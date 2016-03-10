@@ -1,0 +1,16 @@
+.hspacer{margin-right:10px;}
+.button_style{font-face:verdana;}
+.close {
+  display: inline-block;
+  margin-top: 0px;
+  margin-right: 0px;
+  width: 9px;
+  height: 9px;
+  background-repeat: no-repeat !important;
+  text-indent: -10000px;
+  outline: none;
+  background-image: url("img/remove-icon-small.png") !important;
+}
+.static-info{border-bottom:1px solid #eee;}
+.alert_delete{color:red;}
+.ver-inline-menu{list-style:none;}
