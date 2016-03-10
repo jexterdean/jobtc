@@ -1,208 +1,221 @@
 <?php
-Class TicketController extends BaseController{
 
-	public function index(){
+namespace App\Http\Controllers;
+use App\Http\Controllers\BaseController;
 
-		if(Entrust::hasRole('Admin'))
-			$ticket = Ticket::all();
-		elseif(Entrust::hasRole('Client'))
-			$ticket = Ticket::where('username','=',Auth::user()->username)->get();
-		elseif(Entrust::hasRole('Staff')){
-			$ticket = DB::table('fp_ticket')
-				->join('fp_assigned_user','fp_assigned_user.unique_id','=','fp_ticket.ticket_id')
-				->where('belongs_to','=','ticket')
-				->where('fp_assigned_user.username','=',Auth::user()->username)
-				->get();
-		}
 
-		$user_options = User::orderBy('name', 'asc')->lists('name','username');
+class TicketController extends BaseController
+{
 
-		$assets = ['table','datepicker'];
-		
-		return View::make('ticket.index',[
-				'tickets' => $ticket, 
-				'users' => $user_options,
-				'assets' => $assets
-				]);
-	}
+    public function index()
+    {
 
-	public function show($ticket_id){
+        if (Entrust::hasRole('Admin'))
+            $ticket = Ticket::all();
+        elseif (Entrust::hasRole('Client'))
+            $ticket = Ticket::where('username', '=', Auth::user()->username)->get();
+        elseif (Entrust::hasRole('Staff')) {
+            $ticket = DB::table('fp_ticket')
+                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_ticket.ticket_id')
+                ->where('belongs_to', '=', 'ticket')
+                ->where('fp_assigned_user.username', '=', Auth::user()->username)
+                ->get();
+        }
 
-		if(Entrust::hasRole('Admin'))
-			$ticket = Ticket::find($ticket_id);
-		elseif(Entrust::hasRole('Client')){
-			$ticket = Ticket::where('username','=',Auth::user()->username)
-				->where('ticket_id','=',$ticket_id)
-				->first();
-		}
-		elseif(Entrust::hasRole('Staff')){
-			$ticket = DB::table('fp_ticket')
-				->join('fp_assigned_user','fp_assigned_user.unique_id','=','fp_ticket.ticket_id')
-				->where('belongs_to','=','ticket')
-				->where('fp_assigned_user.username','=',Auth::user()->username)
-				->where('ticket_id','=',$ticket_id)
-				->first();
-		}
+        $user_options = User::orderBy('name', 'asc')->lists('name', 'username');
 
-		if(!$ticket)
-			return Redirect::to('ticket')->withErrors('This is not a valid ticket!!');
-			
-		$assignedUser = Assigned_User::where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)
-			->get();
-			
-		$assign_username = Assigned_User::where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)
-			->lists('username','username');
+        $assets = ['table', 'datepicker'];
 
-		$note = Note::where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)
-			->where('username','=', Auth::user()->username)
-			->first();
+        return View::make('ticket.index', [
+            'tickets' => $ticket,
+            'users' => $user_options,
+            'assets' => $assets
+        ]);
+    }
 
-		$user_options = User::orderBy('name', 'asc')
-			->lists('name','username');
+    public function show($ticket_id)
+    {
 
-		$comment = DB::table('fp_comment')
-			->where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)
-			->join('fp_user','fp_comment.username','=','fp_user.username')
-			->orderBy('fp_comment.created_at', 'desc')
-			->get();
+        if (Entrust::hasRole('Admin'))
+            $ticket = Ticket::find($ticket_id);
+        elseif (Entrust::hasRole('Client')) {
+            $ticket = Ticket::where('username', '=', Auth::user()->username)
+                ->where('ticket_id', '=', $ticket_id)
+                ->first();
+        } elseif (Entrust::hasRole('Staff')) {
+            $ticket = DB::table('fp_ticket')
+                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_ticket.ticket_id')
+                ->where('belongs_to', '=', 'ticket')
+                ->where('fp_assigned_user.username', '=', Auth::user()->username)
+                ->where('ticket_id', '=', $ticket_id)
+                ->first();
+        }
 
-		$attachment = DB::table('fp_attachment')
-			->where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)
-			->join('fp_user','fp_attachment.username','=','fp_user.username')
-			->orderBy('fp_attachment.created_at', 'desc')
-			->get();
+        if (!$ticket)
+            return Redirect::to('ticket')->withErrors('This is not a valid ticket!!');
 
-		if(!Entrust::hasRole('Staff')){
-			$task = Task::where('belongs_to','=','ticket')
-				->where('unique_id','=',$ticket_id)
-				->orderBy('created_at', 'desc')
-				->get();
-		}
-		else{
-			$task = Task::where('belongs_to','=','ticket')
-				->where('unique_id','=',$ticket_id)
-				->where('assign_username','=',Auth::user()->username)
-				->orderBy('created_at', 'desc')
-				->get();
-		}
+        $assignedUser = Assigned_User::where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)
+            ->get();
 
-		return View::make('ticket.show',[
-				'ticket' => $ticket, 
-				'note' => $note, 
-				'comments' => $comment, 
-				'attachments' => $attachment, 
-				'tasks' => $task, 
-				'users' => $user_options, 
-				'assign_username' => $assign_username,
-				'assignedUsers' => $assignedUser
-				]);
-	}
+        $assign_username = Assigned_User::where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)
+            ->lists('username', 'username');
 
-	public function create(){
-	}
+        $note = Note::where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)
+            ->where('username', '=', Auth::user()->username)
+            ->first();
 
-	public function edit(){
-	}
+        $user_options = User::orderBy('name', 'asc')
+            ->lists('name', 'username');
 
-	public function store(){	
+        $comment = DB::table('fp_comment')
+            ->where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)
+            ->join('fp_user', 'fp_comment.username', '=', 'fp_user.username')
+            ->orderBy('fp_comment.created_at', 'desc')
+            ->get();
 
-		$setting = Setting::find(1);
+        $attachment = DB::table('fp_attachment')
+            ->where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)
+            ->join('fp_user', 'fp_attachment.username', '=', 'fp_user.username')
+            ->orderBy('fp_attachment.created_at', 'desc')
+            ->get();
 
-		$filevalidation = 'required|mimes:'.$setting->allowed_upload_file.'
-			|max:'.$setting->allowed_upload_max_size;
-		$filename = uniqid();
+        if (!Entrust::hasRole('Staff')) {
+            $task = Task::where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $task = Task::where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)
+                ->where('assign_username', '=', Auth::user()->username)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
 
-		$validation = Validator::make(Input::all(),[
-		'ticket_subject'=>'required',
-		'ticket_description' => 'required',
-		'ticket_priority' => 'required'
-		]);
+        return View::make('ticket.show', [
+            'ticket' => $ticket,
+            'note' => $note,
+            'comments' => $comment,
+            'attachments' => $attachment,
+            'tasks' => $task,
+            'users' => $user_options,
+            'assign_username' => $assign_username,
+            'assignedUsers' => $assignedUser
+        ]);
+    }
 
-		if($validation->fails()){
-			return Redirect::back()->withInput()->withErrors($validation->messages());
-		}
+    public function create()
+    {
+    }
 
-		 $ticket = new Ticket;
-	     $data = Input::all();
+    public function edit()
+    {
+    }
 
-     	if (Input::hasFile('file')) {
-	 		$extension = Input::file('file')->getClientOriginalExtension();
-	 		$file = Input::file('file')->move('assets/tickets/', $filename.".".$extension);
-	 		$data['file'] = $filename.".".$extension;
-		 }
+    public function store()
+    {
 
-		$data['username'] = Auth::user()->username;
-		$data['ticket_status'] = 'open';
-		$ticket->fill($data);
-		$ticket->save();
+        $setting = Setting::find(1);
 
-		return Redirect::back()->withSuccess('Successfully saved!!');
-	}
+        $filevalidation = 'required|mimes:' . $setting->allowed_upload_file . '
+			|max:' . $setting->allowed_upload_max_size;
+        $filename = uniqid();
 
-	public function updateTicketStatus(){
+        $validation = Validator::make(Input::all(), [
+            'ticket_subject' => 'required',
+            'ticket_description' => 'required',
+            'ticket_priority' => 'required'
+        ]);
 
-		$ticket = Ticket::find(Input::get('ticket_id'));
-		$validation = Validator::make(Input::all(),[
-			'ticket_id' => 'required',
-			'ticket_status' => 'required|in:open,close'
-		]);
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation->messages());
+        }
 
-		if($validation->fails()){
-			return Redirect::back()->withErrors($validation->messages());
-		}
-		elseif(!$ticket){
-			return Redirect::back()->withErrors('Wrong URL!!');
-		}
+        $ticket = new Ticket;
+        $data = Input::all();
 
-		$ticket->ticket_status = Input::get('ticket_status');
-		$ticket->save();
-		
-		return Redirect::back()->withSuccess('Saved!!');
-	}
+        if (Input::hasFile('file')) {
+            $extension = Input::file('file')->getClientOriginalExtension();
+            $file = Input::file('file')->move('assets/tickets/', $filename . "." . $extension);
+            $data['file'] = $filename . "." . $extension;
+        }
 
-	public function update(){
-	}
+        $data['username'] = Auth::user()->username;
+        $data['ticket_status'] = 'open';
+        $ticket->fill($data);
+        $ticket->save();
 
-	public function destroy(){
-	}
+        return Redirect::back()->withSuccess('Successfully saved!!');
+    }
 
-	public function delete($ticket_id){
-		$ticket = Ticket::find($ticket_id);
+    public function updateTicketStatus()
+    {
 
-		if(!$ticket || ($ticket->username != Auth::user()->username && !Entrust::hasRole('Admin')))
-			return Redirect::to('ticket')->withErrors('This is not a valid link!!');
+        $ticket = Ticket::find(Input::get('ticket_id'));
+        $validation = Validator::make(Input::all(), [
+            'ticket_id' => 'required',
+            'ticket_status' => 'required|in:open,close'
+        ]);
 
-		DB::table('fp_assigned_user')
-			->where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)->delete();
+        if ($validation->fails()) {
+            return Redirect::back()->withErrors($validation->messages());
+        } elseif (!$ticket) {
+            return Redirect::back()->withErrors('Wrong URL!!');
+        }
 
-		$attachments = DB::table('fp_attachment')
-			->where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)->get();
+        $ticket->ticket_status = Input::get('ticket_status');
+        $ticket->save();
 
-		foreach($attachments as $attachment)
-			File::delete('assets/attachment_files/'.$attachment->file);
+        return Redirect::back()->withSuccess('Saved!!');
+    }
 
-		DB::table('fp_attachment')
-			->where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)->delete();
-		
-		DB::table('fp_comment')
-			->where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)->delete();
-		
-		DB::table('fp_notes')
-			->where('belongs_to','=','ticket')
-			->where('unique_id','=',$ticket_id)->delete();
+    public function update()
+    {
+    }
 
-		$ticket->delete();
-		
-		return Redirect::to('ticket')->withSuccess('Delete Successfully!!!');
-	}
+    public function destroy()
+    {
+    }
+
+    public function delete($ticket_id)
+    {
+        $ticket = Ticket::find($ticket_id);
+
+        if (!$ticket || ($ticket->username != Auth::user()->username && !Entrust::hasRole('Admin')))
+            return Redirect::to('ticket')->withErrors('This is not a valid link!!');
+
+        DB::table('fp_assigned_user')
+            ->where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)->delete();
+
+        $attachments = DB::table('fp_attachment')
+            ->where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)->get();
+
+        foreach ($attachments as $attachment)
+            File::delete('assets/attachment_files/' . $attachment->file);
+
+        DB::table('fp_attachment')
+            ->where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)->delete();
+
+        DB::table('fp_comment')
+            ->where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)->delete();
+
+        DB::table('fp_notes')
+            ->where('belongs_to', '=', 'ticket')
+            ->where('unique_id', '=', $ticket_id)->delete();
+
+        $ticket->delete();
+
+        return Redirect::to('ticket')->withSuccess('Delete Successfully!!!');
+    }
 }
+
 ?>

@@ -12,7 +12,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('forgotPassword', 'ProfileController@forgotPassword');
 });
 
-Route::group(['middleware' => 'auth'],function () {
+Route::group(['middleware' => 'auth'], function () {
 
     if (Entrust::hasRole('Admin')) {
         Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])

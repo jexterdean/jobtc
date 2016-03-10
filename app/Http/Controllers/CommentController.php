@@ -1,46 +1,59 @@
 <?php
-Class CommentController extends BaseController{
 
-	public function index(){
-	}
+namespace App\Http\Controllers;
+use App\Http\Controllers\BaseController;
 
-	public function show(){
-	}
+Class CommentController extends BaseController
+{
 
-	public function create(){
-	}
+    public function index()
+    {
+    }
 
-	public function edit(){
-	}
+    public function show()
+    {
+    }
 
-	public function store(){
+    public function create()
+    {
+    }
 
-		$validation = Validator::make(Input::all(),['comment'=>'required']);
+    public function edit()
+    {
+    }
 
-		if($validation->fails()){
-			return Redirect::back()->withInput()->withErrors($validation->messages());
-		}
+    public function store()
+    {
 
-		$comment = new Comment;
-	    $data = Input::all();
-	    $data['username'] = Auth::user()->username;
-	    $comment->fill($data);
-	    $comment->save();
-	    
-	    return Redirect::back()->withSuccess('Successfully saved!!');
-	}
+        $validation = Validator::make(Input::all(), ['comment' => 'required']);
 
-	public function update(){
-	}
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation->messages());
+        }
 
-	public function destroy($comment_id){
-		$comment = Comment::find($comment_id);
+        $comment = new Comment;
+        $data = Input::all();
+        $data['username'] = Auth::user()->username;
+        $comment->fill($data);
+        $comment->save();
 
-		if(!$comment || ($comment->username != Auth::user()->username && !Entrust::hasRole('Admin')))
-			return Redirect::back()->withErrors('This is not a valid link!!');
+        return Redirect::back()->withSuccess('Successfully saved!!');
+    }
 
-		$comment->delete($comment_id);
-		return Redirect::back()->withSuccess('Deleted successfully!!');
-	}
+    public function update()
+    {
+    }
+
+    public function destroy($comment_id)
+    {
+        $comment = Comment::find($comment_id);
+
+        if (!$comment || ($comment->username != Auth::user()->username && !Entrust::hasRole('Admin')))
+            return Redirect::back()->withErrors('This is not a valid link!!');
+
+        $comment->delete($comment_id);
+        return Redirect::back()->withSuccess('Deleted successfully!!');
+    }
 }
+
 ?>

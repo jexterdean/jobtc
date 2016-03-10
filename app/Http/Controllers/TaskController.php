@@ -1,97 +1,109 @@
 <?php
-Class TaskController extends BaseController{
 
-	public function index(){
+namespace App\Http\Controllers;
+use App\Http\Controllers\BaseController;
 
-		if(Entrust::hasRole('Staff')){
-			$task = Task::where('assign_username','=',Auth::user()->username)
-				->orderBy('created_at', 'desc')
-				->get();	
-		}
-		else{
-			$task = Task::orderBy('created_at', 'desc')
-				->get();				
-		}
-		
+class TaskController extends BaseController
+{
 
-		$assign_username = User::where('client_id','=','')
-			->orderBy('name','asc')
-			->lists('name','username');
+    public function index()
+    {
 
-		return View::make('task.index',[
-			'tasks' => $task,
-			'assign_username' => $assign_username
-			]);
-	}
+        if (Entrust::hasRole('Staff')) {
+            $task = Task::where('assign_username', '=', Auth::user()->username)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            $task = Task::orderBy('created_at', 'desc')
+                ->get();
+        }
 
-	public function show(){
-	}
 
-	public function create(){
-	}
+        $assign_username = User::where('client_id', '=', '')
+            ->orderBy('name', 'asc')
+            ->lists('name', 'username');
 
-	public function edit(){
-	}
+        return View::make('task.index', [
+            'tasks' => $task,
+            'assign_username' => $assign_username
+        ]);
+    }
 
-	public function store(){
+    public function show()
+    {
+    }
 
-		$validation = Validator::make(Input::all(),[
-				'task_title' => 'required',
-				'due_date' => 'required',
-				'belongs_to' => 'required',
-				'unique_id' => 'required',
-				'is_visible' => 'required|in:yes,no'
- 				]);
+    public function create()
+    {
+    }
 
-		if($validation->fails()){
-			return Redirect::back()->withInput()->withErrors($validation->messages());
-		}
+    public function edit()
+    {
+    }
 
-		$task = new Task;
-	    $data = Input::all();
-	    $data['username'] = Auth::user()->username;
-	    $data['task_status'] = 'pending';
-	    $data['due_date'] = date("Y-m-d H:i:s",strtotime($data['due_date']));
-	    $data['assign_username'] = Input::get('assign_username');
+    public function store()
+    {
 
-	    $task->fill($data);
-	    $task->save();
+        $validation = Validator::make(Input::all(), [
+            'task_title' => 'required',
+            'due_date' => 'required',
+            'belongs_to' => 'required',
+            'unique_id' => 'required',
+            'is_visible' => 'required|in:yes,no'
+        ]);
 
-	    return Redirect::back()->withSuccess('Successfully added!!');
-	}
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation->messages());
+        }
 
-	public function updateTaskStatus(){
+        $task = new Task;
+        $data = Input::all();
+        $data['username'] = Auth::user()->username;
+        $data['task_status'] = 'pending';
+        $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
+        $data['assign_username'] = Input::get('assign_username');
 
-		$task = Task::find(Input::get('task_id'));
-		$validation = Validator::make(Input::all(),[
-			'task_id' => 'required',
-			'task_status' => 'required|in:pending,progress,completed'
-		]);
+        $task->fill($data);
+        $task->save();
 
-		if($validation->fails()){
-			return Redirect::back()->withErrors($validation->messages());
-		}
-		elseif(!$task){
-			return Redirect::back()->withErrors('Wrong URL!!');
-		}
+        return Redirect::back()->withSuccess('Successfully added!!');
+    }
 
-		$task->task_status = Input::get('task_status');
-		$task->save();
+    public function updateTaskStatus()
+    {
 
-		return Redirect::back()->withSuccess('Saved!!');
-	}
+        $task = Task::find(Input::get('task_id'));
+        $validation = Validator::make(Input::all(), [
+            'task_id' => 'required',
+            'task_status' => 'required|in:pending,progress,completed'
+        ]);
 
-	public function update(){
-	}
+        if ($validation->fails()) {
+            return Redirect::back()->withErrors($validation->messages());
+        } elseif (!$task) {
+            return Redirect::back()->withErrors('Wrong URL!!');
+        }
 
-	public function destroy($task_id){
-		$task = Task::find($task_id);
-		if(!$task){
-			return Redirect::back()->withErrors('This is not a valid link!!');
-		}
-		$task->delete($task_id);
-		
-		return Redirect::back()->withSuccess('Deleted successfully!!');
-	}
+        $task->task_status = Input::get('task_status');
+        $task->save();
+
+        return Redirect::back()->withSuccess('Saved!!');
+    }
+
+    public function update()
+    {
+    }
+
+    public function destroy($task_id)
+    {
+        $task = Task::find($task_id);
+        if (!$task) {
+            return Redirect::back()->withErrors('This is not a valid link!!');
+        }
+        $task->delete($task_id);
+
+        return Redirect::back()->withSuccess('Deleted successfully!!');
+    }
 }
+
 ?>

@@ -1,77 +1,89 @@
 <?php
-Class MessageController extends BaseController{
 
-	public function index(){
+namespace App\Http\Controllers;
+use App\Http\Controllers\BaseController;
 
-		$user_options = User::where('username','!=',Auth::user()->username)
-			->orderBy('name', 'asc')
-			->lists('name','username');
+class MessageController extends BaseController
+{
 
-		$inbox = Message::where('to_username','=',Auth::user()->username)
-			->orderBy('created_at','asc')
-			->get();
+    public function index()
+    {
 
-		$sent = Message::where('from_username','=',Auth::user()->username)
-			->orderBy('created_at','asc')
-			->get();
+        $user_options = User::where('username', '!=', Auth::user()->username)
+            ->orderBy('name', 'asc')
+            ->lists('name', 'username');
 
-		$assets = ['editor'];
+        $inbox = Message::where('to_username', '=', Auth::user()->username)
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-		return View::make('message.index',[
-				'users' => $user_options,
-				'inbox' => $inbox,
-				'sent' => $sent,
-				'assets' => $assets
-				]);
-	}
+        $sent = Message::where('from_username', '=', Auth::user()->username)
+            ->orderBy('created_at', 'asc')
+            ->get();
 
-	public function show(){
-	}
+        $assets = ['editor'];
 
-	public function create(){
-	}
+        return View::make('message.index', [
+            'users' => $user_options,
+            'inbox' => $inbox,
+            'sent' => $sent,
+            'assets' => $assets
+        ]);
+    }
 
-	public function edit(){
-	}
+    public function show()
+    {
+    }
 
-	public function store(){
+    public function create()
+    {
+    }
 
-		$setting = Setting::find(1);
+    public function edit()
+    {
+    }
 
-		$filevalidation = 'required|mimes:'.$setting->allowed_upload_file.'|max:'.$setting->allowed_upload_max_size;
-		$filename = uniqid();
+    public function store()
+    {
 
-		$validation = Validator::make(Input::all(),[
-			'to_username' => 'required',
-			'message_subject' => 'required',
-			'message_content' => 'required'
-			]);
+        $setting = Setting::find(1);
 
-		if($validation->fails()){
-			return Redirect::back()->withInput()->withErrors($validation->messages());
-		}
+        $filevalidation = 'required|mimes:' . $setting->allowed_upload_file . '|max:' . $setting->allowed_upload_max_size;
+        $filename = uniqid();
 
-		 $message = new Message;
-	     $data = Input::all();
+        $validation = Validator::make(Input::all(), [
+            'to_username' => 'required',
+            'message_subject' => 'required',
+            'message_content' => 'required'
+        ]);
 
-     	if (Input::hasFile('file')) {
-	 		$extension = Input::file('file')->getClientOriginalExtension();
-	 		$file = Input::file('file')->move('assets/message_attachment/', $filename.".".$extension);
-	 		$data['file'] = $filename.".".$extension;
-		 }
-		 else
-		 	$data['file'] = '';
-		 
-		$data['from_username'] = Auth::user()->username;
-		$message->fill($data);
-		$message->save();
-		return Redirect::back()->withSuccess('Successfully sent!!');
-	}
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation->messages());
+        }
 
-	public function update(){
-	}
+        $message = new Message;
+        $data = Input::all();
 
-	public function destroy(){
-	}
+        if (Input::hasFile('file')) {
+            $extension = Input::file('file')->getClientOriginalExtension();
+            $file = Input::file('file')->move('assets/message_attachment/', $filename . "." . $extension);
+            $data['file'] = $filename . "." . $extension;
+        } else
+            $data['file'] = '';
+
+        $data['from_username'] = Auth::user()->username;
+        $message->fill($data);
+        $message->save();
+        return Redirect::back()->withSuccess('Successfully sent!!');
+    }
+
+    public function update()
+    {
+    }
+
+    public function destroy()
+    {
+    }
 }
+
 ?>

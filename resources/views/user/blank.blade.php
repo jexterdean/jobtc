@@ -1,4 +1,4 @@
 @include('layouts.default')
 @section('content')
-Hello
+    Hello
 @stop

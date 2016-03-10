@@ -1,128 +1,143 @@
 <?php
-Class ClientController extends BaseController{
 
-	public function index(){
-		$countries_option = Country::orderBy('country_name', 'asc')
-			->lists('country_name','country_id');
+namespace App\Http\Controllers;
 
-		$client = Client::all();
+use App\Http\Controllers\BaseController;
 
-		$assets = ['table'];
+class ClientController extends BaseController
+{
 
-		return View::make('client.index',[
-				'clients' => $client,
-				'countries' => $countries_option,
-				'assets' => $assets
-				]);
-	}
+    public function index()
+    {
+        $countries_option = Country::orderBy('country_name', 'asc')
+            ->lists('country_name', 'country_id');
 
-	public function show($client_id){
-		$client = Client::find($client_id);
+        $client = Client::all();
 
-		$countries_option = Country::orderBy('country_name', 'asc')
-			->lists('country_name','country_id');
+        $assets = ['table'];
 
-		return View::make('client.show',[
-				'client' => $client,
-				'countries' => $countries_option
-				]);
-	}
+        return View::make('client.index', [
+            'clients' => $client,
+            'countries' => $countries_option,
+            'assets' => $assets
+        ]);
+    }
 
-	public function create(){
-		return View::make('client.create');
-	}
+    public function show($client_id)
+    {
+        $client = Client::find($client_id);
 
-	public function edit($client_id){
-		$client = Client::find($client_id);
+        $countries_option = Country::orderBy('country_name', 'asc')
+            ->lists('country_name', 'country_id');
 
-		$countries_option = Country::orderBy('country_name', 'asc')
-			->lists('country_name','country_id');
+        return View::make('client.show', [
+            'client' => $client,
+            'countries' => $countries_option
+        ]);
+    }
 
-		return View::make('client.edit',[
-				'client' => $client,
-				'countries' => $countries_option
-				]);
-	}
+    public function create()
+    {
+        return View::make('client.create');
+    }
 
-	public function store(){
+    public function edit($client_id)
+    {
+        $client = Client::find($client_id);
 
-		$validation = Validator::make(Input::all(),[
-			'company_name' => 'required|unique:fp_client',
-			'contact_person' => 'required',
-			'email' => 'required|email',
-			'zipcode' => 'numeric',
-			'country_id' => 'required'
-			]);
+        $countries_option = Country::orderBy('country_name', 'asc')
+            ->lists('country_name', 'country_id');
 
-		if($validation->fails()){
-			return Redirect::back()->withInput()->withErrors($validation->messages());
-		}
-			
-		$client = new Client;
-	    $data = Input::all();
-		$data['client_status'] = 'Active';
-		$client->fill($data);
-		$client->save();
+        return View::make('client.edit', [
+            'client' => $client,
+            'countries' => $countries_option
+        ]);
+    }
 
-		return Redirect::to('client')->withSuccess("Client added successfully!!");
-	}
+    public function store()
+    {
 
-	public function update($client_id){
-		$client = Client::find($client_id);
+        $validation = Validator::make(Input::all(), [
+            'company_name' => 'required|unique:fp_client',
+            'contact_person' => 'required',
+            'email' => 'required|email',
+            'zipcode' => 'numeric',
+            'country_id' => 'required'
+        ]);
 
-		$validation = Validator::make(Input::all(),[
-			'company_name' => 'required|unique:fp_client,company_name,'.$client_id.',client_id',
-			'contact_person' => 'required',
-			'email' => 'required|email',
-			'zipcode' => 'numeric',
-			'country_id' => 'required'
-			]);
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation->messages());
+        }
 
-		if($validation->fails()){
-			return Redirect::to('client')->withErrors($validation->messages());
-		}
-	    $data = Input::all();
-		$client->fill($data);
-		$client->save();
-		return Redirect::to('client')->withSuccess("Client updated successfully!!");
-	}
+        $client = new Client;
+        $data = Input::all();
+        $data['client_status'] = 'Active';
+        $client->fill($data);
+        $client->save();
 
-	public function destroy(){
-	}
+        return Redirect::to('client')->withSuccess("Client added successfully!!");
+    }
 
-	public function delete($client_id){
-		$client = Client::find($client_id);
+    public function update($client_id)
+    {
+        $client = Client::find($client_id);
 
-		if(!$client || !Entrust::hasRole('Admin'))
-			return Redirect::to('client')->withErrors('This is not a valid link!!');
+        $validation = Validator::make(Input::all(), [
+            'company_name' => 'required|unique:fp_client,company_name,' . $client_id . ',client_id',
+            'contact_person' => 'required',
+            'email' => 'required|email',
+            'zipcode' => 'numeric',
+            'country_id' => 'required'
+        ]);
 
-		$user = User::find($client_id);
+        if ($validation->fails()) {
+            return Redirect::to('client')->withErrors($validation->messages());
+        }
+        $data = Input::all();
+        $client->fill($data);
+        $client->save();
+        return Redirect::to('client')->withSuccess("Client updated successfully!!");
+    }
 
-		$project = Project::where('client_id','=',$client->client_id)->get();
+    public function destroy()
+    {
+    }
 
-		if(count($project))
-			return Redirect::to('client')->withErrors('This client has some projects!! Delete that project first!!');
+    public function delete($client_id)
+    {
+        $client = Client::find($client_id);
 
-		$ticket = Ticket::where('username','=',$user->username)->get();
+        if (!$client || !Entrust::hasRole('Admin'))
+            return Redirect::to('client')->withErrors('This is not a valid link!!');
 
-		if(count($ticket))
-			return Redirect::to('client')->withErrors('This client has some ticket!! Delete that ticket first!!');
+        $user = User::find($client_id);
 
-		DB::table('fp_message')
-			->where('from_username','=',$user->username)
-			->orWhere('to_username','=',$user->username)
-			->delete();
+        $project = Project::where('client_id', '=', $client->client_id)->get();
 
-		DB::table('fp_events')
-			->where('username','=',$user->username)
-			->delete();
+        if (count($project))
+            return Redirect::to('client')->withErrors('This client has some projects!! Delete that project first!!');
 
-		$user->delete();
+        $ticket = Ticket::where('username', '=', $user->username)->get();
 
-		$client->delete();
+        if (count($ticket))
+            return Redirect::to('client')->withErrors('This client has some ticket!! Delete that ticket first!!');
 
-		return Redirect::to('client')->withSuccess('Client deleted successfully!!');
+        DB::table('fp_message')
+            ->where('from_username', '=', $user->username)
+            ->orWhere('to_username', '=', $user->username)
+            ->delete();
 
-	}
+        DB::table('fp_events')
+            ->where('username', '=', $user->username)
+            ->delete();
+
+        $user->delete();
+
+        $client->delete();
+
+        return Redirect::to('client')->withSuccess('Client deleted successfully!!');
+
+    }
 }
+
 ?>

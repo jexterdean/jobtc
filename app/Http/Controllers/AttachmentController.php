@@ -1,59 +1,73 @@
 <?php
-Class AttachmentController extends BaseController{
 
-	public function index(){
-	}
+namespace App\Http\Controllers;
 
-	public function show(){
-	}
+use App\Http\Controllers\BaseController;
 
-	public function create(){
-	}
+class AttachmentController extends BaseController
+{
 
-	public function edit(){
-	}
+    public function index()
+    {
+    }
 
-	public function store(){
-		$setting = Setting::find(1);
-		$filevalidation = 'required|mimes:'.$setting->allowed_upload_file.'
-									|max:'.$setting->allowed_upload_max_size;
-		$filename = uniqid();
-		$validation = Validator::make(Input::all(),[
-		'attachment_title'=>'required',
-		'file' => $filevalidation
-		]);
+    public function show()
+    {
+    }
 
-		if($validation->fails()){
-			return Redirect::back()->withInput()->withErrors($validation->messages());
-		}
+    public function create()
+    {
+    }
 
-		 $attachment = new Attachment;
-	     $data = Input::all();
+    public function edit()
+    {
+    }
 
-     	if (Input::hasFile('file')) {
-	 		$extension = Input::file('file')->getClientOriginalExtension();
-	 		$file = Input::file('file')->move('assets/attachment_files/', $filename.".".$extension);
-	 		$data['file'] = $filename.".".$extension;
-		 }
-		 
-		$data['username'] = Auth::user()->username;
-		$attachment->fill($data);
-		$attachment->save();
-		return Redirect::back()->withSuccess('Successfully saved!!');
-	}
+    public function store()
+    {
+        $setting = Setting::find(1);
+        $filevalidation = 'required|mimes:' . $setting->allowed_upload_file . '
+									|max:' . $setting->allowed_upload_max_size;
+        $filename = uniqid();
+        $validation = Validator::make(Input::all(), [
+            'attachment_title' => 'required',
+            'file' => $filevalidation
+        ]);
 
-	public function update(){
-	}
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation->messages());
+        }
 
-	public function destroy($attachment_id){
-		$attachment = Attachment::find($attachment_id);
-		
-		if(!$attachment || ($attachment->username != Auth::user()->username && !Entrust::hasRole('Admin')))
-			return Redirect::back()->withErrors('This is not a valid link!!');
-		
-		File::delete('assets/attachment_files/'.$attachment->file);
-		$attachment->delete($attachment_id);
-		return Redirect::back()->withSuccess('Deleted successfully!!');
-	}
+        $attachment = new Attachment;
+        $data = Input::all();
+
+        if (Input::hasFile('file')) {
+            $extension = Input::file('file')->getClientOriginalExtension();
+            $file = Input::file('file')->move('assets/attachment_files/', $filename . "." . $extension);
+            $data['file'] = $filename . "." . $extension;
+        }
+
+        $data['username'] = Auth::user()->username;
+        $attachment->fill($data);
+        $attachment->save();
+        return Redirect::back()->withSuccess('Successfully saved!!');
+    }
+
+    public function update()
+    {
+    }
+
+    public function destroy($attachment_id)
+    {
+        $attachment = Attachment::find($attachment_id);
+
+        if (!$attachment || ($attachment->username != Auth::user()->username && !Entrust::hasRole('Admin')))
+            return Redirect::back()->withErrors('This is not a valid link!!');
+
+        File::delete('assets/attachment_files/' . $attachment->file);
+        $attachment->delete($attachment_id);
+        return Redirect::back()->withSuccess('Deleted successfully!!');
+    }
 }
+
 ?>

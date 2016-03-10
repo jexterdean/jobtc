@@ -1,59 +1,72 @@
 <?php
-Class PaymentController extends BaseController{
 
-	public function index(){
-	}
+namespace App\Http\Controllers;
+use App\Http\Controllers\BaseController;
 
-	public function show(){
-	}
+class PaymentController extends BaseController
+{
 
-	public function create(){
-	}
+    public function index()
+    {
+    }
 
-	public function edit(){
-	}
+    public function show()
+    {
+    }
 
-	public function store(){
+    public function create()
+    {
+    }
 
-		$validation = Validator::make(Input::all(),[
-			'payment_amount' => 'required|numeric',
-			'payment_date' => 'date',
-			'payment_notes' => 'required',
-			'payment_type' => 'required|in:cash,bank',
-			'billing_id' => 'required'
-  			]);
+    public function edit()
+    {
+    }
 
-		if($validation->fails()){
-			return Redirect::back()->withInput()->withErrors($validation->messages());
-		}
+    public function store()
+    {
 
-		$billing = Billing::where('billing_id','=',Input::get('billing_id'))
-			->where('billing_type','=','invoice')
-			->first();
+        $validation = Validator::make(Input::all(), [
+            'payment_amount' => 'required|numeric',
+            'payment_date' => 'date',
+            'payment_notes' => 'required',
+            'payment_type' => 'required|in:cash,bank',
+            'billing_id' => 'required'
+        ]);
 
-		if(!$billing)
-			return Redirect::back()->withErrors('This is not a valid link!!');
+        if ($validation->fails()) {
+            return Redirect::back()->withInput()->withErrors($validation->messages());
+        }
 
-		$payment = new Payment;
-	    $data = Input::all();
-	    $data['username'] = Auth::user()->username;
-	    $payment->fill($data);
-	    $payment->save();
-	    
-	    return Redirect::back()->withSuccess('Successfully saved!!');
-	}
+        $billing = Billing::where('billing_id', '=', Input::get('billing_id'))
+            ->where('billing_type', '=', 'invoice')
+            ->first();
 
-	public function update(){
-	}
+        if (!$billing)
+            return Redirect::back()->withErrors('This is not a valid link!!');
 
-	public function destroy($payment_id){
-		$payment = Payment::find($payment_id);
+        $payment = new Payment;
+        $data = Input::all();
+        $data['username'] = Auth::user()->username;
+        $payment->fill($data);
+        $payment->save();
 
-		if(!$payment || !Entrust::hasRole('Admin'))
-			return Redirect::back()->withErrors('This is not a valid link!!');
+        return Redirect::back()->withSuccess('Successfully saved!!');
+    }
 
-		$payment->delete($payment_id);
-			return Redirect::back()->withSuccess('Deleted Successfully!!');
-	}
+    public function update()
+    {
+    }
+
+    public function destroy($payment_id)
+    {
+        $payment = Payment::find($payment_id);
+
+        if (!$payment || !Entrust::hasRole('Admin'))
+            return Redirect::back()->withErrors('This is not a valid link!!');
+
+        $payment->delete($payment_id);
+        return Redirect::back()->withSuccess('Deleted Successfully!!');
+    }
 }
+
 ?>

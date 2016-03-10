@@ -12,19 +12,19 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements
-	AuthenticatableContract,
-	AuthorizableContract,
-	CanResetPasswordContract
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
 {
 
-	use Authenticatable, Authorizable, CanResetPassword;
+    use Authenticatable, Authorizable, CanResetPassword;
 
-	protected $fillable = ['username','password','client_id','name',
-		'email','phone','user_status','user_status_detail','user_avatar'];
-	
-	protected $primaryKey = 'user_id';
-	protected $table = 'fp_user';
+    protected $fillable = ['username', 'password', 'client_id', 'name',
+        'email', 'phone', 'user_status', 'user_status_detail', 'user_avatar'];
 
-	protected $hidden = array('password','remember_token'); 
+    protected $primaryKey = 'user_id';
+    protected $table = 'fp_user';
+
+    protected $hidden = array('password', 'remember_token');
 
 }

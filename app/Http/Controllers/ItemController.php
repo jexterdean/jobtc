@@ -1,56 +1,69 @@
 <?php
-Class ItemController extends BaseController{
 
-	public function index(){
-	}
+namespace App\Http\Controllers;
+use App\Http\Controllers\BaseController;
 
-	public function show(){
-	}
+class ItemController extends BaseController
+{
 
-	public function create(){
-	}
+    public function index()
+    {
+    }
 
-	public function edit(){
-	}
+    public function show()
+    {
+    }
 
-	public function store(){
+    public function create()
+    {
+    }
 
-		$billing = Billing::where('billing_id','=',Input::get('billing_id'))
-			->where('billing_type','=',Input::get('billing_type'))
-			->first();
+    public function edit()
+    {
+    }
 
-		if(!$billing)
-			return Redirect::to('billing/invoice')->withErrors("Wrong URL");
+    public function store()
+    {
 
-		$validation = Validator::make(Input::all(),[
-				'item_name'=>'required|unique:fp_item,item_name,null,item_id,billing_id,'.Input::get('billing_id'),
-				'item_quantity'=>'required|numeric',
-				'unit_price'=>'required|numeric',
-				]);
+        $billing = Billing::where('billing_id', '=', Input::get('billing_id'))
+            ->where('billing_type', '=', Input::get('billing_type'))
+            ->first();
 
-		if($validation->fails()){
-			return Redirect::to('billing/'.$billing->billing_type."/".$billing->billing_id)->withInput()->withErrors($validation->messages());
-		}
+        if (!$billing)
+            return Redirect::to('billing/invoice')->withErrors("Wrong URL");
+
+        $validation = Validator::make(Input::all(), [
+            'item_name' => 'required|unique:fp_item,item_name,null,item_id,billing_id,' . Input::get('billing_id'),
+            'item_quantity' => 'required|numeric',
+            'unit_price' => 'required|numeric',
+        ]);
+
+        if ($validation->fails()) {
+            return Redirect::to('billing/' . $billing->billing_type . "/" . $billing->billing_id)->withInput()->withErrors($validation->messages());
+        }
 
 
-		$item = new Item;
-		$data = Input::all();
-	    $item->fill($data);
-		$item->save();
+        $item = new Item;
+        $data = Input::all();
+        $item->fill($data);
+        $item->save();
 
-		return Redirect::to('billing/'.$billing->billing_type.'/'.Input::get('billing_id'))->withSuccess("Added successfully!!");		
-	}
+        return Redirect::to('billing/' . $billing->billing_type . '/' . Input::get('billing_id'))->withSuccess("Added successfully!!");
+    }
 
-	public function update(){
-	}
+    public function update()
+    {
+    }
 
-	public function destroy($item_id){
-		$item = Item::find($item_id);
-		if(!$item){
-			return Redirect::back()->withErrors('This is not a valid link!!');
-		}
-		$item->delete($item_id);
-		return Redirect::back()->withSuccess('Deleted successfully!!');
-	}
+    public function destroy($item_id)
+    {
+        $item = Item::find($item_id);
+        if (!$item) {
+            return Redirect::back()->withErrors('This is not a valid link!!');
+        }
+        $item->delete($item_id);
+        return Redirect::back()->withSuccess('Deleted successfully!!');
+    }
 }
+
 ?>

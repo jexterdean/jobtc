@@ -1,41 +1,54 @@
 <?php
-Class NoteController extends BaseController{
 
-	public function index(){
-	}
+namespace App\Http\Controllers;
+use App\Http\Controllers\BaseController;
 
-	public function show(){
-	}
+class NoteController extends BaseController
+{
 
-	public function create(){
-	}
+    public function index()
+    {
+    }
 
-	public function edit(){
-	}
+    public function show()
+    {
+    }
 
-	public function update($note_id=0){
+    public function create()
+    {
+    }
 
-	    $note = Note::findOrNew($note_id);
-	    $data = Input::all();
-	    $data['username'] = Auth::user()->username;
-	    $note->fill($data);
-	    $note->save();
+    public function edit()
+    {
+    }
 
-	    return Redirect::back()->withSuccess('Successfully saved!!');
-	}
+    public function update($note_id = 0)
+    {
 
-	public function store(){
+        $note = Note::findOrNew($note_id);
+        $data = Input::all();
+        $data['username'] = Auth::user()->username;
+        $note->fill($data);
+        $note->save();
 
-	    $note = new Note;
-	    $data = Input::all();
-	    $data['username'] = Auth::user()->username;
-	    $note->fill($data);
-	    $note->save();
-	    
-	    return Redirect::back()->withSuccess('Successfully saved!!');
-	}
+        return Redirect::back()->withSuccess('Successfully saved!!');
+    }
 
-	public function destroy(){
-	}
+    public function store()
+    {
+
+        $note = new Note;
+        $data = Input::all();
+        $data['username'] = Auth::user()->username;
+        $note->fill($data);
+        $note->save();
+
+        return Redirect::back()->withSuccess('Successfully saved!!');
+    }
+
+    public function destroy()
+    {
+    }
 }
+
 ?>

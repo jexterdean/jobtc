@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Timezone extends Model {
+class Timezone extends Model
+{
 
-	protected $fillable = ['timezone_id','timezone_name'];
-	
-	protected $primaryKey = 'timezone_id';
-	protected $table = 'fp_timezone';
+    protected $fillable = ['timezone_id', 'timezone_name'];
+
+    protected $primaryKey = 'timezone_id';
+    protected $table = 'fp_timezone';
 
 }

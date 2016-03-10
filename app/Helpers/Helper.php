@@ -1,6 +1,9 @@
 <?php
+namespace App\Helpers;
 
-Class Helper
+use Session;
+
+class Helper
 {
     public static function showMessage()
     {
