@@ -2,32 +2,32 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 
-{{ HTML::script('assets/js/AdminLTE/app.js') }}
-{{ HTML::script('assets/js/bootbox.js') }}
+{!! HTML::script('assets/js/AdminLTE/app.js')  !!}
+{!!  HTML::script('assets/js/bootbox.js')  !!}
 
 @if(in_array('table',$assets))
-    {{ HTML::script('assets/js/plugins/datatables/jquery.dataTables.js') }}
-    {{ HTML::script('assets/js/plugins/datatables/dataTables.bootstrap.js') }}
-    {{ HTML::script('assets/js/plugins/datatables/dataTables.tableTools.js') }}
-    {{ HTML::script('assets/js/plugins/datatables/dataTables.colVis.js') }}
-    {{ HTML::script('assets/js/plugins/datatables/dataTables.colReorder.js') }}
+    {!!   HTML::script('assets/js/plugins/datatables/jquery.dataTables.js') !!}
+    {!!  HTML::script('assets/js/plugins/datatables/dataTables.bootstrap.js')  !!}
+    {!! HTML::script('assets/js/plugins/datatables/dataTables.tableTools.js')  !!}
+    {!! HTML::script('assets/js/plugins/datatables/dataTables.colVis.js')  !!}
+    {!! HTML::script('assets/js/plugins/datatables/dataTables.colReorder.js')  !!}
 @endif
 
 @if(in_array('knob',$assets))
-    {{ HTML::script('assets/js/plugins/jqueryKnob/jquery.knob.js') }}
+    {!! HTML::script('assets/js/plugins/jqueryKnob/jquery.knob.js') !!}
 @endif
 
 @if(in_array('calendar',$assets))
-    {{ HTML::script('assets/js/moment.min.js') }}
-    {{ HTML::script('assets/js/fullcalendar.min.js') }}
+    {!!  HTML::script('assets/js/moment.min.js')  !!}
+    {!!  HTML::script('assets/js/fullcalendar.min.js')  !!}
 @endif
 
-{{ HTML::script('assets/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}
+{!!  HTML::script('assets/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')  !!}
 
-{{ HTML::script('assets/js/validation-form.js') }}
-{{ HTML::script('assets/js/plugins/input-mask/jquery.inputmask.js') }}
-{{ HTML::script('assets/js/plugins/input-mask/jquery.inputmask.date.extensions.js') }}
-{{ HTML::script('assets/js/plugins/input-mask/jquery.inputmask.extensions.js') }}
+{!! HTML::script('assets/js/validation-form.js')  !!}
+{!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.js')  !!}
+{!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
+{!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.extensions.js')  !!}
 
 <script>
     $(function () {

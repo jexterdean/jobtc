@@ -8,4 +8,5 @@ use Zizaco\Entrust\EntrustPermission;
 class Permission extends EntrustPermission
 {
 
+    protected $table = 'fp_permissions';
 }

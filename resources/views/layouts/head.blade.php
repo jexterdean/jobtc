@@ -9,8 +9,8 @@
           type="text/css"/>
     <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
 
-    {{ HTML::style('assets/custom.css') }}
-		{{ HTML::style('assets/css/AdminLTE.css') }}
+    {!!  HTML::style('assets/custom.css')  !!}
+		{!! HTML::style('assets/css/AdminLTE.css')  !!}
 
         <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -18,17 +18,17 @@
     <![endif]-->
 
     @if(in_array('table',$assets))
-        {{ HTML::style('assets/css/datatables/dataTables.bootstrap.css') }}
-        {{ HTML::style('assets/css/datatables/dataTables.tableTools.css') }}
-        {{ HTML::style('assets/css/datatables/dataTables.colVis.css') }}
-        {{ HTML::style('assets/css/datatables/dataTables.colReorder.css') }}
+        {!!  HTML::style('assets/css/datatables/dataTables.bootstrap.css')  !!}
+        {!!  HTML::style('assets/css/datatables/dataTables.tableTools.css')  !!}
+        {!!  HTML::style('assets/css/datatables/dataTables.colVis.css')  !!}
+        {!!  HTML::style('assets/css/datatables/dataTables.colReorder.css')  !!}
     @endif
 
     @if(in_array('calendar',$assets))
-        {{ HTML::style('assets/css/fullcalendar.css') }}
+        {!!  HTML::style('assets/css/fullcalendar.css')  !!}
     @endif
 
-    {{ HTML::style('assets/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}
+    {!!  HTML::style('assets/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}
 
     <script> var public_path = "{{ URL::to('/'); }}/"; </script>
 </head>

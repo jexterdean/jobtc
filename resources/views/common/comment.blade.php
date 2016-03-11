@@ -4,16 +4,17 @@
             <h3 class="box-title">Comments</h3>
         </div>
         <div class="box-body">
-            {{ Form::open(['method' => 'POST','route' => ['comment.store'],'class' => 'comment-form']) }}
-            {{ Form::hidden('belongs_to',$belongs_to) }}
-            {{ Form::hidden('unique_id', $unique_id) }}
+            {!!  Form::open(['method' => 'POST','route' => ['comment.store'],'class' => 'comment-form'])  !!}
+            {!!  Form::hidden('belongs_to',$belongs_to)  !!}
+            {!!  Form::hidden('unique_id', $unique_id)  !!}
             <div class="form-group">
-                {{ Form::textarea('comment','',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Comment', 'tabindex' => '11'])}}
+                {!!  Form::textarea('comment','',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter
+                Comment', 'tabindex' => '11']) !!}
             </div>
             <div class="form-group">
-                {{ Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '12']) }}
+                {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '12'])  !!}
             </div>
-            {{ Form::close() }}
+            {!!  Form::close()  !!}
 
 
             @if(count($comments))
@@ -22,7 +23,7 @@
                     <div class="box-body chat" id="chat-box">
                         @foreach($comments as $comment)
                             <div class="item">
-                                <img src="{{ Helper::getAvatar($comment->username) }}" alt="user image" class="online"/>
+                                <img src="{{ \App\Helpers\Helper::getAvatar($comment->username) }}" alt="user image" class="online"/>
                                 <p class="message">
                                     <a href="#" class="name">
                                         <small class="text-muted pull-right"><i
@@ -33,11 +34,12 @@
                                     {{ $comment->comment}}
 
                                     @if(Entrust::hasRole('Admin') || Auth::user()->username == $comment->username)
-                                        {{ Form::open(array('route' => array('comment.destroy', $comment->comment_id), 'method' => 'delete')) }}
+                                        {!!  Form::open(array('route' => array('comment.destroy', $comment->comment_id)
+                                        , 'method' => 'delete'))  !!}
                                         <button type="submit" class="btn btn-danger btn-xs"><i class="icon-trash"></i>
                                             Delete
                                         </button>
-                                        {{ Form::close() }}
+                                        {!!   Form::close() !!}
                                     @endif
                                 </p>
                             </div>

@@ -3,7 +3,8 @@
     <h4 class="modal-title">Edit event</h4>
 </div>
 <div class="modal-body">
-    {{ Form::model($event,['method' => 'PATCH','route' => ['event.update',$event->event_id] ,'class' => 'form-horizontal event-form']) }}
+    {!! Form::model($event,['method' => 'PATCH','route' => ['event.update',$event->event_id] ,'class' =>
+    'form-horizontal event-form'])  !!}
     @include('event/partials/_form', ['buttonText' => 'Update'] )
-    {{ Form::close() }}
+    {!!  Form::close()  !!}
 </div>

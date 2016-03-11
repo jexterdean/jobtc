@@ -4,16 +4,17 @@
             <h3 class="box-title">Assign</h3>
         </div>
         <div class="box-body">
-            {{ Form::open(['method' => 'POST','route' => ['assigneduser.store'],'class' => 'assign-user-form']) }}
-            {{ Form::hidden('belongs_to',$belongs_to) }}
-            {{ Form::hidden('unique_id', $unique_id) }}
+            {!!  Form::open(['method' => 'POST','route' => ['assigneduser.store'],'class' => 'assign-user-form'])  !!}
+            {!!  Form::hidden('belongs_to',$belongs_to)  !!}
+            {!!  Form::hidden('unique_id', $unique_id)  !!}
             <div class="form-group">
-                {{ Form::select('username', [null=>'Please Select'] + $users, '', ['class' => 'form-control select2me', 'placeholder' => 'Select One', 'tabindex' =>'1'] ) }}
+                {!!  Form::select('username', [null=>'Please Select'] + $users, '', ['class' => 'form-control
+                select2me', 'placeholder' => 'Select One', 'tabindex' =>'1'] )  !!}
             </div>
             <div class="form-group">
-                {{ Form::submit('Add',['class' => 'btn btn-primary ']) }}
+                {!!  Form::submit('Add',['class' => 'btn btn-primary '])  !!}
             </div>
-            {{ Form::close() }}
+            {!!  Form::close()  !!}
 
 
             <table class="table table-striped table-bordered table-hover">
@@ -37,10 +38,11 @@
                             <td>{{ $assignedUser->username }}</td>
                             <td>{{ date("d M Y h:ia",strtotime($assignedUser->created_at)) }}</td>
                             <td>
-                                {{ Form::open(array('route' => array('assigneduser.destroy', $assignedUser->id), 'method' => 'delete')) }}
+                                {!!  Form::open(array('route' => array('assigneduser.destroy', $assignedUser->id),
+                                'method' => 'delete'))  !!}
                                 <button type="submit" class="btn btn-danger btn-xs"><i class="icon-trash"></i> Delete
                                 </button>
-                                {{ Form::close() }}
+                                {!!  Form::close()  !!}
                             </td>
                         </tr>
                     @endforeach

@@ -103,15 +103,16 @@
                                         @endif
                                         @if(Entrust::hasRole('Admin') || Entrust::hasRole('Staff'))
                                             <div class="row static-info">
-                                                {{ Form::open(['method' => 'POST','url' => 'updateProgress']) }}
+                                                {!!  Form::open(['method' => 'POST','url' => 'updateProgress'])  !!}
                                                 <div class="form-group">
                                                     <label class="col-md-5 name">Project Completion</label>
                                                     <div class="col-md-3 value">
-                                                        {{ Form::select('project_progress', $progress_option, isset($project->project_progress) ? $project->project_progress : '', ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] ) }}
+                                                        {!!  Form::select('project_progress', $progress_option, isset
+                                                        ($project->project_progress) ? $project->project_progress : '', ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] )  !!}
                                                     </div>
                                                 </div>
-                                                {{ Form::hidden('project_id',$project->project_id)}}
-                                                {{ Form::close() }}
+                                                {!!  Form::hidden('project_id',$project->project_id) !!}
+                                                {!!  Form::close()  !!}
                                             </div>
                                         @endif
 
@@ -141,19 +142,20 @@
                                         <h3 class="box-title">Project Timer</h3>
                                         <div class="box-tools pull-right">
                                             @if(count($timer_check))
-                                                {{ Form::open(['method' => 'POST','url' => 'endTimer','class' => 'form-horizontal']) }}
+                                                {!!  Form::open(['method' => 'POST','url' => 'endTimer','class' =>
+                                                'form-horizontal']) !!}
                                                 <button type="submit" class="btn btn-danger btn-sm">End Timer <i
                                                             class="fa fa-font"></i></button>
-                                                {{ Form::hidden('project_id',$project->project_id)}}
-                                                {{ Form::hidden('timer_id',$timer_check->timer_id) }}
-                                                {{ Form::close() }}
+                                                {!!  Form::hidden('project_id',$project->project_id) !!}
+                                                {!!  Form::hidden('timer_id',$timer_check->timer_id)  !!}
+                                                {!!  Form::close()  !!}
                                             @else
-                                                {{ Form::open(['method' => 'POST','url' => 'startTimer','class' => 'form-horizontal']) }}
+                                                {!!  Form::open(['method' => 'POST','url' => 'startTimer','class' =>
+                                                'form-horizontal'])  !!}
                                                 <button type="submit" class="btn btn-success btn-sm">Start Timer <i
                                                             class="fa fa-font"></i></button>
-                                                {{ Form::hidden('project_id',$project->project_id)}}
-                                                {{ Form::close() }}
-                                            @endif
+                                                {!!  Form::hidden('project_id',$project->project_id) !!}
+                                                {!!  Form::close()  !!}                                            @endif
                                         </div>
                                     </div>
                                     <div class="box-body">
@@ -186,12 +188,13 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            {{ Form::open(['method' => 'POST','url' => 'deleteTimer','class' => 'form-horizontal']) }}
+                                                            {!!  Form::open(['method' => 'POST','url' => 'deleteTimer',
+                                                            'class' => 'form-horizontal'])  !!}
                                                             <button type="submit" class="btn btn-danger btn-xs"><i
                                                                         class="icon-trash"></i> Delete
                                                             </button>
-                                                            {{ Form::hidden('timer_id',$timer->timer_id) }}
-                                                            {{ Form::close() }}
+                                                            {!! Form::hidden('timer_id',$timer->timer_id)  !!}
+                                                            {!!  Form::close()  !!}
                                                         </td>
                                                     </tr>
                                                 @endforeach

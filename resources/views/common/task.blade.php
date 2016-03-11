@@ -6,24 +6,28 @@
                     <h3 class="box-title">Add Task</h3>
                 </div>
                 <div class="box-body">
-                    {{ Form::open(['method' => 'POST','route' => ['task.store'],'class' => 'task-form']) }}
-                    {{ Form::hidden('belongs_to',$belongs_to) }}
-                    {{ Form::hidden('unique_id', $unique_id) }}
+                    {!!  Form::open(['method' => 'POST','route' => ['task.store'],'class' => 'task-form'])  !!}
+                    {!!  Form::hidden('belongs_to',$belongs_to)  !!}
+                    {!!  Form::hidden('unique_id', $unique_id)  !!}
                     <div class="form-group">
-                        {{ Form::input('text','task_title','',['class' => 'form-control', 'placeholder' => 'Enter Title', 'tabindex' => '1'])}}
+                        {!!  Form::input('text','task_title','',['class' => 'form-control', 'placeholder' => 'Enter
+                        Title', 'tabindex' => '1']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Description', 'tabindex' => '2'])}}
+                        {!!  Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control',
+                        'placeholder' => 'Enter Description', 'tabindex' => '2']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::input('text','due_date','',['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Enter Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true']) }}
+                        {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
+                        input-medium date-picker', 'placeholder' => 'Enter Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
                     </div>
                     @if(Entrust::hasRole('Admin'))
                         <div class="form-group">
-                            {{ Form::select('assign_username', [null=>'Assign to user'] + $assign_username, isset($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '3'] ) }}
+                            {!!  Form::select('assign_username', [null=>'Assign to user'] + $assign_username, isset
+                            ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '3'] )  !!}
                         </div>
                     @elseif(Entrust::hasRole('Staff'))
-                        {{ Form::hidden('assign_username',Auth::user()->username,['readonly' => true]) }}
+                        {!!  Form::hidden('assign_username',Auth::user()->username,['readonly' => true])  !!}
                     @endif
 
                     @if($belongs_to != 'general')
@@ -37,13 +41,13 @@
                             </div>
                         </div>
                     @else
-                        {{ Form::hidden('is_visible','no',['readonly' => true]) }}
+                        {!!  Form::hidden('is_visible','no',['readonly' => true]) !!}
                     @endif
 
                     <div class="form-group">
-                        {{ Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '5']) }}
+                        {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '5'])  !!}
                     </div>
-                    {{ Form::close() }}
+                    {!!  Form::close()  !!}
                 </div>
             </div>
         </div>
@@ -96,14 +100,15 @@
                                     <td>{{ date("d M Y",strtotime($task->due_date)) }}</td>
                                     <td>
                                         @if(!Entrust::hasRole('Client'))
-                                            {{ Form::open(['method' => 'POST','url' => 'updateTaskStatus','class' => 'form-horizontal']) }}
-                                            {{ Form::select('task_status', [
+                                            {!!  Form::open(['method' => 'POST','url' => 'updateTaskStatus','class' =>
+                                            'form-horizontal'])  !!}
+                                            {!!  Form::select('task_status', [
                                                 'pending' => 'Pending',
                                                 'progress' => 'Progress',
                                                 'completed' => 'Completed'
-                                            ], $task->task_status, ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] ) }}
-                                            {{ Form::hidden('task_id',$task->task_id)}}
-                                            {{ Form::close() }}
+                                            ], $task->task_status, ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] )  !!}
+                                            {!!  Form::hidden('task_id',$task->task_id) !!}
+                                            {!!  Form::close()  !!}
                                         @else
                                             {{ studly_case($task->task_status) }}
                                         @endif
@@ -114,10 +119,11 @@
                                             <a href="{{ url($task->belongs_to.'/'.$task->unique_id) }}"><i
                                                         class="fa fa-external-link"></i></a>
                                             <span class="hspacer"></span>
-                                            {{ Form::open(array('route' => array('task.destroy', $task->task_id), 'method' => 'delete')) }}
+                                            {!!  Form::open(array('route' => array('task.destroy', $task->task_id),
+                                            'method' => 'delete'))  !!}
                                             <button type="submit" class="btn btn-danger btn-sm"><i
                                                         class='fa fa-trash-o'></i></button>
-                                            {{ Form::close() }}
+                                            {!!  Form::close()  !!}
                                         </td>
                                     @endif
                                 </tr>

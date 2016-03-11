@@ -19,7 +19,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="user-header bg-light-blue">
-                                <img src="{{ Helper::getAvatar(Auth::user()->username) }}" class="img-circle"
+                                <img src="{{ \App\Helpers\Helper::getAvatar(Auth::user()->username) }}" class="img-circle"
                                      alt="User Image"/>
                                 <p>
                                     {{ Auth::user()->name }}

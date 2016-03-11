@@ -5,22 +5,25 @@
                 <h3 class="box-title">{{ studly_case($belongs_to) }} Attachments</h3>
             </div>
             <div class="box-body">
-                {{ Form::open(['files' => 'true', 'method' => 'POST','route' => ['attachment.store'],'class' => 'attachment-form']) }}
-                {{ Form::hidden('belongs_to',$belongs_to) }}
-                {{ Form::hidden('unique_id', $unique_id) }}
+                {!!  Form::open(['files' => 'true', 'method' => 'POST','route' => ['attachment.store'],'class' =>
+                'attachment-form'])  !!}
+                {!!  Form::hidden('belongs_to',$belongs_to)  !!}
+                {!!  Form::hidden('unique_id', $unique_id)  !!}
                 <div class="form-group">
-                    {{ Form::input('text','attachment_title','',['class' => 'form-control', 'placeholder' => 'Enter Title', 'tabindex' => '1'])}}
+                    {!!  Form::input('text','attachment_title','',['class' => 'form-control', 'placeholder' => 'Enter
+                    Title', 'tabindex' => '1']) !!}
                 </div>
                 <div class="form-group">
-                    {{ Form::textarea('attachment_description','',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Description', 'tabindex' => '2'])}}
+                    {!!  Form::textarea('attachment_description','',['size' => '30x3', 'class' => 'form-control',
+                    'placeholder' => 'Enter Description', 'tabindex' => '2']) !!}
                 </div>
                 <div class="form-group">
-                    {{ Form::input('file','file','')}}
+                    {!! Form::input('file','file','') !!}
                 </div>
                 <div class="form-group">
-                    {{ Form::submit('Add',['class' => 'btn btn-primary']) }}
+                    {!!  Form::submit('Add',['class' => 'btn btn-primary'])  !!}
                 </div>
-                {{ Form::close() }}
+                {!!  Form::close() !!}
             </div>
         </div>
     </div>
@@ -61,11 +64,12 @@
                                 </td>
                                 <td>
                                     @if(Entrust::hasRole('Admin') || Auth::user()->username == $comment->username)
-                                        {{ Form::open(array('route' => array('attachment.destroy', $attachment->attachment_id), 'method' => 'delete')) }}
+                                        {!!  Form::open(array('route' => array('attachment.destroy',
+                                        $attachment->attachment_id), 'method' => 'delete'))  !!}
                                         <button type="submit" class="btn btn-danger btn-xs"><i class="icon-trash"></i>
                                             Delete
                                         </button>
-                                        {{ Form::close() }}
+                                        {!!  Form::close()  !!}
                                     @endif
                                 </td>
                             </tr>

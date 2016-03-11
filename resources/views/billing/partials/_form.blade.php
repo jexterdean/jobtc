@@ -1,6 +1,6 @@
 <div class="form-body">
     <div class="form-group">
-        {!!  Form::label('ref_no','Ref No',['class' => 'col-md-3 control-label']) !!}
+        {!!   Form::label('ref_no','Ref No',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','ref_no',isset($billing->ref_no) ? $billing->ref_no : '',['class' =>
             'form-control', 'placeholder' => 'Enter Ref No', 'tabindex' => '1']) !!}

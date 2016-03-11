@@ -9,9 +9,9 @@
                 </div>
                 <div class="modal-body">
                     @if(Entrust::hasRole('Admin'))
-                        {{ Form::open(['route' => 'project.store','class' => 'form-horizontal project-form']) }}
+                        {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
                         @include('project/partials/_form')
-                        {{ Form::close() }}
+                        {!! Form::close()  !!}
                     @else
                         <div class='alert alert-danger alert-dismissable'>
                             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>

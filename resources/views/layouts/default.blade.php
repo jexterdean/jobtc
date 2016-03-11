@@ -10,7 +10,7 @@
     <aside class="right-side">
 
         <section class="content">
-            {{ Helper::showMessage() }}
+            {{ \App\Helpers\Helper::showMessage() }}
             @yield('content')
         </section>
     </aside>

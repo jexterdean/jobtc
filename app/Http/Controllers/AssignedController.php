@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use Validation;
 
 class AssignedController extends BaseController
 {
@@ -26,7 +27,8 @@ class AssignedController extends BaseController
     public function store()
     {
         $validation = Validator::make(Input::all(), [
-            'username' => 'required|unique:fp_assigned_user,username,null,username,belongs_to,' . Input::get('belongs_to') . ',unique_id,' . Input::get('unique_id')
+            'username' => 'required|unique:fp_assigned_user,username,null,username,belongs_to,' .
+                Input::get('belongs_to') . ',unique_id,' . Input::get('unique_id')
         ]);
         if ($validation->fails()) {
             return Redirect::back()->withInput()->withErrors($validation->messages());

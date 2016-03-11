@@ -3,16 +3,18 @@
 
     <div class="form-box" id="login-box">
         <div class="header">Forgot Password</div>
-        {{ Form::open(['url' => 'forgotPassword','class' => 'form-class', 'id' => 'forgotPassword-form'])}}
+        {!!  Form::open(['url' => 'forgotPassword','class' => 'form-class', 'id' => 'forgotPassword-form']) !!}
         <div class="body bg-gray">
 
-            {{ Helper::showMessage() }}
+            {{ \App\Helpers\Helper::showMessage() }}
 
             <div class="form-group">
-                {{ Form::text('username', '', array('tabindex' => '1', 'class' => 'form-control', 'placeholder' => 'Username', 'autocomplete' => 'off', 'required' => true)) }}
+                {!!  Form::text('username', '', array('tabindex' => '1', 'class' => 'form-control', 'placeholder' =>
+                'Username', 'autocomplete' => 'off', 'required' => true))  !!}
             </div>
             <div class="form-group">
-                {{ Form::text('email', '', array('tabindex' => '2', 'class' => 'form-control', 'placeholder' => 'Email', 'autocomplete' => 'off', 'required' => true)) }}
+                {!!  Form::text('email', '', array('tabindex' => '2', 'class' => 'form-control', 'placeholder' =>
+                'Email', 'autocomplete' => 'off', 'required' => true))  !!}
             </div>
         </div>
         <div class="footer">

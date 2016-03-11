@@ -8,45 +8,49 @@
                     <h4 class="modal-title">New Ticket</h4>
                 </div>
                 <div class="modal-body">
-                    {{ Form::open(['files' => 'true', 'route' => 'ticket.store','class' => 'form-horizontal ticket-form']) }}
+                    {!!  Form::open(['files' => 'true', 'route' => 'ticket.store','class' => 'form-horizontal
+                    ticket-form'])  !!}
                     <div class="form-body">
                         <div class="form-group">
-                            {{ Form::label('ticket_subject','Subject',['class' => 'col-md-3 control-label'])}}
+                            {!!  Form::label('ticket_subject','Subject',['class' => 'col-md-3 control-label']) !!}
                             <div class="col-md-9">
-                                {{ Form::input('text','ticket_subject',isset($ticket->ticket_subject) ? $ticket->ticket_subject : '',['class' => 'form-control', 'placeholder' => 'Enter Subject', 'tabindex' => '1'])}}
+                                {!!  Form::input('text','ticket_subject',isset($ticket->ticket_subject) ?
+                                $ticket->ticket_subject : '',['class' => 'form-control', 'placeholder' => 'Enter Subject', 'tabindex' => '1']) !!}
                             </div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('ticket_description','Description',['class' => 'col-md-3 control-label'])}}
+                            {!!  Form::label('ticket_description','Description',['class' => 'col-md-3 control-label']) !!}
                             <div class="col-md-9">
-                                {{ Form::textarea('ticket_description',isset($ticket->ticket_description) ? $ticket->ticket_description : '',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Description', 'tabindex' => '2'])}}
+                                {!!  Form::textarea('ticket_description',isset($ticket->ticket_description) ?
+                                $ticket->ticket_description : '',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Description', 'tabindex' => '2']) !!}
                             </div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('ticket_priority','Priority',['class' => 'col-md-3 control-label'])}}
+                            {!! Form::label('ticket_priority','Priority',['class' => 'col-md-3 control-label']) !!}
                             <div class="col-md-9">
-                                {{ Form::select('ticket_priority', [
+                                {!!  Form::select('ticket_priority', [
                                     null => 'Please select',
                                     'low' => 'Low',
                                     'medium' => 'Medium',
                                     'high' => 'High',
                                     'critical' => 'Critical'
-                                ], isset($ticket->ticket_priority) ? $ticket->ticket_priority : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '3'] ) }}
+                                ], isset($ticket->ticket_priority) ? $ticket->ticket_priority : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '3'] )  !!}
                             </div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('file','Select File',['class' => 'col-md-3 control-label'])}}
+                            {!!  Form::label('file','Select File',['class' => 'col-md-3 control-label']) !!}
                             <div class="col-md-9">
-                                {{ Form::input('file','file','')}}
+                                {!! Form::input('file','file','') !!}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-offset-3 col-md-9">
-                                {{ Form::submit(isset($buttonText) ? $buttonText : 'Send',['class' => 'btn btn-success', 'tabindex' => '5']) }}
+                                {!!  Form::submit(isset($buttonText) ? $buttonText : 'Send',['class' => 'btn
+                                btn-success', 'tabindex' => '5'])  !!}
                             </div>
                         </div>
                     </div>
-                    {{ Form::close() }}
+                    {!!  Form::close()  !!}
                 </div>
             </div>
         </div>

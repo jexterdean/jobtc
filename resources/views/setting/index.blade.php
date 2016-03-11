@@ -8,62 +8,74 @@
                     <h3 class="box-title">General Setting </h3>
                 </div>
                 @if(isset($setting->id))
-                    {{ Form::open(['files' => 'true', 'method' => 'PUT','route' => ['setting.update', isset($setting->id) ? $setting->id : ''],'class' => 'general-setting-form']) }}
+                    {!!  Form::open(['files' => 'true', 'method' => 'PUT','route' => ['setting.update', isset
+                    ($setting->id) ? $setting->id : ''],'class' => 'general-setting-form'])  !!}
                 @else
-                    {{ Form::open(['files' => 'true', 'method' => 'POST','route' => ['setting.store'],'class' => 'form-horizontal setting-form']) }}
+                    {!!  Form::open(['files' => 'true', 'method' => 'POST','route' => ['setting.store'],'class' =>
+                    'form-horizontal setting-form'])  !!}
                 @endif
                 <div class="box-body">
                     <div class="form-group">
-                        {{ Form::label('company_name','Company Name')}}
-                        {{ Form::input('text','company_name',isset($setting->company_name) ? $setting->company_name : '',['class' => 'form-control', 'placeholder' => 'Enter Company Name', 'tabindex' => '1'])}}
+                        {!!  Form::label('company_name','Company Name') !!}
+                        {!!  Form::input('text','company_name',isset($setting->company_name) ? $setting->company_name :
+                        '',['class' => 'form-control', 'placeholder' => 'Enter Company Name', 'tabindex' => '1']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('contact_person','Contact Person')}}
-                        {{ Form::input('text','contact_person',isset($setting->contact_person) ? $setting->contact_person : '',['class' => 'form-control', 'placeholder' => 'Enter Contact Person', 'tabindex' => '2'])}}
+                        {!!  Form::label('contact_person','Contact Person') !!}
+                        {!!  Form::input('text','contact_person',isset($setting->contact_person) ?
+                        $setting->contact_person : '',['class' => 'form-control', 'placeholder' => 'Enter Contact Person', 'tabindex' => '2']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('address','Address')}}
-                        {{ Form::textarea('address',isset($setting->address) ? $setting->address : '',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Contact Address', 'tabindex' => '3'])}}
+                        {!!  Form::label('address','Address') !!}
+                        {!!  Form::textarea('address',isset($setting->address) ? $setting->address : '',['size' =>
+                        '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Contact Address', 'tabindex' => '3']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('city','City')}}
-                        {{ Form::input('text','city',isset($setting->city) ? $setting->city : '',['class' => 'form-control', 'placeholder' => 'Enter City Name', 'tabindex' => '4'])}}
+                        {!!  Form::label('city','City') !!}
+                        {!!  Form::input('text','city',isset($setting->city) ? $setting->city : '',['class' =>
+                        'form-control', 'placeholder' => 'Enter City Name', 'tabindex' => '4']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('state','State')}}
-                        {{ Form::input('text','state',isset($setting->state) ? $setting->state : '',['class' => 'form-control', 'placeholder' => 'Enter State Name', 'tabindex' => '5'])}}
+                        {!!  Form::label('state','State') !!}
+                        {!!  Form::input('text','state',isset($setting->state) ? $setting->state : '',['class' =>
+                        'form-control', 'placeholder' => 'Enter State Name', 'tabindex' => '5']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('country_id','Country')}}
-                        {{ Form::select('country_id', [null=>'Please Select'] + $countries, isset($setting->country_id) ? $setting->country_id : '', ['class' => 'form-control input-large select2me', 'placeholder' => 'Select One', 'tabindex' => '6'] ) }}
+                        {!!  Form::label('country_id','Country') !!}
+                        {!!  Form::select('country_id', [null=>'Please Select'] + $countries, isset
+                        ($setting->country_id) ? $setting->country_id : '', ['class' => 'form-control input-large select2me', 'placeholder' => 'Select One', 'tabindex' => '6'] )  !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('zipcode','Zip Code')}}
-                        {{ Form::input('number','zipcode',isset($setting->zipcode) ? $setting->zipcode : '',['class' => 'form-control', 'placeholder' => 'Enter Zip Code', 'tabindex' => '7'])}}
+                        {!!  Form::label('zipcode','Zip Code') !!}
+                        {!!  Form::input('number','zipcode',isset($setting->zipcode) ? $setting->zipcode : '',['class'
+                        => 'form-control', 'placeholder' => 'Enter Zip Code', 'tabindex' => '7']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('email','Email')}}
-                        {{ Form::input('email','email',isset($setting->email) ? $setting->email : '',['class' => 'form-control', 'placeholder' => 'Enter Email', 'tabindex' => '8'])}}
+                        {!!  Form::label('email','Email') !!}
+                        {!!  Form::input('email','email',isset($setting->email) ? $setting->email : '',['class' =>
+                        'form-control', 'placeholder' => 'Enter Email', 'tabindex' => '8']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('phone','Phone')}}
-                        {{ Form::input('text','phone',isset($setting->phone) ? $setting->phone : '',['class' => 'form-control', 'placeholder' => 'Enter Phone', 'tabindex' => '9'])}}
+                        {!!  Form::label('phone','Phone') !!}
+                        {!!  Form::input('text','phone',isset($setting->phone) ? $setting->phone : '',['class' =>
+                        'form-control', 'placeholder' => 'Enter Phone', 'tabindex' => '9']) !!}
                     </div>
                     <div class="form-group">
                         <label>
-                            {{ Form::checkbox('remove_image', 'Yes', false, ['class' => 'form-control', 'id' => 'remove_image', 'tabindex' => '10'])}}
+                            {!!  Form::checkbox('remove_image', 'Yes', false, ['class' => 'form-control', 'id' =>
+                            'remove_image', 'tabindex' => '10']) !!}
                             Remove Logo
                         </label>
                     </div>
                     <div class="form-group" id="div_avatar">
-                        {{ Form::label('file','Avatar')}}
-                        {{ Form::input('file','file','')}}
+                        {!!  Form::label('file','Avatar') !!}
+                        {!!  Form::input('file','file','') !!}
                     </div>
                 </div>
                 <div class="box-footer">
-                    {{ Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '13']) }}
+                    {!!   Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '13']) !!}
                 </div>
-                {{ Form::close() }}
+                {!!  Form::close()  !!}
             </div>
         </div>
         <div class="col-md-6">
@@ -71,16 +83,18 @@
                 <div class="box-header">
                     <h3 class="box-title">System Setting </h3>
                 </div>
-                {{ Form::open(['method' => 'PUT','route' => ['setting.update', isset($setting->id) ? $setting->id : ''],'class' => 'system-setting-form']) }}
+                {!!  Form::open(['method' => 'PUT','route' => ['setting.update', isset($setting->id) ? $setting->id :
+                ''],'class' => 'system-setting-form'])  !!}
                 <div class="box-body">
                     <div class="form-group">
-                        {{ Form::label('allowed_upload_file','Allowed upload file')}}
-                        {{ Form::input('text','allowed_upload_file',isset($setting->allowed_upload_file) ? $setting->allowed_upload_file : '',['class' => 'form-control', 'placeholder' => 'Enter File Extensions'])}}
+                        {!!  Form::label('allowed_upload_file','Allowed upload file') !!}
+                        {!!  Form::input('text','allowed_upload_file',isset($setting->allowed_upload_file) ?
+                        $setting->allowed_upload_file : '',['class' => 'form-control', 'placeholder' => 'Enter File Extensions']) !!}
                         <span class="help-block">Separated by comma operator (,) </span>
                     </div>
                     <div class="form-group">
-                        {{ Form::label('default_language','Default Language')}}
-                        {{Form::select('default_language',[
+                        {!!  Form::label('default_language','Default Language') !!}
+                        {!! Form::select('default_language',[
                                 'en'=>'English',
                                 'fr'=>'French',
                                 'du'=>'Dutch',
@@ -88,33 +102,38 @@
                                 'it'=>'Italian',
                                 'rs'=>'Russian',
                                 'sp'=>'Spanish'
-                                ],$setting->default_language,['class' => 'form-control', 'placeholder' => 'Select One', 'tabindex' => '14'])}}
+                                ],$setting->default_language,['class' => 'form-control', 'placeholder' => 'Select One', 'tabindex' => '14']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('timezone_id','Timezone')}}
-                        {{ Form::select('timezone_id', [null=>'Please Select'] + $timezone, isset($setting->timezone_id) ? $setting->timezone_id : '', ['class' => 'form-control input-large select2me', 'placeholder' => 'Select One', 'tabindex' => '15'] ) }}
+                        {!!  Form::label('timezone_id','Timezone') !!}
+                        {!!  Form::select('timezone_id', [null=>'Please Select'] + $timezone, isset
+                        ($setting->timezone_id) ? $setting->timezone_id : '', ['class' => 'form-control input-large select2me', 'placeholder' => 'Select One', 'tabindex' => '15'] )  !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('allowed_upload_max_size','Allowed file max size')}}
-                        {{ Form::input('text','allowed_upload_max_size',isset($setting->allowed_upload_max_size) ? $setting->allowed_upload_max_size : '',['class' => 'form-control', 'placeholder' => 'Enter File Max Size', 'tabindex' => '16'])}}
+                        {!!  Form::label('allowed_upload_max_size','Allowed file max size') !!}
+                        {!!  Form::input('text','allowed_upload_max_size',isset($setting->allowed_upload_max_size) ?
+                        $setting->allowed_upload_max_size : '',['class' => 'form-control', 'placeholder' => 'Enter File Max Size', 'tabindex' => '16']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('default_currency','Default Currency')}}
-                        {{ Form::input('text','default_currency',isset($setting->default_currency) ? $setting->default_currency : '',['class' => 'form-control', 'placeholder' => 'Enter Default Currency', 'tabindex' => '17'])}}
+                        {!!  Form::label('default_currency','Default Currency') !!}
+                        {!!  Form::input('text','default_currency',isset($setting->default_currency) ?
+                        $setting->default_currency : '',['class' => 'form-control', 'placeholder' => 'Enter Default Currency', 'tabindex' => '17']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('default_tax','Default Tax')}}
-                        {{ Form::input('number','default_tax',isset($setting->default_tax) ? round($setting->default_tax,2) : '',['class' => 'form-control', 'placeholder' => 'Enter Default Tax', 'tabindex' => '18'])}}
+                        {!!  Form::label('default_tax','Default Tax') !!}
+                        {!!  Form::input('number','default_tax',isset($setting->default_tax) ? round
+                        ($setting->default_tax,2) : '',['class' => 'form-control', 'placeholder' => 'Enter Default Tax', 'tabindex' => '18']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('default_discount','Default Discount')}}
-                        {{ Form::input('number','default_discount',isset($setting->default_discount) ? round($setting->default_discount,2) : '',['class' => 'form-control', 'placeholder' => 'Enter Default Discount', 'tabindex' => '19'])}}
+                        {!!  Form::label('default_discount','Default Discount') !!}
+                        {!!  Form::input('number','default_discount',isset($setting->default_discount) ? round
+                        ($setting->default_discount,2) : '',['class' => 'form-control', 'placeholder' => 'Enter Default Discount', 'tabindex' => '19']) !!}
                     </div>
                 </div>
                 <div class="box-footer">
-                    {{ Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '20']) }}
+                    {!!  Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '20'])  !!}
                 </div>
-                {{ Form::close() }}
+                {!!  Form::close()  !!}
             </div>
         </div>
     </div>

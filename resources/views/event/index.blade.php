@@ -8,9 +8,9 @@
                     <h4 class="modal-title">Add Event</h4>
                 </div>
                 <div class="modal-body">
-                    {{ Form::open(['route' => 'event.store','class' => 'form-horizontal user-form']) }}
+                    {!!  Form::open(['route' => 'event.store','class' => 'form-horizontal user-form'])  !!}
                     @include('event/partials/_form')
-                    {{ Form::close() }}
+                    {!!  Form::close()  !!}
                 </div>
             </div>
         </div>

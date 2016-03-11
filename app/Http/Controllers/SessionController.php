@@ -6,10 +6,11 @@ use \Auth;
 use \View;
 use Illuminate\Http\Request;
 use \Form;
-
+use \Input;
+use \Redirect;
 class SessionController extends BaseController
 {
-    public function create()
+    public function create( Request $request)
     {
         if (Auth::check()) return Redirect::to('dashboard');
 
@@ -18,7 +19,7 @@ class SessionController extends BaseController
 
     public function store()
     {
-        if (Auth::attempt(Input::only('username', 'password'), Request::get('remember'))) {
+        if (Auth::attempt(Input::only('username', 'password'), Input::get('remember'))) {
             if (Auth::user()->user_status != 'Active') {
                 $name = Auth::user()->name;
                 Auth::logout();

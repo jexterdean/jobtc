@@ -144,11 +144,11 @@
                                                         <td>{{ $billing->currency }} {{ round($item->unit_price,2) }}</td>
                                                         <td>{{ round($item->item_quantity*$item->unit_price,2) }}</td>
                                                         <td>
-                                                            {{ Form::open(array('route' => array('item.destroy', $item->item_id), 'method' => 'delete')) }}
+                                                            {!! Form::open(array('route' => array('item.destroy', $item->item_id), 'method' => 'delete')) !!}
                                                             <button type="submit" class="btn btn-danger btn-xs"><i
                                                                         class="icon-trash"></i> Delete
                                                             </button>
-                                                            {{ Form::close() }}
+                                                            {!!  Form::close()  !!}
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -157,25 +157,29 @@
                                         </table>
 
                                         <br/>
-                                        {{ Form::open(['route' => 'item.store','class' => 'item-form']) }}
+                                        {!!  Form::open(['route' => 'item.store','class' => 'item-form']) !!}
                                         <div class="form-group">
-                                            {{ Form::input('text','item_name','',['class' => 'form-control', 'placeholder' => 'Enter Item Name'])}}
+                                            {!!  Form::input('text','item_name','',['class' => 'form-control',
+                                            'placeholder' => 'Enter Item Name']) !!}
                                         </div>
                                         <div class="form-group">
-                                            {{ Form::input('number','item_quantity','',['class' => 'form-control', 'placeholder' => 'Enter Item Quantity', 'step' => '.01'])}}
+                                            {!!  Form::input('number','item_quantity','',['class' => 'form-control',
+                                            'placeholder' => 'Enter Item Quantity', 'step' => '.01'])  !!}
                                         </div>
                                         <div class="form-group">
-                                            {{ Form::input('number','unit_price','',['class' => 'form-control', 'placeholder' => 'Enter Unit Price', 'step' => '.01'])}}
+                                            {!!  Form::input('number','unit_price','',['class' => 'form-control',
+                                            'placeholder' => 'Enter Unit Price', 'step' => '.01']) !!}
                                         </div>
                                         <div class="form-group">
-                                            {{ Form::textarea('item_description','',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Item Description'])}}
+                                            {!!  Form::textarea('item_description','',['size' => '30x3', 'class' =>
+                                            'form-control', 'placeholder' => 'Enter Item Description']) !!}
                                         </div>
                                         <div class="form-group">
-                                            {{ Form::hidden('billing_id',$billing->billing_id)}}
-                                            {{ Form::hidden('billing_type',$billing->billing_type)}}
-                                            {{ Form::submit('Add',['class' => 'btn btn-primary']) }}
+                                            {!!  Form::hidden('billing_id',$billing->billing_id) !!}
+                                            {!! Form::hidden('billing_type',$billing->billing_type) !!}
+                                            {!! Form::submit('Add',['class' => 'btn btn-primary'])  !!}
                                         </div>
-                                        {{ Form::close() }}
+                                        {!!  Form::close()  !!}
 
                                     </div>
                                 </div>
@@ -196,26 +200,31 @@
                                             <h3 class="box-title">Make Payment</h3>
                                         </div>
                                         <div class="box-body">
-                                            {{ Form::open(['method' => 'POST','route' => ['payment.store'],'class' => 'payment-form']) }}
+                                            {!! Form::open(['method' => 'POST','route' => ['payment.store'],'class' =>
+                                            'payment-form'])  !!}
                                             <div class="form-body">
                                                 <div class="form-group">
-                                                    {{ Form::input('number','payment_amount','',['class' => 'form-control', 'placeholder' => 'Enter Amount', 'step' => '.01'])}}
+                                                    {!!  Form::input('number','payment_amount','',['class' =>
+                                                    'form-control', 'placeholder' => 'Enter Amount', 'step' => '.01'])  !!}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ Form::textarea('payment_notes','',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Description'])}}
+                                                    {!!  Form::textarea('payment_notes','',['size' => '30x3', 'class'
+                                                    => 'form-control', 'placeholder' => 'Enter Description'])  !!}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ Form::input('text','payment_date','',['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Enter Payment Date', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true']) }}
+                                                    {!!  Form::input('text','payment_date','',['class' => 'form-control
+                                                    form-control-inline input-medium date-picker', 'placeholder' => 'Enter Payment Date', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ Form::select('payment_type', ['cash' => 'Cash' ,'bank' => 'Bank'], '', ['class' => 'form-control', 'placeholder' => 'Payment To'] ) }}
+                                                    {!!  Form::select('payment_type', ['cash' => 'Cash' ,'bank' =>
+                                                    'Bank'], '', ['class' => 'form-control', 'placeholder' => 'Payment To'] )  !!}
                                                 </div>
                                                 <div class="form-group">
-                                                    {{ Form::submit('Add',['class' => 'btn btn-primary']) }}
-                                                    {{ Form::hidden('billing_id',$billing->billing_id) }}
+                                                    {!!  Form::submit('Add',['class' => 'btn btn-primary'])  !!}
+                                                    {!!  Form::hidden('billing_id',$billing->billing_id)  !!}
                                                 </div>
                                             </div>
-                                            {{ Form::close() }}
+                                            {!!  Form::close()  !!}
                                         </div>
                                     </div>
                                 </div>
@@ -258,11 +267,12 @@
                                                             <td>{{ studly_case($payment->payment_type) }}</td>
                                                             <td>{{ $payment->payment_notes }}</td>
                                                             <td>
-                                                                {{ Form::open(array('route' => array('payment.destroy', $payment->payment_id), 'method' => 'delete')) }}
+                                                                {!!  Form::open(array('route' => array('payment
+                                                                .destroy', $payment->payment_id), 'method' => 'delete'))  !!}
                                                                 <button type="submit" class="btn btn-danger btn-xs"><i
                                                                             class="icon-trash"></i> Delete
                                                                 </button>
-                                                                {{ Form::close() }}
+                                                                {!! Form::close()  !!}
                                                             </td>
                                                         </tr>
                                                     @endforeach

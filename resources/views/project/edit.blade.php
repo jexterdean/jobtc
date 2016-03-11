@@ -4,9 +4,10 @@
 </div>
 <div class="modal-body">
     @if(Entrust::hasRole('Admin'))
-        {{ Form::model($project,['method' => 'PATCH','route' => ['project.update',$project->project_id] ,'class' => 'form-horizontal project-form']) }}
+        {!! Form::model($project,['method' => 'PATCH','route' => ['project.update',$project->project_id] ,'class' =>
+        'form-horizontal project-form'])  !!}
         @include('project/partials/_form', ['buttonText' => 'Update Project'] )
-        {{ Form::close() }}
+        {!!  Form::close()  !!}
     @else
         <div class='alert alert-danger alert-dismissable'>
             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>

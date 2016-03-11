@@ -78,16 +78,17 @@
                                                 Status
                                             </div>
                                             <div class="col-md-7 value">
-                                                {{ Form::open(['method' => 'POST','url' => 'updateBugStatus','class' => 'form-horizontal']) }}
-                                                {{ Form::select('bug_status', [
+                                                {!! Form::open(['method' => 'POST','url' => 'updateBugStatus','class'
+                                                => 'form-horizontal'])  !!}
+                                                {!!  Form::select('bug_status', [
                                                    null => 'Please select',
                                                    'unconfirmed' => 'Unconfirmed',
                                                    'confirmed' => 'Confirmed',
                                                    'progress' => 'Progress',
                                                    'resolved' => 'Resolved'
-                                                ], isset($bug->bug_status) ? $bug->bug_status : '', ['class' => 'form-control select2me', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] ) }}
-                                                {{ Form::hidden('bug_id',$bug->bug_id)}}
-                                                {{ Form::close() }}
+                                                ], isset($bug->bug_status) ? $bug->bug_status : '', ['class' => 'form-control select2me', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] )  !!}
+                                                {!!  Form::hidden('bug_id',$bug->bug_id) !!}
+                                                {!!  Form::close()  !!}
                                             </div>
                                         </div>
 

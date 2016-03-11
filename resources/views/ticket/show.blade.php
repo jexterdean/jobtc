@@ -61,15 +61,16 @@
                                             </div>
                                             <div class="col-md-7 value">
                                                 @if(!Entrust::hasRole('Client'))
-                                                    {{ Form::open(['method' => 'POST','url' => 'updateTicketStatus','class' => 'form-horizontal']) }}
-                                                    {{ Form::select('ticket_status', [
+                                                    {!!  Form::open(['method' => 'POST','url' => 'updateTicketStatus',
+                                                    'class' => 'form-horizontal'])  !!}
+                                                    {!!  Form::select('ticket_status', [
                                                        'open' => 'Open',
                                                        'close' => 'Close'
-                                                    ], isset($ticket->ticket_status) ? $ticket->ticket_status : '', ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] ) }}
-                                                    {{ Form::hidden('ticket_id',$ticket->ticket_id)}}
-                                                    {{ Form::close() }}
+                                                    ], isset($ticket->ticket_status) ? $ticket->ticket_status : '', ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] )  !!}
+                                                    {!!  Form::hidden('ticket_id',$ticket->ticket_id) !!}
+                                                    {!!  Form::close()  !!}
                                                 @else
-                                                    {{ studly_case($ticket->ticket_status) }}
+                                                    {!!  studly_case($ticket->ticket_status) !!}
                                                 @endif
                                             </div>
                                         </div>

@@ -15,7 +15,7 @@
                             <div class="box-body chat" id="chat-box">
                                 @foreach($inbox as $inbox_message)
                                     <div class="item">
-                                        <img src="{{ Helper::getAvatar($inbox_message->from_username) }}"
+                                        <img src="{{ \App\Helpers\Helper::getAvatar($inbox_message->from_username) }}"
                                              alt="user image" class="online"/>
                                         <p class="message">
                                             <a href="#" class="name">
@@ -58,7 +58,7 @@
                             <div class="box-body chat" id="chat-box">
                                 @foreach($sent as $sent_message)
                                     <div class="item">
-                                        <img src="{{ Helper::getAvatar($sent_message->to_username) }}" alt="user image"
+                                        <img src="{{ \App\Helpers\Helper::getAvatar($sent_message->to_username) }}" alt="user image"
                                              class="online"/>
                                         <p class="message">
                                             <a href="#" class="name">
@@ -105,11 +105,11 @@
                 <div class="box-header">
                     <h3 class="box-title">Send Message</h3>
                 </div>
-                {{ Form::open(['files' => 'true', 'route' => 'message.store','class' => 'message-form']) }}
+                {!!  Form::open(['files' => 'true', 'route' => 'message.store','class' => 'message-form'])  !!}
                 <div class="box-body">
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="{{ Helper::getAvatar(Auth::user()->username) }}" class="img-circle"
+                            <img src="{{ \App\Helpers\Helper::getAvatar(Auth::user()->username) }}" class="img-circle"
                                  alt="User Image"/>
                         </div>
                         <div class="pull-left info">
@@ -117,22 +117,25 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        {{ Form::select('to_username', [null=>'Message to'] + $users, '', ['class' => 'form-control', 'placeholder' => 'Select One', 'tabindex' => '1'] ) }}
+                        {!!  Form::select('to_username', [null=>'Message to'] + $users, '', ['class' => 'form-control',
+                        'placeholder' => 'Select One', 'tabindex' => '1'] )  !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::input('text','message_subject','',['class' => 'form-control', 'placeholder' => 'Enter Subject', 'tabindex' => '2'])}}
+                        {!!  Form::input('text','message_subject','',['class' => 'form-control', 'placeholder' =>
+                        'Enter Subject', 'tabindex' => '2']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::textarea('message_content','',['size' => '30x8', 'class' => 'form-control textarea', 'placeholder' => 'Enter Message Content', 'tabindex' => '3'])}}
+                        {!!  Form::textarea('message_content','',['size' => '30x8', 'class' => 'form-control textarea',
+                        'placeholder' => 'Enter Message Content', 'tabindex' => '3']) !!}
                     </div>
                     <div class="form-group">
-                        {{ Form::input('file','file','')}}
+                        {!!  Form::input('file','file','') !!}
                     </div>
                 </div>
                 <div class="box-footer">
-                    {{ Form::submit('Send',['class' => 'btn btn-primary', 'tabindex' => '20']) }}
+                    {!!  Form::submit('Send',['class' => 'btn btn-primary', 'tabindex' => '20'])  !!}
                 </div>
-                {{ Form::close() }}
+                {!!  Form::close()  !!}
             </div>
         </div>
     </div>
