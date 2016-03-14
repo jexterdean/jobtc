@@ -14,6 +14,8 @@ Route::group(['middleware' => 'guest'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
 
+    echo Entrust::hasRole('Admin')? 'yes': 'sorry';
+    die();
     if (Entrust::hasRole('Admin')) {
         Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
             ->where('billing_type', 'invoice|estimate');
