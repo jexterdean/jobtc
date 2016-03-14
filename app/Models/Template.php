@@ -10,6 +10,6 @@ class Template extends Model
     protected $fillable = ['template_id', 'template_subject', 'template_content'];
 
     protected $primaryKey = 'template_id';
-    protected $table = 'fp_template';
+    protected $table = 'template';
 
 }

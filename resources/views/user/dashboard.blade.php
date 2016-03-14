@@ -71,16 +71,17 @@
                         @if($payable->totalSales>0)
                             <input type="text" class="knob" data-readonly="true"
                                    value="{{ round(100-(($paid->totalPaid/$payable->totalSales)*100),2) }}"
-                                   data-width="120" data-height="120" data-fgColor="{{ Helper::getRandomHexColor() }}"/>
+                                   data-width="120" data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor
+                                   () }}"/>
                         @else
                             <input type="text" class="knob" data-readonly="true" value="0" data-width="120"
-                                   data-height="120" data-fgColor="{{ Helper::getRandomHexColor() }}"/>
+                                   data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor() }}"/>
                         @endif
                         <div class="knob-label">Percentage Amount Due</div>
                     </div>
                     <div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">
                         <input type="text" class="knob" data-readonly="true" value="{{ $inCompletProjects }}"
-                               data-width="120" data-height="120" data-fgColor="{{ Helper::getRandomHexColor() }}"/>
+                               data-width="120" data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor() }}"/>
                         <div class="knob-label">Pending Projects</div>
                     </div>
                 </div>
@@ -337,7 +338,7 @@
     foreach ($events as $event) {
         $start_date = date("Y-m-d", strtotime($event->start_date));
         $end_date = date("Y-m-d", strtotime($event->end_date));
-        $color = Helper::getRandomHexColor();
+        $color = \App\Helpers\Helper::getRandomHexColor();
         $EVENTS[] = "{ title:'$event->event_title', start:'$start_date',end:'$end_date',color:'$color',allDay: true }";
     }
     $EVENTS = implode(",", $EVENTS);

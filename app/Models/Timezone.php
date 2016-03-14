@@ -10,6 +10,6 @@ class Timezone extends Model
     protected $fillable = ['timezone_id', 'timezone_name'];
 
     protected $primaryKey = 'timezone_id';
-    protected $table = 'fp_timezone';
+    protected $table = 'timezone';
 
 }

@@ -6,5 +6,5 @@ use Zizaco\Entrust\EntrustRole;
 
 class Role extends EntrustRole
 {
-    protected $table = 'fp_roles';
+    protected $table = 'roles';
 }

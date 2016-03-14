@@ -2,7 +2,7 @@
 namespace App\Helpers;
 
 use Session;
-
+use DB;
 class Helper
 {
     public static function showMessage()
@@ -46,7 +46,7 @@ class Helper
 
     public static function getAvatar($username)
     {
-        $user = DB::table('fp_user')->where('username', '=', $username)->first();
+        $user = DB::table('user')->where('username', '=', $username)->first();
         if (isset($user->user_avatar))
             $url = 'assets/user/' . $user->user_avatar;
         else

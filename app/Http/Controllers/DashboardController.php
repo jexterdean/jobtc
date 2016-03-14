@@ -2,6 +2,21 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use \Auth;
+use \View;
+use \Form;
+use \Input;
+use \Redirect;
+use \Entrust;
+use \DB;
+use App\Models\Client;
+use App\Models\User;
+use App\Models\Events;
+use App\Models\Bug;
+use App\Models\Project;
+use App\Models\Ticket;
+use App\Models\Task;
+use App\Models\Billing;
 
 class DashboardController extends BaseController
 {
@@ -24,13 +39,13 @@ class DashboardController extends BaseController
             $invoice = Billing::where('billing_type', '=', 'invoice')
                 ->get();
 
-            $payable = DB::table('fp_item')
-                ->join('fp_billing', 'fp_billing.billing_id', '=', 'fp_item.billing_id')
+            $payable = DB::table('item')
+                ->join('billing', 'billing.billing_id', '=', 'item.billing_id')
                 ->select(DB::raw('sum(item_quantity*unit_price) AS totalSales'))
                 ->where('billing_type', '=', 'invoice')
                 ->first();
 
-            $paid = DB::table('fp_payment')
+            $paid = DB::table('payment')
                 ->select(DB::raw('sum(payment_amount) AS totalPaid'))
                 ->first();
 
@@ -75,45 +90,45 @@ class DashboardController extends BaseController
             ];
         } elseif (Entrust::hasRole('Staff')) {
 
-            $projects = DB::table('fp_project')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_project.project_id')
+            $projects = DB::table('project')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
                 ->where('username', '=', Auth::user()->username)
                 ->where('project_progress', '!=', '100')
                 ->get();
 
-            $total_projects = DB::table('fp_project')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_project.project_id')
+            $total_projects = DB::table('project')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
                 ->where('project_progress', '=', '100')
                 ->where('username', '=', Auth::user()->username)
                 ->get();
 
-            $bugs = DB::table('fp_bug')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_bug.bug_id')
+            $bugs = DB::table('bug')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'bug.bug_id')
                 ->where('belongs_to', '=', 'bug')
                 ->where('bug_status', '!=', 'resolved')
                 ->where('username', '=', Auth::user()->username)
                 ->get();
 
-            $total_bugs = DB::table('fp_bug')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_bug.bug_id')
+            $total_bugs = DB::table('bug')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'bug.bug_id')
                 ->where('belongs_to', '=', 'bug')
                 ->where('bug_status', '=', 'resolved')
                 ->where('username', '=', Auth::user()->username)
                 ->get();
 
-            $tickets = DB::table('fp_ticket')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_ticket.ticket_id')
+            $tickets = DB::table('ticket')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
                 ->where('belongs_to', '=', 'ticket')
-                ->where('fp_assigned_user.username', '=', Auth::user()->username)
+                ->where('assigned_user.username', '=', Auth::user()->username)
                 ->where('ticket_status', '=', 'open')
                 ->get();
 
-            $total_tickets = DB::table('fp_ticket')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_ticket.ticket_id')
+            $total_tickets = DB::table('ticket')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
                 ->where('belongs_to', '=', 'ticket')
-                ->where('fp_assigned_user.username', '=', Auth::user()->username)
+                ->where('assigned_user.username', '=', Auth::user()->username)
                 ->where('ticket_status', '=', 'close')
                 ->get();
 
@@ -135,30 +150,30 @@ class DashboardController extends BaseController
 
         } elseif (Entrust::hasRole('Client')) {
 
-            $projects = DB::table('fp_project')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
+            $projects = DB::table('project')
+                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->where('project_progress', '!=', '100')
                 ->get();
 
-            $total_projects = DB::table('fp_project')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
+            $total_projects = DB::table('project')
+                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->where('project_progress', '=', '100')
                 ->get();
 
-            $bugs = DB::table('fp_bug')
-                ->join('fp_project', 'fp_project.project_id', '=', 'fp_bug.project_id')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
+            $bugs = DB::table('bug')
+                ->join('project', 'project.project_id', '=', 'bug.project_id')
+                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('bug_status', '!=', 'resolved')
-                ->where('fp_user.user_id', '=', Auth::user()->user_id)
+                ->where('user.user_id', '=', Auth::user()->user_id)
                 ->get();
 
-            $total_bugs = DB::table('fp_bug')
-                ->join('fp_project', 'fp_project.project_id', '=', 'fp_bug.project_id')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
+            $total_bugs = DB::table('bug')
+                ->join('project', 'project.project_id', '=', 'bug.project_id')
+                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('bug_status', '=', 'resolved')
-                ->where('fp_user.user_id', '=', Auth::user()->user_id)
+                ->where('user.user_id', '=', Auth::user()->user_id)
                 ->get();
 
             $tickets = Ticket::where('username', '=', Auth::user()->username)

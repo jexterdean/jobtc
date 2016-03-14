@@ -23,7 +23,7 @@ class User extends Model implements
         'email', 'phone', 'user_status', 'user_status_detail', 'user_avatar'];
 
     protected $primaryKey = 'user_id';
-    protected $table = 'fp_user';
+    protected $table = 'user';
 
     protected $hidden = array('password', 'remember_token');
 

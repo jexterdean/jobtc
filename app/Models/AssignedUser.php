@@ -15,6 +15,6 @@ class AssignedUser extends Model
 
     protected $fillable = ['id', 'belongs_to', 'unique_id', 'username'];
     protected $primaryKey = 'id';
-    protected $table = 'fp_assigned_user';
+    protected $table = 'assigned_user';
 
 }

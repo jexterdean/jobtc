@@ -71,13 +71,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('bug/{bug_id}/delete', 'BugController@delete');
     Route::get('ticket/{ticket_id}/delete', 'TicketController@delete');
     Route::get('profile', function () {
-        return View::make('user.profile');
+        return View::make('user.profile',['assets'=> []]);
     });
     Route::get('docs', function () {
-        return View::make('docs.docs');
+        return View::make('docs.docs',['assets'=> []]);
     });
     Route::get('about', function () {
-        return View::make('about.about');
+        return View::make('about.about',['assets'=>[]]);
     });
 
 

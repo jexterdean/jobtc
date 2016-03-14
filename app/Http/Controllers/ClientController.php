@@ -4,6 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 
+use App\Models\Country;
+use App\Models\Client;
+use App\Models\Ticket;
+
+use Entrust;
+use View;
+use Redirect;
+use Validator;
+use DB;
+use Input;
 class ClientController extends BaseController
 {
 

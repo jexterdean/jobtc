@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
+use Illuminate\Http\Request;
 use \Auth;
 use \View;
-use Illuminate\Http\Request;
 use \Form;
 use \Input;
 use \Redirect;

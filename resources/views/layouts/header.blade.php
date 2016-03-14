@@ -1,7 +1,7 @@
 @if (Auth::check())
     <header class="header">
         <a href="{{ url('/') }}" class="logo">
-            Freelance Plus
+            Tom's PM App
         </a>
         <nav class="navbar navbar-static-top" role="navigation">
             <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">

@@ -19,6 +19,6 @@ class Events extends Model
     ];
 
     protected $primaryKey = 'event_id';
-    protected $table = 'fp_events';
+    protected $table = 'events';
 
 }
