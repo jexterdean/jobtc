@@ -2,23 +2,39 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
+use Illuminate\Http\Request;
+use App\Models\Project;
+use App\Models\User;
+use App\Models\Client;
+use App\Models\AssignedUser;
+use App\Models\Note;
+use App\Models\Attachment;
+use App\Models\Task;
+use App\Models\Timer;
+
+use \DB;
+use \Auth;
+use \View;
+use \Validator;
+use \Input;
+use \Redirect;
 
 class ProjectController extends BaseController
 {
 
-    public function index()
+    public function index(Request $request)
     {
 
-        if (Entrust::hasRole('Admin'))
+        if ( parent::userHasRole('admin'))
             $projects = Project::all();
-        elseif (Entrust::hasRole('Client')) {
-            $projects = DB::table('fp_project')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
+        elseif (parent::userHasRole('Client')) {
+            $projects = DB::table('project')
+                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->get();
-        } elseif (Entrust::hasRole('Staff')) {
-            $projects = DB::table('fp_project')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_project.project_id')
+        } elseif (parent::userHasRole('Staff')) {
+            $projects = DB::table('project')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
                 ->where('username', '=', Auth::user()->username)
                 ->get();
@@ -29,7 +45,8 @@ class ProjectController extends BaseController
             ->lists('name', 'username');
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+            ->lists('company_name', 'client_id')
+        ->toArray();
 
         $assets = ['table', 'datepicker'];
 
@@ -44,17 +61,18 @@ class ProjectController extends BaseController
     public function show($project_id)
     {
 
-        if (Entrust::hasRole('Admin'))
+        if (parent::userHasRole('Admin')){
             $project = Project::find($project_id);
-        elseif (Entrust::hasRole('Client')) {
-            $project = DB::table('fp_project')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
+        }
+        elseif (parent::userHasRole('Client')) {
+            $project = DB::table('project')
+                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->where('project_id', '=', $project_id)
                 ->first();
-        } elseif (Entrust::hasRole('Staff')) {
-            $project = DB::table('fp_project')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_project.project_id')
+        } elseif (parent::userHasRole('Staff')) {
+            $project = DB::table('project')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
                 ->where('username', '=', Auth::user()->username)
                 ->where('project_id', '=', $project_id)
@@ -64,17 +82,19 @@ class ProjectController extends BaseController
         if (!$project)
             return Redirect::to('project')->withErrors('This is not a valid link!!');
 
-        $assignedUser = Assigned_User::where('belongs_to', '=', 'project')
+        $assignedUser = AssignedUser::where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)
             ->get();
 
-        $assign_username = Assigned_User::where('belongs_to', '=', 'project')
+        $assign_username = AssignedUser::where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)
-            ->lists('username', 'username');
+            ->lists('username', 'username')
+            ->toArray();
 
         $user = User::where('client_id', '=', '')
             ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+            ->lists('name', 'username')
+            ->toArray();
 
         $client_options = Client::orderBy('company_name', 'asc')
             ->lists('company_name', 'client_id');
@@ -84,11 +104,11 @@ class ProjectController extends BaseController
             ->where('username', '=', Auth::user()->username)
             ->first();
 
-        $comment = DB::table('fp_comment')
+        $comment = DB::table('comment')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)
-            ->join('fp_user', 'fp_comment.username', '=', 'fp_user.username')
-            ->orderBy('fp_comment.created_at', 'desc')
+            ->join('user', 'comment.username', '=', 'user.username')
+            ->orderBy('comment.created_at', 'desc')
             ->get();
 
         $attachment = Attachment::where('belongs_to', '=', 'project')
@@ -96,7 +116,7 @@ class ProjectController extends BaseController
             ->orderBy('created_at', 'desc')
             ->get();
 
-        if (!Entrust::hasRole('Staff')) {
+        if (!parent::userHasRole('Staff')) {
             $task = Task::where('belongs_to', '=', 'project')
                 ->where('unique_id', '=', $project_id)
                 ->orderBy('created_at', 'desc')
@@ -117,6 +137,7 @@ class ProjectController extends BaseController
             ->where('end_time', '=', null)
             ->first();
 
+        $progress_option = [];
         for ($i = 0; $i <= 100; $i++)
             $progress_option[] = $i . " %";
 
@@ -144,7 +165,7 @@ class ProjectController extends BaseController
         return View::make('project.create');
     }
 
-    public function edit($id)
+    public function edit(Request $request,$id)
     {
         $project = Project::find($id);
 
@@ -162,13 +183,13 @@ class ProjectController extends BaseController
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
 
-        $validation = Validator::make(Input::all(), [
-            'project_title' => 'required|unique:fp_project',
+        $validation = Validator::make($request->all(), [
+            'project_title' => 'required|unique:project',
             'client_id' => 'required',
-            'ref_no' => 'required|unique:fp_project',
+            'ref_no' => 'required|unique:project',
             'start_date' => 'required|date_format:"d-m-Y"',
             'deadline' => 'required|date_format:"d-m-Y"|after:start_date',
             'rate_type' => 'required',
@@ -176,13 +197,13 @@ class ProjectController extends BaseController
         ]);
 
         if ($validation->fails()) {
-            return Redirect::to('project')->withInput()->withErrors($validation->messages());
+            return redirect()->to('project')->withInput()->withErrors($validation->messages());
         }
 
         $project = new Project;
-        $project->project_title = Input::get('project_title');
-        $project->client_id = Input::get('client_id');
-        $project->ref_no = Input::get('ref_no');
+        $project->project_title = $request->get('project_title');
+        $project->client_id = $request->get('client_id');
+        $project->ref_no = $request->get('ref_no');
         $project->start_date = date("Y-m-d H:i:s", strtotime(Input::get('start_date')));
         $project->deadline = date("Y-m-d H:i:s", strtotime(Input::get('deadline')));
         $project->project_description = Input::get('project_description');
@@ -190,7 +211,7 @@ class ProjectController extends BaseController
         $project->rate_value = Input::get('rate_value');
         $project->save();
 
-        return Redirect::to('project')->withSuccess("Project added successfully !!");
+        return redirect()->to('project')->withSuccess("Project added successfully !!");
     }
 
     public function update($project_id)
@@ -198,9 +219,9 @@ class ProjectController extends BaseController
         $project = Project::find($project_id);
 
         $validation = Validator::make(Input::all(), [
-            'project_title' => 'required|unique:fp_project,project_title,' . $project_id . ',project_id',
+            'project_title' => 'required|unique:project,project_title,' . $project_id . ',project_id',
             'client_id' => 'required',
-            'ref_no' => 'required|unique:fp_project,ref_no,' . $project_id . ',project_id',
+            'ref_no' => 'required|unique:project,ref_no,' . $project_id . ',project_id',
             'start_date' => 'required|date_format:"d-m-Y"',
             'deadline' => 'required|date_format:"d-m-Y"|after:start_date',
             'rate_type' => 'required',
@@ -292,7 +313,7 @@ class ProjectController extends BaseController
     {
         $timer = Timer::find(Input::get('timer_id'));
 
-        if (!$timer || !Entrust::hasRole('Admin'))
+        if (!$timer || !parent::userHasRole('Admin'))
             return Redirect::back()->withErrors('Wrong URL!!');
 
         $timer->delete(Input::get('timer_id'));
@@ -330,37 +351,37 @@ class ProjectController extends BaseController
     {
         $project = Project::find($project_id);
 
-        if (!$project || !Entrust::hasRole('Admin'))
+        if (!$project || !parent::userHasRole('Admin'))
             return Redirect::to('project')->withErrors('This is not a valid link!!');
 
-        DB::table('fp_assigned_user')
+        DB::table('assigned_user')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)->delete();
 
-        $attachments = DB::table('fp_attachment')
+        $attachments = DB::table('attachment')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)->get();
 
         foreach ($attachments as $attachment)
             File::delete('assets/attachment_files/' . $attachment->file);
 
-        DB::table('fp_attachment')
+        DB::table('attachment')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)->delete();
 
-        DB::table('fp_comment')
+        DB::table('comment')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)->delete();
 
-        DB::table('fp_notes')
+        DB::table('notes')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)->delete();
 
-        DB::table('fp_task')
+        DB::table('task')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $project_id)->delete();
 
-        DB::table('fp_timer')
+        DB::table('timer')
             ->where('project_id', '=', $project_id)->delete();
 
         $project->delete();

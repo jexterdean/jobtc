@@ -16,4 +16,3 @@
 		"General Setting" => 'General Setting',
 		"Event Calendar" => 'Event Calendar',
 		];
-?>

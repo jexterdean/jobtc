@@ -9,7 +9,7 @@
     <div class="form-group">
         {!!  Form::label('client_id','Company Name',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('client_id', [null=>'Please Select'] + $clients, isset($project->client_id) ?
+            {!!  Form::select('client_id', $clients, isset($project->client_id) ?
             $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
@@ -45,7 +45,7 @@
         {!!  Form::label('rate_type','Rate Type',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::select('rate_type', [
-                null => 'Please select',
+                '' => 'Please select',
                 'fixed' => 'Fixed',
                 'hourly' => 'Hourly'
             ], isset($project->rate_type) ? $project->rate_type : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '7'] )  !!}
@@ -60,7 +60,7 @@
     </div>
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
-            {!!  Form::submit(isset($buttonText) ? $buttonText : 'Add Project',['class' => 'btn green', 'tabindex' =>
+            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Project'),['class' => 'btn green', 'tabindex' =>
             '9'])  !!}
         </div>
     </div>

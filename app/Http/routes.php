@@ -6,45 +6,48 @@ Route::get('/', 'SessionController@create');
 Route::get('/login', 'SessionController@create');
 
 Route::group(['middleware' => 'guest'], function () {
+
     Route::get('forgotPassword', function () {
         return view('session.forgotPassword');
     });
     Route::post('forgotPassword', 'ProfileController@forgotPassword');
 });
 
+
+//Admin
+Route::group(['middleware' => ['auth','auth.admin']], function () {
+    Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
+        ->where('billing_type', 'invoice|estimate');
+    Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
+        ->where('billing_type', 'invoice|estimate');
+    Route::get('/billing/{billing_type}/{billing_id}/edit', ['uses' => 'BillingController@edit'])
+        ->where('billing_type', 'invoice|estimate');
+    Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
+        ->where('billing_type', 'invoice|estimate');
+    Route::resource('billing', 'BillingController');
+    Route::resource('setting', 'SettingController');
+    Route::resource('template', 'TemplateController');
+    Route::resource('item', 'ItemController');
+    Route::resource('payment', 'PaymentController');
+    Route::resource('user', 'UserController');
+    Route::resource('client', 'ClientController');
+    Route::resource('assigneduser', 'AssignedController');
+});
+
+//staff
+Route::group(['middleware' => ['auth','auth.staff']], function () {
+    Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
+        ->where('billing_type', 'invoice|estimate');
+    Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
+        ->where('billing_type', 'invoice|estimate');
+});
+
+//client
+Route::group(['middleware' => ['auth','auth.client']], function () {
+    Route::resource('task', 'TaskController');
+});
+
 Route::group(['middleware' => 'auth'], function () {
-
-    echo Entrust::hasRole('Admin')? 'yes': 'sorry';
-    die();
-    if (Entrust::hasRole('Admin')) {
-        Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
-            ->where('billing_type', 'invoice|estimate');
-        Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
-            ->where('billing_type', 'invoice|estimate');
-        Route::get('/billing/{billing_type}/{billing_id}/edit', ['uses' => 'BillingController@edit'])
-            ->where('billing_type', 'invoice|estimate');
-        Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
-            ->where('billing_type', 'invoice|estimate');
-        Route::resource('billing', 'BillingController');
-        Route::resource('setting', 'SettingController');
-        Route::resource('template', 'TemplateController');
-        Route::resource('item', 'ItemController');
-        Route::resource('payment', 'PaymentController');
-        Route::resource('user', 'UserController');
-        Route::resource('client', 'ClientController');
-        Route::resource('assigneduser', 'AssignedController');
-    }
-
-    if (Entrust::hasRole('Client')) {
-        Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
-            ->where('billing_type', 'invoice|estimate');
-        Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
-            ->where('billing_type', 'invoice|estimate');
-    }
-
-    if (!Entrust::hasRole('Client')) {
-        Route::resource('task', 'TaskController');
-    }
 
     Route::resource('event', 'EventsController');
     Route::resource('project', 'ProjectController');
@@ -73,13 +76,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('bug/{bug_id}/delete', 'BugController@delete');
     Route::get('ticket/{ticket_id}/delete', 'TicketController@delete');
     Route::get('profile', function () {
-        return View::make('user.profile',['assets'=> []]);
+        return View::make('user.profile', ['assets' => []]);
     });
     Route::get('docs', function () {
-        return View::make('docs.docs',['assets'=> []]);
+        return View::make('docs.docs', ['assets' => []]);
     });
     Route::get('about', function () {
-        return View::make('about.about',['assets'=>[]]);
+        return View::make('about.about', ['assets' => []]);
     });
 
 

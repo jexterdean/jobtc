@@ -3,7 +3,7 @@
     <h4 class="modal-title">Edit Project</h4>
 </div>
 <div class="modal-body">
-    @if(Entrust::hasRole('Admin'))
+    @role('admin')
         {!! Form::model($project,['method' => 'PATCH','route' => ['project.update',$project->project_id] ,'class' =>
         'form-horizontal project-form'])  !!}
         @include('project/partials/_form', ['buttonText' => 'Update Project'] )
@@ -13,7 +13,7 @@
             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
             <strong>You dont have to perform this action!!</strong>
         </div>
-    @endif
+    @endrole
 </div>
 <script>
     $(function () {

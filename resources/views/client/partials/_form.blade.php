@@ -58,8 +58,8 @@
     <div class="form-group">
         {!!  Form::label('country_id','Country',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('country_id', [null=>'Please Select'] + $countries, isset($client->country_id) ?
-            $client->country_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '9'] )  !!}
+            {!!  Form::select('country_id', $countries,( isset($client->country_id) ?
+            $client->country_id : ''), ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '9'] )  !!}
         </div>
     </div>
     <div class="row">

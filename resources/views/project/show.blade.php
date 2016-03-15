@@ -90,7 +90,7 @@
                                                 {{ date("d M Y, h:ia", strtotime($project->deadline)) }}
                                             </div>
                                         </div>
-                                        @if(Entrust::hasRole('Admin'))
+                                        @role('admin')
                                             <div class="row static-info">
                                                 <div class="col-md-5 name">
                                                     Rate Type:
@@ -100,8 +100,9 @@
                                                     {{ $project->rate_value }}
                                                 </div>
                                             </div>
-                                        @endif
-                                        @if(Entrust::hasRole('Admin') || Entrust::hasRole('Staff'))
+                                        @endrole
+
+                                        @role('admin|staff')
                                             <div class="row static-info">
                                                 {!!  Form::open(['method' => 'POST','url' => 'updateProgress'])  !!}
                                                 <div class="form-group">
@@ -114,7 +115,7 @@
                                                 {!!  Form::hidden('project_id',$project->project_id) !!}
                                                 {!!  Form::close()  !!}
                                             </div>
-                                        @endif
+                                        @endrole
 
                                     </div>
                                 </div>
@@ -123,9 +124,9 @@
 
                             </div>
 
-                            @if(Entrust::hasRole('Admin'))
+                            @role('admin')
                                 @include('common.assign',['assignedUsers' => $assignedUsers, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
-                            @endif
+                            @endrole
 
                             @include('common.comment',['comments' => $comments, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
 
@@ -212,7 +213,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    <</div>
 
 @stop
 

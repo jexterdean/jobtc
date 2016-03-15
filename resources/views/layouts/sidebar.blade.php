@@ -14,18 +14,18 @@
                     <i class="fa fa-home"></i> <span>{{Lang::get('messages.DashBoard')}}</span>
                 </a>
             </li>
-            @if(Entrust::hasRole('Admin'))
+            @role('admin')
                 <li>
                     <a href="{{ url('client') }}">
                         <i class="fa fa-users"></i> <span>{{Lang::get('messages.Clients')}}</span>
                     </a>
                 </li>
-            @endif
-            @if(!Entrust::hasRole('Staff'))
+            @endrole
+            @role('staff')
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-tablet"></i>
-                        <span>{{Lang::get('messages.Billing')}}</span>
+                        <span>{{ Lang::get('messages.Billing')}} </span>
                         <i class="fa fa-angle-right pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
@@ -35,7 +35,7 @@
                                         class="fa fa-file-text-o"></i> {{Lang::get('messages.Invoice')}}</a></li>
                     </ul>
                 </li>
-            @endif
+            @endrole
             <li>
                 <a href="{{ url('project') }}">
                     <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
@@ -51,13 +51,13 @@
                     <i class="fa fa-ticket"></i> <span>{{Lang::get('messages.Tickets')}}</span>
                 </a>
             </li>
-            @if(!Entrust::hasRole('Client'))
+            @role('client')
                 <li>
                     <a href="{{ url('task') }}">
                         <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
                     </a>
                 </li>
-            @endif
+            @endrole
             <li>
                 <a href="{{ url('event') }}">
                     <i class="fa fa-calendar"></i> <span>{{Lang::get('messages.Event Calendar')}}</span>
@@ -68,7 +68,7 @@
                     <i class="fa fa-envelope"></i> <span>{{Lang::get('messages.Message')}}</span>
                 </a>
             </li>
-            @if(Entrust::hasRole('Admin'))
+            @role('admin')
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-laptop"></i>
@@ -84,7 +84,7 @@
                                         class="fa fa-folder-o"></i> {{Lang::get('messages.Email Templates')}}</a></li>
                     </ul>
                 </li>
-            @endif
+            @endrole
         </ul>
     </section>
 </aside>

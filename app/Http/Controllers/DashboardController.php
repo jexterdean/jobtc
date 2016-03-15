@@ -3,11 +3,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
 use \Auth;
+use Illuminate\Http\Request;
 use \View;
 use \Form;
 use \Input;
 use \Redirect;
-use \Entrust;
 use \DB;
 use App\Models\Client;
 use App\Models\User;
@@ -21,18 +21,21 @@ use App\Models\Billing;
 class DashboardController extends BaseController
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $activeUser = $request->user();
 
         $client = Client::all();
         $user = User::all();
-        $events = Events::where('username', '=', Auth::user()->username)
+        $events = Events::where('username', '=', $activeUser->username)
             ->orWhere('public', '=', '1')
             ->get();
 
         $assets = ['knob', 'calendar'];
+        $data = [];
 
-        if (Entrust::hasRole('Admin')) {
+
+        if ($activeUser->is('admin')) {
             $estimate = Billing::where('billing_type', '=', 'estimate')
                 ->get();
 
@@ -88,7 +91,7 @@ class DashboardController extends BaseController
                 'events' => $events,
                 'tasks' => $tasks
             ];
-        } elseif (Entrust::hasRole('Staff')) {
+        } elseif ($activeUser->is('staff')) {
 
             $projects = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
@@ -148,7 +151,7 @@ class DashboardController extends BaseController
                 'events' => $events
             ];
 
-        } elseif (Entrust::hasRole('Client')) {
+        } elseif ($activeUser->is('client')) {
 
             $projects = DB::table('project')
                 ->join('user', 'user.client_id', '=', 'project.client_id')

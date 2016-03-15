@@ -63,7 +63,7 @@
                                 <td><a href="{{ url('assets/attachment_files/'.$attachment->file) }}">click here</a>
                                 </td>
                                 <td>
-                                    @if(Entrust::hasRole('Admin') || Auth::user()->username == $comment->username)
+                                    @if(Auth::user()->is('admin') || Auth::user()->username == $comment->username)
                                         {!!  Form::open(array('route' => array('attachment.destroy',
                                         $attachment->attachment_id), 'method' => 'delete'))  !!}
                                         <button type="submit" class="btn btn-danger btn-xs"><i class="icon-trash"></i>

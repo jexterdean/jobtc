@@ -1,5 +1,5 @@
 <div class="row">
-    @if(!Entrust::hasRole('Client'))
+    @if(!Auth::user()->is('Client'))
         <div class="col-md-4">
             <div class="box box-solid box-primary">
                 <div class="box-header">
@@ -21,12 +21,13 @@
                         {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
                         input-medium date-picker', 'placeholder' => 'Enter Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
                     </div>
-                    @if(Entrust::hasRole('Admin'))
+                    @role('admin')
                         <div class="form-group">
                             {!!  Form::select('assign_username', [null=>'Assign to user'] + $assign_username, isset
                             ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '3'] )  !!}
                         </div>
-                    @elseif(Entrust::hasRole('Staff'))
+                    @endrole
+                    @role('staff')
                         {!!  Form::hidden('assign_username',Auth::user()->username,['readonly' => true])  !!}
                     @endif
 
@@ -76,7 +77,7 @@
                         <th>
                             Status
                         </th>
-                        @if(!Entrust::hasRole('Client'))
+                        @if(!Auth::user()->is('client'))
                             <th>
                                 Option
                             </th>
@@ -87,7 +88,8 @@
                     @if($tasks!='')
                         @foreach($tasks as $task)
 
-                            @if((Entrust::hasRole('Client') && $task->is_visible == 'yes') || !Entrust::hasRole('Client'))
+                            @if((Auth::user()->is('client') && $task->is_visible == 'yes') ||
+                            !Auth::user()->is('client'))
 
                                 <tr>
                                     <td>{{ $task->task_title }}
@@ -99,9 +101,11 @@
                                     <td>{{ studly_case($task->belongs_to) }}</td>
                                     <td>{{ date("d M Y",strtotime($task->due_date)) }}</td>
                                     <td>
-                                        @if(!Entrust::hasRole('Client'))
+                                        @role('client')
+                                            {{ studly_case($task->task_status) }}
+                                        @else
                                             {!!  Form::open(['method' => 'POST','url' => 'updateTaskStatus','class' =>
-                                            'form-horizontal'])  !!}
+                                             'form-horizontal'])  !!}
                                             {!!  Form::select('task_status', [
                                                 'pending' => 'Pending',
                                                 'progress' => 'Progress',
@@ -109,12 +113,10 @@
                                             ], $task->task_status, ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] )  !!}
                                             {!!  Form::hidden('task_id',$task->task_id) !!}
                                             {!!  Form::close()  !!}
-                                        @else
-                                            {{ studly_case($task->task_status) }}
                                         @endif
                                     </td>
 
-                                    @if(!Entrust::hasRole('Client'))
+                                    @if(!Auth::user()->is('Client'))
                                         <td>
                                             <a href="{{ url($task->belongs_to.'/'.$task->unique_id) }}"><i
                                                         class="fa fa-external-link"></i></a>

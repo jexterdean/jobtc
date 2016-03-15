@@ -3,6 +3,13 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\Comment;
+
+use Auth;
+use Redirect;
+use Input;
+use Validator;
+
 Class CommentController extends BaseController
 {
 

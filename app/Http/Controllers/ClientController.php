@@ -20,7 +20,8 @@ class ClientController extends BaseController
     public function index()
     {
         $countries_option = Country::orderBy('country_name', 'asc')
-            ->lists('country_name', 'country_id');
+            ->lists('country_name', 'country_id')
+        ->toArray();
 
         $client = Client::all();
 
@@ -56,7 +57,8 @@ class ClientController extends BaseController
         $client = Client::find($client_id);
 
         $countries_option = Country::orderBy('country_name', 'asc')
-            ->lists('country_name', 'country_id');
+            ->lists('country_name', 'country_id')
+        ->toArray();
 
         return View::make('client.edit', [
             'client' => $client,
@@ -68,7 +70,7 @@ class ClientController extends BaseController
     {
 
         $validation = Validator::make(Input::all(), [
-            'company_name' => 'required|unique:fp_client',
+            'company_name' => 'required|unique:client',
             'contact_person' => 'required',
             'email' => 'required|email',
             'zipcode' => 'numeric',
@@ -93,7 +95,7 @@ class ClientController extends BaseController
         $client = Client::find($client_id);
 
         $validation = Validator::make(Input::all(), [
-            'company_name' => 'required|unique:fp_client,company_name,' . $client_id . ',client_id',
+            'company_name' => 'required|unique:client,company_name,' . $client_id . ',client_id',
             'contact_person' => 'required',
             'email' => 'required|email',
             'zipcode' => 'numeric',
@@ -132,12 +134,12 @@ class ClientController extends BaseController
         if (count($ticket))
             return Redirect::to('client')->withErrors('This client has some ticket!! Delete that ticket first!!');
 
-        DB::table('fp_message')
+        DB::table('message')
             ->where('from_username', '=', $user->username)
             ->orWhere('to_username', '=', $user->username)
             ->delete();
 
-        DB::table('fp_events')
+        DB::table('events')
             ->where('username', '=', $user->username)
             ->delete();
 

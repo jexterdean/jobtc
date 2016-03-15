@@ -4,7 +4,7 @@
     <div class="row">
 
         <div class="col-md-6 col-sm-12">
-            @if(Entrust::hasRole('Admin'))
+            @role('admin')
                 <div class="col-lg-6">
                     <div class="small-box bg-aqua">
                         <div class="inner">
@@ -131,7 +131,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endrole
             <div style="clear:both;"></div>
             <br/>
             <div class="box">
@@ -193,7 +193,7 @@
                 </div>
             </div>
 
-            @if(!Entrust::hasRole('Client'))
+            @role('client')
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
@@ -231,7 +231,7 @@
                         @endif
                     </div>
                 </div>
-            @endif
+            @endrole
         </div>
 
 

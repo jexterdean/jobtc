@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
+use App\Models\Note;
+use Input;
+use DB;
+use Redirect;
+use Auth;
 
 class NoteController extends BaseController
 {

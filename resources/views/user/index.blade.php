@@ -8,9 +8,9 @@
                     <h4 class="modal-title">Add Client</h4>
                 </div>
                 <div class="modal-body">
-                    {{ Form::open(['route' => 'user.store','class' => 'form-horizontal user-form']) }}
+                    {!! Form::open(['route' => 'user.store','class' => 'form-horizontal user-form'])  !!}
                     @include('user/partials/_form')
-                    {{ Form::close() }}
+                    {!!  Form::close() !!}
                 </div>
             </div>
         </div>

@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use Validation;
+
+use App\Models\AssignedUser;
+use App\Models\Task;
+
+use Validator;
+use DB;
+use Input;
+use Redirect;
 
 class AssignedController extends BaseController
 {
@@ -27,14 +34,14 @@ class AssignedController extends BaseController
     public function store()
     {
         $validation = Validator::make(Input::all(), [
-            'username' => 'required|unique:fp_assigned_user,username,null,username,belongs_to,' .
+            'username' => 'required|unique:assigned_user,username,null,username,belongs_to,' .
                 Input::get('belongs_to') . ',unique_id,' . Input::get('unique_id')
         ]);
         if ($validation->fails()) {
             return Redirect::back()->withInput()->withErrors($validation->messages());
         }
 
-        $assignedUser = new Assigned_User;
+        $assignedUser = new AssignedUser();
         $data = Input::all();
         $assignedUser->fill($data);
         $assignedUser->save();
@@ -48,21 +55,21 @@ class AssignedController extends BaseController
     public function destroy($id)
     {
 
-        if (!Entrust::hasRole('Admin'))
+        if (!parent::userHasRole('Admin'))
             return Redirect::back()->withErrors('You dont have permission of this operation!!');
 
-        $assignedUser = Assigned_User::find($id);
+        $assignedUser = AssignedUser::find($id);
         if (!$assignedUser) {
             return Redirect::back() > withErrors('This is not a valid link!!');
         }
 
         $task = Task::where('unique_id', '=', $assignedUser->unique_id)
             ->where('belongs_to', '=', $assignedUser->belongs_to)
-            ->where('assign_username', '=', $assignedUser->username)
+            ->where('username', '=', $assignedUser->username)
             ->get();
 
         if (count($task)) {
-            return Redirect::back()->withErrors('This user has already assigned a task!!');
+            return Redirect::back()->withErrors('This user has already assigned task!!');
         }
 
         $assignedUser->delete($id);

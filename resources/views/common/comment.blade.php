@@ -33,7 +33,7 @@
                                     </a>
                                     {{ $comment->comment}}
 
-                                    @if(Entrust::hasRole('Admin') || Auth::user()->username == $comment->username)
+                                    @if(Auth::user()->is('admin') || Auth::user()->username == $comment->username)
                                         {!!  Form::open(array('route' => array('comment.destroy', $comment->comment_id)
                                         , 'method' => 'delete'))  !!}
                                         <button type="submit" class="btn btn-danger btn-xs"><i class="icon-trash"></i>

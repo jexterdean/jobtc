@@ -2,14 +2,14 @@
     <div class="form-group">
         {!!  Form::label('client_id','Company Name',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('client_id', [null=>'Please Select'] + $clients, isset($user->client_id) ?
+            {!!  Form::select('client_id', $clients, isset($user->client_id) ?
             $user->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '1'] )  !!}
         </div>
     </div>
     <div class="form-group">
         {!!   Form::label('role_id','User role',['class' => 'col-md-3 control-label'])!!}
         <div class="col-md-9">
-            {!!  Form::select('role_id', [null => 'Please select'] + $roles, isset($user->role_id) ? $user->role_id :
+            {!!  Form::select('role_id', $roles, isset($user->role_id) ? $user->role_id :
             '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '2'] ) !!}
         </div>
     </div>

@@ -3,21 +3,36 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\User;
+use App\Models\Client;
+use Bican\Roles\Models\Role;
+
+use DB;
+use Illuminate\Http\Request;
+use Validator;
+use Input;
+use Redirect;
+use View;
+use Hash;
+
 class UserController extends BaseController
 {
 
     public function index()
     {
-        $user = DB::table('fp_user')
-            ->join('fp_assigned_roles', 'fp_assigned_roles.user_id', '=', 'fp_user.user_id')
-            ->where('fp_user.user_id', '!=', '1')
+        $user = DB::table('user')
+            ->join('role_user', 'role_user.user_id', '=', 'user.user_id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->where('roles.level', '<>', '1')
             ->get();
 
         $role = Role::orderBy('name', 'asc')
-            ->lists('name', 'id');
+            ->lists('name', 'id')
+            ->toArray();
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+            ->lists('company_name', 'client_id')
+            ->toArray();
 
         $assets = ['table', 'select2'];
 
@@ -45,16 +60,16 @@ class UserController extends BaseController
 
     public function edit($id)
     {
-        $user = DB::table('fp_user')
-            ->join('fp_assigned_roles', 'fp_assigned_roles.user_id', '=', 'fp_user.user_id')
-            ->where('fp_user.user_id', '!=', '1')
-            ->where('fp_user.user_id', '=', $id)
+        $user = DB::table('user')
+            ->join('assigned_roles', 'assigned_roles.user_id', '=', 'user.user_id')
+            ->where('user.user_id', '!=', '1')
+            ->where('user.user_id', '=', $id)
             ->first();
 
         $role = Role::orderBy('name', 'asc')->lists('name', 'id');
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+            ->lists('company_name', 'client_id')->toArray();
 
         if ($user)
             return View::make('user.edit', [
@@ -66,13 +81,13 @@ class UserController extends BaseController
             return Redirect::to('user')->withErrors('Wrong user id to edit!!');
     }
 
-    public function store()
+    public function store(Request $request)
     {
 
         $role = Role::orderBy('name', 'asc')->lists('name', 'id');
 
         $validation = Validator::make(Input::all(), [
-            'username' => 'required|unique:fp_user',
+            'username' => 'required|unique:user',
             'password' => 'required',
             'email' => 'required',
             'name' => 'required',
@@ -83,10 +98,17 @@ class UserController extends BaseController
             return Redirect::to('user')->withErrors($validation->messages());
         }
 
-        if ($role[Input::get('role_id')] != 'Client' && Input::get('client_id') != '')
-            return Redirect::to('user')->withErrors('Only clients can have company!!');
-        if ($role[Input::get('role_id')] == 'Client' && Input::get('client_id') == '')
-            return Redirect::to('user')->withErrors('A client should have a company!!');
+        $clientRole = Role::where('id', Input::get('role_id'))->first();
+        if ($clientRole && $clientRole->slug === 'client'){
+
+            // no company id the return.
+            if(!Input::get('client_id')){
+
+                return Redirect::to('user')->withInput($request->except('password'))
+                    ->withErrors('A client should have a company!!');
+            }
+
+        }
 
         $user = new User;
         $user->client_id = Input::get('client_id');
@@ -103,11 +125,9 @@ class UserController extends BaseController
         return Redirect::to('user')->withSuccess("User added successfully!!");
     }
 
-    public function update($id)
+    public function update(Request $request,$id)
     {
         $user = User::find($id);
-        $role = Role::orderBy('name', 'asc')->lists('name', 'id');
-
         $validation = Validator::make(Input::all(), [
             'email' => 'required',
             'name' => 'required',
@@ -117,10 +137,20 @@ class UserController extends BaseController
         if ($validation->fails()) {
             return Redirect::to('user')->withErrors($validation->messages());
         }
-        if ($role[Input::get('role_id')] != 'Client' && Input::get('client_id') != '')
-            return Redirect::to('user')->withErrors('Only clients can have company!!');
-        if ($role[Input::get('role_id')] == 'Client' && Input::get('client_id') == '')
-            return Redirect::to('user')->withErrors('A client should have a company!!');
+
+        $clientRole = Role::where('id', Input::get('role_id'))->first();
+        if ($clientRole && $clientRole->slug === 'client'){
+
+            // no company id the return.
+            if(!Input::get('client_id')){
+
+                print_r(Input::get('client_id'));
+                die();
+                return Redirect::to('user')->withInput($request->except('password'))
+                    ->withErrors('A client should have a company!!');
+            }
+
+        }
 
         $user->client_id = Input::get('client_id');
         $user->name = Input::get('name');
