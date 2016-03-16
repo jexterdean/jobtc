@@ -3,6 +3,19 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\Ticket;
+use App\Models\AssignedUser;
+use App\Models\User;
+use App\Models\Setting;
+use App\Models\Note;
+
+
+use Redirect;
+use Auth;
+use DB;
+use Validator;
+use View;
+use Input;
 
 class TicketController extends BaseController
 {
@@ -10,15 +23,15 @@ class TicketController extends BaseController
     public function index()
     {
 
-        if (Entrust::hasRole('Admin'))
+        if (parent::hasRole('Admin'))
             $ticket = Ticket::all();
-        elseif (Entrust::hasRole('Client'))
+        elseif (parent::hasRole('Client'))
             $ticket = Ticket::where('username', '=', Auth::user()->username)->get();
-        elseif (Entrust::hasRole('Staff')) {
-            $ticket = DB::table('fp_ticket')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_ticket.ticket_id')
+        elseif (parent::hasRole('Staff')) {
+            $ticket = DB::table('ticket')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
                 ->where('belongs_to', '=', 'ticket')
-                ->where('fp_assigned_user.username', '=', Auth::user()->username)
+                ->where('assigned_user.username', '=', Auth::user()->username)
                 ->get();
         }
 
@@ -36,17 +49,17 @@ class TicketController extends BaseController
     public function show($ticket_id)
     {
 
-        if (Entrust::hasRole('Admin'))
+        if (parent::hasRole('Admin'))
             $ticket = Ticket::find($ticket_id);
-        elseif (Entrust::hasRole('Client')) {
+        elseif (parent::hasRole('Client')) {
             $ticket = Ticket::where('username', '=', Auth::user()->username)
                 ->where('ticket_id', '=', $ticket_id)
                 ->first();
-        } elseif (Entrust::hasRole('Staff')) {
-            $ticket = DB::table('fp_ticket')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_ticket.ticket_id')
+        } elseif (parent::hasRole('Staff')) {
+            $ticket = DB::table('ticket')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
                 ->where('belongs_to', '=', 'ticket')
-                ->where('fp_assigned_user.username', '=', Auth::user()->username)
+                ->where('assigned_user.username', '=', Auth::user()->username)
                 ->where('ticket_id', '=', $ticket_id)
                 ->first();
         }
@@ -54,11 +67,11 @@ class TicketController extends BaseController
         if (!$ticket)
             return Redirect::to('ticket')->withErrors('This is not a valid ticket!!');
 
-        $assignedUser = Assigned_User::where('belongs_to', '=', 'ticket')
+        $assignedUser = AssignedUser::where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)
             ->get();
 
-        $assign_username = Assigned_User::where('belongs_to', '=', 'ticket')
+        $assign_username = AssignedUser::where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)
             ->lists('username', 'username');
 
@@ -70,21 +83,21 @@ class TicketController extends BaseController
         $user_options = User::orderBy('name', 'asc')
             ->lists('name', 'username');
 
-        $comment = DB::table('fp_comment')
+        $comment = DB::table('comment')
             ->where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)
-            ->join('fp_user', 'fp_comment.username', '=', 'fp_user.username')
-            ->orderBy('fp_comment.created_at', 'desc')
+            ->join('user', 'comment.username', '=', 'user.username')
+            ->orderBy('comment.created_at', 'desc')
             ->get();
 
-        $attachment = DB::table('fp_attachment')
+        $attachment = DB::table('attachment')
             ->where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)
-            ->join('fp_user', 'fp_attachment.username', '=', 'fp_user.username')
-            ->orderBy('fp_attachment.created_at', 'desc')
+            ->join('user', 'attachment.username', '=', 'user.username')
+            ->orderBy('attachment.created_at', 'desc')
             ->get();
 
-        if (!Entrust::hasRole('Staff')) {
+        if (!parent::hasRole('Staff')) {
             $task = Task::where('belongs_to', '=', 'ticket')
                 ->where('unique_id', '=', $ticket_id)
                 ->orderBy('created_at', 'desc')
@@ -186,29 +199,29 @@ class TicketController extends BaseController
     {
         $ticket = Ticket::find($ticket_id);
 
-        if (!$ticket || ($ticket->username != Auth::user()->username && !Entrust::hasRole('Admin')))
+        if (!$ticket || ($ticket->username != Auth::user()->username && !parent::hasRole('Admin')))
             return Redirect::to('ticket')->withErrors('This is not a valid link!!');
 
-        DB::table('fp_assigned_user')
+        DB::table('assigned_user')
             ->where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)->delete();
 
-        $attachments = DB::table('fp_attachment')
+        $attachments = DB::table('attachment')
             ->where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)->get();
 
         foreach ($attachments as $attachment)
             File::delete('assets/attachment_files/' . $attachment->file);
 
-        DB::table('fp_attachment')
+        DB::table('attachment')
             ->where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)->delete();
 
-        DB::table('fp_comment')
+        DB::table('comment')
             ->where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)->delete();
 
-        DB::table('fp_notes')
+        DB::table('notes')
             ->where('belongs_to', '=', 'ticket')
             ->where('unique_id', '=', $ticket_id)->delete();
 

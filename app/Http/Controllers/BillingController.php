@@ -4,6 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 
+use App\Models\Client;
+use App\Models\Billing;
+use App\Models\Setting;
+use App\Helpers\Helper;
+use App\Models\Item;
+use App\Models\Note;
+use App\Models\Payment;
+
+
+use View;
+use Auth;
+use Redirect;
+use Validator;
+use DB;
+use Input;
+
 class BillingController extends BaseController
 {
 
@@ -12,22 +28,25 @@ class BillingController extends BaseController
         $data['billing_type'] = $billing_type;
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+            ->lists('company_name', 'client_id')
+            ->toArray();
 
-        if (Entrust::hasRole('Admin')) {
+        if (parent::hasRole('Admin')) {
             $billing = Billing::where('billing_type', '=', $billing_type)
                 ->get();
-        } elseif (Entrust::hasRole('Client')) {
-            $billing = DB::table('fp_billing')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_billing.client_id')
+        } elseif (parent::hasRole('Client')) {
+            $billing = DB::table('billing')
+                ->join('user', 'user.client_id', '=', 'billing.client_id')
                 ->where('billing_type', '=', $billing_type)
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->get();
         }
 
+        $settings = Setting::find(1);
         $assets = ['table', 'datepicker'];
 
         return View::make('billing.index', [
+            'site_settings' => $settings,
             'data' => $data,
             'clients' => $client_options,
             'billings' => $billing,
@@ -61,10 +80,12 @@ class BillingController extends BaseController
         $payment = Payment::where('billing_id', '=', $billing_id)
             ->sum('payment_amount');
 
+        $settings = Setting::find(1);
         $assets = ['invoice', 'datepicker'];
 
         if ($billing)
             return View::make('billing.show', [
+                'site_settings' => $settings,
                 'data' => $data,
                 'billing' => $billing,
                 'client' => $client,
@@ -83,13 +104,13 @@ class BillingController extends BaseController
         $data['billing_type'] = $billing_type;
         $data['billing_id'] = $billing_id;
 
-        if (Entrust::hasRole('Admin')) {
+        if (parent::hasRole('Admin')) {
             $billing = Billing::where('billing_id', '=', $billing_id)
                 ->where('billing_type', '=', $billing_type)
                 ->first();
-        } elseif (Entrust::hasRole('Client')) {
+        } elseif (parent::hasRole('Client')) {
             $billing = Billing::where('billing_id', '=', $billing_id)
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_billing.client_id')
+                ->join('user', 'user.client_id', '=', 'billing.client_id')
                 ->where('billing_type', '=', $billing_type)
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->first();
@@ -180,7 +201,7 @@ class BillingController extends BaseController
     {
 
         $validationRule = [
-            'ref_no' => 'required|unique:fp_billing',
+            'ref_no' => 'required|unique:billing',
             'billing_type' => 'required|in:invoice,estimate',
             'client_id' => 'required',
             'issue_date' => 'required|date_format:"d-m-Y"',
@@ -223,7 +244,7 @@ class BillingController extends BaseController
     {
 
         $validationRule = [
-            'ref_no' => 'required|unique:fp_billing,ref_no,' . $billing_id . ',billing_id',
+            'ref_no' => 'required|unique:billing,ref_no,' . $billing_id . ',billing_id',
             'billing_type' => 'required|in:invoice,estimate',
             'client_id' => 'required',
             'issue_date' => 'required|date_format:"d-m-Y"',
@@ -270,14 +291,14 @@ class BillingController extends BaseController
     {
         $billing = Billing::find($billing_id);
 
-        if (!$billing || !Entrust::hasRole('Admin'))
+        if (!$billing || !parent::hasRole('Admin'))
             return Redirect::back()->withErrors('This is not a valid link!!');
 
-        DB::table('fp_item')
+        DB::table('item')
             ->where('billing_id', '=', $billing_id)
             ->delete();
 
-        DB::table('fp_payment')
+        DB::table('payment')
             ->where('billing_id', '=', $billing_id)
             ->delete();
 

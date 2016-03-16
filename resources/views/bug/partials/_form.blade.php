@@ -9,7 +9,7 @@
     <div class="form-group">
         {!!  Form::label('project_id','Project',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('project_id', [null=>'Please Select'] + $projects, isset($bugs->project_id) ?
+            {!!  Form::select('project_id',  $projects, isset($bugs->project_id) ?
             $bugs->project_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '2'] )  !!}
         </div>
     </div>

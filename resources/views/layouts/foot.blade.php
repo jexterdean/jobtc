@@ -54,7 +54,7 @@
                     "bSort": true,
                     "bInfo": true,
                     "bAutoWidth": true,
-                    "sAjaxSource": "{{ url('data.txt') }}"
+                    "sAjaxSource": "{{ url('/data/'. (isset($cacheKey)?$cacheKey:'none')) }}"
                 });
         var tt = new $.fn.dataTable.TableTools(table);
         $(tt.fnContainer()).insertBefore('div.dataTables_wrapper');

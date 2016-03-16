@@ -8,16 +8,16 @@
                     <h4 class="modal-title">Add Bug</h4>
                 </div>
                 <div class="modal-body">
-                    @if(Entrust::hasRole('Admin'))
-                        {{ Form::open(['route' => 'bug.store','class' => 'form-horizontal bug-form']) }}
+                    @role('admin')
+                        {!!  Form::open(['route' => 'bug.store','class' => 'form-horizontal bug-form'])  !!}
                         @include('bug/partials/_form')
-                        {{ Form::close() }}
+                        {!!  Form::close()  !!}
                     @else
                         <div class='alert alert-danger alert-dismissable'>
                             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                             <strong>You dont have to perform this action!!</strong>
                         </div>
-                    @endif
+                    @endrole
                 </div>
             </div>
         </div>
@@ -55,10 +55,10 @@
                     $QA[] = array($bug->ref_no, isset($projects[$bug->project_id]) ? $projects[$bug->project_id] : '', date("d M Y h:ia", strtotime($bug->reported_on)), $bug->bug_priority, $bug->bug_status, $Option);
                 }
 
-                $DATA['aaData'] = $QA;
-                $fp = fopen('data.txt', 'w');
-                fwrite($fp, json_encode($DATA));
-                fclose($fp); ?>
+
+                $cacheKey = md5('bug.list.' . session()->getId());
+                Cache::put($cacheKey, $QA, 100);
+                ?>
                 <table class="table table-striped table-bordered table-hover datatableclass" id="project_table">
                     <thead>
                     <tr>

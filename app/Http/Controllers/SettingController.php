@@ -3,6 +3,18 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\Setting;
+use App\Models\Country;
+use App\Models\Timezone;
+
+use View;
+use DB;
+use Redirect;
+use Input;
+use Validator;
+use Session;
+use File;
+
 class SettingController extends BaseController
 {
 
@@ -10,12 +22,15 @@ class SettingController extends BaseController
     {
         $setting = Setting::find(1);
         $countries_option = Country::orderBy('country_name', 'asc')
-            ->lists('country_name', 'country_id');
+            ->lists('country_name', 'country_id')
+            ->toArray();
 
         $timezone = Timezone::orderBy('timezone_name', 'asc')
-            ->lists('timezone_name', 'timezone_id');
+            ->lists('timezone_name', 'timezone_id')
+            ->toArray();
 
         return View::make('setting.index', [
+            'assets' => [],
             'setting' => $setting,
             'countries' => $countries_option,
             'timezone' => $timezone
@@ -89,7 +104,7 @@ class SettingController extends BaseController
         }
         $data = Input::all();
         Session::put('language', Input::get('default_language'));
-        App::setLocale(Input::get('default_language'));
+        app()->setLocale(Input::get('default_language'));
 
         if (Input::get('remove_image') == 'Yes') {
             File::delete('assets/company_logo/' . $setting->company_logo);

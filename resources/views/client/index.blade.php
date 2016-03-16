@@ -54,10 +54,9 @@
                     $QA[] = array($client->company_name, $client->contact_person, $client->email, isset($countries[$client->country_id]) ? $countries[$client->country_id] : '', $Option);
                 }
 
-                $DATA['aaData'] = $QA;
-                $fp = fopen('data.txt', 'w');
-                fwrite($fp, json_encode($DATA));
-                fclose($fp); ?>
+                    $cacheKey = 'client.list.'. session()->getId();
+                    \Cache::put($cacheKey, $QA,100);
+                ?>
                 <table class="table table-striped table-bordered table-hover datatableclass" id="client_table">
                     <thead>
                     <tr>

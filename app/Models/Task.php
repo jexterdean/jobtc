@@ -13,7 +13,6 @@ class Task extends Model
         'username',
         'is_visible',
         'task_title',
-        'assign_username',
         'task_description',
         'due_date',
         'task_status',

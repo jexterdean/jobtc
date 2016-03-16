@@ -23,7 +23,7 @@
                     </div>
                     @role('admin')
                         <div class="form-group">
-                            {!!  Form::select('assign_username', [null=>'Assign to user'] + $assign_username, isset
+                            {!!  Form::select('assign_username', $assign_username, isset
                             ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '3'] )  !!}
                         </div>
                     @endrole
@@ -36,9 +36,9 @@
                             <label> Visible to Client </label>
                             <div class="radio-list">
                                 <label class="radio-inline">
-                                    {{ Form::radio('is_visible','yes',true) }} Yes</label>
+                                    {!!  Form::radio('is_visible','yes',true) !!} Yes</label>
                                 <label class="radio-inline">
-                                    {{ Form::radio('is_visible','no') }} No </label>
+                                    {!! Form::radio('is_visible','no')  !!} No </label>
                             </div>
                         </div>
                     @else

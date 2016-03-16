@@ -2,15 +2,29 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
+use Illuminate\Http\Request;
+
+use App\Models\Task;
+
+
+use View;
+use Auth;
+use Redirect;
+use Validator;
+use Input;
 
 class TaskController extends BaseController
 {
 
+
+    /**
+     * @return mixed
+     */
     public function index()
     {
 
-        if (Entrust::hasRole('Staff')) {
-            $task = Task::where('assign_username', '=', Auth::user()->username)
+        if (parent::hasRole('staff')) {
+            $task = Task::where('username', '=', Auth::user()->username)
                 ->orderBy('created_at', 'desc')
                 ->get();
         } else {
@@ -41,10 +55,10 @@ class TaskController extends BaseController
     {
     }
 
-    public function store()
+    public function store(Request $request)
     {
 
-        $validation = Validator::make(Input::all(), [
+        $validation = Validator::make($request->all(), [
             'task_title' => 'required',
             'due_date' => 'required',
             'belongs_to' => 'required',
@@ -58,10 +72,10 @@ class TaskController extends BaseController
 
         $task = new Task;
         $data = Input::all();
-        $data['username'] = Auth::user()->username;
+//        $data['username'] = Auth::user()->username;
         $data['task_status'] = 'pending';
         $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
-        $data['assign_username'] = Input::get('assign_username');
+        $data['username'] = Input::get('assign_username');
 
         $task->fill($data);
         $task->save();

@@ -4,6 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 
+use App\Models\Bug;
+use App\Models\Project;
+use App\Models\AssignedUser;
+use App\Models\Task;
+use App\Models\User;
+use App\Models\Note;
+
+use DB;
+use Validator;
+use Auth;
+use Input;
+use View;
+use Redirect;
+use File;
 
 class BugController extends BaseController
 {
@@ -11,21 +25,24 @@ class BugController extends BaseController
     public function index()
     {
 
-        if (Entrust::hasRole('Admin'))
+        if ($this->userHasRole('admin')) {
             $bug = Bug::all();
-        elseif (Entrust::hasRole('Client')) {
-            $bug = DB::table('fp_bug')
-                ->join('fp_project', 'fp_project.project_id', '=', 'fp_bug.project_id')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
-                ->where('fp_user.user_id', '=', Auth::user()->user_id)
-                ->get();
-        } elseif (Entrust::hasRole('Staff')) {
-            $bug = DB::table('fp_bug')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_bug.bug_id')
-                ->where('belongs_to', '=', 'bug')
-                ->where('username', '=', Auth::user()->username)
-                ->get();
-        }
+        } else
+            if ($this->userHasRole('client')) {
+                $bug = DB::table('bug')
+                    ->join('project', 'project.project_id', '=', 'bug.project_id')
+                    ->join('user', 'user.client_id', '=', 'project.client_id')
+                    ->where('user.user_id', '=', Auth::user()->user_id)
+                    ->get();
+            } else
+                if ($this->userHasRole('staff')) {
+
+                    $bug = DB::table('bug')
+                        ->join('assigned_user', 'assigned_user.unique_id', '=', 'bug.bug_id')
+                        ->where('belongs_to', '=', 'bug')
+                        ->where('username', '=', Auth::user()->username)
+                        ->get();
+                }
 
         $project_options = Project::orderBy('project_title', 'asc')
             ->lists('project_title', 'project_id');
@@ -41,39 +58,41 @@ class BugController extends BaseController
 
     public function show($bug_id)
     {
-
-        if (Entrust::hasRole('Admin'))
+        if ($this->userHasRole('admin')) {
             $bug = Bug::find($bug_id);
-        elseif (Entrust::hasRole('Client')) {
-            $bug = DB::table('fp_bug')
-                ->join('fp_project', 'fp_project.project_id', '=', 'fp_bug.project_id')
-                ->join('fp_user', 'fp_user.client_id', '=', 'fp_project.client_id')
-                ->where('fp_user.user_id', '=', Auth::user()->user_id)
+        } elseif ($this->userHasRole('staff')) {
+            $bug = DB::table('bug')
+                ->join('project', 'project.project_id', '=', 'bug.project_id')
+                ->join('user', 'user.client_id', '=', 'project.client_id')
+                ->where('user.user_id', '=', Auth::user()->user_id)
                 ->where('bug_id', '=', $bug_id)
                 ->first();
-        } elseif (Entrust::hasRole('Staff')) {
-            $bug = DB::table('fp_bug')
-                ->join('fp_assigned_user', 'fp_assigned_user.unique_id', '=', 'fp_bug.bug_id')
+        } elseif ($this->userHasRole('client')) {
+
+
+            $bug = DB::table('bug')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'bug.bug_id')
                 ->where('belongs_to', '=', 'bug')
                 ->where('username', '=', Auth::user()->username)
                 ->where('bug_id', '=', $bug_id)
                 ->first();
         }
-
         if (!$bug)
             return Redirect::to('bug')->withErrors('This is not a valid link!!');
 
-        $assignedUser = Assigned_User::where('belongs_to', '=', 'bug')
+        $assignedUser = AssignedUser::where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)
             ->get();
 
-        $assign_username = Assigned_User::where('belongs_to', '=', 'bug')
+        $assign_username = AssignedUser::where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)
-            ->lists('username', 'username');
+            ->lists('username', 'username')
+            ->toArray();
 
         $user = User::where('client_id', '=', '')
             ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+            ->lists('name', 'username')
+            ->toArray();
 
         $project_options = Project::orderBy('project_title', 'asc')
             ->lists('project_title', 'project_id');
@@ -83,21 +102,21 @@ class BugController extends BaseController
             ->where('username', '=', Auth::user()->username)
             ->first();
 
-        $comment = DB::table('fp_comment')
+        $comment = DB::table('comment')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)
-            ->join('fp_user', 'fp_comment.username', '=', 'fp_user.username')
-            ->orderBy('fp_comment.created_at', 'desc')
+            ->join('user', 'comment.username', '=', 'user.username')
+            ->orderBy('comment.created_at', 'desc')
             ->get();
 
-        $attachment = DB::table('fp_attachment')
+        $attachment = DB::table('attachment')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)
-            ->join('fp_user', 'fp_attachment.username', '=', 'fp_user.username')
-            ->orderBy('fp_attachment.created_at', 'desc')
+            ->join('user', 'attachment.username', '=', 'user.username')
+            ->orderBy('attachment.created_at', 'desc')
             ->get();
 
-        if (!Entrust::hasRole('Staff')) {
+        if (!$this->userHasRole('Staff')) {
             $task = Task::where('belongs_to', '=', 'bug')
                 ->where('unique_id', '=', $bug_id)
                 ->orderBy('created_at', 'desc')
@@ -136,7 +155,8 @@ class BugController extends BaseController
         $bug = Bug::find($id);
 
         $project_options = Project::orderBy('project_title', 'asc')
-            ->lists('project_title', 'project_id');
+            ->lists('project_title', 'project_id')
+            ->toArray();
 
         return View::make('bug.edit', [
             'bugs' => $bug,
@@ -144,12 +164,13 @@ class BugController extends BaseController
         ]);
     }
 
-    public function store()
+    public
+    function store()
     {
 
         $validation = Validator::make(Input::all(), [
             'project_id' => 'required',
-            'ref_no' => 'required|unique:fp_bug',
+            'ref_no' => 'required|unique:bug',
             'reported_on' => 'required',
             'bug_priority' => 'required',
             'bug_status' => 'required'
@@ -171,7 +192,8 @@ class BugController extends BaseController
         return Redirect::to('bug')->withSuccess("Bug added successfully !!");
     }
 
-    public function update($bug_id)
+    public
+    function update($bug_id)
     {
         $bug = Bug::find($bug_id);
 
@@ -186,7 +208,8 @@ class BugController extends BaseController
         return Redirect::to('bug')->withSuccess("Bug updated successfully!!");
     }
 
-    public function updateBugStatus()
+    public
+    function updateBugStatus()
     {
         $bug = Bug::find(Input::get('bug_id'));
         $validation = Validator::make(Input::all(), [
@@ -205,41 +228,43 @@ class BugController extends BaseController
         return Redirect::back()->withSuccess('Saved!!');
     }
 
-    public function destroy()
+    public
+    function destroy()
     {
     }
 
-    public function delete($bug_id)
+    public
+    function delete($bug_id)
     {
         $bug = Bug::find($bug_id);
 
-        if (!$bug || !Entrust::hasRole('Admin'))
+        if (!$bug || !$this->userHasRole('Admin'))
             return Redirect::to('bug')->withErrors('This is not a valid link!!');
 
-        DB::table('fp_assigned_user')
+        DB::table('assigned_user')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)->delete();
 
-        $attachments = DB::table('fp_attachment')
+        $attachments = DB::table('attachment')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)->get();
 
         foreach ($attachments as $attachment)
             File::delete('assets/attachment_files/' . $attachment->file);
 
-        DB::table('fp_attachment')
+        DB::table('attachment')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)->delete();
 
-        DB::table('fp_comment')
+        DB::table('comment')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)->delete();
 
-        DB::table('fp_notes')
+        DB::table('notes')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)->delete();
 
-        DB::table('fp_task')
+        DB::table('task')
             ->where('belongs_to', '=', 'bug')
             ->where('unique_id', '=', $bug_id)->delete();
 

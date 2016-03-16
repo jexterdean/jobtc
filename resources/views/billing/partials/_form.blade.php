@@ -9,7 +9,7 @@
     <div class="form-group">
         {!!  Form::label('client_id','Company Name',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('client_id', [null=>'Please Select'] + $clients, isset($billing->client_id) ?
+            {!!  Form::select('client_id', $clients, isset($billing->client_id) ?
                 $billing->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '2'] )  !!}
         </div>
     </div>
@@ -61,7 +61,7 @@
     <div class="form-group">
         {!!  Form::label('notes','Note',['class' => 'col-md-3 control-label'])  !!}
         <div class="col-md-9">
-            {!! Form::textarea('notes',isset($billing->notes) ? Helper::br2nl($billing->notes) : '',['size' =>
+            {!! Form::textarea('notes',isset($billing->notes) ? \App\Helpers\Helper::br2nl($billing->notes) : '',['size' =>
             '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Notes', 'tabindex' => '9'])  !!}
         </div>
     </div>

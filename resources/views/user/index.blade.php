@@ -56,13 +56,16 @@
                     $linkToEdit = "<a href='user/$user->user_id/edit' data-toggle='modal' data-target='#ajax'> <i class='fa fa-edit'></i> </a>";
                     $linkToDelete = "<a href='user/$user->user_id/delete'> <i class='fa fa-trash-o alert_delete'></i> </a>";
                     $Options = "$linkToEdit";
-                    $QA[] = array($user->name, $user_status, $user->email, $roles[$user->role_id], $company_name, $Options);
+                    $QA[] = array($user->name,
+                            $user_status,
+                            $user->email,
+                            $roles[$user->role_id],
+                            $company_name,
+                            $Options);
                 }
-
-                $DATA['aaData'] = $QA;
-                $fp = fopen('data.txt', 'w');
-                fwrite($fp, json_encode($DATA));
-                fclose($fp); ?>
+                    $cacheKey = md5('user.list.'. session()->getId());
+                    Cache::put($cacheKey, $QA,100);
+                ?>
                 <table class="table table-striped table-bordered table-hover datatableclass" id="user_table">
                     <thead>
                     <tr>

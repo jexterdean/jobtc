@@ -3,6 +3,17 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\Billing;
+use App\Models\Item;
+
+
+use Auth;
+use Validator;
+use View;
+use Redirect;
+use DB;
+use Input;
+
 class ItemController extends BaseController
 {
 
@@ -33,7 +44,7 @@ class ItemController extends BaseController
             return Redirect::to('billing/invoice')->withErrors("Wrong URL");
 
         $validation = Validator::make(Input::all(), [
-            'item_name' => 'required|unique:fp_item,item_name,null,item_id,billing_id,' . Input::get('billing_id'),
+            'item_name' => 'required|unique:item,item_name,null,item_id,billing_id,' . Input::get('billing_id'),
             'item_quantity' => 'required|numeric',
             'unit_price' => 'required|numeric',
         ]);

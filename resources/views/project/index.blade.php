@@ -9,15 +9,15 @@
                 </div>
                 <div class="modal-body">
                     @role('admin')
-                        {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
-                        @include('project/partials/_form')
-                        {!! Form::close()  !!}
+                    {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
+                    @include('project/partials/_form')
+                    {!! Form::close()  !!}
                     @else
                         <div class='alert alert-danger alert-dismissable'>
                             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                             <strong>You dont have to perform this action!!</strong>
                         </div>
-                    @endrole
+                        @endrole
                 </div>
             </div>
         </div>
@@ -57,10 +57,9 @@
                     $QA[] = array($project->project_title, isset($clients[$project->client_id]) ? $clients[$project->client_id] : '', $project->ref_no, date("d M Y", strtotime($project->start_date)), date("d M Y", strtotime($project->deadline)), $linkStatus, $Option);
                 }
 
-                $DATA['aaData'] = $QA;
-                $fp = fopen('data.txt', 'w');
-                fwrite($fp, json_encode($DATA));
-                fclose($fp); ?>
+                $cacheKey = md5('project.list.' . session()->getId());
+                Cache::put($cacheKey, $QA, 100);
+                ?>
                 <table class="table table-striped table-bordered table-hover datatableclass" id="project_table">
                     <thead>
                     <tr>

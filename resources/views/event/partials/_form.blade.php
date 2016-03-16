@@ -27,7 +27,7 @@
             '', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Enter Start Date', 'tabindex' => '4', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
         </div>
     </div>
-    @if(Entrust::hasRole('Admin'))
+    @role('admin')
         <div class="form-group">
             <label class='col-md-3 control-label'>Make Public
             </label>
@@ -35,7 +35,7 @@
                 {!!  Form::checkbox('public', '1', false, ['class' => 'minimal', 'id' => 'minimal', 'tabindex' => '5']) !!}
             </div>
         </div>
-    @endif
+    @endrole
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             {!!  Form::submit(isset($buttonText) ? $buttonText : 'Save',['class' => 'btn btn-primary', 'tabindex' =>

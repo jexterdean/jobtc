@@ -23,11 +23,9 @@ class DashboardController extends BaseController
 
     public function index(Request $request)
     {
-        $activeUser = $request->user();
-
         $client = Client::all();
         $user = User::all();
-        $events = Events::where('username', '=', $activeUser->username)
+        $events = Events::where('username', '=', parent::getActiveUser()->username)
             ->orWhere('public', '=', '1')
             ->get();
 
@@ -35,7 +33,7 @@ class DashboardController extends BaseController
         $data = [];
 
 
-        if ($activeUser->is('admin')) {
+        if (parent::hasRole('admin')) {
             $estimate = Billing::where('billing_type', '=', 'estimate')
                 ->get();
 
@@ -91,7 +89,8 @@ class DashboardController extends BaseController
                 'events' => $events,
                 'tasks' => $tasks
             ];
-        } elseif ($activeUser->is('staff')) {
+        } elseif (parent::hasRole('staff')) {
+
 
             $projects = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
@@ -151,7 +150,7 @@ class DashboardController extends BaseController
                 'events' => $events
             ];
 
-        } elseif ($activeUser->is('client')) {
+        } elseif (parent::hasRole('client')) {
 
             $projects = DB::table('project')
                 ->join('user', 'user.client_id', '=', 'project.client_id')

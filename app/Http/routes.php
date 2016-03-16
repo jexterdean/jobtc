@@ -14,41 +14,53 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 
-//Admin
-Route::group(['middleware' => ['auth','auth.admin']], function () {
-    Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
-        ->where('billing_type', 'invoice|estimate');
-    Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
-        ->where('billing_type', 'invoice|estimate');
-    Route::get('/billing/{billing_type}/{billing_id}/edit', ['uses' => 'BillingController@edit'])
-        ->where('billing_type', 'invoice|estimate');
-    Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
-        ->where('billing_type', 'invoice|estimate');
-    Route::resource('billing', 'BillingController');
-    Route::resource('setting', 'SettingController');
-    Route::resource('template', 'TemplateController');
-    Route::resource('item', 'ItemController');
-    Route::resource('payment', 'PaymentController');
-    Route::resource('user', 'UserController');
-    Route::resource('client', 'ClientController');
-    Route::resource('assigneduser', 'AssignedController');
-});
-
-//staff
-Route::group(['middleware' => ['auth','auth.staff']], function () {
-    Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
-        ->where('billing_type', 'invoice|estimate');
-    Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
-        ->where('billing_type', 'invoice|estimate');
-});
-
-//client
-Route::group(['middleware' => ['auth','auth.client']], function () {
-    Route::resource('task', 'TaskController');
-});
-
 Route::group(['middleware' => 'auth'], function () {
 
+
+    /**
+     *  Client
+     */
+    Route::group(['middleware' => 'role:client'], function () {
+        Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
+            ->where('billing_type', 'invoice|estimate');
+        Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
+            ->where('billing_type', 'invoice|estimate');
+    });
+
+    /**
+     * Admin only
+     */
+    Route::group(['middleware'=> 'role:admin'], function(){
+
+        Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
+            ->where('billing_type', 'invoice|estimate');
+        Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
+            ->where('billing_type', 'invoice|estimate');
+        Route::get('/billing/{billing_type}/{billing_id}/edit', ['uses' => 'BillingController@edit'])
+            ->where('billing_type', 'invoice|estimate');
+        Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
+            ->where('billing_type', 'invoice|estimate');
+        Route::resource('task', 'TaskController');
+        Route::resource('billing', 'BillingController');
+        Route::resource('setting', 'SettingController');
+        Route::resource('template', 'TemplateController');
+        Route::resource('item', 'ItemController');
+        Route::resource('payment', 'PaymentController');
+        Route::resource('user', 'UserController');
+        Route::resource('client', 'ClientController');
+        Route::resource('assigneduser', 'AssignedController');
+
+    });
+
+    /**
+     * Staff
+     */
+    Route::group(['middleware'=> 'role:staff'], function(){
+        Route::resource('task', 'TaskController');
+    });
+
+
+    Route::get('/data/{cacheKey}','CacheDataController@getCache');
     Route::resource('event', 'EventsController');
     Route::resource('project', 'ProjectController');
     Route::resource('bug', 'BugController');

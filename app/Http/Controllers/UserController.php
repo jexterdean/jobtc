@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\BaseController;
 
 use App\Models\User;
@@ -21,6 +22,8 @@ class UserController extends BaseController
     public function index()
     {
         $user = DB::table('user')
+            ->select('user.user_id','user.user_status', 'user.name','user.email','user.username',
+                'role_user.role_id','user.client_id')
             ->join('role_user', 'role_user.user_id', '=', 'user.user_id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('roles.level', '<>', '1')
@@ -61,8 +64,10 @@ class UserController extends BaseController
     public function edit($id)
     {
         $user = DB::table('user')
-            ->join('assigned_roles', 'assigned_roles.user_id', '=', 'user.user_id')
-            ->where('user.user_id', '!=', '1')
+//            ->join('assigned_roles', 'assigned_roles.user_id', '=', 'user.user_id')
+            ->join('role_user', 'role_user.user_id', '=', 'user.user_id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->where('roles.level', '<>', '1')
             ->where('user.user_id', '=', $id)
             ->first();
 
@@ -71,14 +76,16 @@ class UserController extends BaseController
         $client_options = Client::orderBy('company_name', 'asc')
             ->lists('company_name', 'client_id')->toArray();
 
-        if ($user)
+        if ($user) {
+
             return View::make('user.edit', [
                 'user' => $user,
                 'clients' => $client_options,
                 'roles' => $role
             ]);
-        else
-            return Redirect::to('user')->withErrors('Wrong user id to edit!!');
+        }
+
+        return Redirect::to('user')->withErrors('Wrong user id to edit!!');
     }
 
     public function store(Request $request)
@@ -99,10 +106,10 @@ class UserController extends BaseController
         }
 
         $clientRole = Role::where('id', Input::get('role_id'))->first();
-        if ($clientRole && $clientRole->slug === 'client'){
+        if ($clientRole && $clientRole->slug === 'client') {
 
             // no company id the return.
-            if(!Input::get('client_id')){
+            if (!Input::get('client_id')) {
 
                 return Redirect::to('user')->withInput($request->except('password'))
                     ->withErrors('A client should have a company!!');
@@ -125,7 +132,7 @@ class UserController extends BaseController
         return Redirect::to('user')->withSuccess("User added successfully!!");
     }
 
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
         $user = User::find($id);
         $validation = Validator::make(Input::all(), [
@@ -139,10 +146,10 @@ class UserController extends BaseController
         }
 
         $clientRole = Role::where('id', Input::get('role_id'))->first();
-        if ($clientRole && $clientRole->slug === 'client'){
+        if ($clientRole && $clientRole->slug === 'client') {
 
             // no company id the return.
-            if(!Input::get('client_id')){
+            if (!Input::get('client_id')) {
 
                 print_r(Input::get('client_id'));
                 die();

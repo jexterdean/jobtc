@@ -99,9 +99,9 @@
 
                             </div>
 
-                            @if(Entrust::hasRole('Admin'))
+                            @role('admin')
                                 @include('common.assign',['assignedUsers' => $assignedUsers, 'belongs_to' => 'bug', 'unique_id' => $bug->bug_id])
-                            @endif
+                            @endrole
 
                             @include('common.comment',['comments' => $comments, 'belongs_to' => 'bug', 'unique_id' => $bug->bug_id])
 

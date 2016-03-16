@@ -31,4 +31,8 @@ class BaseController extends Controller
         return $user->is(strtolower($role));
     }
 
+    protected function hasRole($role){
+        return $this->userHasRole($role);
+    }
+
 }

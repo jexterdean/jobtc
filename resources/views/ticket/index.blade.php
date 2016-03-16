@@ -81,10 +81,9 @@
                     $QA[] = array($ticket->ticket_subject, isset($ticket->username) ? $ticket->username : '', studly_case($ticket->ticket_priority), $ticket_status, date("d M Y", strtotime($ticket->created_at)), $Options);
                 }
 
-                $DATA['aaData'] = $QA;
-                $fp = fopen('data.txt', 'w');
-                fwrite($fp, json_encode($DATA));
-                fclose($fp); ?>
+                    $cacheKey = 'tickets.list.'. session()->getId();
+                    \Cache::put($cacheKey,$QA , 100);
+                ?>
                 <table class="table table-striped table-bordered table-hover datatableclass" id="project_table">
                     <thead>
                     <tr>

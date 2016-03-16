@@ -20,8 +20,6 @@
                         <i class="fa fa-users"></i> <span>{{Lang::get('messages.Clients')}}</span>
                     </a>
                 </li>
-            @endrole
-            @role('staff')
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-tablet"></i>

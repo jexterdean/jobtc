@@ -60,7 +60,7 @@
                                                 Status:
                                             </div>
                                             <div class="col-md-7 value">
-                                                @if(!Entrust::hasRole('Client'))
+                                                @if(!Auth::user()->is('client'))
                                                     {!!  Form::open(['method' => 'POST','url' => 'updateTicketStatus',
                                                     'class' => 'form-horizontal'])  !!}
                                                     {!!  Form::select('ticket_status', [
@@ -89,9 +89,9 @@
 
                             </div>
 
-                            @if(Entrust::hasRole('Admin'))
+                            @role('admin')
                                 @include('common.assign',['assignedUsers' => $assignedUsers, 'belongs_to' => 'ticket', 'unique_id' => $ticket->ticket_id])
-                            @endif
+                            @endrole
 
                             @include('common.comment',['comments' => $comments, 'belongs_to' => 'ticket', 'unique_id' => $ticket->ticket_id])
                         </div>
