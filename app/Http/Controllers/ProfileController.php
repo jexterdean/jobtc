@@ -3,6 +3,16 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\User;
+
+use Hash;
+use \DB;
+use \Auth;
+use \View;
+use \Validator;
+use \Input;
+use \Redirect;
+
 class ProfileController extends BaseController
 {
 

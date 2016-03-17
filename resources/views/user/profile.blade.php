@@ -13,7 +13,7 @@
                     <div class="form-group">
                         {!!  Form::label('name','Name') !!}
                         {!!  Form::input('text','name',Auth::user()->name,['class' => 'form-control', 'placeholder' =>
-                        'Enter Name'] !!}
+                        'Enter Name']) !!}
                     </div>
                     <div class="form-group">
                         {!!   Form::label('email','Email')!!}

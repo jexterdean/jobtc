@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
+use Bican\Roles\Exceptions\RoleDeniedException;
 use Illuminate\Http\Request;
 
 use App\Models\Task;
@@ -16,6 +17,12 @@ use Input;
 class TaskController extends BaseController
 {
 
+    function __construct()
+    {
+        if(!Auth::user()->is('client')){
+            throw  new RoleDeniedException('Client or Admin');
+        }
+    }
 
     /**
      * @return mixed

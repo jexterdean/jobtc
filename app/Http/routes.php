@@ -55,9 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Staff
      */
-    Route::group(['middleware'=> 'role:client'], function(){
-        Route::resource('task', 'TaskController');
-    });
+    Route::resource('task', 'TaskController');
 
 
     Route::get('/data/{cacheKey}','CacheDataController@getCache');

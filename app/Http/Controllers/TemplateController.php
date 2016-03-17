@@ -3,6 +3,13 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\Template;
+
+use View;
+use Auth;
+use Redirect;
+use Validator;
+use Input;
 class TemplateController extends BaseController
 {
 
@@ -12,7 +19,8 @@ class TemplateController extends BaseController
 
 
         return View::make('template.index', [
-            'templates' => $templates
+            'templates' => $templates,
+            'assets' => []
         ]);
     }
 
