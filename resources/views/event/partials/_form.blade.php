@@ -9,7 +9,7 @@
     <div class="form-group">
         {!! Form::label('event_description','Event Description',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::textarea('event_description',isset($event->event_description) ? Helper::br2nl
+            {!!  Form::textarea('event_description',isset($event->event_description) ? \App\Helpers\Helper::br2nl
             ($event->event_description) : '',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Event Description', 'tabindex' => '2']) !!}
         </div>
     </div>

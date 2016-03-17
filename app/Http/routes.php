@@ -55,7 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Staff
      */
-    Route::group(['middleware'=> 'role:staff'], function(){
+    Route::group(['middleware'=> 'role:client'], function(){
         Route::resource('task', 'TaskController');
     });
 

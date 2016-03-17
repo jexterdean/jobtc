@@ -108,7 +108,7 @@ class UserController extends BaseController
         $clientRole = Role::where('id', Input::get('role_id'))->first();
         if ($clientRole && $clientRole->slug === 'client') {
 
-            // no company id the return.
+            // no company id then return.
             if (!Input::get('client_id')) {
 
                 return Redirect::to('user')->withInput($request->except('password'))

@@ -124,7 +124,7 @@ class ProjectController extends BaseController
         } else {
             $task = Task::where('belongs_to', '=', 'project')
                 ->where('unique_id', '=', $project_id)
-                ->where('assign_username', '=', Auth::user()->username)
+                ->where('username', '=', Auth::user()->username)
                 ->orderBy('created_at', 'desc')
                 ->get();
         }

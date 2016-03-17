@@ -24,7 +24,7 @@
                                                 </small>
                                                 {{ $inbox_message->from_username }}
                                             </a>
-                                            {{ $inbox_message->message_content }}
+                                            {!!  $inbox_message->message_content  !!}
                                         </p>
 
                                         @if($inbox_message->file)
@@ -67,7 +67,7 @@
                                                 </small>
                                                 {{ $sent_message->to_username }}
                                             </a>
-                                            {{ $sent_message->message_content }}
+                                            {!!  $sent_message->message_content  !!}
                                         </p>
 
                                         @if($sent_message->file)
@@ -118,7 +118,7 @@
                     </div>
                     <div class="form-group">
                         {!!  Form::select('to_username', [null=>'Message to'] + $users, '', ['class' => 'form-control',
-                        'placeholder' => 'Select One', 'tabindex' => '1'] )  !!}
+                         'tabindex' => '1'] )  !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::input('text','message_subject','',['class' => 'form-control', 'placeholder' =>

@@ -3,6 +3,16 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\User;
+use App\Models\Message;
+use App\Models\Setting;
+
+
+use View;
+use Auth;
+use Redirect;
+use Validator;
+use Input;
 class MessageController extends BaseController
 {
 
@@ -11,7 +21,8 @@ class MessageController extends BaseController
 
         $user_options = User::where('username', '!=', Auth::user()->username)
             ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+            ->lists('name', 'username')
+            ->toArray();
 
         $inbox = Message::where('to_username', '=', Auth::user()->username)
             ->orderBy('created_at', 'asc')

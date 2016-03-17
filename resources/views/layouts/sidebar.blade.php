@@ -20,6 +20,8 @@
                         <i class="fa fa-users"></i> <span>{{Lang::get('messages.Clients')}}</span>
                     </a>
                 </li>
+            @endrole;
+            @if(!Auth::user()->is('staff'))
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-tablet"></i>
@@ -33,7 +35,7 @@
                                         class="fa fa-file-text-o"></i> {{Lang::get('messages.Invoice')}}</a></li>
                     </ul>
                 </li>
-            @endrole
+            @endif
             <li>
                 <a href="{{ url('project') }}">
                     <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
@@ -49,13 +51,13 @@
                     <i class="fa fa-ticket"></i> <span>{{Lang::get('messages.Tickets')}}</span>
                 </a>
             </li>
-            @role('client')
+            @if(!Auth::user()->is('staff'))
                 <li>
                     <a href="{{ url('task') }}">
                         <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
                     </a>
                 </li>
-            @endrole
+            @endif
             <li>
                 <a href="{{ url('event') }}">
                     <i class="fa fa-calendar"></i> <span>{{Lang::get('messages.Event Calendar')}}</span>

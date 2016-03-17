@@ -59,11 +59,9 @@
                         $title .= " <small class='badge bg-green'>public</small>";
                     $QA[] = array($title, $event->event_description, date("d M Y", strtotime($event->start_date)), date("d M Y", strtotime($event->end_date)), $status, $Options);
                 }
-
-                $DATA['aaData'] = $QA;
-                $fp = fopen('data.txt', 'w');
-                fwrite($fp, json_encode($DATA));
-                fclose($fp); ?>
+                    $cacheKey = 'events.list.'. session()->getId();
+                    Cache::put($cacheKey, $QA, 100);
+?>
                 <table class="table table-striped table-bordered table-hover datatableclass" id="user_table">
                     <thead>
                     <tr>

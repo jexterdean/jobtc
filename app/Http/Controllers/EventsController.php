@@ -3,13 +3,29 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use App\Models\Events;
+use App\Helpers\Helper;
+
+use Auth;
+use DB;
+use Validator;
+use Input;
+use Redirect;
+use View;
+use Hash;
+
 class EventsController extends BaseController
 {
 
     public function index()
     {
-        $events = Events::where('username', '=', Auth::user()->username)->orWhere('public', '=', '1')->get();
+        $events = Events::where('username', '=', Auth::user()->username)
+            ->orWhere('public', '=', '1')
+            ->get();
+
         $assets = ['table', 'select2'];
+
+
         return View::make('event.index', [
             'events' => $events,
             'assets' => $assets
@@ -43,7 +59,7 @@ class EventsController extends BaseController
     {
 
         $validation = Validator::make(Input::all(), [
-            'event_title' => 'required|unique:fp_events',
+            'event_title' => 'required|unique:events',
             'event_description' => 'required',
             'start_date' => 'required|date_format:"d-m-Y"',
             'end_date' => 'required|date_format:"d-m-Y"'
@@ -74,7 +90,7 @@ class EventsController extends BaseController
 
         $event = Events::find($event_id);
         $validation = Validator::make(Input::all(), [
-            'event_title' => 'required|unique:fp_events,event_title,' . $event_id . ',event_id',
+            'event_title' => 'required|unique:events,event_title,' . $event_id . ',event_id',
             'event_description' => 'required',
             'start_date' => 'required|date_format:"d-m-Y"',
             'end_date' => 'required|date_format:"d-m-Y"'
@@ -105,7 +121,7 @@ class EventsController extends BaseController
     {
         $event = Events::find($event_id);
 
-        if (!$event && ($event->username != Auth::user()->username || !Entrust::hasRole('Admin')))
+        if (!$event && ($event->username != Auth::user()->username || !parent::hasRole('Admin')))
             return Redirect::back()->withErrors('This is not a valid link!!');
 
         $event->delete();

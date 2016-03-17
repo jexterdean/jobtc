@@ -5,7 +5,7 @@ use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 
 use App\Models\Task;
-
+use App\Models\User;
 
 use View;
 use Auth;
@@ -37,7 +37,10 @@ class TaskController extends BaseController
             ->orderBy('name', 'asc')
             ->lists('name', 'username');
 
+        $assets = [];
+
         return View::make('task.index', [
+            'assets' => $assets,
             'tasks' => $task,
             'assign_username' => $assign_username
         ]);

@@ -193,7 +193,7 @@
                 </div>
             </div>
 
-            @role('client')
+            @if(!Auth::user()->is('client'))
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
@@ -231,7 +231,7 @@
                         @endif
                     </div>
                 </div>
-            @endrole
+            @endif
         </div>
 
 
