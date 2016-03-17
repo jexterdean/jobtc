@@ -51,7 +51,7 @@
                     <i class="fa fa-ticket"></i> <span>{{Lang::get('messages.Tickets')}}</span>
                 </a>
             </li>
-            @if(!Auth::user()->is('staff'))
+            @if(!Auth::user()->is('client'))
                 <li>
                     <a href="{{ url('task') }}">
                         <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>

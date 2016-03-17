@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 class AssignedUser extends Model
 {
 
+    const BELONGS_TO_TICKET = 'ticket';
+    const BELONGS_TO_TASK = 'task';
+    const BELONGS_TO_PROJECT = 'project';
+
     protected $fillable = ['id', 'belongs_to', 'unique_id', 'username'];
     protected $primaryKey = 'id';
     protected $table = 'assigned_user';

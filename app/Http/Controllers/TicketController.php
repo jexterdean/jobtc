@@ -8,6 +8,7 @@ use App\Models\AssignedUser;
 use App\Models\User;
 use App\Models\Setting;
 use App\Models\Note;
+use App\Models\Task;
 
 
 use Redirect;
@@ -81,7 +82,8 @@ class TicketController extends BaseController
             ->first();
 
         $user_options = User::orderBy('name', 'asc')
-            ->lists('name', 'username');
+            ->lists('name', 'username')
+            ->toArray();
 
         $comment = DB::table('comment')
             ->where('belongs_to', '=', 'ticket')
@@ -110,7 +112,9 @@ class TicketController extends BaseController
                 ->get();
         }
 
+        $assets = [];
         return View::make('ticket.show', [
+            'assets' => $assets,
             'ticket' => $ticket,
             'note' => $note,
             'comments' => $comment,

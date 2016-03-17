@@ -19,7 +19,7 @@ class TaskController extends BaseController
 
     function __construct()
     {
-        if(!Auth::user()->is('client')){
+        if(Auth::user()->is('client')){
             throw  new RoleDeniedException('Client or Admin');
         }
     }

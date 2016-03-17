@@ -4,6 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 
+use App\Models\Setting;
+use App\Models\Attachment;
+
+use Validator;
+use Redirect;
+use Input;
+use Auth;
+use File;
+
 class AttachmentController extends BaseController
 {
 
@@ -61,7 +70,7 @@ class AttachmentController extends BaseController
     {
         $attachment = Attachment::find($attachment_id);
 
-        if (!$attachment || ($attachment->username != Auth::user()->username && !Entrust::hasRole('Admin')))
+        if (!$attachment || ($attachment->username != Auth::user()->username && !parent::hasRole('Admin')))
             return Redirect::back()->withErrors('This is not a valid link!!');
 
         File::delete('assets/attachment_files/' . $attachment->file);

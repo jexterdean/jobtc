@@ -333,7 +333,6 @@
         </div>
     </div>
 
-    <h1>Events</h1>
     <?php
     $EVENTS = array();
     foreach ($events as $event) {
