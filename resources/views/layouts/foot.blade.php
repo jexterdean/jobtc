@@ -99,9 +99,7 @@
                 week: 'week',
                 day: 'day'
             },
-            events: [
-                {{ $EVENTS }}
-            ]
+            events:{!!  $EVENTS !!}
         });
     });
     @endif

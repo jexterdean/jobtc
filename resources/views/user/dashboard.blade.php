@@ -333,15 +333,24 @@
         </div>
     </div>
 
+    <h1>Events</h1>
     <?php
     $EVENTS = array();
     foreach ($events as $event) {
-        $start_date = date("Y-m-d", strtotime($event->start_date));
-        $end_date = date("Y-m-d", strtotime($event->end_date));
+        $startDate = date("Y-m-d", strtotime($event->start_date));
+        $endDate = date("Y-m-d", strtotime($event->end_date));
         $color = \App\Helpers\Helper::getRandomHexColor();
-        $EVENTS[] = "{ title:'$event->event_title', start:'$start_date',end:'$end_date',color:'$color',allDay: true }";
+
+        $EVENTS[] = [
+            'title'=> $event->event_title,
+            'start' => $startDate,
+            'end' => $endDate,
+            'color' => $color,
+            'allDay' => true
+        ];
     }
-    $EVENTS = implode(",", $EVENTS);
+
+            $EVENTS = json_encode($EVENTS);
     ?>
 
 @stop
