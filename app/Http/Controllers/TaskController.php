@@ -19,6 +19,7 @@ class TaskController extends BaseController
 
     function __construct()
     {
+        //Only staff and admin can access
         if(Auth::user()->is('client')){
             throw  new RoleDeniedException('Client or Admin');
         }
