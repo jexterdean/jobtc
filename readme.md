@@ -9,7 +9,7 @@
       - (Authorization)[https://github.com/romanbican/roles]
       - (Imaging)[]
 
-### Jex- Update 3/18/2016
+### Jex- Update 3/18/2016(Sir tom asked me to install the project manager in job.tc)
 
 Encountered these errors when ran migration(php artisan migrate --seed)
 
