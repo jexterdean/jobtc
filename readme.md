@@ -1,4 +1,4 @@
-#Tom's Project Manangement App
+#Tom's Project Management App
 
 ### Requirements
 
@@ -21,4 +21,3 @@ Encountered these errors when ran migration(php artisan migrate --seed)
 
   [PDOException]
   SQLSTATE[HY000]: General error: 1215 Cannot add foreign key constraint
-
