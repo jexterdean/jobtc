@@ -13,22 +13,15 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li class="user-header bg-light-blue">
-                                <img src="{{ \App\Helpers\Helper::getAvatar(Auth::user()->username) }}" class="img-circle"
-                                     alt="User Image"/>
-                                <p>
-                                    {{ Auth::user()->name }}
-                                </p>
+                                <img onclick="window.location.href = '{{ url('/profile') }}' "
+                                     src="{{ \App\Helpers\Helper::getAvatar(Auth::user()->username) }}"
+                                      class="img-circle"
+                                     alt="User Image"
+                                     style="cursor: pointer;"
+                                     title="My profile"
+                                />
                             </li>
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="{{ url('profile') }}" class="btn btn-default btn-flat">Profile</a>
-                                    <a href="{{ url('docs') }}" class="btn btn-default btn-flat">Help</a>
-                                    <a href="{{ url('about') }}" class="btn btn-default btn-flat">About</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="{{ url('logout') }}" class="btn btn-default btn-flat">Log Off</a>
-                                </div>
-                            </li>
+
                         </ul>
                     </li>
                 </ul>
