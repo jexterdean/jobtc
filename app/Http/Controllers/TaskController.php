@@ -45,7 +45,7 @@ class TaskController extends BaseController
             ->orderBy('name', 'asc')
             ->lists('name', 'username');
 
-        $assets = [];
+        $assets = ['calendar'];
 
         return View::make('task.index', [
             'assets' => $assets,
