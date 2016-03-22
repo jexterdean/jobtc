@@ -11,6 +11,7 @@
 
     {!!  HTML::style('assets/custom.css')  !!}
 		{!! HTML::style('assets/css/AdminLTE.css')  !!}
+    {!!  HTML::style('assets/css/app.css')  !!}
 
         <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
