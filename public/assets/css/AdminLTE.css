@@ -16,7 +16,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
-  background: #f9f9f9;
+  background: #A9B7C4;
 }
 a {
   color: #3c8dbc;
@@ -111,7 +111,7 @@ body.fixed .wrapper {
 /* Content */
 .content {
   padding: 20px 15px;
-  background: #f9f9f9;
+  background: #A9B7C4;
 }
 /* Utility */
 /* H1 - H6 font */
@@ -464,7 +464,6 @@ body > .header {
 body > .header .navbar {
   height: 50px;
   margin-bottom: 0;
-  margin-left: 220px;
 }
 body > .header .navbar .sidebar-toggle {
   float: left;
@@ -494,6 +493,8 @@ body > .header .navbar .sidebar-toggle .icon-bar {
 body > .header .navbar .sidebar-toggle .icon-bar + .icon-bar {
   margin-top: 4px;
 }
+
+
 body > .header .navbar .nav > li.user > a {
   font-weight: bold;
 }

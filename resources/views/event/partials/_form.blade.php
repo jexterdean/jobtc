@@ -17,7 +17,8 @@
         {!!  Form::label('start_date','Start Date',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-3">
             {!!  Form::input('text','start_date',isset($event->start_date) ? date("d-m-Y",strtotime($event->start_date)
-            ) : '', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Enter Start Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true']) !!}
+            ) : '', ['class' => 'form-control form-control-inline input-medium date-picker datepicker',
+             ]) !!}
         </div>
     </div>
     <div class="form-group">
