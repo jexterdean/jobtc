@@ -39,7 +39,7 @@
                             <div class="col-md-6">
                                 <div class="box box-solid box-primary">
                                     <div class="box-header">
-                                        <h3 class="box-title">Project Ref # {{ $project->ref_no }}</h3>
+                                        <h3 class="box-title">Project Ref # {{ $project->project_id }}</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row static-info">

@@ -15,11 +15,11 @@
                     </div>
                     <div class="form-group">
                         {!!  Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control',
-                        'placeholder' => 'Enter Description', 'tabindex' => '2']) !!}
+                        'placeholder' => 'Description', 'tabindex' => '2']) !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
-                        input-medium date-picker', 'placeholder' => 'Enter Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+                        input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
                     </div>
                     @role('admin')
                         <div class="form-group">

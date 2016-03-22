@@ -9,7 +9,7 @@
             {!!  Form::hidden('unique_id', $unique_id)  !!}
             <div class="form-group">
                 {!!  Form::select('username',  $users, '', ['class' => 'form-control
-                select2me', 'placeholder' => 'Select One', 'tabindex' =>'1'] )  !!}
+                select2me', 'placeholder' => 'Select User', 'tabindex' =>'1'] )  !!}
             </div>
             <div class="form-group">
                 {!!  Form::submit('Add',['class' => 'btn btn-primary '])  !!}
