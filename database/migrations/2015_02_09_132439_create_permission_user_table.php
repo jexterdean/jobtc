@@ -17,7 +17,11 @@ class CreatePermissionUserTable extends Migration
             $table->integer('permission_id')->unsigned()->index();
             $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
             $table->integer('user_id')->unsigned()->index();
+<<<<<<< HEAD
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+=======
+            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade');
+>>>>>>> 81149e8a533a6bdaeb74ba5c3dfe96e8de11525c
             $table->timestamps();
         });
     }
