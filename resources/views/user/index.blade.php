@@ -49,14 +49,18 @@
                     else
                         $company_name = $clients[$user->client_id];
 
-                    if ($user->user_status == 'Active')
-                        $user_status = $user->username . " <span class='label label-success'>Active</span>";
-                    else
-                        $user_status = $user->username . " <span class='label label-danger'>Banned</span>";
+                    if ($user->user_status == 'Active'){
+                        $user_status = " <span class='label label-success'>Active</span>";
+                    }
+                    else{
+                        $user_status = " <span class='label label-danger'>Banned</span>";
+                    }
+
                     $linkToEdit = "<a href='user/$user->user_id/edit' data-toggle='modal' data-target='#ajax'> <i class='fa fa-edit'></i> </a>";
                     $linkToDelete = "<a href='user/$user->user_id/delete'> <i class='fa fa-trash-o alert_delete'></i> </a>";
                     $Options = "$linkToEdit";
                     $QA[] = array($user->name,
+                            $user->username,
                             $user_status,
                             $user->email,
                             $roles[$user->role_id],
@@ -74,6 +78,9 @@
                         </th>
                         <th>
                             Username
+                        </th>
+                        <th>
+                            Status
                         </th>
                         <th>
                             Email
