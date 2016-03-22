@@ -1,6 +1,6 @@
 <div class="box box-solid box-primary">
     <div class="box-header">
-        <h3 class="box-title">Private Notes by {{ Auth::user()->name }}</h3>
+        <h3 class="box-title">Private Notes {{ Auth::user()->name }}</h3>
     </div>
     <div class="box-body">
         @if(isset($note->note_id))

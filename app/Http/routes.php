@@ -98,3 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
+Route::group(['prefix' => 'api'], function () {
+    Route::group(['prefix' => 'v1'], function () {
+    });
+});
