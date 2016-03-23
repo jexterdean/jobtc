@@ -20,7 +20,7 @@ Route::group(['middleware' => 'auth'], function () {
      * Links
      */
     Route::resource('links','LinkController');
-    Route::resource('linksCategory','LinkCategoryController');
+    Route::resource('linkCategory','LinkCategoryController');
 
     /**
      *  Client
