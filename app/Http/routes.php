@@ -16,6 +16,10 @@ Route::group(['middleware' => 'guest'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
 
+    /**
+     * Links
+     */
+    Route::resource('links','LinkController');
 
     /**
      *  Client

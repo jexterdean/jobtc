@@ -70,6 +70,12 @@
         <i class="fa fa-envelope"></i> <span>{{Lang::get('messages.Message')}}</span>
     </a>
 </li>
+<li>
+    <a href="{{ route('links.index') }}">
+        <i class="fa fa-envelope"></i> <span> Links </span>
+    </a>
+</li>
+
 @role('admin')
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
