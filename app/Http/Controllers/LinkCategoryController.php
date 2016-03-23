@@ -6,9 +6,9 @@ use App\Models\LinkCategory;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 
-class LinkCategoryController extends Controller
+class LinkCategoryController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class LinkCategoryController extends Controller
     {
         $categories = LinkCategory::all();
 
-        return view('linkcategory.index',[
+        return view('linkCategory.index',[
             'assets' => ['table'],
             'categories' => $categories
         ]);
@@ -68,7 +68,11 @@ class LinkCategoryController extends Controller
      */
     public function edit($id)
     {
+        $cat = LinkCategory::find($id);
 
+        return view('linkCategory.edit', [
+            'category'=> $cat
+        ]);
     }
 
     /**
@@ -81,6 +85,7 @@ class LinkCategoryController extends Controller
     public function update(Request $request, $id)
     {
         /** @var  $linkCategory LinkCategory */
+
 
         $linkCategory = LinkCategory::find($id);
         $linkCategory->update($request->all());
@@ -96,6 +101,9 @@ class LinkCategoryController extends Controller
      */
     public function destroy($id)
     {
+        /** @var  $linkCategory LinkCategory*/
+        $linkCategory = LinkCategory::find($id);
+        $linkCategory->delete();
 
         return redirect()->route('linkCategory.index');
     }

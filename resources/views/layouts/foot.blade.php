@@ -74,6 +74,18 @@
 
     });
 
+    $(document).on('click', '.show_edit_form',function(e){
+        e.preventDefault();
+
+        var link = e.currentTarget.href;
+
+        console.log(link);
+        $.get(link, function(data){
+            $('#ajax .modal-content').html(data);
+            $('#ajax').modal('show');
+        });
+    });
+
     $(document).on("click", ".alert_delete", function (e) {
         var link = $(this).attr("href");
 

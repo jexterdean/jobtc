@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class LinkCategory extends  Model
 {
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','slug'];
     protected $primaryKey = 'id';
     protected $table= 'link_categories';
 }
