@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\UserRoleTrait;
 
 class BaseController extends Controller
 {
+
+    use UserRoleTrait;
 
     /**
      * Setup the layout used by the controller.
@@ -19,20 +22,5 @@ class BaseController extends Controller
         }
     }
 
-    /**
-     * @return User
-     */
-    protected function getActiveUser(){
-        return request()->user();
-    }
-
-    protected function userHasRole($role){
-        $user = $this->getActiveUser();
-        return $user->is(strtolower($role));
-    }
-
-    protected function hasRole($role){
-        return $this->userHasRole($role);
-    }
 
 }
