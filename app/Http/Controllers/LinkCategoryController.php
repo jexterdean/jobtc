@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Link;
 use App\Models\LinkCategory;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\BaseController;
 
-class LinkController extends BaseController
+class LinkCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,21 +17,10 @@ class LinkController extends BaseController
      */
     public function index()
     {
+        $categories = LinkCategory::all();
 
-        $links = Link::select('links.id','title','url','descriptions','tags',
-            'comments',
-            'link_categories.name as category_name')
-            ->leftJoin('link_categories', 'link_categories.id','=','links.category_id')
-            ->get();
-
-        $categories = LinkCategory::all()
-        ->lists('name','id')
-        ->toArray();
-
-
-        return view('links.index',[
-            'assets'=> ['table'],
-            'links'=> $links,
+        return view('linkcategory.index',[
+            'assets' => ['table'],
             'categories' => $categories
         ]);
     }
@@ -45,7 +32,7 @@ class LinkController extends BaseController
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -56,10 +43,10 @@ class LinkController extends BaseController
      */
     public function store(Request $request)
     {
-        $link = new Link($request->all());
-        $link->save();
+        $linkCategory = new LinkCategory($request->all());
+        $linkCategory->save();
 
-        return redirect()->route('links.index');
+        return redirect()->route('linkCategory.index');
     }
 
     /**
@@ -81,17 +68,7 @@ class LinkController extends BaseController
      */
     public function edit($id)
     {
-        $categories = LinkCategory::all()
-            ->lists('name','id')
-            ->toArray();
 
-        $link = Link::find($id);
-
-        return view('links.edit',[
-            'assets'=> [],
-            'link'=> $link,
-            'categories' => $categories
-        ]);
     }
 
     /**
@@ -103,14 +80,12 @@ class LinkController extends BaseController
      */
     public function update(Request $request, $id)
     {
+        /** @var  $linkCategory LinkCategory */
 
-        /** @var  $link Link */
-        $link  = Link::find($id);
+        $linkCategory = LinkCategory::find($id);
+        $linkCategory->update($request->all());
 
-        $link->update($request->all());
-
-         return redirect()->route('links.index');
-
+        return redirect()->route('linkCategory.index');
     }
 
     /**
@@ -122,10 +97,6 @@ class LinkController extends BaseController
     public function destroy($id)
     {
 
-        /** @var  $link Link*/
-        $link  = Link::find($id);
-        $link->delete();
-
-        return redirect()->route('links.index');
+        return redirect()->route('linkCategory.index');
     }
 }

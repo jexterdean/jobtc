@@ -51,7 +51,8 @@
                 foreach ($links as $link) {
                     $linkToEdit = "<a href='links/$link->id/edit' data-toggle='modal' data-target='#ajax'> <i
                     class='fa fa-edit fa-2x'></i> </a>";
-                    $linkToDelete = "<a href='link/s$link->id/delete' class='alert_delete'> <i class='fa
+                    $linkToDelete = "<a href='". route('links.destroy', $link->id) ."' class='alert_delete'> <i
+                    class='fa
                     fa-trash-o fa-2x'></i> </a>";
                     $Option = " <span class='hspacer'></span> $linkToEdit <span class='hspacer'></span> $linkToDelete";
 
