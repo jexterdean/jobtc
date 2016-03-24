@@ -39,6 +39,14 @@
         <span> Issue </span>
         <span class="caret"></span></a>
     <ul class="dropdown-menu">
+
+        @if(!Auth::user()->is('client'))
+            <li>
+                <a href="{{ url('task') }}">
+                    <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
+                </a>
+            </li>
+        @endif
         <li>
             <a href="{{ url('bug') }}">
                 <i class="fa fa-bug"></i> <span>{{Lang::get('messages.Bugs')}}</span>
@@ -49,13 +57,6 @@
                 <i class="fa fa-ticket"></i> <span>{{Lang::get('messages.Tickets')}}</span>
             </a>
         </li>
-        @if(!Auth::user()->is('client'))
-            <li>
-                <a href="{{ url('task') }}">
-                    <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
-                </a>
-            </li>
-        @endif
     </ul>
 </li>
 
