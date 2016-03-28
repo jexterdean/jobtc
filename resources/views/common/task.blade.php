@@ -110,7 +110,9 @@
                                                 'pending' => 'Pending',
                                                 'progress' => 'Progress',
                                                 'completed' => 'Completed'
-                                            ], $task->task_status, ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] )  !!}
+                                            ], $task->task_status, ['class' => 'form-control',
+                                            'placeholder' => 'Update Task',
+                                            "onchange" => "this.form.submit()"] )  !!}
                                             {!!  Form::hidden('task_id',$task->task_id) !!}
                                             {!!  Form::close()  !!}
                                         @endif

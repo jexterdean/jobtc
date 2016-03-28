@@ -46,17 +46,48 @@
 
                 $QA = array();
                 foreach ($tasks as $task) {
+
+                    $taskVisibleToClient = ($task->is_visible ==='yes')
+                            ? "<span class='label label-success'> <i class='fa fa-search-plus'></i></span>"
+                            : "";
+
+                    $status = "";
+
+                    if ($isClient) {
+                        $status = studly_case($task->task_status);
+                    } else {
+                        $status = Form::open(['method' => 'POST', 'url' => 'updateTaskStatus', 'class' =>
+                                        'form-horizontal']) .
+                                Form::select('task_status', [
+                                        'pending' => 'Pending',
+                                        'progress' => 'Progress',
+                                        'completed' => 'Completed'
+                                ], $task->task_status, ['class' => 'form-control',
+                                        'placeholder' => 'Update Task',
+                                        "onchange" => "this.form.submit()"]) .
+                                Form::hidden('task_id', $task->task_id) .
+                                Form::close();
+                    }
+
+                    /**
+                     * Options
+                     */
                     $taskToEdit = "<a href='task/$task->task_id/edit' data-toggle='modal' data-target='#ajax1'
                     class='show_edit_form'> <i
                     class='fa fa-edit fa-2x'></i> </a>";
-                    $taskToDelete = "<a href='". route('task.destroy', $task->task_id) ."' class='alert_delete '> <i
+
+                    $viewTask = "<a href='$task->belongs_to/$task->unique_id'> <i class='fa fa-link fa-2x'></i> </a>";
+
+                    $taskToDelete = "<a href='" . route('task.destroy', $task->task_id) . "' class='alert_delete '> <i
                     class='fa
                     fa-trash-o fa-2x'></i> </a>";
                     $Option = " <span class='hspacer'></span> $taskToEdit <span class='hspacer'></span> $taskToDelete";
 
-                    $QA[] = array($task->task_title,
+                    $QA[] = array(
+                            ($taskVisibleToClient."".$task->task_title),
                             $task->username,
                             $task->due_date,
+                            $status,
                             $Option);
                 }
 
@@ -74,6 +105,9 @@
                         </th>
                         <th>
                             Due Date
+                        </th>
+                        <th>
+                            Status
                         </th>
                         <th>
                             Actions

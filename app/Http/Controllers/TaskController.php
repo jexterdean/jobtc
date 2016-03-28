@@ -54,6 +54,7 @@ class TaskController extends BaseController
             'assets' => $assets,
             'tasks' => $tasks,
             'belongs_to'=> $belongsTo,
+            'isClient'=> parent::hasRole('client'),
             'assign_username' => $assign_username
         ]);
     }
@@ -77,6 +78,7 @@ class TaskController extends BaseController
 
             return view('task.edit', [
                 'task'=> $task,
+                'isClient'=> parent::hasRole('client'),
                 'assign_username'=>$assign_username
             ]);
         }
