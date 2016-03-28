@@ -49,10 +49,12 @@
                 <?php $DATA = array();
                 $QA = array();
                 foreach ($projects as $project) {
-                    $linkToEdit = "<a href='project/$project->project_id/edit' data-toggle='modal' data-target='#ajax'> <i class='fa fa-edit'></i> </a>";
-                    $linkToView = "<a href='project/$project->project_id'><i class='fa fa-external-link'></i></a>";
+                    $linkToEdit = "<a href='project/$project->project_id/edit' data-toggle='modal'
+                    data-target='#ajax'> <i class='fa-2x fa fa-edit'></i> </a>";
+                    $linkToView = "<a href='project/$project->project_id'><i class='fa fa-external-link fa-2x'></i></a>";
                     $linkStatus = \App\Helpers\Helper::getProgressStatus($project->project_progress);
-                    $linkToDelete = "<a href='project/$project->project_id/delete' class='alert_delete'> <i class='fa fa-trash-o'></i> </a>";
+                    $linkToDelete = "<a href='project/$project->project_id/delete' class='alert_delete'> <i class='fa-2x
+                    fa fa-trash-o'></i> </a>";
                     $Option = "$linkToView <span class='hspacer'></span> $linkToEdit <span class='hspacer'></span> $linkToDelete";
                     $QA[] = array($project->project_title, isset($clients[$project->client_id]) ? $clients[$project->client_id] : '', $project->ref_no, date("d M Y", strtotime($project->start_date)), date("d M Y", strtotime($project->deadline)), $linkStatus, $Option);
                 }
