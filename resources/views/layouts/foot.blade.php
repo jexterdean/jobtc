@@ -67,7 +67,7 @@
 
         $(".textarea").wysihtml5({"link": false, "image": false});
 
-        Validate.init();
+//        Validate.init();
         $('#task-list-box').slimScroll({
             height: '250px'
         });
