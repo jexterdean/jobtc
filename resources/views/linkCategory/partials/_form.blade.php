@@ -16,7 +16,7 @@
 
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
-            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Links'),['class' => 'btn green', 'tabindex' =>
+            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Category'),['class' => 'btn green', 'tabindex' =>
             '9'])  !!}
         </div>
     </div>

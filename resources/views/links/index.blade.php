@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Add Project</h4>
+                    <h4 class="modal-title">Add Link</h4>
                 </div>
                 <div class="modal-body">
                     @role('admin')
@@ -23,6 +23,29 @@
         </div>
     </div>
 
+    <div class="modal fade" id="add_category" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Add Category</h4>
+                    </div>
+                    <div class="modal-body">
+                        @role('admin')
+                        {!!  Form::open(['route' => 'linkCategory.store','class' => 'form-horizontal link-form'])  !!}
+                        @include('linkCategory/partials/_form')
+                        {!! Form::close()  !!}
+                        @else
+                            <div class='alert alert-danger alert-dismissable'>
+                                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+                                <strong>You dont have to perform this action!!</strong>
+                            </div>
+                            @endrole
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">
@@ -35,10 +58,13 @@
     <div class="col-md-12">
         <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
             <div class="box-header">
-                <h3 class="box-title">link List</h3>
+                <h3 class="box-title">Link List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_link">
-                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New link</button>
+                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Link</button>
+                    </a>
+                    <a data-toggle="modal" href="#add_category">
+                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Category</button>
                     </a>
                     <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
@@ -57,7 +83,7 @@
                     $Option = " <span class='hspacer'></span> $linkToEdit <span class='hspacer'></span> $linkToDelete";
 
                     $QA[] = array($link->title,
-                            "<a href='".url($link->url)."'>". ($link->url) ."</a>",
+                            "<a href='".url($link->url)."' target='_blank'>". ($link->title) ."</a>",
                             $link->category_name,
                             $link->tags,
                             $link->comments,

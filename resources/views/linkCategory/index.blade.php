@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Add Project</h4>
+                    <h4 class="modal-title">Add Category</h4>
                 </div>
                 <div class="modal-body">
                     @role('admin')
@@ -35,10 +35,10 @@
     <div class="col-md-12">
         <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
             <div class="box-header">
-                <h3 class="box-title">link List</h3>
+                <h3 class="box-title">Category List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_link">
-                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New link</button>
+                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Category</button>
                     </a>
                     <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
@@ -70,7 +70,7 @@
                     <thead>
                     <tr>
                         <th>
-                            slug
+                            Slug
                         </th>
                         <th>
                             Name
