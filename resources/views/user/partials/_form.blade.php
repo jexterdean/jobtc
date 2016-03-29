@@ -17,7 +17,7 @@
         {!!  Form::label('name','Name',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','name',isset($user->name) ? $user->name : '',['class' => 'form-control',
-            'placeholder' => 'Enter Name', 'tabindex' => '3']) !!}
+            'placeholder' => 'Name', 'tabindex' => '3']) !!}
         </div>
     </div>
     @if (!isset($user->username))
@@ -25,7 +25,7 @@
             {!!  Form::label('username','Username',['class' => 'col-md-3 control-label']) !!}
             <div class="col-md-9">
                 {!!  Form::input('text','username',isset($user->username) ? $user->username : '',['class' =>
-                'form-control', 'placeholder' => 'Enter Username', 'tabindex' => '4']) !!}
+                'form-control', 'placeholder' => 'Username', 'tabindex' => '4']) !!}
             </div>
         </div>
         <div class="form-group">
@@ -43,7 +43,7 @@
                     Ban??</label>
             </div>
             <div class="col-md-9">
-                {!!  Form::input('text','user_status_detail','',['class' => 'form-control', 'placeholder' => 'Enter Ban
+                {!!  Form::input('text','user_status_detail','',['class' => 'form-control', 'placeholder' => 'Ban
                 Reason', 'tabindex' => '7']) !!}
             </div>
         </div>
@@ -52,14 +52,14 @@
         {!!   Form::label('email','Email',['class' => 'col-md-3 control-label'])!!}
         <div class="col-md-9">
             {!!  Form::input('email','email',isset($user->email) ? $user->email : '',['class' => 'form-control',
-            'placeholder' => 'Enter Email', 'tabindex' => '8']) !!}
+            'placeholder' => 'Email', 'tabindex' => '8']) !!}
         </div>
     </div>
     <div class="form-group">
         {!!  Form::label('phone','Phone',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','phone',isset($user->phone) ? $user->phone : '',['class' => 'form-control',
-            'placeholder' => 'Enter Contact Number', 'tabindex' => '9']) !!}
+            'placeholder' => 'Contact Number', 'tabindex' => '9']) !!}
         </div>
     </div>
     <div class="row">

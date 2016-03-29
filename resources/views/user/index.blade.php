@@ -56,9 +56,11 @@
                         $user_status = " <span class='label label-danger'>Banned</span>";
                     }
 
-                    $linkToEdit = "<a href='user/$user->user_id/edit' data-toggle='modal' data-target='#ajax'> <i class='fa fa-edit'></i> </a>";
-                    $linkToDelete = "<a href='user/$user->user_id/delete'> <i class='fa fa-trash-o alert_delete'></i> </a>";
-                    $Options = "$linkToEdit";
+                    $linkToEdit = "<a href='user/$user->user_id/edit' data-toggle='modal' data-target='#ajax'> <i
+                    class='fa fa-edit fa-2x'></i> </a>";
+                    $linkToDelete = "<a href='user/$user->user_id/delete'> <i class='fa fa-trash-o alert_delete fa-2x
+                    '></i> </a>";
+                    $Options = "$linkToEdit $linkToDelete";
                     $QA[] = array($user->name,
                             $user->username,
                             $user_status,

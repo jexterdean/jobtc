@@ -10,8 +10,7 @@
                     {!!  Form::hidden('belongs_to',$belongs_to)  !!}
                     {!!  Form::hidden('unique_id', $unique_id)  !!}
                     <div class="form-group">
-                        {!!  Form::input('text','task_title','',['class' => 'form-control', 'placeholder' => 'Enter
-                        Title', 'tabindex' => '1']) !!}
+                        {!!  Form::input('text','task_title','',['class' => 'form-control', 'placeholder' => 'Title', 'tabindex' => '1']) !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control',
@@ -24,7 +23,8 @@
                     @role('admin')
                         <div class="form-group">
                             {!!  Form::select('assign_username', $assign_username, isset
-                            ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '3'] )  !!}
+                            ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me',
+                            'placeholder' => 'Assign User', 'tabindex' => '3'] )  !!}
                         </div>
                     @endrole
                     @role('staff')
@@ -110,7 +110,9 @@
                                                 'pending' => 'Pending',
                                                 'progress' => 'Progress',
                                                 'completed' => 'Completed'
-                                            ], $task->task_status, ['class' => 'form-control', 'placeholder' => 'Select One', "onchange" => "this.form.submit()"] )  !!}
+                                            ], $task->task_status, ['class' => 'form-control',
+                                            'placeholder' => 'Update Task',
+                                            "onchange" => "this.form.submit()"] )  !!}
                                             {!!  Form::hidden('task_id',$task->task_id) !!}
                                             {!!  Form::close()  !!}
                                         @endif

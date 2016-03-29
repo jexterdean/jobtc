@@ -353,3 +353,13 @@
     ?>
 
 @stop
+
+@section('js_footer')
+@parent
+
+    <script>
+        Validate.init();
+
+    </script>
+
+@stop
