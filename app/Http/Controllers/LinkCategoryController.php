@@ -46,8 +46,11 @@ class LinkCategoryController extends BaseController
         $linkCategory = new LinkCategory($request->all());
         $linkCategory->save();
 
-        return redirect()->route('linkCategory.index');
+        $categories = LinkCategory::all();
+
+        return !array_key_exists('request_from_link_page',$request->all()) ? redirect()->route('linkCategory.index') : json_encode($categories);
     }
+
 
     /**
      * Display the specified resource.
@@ -85,7 +88,6 @@ class LinkCategoryController extends BaseController
     public function update(Request $request, $id)
     {
         /** @var  $linkCategory LinkCategory */
-
 
         $linkCategory = LinkCategory::find($id);
         $linkCategory->update($request->all());

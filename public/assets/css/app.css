@@ -1,3 +1,47 @@
-body{
-    background: #A9B7C4 !important;
+body {
+  background: #A9B7C4 !important;
+}
+.form-control {
+  color: #000000 !important;
+}
+.modal .close {
+  width: 12px;
+  height: 12px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: #ffffff !important;
+}
+.modal .modal-header-success {
+  color: #ffffff !important;
+  background-color: #5cb85c;
+}
+.modal .modal-header-warning {
+  color: #ffffff !important;
+  background-color: #f0ad4e;
+}
+.modal .modal-header-danger {
+  color: #ffffff !important;
+  background-color: #d9534f;
+}
+.modal .modal-header-info {
+  color: #ffffff !important;
+  background-color: #5bc0de;
+}
+.modal .modal-header-primary {
+  color: #ffffff !important;
+  background-color: #428bca;
+}
+.box .dataTable {
+  width: 100%!important;
+}
+.navbar-toggle {
+  border: 1px solid #e7e7e7 !important;
+}
+.navbar-toggle:hover {
+  background-color: #eaeaea !important;
+}
+.navbar-toggle .icon-bar {
+  background: #000000 !important;
 }
