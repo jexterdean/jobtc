@@ -1,5 +1,5 @@
 @if(!Auth::user()->is('Client'))
-    <div class="panel panel-primary">
+    <div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
         <div class="panel-heading">
             <h3 class="panel-title">Add Task</h3>
         </div>
@@ -29,20 +29,6 @@
                 {!!  Form::hidden('assign_username',Auth::user()->username,['readonly' => true])  !!}
             @endif
 
-            @if($belongs_to != 'general')
-                <div class="form-group">
-                    <label> Visible to Client </label>
-                    <div class="radio-list">
-                        <label class="radio-inline">
-                            {!!  Form::radio('is_visible','yes',true) !!} Yes</label>
-                        <label class="radio-inline">
-                            {!! Form::radio('is_visible','no')  !!} No </label>
-                    </div>
-                </div>
-            @else
-                {!!  Form::hidden('is_visible','no',['readonly' => true]) !!}
-            @endif
-
             <div class="form-group">
                 {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '5'])  !!}
             </div>
@@ -50,7 +36,7 @@
         </div>
     </div>
 @endif
-<div class="panel panel-primary">
+<div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
     <div class="panel-heading">
         <h3 class="panel-title">Task List</h3>
     </div>

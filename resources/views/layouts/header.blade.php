@@ -1,5 +1,5 @@
 @if (Auth::check())
-        <nav class="navbar navbar-static-top navbar-default" role="navigation">
+        <nav class="navbar navbar-static-top navbar-inverse navbar-border" role="navigation">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                         data-target="#navbar" aria-expanded="false" aria-controls="navbar">

@@ -1,4 +1,4 @@
-<div class="panel panel-primary">
+<div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
     <div class="panel-heading"><h3 class="panel-title">Assign</h3></div>
     <div class="panel-body">
         {!!  Form::open(['method' => 'POST','route' => ['assigneduser.store'],'class' => 'assign-user-form'])  !!}

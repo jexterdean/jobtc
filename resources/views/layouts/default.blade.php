@@ -1,5 +1,5 @@
 @include('layouts.head')
-<body class="skin-black">
+<body>
 
 @include('layouts.header')
 

@@ -1,4 +1,4 @@
-<div class="panel panel-primary">
+<div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
     <div class="panel-heading">
         <h3 class="panel-title">{{ studly_case($belongs_to) }} Attachments</h3>
     </div>
@@ -24,7 +24,7 @@
         {!!  Form::close() !!}
     </div>
 </div>
-<div class="panel panel-primary">
+<div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
     <div class="panel-heading">
         <h3 class="panel-title">{{ studly_case($belongs_to) }} Attachments List</h3>
     </div>

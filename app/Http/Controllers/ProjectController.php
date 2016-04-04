@@ -112,7 +112,7 @@ class ProjectController extends BaseController
         $project->save();
 
         $update_project_ref = Project::find($project->project_id);
-        $update_project_ref->ref_no = 'PM-'.str_pad($project->project_id,7,'0',STR_PAD_LEFT);
+        $update_project_ref->ref_no = $project->project_id;
         $update_project_ref->save();
 
         return redirect()->to('project')->withSuccess("Project added successfully !!");

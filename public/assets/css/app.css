@@ -1,3 +1,6 @@
+/*Variables*/
+/*Mixin*/
+/*CSS Conversion*/
 body {
   background: #A9B7C4 !important;
 }
@@ -11,30 +14,144 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  color: #ffffff !important;
 }
-.modal .modal-header-success {
+.modal-success {
   color: #ffffff !important;
-  background-color: #5cb85c;
+  background-color: #59ae59 !important;
 }
-.modal .modal-header-warning {
+.modal-warning {
   color: #ffffff !important;
-  background-color: #f0ad4e;
+  background-color: #f0ad4e !important;
 }
-.modal .modal-header-danger {
+.modal-info {
   color: #ffffff !important;
-  background-color: #d9534f;
+  background-color: #5bc0de !important;
 }
-.modal .modal-header-info {
+.modal-danger {
   color: #ffffff !important;
-  background-color: #5bc0de;
+  background-color: #d9534f !important;
 }
-.modal .modal-header-primary {
+.modal-primary {
   color: #ffffff !important;
-  background-color: #428bca;
+  background-color: #428bca !important;
 }
-.box .dataTable {
+.panel-success {
+  -webkit-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  -moz-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  border-color: #59ae59 !important;
+}
+.panel-success > .panel-heading {
+  color: #ffffff;
+  background: #59ae59 !important;
+  border-color: #59ae59 !important;
+}
+.panel-warning {
+  -webkit-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  -moz-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  border-color: #f0ad4e !important;
+}
+.panel-warning > .panel-heading {
+  color: #ffffff;
+  background: #f0ad4e !important;
+  border-color: #f0ad4e !important;
+}
+.panel-info {
+  -webkit-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  -moz-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  border-color: #5bc0de !important;
+}
+.panel-info > .panel-heading {
+  color: #ffffff;
+  background: #5bc0de !important;
+  border-color: #5bc0de !important;
+}
+.panel-danger {
+  -webkit-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  -moz-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  border-color: #d9534f !important;
+}
+.panel-danger > .panel-heading {
+  color: #ffffff;
+  background: #d9534f !important;
+  border-color: #d9534f !important;
+}
+.panel-primary {
+  -webkit-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  -moz-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  border-color: #428bca !important;
+}
+.panel-primary > .panel-heading {
+  color: #ffffff;
+  background: #428bca !important;
+  border-color: #428bca !important;
+}
+.dataTable {
   width: 100%!important;
+}
+.navbar-border {
+  border-bottom: 2px solid #c2d0dd;
+}
+.navbar-inverse {
+  -webkit-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  -moz-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+}
+.navbar-inverse ul > li:hover {
+  background: #878787;
+}
+.navbar-inverse ul > li > a {
+  color: #FFFFFF!important;
+}
+.navbar-inverse ul > li ul > li > a {
+  color: #000000!important;
+}
+.navbar-inverse .navbar-brand {
+  color: #FFFFFF!important;
+}
+.box {
+  -webkit-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  -moz-box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+  box-shadow: 10px 8px 12px -6px rgba(15, 15, 15, 0.34);
+}
+.box-success {
+  border-color: #59ae59 !important;
+}
+.box-success > .box-header {
+  color: #ffffff;
+  background: #59ae59 !important;
+}
+.box-warning {
+  border-color: #f0ad4e !important;
+}
+.box-warning > .box-header {
+  color: #ffffff;
+  background: #f0ad4e !important;
+}
+.box-info {
+  border-color: #5bc0de !important;
+}
+.box-info > .box-header {
+  color: #ffffff;
+  background: #5bc0de !important;
+}
+.box-danger {
+  border-color: #d9534f !important;
+}
+.box-danger > .box-header {
+  color: #ffffff;
+  background: #d9534f !important;
+}
+.box-primary {
+  border-color: #428bca !important;
+}
+.box-primary > .box-header {
+  color: #ffffff;
+  background: #428bca !important;
 }
 .navbar-toggle {
   border: 1px solid #e7e7e7 !important;
