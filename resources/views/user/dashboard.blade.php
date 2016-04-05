@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">
+                    <div class="col-xs-6 text-center">
                         @if($payable->totalSales>0)
                             <input type="text" class="knob" data-readonly="true"
                                    value="{{ round(100-(($paid->totalPaid/$payable->totalSales)*100),2) }}"
@@ -79,7 +79,7 @@
                         @endif
                         <div class="knob-label">Percentage Amount Due</div>
                     </div>
-                    <div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">
+                    <div class="col-xs-6 text-center">
                         <input type="text" class="knob" data-readonly="true" value="{{ $inCompletProjects }}"
                                data-width="120" data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor() }}"/>
                         <div class="knob-label">Pending Projects</div>
@@ -236,7 +236,7 @@
 
 
         <div class="col-md-6">
-            <div class="box box-primary">
+            <div class="box">
                 <div class="box-body no-padding">
                     <div id="calendar"></div>
                 </div>

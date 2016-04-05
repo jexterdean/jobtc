@@ -56,7 +56,7 @@
 
 
     <div class="col-md-12">
-        <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
+        <div class="box box-solid">
             <div class="box-header">
                 <h3 class="box-title">Link List</h3>
                 <div class="box-tools pull-right">

@@ -17,7 +17,7 @@
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                         <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="#" class="dropdown-toggle">
                                 <i class="glyphicon glyphicon-user"></i>
                                 <span>{{ Auth::user()->username }} <i class="caret"></i></span>
                             </a>

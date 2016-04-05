@@ -12,8 +12,7 @@
 @endrole
 @if(!Auth::user()->is('staff'))
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-           role="button" aria-haspopup="true" aria-expanded="false">
+        <a href="#" class="dropdown-toggle">
             <i class="fa fa-tablet"></i>
             <span>{{ Lang::get('messages.Billing')}} </span>
             <span class="caret"></span></a>
@@ -39,8 +38,7 @@
     </li>
 @endif
 <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
+    <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>
         <span> Issue </span>
         <span class="caret"></span></a>
@@ -61,7 +59,7 @@
 
 <li>
     <a href="{{ url('event') }}">
-        <i class="fa fa-calendar"></i> <span>{{Lang::get('messages.Event Calendar')}}</span>
+        <i class="fa fa-calendar"></i> <span>Event</span>
     </a>
 </li>
 <li>
@@ -70,30 +68,16 @@
     </a>
 </li>
 
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
+<li>
+    <a href="{{ route('links.index') }}">
         <i class="fa fa-globe"></i>
         <span>Links</span>
-        <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        <li>
-            <a href="{{ route('linkCategory.index') }}">
-                <i class="fa fa-adjust"></i> <span> Categories </span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ route('links.index') }}">
-                <i class="fa fa-globe"></i> <span> Links </span>
-            </a>
-        </li>
-    </ul>
+    </a>
 </li>
 
 @role('admin')
 <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
+    <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>
         <span>{{Lang::get('messages.Setting')}}</span>
         <span class="caret"></span></a>

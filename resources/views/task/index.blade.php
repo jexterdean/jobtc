@@ -29,14 +29,14 @@
 
 
     <div class="col-md-12">
-        <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
+        <div class="box box-solid">
             <div class="box-header">
                 <h3 class="box-title">Task List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_link">
                         <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Task</button>
                     </a>
-                    <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
+                    <button class="btn btn-sm" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
                 </div>
             </div>
