@@ -76,15 +76,15 @@
                     class='show_edit_form'> <i
                     class='fa fa-edit fa-2x'></i> </a>";
 
-                    $viewTask = "<a href='$task->belongs_to/$task->unique_id'> <i class='fa fa-link fa-2x'></i> </a>";
+                    $viewTask = "<a href='" . route('task.show', $task->task_id) . "'> <i class='fa fa-eye fa-2x'></i> </a>";
 
                     $taskToDelete = "<a href='" . route('task.destroy', $task->task_id) . "' class='alert_delete '> <i
                     class='fa
                     fa-trash-o fa-2x'></i> </a>";
-                    $Option = " <span class='hspacer'></span> $taskToEdit <span class='hspacer'></span> $taskToDelete";
+                    $Option = "$viewTask <span class='hspacer'></span> $taskToEdit <span class='hspacer'></span> $taskToDelete";
 
                     $QA[] = array(
-                            ($taskVisibleToClient."".$task->task_title),
+                            ($taskVisibleToClient." ".$task->task_title),
                             $task->username,
                             $task->due_date,
                             $status,

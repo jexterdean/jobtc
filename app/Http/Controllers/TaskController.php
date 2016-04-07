@@ -31,7 +31,6 @@ class TaskController extends BaseController
     public function index()
     {
 
-        $tasks = [];
         if (parent::hasRole('staff')) {
             $tasks = Task::where('username', '=', Auth::user()->username)
                 ->orderBy('created_at', 'desc')
@@ -44,9 +43,8 @@ class TaskController extends BaseController
         $belongsTo = 'task';
 
 
-        $assign_username = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
-            ->lists('username', 'username');
+        $assign_username = User::orderBy('name')
+            ->lists('username', 'name');
 
         $assets = ['calendar','table'];
 
@@ -59,8 +57,32 @@ class TaskController extends BaseController
         ]);
     }
 
-    public function show()
+    public function show($id)
     {
+        //
+        $task = [];
+        if (parent::userHasRole('Admin')){
+            $task = Task::find($id);
+        }
+        elseif (parent::userHasRole('Client')) {
+            $task = DB::table('task')
+                ->join('user', 'user.client_id', '=', 'task.client_id')
+                ->where('user_id', '=', Auth::user()->user_id)
+                ->where('task_id', '=', $id)
+                ->first();
+        } elseif (parent::userHasRole('Staff')) {
+            $task = DB::table('task')
+                ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
+                ->where('belongs_to', '=', 'project')
+                ->where('username', '=', Auth::user()->username)
+                ->where('project_id', '=', $id)
+                ->first();
+        }
+        $assets = ['calendar'];
+        return view('task.show', [
+            'task'=> $task,
+            'assets' => $assets
+        ]);
     }
 
     public function create()
@@ -71,9 +93,9 @@ class TaskController extends BaseController
     {
         $task = Task::find($id);
 
-        $assign_username = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
-            ->lists('username', 'username');
+        $assign_username = User::orderBy('name')
+            ->lists('username', 'name');
+
         if($task){
 
             return view('task.edit', [
@@ -155,6 +177,7 @@ class TaskController extends BaseController
 
         return Redirect::back()->withSuccess('Deleted successfully!!');
     }
+
 }
 
 ?>

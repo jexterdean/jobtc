@@ -33,6 +33,9 @@
 {!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
 {!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.extensions.js')  !!}
 
+{!! HTML::script('assets/js/countdown.timer.js')  !!}
+
+
 <script>
     $(function () {
         $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
@@ -109,8 +112,59 @@
                 $(this).val('');
             });
         /*endregion*/
-    });
 
+        /*region Timer*/
+        var element = $('#timer');
+        function startEditTimer(s){
+            var timerStart = parseInt(0) + parseInt(s);
+            var $minutes = parseInt(timerStart/60);
+            var $hoursValue = parseInt($minutes/60);
+            var $minutesValue = $minutes - ($hoursValue * 60);
+            var $secondsValue = timerStart - (($hoursValue * 3600) + ($minutesValue * 60));
+
+            $.countDownTimer(element, {
+                includeTimer: {
+                    hour: 1,
+                    minutes: 1,
+                    seconds: 1
+                },
+                isMilitaryTime: 0,
+                isCountUp: 1,
+                hours: $hoursValue,
+                minutes: $minutesValue,
+                seconds: $secondsValue
+            });
+        }
+        $('.btn-stop').click(function(e){
+            if($(this).hasClass('start_time')){
+                startEditTimer(0);
+                $(this)
+                    .html('Stop Time')
+                    .removeClass('start_time')
+                    .addClass('stop_time');
+                element.css({
+                            'color': '#000000'
+                        });
+            }
+            else{
+                $(this)
+                    .html('Start Time')
+                    .removeClass('stop_time')
+                    .addClass('start_time');
+                element.css({
+                    'color': '#ff0000'
+                });
+                $.stopCountDownTimer();
+            }
+
+        });
+        /*endregion*/
+    });
+    setTimeout(function(){
+        $('.alert').fadeTo(2000, 500).slideUp(500, function(){
+                $(this).alert('close');
+        });
+    }, 2000);
     $(document).on('click', '.show_edit_form',function(e){
         e.preventDefault();
 
