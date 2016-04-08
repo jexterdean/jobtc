@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Models\TaskTimer;
 
 use View;
 use Auth;
 use Redirect;
 use Validator;
 use Input;
+use \DB;
 
 class TaskController extends BaseController
 {
@@ -44,7 +46,7 @@ class TaskController extends BaseController
 
 
         $assign_username = User::orderBy('name')
-            ->lists('username', 'name');
+            ->lists('id', 'name');
 
         $assets = ['calendar','table'];
 
@@ -78,10 +80,18 @@ class TaskController extends BaseController
                 ->where('project_id', '=', $id)
                 ->first();
         }
+        $task_timer = DB::table('task_timer')
+            ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
+            ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
+            ->select('task_timer.*', 'user.name', 'user.username', 'task.task_title')
+            ->where('task_timer.task_id', '=', $id)
+            ->get();
         $assets = ['calendar'];
+
         return view('task.show', [
             'task'=> $task,
-            'assets' => $assets
+            'assets' => $assets,
+            'task_timer' => $task_timer
         ]);
     }
 
@@ -89,14 +99,14 @@ class TaskController extends BaseController
     {
     }
 
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         $task = Task::find($id);
 
         $assign_username = User::orderBy('name')
-            ->lists('username', 'name');
+            ->lists('id', 'name');
 
-        if($task){
+        if(count($task) > 0){
 
             return view('task.edit', [
                 'task'=> $task,
@@ -178,6 +188,41 @@ class TaskController extends BaseController
         return Redirect::back()->withSuccess('Deleted successfully!!');
     }
 
+    public function taskTimer(Request $request,$id){
+        $taskTimer = new TaskTimer($request->all());
+        $taskTimer->save();
+
+        $data = DB::table('task_timer')
+            ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
+            ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
+            ->select('task_timer.*', 'user.name', 'user.username', 'task.task_title')
+            ->where('task_timer.task_id', '=', $id)
+            ->get();
+
+        return json_encode($data);
+    }
+
+    public function updateTaskTimer(Request $request,$id){
+        $taskTimer = new TaskTimer($request->all());
+        $taskTimer->save();
+
+        $data = DB::table('task_timer')
+            ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
+            ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
+            ->select('task_timer.*', 'user.name', 'user.username', 'task.task_title')
+            ->where('task_timer.task_id', '=', $id)
+            ->get();
+
+        return json_encode($data);
+    }
+
+    public function deleteTaskTimer($id)
+    {
+        $task = TaskTimer::find($id);
+        $task->delete($id);
+
+        return Redirect::back()->withSuccess('Deleted successfully!!');
+    }
 }
 
 ?>

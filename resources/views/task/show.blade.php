@@ -12,6 +12,9 @@
         </div>
     </div>
 </div>
+{!! Form::open(['url' => ['taskTimer/' . $task->task_id],'class' => 'task-form'])  !!}
+{!! Form::hidden('task_id',$task->task_id) !!}
+{!! Form::hidden('user_id',$task->user_id) !!}
 <div class="col-md-12">
     <div class="row">
         <div class="col-sm-8">
@@ -144,10 +147,21 @@
                                         <th>Option</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="4">No data was found.</td>
-                                    </tr>
+                                <tbody class="task-table-body">
+                                    @if(count($task_timer) > 0)
+                                        @foreach($task_timer as $val)
+                                        <tr>
+                                            <td>{{ $val->name }}</td>
+                                            <td class="text-center">{{ $val->start_time != '0000-00-00 00:00:00' ? date('d/m/Y g:i:s A', strtotime($val->start_time)) : '&nbsp;'}}</td>
+                                            <td class="text-center">{{ $val->end_time != '0000-00-00 00:00:00' ? date('d/m/Y g:i:s A', strtotime($val->end_time)) : '&nbsp;'}}</td>
+                                            <td class="text-center" style="width: 5%;"><a href=' {{ url('deleteTaskTimer/' . $val->id) }}' class='alert_delete '> <i class='fa fa-trash-o fa-2x'></i> </a></td>
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="4">No data was found.</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -160,5 +174,6 @@
         </div>
     </div>
 </div>
+{!! Form::close() !!}
 @stop
 

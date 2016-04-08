@@ -34,6 +34,7 @@
 {!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.extensions.js')  !!}
 
 {!! HTML::script('assets/js/countdown.timer.js')  !!}
+{!! HTML::script('assets/js/jquery-dateFormat.js')  !!}
 
 
 <script>
@@ -136,6 +137,12 @@
             });
         }
         $('.btn-stop').click(function(e){
+            var form = $('.task-form');
+            var data = form.serializeArray();
+            var date = $.now();
+            var now = $.format.date(date, "yyyy-MM-dd HH:mm:ss");
+            var tbody = $('.task-table-body');
+
             if($(this).hasClass('start_time')){
                 startEditTimer(0);
                 $(this)
@@ -145,6 +152,22 @@
                 element.css({
                             'color': '#000000'
                         });
+                data.push({'name':'start_time','value':now});
+
+                $.post(form.attr('action'),data,function(data){
+                    console.log(data);
+                    var ele = '';
+                    var _return_data = jQuery.parseJSON(data);
+                    $.each(_return_data,function(index,value){
+                        ele += '<tr>';
+                        ele += '<td>' + value.name + '</td>';
+                        ele += '<td class="text-center">' + $.format.date(value.start_time, "dd-MM-yyyy hh:mm:ss a") + '</td>';
+                        ele += '<td class="text-center">&nbsp;</td>';
+                        ele += '<td class="text-center" style="width: 5%;"><a href="deleteTaskTimer/' + value.id + '" class="alert_delete"> <i class="fa fa-trash-o fa-2x"></i> </a></td>';
+                        ele += '</tr>';
+                    });
+                    tbody.html(ele);
+                });
             }
             else{
                 $(this)
