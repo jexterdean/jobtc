@@ -30,28 +30,28 @@ class ProjectController extends BaseController
      */
     public function index()
     {
-        //
-        if ( parent::userHasRole('admin'))
+        $user_type = Auth::user('user')->user_type;
+        
+        //if ( parent::userHasRole('admin'))
+        if ($user_type === 1 || $user_type === 2 || $user_type === 3) { 
             $projects = Project::all();
-        elseif (parent::userHasRole('Client')) {
+        } elseif (parent::userHasRole('Client')) {
             $projects = DB::table('project')
-                ->join('user', 'user.client_id', '=', 'project.client_id')
-                ->where('user_id', '=', Auth::user()->user_id)
+                ->join('user', 'user.id', '=', 'project.client_id')
+                ->where('user_id', '=', Auth::user('user')->id)
                 ->get();
-        } elseif (parent::userHasRole('Staff')) {
+        } elseif ($user_type === 4) {
             $projects = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
-                ->where('username', '=', Auth::user()->username)
+                ->where('username', '=', Auth::user('user')->email)
                 ->get();
         }
 
-        $user = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+        $user = User::orderBy('first_name', 'asc')->lists('first_name', 'email');
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id')
+            ->lists('company_name', 'id')
             ->toArray();
 
         $assets = ['table', 'datepicker'];
@@ -126,21 +126,24 @@ class ProjectController extends BaseController
      */
     public function show($id)
     {
-        //
-        if (parent::userHasRole('Admin')){
+        $user_type = Auth::user('user')->user_type;
+        
+        //if ( parent::userHasRole('admin'))
+        if ($user_type === 1 || $user_type === 2 || $user_type === 3) { 
+        //if (parent::userHasRole('Admin')){
             $project = Project::find($id);
         }
-        elseif (parent::userHasRole('Client')) {
+        elseif ($user_type === 5) {
             $project = DB::table('project')
-                ->join('user', 'user.client_id', '=', 'project.client_id')
-                ->where('user_id', '=', Auth::user()->user_id)
+                ->join('user', 'user.id', '=', 'project.client_id')
+                ->where('user_id', '=', Auth::user('user')->id)
                 ->where('project_id', '=', $id)
                 ->first();
-        } elseif (parent::userHasRole('Staff')) {
+        } elseif ($user_type === 4) {
             $project = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
-                ->where('username', '=', Auth::user()->username)
+                ->where('username', '=', Auth::user('email')->email)
                 ->where('project_id', '=', $id)
                 ->first();
         }
@@ -157,23 +160,22 @@ class ProjectController extends BaseController
             ->lists('username', 'username')
             ->toArray();
 
-        $user = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
-            ->lists('name', 'username')
+        $user = User::orderBy('first_name', 'asc')
+            ->lists('first_name', 'email')
             ->toArray();
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+            ->lists('company_name', 'id');
 
         $note = Note::where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $id)
-            ->where('username', '=', Auth::user()->username)
+            ->where('username', '=', Auth::user('user')->email)
             ->first();
 
         $comment = DB::table('comment')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $id)
-            ->join('user', 'comment.username', '=', 'user.username')
+            ->join('user', 'comment.username', '=', 'user.email')
             ->orderBy('comment.created_at', 'desc')
             ->get();
 
@@ -190,7 +192,7 @@ class ProjectController extends BaseController
         } else {
             $task = Task::where('belongs_to', '=', 'project')
                 ->where('unique_id', '=', $id)
-                ->where('username', '=', Auth::user()->username)
+                ->where('username', '=', Auth::user('user')->email)
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
@@ -237,11 +239,10 @@ class ProjectController extends BaseController
         //
         $project = Project::find($id);
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+            ->lists('company_name', 'id');
 
-        $user = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+        $user = User::orderBy('first_name', 'asc')
+            ->lists('first_name', 'email');
 
         return view('project.edit', [
             'project' => $project,
@@ -363,7 +364,7 @@ class ProjectController extends BaseController
 
         $timer = new Timer;
         $data = Input::all();
-        $data['username'] = Auth::user()->username;
+        $data['username'] = Auth::user('user')->email;
         $data['start_time'] = date("Y-m-d H:i:s", time());
         $timer->fill($data);
         $timer->save();

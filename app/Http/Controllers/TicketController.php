@@ -1,16 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Controllers\BaseController;
 
+use App\Http\Controllers\BaseController;
 use App\Models\Ticket;
 use App\Models\AssignedUser;
 use App\Models\User;
 use App\Models\Setting;
 use App\Models\Note;
 use App\Models\Task;
-
-
 use Redirect;
 use Auth;
 use DB;
@@ -18,124 +16,125 @@ use Validator;
 use View;
 use Input;
 
-class TicketController extends BaseController
-{
+class TicketController extends BaseController {
 
-    public function index()
-    {
+    public function index() {
 
-        if (parent::hasRole('Admin'))
+        //if (parent::hasRole('Admin'))
+        if (Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3) {
             $ticket = Ticket::all();
-        elseif (parent::hasRole('Client'))
-            $ticket = Ticket::where('username', '=', Auth::user()->username)->get();
-        elseif (parent::hasRole('Staff')) {
+        } elseif (parent::hasRole('Client')) {
+            $ticket = Ticket::where('username', '=', Auth::user('user')->email)->get();
+            //} elseif (parent::hasRole('Staff')) {
+        } elseif (Auth::user('user')->user_type === 4) {
             $ticket = DB::table('ticket')
-                ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
-                ->where('belongs_to', '=', 'ticket')
-                ->where('assigned_user.username', '=', Auth::user()->username)
-                ->get();
+                    ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
+                    ->where('belongs_to', '=', 'ticket')
+                    ->where('assigned_user.username', '=', Auth::user('user')->email)
+                    ->get();
         }
 
-        $user_options = User::orderBy('name', 'asc')->lists('name', 'username');
+        //$user_options = User::orderBy('name', 'asc')->lists('name', 'username');
+        $user_options = User::orderBy('first_name', 'asc')->lists('first_name', 'email');
 
         $assets = ['table', 'datepicker'];
 
         return View::make('ticket.index', [
-            'tickets' => $ticket,
-            'users' => $user_options,
-            'assets' => $assets
+                    'tickets' => $ticket,
+                    'users' => $user_options,
+                    'assets' => $assets
         ]);
     }
 
-    public function show($ticket_id)
-    {
+    public function show($ticket_id) {
 
-        if (parent::hasRole('Admin'))
+        //if (parent::hasRole('Admin'))
+        if (Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3) {
             $ticket = Ticket::find($ticket_id);
-        elseif (parent::hasRole('Client')) {
+        } elseif (parent::hasRole('Client')) {
             $ticket = Ticket::where('username', '=', Auth::user()->username)
-                ->where('ticket_id', '=', $ticket_id)
-                ->first();
-        } elseif (parent::hasRole('Staff')) {
+                    ->where('ticket_id', '=', $ticket_id)
+                    ->first();
+            //} elseif (parent::hasRole('Staff')) {
+        } elseif (Auth::user('user')->user_type === 4) {
             $ticket = DB::table('ticket')
-                ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
-                ->where('belongs_to', '=', 'ticket')
-                ->where('assigned_user.username', '=', Auth::user()->username)
-                ->where('ticket_id', '=', $ticket_id)
-                ->first();
+                    ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
+                    ->where('belongs_to', '=', 'ticket')
+                    ->where('assigned_user.username', '=', Auth::user('user')->email)
+                    ->where('ticket_id', '=', $ticket_id)
+                    ->first();
         }
 
         if (!$ticket)
             return Redirect::to('ticket')->withErrors('This is not a valid ticket!!');
 
         $assignedUser = AssignedUser::where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)
-            ->get();
+                ->where('unique_id', '=', $ticket_id)
+                ->get();
 
         $assign_username = AssignedUser::where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)
-            ->lists('username', 'username');
+                ->where('unique_id', '=', $ticket_id)
+                ->lists('username', 'username');
 
         $note = Note::where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)
-            ->where('username', '=', Auth::user()->username)
-            ->first();
+                ->where('unique_id', '=', $ticket_id)
+                ->where('username', '=', Auth::user()->username)
+                ->first();
 
-        $user_options = User::orderBy('name', 'asc')
-            ->lists('name', 'username')
-            ->toArray();
+        $user_options = User::orderBy('first_name', 'asc')
+                ->lists('first_name', 'email')
+                ->toArray();
 
         $comment = DB::table('comment')
-            ->where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)
-            ->join('user', 'comment.username', '=', 'user.username')
-            ->orderBy('comment.created_at', 'desc')
-            ->get();
+                ->where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)
+                ->join('user', 'comment.username', '=', 'user.username')
+                ->orderBy('comment.created_at', 'desc')
+                ->get();
 
         $attachment = DB::table('attachment')
-            ->where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)
-            ->join('user', 'attachment.username', '=', 'user.username')
-            ->orderBy('attachment.created_at', 'desc')
-            ->get();
+                ->where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)
+                ->join('user', 'attachment.username', '=', 'user.username')
+                ->orderBy('attachment.created_at', 'desc')
+                ->get();
 
         if (!parent::hasRole('Staff')) {
             $task = Task::where('belongs_to', '=', 'ticket')
-                ->where('unique_id', '=', $ticket_id)
-                ->orderBy('created_at', 'desc')
-                ->get();
+                    ->where('unique_id', '=', $ticket_id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
         } else {
             $task = Task::where('belongs_to', '=', 'ticket')
-                ->where('unique_id', '=', $ticket_id)
-                ->where('assign_username', '=', Auth::user()->username)
-                ->orderBy('created_at', 'desc')
-                ->get();
+                    ->where('unique_id', '=', $ticket_id)
+                    ->where('assign_username', '=', Auth::user()->username)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
         }
 
         $assets = [];
         return View::make('ticket.show', [
-            'assets' => $assets,
-            'ticket' => $ticket,
-            'note' => $note,
-            'comments' => $comment,
-            'attachments' => $attachment,
-            'tasks' => $task,
-            'users' => $user_options,
-            'assign_username' => $assign_username,
-            'assignedUsers' => $assignedUser
+                    'assets' => $assets,
+                    'ticket' => $ticket,
+                    'note' => $note,
+                    'comments' => $comment,
+                    'attachments' => $attachment,
+                    'tasks' => $task,
+                    'users' => $user_options,
+                    'assign_username' => $assign_username,
+                    'assignedUsers' => $assignedUser
         ]);
     }
 
-    public function create()
-    {
+    public function create() {
+        
     }
 
-    public function edit()
-    {
+    public function edit() {
+        
     }
 
-    public function store()
-    {
+    public function store() {
 
         $setting = Setting::find(1);
 
@@ -144,9 +143,9 @@ class TicketController extends BaseController
         $filename = uniqid();
 
         $validation = Validator::make(Input::all(), [
-            'ticket_subject' => 'required',
-            'ticket_description' => 'required',
-            'ticket_priority' => 'required'
+                    'ticket_subject' => 'required',
+                    'ticket_description' => 'required',
+                    'ticket_priority' => 'required'
         ]);
 
         if ($validation->fails()) {
@@ -162,7 +161,7 @@ class TicketController extends BaseController
             $data['file'] = $filename . "." . $extension;
         }
 
-        $data['username'] = Auth::user()->username;
+        $data['username'] = Auth::user('user')->email;
         $data['ticket_status'] = 'open';
         $ticket->fill($data);
         $ticket->save();
@@ -170,13 +169,12 @@ class TicketController extends BaseController
         return Redirect::back()->withSuccess('Successfully saved!!');
     }
 
-    public function updateTicketStatus()
-    {
+    public function updateTicketStatus() {
 
         $ticket = Ticket::find(Input::get('ticket_id'));
         $validation = Validator::make(Input::all(), [
-            'ticket_id' => 'required',
-            'ticket_status' => 'required|in:open,close'
+                    'ticket_id' => 'required',
+                    'ticket_status' => 'required|in:open,close'
         ]);
 
         if ($validation->fails()) {
@@ -191,48 +189,48 @@ class TicketController extends BaseController
         return Redirect::back()->withSuccess('Saved!!');
     }
 
-    public function update()
-    {
+    public function update() {
+        
     }
 
-    public function destroy()
-    {
+    public function destroy() {
+        
     }
 
-    public function delete($ticket_id)
-    {
+    public function delete($ticket_id) {
         $ticket = Ticket::find($ticket_id);
 
         if (!$ticket || ($ticket->username != Auth::user()->username && !parent::hasRole('Admin')))
             return Redirect::to('ticket')->withErrors('This is not a valid link!!');
 
         DB::table('assigned_user')
-            ->where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)->delete();
+                ->where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)->delete();
 
         $attachments = DB::table('attachment')
-            ->where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)->get();
+                        ->where('belongs_to', '=', 'ticket')
+                        ->where('unique_id', '=', $ticket_id)->get();
 
         foreach ($attachments as $attachment)
             File::delete('assets/attachment_files/' . $attachment->file);
 
         DB::table('attachment')
-            ->where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)->delete();
+                ->where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)->delete();
 
         DB::table('comment')
-            ->where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)->delete();
+                ->where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)->delete();
 
         DB::table('notes')
-            ->where('belongs_to', '=', 'ticket')
-            ->where('unique_id', '=', $ticket_id)->delete();
+                ->where('belongs_to', '=', 'ticket')
+                ->where('unique_id', '=', $ticket_id)->delete();
 
         $ticket->delete();
 
         return Redirect::to('ticket')->withSuccess('Delete Successfully!!!');
     }
+
 }
 
 ?>
