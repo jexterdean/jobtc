@@ -31,7 +31,7 @@
                                          title="My profile"
                                     />
                                 </li>
-                                <li><a class="btn btn-link" href="/logout">Log out</a></li>
+                                <li><a class="btn btn-link" href="/laravel-pm/logout">Log out</a></li>
                             </ul>
                         </li>
                     </ul>
