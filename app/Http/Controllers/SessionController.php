@@ -14,7 +14,7 @@ use \Redirect;
 class SessionController extends BaseController {
 
     public function create(Request $request) {
-        if (Auth::check('user') || Auth::viaRemember('user')) {
+        if (Auth::check('user')) {
             return Redirect::to('dashboard');
         }
 
