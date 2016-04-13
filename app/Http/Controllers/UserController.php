@@ -24,7 +24,7 @@ class UserController extends BaseController
         $user = DB::table('user')
             ->select('user.user_id','user.user_status', 'user.name','user.email','user.username',
                 'role_user.role_id','user.client_id')
-            ->join('role_user', 'role_user.user_id', '=', 'user.user_id')
+            ->join('role_user', 'role_user.user_id', '=', 'user.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('roles.level', '<>', '1')
             ->get();
@@ -34,7 +34,7 @@ class UserController extends BaseController
             ->toArray();
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id')
+            ->lists('company_name', 'id')
             ->toArray();
 
         $assets = ['table', 'select2'];
@@ -64,17 +64,17 @@ class UserController extends BaseController
     public function edit($id)
     {
         $user = DB::table('user')
-//            ->join('assigned_roles', 'assigned_roles.user_id', '=', 'user.user_id')
-            ->join('role_user', 'role_user.user_id', '=', 'user.user_id')
+            ->join('assigned_roles', 'assigned_roles.user_id', '=', 'user.id')
+            ->join('role_user', 'role_user.user_id', '=', 'user.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('roles.level', '<>', '1')
-            ->where('user.user_id', '=', $id)
+            ->where('user.id', '=', $id)
             ->first();
 
         $role = Role::orderBy('name', 'asc')->lists('name', 'id');
 
         $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id')->toArray();
+            ->lists('company_name', 'id')->toArray();
 
         if ($user) {
 

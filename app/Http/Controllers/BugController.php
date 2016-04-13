@@ -25,7 +25,8 @@ class BugController extends BaseController
     public function index()
     {
 
-        if ($this->userHasRole('admin')) {
+        //if ($this->userHasRole('admin')) {
+        if (Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3) {
             $bug = Bug::all();
         } else
             if ($this->userHasRole('client')) {
@@ -35,7 +36,8 @@ class BugController extends BaseController
                     ->where('user.user_id', '=', Auth::user()->user_id)
                     ->get();
             } else
-                if ($this->userHasRole('staff')) {
+                //if ($this->userHasRole('staff')) {
+                if (Auth::user('user')->user_type === 4) {
 
                     $bug = DB::table('bug')
                         ->join('assigned_user', 'assigned_user.unique_id', '=', 'bug.bug_id')

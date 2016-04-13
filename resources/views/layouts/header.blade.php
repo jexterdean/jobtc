@@ -19,19 +19,19 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span>{{ Auth::user()->username }} <i class="caret"></i></span>
+                                <span>{{ Auth::user('user')->email}} <i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header bg-light-blue">
                                     <img onclick="window.location.href = '{{ url('/profile') }}' "
-                                         src="{{ \App\Helpers\Helper::getAvatar(Auth::user()->username) }}"
+                                         src="{{ \App\Helpers\Helper::getAvatar(Auth::user('user')->email) }}"
                                           class="img-circle"
                                          alt="User Image"
                                          style="cursor: pointer;"
                                          title="My profile"
                                     />
                                 </li>
-
+                                <li><a class="btn btn-link" href="/logout">Log out</a></li>
                             </ul>
                         </li>
                     </ul>

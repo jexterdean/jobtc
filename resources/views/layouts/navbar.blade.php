@@ -3,14 +3,14 @@
         <i class="fa fa-home"></i> <span>{{Lang::get('messages.DashBoard')}}</span>
     </a>
 </li>
-@role('admin')
+@if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
 <li>
     <a href="{{ url('client') }}">
         <i class="fa fa-users"></i> <span>{{Lang::get('messages.Clients')}}</span>
     </a>
 </li>
-@endrole
-@if(!Auth::user()->is('staff'))
+@endif
+@if(!Auth::user('user')->user_type === 4)
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
            role="button" aria-haspopup="true" aria-expanded="false">
@@ -24,14 +24,13 @@
                             class="fa fa-file-text-o"></i> {{Lang::get('messages.Invoice')}}</a></li>
         </ul>
     </li>
-
 @endif
 <li>
     <a href="{{ url('project') }}">
         <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
     </a>
 </li>
-@if(!Auth::user()->is('client'))
+@if(!Auth::user('client'))
     <li>
         <a href="{{ url('task') }}">
             <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
@@ -106,5 +105,11 @@
                         class="fa fa-folder-o"></i> {{Lang::get('messages.Email Templates')}}</a></li>
     </ul>
 </li>
-
 @endrole
+
+<li>
+    <a href="https://job.tc">
+        <i class="fa fa-sitemap"></i> <span>Hiring System</span>
+    </a>
+</li>
+
