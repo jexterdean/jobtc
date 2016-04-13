@@ -14,7 +14,7 @@ use \Redirect;
 class SessionController extends BaseController {
 
     public function create(Request $request) {
-        if (Auth::check('user')) {
+        if (Auth::check('user') || Auth::viaRemember('user')) {
             return Redirect::to('dashboard');
         }
 
@@ -59,7 +59,6 @@ class SessionController extends BaseController {
                 return redirect()->intended('dashboard')->withErrors($validator, 'login')->withInput();
             } else {
                 Auth::logout('user');
-                Auth::logout('client');
                 return Redirect::to('login')->withErrors("You are not allowed to login!!");
             }
 
