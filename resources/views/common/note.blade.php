@@ -1,6 +1,6 @@
-<div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
+<div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Private Notes {{ Auth::user()->name }}</h3>
+        <h3 class="panel-title">Notes {{ Auth::user()->name }}</h3>
     </div>
     <div class="panel-body">
         @if(isset($note->note_id))
@@ -11,7 +11,7 @@
         @endif
         <div class="form-group">
             {!!  Form::textarea('note_content',isset($note->note_content) ? $note->note_content : '',['size' => '25x3',
-            'class' => 'form-control textarea', 'placeholder' => 'Enter Notes']) !!}
+            'class' => 'form-control textarea', 'placeholder' => 'Notes']) !!}
         </div>
         <div class="form-group">
             {!!  Form::hidden('belongs_to',$belongs_to) !!}

@@ -36,17 +36,15 @@
                         @include('linkCategory/partials/_form')
                         {!! Form::close()  !!}
                         @else
-                            <div class='alert alert-danger alert-dismissable'>
-                                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
-                                <strong>You dont have to perform this action!!</strong>
-                            </div>
-                            @endrole
-                    </div>
+                        <div class='alert alert-danger alert-dismissable'>
+                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+                            <strong>You dont have to perform this action!!</strong>
+                        </div>
+                        @endrole
                 </div>
             </div>
         </div>
-
-
+    </div>
     <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -56,7 +54,7 @@
 
 
     <div class="col-md-12">
-        <div class="box box-solid">
+        <div class="box box-solid box-default">
             <div class="box-header">
                 <h3 class="box-title">Link List</h3>
                 <div class="box-tools pull-right">

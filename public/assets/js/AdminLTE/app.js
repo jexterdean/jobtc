@@ -52,12 +52,12 @@ $(function() {
         if (!box.hasClass("collapsed-box")) {
             box.addClass("collapsed-box");
             //Convert minus into plus
-            $(this).children(".fa-minus").removeClass("fa-minus").addClass("fa-plus");
+            $(this).children(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
             bf.slideUp();
         } else {
             box.removeClass("collapsed-box");
             //Convert plus into minus
-            $(this).children(".fa-plus").removeClass("fa-plus").addClass("fa-minus");
+            $(this).children(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
             bf.slideDown();
         }
     });

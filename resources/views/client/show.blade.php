@@ -5,7 +5,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
-            <div class="box box-solid box-primary">
+            <div class="box box-solid box-default">
                 <div class="box-header">
                     <h3 class="box-title">{{ $client->contact_person }}</h3>
                 </div>

@@ -183,14 +183,16 @@ class ProjectController extends BaseController
             ->get();
 
         if (!parent::userHasRole('Staff')) {
-            $task = Task::where('belongs_to', '=', 'project')
-                ->where('unique_id', '=', $id)
+            $task = Task::where('project_id', '=', $id)
+                ->leftJoin('user', 'task.user_id', '=', 'user.user_id')
                 ->orderBy('created_at', 'desc')
+                ->select('task.*','user.name')
                 ->get();
         } else {
-            $task = Task::where('belongs_to', '=', 'project')
-                ->where('unique_id', '=', $id)
-                ->where('username', '=', Auth::user()->username)
+            $task = Task::where('project_id', '=', $id)
+                ->leftJoin('user', 'task.user_id', '=', 'user.user_id')
+                ->where('user_id', '=', Auth::user()->user_id)
+                ->select('task.*','user.name')
                 ->orderBy('created_at', 'desc')
                 ->get();
         }

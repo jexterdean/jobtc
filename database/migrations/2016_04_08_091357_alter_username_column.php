@@ -14,8 +14,12 @@ class AlterUsernameColumn extends Migration
     {
         //
         Schema::table('task', function (Blueprint $table) {
-            $table->dropColumn('username');
-            $table->integer('user_id');
+            if (!Schema::hasColumn('user_id'))
+            {
+                $table->dropColumn('username');
+                $table->integer('user_id');
+            }
+
         });
     }
 
@@ -28,8 +32,12 @@ class AlterUsernameColumn extends Migration
     {
         //
         Schema::table('task', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-            $table->string('username', 50);
+
+            if (Schema::hasColumn('user_id'))
+            {
+                $table->dropColumn('user_id');
+                $table->string('username', 50);
+            }
         });
     }
 }
