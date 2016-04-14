@@ -108,8 +108,11 @@
 @endrole
 
 <li>
-    <a href="https://job.tc">
+    <a href="https://job.tc/dashboard">
         <i class="fa fa-sitemap"></i> <span>Hiring System</span>
     </a>
+    <!--a href="http://localhost:8080/dashboard">
+        <i class="fa fa-sitemap"></i> <span>Hiring System</span>
+    </a-->
 </li>
 
