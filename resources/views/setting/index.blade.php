@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="box box-primary">
+            <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">General Setting </h3>
                 </div>
@@ -79,7 +79,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="box box-primary">
+            <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">System Setting </h3>
                 </div>
