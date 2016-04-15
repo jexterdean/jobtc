@@ -33,6 +33,10 @@
 {!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.date.extensions.js') !!}
 {!! HTML::script('assets/js/plugins/input-mask/jquery.inputmask.extensions.js')  !!}
 
+{!! HTML::script('assets/js/countdown.timer.js')  !!}
+{!! HTML::script('assets/js/jquery-dateFormat.js')  !!}
+
+
 <script>
     $(function () {
         $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
@@ -109,8 +113,81 @@
                 $(this).val('');
             });
         /*endregion*/
-    });
 
+        /*region Timer*/
+        var element = $('#timer');
+        function startEditTimer(s){
+            var timerStart = parseInt(0) + parseInt(s);
+            var $minutes = parseInt(timerStart/60);
+            var $hoursValue = parseInt($minutes/60);
+            var $minutesValue = $minutes - ($hoursValue * 60);
+            var $secondsValue = timerStart - (($hoursValue * 3600) + ($minutesValue * 60));
+
+            $.countDownTimer(element, {
+                includeTimer: {
+                    hour: 1,
+                    minutes: 1,
+                    seconds: 1
+                },
+                isMilitaryTime: 0,
+                isCountUp: 1,
+                hours: $hoursValue,
+                minutes: $minutesValue,
+                seconds: $secondsValue
+            });
+        }
+        $('.btn-stop').click(function(e){
+            var form = $('.task-form');
+            var data = form.serializeArray();
+            var date = $.now();
+            var now = $.format.date(date, "yyyy-MM-dd HH:mm:ss");
+            var tbody = $('.task-table-body');
+
+            if($(this).hasClass('start_time')){
+                startEditTimer(0);
+                $(this)
+                    .html('Stop Time')
+                    .removeClass('start_time')
+                    .addClass('stop_time');
+                element.css({
+                            'color': '#000000'
+                        });
+                data.push({'name':'start_time','value':now});
+
+                $.post(form.attr('action'),data,function(data){
+                    console.log(data);
+                    var ele = '';
+                    var _return_data = jQuery.parseJSON(data);
+                    $.each(_return_data,function(index,value){
+                        ele += '<tr>';
+                        ele += '<td>' + value.name + '</td>';
+                        ele += '<td class="text-center">' + $.format.date(value.start_time, "dd-MM-yyyy hh:mm:ss a") + '</td>';
+                        ele += '<td class="text-center">&nbsp;</td>';
+                        ele += '<td class="text-center" style="width: 5%;"><a href="deleteTaskTimer/' + value.id + '" class="alert_delete"> <i class="fa fa-trash-o fa-2x"></i> </a></td>';
+                        ele += '</tr>';
+                    });
+                    tbody.html(ele);
+                });
+            }
+            else{
+                $(this)
+                    .html('Start Time')
+                    .removeClass('stop_time')
+                    .addClass('start_time');
+                element.css({
+                    'color': '#ff0000'
+                });
+                $.stopCountDownTimer();
+            }
+
+        });
+        /*endregion*/
+    });
+    setTimeout(function(){
+        $('.alert').fadeTo(2000, 500).slideUp(500, function(){
+                $(this).alert('close');
+        });
+    }, 2000);
     $(document).on('click', '.show_edit_form',function(e){
         e.preventDefault();
 

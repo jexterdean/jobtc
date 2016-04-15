@@ -30,6 +30,7 @@
 </div>
 
 
+<<<<<<< HEAD
 <div class="col-md-12">
     <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
         <div class="box-header">
@@ -40,6 +41,19 @@
                 </a>
                 <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
                         class="fa fa-minus"></i></button>
+=======
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">Project List</h3>
+                <div class="box-tools pull-right">
+                    <a data-toggle="modal" href="#add_project">
+                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add Project</button>
+                    </a>
+                    <button class="btn btn-sm" data-widget="collapse"><i
+                                class="fa fa-minus"></i></button>
+                </div>
+>>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
             </div>
         </div>
         <div class="box-body">

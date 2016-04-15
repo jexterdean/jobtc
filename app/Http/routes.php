@@ -60,7 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
      * Staff
      */
     Route::resource('task', 'TaskController');
-
+    Route::any('taskTimer/{id}', 'TaskController@taskTimer');
+    Route::any('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
+    Route::any('deleteTaskTimer/{id}', 'TaskController@deleteTaskTimer');
 
     Route::get('/data/{cacheKey}','CacheDataController@getCache');
     Route::resource('event', 'EventsController');

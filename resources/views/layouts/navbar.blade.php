@@ -12,8 +12,7 @@
 @endif
 @if(!Auth::user('user')->user_type === 4)
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-           role="button" aria-haspopup="true" aria-expanded="false">
+        <a href="#" class="dropdown-toggle">
             <i class="fa fa-tablet"></i>
             <span>{{ Lang::get('messages.Billing')}} </span>
             <span class="caret"></span></a>
@@ -30,6 +29,7 @@
         <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
     </a>
 </li>
+<<<<<<< HEAD
 @if(!Auth::user('client'))
     <li>
         <a href="{{ url('task') }}">
@@ -37,9 +37,15 @@
         </a>
     </li>
 @endif
+=======
+<li>
+    <a href="{{ url('task') }}">
+        <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
+    </a>
+</li>
+>>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
 <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
+    <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>
         <span> Issue </span>
         <span class="caret"></span></a>
@@ -60,7 +66,7 @@
 
 <li>
     <a href="{{ url('event') }}">
-        <i class="fa fa-calendar"></i> <span>{{Lang::get('messages.Event Calendar')}}</span>
+        <i class="fa fa-calendar"></i> <span>Event</span>
     </a>
 </li>
 <li>
@@ -69,30 +75,16 @@
     </a>
 </li>
 
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
+<li>
+    <a href="{{ route('links.index') }}">
         <i class="fa fa-globe"></i>
         <span>Links</span>
-        <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        <li>
-            <a href="{{ route('linkCategory.index') }}">
-                <i class="fa fa-adjust"></i> <span> Categories </span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ route('links.index') }}">
-                <i class="fa fa-globe"></i> <span> Links </span>
-            </a>
-        </li>
-    </ul>
+    </a>
 </li>
 
 @role('admin')
 <li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
+    <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>
         <span>{{Lang::get('messages.Setting')}}</span>
         <span class="caret"></span></a>
