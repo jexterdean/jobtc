@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">
+                    <div class="col-xs-6 text-center">
                         @if($payable->totalSales>0)
                             <input type="text" class="knob" data-readonly="true"
                                    value="{{ round(100-(($paid->totalPaid/$payable->totalSales)*100),2) }}"
@@ -81,7 +81,7 @@
                         @endif
                         <div class="knob-label">Percentage Amount Due</div>
                     </div>
-                    <div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">
+                    <div class="col-xs-6 text-center">
                         <input type="text" class="knob" data-readonly="true" value="{{ $inCompletProjects }}"
                                data-width="120" data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor() }}"/>
                         <div class="knob-label">Pending Projects</div>
@@ -136,7 +136,7 @@
             @endif
             <div style="clear:both;"></div>
             <br/>
-            <div class="box">
+            <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-lightbulb-o"></i> Pending Projects</h3>
                 </div>
@@ -195,8 +195,13 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             @if(!Auth::check('client'))
                 <div class="box">
+=======
+            @if(!Auth::user()->is('client'))
+                <div class="box box-primary">
+>>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
                     </div>
@@ -243,7 +248,7 @@
                     <div id="calendar"></div>
                 </div>
             </div>
-            <div class="box">
+            <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-bug"></i> Pending Bugs</h3>
                 </div>
@@ -287,7 +292,7 @@
                     @endif
                 </div>
             </div>
-            <div class="box">
+            <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-ticket"></i> Opened Tickets</h3>
                 </div>
