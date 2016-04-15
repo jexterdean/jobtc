@@ -47,9 +47,15 @@
                 $DATA = array();
                 $QA = array();
                 foreach ($clients as $client) {
+<<<<<<< HEAD
                     $linkToEdit = "<a href='client/$client->client_id/edit' data-toggle='modal' data-target='#client_edit'> <i class='fa fa-2x fa-edit'></i> </a>";
                     $linkToView = "<a href='client/$client->client_id' data-toggle='modal' data-target='#client_show'> <i class='fa fa-2x fa-external-link'></i> </a>";
                     $linkToDelete = "<a href='client/$client->client_id/delete' class='alert_delete'> <i class='fa fa-2x fa-trash-o'></i> </a>";
+=======
+                    $linkToEdit = "<a href='client/$client->id/edit' data-toggle='modal' data-target='#client_edit'> <i class='fa fa-edit'></i> </a>";
+                    $linkToView = "<a href='client/$client->id' data-toggle='modal' data-target='#client_show'> <i class='fa fa-external-link'></i> </a>";
+                    $linkToDelete = "<a href='client/$client->client_id/delete' class='alert_delete'> <i class='fa fa-trash-o'></i> </a>";
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
                     $Option = "$linkToView <span class=hspacer></span> $linkToEdit <span class=hspacer></span> $linkToDelete";
                     $QA[] = array($client->company_name, $client->contact_person, $client->email, isset($countries[$client->country_id]) ? $countries[$client->country_id] : '', $Option);
                 }

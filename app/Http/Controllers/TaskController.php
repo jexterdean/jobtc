@@ -37,7 +37,11 @@ class TaskController extends BaseController
     {
 
         if (parent::hasRole('staff')) {
+<<<<<<< HEAD
             $tasks = Task::where('user_id', '=', Auth::user()->user_id)
+=======
+            $tasks = Task::where('email', '=', Auth::user('user')->email)
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
                 ->orderBy('created_at', 'desc')
                 ->get();
         } else {
@@ -52,8 +56,13 @@ class TaskController extends BaseController
         $belongsTo = 'task';
 
 
+<<<<<<< HEAD
         $assign_username = User::orderBy('name')
             ->lists('name', 'user_id');
+=======
+        $assign_username = User::orderBy('first_name', 'asc')
+            ->lists('email', 'email');
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
 
         $assets = ['calendar','table'];
 
@@ -151,10 +160,16 @@ class TaskController extends BaseController
     {
         $task = Task::find($id);
 
+<<<<<<< HEAD
         $assign_username = User::orderBy('name')
             ->lists('name', 'user_id');
 
         if(count($task) > 0){
+=======
+        $assign_username = User::orderBy('first_name', 'asc')
+            ->lists('email', 'email');
+        if($task){
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
 
             return view('task.edit', [
                 'task'=> $task,
