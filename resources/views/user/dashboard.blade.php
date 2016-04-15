@@ -194,14 +194,8 @@
                     @endif
                 </div>
             </div>
-
-<<<<<<< HEAD
-            @if(!Auth::user()->is('client'))
-                <div class="box box-default">
-=======
             @if(!Auth::check('client'))
                 <div class="box">
->>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
                     </div>

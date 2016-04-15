@@ -191,16 +191,10 @@ class ProjectController extends BaseController
                 ->select('task.*','user.name')
                 ->get();
         } else {
-<<<<<<< HEAD
-            $task = Task::where('project_id', '=', $id)
-                ->leftJoin('user', 'task.user_id', '=', 'user.user_id')
-                ->where('user_id', '=', Auth::user()->user_id)
-                ->select('task.*','user.name')
-=======
+
             $task = Task::where('belongs_to', '=', 'project')
                 ->where('unique_id', '=', $id)
                 ->where('username', '=', Auth::user('user')->email)
->>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
                 ->orderBy('created_at', 'desc')
                 ->get();
         }

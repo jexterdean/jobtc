@@ -29,21 +29,11 @@
         <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
     </a>
 </li>
-<<<<<<< HEAD
 <li>
     <a href="{{ url('task') }}">
         <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
     </a>
 </li>
-=======
-@if(!Auth::user('client'))
-    <li>
-        <a href="{{ url('task') }}">
-            <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
-        </a>
-    </li>
-@endif
->>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>
