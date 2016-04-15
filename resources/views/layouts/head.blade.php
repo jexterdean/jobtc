@@ -8,6 +8,8 @@
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"
           type="text/css"/>
     <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://fullcalendar.io/js/fullcalendar-2.6.1/lib/cupertino/jquery-ui.min.css" rel="stylesheet"
+              type="text/css"/>
 
     {!!  HTML::style('assets/custom.css')  !!}
 		{!! HTML::style('assets/css/AdminLTE.css')  !!}
@@ -27,6 +29,11 @@
 
     @if(in_array('calendar',$assets))
         {!!  HTML::style('assets/css/fullcalendar.css')  !!}
+        {!! HTML::style('assets/css/bootstrap-datetimepicker.min.css') !!}
+    @endif
+
+    @if(in_array('select',$assets))
+            {!!  HTML::style('assets/css/bootstrap-select.css') !!}
     @endif
 
     {!!  HTML::style('assets/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}

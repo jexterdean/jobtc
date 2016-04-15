@@ -62,8 +62,8 @@
 
 
 <li>
-    <a href="{{ url('event') }}">
-        <i class="fa fa-calendar"></i> <span>{{Lang::get('messages.Event Calendar')}}</span>
+    <a href="{{ url('meeting') }}">
+        <i class="fa fa-calendar"></i> <span>{{Lang::get('Meeting Calendar')}}</span>
     </a>
 </li>
 <li>
