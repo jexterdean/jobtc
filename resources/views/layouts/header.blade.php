@@ -31,8 +31,8 @@
                                          title="My profile"
                                     />
                                 </li>
-                                <li><a class="btn btn-link" href="https://job.tc:8081/logout">Log out</a></li>
-                                <!--li><a class="btn btn-link" href="/logout">Log out</a></li-->
+                                <!--li><a class="btn btn-link" href="https://job.tc:8081/logout">Log out</a></li-->
+                                <li><a class="btn btn-link" href="/logout">Log out</a></li>
                             </ul>
                         </li>
                     </ul>

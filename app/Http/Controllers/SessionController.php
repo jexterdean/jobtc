@@ -17,7 +17,6 @@ class SessionController extends BaseController {
         if (Auth::check('user') || Auth::viaRemember('user')) {
             return Redirect::to('dashboard');
         }
-
         return View::make('session.create');
     }
 
