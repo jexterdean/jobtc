@@ -38,7 +38,7 @@
                     <a data-toggle="modal" href="#add_project">
                         <button class="btn btn-sm btn-primary"><i class="fa fa-plus-circle"></i> Add Project</button>
                     </a>
-                    <button class="btn btn-sm btn-danger" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>
             </div>
             <div class="box-body">

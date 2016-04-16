@@ -48,7 +48,7 @@ class ProjectController extends BaseController
 
         $user = User::where('client_id', '=', '')
             ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+            ->lists('name', 'user_id');
 
         $client_options = Client::orderBy('company_name', 'asc')
             ->lists('company_name', 'client_id')
