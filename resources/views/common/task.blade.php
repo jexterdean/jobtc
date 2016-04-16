@@ -65,7 +65,7 @@
                             @if(!Auth::user()->is('Client'))
                                 <td class="text-right">
                                     <a href="{{ url('task/'.$task->task_id) }}"><i class="fa fa-2x fa-external-link"></i></a>
-                                    <a href="{{ route('task.update',$task->task_id) }}"><i class="fa fa-2x fa-pencil"></i></a>
+                                    <a href="{{ route('task.edit',$task->task_id) }}" class="show_edit_form"><i class="fa fa-2x fa-pencil"></i></a>
                                     <a href="{{ route('project.destroy',$task->task_id) }}" class="alert_delete"><i class="fa fa-2x fa-trash-o"></i></a>
                                 </td>
                             @endif

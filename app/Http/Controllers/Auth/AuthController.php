@@ -6,8 +6,7 @@ use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
-//use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use Sarav\Multiauth\Foundation\AuthenticatesAndRegistersUsers;
+use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {

@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -26,7 +27,7 @@
                             <div class="col-md-6">
                                 <div class="box box-solid box-default">
                                     <div class="box-header">
-                                        <h3 class="box-title">Ticket Detail</h3>
+                                        <h3 class="box-title">Ticekt Detail</h3>
                                     </div>
                                     <div class="box-body">
                                         <div class="row static-info">
@@ -59,7 +60,7 @@
                                                 Status:
                                             </div>
                                             <div class="col-md-7 value">
-                                                @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+                                                @if(!Auth::user()->is('client'))
                                                     {!!  Form::open(['method' => 'POST','url' => 'updateTicketStatus',
                                                     'class' => 'form-horizontal'])  !!}
                                                     {!!  Form::select('ticket_status', [
@@ -88,9 +89,9 @@
 
                             </div>
 
-                            @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+                            @role('admin')
                                 @include('common.assign',['assignedUsers' => $assignedUsers, 'belongs_to' => 'ticket', 'unique_id' => $ticket->ticket_id])
-                            @endif
+                            @endrole
 
                             @include('common.comment',['comments' => $comments, 'belongs_to' => 'ticket', 'unique_id' => $ticket->ticket_id])
                         </div>

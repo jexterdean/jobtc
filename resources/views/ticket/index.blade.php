@@ -64,7 +64,7 @@
                     <a data-toggle="modal" href="#add_ticket">
                         <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Ticket</button>
                     </a>
-                    <button class="btn btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>
             </div>
             <div class="box-body">
