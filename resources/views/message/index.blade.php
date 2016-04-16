@@ -101,7 +101,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="box box-primary">
+            <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title">Send Message</h3>
                 </div>

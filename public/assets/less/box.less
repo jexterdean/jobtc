@@ -6,7 +6,11 @@
   -moz-border-radius: 3px;
   border-radius: 3px;
   width: 100%;
-  .box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
+  .box-shadow(2px 2px 5px -1px rgba(0, 0, 0, 0.50));
+  //.box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
+  &-default{
+    .box-variant(@brand-default);
+  }
   &-success{
     .box-variant(@brand-success);
   }
@@ -24,7 +28,7 @@
   }
   .box-header{
     position: relative;
-    background: @panel-default-border;
+    //background: @panel-default-border;
     .box-shadow-variant();
     &:before,&:after{
       display: table;
@@ -47,6 +51,9 @@
     }
     > .box-tools{
       padding: 5px 10px 5px 5px;
+    }
+    .progress{
+      margin: 10px -20px 0!important;
     }
   }
   .box-body{

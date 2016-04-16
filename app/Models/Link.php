@@ -15,7 +15,7 @@ class Link extends Model
 
 
     protected $fillable = [
-        'title','category_id','url','descriptions','tags','comments'
+        'title','category_id','url','descriptions','tags','comments','task_id'
     ];
     protected $primaryKey = 'id';
     protected $table = 'links';

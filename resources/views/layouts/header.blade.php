@@ -19,7 +19,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span>{{ Auth::user()->username }} <i class="caret"></i></span>
+                                <span>{{ Auth::user('user')->email}} <i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>

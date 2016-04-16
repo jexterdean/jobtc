@@ -29,7 +29,7 @@
 
 
     <div class="col-md-12">
-        <div class="box box-primary">
+        <div class="box box-default">
             <div class="box-header">
                 <h3 class="box-title">Task List</h3>
                 <div class="box-tools pull-right">
@@ -46,10 +46,6 @@
 
                 $QA = array();
                 foreach ($tasks as $task) {
-
-                    $taskVisibleToClient = ($task->is_visible ==='yes')
-                            ? "<span class='label label-success'> <i class='fa fa-search-plus'></i></span>"
-                            : "";
 
                     $status = "";
 
@@ -84,8 +80,8 @@
                     $Option = "$viewTask <span class='hspacer'></span> $taskToEdit <span class='hspacer'></span> $taskToDelete";
 
                     $QA[] = array(
-                            ($taskVisibleToClient." ".$task->task_title),
-                            $task->username,
+                            ($task->task_title),
+                            $task->name,
                             $task->due_date,
                             $status,
                             $Option);
