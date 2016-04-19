@@ -23,6 +23,26 @@
     </div>
 </div>
 
+<<<<<<< HEAD
+    <div class="modal fade add_category_modal" id="add_category" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-{{ \App\Helpers\Helper::getRandomColor() }}">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Add Category</h4>
+                    </div>
+                    <div class="modal-body">
+                        @role('admin')
+                        {!!  Form::open(['route' => 'linkCategory.store','class' => 'form-horizontal category-form'])  !!}
+                        @include('linkCategory/partials/_form')
+                        {!! Form::close()  !!}
+                        @else
+                        <div class='alert alert-danger alert-dismissable'>
+                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+                            <strong>You dont have to perform this action!!</strong>
+                        </div>
+                        @endrole
+=======
 <div class="modal fade add_category_modal" id="add_category" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -39,22 +59,31 @@
                 <div class='alert alert-danger alert-dismissable'>
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                     <strong>You dont have to perform this action!!</strong>
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
                 </div>
                 @endif
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+    <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+=======
 </div>
 
 
 <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
         </div>
     </div>
 </div>
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <div class="col-md-12">
     <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
@@ -67,8 +96,10 @@
                 <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
                         class="fa fa-minus"></i></button>
 =======
+=======
+>>>>>>> project_update
     <div class="col-md-12">
-        <div class="box box-solid">
+        <div class="box box-solid box-default">
             <div class="box-header">
                 <h3 class="box-title">Link List</h3>
                 <div class="box-tools pull-right">
@@ -78,7 +109,22 @@
                     <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
                 </div>
+<<<<<<< HEAD
 >>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
+=======
+=======
+<div class="col-md-12">
+    <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
+        <div class="box-header">
+            <h3 class="box-title">Link List</h3>
+            <div class="box-tools pull-right">
+                <a data-toggle="modal" href="#add_link">
+                    <button class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> Add New Link</button>
+                </a>
+                <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
+                        class="fa fa-minus"></i></button>
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
+>>>>>>> project_update
             </div>
         </div>
         <div class="box-body">

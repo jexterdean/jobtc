@@ -11,9 +11,10 @@ class TaskChecklist extends Model
     protected $fillable = [
         'task_id',
         'user_id',
-        'checklist'
+        'checklist',
+        'is_finished'
     ];
 
     protected $primaryKey = 'id';
-    protected $table = 'task_checklist';
+    protected $table = 'task_check_list';
 }

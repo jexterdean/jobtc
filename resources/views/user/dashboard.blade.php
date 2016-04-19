@@ -136,7 +136,7 @@
             @endif
             <div style="clear:both;"></div>
             <br/>
-            <div class="box box-primary">
+            <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-lightbulb-o"></i> Pending Projects</h3>
                 </div>
@@ -196,12 +196,21 @@
             </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             @if(!Auth::check('client'))
                 <div class="box">
 =======
             @if(!Auth::user()->is('client'))
                 <div class="box box-primary">
 >>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
+=======
+            @if(!Auth::user()->is('client'))
+                <div class="box box-default">
+=======
+            @if(!Auth::check('client'))
+                <div class="box">
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
+>>>>>>> project_update
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
                     </div>
@@ -243,12 +252,12 @@
 
 
         <div class="col-md-6">
-            <div class="box box-primary">
+            <div class="box box-default">
                 <div class="box-body no-padding">
                     <div id="calendar"></div>
                 </div>
             </div>
-            <div class="box box-primary">
+            <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-bug"></i> Pending Bugs</h3>
                 </div>
@@ -292,7 +301,7 @@
                     @endif
                 </div>
             </div>
-            <div class="box box-primary">
+            <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-ticket"></i> Opened Tickets</h3>
                 </div>

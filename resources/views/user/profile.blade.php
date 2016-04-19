@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="box box-primary">
+            <div class="box box-defualt">
                 <div class="box-header">
                     <h3 class="box-title">Update Profile</h3>
                 </div>
@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="box box-primary">
+            <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title">Change Password</h3>
                 </div>

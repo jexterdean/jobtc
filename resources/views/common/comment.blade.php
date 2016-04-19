@@ -1,4 +1,4 @@
-<div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
+<div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">Comments</h3>
     </div>

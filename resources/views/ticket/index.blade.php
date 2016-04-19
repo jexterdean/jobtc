@@ -57,7 +57,7 @@
     </div>
 
     <div class="col-md-12">
-        <div class="box box-solid">
+        <div class="box box-solid box-default">
             <div class="box-header">
                 <h3 class="box-title">Ticket List</h3>
                 <div class="box-tools pull-right">

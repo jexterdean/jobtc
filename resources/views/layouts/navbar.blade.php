@@ -30,6 +30,15 @@
     </a>
 </li>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<li>
+    <a href="{{ url('task') }}">
+        <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
+    </a>
+</li>
+=======
+>>>>>>> project_update
 @if(!Auth::user('client'))
     <li>
         <a href="{{ url('task') }}">
@@ -37,6 +46,7 @@
         </a>
     </li>
 @endif
+<<<<<<< HEAD
 =======
 <li>
     <a href="{{ url('task') }}">
@@ -44,6 +54,9 @@
     </a>
 </li>
 >>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
+=======
+>>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
+>>>>>>> project_update
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>
