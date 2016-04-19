@@ -22,7 +22,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade add_category_modal" id="add_category" tabindex="-1" role="basic" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -31,7 +30,7 @@
                         <h4 class="modal-title">Add Category</h4>
                     </div>
                     <div class="modal-body">
-                        @role('admin')
+                        @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
                         {!!  Form::open(['route' => 'linkCategory.store','class' => 'form-horizontal category-form'])  !!}
                         @include('linkCategory/partials/_form')
                         {!! Form::close()  !!}

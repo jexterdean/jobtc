@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Freelance Plus</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+   
     {!!  HTML::style('assets/css/bootstrap.css')  !!}
-    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"
-          type="text/css"/>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
 
     {!!  HTML::style('assets/custom.css')  !!}
