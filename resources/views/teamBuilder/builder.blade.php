@@ -5,38 +5,50 @@
         </a>
     </div>
     <div class="col-md-12"><br /></div>
-    <div class="col-md-12">
-        <div class="box box-solid box-primary">
-            <div class="box-header">
-                <h3 class="box-title">Team</h3>
-                <div class="box-tools pull-right">
-                    <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+    @foreach($team as $v)
+        <div class="col-md-12">
+            <div class="box box-solid box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">{!! $v->title !!} Team - Project: <em>{!! $v->project_title !!}</em></h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="box box-solid box-primary">
-                            <div class="box-header">
-                                <h4 class="box-title" style="font-size: 14px;">Team Box</h4>
-                                <div class="box-tools pull-right">
-                                    <a data-toggle="modal" href="#add_member">
-                                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add</button>
-                                    </a>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="box box-solid box-primary">
+                                <div class="box-header">
+                                    <h4 class="box-title" style="font-size: 14px;">Team Box</h4>
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-sm addMemberBtn" id="{!! $v->id !!}"><i class="fa fa-plus-circle"></i> Add</button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    @foreach($v->member as $m)
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <a href="#">
+                                                {!! HTML::image("assets/user/avatar.png", 'class="media-object"') !!}
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading">{{ $m->name }}</h4>
+                                            {{ $m->email }}
+                                        </div>
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
-                            <div class="box-body">
-
-                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div id="team_calendar"></div>
+                        <div class="col-md-8">
+                            <div id="team_calendar"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endforeach
 </div>
 
 <div class="modal fade" id="create_team">
@@ -57,13 +69,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Add Member</h4>
             </div>
-            {!! Form::open(array('url' => 'teamBuilder')) !!}
             <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="submit" name="addEventBtn" class="btn btn-success addEventBtn">Add</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-            {!! Form::close() !!}
         </div>
     </div>
 </div>
@@ -174,11 +180,25 @@
             });
         }
 
-        var add_member = $('#add_member');
-        add_member.on('show.bs.modal', function(e){
+        var create_team = $('#create_team');
+        create_team.on('show.bs.modal', function(e){
             $.ajax({
-                url: '{{ URL::to("/teamBuilder/create") }}',
+                url: '{{ URL::to("/teamBuilder/create?p=team") }}',
                 success: function(doc) {
+                    create_team.find('.modal-body').html(doc);
+                }
+            });
+        });
+
+        var addMemberBtn = $('.addMemberBtn');
+        var add_member = $('#add_member');
+        addMemberBtn.click(function(e){
+            var thisId = this.id;
+            var thisUrl = '{{ URL::to("/teamBuilder/create?p=member") }}&id=' + thisId;
+            $.ajax({
+                url: thisUrl,
+                success: function(doc) {
+                    add_member.modal('show');
                     add_member.find('.modal-body').html(doc);
                 }
             });

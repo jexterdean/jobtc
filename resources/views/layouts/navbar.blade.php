@@ -63,12 +63,17 @@
 
 <li>
     <a href="{{ url('meeting') }}">
-        <i class="fa fa-calendar"></i> <span>{{Lang::get('Meeting Calendar')}}</span>
+        <i class="fa fa-calendar"></i> <span>{{Lang::get('Meetings')}}</span>
     </a>
 </li>
 <li>
     <a href="{{ url('message') }}">
         <i class="fa fa-envelope"></i> <span>{{Lang::get('messages.Message')}}</span>
+    </a>
+</li>
+<li>
+    <a href="{{ url('payroll') }}">
+        <i class="fa fa-credit-card"></i> <span>{{Lang::get('Payroll')}}</span>
     </a>
 </li>
 

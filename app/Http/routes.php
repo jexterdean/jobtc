@@ -106,6 +106,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('meeting', 'MeetingController');
     Route::get('meetingJson', 'MeetingController@meetingJson');
     Route::get('meetingTimezone', 'MeetingController@meetingTimezone');
+
+    /*
+     * Team Builder
+    */
+    Route::resource('teamBuilder', 'TeamBuilderController');
+    Route::get('teamBuilderJson', 'TeamBuilderController@teamBuilderJson');
+    Route::get('teamBuilderUserJson', 'TeamBuilderController@teamBuilderUserJson');
+    Route::get('teamBuilderExistingUserJson', 'TeamBuilderController@teamBuilderExistingUserJson');
+
+    /*
+     * Payroll
+    */
+    Route::resource('payroll', 'PayrollController');
+    Route::get('payrollJson', 'PayrollController@payrollJson');
 });
 
 Route::group(['prefix' => 'api'], function () {
