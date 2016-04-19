@@ -21,58 +21,51 @@
         </div>
     </div>
     <div class="form-group">
-        {!!  Form::label('password','Password',['class' => 'col-md-3 control-label']) !!}
-        <div class="col-md-9">
-            {!!  Form::input('password','password',isset($client->password) ? $client->password: '',['class' => 'form-control',
-            'placeholder' => 'Enter Password', 'tabindex' => '4']) !!}
-        </div>
-    </div>
-    <div class="form-group">
         {!!  Form::label('phone','Phone',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!! Form::input('text','phone',isset($client->phone) ? $client->phone : '',['class' => 'form-control',
-            'placeholder' => 'Enter Contact Number', 'tabindex' => '5']) !!}
+            'placeholder' => 'Enter Contact Number', 'tabindex' => '4']) !!}
         </div>
     </div>
     <div class="form-group">
         {!!  Form::label('address','Address',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::textarea('address',isset($client->address) ? $client->address : '',['size' => '30x3', 'class' =>
-            'form-control', 'placeholder' => 'Enter Contact Address', 'tabindex' => '6']) !!}
+            'form-control', 'placeholder' => 'Enter Contact Address', 'tabindex' => '5']) !!}
         </div>
     </div>
     <div class="form-group">
         {!!  Form::label('zipcode','Zip Code',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','zipcode',isset($client->zipcode) ? $client->zipcode : '',['class' =>
-            'form-control', 'placeholder' => 'Enter Zip Code', 'tabindex' => '7']) !!}
+            'form-control', 'placeholder' => 'Enter Zip Code', 'tabindex' => '6']) !!}
         </div>
     </div>
     <div class="form-group">
         {!!  Form::label('city','City',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','city',isset($client->city) ? $client->city : '',['class' => 'form-control',
-            'placeholder' => 'Enter City', 'tabindex' => '8']) !!}
+            'placeholder' => 'Enter City', 'tabindex' => '7']) !!}
         </div>
     </div>
     <div class="form-group">
         {!! Form::label('state','State',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!! Form::input('text','state',isset($client->state) ? $client->state : '',['class' => 'form-control',
-            'placeholder' => 'Enter State', 'tabindex' => '9']) !!}
+            'placeholder' => 'Enter State', 'tabindex' => '8']) !!}
         </div>
     </div>
     <div class="form-group">
         {!!  Form::label('country_id','Country',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::select('country_id', $countries,( isset($client->country_id) ?
-            $client->country_id : ''), ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '10'] )  !!}
+            $client->country_id : ''), ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '9'] )  !!}
         </div>
     </div>
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             {!!  Form::submit(isset($buttonText) ? $buttonText : 'Add Client',['class' => 'btn btn-primary', 'tabindex'
-            => '11'])  !!}
+            => '10'])  !!}
         </div>
     </div>
 </div>

@@ -14,8 +14,6 @@ use Redirect;
 use Validator;
 use DB;
 use Input;
-use Illuminate\Http\Request;
-
 class ClientController extends BaseController
 {
 
@@ -39,7 +37,7 @@ class ClientController extends BaseController
     public function show($client_id)
     {
         $client = Client::find($client_id);
-        
+
         $countries_option = Country::orderBy('country_name', 'asc')
             ->lists('country_name', 'country_id');
 
@@ -68,14 +66,13 @@ class ClientController extends BaseController
         ]);
     }
 
-    public function store(Request $request)
+    public function store()
     {
 
         $validation = Validator::make(Input::all(), [
             'company_name' => 'required|unique:client',
             'contact_person' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
             'zipcode' => 'numeric',
             'country_id' => 'required'
         ]);
@@ -85,20 +82,9 @@ class ClientController extends BaseController
         }
 
         $client = new Client;
-        
-        //$data = Input::all();
-        //$data['client_status'] = 'Active';
-        //$client->fill($data);
-        $client->country_id = $request->input('country_id');
-        $client->company_name = $request->input('company_name');
-        $client->contact_person = $request->input('contact_person');
-        $client->email = $request->input('email');
-        $client->phone = $request->input('phone');
-        $client->address = $request->input('address');
-        $client->zipcode = $request->input('zipcode');
-        $client->city = $request->input('city');
-        $client->state = $request->input('state');
-        $client->password = bcrypt($request->input('password'));        
+        $data = Input::all();
+        $data['client_status'] = 'Active';
+        $client->fill($data);
         $client->save();
 
         return Redirect::to('client')->withSuccess("Client added successfully!!");
@@ -109,7 +95,7 @@ class ClientController extends BaseController
         $client = Client::find($client_id);
 
         $validation = Validator::make(Input::all(), [
-            'company_name' => 'required|unique:client,company_name,' . $client_id . ',id',
+            'company_name' => 'required|unique:client,company_name,' . $client_id . ',client_id',
             'contact_person' => 'required',
             'email' => 'required|email',
             'zipcode' => 'numeric',
@@ -138,23 +124,23 @@ class ClientController extends BaseController
 
         $user = User::find($client_id);
 
-        $project = Project::where('client_id', '=', $client->id)->get();
+        $project = Project::where('client_id', '=', $client->client_id)->get();
 
         if (count($project))
             return Redirect::to('client')->withErrors('This client has some projects!! Delete that project first!!');
 
-        $ticket = Ticket::where('username', '=', $user->email)->get();
+        $ticket = Ticket::where('username', '=', $user->username)->get();
 
         if (count($ticket))
             return Redirect::to('client')->withErrors('This client has some ticket!! Delete that ticket first!!');
 
         DB::table('message')
-            ->where('from_username', '=', $user->email)
-            ->orWhere('to_username', '=', $user->email)
+            ->where('from_username', '=', $user->username)
+            ->orWhere('to_username', '=', $user->username)
             ->delete();
 
         DB::table('events')
-            ->where('username', '=', $user->email)
+            ->where('username', '=', $user->username)
             ->delete();
 
         $user->delete();

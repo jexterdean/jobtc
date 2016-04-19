@@ -3,7 +3,7 @@
     <h4 class="modal-title">Edit link</h4>
 </div>
 <div class="modal-body">
-    @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+    @role('admin')
         {!! Form::model($link,['method' => 'PATCH','route' => ['links.update',$link->id] ,'class' =>
         'form-horizontal link-form'])  !!}
         @include('links/partials/_form', ['buttonText' => 'Update Links'] )
@@ -13,7 +13,7 @@
             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
             <strong>You dont have to perform this action!!</strong>
         </div>
-    @endif
+    @endrole
 </div>
 <script>
     $(function () {

@@ -28,15 +28,15 @@
         </div>
     </div>
 </div>
-<div class="col-md-12">
-    <div class="box box-default">
-        <div class="box-header">
-            <h3 class="box-title">Project List</h3>
-            <div class="box-tools pull-right">
-                <a data-toggle="modal" href="#add_project">
-                    <button class="btn btn-sm btn-primary"><i class="fa fa-plus-circle"></i> Add Project</button>
-                </a>
-                <button class="btn btn-sm btn-danger" data-widget="collapse"><i class="fa fa-minus"></i></button>
+    <div class="col-md-12">
+        <div class="box box-default">
+            <div class="box-header">
+                <h3 class="box-title">Project List</h3>
+                <div class="box-tools pull-right">
+                    <a data-toggle="modal" href="#add_project">
+                        <button class="btn btn-sm btn-primary"><i class="fa fa-plus-circle"></i> Add Project</button>
+                    </a>
+                    <button class="btn btn-sm btn-danger btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
             </div>
         </div>
         <div class="box-body">

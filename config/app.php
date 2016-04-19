@@ -148,7 +148,6 @@ return [
         Bican\Roles\RolesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Sarav\Multiauth\MultiauthServiceProvider::class
     ],
 
     /*

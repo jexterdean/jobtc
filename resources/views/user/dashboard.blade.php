@@ -1,12 +1,10 @@
 @extends('layouts.default')
 @section('content')
 
-
     <div class="row">
 
         <div class="col-md-6 col-sm-12">
-            <!--If Role is Administrator, Employer or Manager-->
-            @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+            @role('admin')
                 <div class="col-lg-6">
                     <div class="small-box bg-aqua">
                         <div class="inner">
@@ -133,7 +131,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endrole
             <div style="clear:both;"></div>
             <br/>
             <div class="box box-default">
@@ -194,8 +192,8 @@
                     @endif
                 </div>
             </div>
-            @if(!Auth::check('client'))
-                <div class="box">
+            @if(!Auth::user()->is('client'))
+                <div class="box box-default">
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
                     </div>

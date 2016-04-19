@@ -53,8 +53,8 @@ class TaskController extends BaseController {
 
         $belongsTo = 'task';
 
-        $assign_username = User::orderBy('first_name', 'asc')
-                ->lists('email', 'email');
+        $assign_username = User::orderBy('name')
+            ->lists('name', 'user_id');
 
         $assets = ['calendar', 'table'];
 
@@ -147,10 +147,10 @@ class TaskController extends BaseController {
     public function edit($id) {
         $task = Task::find($id);
 
-        $assign_username = User::orderBy('first_name', 'asc')
-                ->lists('email', 'email');
+        $assign_username = User::orderBy('name')
+            ->lists('name', 'user_id');
 
-        if (count($task) > 0) {
+        if(count($task) > 0){
 
             return view('task.edit', [
                 'task' => $task,

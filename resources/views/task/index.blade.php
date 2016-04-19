@@ -36,8 +36,7 @@
                     <a data-toggle="modal" href="#add_link">
                         <button class="btn btn-sm btn-success btn-shadow"><i class="fa fa-plus-circle"></i> Add New Task</button>
                     </a>
-                    <button class="btn btn-sm btn-warning" data-widget="collapse"><i
-                                class="fa fa-minus"></i></button>
+                    <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>
             </div>
             <div class="box-body">
