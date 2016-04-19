@@ -24,7 +24,10 @@
                             <ul class="dropdown-menu">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> project-merge-04-19-2016
                                 <li>
                                     <a href="{{ url('/profile') }}"><i class="glyphicon glyphicon-user"></i> My Profile</a>
                                 </li>
@@ -32,6 +35,7 @@
                                 <li>
                                     <a href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
                                 </li>
+<<<<<<< HEAD
 =======
 >>>>>>> project_update
                                 <li class="user-header bg-light-blue">
@@ -58,6 +62,9 @@
 =======
 >>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
 >>>>>>> project_update
+=======
+
+>>>>>>> project-merge-04-19-2016
                             </ul>
                         </li>
                     </ul>

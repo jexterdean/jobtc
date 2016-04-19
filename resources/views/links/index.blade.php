@@ -22,7 +22,26 @@
         </div>
     </div>
 </div>
+    <div class="modal fade add_category_modal" id="add_category" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header modal-header-{{ \App\Helpers\Helper::getRandomColor() }}">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Add Category</h4>
+                    </div>
+                    <div class="modal-body">
+                        @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+                        {!!  Form::open(['route' => 'linkCategory.store','class' => 'form-horizontal category-form'])  !!}
+                        @include('linkCategory/partials/_form')
+                        {!! Form::close()  !!}
+                        @else
+                        <div class='alert alert-danger alert-dismissable'>
+                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+                            <strong>You dont have to perform this action!!</strong>
+                        </div>
+                        @endif
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     <div class="modal fade add_category_modal" id="add_category" tabindex="-1" role="basic" aria-hidden="true">
             <div class="modal-dialog">
@@ -60,16 +79,21 @@
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                     <strong>You dont have to perform this action!!</strong>
 >>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
+=======
+>>>>>>> project-merge-04-19-2016
                 </div>
-                @endif
             </div>
         </div>
     </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> project-merge-04-19-2016
     <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             </div>
+<<<<<<< HEAD
 =======
 </div>
 
@@ -100,6 +124,12 @@
 >>>>>>> project_update
     <div class="col-md-12">
         <div class="box box-solid box-default">
+=======
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="box box-default">
+>>>>>>> project-merge-04-19-2016
             <div class="box-header">
                 <h3 class="box-title">Link List</h3>
                 <div class="box-tools pull-right">
@@ -109,6 +139,7 @@
                     <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
                 </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
 =======
@@ -125,6 +156,8 @@
                         class="fa fa-minus"></i></button>
 >>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
 >>>>>>> project_update
+=======
+>>>>>>> project-merge-04-19-2016
             </div>
         </div>
         <div class="box-body">

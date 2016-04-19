@@ -55,7 +55,7 @@ class DashboardController extends BaseController
             $completedProjects = Project::where('project_progress', '=', '100')
                 ->count('project_id');
 
-            $inCompletProjects = Project::where('project_progress', '!=', '100')
+            $inCompleteProjects = Project::where('project_progress', '!=', '100')
                 ->count('project_id');
 
             $projects = Project::where('project_progress', '!=', '100')
@@ -82,7 +82,7 @@ class DashboardController extends BaseController
                 'payable' => $payable,
                 'paid' => $paid,
                 'completedProjects' => $completedProjects,
-                'inCompletProjects' => $inCompletProjects,
+                'inCompletProjects' => $inCompleteProjects,
                 'projects' => $projects,
                 'bugs' => $bugs,
                 'tickets' => $tickets,
@@ -90,8 +90,8 @@ class DashboardController extends BaseController
                 'events' => $events,
                 'tasks' => $tasks
             ];
-        } elseif ($user_type === 4) {
 
+        } elseif ($user_type === 4) {
 
             $projects = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
@@ -150,8 +150,6 @@ class DashboardController extends BaseController
                 'tasks' => $tasks,
                 'events' => $events
             ];
-
-        } else {
 
             $projects = DB::table('project')
                 ->join('user', 'user.client_id', '=', 'project.client_id')

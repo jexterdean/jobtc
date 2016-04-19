@@ -1,9 +1,6 @@
 @extends('layouts.default')
 @section('content')
-
-
     <div class="row">
-
         <div class="col-md-6 col-sm-12">
             <!--If Role is Administrator, Employer or Manager-->
             @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
@@ -194,6 +191,7 @@
                     @endif
                 </div>
             </div>
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -211,6 +209,10 @@
                 <div class="box">
 >>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
 >>>>>>> project_update
+=======
+            @if(!Auth::check('client'))
+                <div class="box">
+>>>>>>> project-merge-04-19-2016
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
                     </div>
@@ -249,15 +251,17 @@
                 </div>
             @endif
         </div>
-
-
         <div class="col-md-6">
+<<<<<<< HEAD
             <div class="box box-default">
                 <div class="box-body no-padding">
                     <div id="calendar"></div>
                 </div>
             </div>
             <div class="box box-default">
+=======
+            <div class="box">
+>>>>>>> project-merge-04-19-2016
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-bug"></i> Pending Bugs</h3>
                 </div>
@@ -348,34 +352,38 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            {{-- include the meeting calendar --}}
+            {{-- replace the event calendar --}}
+            @include('meeting.calendar')
+        </div>
+    </div>
 
     <?php
-    $EVENTS = array();
-    foreach ($events as $event) {
-        $startDate = date("Y-m-d", strtotime($event->start_date));
-        $endDate = date("Y-m-d", strtotime($event->end_date));
-        $color = \App\Helpers\Helper::getRandomHexColor();
+    if(in_array('calendar', $assets)){
+        $EVENTS = array();
+        foreach ($events as $event) {
+            $startDate = date("Y-m-d", strtotime($event->start_date));
+            $endDate = date("Y-m-d", strtotime($event->end_date));
+            $color = \App\Helpers\Helper::getRandomHexColor();
 
-        $EVENTS[] = [
-            'title'=> $event->event_title,
-            'start' => $startDate,
-            'end' => $endDate,
-            'color' => $color,
-            'allDay' => true
-        ];
+            $EVENTS[] = [
+                'title'=> $event->event_title,
+                'start' => $startDate,
+                'end' => $endDate,
+                'color' => $color,
+                'allDay' => true
+            ];
+        }
+        $EVENTS = json_encode($EVENTS);
     }
-
-            $EVENTS = json_encode($EVENTS);
     ?>
-
 @stop
 
 @section('js_footer')
 @parent
-
-    <script>
-        Validate.init();
-
-    </script>
-
+<script>
+    Validate.init();
+</script>
 @stop

@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    @role('admin')
+    @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
     <div class="form-group">
         {!!  Form::label('username','Assign User',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
@@ -39,9 +39,9 @@
             'placeholder' => 'Assign User',] )  !!}
         </div>
     </div>
-    @endrole
-    @role('staff')
-    {!!  Form::hidden('assign_username',Auth::user()->username,['readonly' => true])  !!}
+    @endif
+    @if(Auth::user('user')->user_type === 4)
+    {!!  Form::hidden('assign_username',Auth::user('user')->email,['readonly' => true])  !!}
     @endif
     <div class="form-group">
         <label class="col-md-3"></label>
