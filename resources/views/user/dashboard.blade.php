@@ -235,12 +235,10 @@
 
 
         <div class="col-md-6">
-            <div class="box box-default">
-                <div class="box-body no-padding">
-                    <div id="calendar"></div>
-                </div>
-            </div>
-            <div class="box box-default">
+            {{-- include the meeting calendar --}}
+            {{-- replace the event calendar --}}
+            @include('meeting.calendar')
+            <div class="box">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-bug"></i> Pending Bugs</h3>
                 </div>
