@@ -3,6 +3,7 @@
     {!! method_field('delete') !!}
     </form>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 
@@ -22,8 +23,13 @@
 @endif
 
 @if(in_array('calendar',$assets))
-    {!!  HTML::script('assets/js/moment.min.js')  !!}
+    {!!  HTML::script('assets/js/moment.js')  !!}
     {!!  HTML::script('assets/js/fullcalendar.min.js')  !!}
+    {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
+@endif
+
+@if(in_array('select',$assets))
+    {!! HTML::script('assets/js/bootstrap-select.js') !!}
 @endif
 
 {!!  HTML::script('assets/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')  !!}
