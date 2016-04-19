@@ -11,6 +11,12 @@ class AccountsSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('accounts')->insert(array(
+            array(
+                'account_name' => 'Sample Account Name',
+                'currency' => 'USD',
+                'payment_method_id' => 2
+            )
+        ));
     }
 }

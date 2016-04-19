@@ -14,6 +14,7 @@ class UpdateUserTable extends Migration
     {
         Schema::table('user', function ($table) {
             $table->integer('timezone_id')->default(1)->after('remember_token');
+            $table->integer('accounts_id')->after('client_id')->nullable();
         });
     }
 
@@ -26,6 +27,7 @@ class UpdateUserTable extends Migration
     {
         Schema::table('user', function($table){
             $table->dropColumn('timezone_id');
+            $table->dropColumn('accounts_id');
         });
     }
 }

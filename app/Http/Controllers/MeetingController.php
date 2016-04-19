@@ -26,7 +26,7 @@ class MeetingController extends BaseController
      */
     public function index()
     {
-        $assets = ['calendar', 'date', 'select'];
+        $assets = ['calendar', 'date', 'select', 'magicSuggest', 'waiting'];
 
         return View::make('meeting.default', [
             'assets' => $assets
@@ -38,7 +38,7 @@ class MeetingController extends BaseController
 
         //find user timezone and get current offset (like +08:00)
         $user_timezone = DB::table('timezone')
-            ->where('timezone.timezone_id', '=', parent::getActiveUser()->timezone_id)
+            //->where('timezone.timezone_id', '=', parent::getActiveUser()->timezone_id)
             ->pluck('timezone_name');
         date_default_timezone_set($user_timezone);
         $p = date('P');
@@ -51,6 +51,7 @@ class MeetingController extends BaseController
         $m = DB::table('meeting')
             ->select(DB::raw('
                 fp_meeting.*,
+                fp_meeting.attendees as attendees_id,
                 fp_project.project_title,
                 fp_meeting_type.type as meeting_type,
                 fp_meeting_priority.priority as meeting_priority,
@@ -67,6 +68,7 @@ class MeetingController extends BaseController
             ->leftJoin('meeting_priority', 'meeting_priority.id','=','meeting.priority_id')
             ->get();
         $meeting = array();
+        $project_colors = array();
         if(count($m) > 0) {
             foreach ($m as $v) {
                 //change the date and time from user timezone to the custom timezone
@@ -74,11 +76,18 @@ class MeetingController extends BaseController
                 $v->end = date('c', strtotime($v->end));
 
                 $color = \App\Helpers\Helper::getRandomHexColor();
+                if(array_key_exists($v->project_id, $project_colors)){
+                    $color = $project_colors[$v->project_id];
+                }
+                else{
+                    $project_colors[$v->project_id] = $color;
+                }
+
                 $v->color = $color;
 
                 //if has attendees search and pass as variable into one string
-                if($v->attendees) {
-                    $attendees = json_decode($v->attendees);
+                if($v->attendees_id) {
+                    $attendees = json_decode($v->attendees_id);
                     $u = DB::table('user')
                         ->select(DB::raw('GROUP_CONCAT(username separator ", ") as attendees'))
                         ->whereIn('user_id', $attendees)
@@ -96,27 +105,53 @@ class MeetingController extends BaseController
     public function meetingTimezone(){
         header("Content-type: application/json");
 
-        $t = DB::table('timezone')
-            ->select('timezone_id', 'timezone_name')
+        $timezone = DB::table('timezone')
+            ->select('timezone_name', 'timezone_id')
             ->get();
-        $current_timezone = '';
-        $timezone= array();
-        if(count($t) > 0){
-            foreach($t as $v){
-                //get user timezone
-                if(parent::getActiveUser()->timezone_id == $v->timezone_id){
-                    $current_timezone = $v->timezone_name;
-                }
-
-                //timezone array
-                $timezone[$v->timezone_name] = $v->timezone_name;
-            }
-        }
+        $timezone = array_pluck($timezone, 'timezone_name', 'timezone_id');
+        //get user timezone
+        $current_timezone = array_key_exists(parent::getActiveUser()->timezone_id, $timezone) ?
+            $timezone[parent::getActiveUser()->timezone_id] : '';
 
         return response()->json(array(
             'timezone' => $timezone,
             'current_timezone' => $current_timezone
         ));
+    }
+
+    private function getDropDown(&$data){
+        $project = DB::table('project')
+            ->select('project_id', 'project_title')
+            ->get();
+        $p = array_pluck($project, 'project_title', 'project_id');
+        $data['project'] = array(0 => 'Select Project');
+        $data['project'] += $p;
+
+        $meeting_type = DB::table('meeting_type')
+            ->select('id', 'type')
+            ->get();
+        $data['meeting_type'] = array_pluck($meeting_type, 'type', 'id');
+
+        $meeting_priority = DB::table('meeting_priority')
+            ->select('id', 'priority')
+            ->get();
+        $data['meeting_priority'] = array_pluck($meeting_priority, 'priority', 'id');
+
+        $user = DB::table('user')
+            ->select('user_id', 'username')
+            ->get();
+        $data['user'] = array_pluck($user, 'username', 'user_id');
+
+        $team_member = DB::table('team_member')
+            ->select('project_id', 'user_id')
+            ->get();
+        $user_per_project = array();
+        if(count($team_member) > 0){
+            foreach($team_member as $v){
+                $user_per_project[$v->project_id][] = $v->user_id;
+            }
+        }
+        $data['user_per_project'] = json_encode($user_per_project);
     }
 
     /**
@@ -126,55 +161,13 @@ class MeetingController extends BaseController
      */
     public function create()
     {
-        $date = $_GET['date'];
+        $data = array();
+        $data['date'] = $_GET['date'];
 
-        $p = DB::table('project')
-            ->select('project_id', 'project_title')
-            ->get();
-        $project = array();
-        if(count($p) > 0){
-            foreach($p as $v){
-                $project[$v->project_id] = $v->project_title;
-            }
-        }
+        //call function drop down that would get all the data
+        $this->getDropDown($data);
 
-        $m = DB::table('meeting_type')
-            ->select('id', 'type')
-            ->get();
-        $meeting_type = array();
-        if(count($m) > 0){
-            foreach($m as $v){
-                $meeting_type[$v->id] = $v->type;
-            }
-        }
-
-        $m = DB::table('meeting_priority')
-            ->select('id', 'priority')
-            ->get();
-        $meeting_priority = array();
-        if(count($m) > 0){
-            foreach($m as $v){
-                $meeting_priority[$v->id] = $v->priority;
-            }
-        }
-
-        $u = DB::table('user')
-            ->select('user_id', 'username')
-            ->get();
-        $user = array();
-        if(count($u) > 0){
-            foreach($u as $v){
-                $user[$v->user_id] = $v->username;
-            }
-        }
-
-        return View::make('meeting.create', [
-            'date' => $date,
-            'project' => $project,
-            'meeting_type' => $meeting_type,
-            'meeting_priority' => $meeting_priority,
-            'user' => $user
-        ]);
+        return View::make('meeting.create', $data);
     }
 
     /**
@@ -229,56 +222,13 @@ class MeetingController extends BaseController
      */
     public function show($id)
     {
-        $event = Meeting::where('id', $id)
+        $data = array();
+        $data['event'] = Meeting::where('id', $id)
             ->first();
 
-        $p = DB::table('project')
-            ->select('project_id', 'project_title')
-            ->get();
-        $project = array();
-        if(count($p) > 0){
-            foreach($p as $v){
-                $project[$v->project_id] = $v->project_title;
-            }
-        }
+        $this->getDropDown($data);
 
-        $m = DB::table('meeting_type')
-            ->select('id', 'type')
-            ->get();
-        $meeting_type = array();
-        if(count($m) > 0){
-            foreach($m as $v){
-                $meeting_type[$v->id] = $v->type;
-            }
-        }
-
-        $m = DB::table('meeting_priority')
-            ->select('id', 'priority')
-            ->get();
-        $meeting_priority = array();
-        if(count($m) > 0){
-            foreach($m as $v){
-                $meeting_priority[$v->id] = $v->priority;
-            }
-        }
-
-        $u = DB::table('user')
-            ->select('user_id', 'username')
-            ->get();
-        $user = array();
-        if(count($u) > 0){
-            foreach($u as $v){
-                $user[$v->user_id] = $v->username;
-            }
-        }
-
-        return View::make('meeting.edit', [
-            'event' => $event,
-            'project' => $project,
-            'meeting_type' => $meeting_type,
-            'meeting_priority' => $meeting_priority,
-            'user' => $user
-        ]);
+        return View::make('meeting.edit', $data);
     }
 
     /**

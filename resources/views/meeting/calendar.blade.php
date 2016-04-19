@@ -11,55 +11,49 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Add Meeting</h4>
             </div>
-            <?php
-            echo Form::open(array('url' => 'meeting'));
-                ?>
+            {!! Form::open(array('url' => 'meeting')) !!}
                 <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="submit" name="addEventBtn" class="btn btn-success addEventBtn">Add</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
-                <?php
-            echo Form::close();
-            ?>
+            {!! Form::close() !!}
         </div>
     </div>
 </div>
 <div class="modal fade editEventModal">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Edit Meeting</h4>
-                </div>
-                <?php
-                echo Form::open(array('url' => 'meeting', 'method' => 'PATCH', 'class' => 'editMeetingForm'));
-                    ?>
-                    <div class="modal-body"></div>
-                    <div class="modal-footer">
-                        <button type="submit" name="editEventBtn" class="btn btn-success editEventBtn">Edit</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-                    <?php
-                echo Form::close();
-                ?>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Meeting</h4>
             </div>
+            {!! Form::open(array('url' => 'meeting', 'method' => 'PATCH', 'class' => 'editMeetingForm')) !!}
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="submit" name="editEventBtn" class="btn btn-success editEventBtn">Edit</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            {!! Form::close() !!}
         </div>
     </div>
+</div>
+<div class="modal fade" id="add_member">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Member</h4>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
 
 @section('js_footer')
 @parent
 <script>
     $(function(e){
-        //to fix the PATCH method type of form not working
-        $.ajaxSetup(
-        {
-            headers:
-            {
-                'X-CSRF-Token': $('input[name="_token"]').val()
-            }
-        });
-
         var paddingLeft = function (paddingValue, str) {
            return String(paddingValue + str).slice(-paddingValue.length);
         };
@@ -68,17 +62,40 @@
         var meeting_calendar = $('#meeting_calendar');
         var addEventModal = $('.addEventModal');
         var editEventModal = $('.editEventModal');
-        var currentTimezone = '';
+        var calendarEvents = [];
         var timezone = [];
+        var teams = [];
+        var currentTimezone = '';
+        var currentTeam = '';
+        var currentUser = '';
+        var renderCounter = 0;
 
-        $.ajax({
-            url: '{{ URL::to('meetingTimezone') }}',
-            success: function(doc) {
-                currentTimezone = doc.current_timezone;
-                timezone = doc.timezone;
-                renderCalendar();
-            }
-        });
+        loadEvent();
+        function loadEvent(){
+            var thisUrl = '{{ URL::to('meetingJson') }}' + (currentTimezone ? ('?timezone=' + currentTimezone) : '');
+            $.ajax({
+                url: thisUrl,
+                success: function(doc) {
+                    calendarEvents = doc;
+                    $.ajax({
+                        url: '{{ URL::to('meetingTimezone') }}',
+                        success: function(doc) {
+                            currentTimezone = doc.current_timezone;
+                            timezone = doc.timezone;
+
+                            $.ajax({
+                                url: '{{ URL::to('teamBuilderJson') }}',
+                                success: function(doc) {
+                                    teams = doc;
+
+                                    renderCalendar();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
 
         function renderCalendar(){
             meeting_calendar.fullCalendar({
@@ -125,8 +142,14 @@
                     }
                 },
                 eventAfterAllRender: function( view ){
+                    var fc_header = $('.fc-header');
                     var header_left = $('.fc-header-left');
-                    if(header_left.find('.timezoneArea').length == 0){ //only append if drop down timezone doesn't exist yet
+                    header_left.find('.fc-button').prependTo(".fc-header-right");
+
+                    header_left.find('.fc-button').addClass('hidden');
+                    header_left.find('.fc-header-space').addClass('hidden');
+
+                    if(fc_header.find('.timezoneArea').length == 0){ //only append if drop down timezone doesn't exist yet
                         var tStr =
                             '<span class="form-inline timezoneArea" style="margin-left: 10px;">' +
                                 '<select class="timezone-selector form-control" style="width: 130px;font-size: 12px;"></select>' +
@@ -135,31 +158,73 @@
 
                         //add the options for timezone drop down
                         $.each(timezone, function(i, t){
-                            header_left
+                            fc_header
                                 .find('.timezone-selector')
                                 .append($("<option/>").text(t).attr('value', t));
                         });
 
                         //set the default value and add event when the timezone dp is change
-                        header_left
+                        fc_header
                             .find('.timezone-selector')
                             .val(currentTimezone)
                             .on('change', function() {
                                 currentTimezone = $(this).val(); //pass new value
                                 meeting_calendar.fullCalendar('destroy'); //remove existing calendar
-                                renderCalendar(); //create new calendar
+                                loadEvent(); //create new calendar
                             });
                     }
+                    if(fc_header.find('.teamArea').length == 0){
+                        var teamStr =
+                            '<span class="form-inline teamArea" style="margin-left: 10px;">' +
+                                '<select class="team-selector form-control" style="width: 130px;font-size: 12px;"></select>&nbsp;' +
+                                '<select class="user-selector form-control hidden" style="width: 130px;font-size: 12px;"></select>&nbsp;' +
+                                '<button class="btn btn-sm addMemberBtn hidden"><i class="fa fa-plus-circle"></i> Add</button>' +
+                             '</span>';
+                        header_left.append(teamStr);
+
+                        $.each(teams, function(i, t){
+                            fc_header
+                                .find('.team-selector')
+                                .append($("<option/>").text(t.project_title).attr('value', t.project_id));
+                        });
+
+                        teamChange();
+                        fc_header
+                            .find('.team-selector')
+                            .val(currentTeam)
+                            .on('change', function() {
+                                currentTeam = $(this).val(); //pass new value
+                                teamChange();
+                            });
+
+                        userChange();
+                        fc_header
+                            .find('.user-selector')
+                            .val(currentUser)
+                            .on('change', function() {
+                                currentUser = $(this).val(); //pass new value
+                                userChange();
+                            });
+
+                        fc_header
+                            .find('.addMemberBtn')
+                            .on('click', function() {
+                                var add_member = $('#add_member');
+                                var thisUrl = '{{ URL::to("/teamBuilder/create?p=member") }}&id=' + currentTeam;
+                                $.ajax({
+                                    url: thisUrl,
+                                    success: function(doc) {
+                                        add_member.modal('show');
+                                        add_member.find('.modal-body').html(doc);
+                                    }
+                                });
+                            });
+                    }
+
+
+                    renderCounter ++;
                 },
-                events: function(start, end, timezone, callback) {
-                    var thisUrl = '{{ URL::to('meetingJson') }}' + (currentTimezone ? ('?timezone=' + currentTimezone) : '');
-                    $.ajax({
-                        url: thisUrl,
-                        success: function(doc) {
-                            callback(doc);
-                        }
-                    });
-                },
+                events: calendarEvents,
                 dayClick: function(date, jsEvent, view) {
                     //add meeting pop out triggered
                     var d = date._d;
@@ -209,6 +274,60 @@
                     });
                 }
             });
+        }
+
+        function teamChange(){
+            var fc_header = $('.fc-header');
+            var thisEvents = calendarEvents;
+            fc_header.find('.user-selector').html('');
+
+            if(currentTeam != 0){
+                fc_header.find('.addMemberBtn').removeClass('hidden');
+
+                thisEvents = $.grep(thisEvents, function(v) {
+                    return v.project_id == currentTeam;
+                });
+
+                $.ajax({
+                    url: '{{ URL::to('teamBuilderUserJson') }}?t=' + currentTeam,
+                    success: function(user) {
+                        $.each(user, function(i, t){
+                            fc_header
+                                .find('.user-selector')
+                                .append($("<option/>").text(t.name).attr('value', t.id));
+                        });
+
+                        if(user.length > 0){
+                            fc_header.find('.user-selector').removeClass('hidden');
+                        }
+                        else{
+                            fc_header.find('.user-selector').addClass('hidden');
+                        }
+                    }
+                });
+            }
+            else{
+                fc_header.find('.addMemberBtn').addClass('hidden');
+                fc_header.find('.user-selector').addClass('hidden');
+            }
+
+            meeting_calendar.fullCalendar('removeEvents');
+            meeting_calendar.fullCalendar('addEventSource', thisEvents);
+        }
+        function userChange(){
+            var thisEvents = calendarEvents;
+
+            thisEvents = $.grep(thisEvents, function(v) {
+                var isOk = currentUser != 0 ? $.inArray(currentUser, v.attendees_id) !== -1 : true;
+                if(currentTeam != 0){
+                    isOk = isOk ? v.project_id == currentTeam : isOk;
+                }
+
+                return isOk;
+            });
+
+            meeting_calendar.fullCalendar('removeEvents');
+            meeting_calendar.fullCalendar('addEventSource', thisEvents);
         }
     });
 </script>

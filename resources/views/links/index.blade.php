@@ -51,10 +51,8 @@
             </div>
         </div>
     </div>
-</div>
-
     <div class="col-md-12">
-        <div class="box box-solid box-default">
+        <div class="box box-default">
             <div class="box-header">
                 <h3 class="box-title">Link List</h3>
                 <div class="box-tools pull-right">

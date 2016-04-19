@@ -35,6 +35,14 @@
     {!! HTML::script('assets/js/bootstrap-select.js') !!}
 @endif
 
+@if(in_array('magicSuggest',$assets))
+    {!! HTML::script('assets/js/magicsuggest-min.js') !!}
+@endif
+
+@if(in_array('waiting',$assets))
+    {!! HTML::script('assets/js/bootstrap.waiting.js') !!}
+@endif
+
 {!!  HTML::script('assets/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')  !!}
 
 {!! HTML::script('assets/js/validation-form.js')  !!}
@@ -48,6 +56,15 @@
 
 <script>
     $(function () {
+        //to fix the ajax PATCH/POST method type of form not working
+        $.ajaxSetup(
+        {
+            headers:
+            {
+                'X-CSRF-Token': $('input[name="_token"]').val()
+            }
+        });
+
         $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
         $("[data-mask]").inputmask();
     });

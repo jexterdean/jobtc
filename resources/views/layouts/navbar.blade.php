@@ -56,7 +56,7 @@
 
 <li>
     <a href="{{ url('meeting') }}">
-        <i class="fa fa-calendar"></i> <span>{{Lang::get('Meeting Calendar')}}</span>
+        <i class="fa fa-calendar"></i> <span>{{Lang::get('Meetings')}}</span>
     </a>
 </li>
 <li>
@@ -65,11 +65,25 @@
     </a>
 </li>
 
-<li>
-    <a href="{{ route('links.index') }}">
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+       role="button" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-globe"></i>
         <span>Links</span>
+        <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+<li>
+            <a href="{{ route('linkCategory.index') }}">
+                <i class="fa fa-adjust"></i> <span> Categories </span>
     </a>
+</li>
+
+<li>
+    <a href="{{ route('links.index') }}">
+                <i class="fa fa-globe"></i> <span> Links </span>
+    </a>
+</li>
+    </ul>
 </li>
 
 @role('admin')

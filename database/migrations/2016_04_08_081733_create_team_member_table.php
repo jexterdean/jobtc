@@ -12,7 +12,14 @@ class CreateTeamMemberTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('team_member', function(Blueprint $table){
+            $table->increments('id')->unsigned();
+            $table->integer('created_by');
+            $table->integer('project_id');
+            $table->integer('user_id');
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +29,6 @@ class CreateTeamMemberTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('team_member');
     }
 }
