@@ -2,10 +2,9 @@
     {!! csrf_field() !!}
     {!! method_field('delete') !!}
     </form>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
 
 {!! HTML::script('assets/js/AdminLTE/app.js')  !!}
 {!!  HTML::script('assets/js/bootbox.js')  !!}
@@ -58,6 +57,9 @@
                         showAll: "Show all",
                         showNone: "Show none"
                     },
+                    "language": {
+                          "emptyTable": "No data available in table"
+                    },
                     "bPaginate": true,
                     "bLengthChange": true,
                     "bFilter": true,
@@ -77,6 +79,41 @@
             height: '250px'
         });
 
+        /*region Auto Change and Select Category Name*/
+        $('.category-name')
+            .bind('keyup keypress blur',function(){
+                var myStr = $(this).val();
+                myStr = myStr.toLowerCase();
+                myStr = myStr.replace(/\s+/g, "-");
+                $(this).val(myStr);
+            })
+            .focusout(function(){
+                $('#category-name').val($(this).val());
+                var cat_form = $('.category-form');
+                var form_data = cat_form.serializeArray();
+                var url = cat_form.attr('action');
+                var cat_value = $(this).val();
+                if($(this).val()){
+                    form_data.push(
+                        {name:'slug',value:$(this).val()},
+                        {name:'request_from_link_page',value:'1'}
+                    );
+
+                    $.post(url,form_data,function(data){
+                        var _return_data = jQuery.parseJSON(data);
+                        var option_ele = '<option value>Select Category</option>';
+
+                        $.each(_return_data,function(key,val){
+                            var is_selected = cat_value == val.name ? 'selected' : '';
+                            option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
+                        });
+                       $('select.category').html(option_ele);
+                    });
+                }
+
+                $(this).val('');
+            });
+        /*endregion*/
     });
 
     $(document).on('click', '.show_edit_form',function(e){

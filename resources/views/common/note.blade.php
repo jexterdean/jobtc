@@ -1,8 +1,8 @@
-<div class="box box-solid box-primary">
-    <div class="box-header">
-        <h3 class="box-title">Private Notes {{ Auth::user()->name }}</h3>
+<div class="panel panel-{{ \App\Helpers\Helper::getRandomColor() }}">
+    <div class="panel-heading">
+        <h3 class="panel-title">Private Notes {{ Auth::user()->name }}</h3>
     </div>
-    <div class="box-body">
+    <div class="panel-body">
         @if(isset($note->note_id))
             {!!  Form::open(['method' => 'PUT','route' => ['note.update', isset($note->note_id) ? $note->note_id : ''],
             'class' => 'note-form'])  !!}
