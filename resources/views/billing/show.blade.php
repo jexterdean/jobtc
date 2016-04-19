@@ -31,7 +31,7 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="box box-solid box-primary">
+                                <div class="box box-solid box-default">
                                     <div class="box-header">
                                         <h3 class="box-title">{{ studly_case($billing->billing_type) }} Ref
                                             # {{ $billing->ref_no }}</h3>
@@ -110,7 +110,7 @@
                                 @include('common.note',['note' => $note, 'belongs_to' => 'billing', 'unique_id' => $billing->billing_id])
                             </div>
                             <div class="col-md-6">
-                                <div class="box box-solid box-primary">
+                                <div class="box box-solid box-default">
                                     <div class="box-header">
                                         <h3 class="box-title">Item List</h3>
                                     </div>
@@ -195,7 +195,7 @@
                         <div class="tab-pane" id="tab_3">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="box box-solid box-primary">
+                                    <div class="box box-solid box-default">
                                         <div class="box-header">
                                             <h3 class="box-title">Make Payment</h3>
                                         </div>
@@ -229,7 +229,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="box box-solid box-primary">
+                                    <div class="box box-solid box-default">
                                         <div class="box-header">
                                             <h3 class="box-title">Payment List</h3>
                                         </div>

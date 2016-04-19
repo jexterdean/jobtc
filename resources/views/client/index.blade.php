@@ -32,14 +32,14 @@
 
 
     <div class="col-md-12">
-        <div class="box box-solid box-primary">
+        <div class="box box-default">
             <div class="box-header">
                 <h3 class="box-title">Client List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_client">
-                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Client</button>
+                        <button class="btn btn-shadow btn-success btn-sm"><i class="fa fa-plus-circle"></i> Add New Client</button>
                     </a>
-                    <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-danger btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
                 </div>
             </div>
             <div class="box-body">
@@ -47,6 +47,7 @@
                 $DATA = array();
                 $QA = array();
                 foreach ($clients as $client) {
+
                     $linkToEdit = "<a href='client/$client->id/edit' data-toggle='modal' data-target='#client_edit'> <i class='fa fa-edit'></i> </a>";
                     $linkToView = "<a href='client/$client->id' data-toggle='modal' data-target='#client_show'> <i class='fa fa-external-link'></i> </a>";
                     $linkToDelete = "<a href='client/$client->client_id/delete' class='alert_delete'> <i class='fa fa-trash-o'></i> </a>";

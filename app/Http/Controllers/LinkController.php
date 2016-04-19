@@ -27,8 +27,8 @@ class LinkController extends BaseController
             ->get();
 
         $categories = LinkCategory::all()
-        ->lists('name','id')
-        ->toArray();
+            ->lists('name','id')
+            ->toArray();
 
 
         return view('links.index',[
@@ -59,7 +59,7 @@ class LinkController extends BaseController
         $link = new Link($request->all());
         $link->save();
 
-        return redirect()->route('links.index');
+        return $request->task_id ? redirect()->route('task.show', $request->task_id) : redirect()->route('links.index');
     }
 
     /**

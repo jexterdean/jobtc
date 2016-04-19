@@ -16,23 +16,19 @@
                 </ul>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
-                        <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle">
                                 <i class="glyphicon glyphicon-user"></i>
                                 <span>{{ Auth::user('user')->email}} <i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="user-header bg-light-blue">
-                                    <img onclick="window.location.href = '{{ url('/profile') }}' "
-                                         src="{{ \App\Helpers\Helper::getAvatar(Auth::user('user')->email) }}"
-                                          class="img-circle"
-                                         alt="User Image"
-                                         style="cursor: pointer;"
-                                         title="My profile"
-                                    />
+                                <li>
+                                    <a href="{{ url('/profile') }}"><i class="glyphicon glyphicon-user"></i> My Profile</a>
                                 </li>
-                                <!--li><a class="btn btn-link" href="https://job.tc:8081/logout">Log out</a></li-->
-                                <li><a class="btn btn-link" href="/logout">Log out</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
