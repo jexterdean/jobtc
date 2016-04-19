@@ -63,7 +63,19 @@ return [
             'prefix'    => 'fp_',
             'strict'    => false,
         ],
-
+        
+        'mysql_jobtc' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_JOBTC_HOST', 'localhost'),
+            'database'  => env('DB_JOBTC_DATABASE', 'hirefitnet'),
+            'username'  => env('DB_JOBTC_USERNAME', 'hirefitnet'),
+            'password'  => env('DB_JOBTC_PASSWORD', 'hirefitnet'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],
+        
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => env('DB_HOST', 'localhost'),

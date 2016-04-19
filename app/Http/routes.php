@@ -1,6 +1,5 @@
 <?php
 
-
 Route::resource('session', 'SessionController');
 Route::get('/', 'SessionController@create');
 Route::get('/login', 'SessionController@create');
@@ -25,17 +24,17 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      *  Client
      */
-    Route::group(['middleware' => 'role:client'], function () {
+    //Route::group(['middleware' => 'role:client'], function () {
         Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
             ->where('billing_type', 'invoice|estimate');
         Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
             ->where('billing_type', 'invoice|estimate');
-    });
+    //});
 
     /**
      * Admin only
      */
-    Route::group(['middleware'=> 'role:admin'], function(){
+    //Route::group(['middleware'=> 'role:admin'], function(){
 
         Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
             ->where('billing_type', 'invoice|estimate');
@@ -55,13 +54,18 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('client', 'ClientController');
         Route::resource('assigneduser', 'AssignedController');
 
-    });
+    //});
 
     /**
      * Staff
      */
     Route::resource('task', 'TaskController');
-
+    Route::post('taskTimer/{id}', 'TaskController@taskTimer');
+    Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
+    Route::any('deleteTaskTimer/{id}', 'TaskController@deleteTaskTimer');
+    Route::post('checkList', 'TaskController@checkList');
+    Route::post('updateCheckList/{id}', 'TaskController@updateCheckList');
+    Route::any('deleteCheckList/{id}', 'TaskController@deleteCheckList');
 
     Route::get('/data/{cacheKey}','CacheDataController@getCache');
     Route::resource('event', 'EventsController');

@@ -1,143 +1,83 @@
-<div class="row">
-    @if(!Auth::user()->is('Client'))
-        <div class="col-md-4">
-            <div class="box box-solid box-primary">
-                <div class="box-header">
-                    <h3 class="box-title">Add Task</h3>
+<div class="modal fade" id="add_task" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Task</h4>
+            </div>
+            {!!  Form::open(['method' => 'POST','route' => ['task.store'],'class' => 'task-form'])  !!}
+            <div class="modal-body">
+                {!!  Form::hidden('belongs_to',$belongs_to)  !!}
+                {!!  Form::hidden('unique_id', $unique_id)  !!}
+                {!!  Form::hidden('project_id', $project_id)  !!}
+                <div class="form-group">
+                    {!!  Form::input('text','task_title','',['class' => 'form-control', 'placeholder' => 'Title', 'tabindex' => '1']) !!}
                 </div>
-                <div class="box-body">
-                    {!!  Form::open(['method' => 'POST','route' => ['task.store'],'class' => 'task-form'])  !!}
-                    {!!  Form::hidden('belongs_to',$belongs_to)  !!}
-                    {!!  Form::hidden('unique_id', $unique_id)  !!}
+                <div class="form-group">
+                    {!!  Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control',
+                    'placeholder' => 'Description', 'tabindex' => '2']) !!}
+                </div>
+                <div class="form-group">
+                    {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
+                    input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+                </div>
+                @role('admin')
                     <div class="form-group">
-                        {!!  Form::input('text','task_title','',['class' => 'form-control', 'placeholder' => 'Title', 'tabindex' => '1']) !!}
+                        {!!  Form::select('assign_username', $assign_username, isset
+                        ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me',
+                        'placeholder' => 'Assign User', 'tabindex' => '3'] )  !!}
                     </div>
-                    <div class="form-group">
-                        {!!  Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control',
-                        'placeholder' => 'Description', 'tabindex' => '2']) !!}
-                    </div>
-                    <div class="form-group">
-                        {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
-                        input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
-                    </div>
-                    @role('admin')
-                        <div class="form-group">
-                            {!!  Form::select('assign_username', $assign_username, isset
-                            ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me',
-                            'placeholder' => 'Assign User', 'tabindex' => '3'] )  !!}
-                        </div>
-                    @endrole
-                    @role('staff')
-                        {!!  Form::hidden('assign_username',Auth::user()->username,['readonly' => true])  !!}
-                    @endif
-
-                    @if($belongs_to != 'general')
-                        <div class="form-group">
-                            <label> Visible to Client </label>
-                            <div class="radio-list">
-                                <label class="radio-inline">
-                                    {!!  Form::radio('is_visible','yes',true) !!} Yes</label>
-                                <label class="radio-inline">
-                                    {!! Form::radio('is_visible','no')  !!} No </label>
-                            </div>
-                        </div>
-                    @else
-                        {!!  Form::hidden('is_visible','no',['readonly' => true]) !!}
-                    @endif
-
-                    <div class="form-group">
-                        {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '5'])  !!}
-                    </div>
-                    {!!  Form::close()  !!}
+                @endrole
+                @role('staff')
+                    {!!  Form::hidden('assign_username',Auth::user()->username,['readonly' => true])  !!}
+                @endrole
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '5'])  !!}
                 </div>
             </div>
+            {!!  Form::close() !!}
         </div>
-    @endif
-    <div class="col-md-8">
-        <div class="box box-solid box-primary">
-            <div class="box-header">
-                <h3 class="box-title">Task List</h3>
-            </div>
-            <div class="box-body">
-                <table class="table table-striped table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th>
-                            Title
-                        </th>
-                        <th>
-                            Description
-                        </th>
-                        <th>
-                            Belongs to
-                        </th>
-                        <th>
-                            Due Date
-                        </th>
-                        <th>
-                            Status
-                        </th>
-                        @if(!Auth::user()->is('client'))
-                            <th>
-                                Option
-                            </th>
-                        @endif
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if($tasks!='')
-                        @foreach($tasks as $task)
+    </div>
+</div>
+<div class="box box-default">
+    <div class="box-header">
+        <h3 class="box-title">Task List</h3>
+        <div class="box-tools pull-right">
+            <a data-toggle="modal" href="#add_task">
+                <button class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> Add Task</button>
+            </a>
+            <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
+        </div>
+    </div>
+    <div class="box-body">
+        <table class="table table-hover table-striped">
+            @if(count($tasks) > 0)
+                @foreach($tasks as $task)
+                    @if((Auth::user()->is('client') && $task->is_visible == 'yes') ||
+                         !Auth::user()->is('client'))
 
-                            @if((Auth::user()->is('client') && $task->is_visible == 'yes') ||
-                            !Auth::user()->is('client'))
-
-                                <tr>
-                                    <td>{{ $task->task_title }}
-                                        @if($task->is_visible === 'yes')
-                                            <span class="badge bg-green">Visible to client</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $task->task_description }}</td>
-                                    <td>{{ studly_case($task->belongs_to) }}</td>
-                                    <td>{{ date("d M Y",strtotime($task->due_date)) }}</td>
-                                    <td>
-                                        @role('client')
-                                            {{ studly_case($task->task_status) }}
-                                        @else
-                                            {!!  Form::open(['method' => 'POST','url' => 'updateTaskStatus','class' =>
-                                             'form-horizontal'])  !!}
-                                            {!!  Form::select('task_status', [
-                                                'pending' => 'Pending',
-                                                'progress' => 'Progress',
-                                                'completed' => 'Completed'
-                                            ], $task->task_status, ['class' => 'form-control',
-                                            'placeholder' => 'Update Task',
-                                            "onchange" => "this.form.submit()"] )  !!}
-                                            {!!  Form::hidden('task_id',$task->task_id) !!}
-                                            {!!  Form::close()  !!}
-                                        @endif
-                                    </td>
-
-                                    @if(!Auth::user()->is('Client'))
-                                        <td>
-                                            <a href="{{ url($task->belongs_to.'/'.$task->unique_id) }}"><i
-                                                        class="fa fa-external-link"></i></a>
-                                            <span class="hspacer"></span>
-                                            {!!  Form::open(array('route' => array('task.destroy', $task->task_id),
-                                            'method' => 'delete'))  !!}
-                                            <button type="submit" class="btn btn-danger btn-sm"><i
-                                                        class='fa fa-trash-o'></i></button>
-                                            {!!  Form::close()  !!}
-                                        </td>
-                                    @endif
-                                </tr>
-
+                        <tr>
+                            <td>{{ $task->task_title }}</td>
+                            <td>{{ date("d M Y",strtotime($task->due_date)) }}</td>
+                            <td>{{ $task->name }}</td>
+                            @if(!Auth::user()->is('Client'))
+                                <td class="text-right">
+                                    <a href="{{ url('task/'.$task->task_id) }}"><i class="fa fa-2x fa-external-link"></i></a>
+                                    <a href="{{ route('task.update',$task->task_id) }}"><i class="fa fa-2x fa-pencil"></i></a>
+                                    <a href="{{ route('project.destroy',$task->task_id) }}" class="alert_delete"><i class="fa fa-2x fa-trash-o"></i></a>
+                                </td>
                             @endif
-                        @endforeach
+                        </tr>
+
                     @endif
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                @endforeach
+            @else
+                 <tr>
+                    <td colspan="6">No data was found.</td>
+                </tr>
+            @endif
+        </table>
     </div>
 </div>

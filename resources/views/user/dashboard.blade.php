@@ -1,10 +1,12 @@
 @extends('layouts.default')
 @section('content')
 
+
     <div class="row">
 
         <div class="col-md-6 col-sm-12">
-            @role('admin')
+            <!--If Role is Administrator, Employer or Manager-->
+            @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
                 <div class="col-lg-6">
                     <div class="small-box bg-aqua">
                         <div class="inner">
@@ -67,7 +69,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">
+                    <div class="col-xs-6 text-center">
                         @if($payable->totalSales>0)
                             <input type="text" class="knob" data-readonly="true"
                                    value="{{ round(100-(($paid->totalPaid/$payable->totalSales)*100),2) }}"
@@ -79,7 +81,7 @@
                         @endif
                         <div class="knob-label">Percentage Amount Due</div>
                     </div>
-                    <div class="col-xs-6 text-center" style="border-right: 1px solid #f4f4f4">
+                    <div class="col-xs-6 text-center">
                         <input type="text" class="knob" data-readonly="true" value="{{ $inCompletProjects }}"
                                data-width="120" data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor() }}"/>
                         <div class="knob-label">Pending Projects</div>
@@ -131,10 +133,10 @@
                         </div>
                     </div>
                 </div>
-            @endrole
+            @endif
             <div style="clear:both;"></div>
             <br/>
-            <div class="box">
+            <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-lightbulb-o"></i> Pending Projects</h3>
                 </div>
@@ -192,8 +194,7 @@
                     @endif
                 </div>
             </div>
-
-            @if(!Auth::user()->is('client'))
+            @if(!Auth::check('client'))
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
@@ -283,7 +284,7 @@
                     @endif
                 </div>
             </div>
-            <div class="box">
+            <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-ticket"></i> Opened Tickets</h3>
                 </div>

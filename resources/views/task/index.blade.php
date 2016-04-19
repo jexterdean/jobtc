@@ -29,14 +29,14 @@
 
 
     <div class="col-md-12">
-        <div class="box box-solid box-{{ \App\Helpers\Helper::getRandomColor() }}">
+        <div class="box box-default">
             <div class="box-header">
                 <h3 class="box-title">Task List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_link">
-                        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Task</button>
+                        <button class="btn btn-sm btn-success btn-shadow"><i class="fa fa-plus-circle"></i> Add New Task</button>
                     </a>
-                    <button class="btn btn-{{ \App\Helpers\Helper::getRandomColor() }} btn-sm" data-widget="collapse"><i
+                    <button class="btn btn-sm btn-warning" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
                 </div>
             </div>
@@ -46,10 +46,6 @@
 
                 $QA = array();
                 foreach ($tasks as $task) {
-
-                    $taskVisibleToClient = ($task->is_visible ==='yes')
-                            ? "<span class='label label-success'> <i class='fa fa-search-plus'></i></span>"
-                            : "";
 
                     $status = "";
 
@@ -76,16 +72,16 @@
                     class='show_edit_form'> <i
                     class='fa fa-edit fa-2x'></i> </a>";
 
-                    $viewTask = "<a href='$task->belongs_to/$task->unique_id'> <i class='fa fa-link fa-2x'></i> </a>";
+                    $viewTask = "<a href='" . route('task.show', $task->task_id) . "'> <i class='fa fa-eye fa-2x'></i> </a>";
 
                     $taskToDelete = "<a href='" . route('task.destroy', $task->task_id) . "' class='alert_delete '> <i
                     class='fa
                     fa-trash-o fa-2x'></i> </a>";
-                    $Option = " <span class='hspacer'></span> $taskToEdit <span class='hspacer'></span> $taskToDelete";
+                    $Option = "$viewTask <span class='hspacer'></span> $taskToEdit <span class='hspacer'></span> $taskToDelete";
 
                     $QA[] = array(
-                            ($taskVisibleToClient."".$task->task_title),
-                            $task->username,
+                            ($task->task_title),
+                            $task->name,
                             $task->due_date,
                             $status,
                             $Option);
