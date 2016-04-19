@@ -19,7 +19,8 @@ class TaskController extends BaseController
 
     function __construct()
     {
-        if(Auth::user()->is('client')){
+        //Only staff and admin can access
+        if(parent::hasRole('client')){
             throw  new RoleDeniedException('Client or Admin');
         }
     }
@@ -30,25 +31,29 @@ class TaskController extends BaseController
     public function index()
     {
 
+        $tasks = [];
         if (parent::hasRole('staff')) {
-            $task = Task::where('username', '=', Auth::user()->username)
+            $tasks = Task::where('username', '=', Auth::user()->username)
                 ->orderBy('created_at', 'desc')
                 ->get();
         } else {
-            $task = Task::orderBy('created_at', 'desc')
+            $tasks = Task::orderBy('created_at', 'desc')
                 ->get();
         }
+
+        $belongsTo = 'task';
 
 
         $assign_username = User::where('client_id', '=', '')
             ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+            ->lists('username', 'username');
 
-        $assets = [];
+        $assets = ['calendar','table'];
 
         return View::make('task.index', [
             'assets' => $assets,
-            'tasks' => $task,
+            'tasks' => $tasks,
+            'belongs_to'=> $belongsTo,
             'assign_username' => $assign_username
         ]);
     }
@@ -61,8 +66,21 @@ class TaskController extends BaseController
     {
     }
 
-    public function edit()
+    public function edit(Request $request, $id)
     {
+        $task = Task::find($id);
+
+        $assign_username = User::where('client_id', '=', '')
+            ->orderBy('name', 'asc')
+            ->lists('username', 'username');
+        if($task){
+
+            return view('task.edit', [
+                'task'=> $task,
+                'assign_username'=>$assign_username
+            ]);
+        }
+
     }
 
     public function store(Request $request)
@@ -70,7 +88,6 @@ class TaskController extends BaseController
 
         $validation = Validator::make($request->all(), [
             'task_title' => 'required',
-            'due_date' => 'required',
             'belongs_to' => 'required',
             'unique_id' => 'required',
             'is_visible' => 'required|in:yes,no'
@@ -82,10 +99,9 @@ class TaskController extends BaseController
 
         $task = new Task;
         $data = Input::all();
-//        $data['username'] = Auth::user()->username;
         $data['task_status'] = 'pending';
         $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
-        $data['username'] = Input::get('assign_username');
+        $data['username'] = Input::get('username','Open');
 
         $task->fill($data);
         $task->save();
@@ -114,8 +130,17 @@ class TaskController extends BaseController
         return Redirect::back()->withSuccess('Saved!!');
     }
 
-    public function update()
+    public function update(Request $request, $id)
     {
+
+        $task = Task::find($id);
+
+        $data = $request->all();
+        $data['due_date'] =date("Y-m-d H:i:s", strtotime($data['due_date']));
+
+        $task->update($data);
+
+        return redirect()->route('task.index');
     }
 
     public function destroy($task_id)

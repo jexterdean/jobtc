@@ -1,3 +1,7 @@
+<form id="form-delete" action="" method="post" style="width: 0px;height: 0px;">
+    {!! csrf_field() !!}
+    {!! method_field('delete') !!}
+    </form>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
@@ -70,13 +74,29 @@
 
     });
 
+    $(document).on('click', '.show_edit_form',function(e){
+        e.preventDefault();
+
+        var link = e.currentTarget.href;
+
+        console.log(link);
+        $.get(link, function(data){
+            $('#ajax .modal-content').html(data);
+            $('#ajax').modal('show');
+        });
+    });
+
     $(document).on("click", ".alert_delete", function (e) {
         var link = $(this).attr("href");
 
         e.preventDefault();
         bootbox.confirm("Are you sure want to proceed?", function (result) {
             if (result) {
-                document.location.href = link;
+                var form = $('#form-delete');
+                form.attr('action',link);
+                form.submit();
+
+//                document.location.href = link;
             }
         });
     });
@@ -99,7 +119,7 @@
                 week: 'week',
                 day: 'day'
             },
-            events:{!!  $EVENTS !!}
+            events:{!!  $EVENTS or "[]" !!}
         });
     });
     @endif

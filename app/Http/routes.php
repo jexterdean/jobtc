@@ -16,6 +16,11 @@ Route::group(['middleware' => 'guest'], function () {
 
 Route::group(['middleware' => 'auth'], function () {
 
+    /**
+     * Links
+     */
+    Route::resource('links','LinkController');
+    Route::resource('linkCategory','LinkCategoryController');
 
     /**
      *  Client
@@ -98,3 +103,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 
+Route::group(['prefix' => 'api'], function () {
+    Route::group(['prefix' => 'v1'], function () {
+    });
+});

@@ -88,7 +88,8 @@
                     <thead>
                     <tr>
                         <th>
-                            Subject
+                            <span style="width: 250px;">Subject</span>
+
                         </th>
                         <th>
                             User Name
