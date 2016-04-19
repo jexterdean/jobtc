@@ -100,7 +100,12 @@ Route::group(['middleware' => 'auth'], function () {
         return View::make('about.about', ['assets' => []]);
     });
 
-
+    /*
+     * Add Meeting
+    */
+    Route::resource('meeting', 'MeetingController');
+    Route::get('meetingJson', 'MeetingController@meetingJson');
+    Route::get('meetingTimezone', 'MeetingController@meetingTimezone');
 });
 
 Route::group(['prefix' => 'api'], function () {

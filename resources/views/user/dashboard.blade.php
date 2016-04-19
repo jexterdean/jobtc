@@ -236,11 +236,9 @@
 
 
         <div class="col-md-6">
-            <div class="box box-primary">
-                <div class="box-body no-padding">
-                    <div id="calendar"></div>
-                </div>
-            </div>
+            {{-- include the meeting calendar --}}
+            {{-- replace the event calendar --}}
+            @include('meeting.calendar')
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-bug"></i> Pending Bugs</h3>
@@ -351,5 +349,15 @@
 
             $EVENTS = json_encode($EVENTS);
     ?>
+
+@stop
+
+@section('js_footer')
+@parent
+
+    <script>
+        Validate.init();
+
+    </script>
 
 @stop

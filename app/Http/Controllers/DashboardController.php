@@ -32,7 +32,6 @@ class DashboardController extends BaseController
         $assets = ['knob', 'calendar'];
         $data = [];
 
-
         if (parent::hasRole('admin')) {
             $estimate = Billing::where('billing_type', '=', 'estimate')
                 ->get();
@@ -89,9 +88,8 @@ class DashboardController extends BaseController
                 'events' => $events,
                 'tasks' => $tasks
             ];
-        } elseif (parent::hasRole('staff')) {
-
-
+        }
+        elseif (parent::hasRole('staff')) {
             $projects = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
@@ -150,8 +148,8 @@ class DashboardController extends BaseController
                 'events' => $events
             ];
 
-        } elseif (parent::hasRole('client')) {
-
+        }
+        elseif (parent::hasRole('client')) {
             $projects = DB::table('project')
                 ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('user_id', '=', Auth::user()->user_id)
