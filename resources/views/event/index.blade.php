@@ -25,14 +25,14 @@
 
 
     <div class="col-md-12">
-        <div class="box box-solid box-primary">
+        <div class="box box-solid box-default">
             <div class="box-header">
                 <h3 class="box-title">Event List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_event">
                         <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New Event</button>
                     </a>
-                    <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>
             </div>
             <div class="box-body">
@@ -61,7 +61,7 @@
                 }
                     $cacheKey = 'events.list.'. session()->getId();
                     Cache::put($cacheKey, $QA, 100);
-?>
+                ?>
                 <table class="table table-striped table-bordered table-hover datatableclass" id="user_table">
                     <thead>
                     <tr>

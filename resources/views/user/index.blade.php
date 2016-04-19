@@ -30,14 +30,14 @@
 
 
     <div class="col-md-12">
-        <div class="box box-solid box-primary">
+        <div class="box box-solid box-default">
             <div class="box-header">
                 <h3 class="box-title">User List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_user">
                         <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New User</button>
                     </a>
-                    <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>
             </div>
             <div class="box-body">

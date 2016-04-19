@@ -1,12 +1,12 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-    <h4 class="modal-title">Edit link</h4>
+    <h4 class="modal-title">Edit Category</h4>
 </div>
 <div class="modal-body">
     @role('admin')
         {!! Form::model($category,['method' => 'PATCH','route' => ['linkCategory.update',$category->id] ,'class' =>
         'form-horizontal link-form'])  !!}
-        @include('linkCategory/partials/_form', ['buttonText' => 'Update Links'] )
+        @include('linkCategory/partials/_form', ['buttonText' => 'Update Category'] )
         {!!  Form::close()  !!}
     @else
         <div class='alert alert-danger alert-dismissable'>

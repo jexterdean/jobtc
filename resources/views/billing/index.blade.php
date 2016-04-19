@@ -26,7 +26,7 @@
     @endrole
 
     <div class="col-md-12">
-        <div class="box box-solid box-primary">
+        <div class="box box-solid box-default">
             <div class="box-header">
                 <h3 class="box-title">{{ studly_case($data['billing_type']) }} List </h3>
                 <div class="box-tools pull-right">
@@ -36,7 +36,7 @@
                                 New {{ studly_case($data['billing_type']) }}</button>
                         </a>
                     @endrole
-                    <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>
             </div>
             <div class="box-body">

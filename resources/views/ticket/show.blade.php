@@ -25,7 +25,7 @@
                     <div class="tab-pane active" id="tab_1">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="box box-solid box-primary">
+                                <div class="box box-solid box-default">
                                     <div class="box-header">
                                         <h3 class="box-title">Ticekt Detail</h3>
                                     </div>

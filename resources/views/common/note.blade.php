@@ -1,8 +1,8 @@
-<div class="box box-solid box-primary">
-    <div class="box-header">
-        <h3 class="box-title">Private Notes {{ Auth::user()->name }}</h3>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Notes {{ Auth::user()->name }}</h3>
     </div>
-    <div class="box-body">
+    <div class="panel-body">
         @if(isset($note->note_id))
             {!!  Form::open(['method' => 'PUT','route' => ['note.update', isset($note->note_id) ? $note->note_id : ''],
             'class' => 'note-form'])  !!}
@@ -11,7 +11,7 @@
         @endif
         <div class="form-group">
             {!!  Form::textarea('note_content',isset($note->note_content) ? $note->note_content : '',['size' => '25x3',
-            'class' => 'form-control textarea', 'placeholder' => 'Enter Notes']) !!}
+            'class' => 'form-control textarea', 'placeholder' => 'Notes']) !!}
         </div>
         <div class="form-group">
             {!!  Form::hidden('belongs_to',$belongs_to) !!}

@@ -8,12 +8,13 @@ use \View;
 use \Form;
 use \Input;
 use \Redirect;
-class SessionController extends BaseController
-{
-    public function create( Request $request)
-    {
-        if (Auth::check()) return Redirect::to('dashboard');
 
+class SessionController extends BaseController {
+
+    public function create(Request $request) {
+        if (Auth::check('user') || Auth::viaRemember('user')) {
+            return Redirect::to('dashboard');
+        }
         return View::make('session.create');
     }
 
