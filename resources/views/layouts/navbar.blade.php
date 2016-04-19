@@ -64,6 +64,11 @@
         <i class="fa fa-envelope"></i> <span>{{Lang::get('messages.Message')}}</span>
     </a>
 </li>
+<li>
+    <a href="{{ url('payroll') }}">
+        <i class="fa fa-credit-card"></i> <span>{{Lang::get('Payroll')}}</span>
+    </a>
+</li>
 
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
