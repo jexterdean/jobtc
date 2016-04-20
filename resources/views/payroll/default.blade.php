@@ -2,5 +2,5 @@
 
 @section('content')
 @parent
-@include('teamBuilder.builder')
+@include('payroll.payroll')
 @stop

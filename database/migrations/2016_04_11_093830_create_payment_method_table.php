@@ -12,7 +12,12 @@ class CreatePaymentMethodTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('payment_method', function(Blueprint $table){
+            $table->increments('id')->unsigned();
+            $table->string('payment_method', 50);
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +27,6 @@ class CreatePaymentMethodTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('payment_method');
     }
 }

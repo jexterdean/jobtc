@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccountsTable extends Migration
+class CreatePayPeriod extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,9 @@ class CreateAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function(Blueprint $table){
+        Schema::create('pay_period', function(Blueprint $table){
             $table->increments('id')->unsigned();
-            $table->string('account_name', 50);
-            $table->string('currency', 5);
-            $table->string('payment_method_id', 5);
+            $table->string('period');
 
             $table->timestamps();
         });
@@ -29,6 +27,6 @@ class CreateAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('accounts');
+        Schema::drop('pay_period');
     }
 }

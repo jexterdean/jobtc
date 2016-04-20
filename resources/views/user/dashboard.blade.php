@@ -1,8 +1,6 @@
 @extends('layouts.default')
 @section('content')
-
     <div class="row">
-
         <div class="col-md-6 col-sm-12">
             @role('admin')
                 <div class="col-lg-6">
@@ -232,12 +230,7 @@
                 </div>
             @endif
         </div>
-
-
         <div class="col-md-6">
-            {{-- include the meeting calendar --}}
-            {{-- replace the event calendar --}}
-            @include('meeting.calendar')
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-bug"></i> Pending Bugs</h3>
@@ -329,34 +322,38 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            {{-- include the meeting calendar --}}
+            {{-- replace the event calendar --}}
+            @include('meeting.calendar')
+        </div>
+    </div>
 
     <?php
-    $EVENTS = array();
-    foreach ($events as $event) {
-        $startDate = date("Y-m-d", strtotime($event->start_date));
-        $endDate = date("Y-m-d", strtotime($event->end_date));
-        $color = \App\Helpers\Helper::getRandomHexColor();
+    if(in_array('calendar', $assets)){
+        $EVENTS = array();
+        foreach ($events as $event) {
+            $startDate = date("Y-m-d", strtotime($event->start_date));
+            $endDate = date("Y-m-d", strtotime($event->end_date));
+            $color = \App\Helpers\Helper::getRandomHexColor();
 
-        $EVENTS[] = [
-            'title'=> $event->event_title,
-            'start' => $startDate,
-            'end' => $endDate,
-            'color' => $color,
-            'allDay' => true
-        ];
+            $EVENTS[] = [
+                'title'=> $event->event_title,
+                'start' => $startDate,
+                'end' => $endDate,
+                'color' => $color,
+                'allDay' => true
+            ];
+        }
+        $EVENTS = json_encode($EVENTS);
     }
-
-            $EVENTS = json_encode($EVENTS);
     ?>
-
 @stop
 
 @section('js_footer')
 @parent
-
-    <script>
-        Validate.init();
-
-    </script>
-
+<script>
+    Validate.init();
+</script>
 @stop

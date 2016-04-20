@@ -5,7 +5,7 @@
         'project_id',
         $project, '',
         array(
-          'class' => 'form-control'
+          'class' => 'project-dp form-control'
         )
     );
     ?>
@@ -87,14 +87,23 @@
 
 <script>
     $(function(e){
+        var project_dp = $('.project-dp');
         var time = $('.time');
         var start_date = $('.start_date'),
             end_date = $('.end_date');
         var selectpicker = $('.selectpicker');
+        var $user_per_project = <?php echo $user_per_project ? $user_per_project : '[]'; ?>;
 
          time.datetimepicker({
             format: 'DD/MM/YYYY hh:mm a'
         });
         selectpicker.selectpicker();
+
+        project_dp.change(function(e){
+            var thisVal = $(this).val();
+            if($user_per_project[thisVal] != undefined){
+                selectpicker.selectpicker('val', $user_per_project[thisVal]);
+            }
+        });
     });
 </script>
