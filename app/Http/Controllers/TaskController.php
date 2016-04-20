@@ -30,13 +30,15 @@ class TaskController extends BaseController {
     /**
      * @return mixed
      */
-    public function index()
-    {
+    public function index() {
 
-        if (parent::hasRole('staff')) {
-            $tasks = Task::where('user_id', '=', Auth::user()->user_id)
-                ->orderBy('created_at', 'desc')
-                ->get();
+        $user_type = Auth::user('user')->user_type;
+        //if (parent::hasRole('staff')) {
+        if ($user_type === 4) {
+
+            $tasks = Task::where('username', '=', Auth::user('user')->email)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
         } else {
             /*$tasks = Task::orderBy('created_at', 'desc')
                     ->join('user', 'task.user_id', '=', 'users.id')
