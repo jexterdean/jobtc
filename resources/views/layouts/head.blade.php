@@ -32,7 +32,11 @@
     @endif
 
     @if(in_array('select',$assets))
-            {!!  HTML::style('assets/css/bootstrap-select.css') !!}
+        {!!  HTML::style('assets/css/bootstrap-select.css') !!}
+    @endif
+
+    @if(in_array('magicSuggest',$assets))
+        {!!  HTML::style('assets/css/magicsuggest-min.css') !!}
     @endif
 
     {!!  HTML::style('assets/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}
