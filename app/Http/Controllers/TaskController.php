@@ -11,10 +11,6 @@ use App\Models\TaskTimer;
 use App\Models\TaskChecklist;
 use App\Models\Link;
 use App\Models\LinkCategory;
-<<<<<<< HEAD
-
-=======
->>>>>>> project-merge-04-19-2016
 use View;
 use Auth;
 use Redirect;
@@ -36,23 +32,6 @@ class TaskController extends BaseController {
      */
     public function index() {
 
-<<<<<<< HEAD
-        if (parent::hasRole('staff')) {
-<<<<<<< HEAD
-            $tasks = Task::where('user_id', '=', Auth::user()->user_id)
-=======
-            $tasks = Task::where('email', '=', Auth::user('user')->email)
->>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
-                ->orderBy('created_at', 'desc')
-                ->get();
-        } else {
-            $tasks = Task::orderBy('created_at', 'desc')
-                ->join('user', 'task.user_id', '=', 'user.user_id')
-                ->select(
-                    'task.*','user.name', 'user.username'
-                )
-                ->get();
-=======
         $user_type = Auth::user('user')->user_type;
         //if (parent::hasRole('staff')) {
         if ($user_type === 4) {
@@ -70,33 +49,13 @@ class TaskController extends BaseController {
             $tasks = Task::where('username', '=', Auth::user('user')->email)
                     ->orderBy('created_at', 'desc')
                     ->get();
->>>>>>> project-merge-04-19-2016
+
         }
 
         $belongsTo = 'task';
 
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
         $assign_username = User::orderBy('first_name', 'asc')
             ->lists('email', 'email');
-=======
-        $assign_username = User::orderBy('name')
-            ->lists('id', 'name');
->>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
-=======
-        $assign_username = User::orderBy('name')
-            ->lists('name', 'user_id');
-=======
-        $assign_username = User::orderBy('first_name', 'asc')
-            ->lists('email', 'email');
->>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
->>>>>>> project_update
-=======
-        $assign_username = User::orderBy('first_name', 'asc')
-                ->lists('email', 'email');
->>>>>>> project-merge-04-19-2016
 
         $assets = ['calendar', 'table'];
 
@@ -131,48 +90,6 @@ class TaskController extends BaseController {
                     ->first();
         }
         $task_timer = DB::table('task_timer')
-<<<<<<< HEAD
-            ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
-            ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
-            ->select(
-                'task_timer.*','user.name', 'user.username', 'task.task_title',
-                DB::raw(
-                    'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
-                ),
-                DB::raw(
-                    'TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, now()) as _time'
-                )
-            )
-            ->where('task_timer.task_id', '=', $id)
-            ->orderBy('start_time','desc')
-            ->get();
-
-        $current_time =  DB::table('task_timer')
-            ->select(
-                DB::raw(
-                    'TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, now()) as _time, id'
-                )
-            )
-            ->where('task_timer.task_id', '=', $id)
-            ->where('task_timer.end_time', '=', '0000-00-00 00:00:00')
-            ->first();
-
-        $checkList = TaskChecklist::where('task_id','=',$id)->get();
-        $total_checklist = TaskChecklist::where('task_id','=',$id)->count();
-        $finish_checklist = TaskChecklist::where('is_finished','=',1)->count();
-        $percentage = ($finish_checklist / $total_checklist) * 100;
-
-        $links = Link::select('links.id','title','url','descriptions','tags',
-            'comments',
-            'link_categories.name as category_name')
-            ->leftJoin('link_categories', 'link_categories.id','=','links.category_id')
-            ->where('task_id','=',$id)
-            ->get();
-
-        $categories = LinkCategory::all()
-            ->lists('name','id')
-            ->toArray();
-=======
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
@@ -209,7 +126,7 @@ class TaskController extends BaseController {
         $categories = LinkCategory::all()
                 ->lists('name', 'id')
                 ->toArray();
->>>>>>> project-merge-04-19-2016
+
 
         $assets = ['calendar'];
 
@@ -219,11 +136,7 @@ class TaskController extends BaseController {
             'task_timer' => $task_timer,
             'checkList' => $checkList,
             'current_time' => $current_time,
-<<<<<<< HEAD
-            'percentage' => number_format($percentage,2),
-=======
             'percentage' => number_format($percentage, 2),
->>>>>>> project-merge-04-19-2016
             'links' => $links,
             'categories' => $categories
         ]);
@@ -236,35 +149,11 @@ class TaskController extends BaseController {
     public function edit($id) {
         $task = Task::find($id);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         $assign_username = User::orderBy('first_name', 'asc')
             ->lists('email', 'email');
-        if($task){
-=======
-=======
->>>>>>> project_update
-        $assign_username = User::orderBy('name')
-            ->lists('name', 'user_id');
-
+        
         if(count($task) > 0){
-<<<<<<< HEAD
->>>>>>> 7961e7ff7602b9e3394a2c9c4880dfe48422af76
-=======
-=======
-        $assign_username = User::orderBy('first_name', 'asc')
-            ->lists('email', 'email');
-        if($task){
->>>>>>> 9c35634d6341f4119334b566861bca0dd430be62
->>>>>>> project_update
-=======
-        $assign_username = User::orderBy('first_name', 'asc')
-                ->lists('email', 'email');
-
-        if (count($task) > 0) {
->>>>>>> project-merge-04-19-2016
-
             return view('task.edit', [
                 'task' => $task,
                 'isClient' => parent::hasRole('client'),
@@ -290,12 +179,9 @@ class TaskController extends BaseController {
         $data = Input::all();
         $data['task_status'] = 'pending';
         $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
-<<<<<<< HEAD
-        $data['user_id'] = Input::get('user_id','Open');
-=======
-        $data['user_id'] = Input::get('user_id', 'Open');
->>>>>>> project-merge-04-19-2016
 
+        $data['user_id'] = Input::get('user_id', 'Open');
+        
         $task->fill($data);
         $task->save();
 
@@ -348,42 +234,6 @@ class TaskController extends BaseController {
         $taskTimer = new TaskTimer($request->all());
         $taskTimer->save();
         $data['table'] = DB::table('task_timer')
-<<<<<<< HEAD
-            ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
-            ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
-            ->select(
-                'task_timer.*', 'user.name', 'user.username', 'task.task_title',
-                DB::raw(
-                    'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
-                )
-            )
-            ->where('task_timer.task_id', '=', $id)
-            ->orderBy('start_time','desc')
-            ->get();
-        $data['return_task_timer'] = $taskTimer->id;
-        return json_encode($data);
-    }
-
-    public function updateTaskTimer(Request $request,$id){
-        $taskTimer = TaskTimer::find($id);
-        $taskTimer->update($request->all());
-
-        $data['table'] = DB::table('task_timer')
-            ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
-            ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
-            ->select(
-                'task_timer.*',
-                'user.name',
-                'user.username',
-                'task.task_title',
-                DB::raw(
-                    'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
-                )
-            )
-            ->where('task_timer.task_id', '=', $taskTimer->task_id)
-            ->orderBy('start_time','desc')
-            ->get();
-=======
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
@@ -429,29 +279,10 @@ class TaskController extends BaseController {
         $taskCheckList->save();
         $data = TaskChecklist::where('task_id', '=', $request->task_id)
                 ->get();
->>>>>>> project-merge-04-19-2016
 
         return json_encode($data);
     }
 
-    public function updateCheckList(Request $request, $id) {
-        $taskCheckList = TaskChecklist::find($id);
-        $data = $request->all();
-        $data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
-
-        $taskCheckList->update($data);
-
-        return json_encode($data);
-    }
-
-    public function deleteCheckList($id) {
-        $checkList = TaskChecklist::find($id);
-        $checkList->delete($id);
-
-        return Redirect::back()->withSuccess('Deleted successfully!!');
-    }
-
-<<<<<<< HEAD
     public function checkList(Request $request){
         $taskCheckList = new TaskChecklist($request->all());
         $taskCheckList->save();
@@ -477,8 +308,6 @@ class TaskController extends BaseController {
 
         return Redirect::back()->withSuccess('Deleted successfully!!');
     }
-=======
->>>>>>> project-merge-04-19-2016
 }
 
 ?>
