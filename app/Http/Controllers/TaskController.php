@@ -49,6 +49,7 @@ class TaskController extends BaseController {
             $tasks = Task::where('user_id', '=', Auth::user('user')->user_id)
                     ->orderBy('created_at', 'desc')
                     ->get();
+
         }
 
         $belongsTo = 'task';
@@ -126,6 +127,7 @@ class TaskController extends BaseController {
                 ->lists('name', 'id')
                 ->toArray();
 
+
         $assets = ['calendar'];
 
         return view('task.show', [
@@ -175,8 +177,9 @@ class TaskController extends BaseController {
         $data = Input::all();
         $data['task_status'] = 'pending';
         $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
-        $data['user_id'] = Input::get('user_id', 'Open');
 
+        $data['user_id'] = Input::get('user_id', 'Open');
+        
         $task->fill($data);
         $task->save();
 
@@ -278,7 +281,7 @@ class TaskController extends BaseController {
         return json_encode($data);
     }
 
-    public function updateCheckList(Request $request, $id) {
+    public function updateCheckList(Request $request, $id){
         $taskCheckList = TaskChecklist::find($id);
         $data = $request->all();
         $data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
@@ -288,13 +291,12 @@ class TaskController extends BaseController {
         return json_encode($data);
     }
 
-    public function deleteCheckList($id) {
+    public function deleteCheckList($id){
         $checkList = TaskChecklist::find($id);
         $checkList->delete($id);
 
         return Redirect::back()->withSuccess('Deleted successfully!!');
     }
-
 }
 
 ?>

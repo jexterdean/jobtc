@@ -31,8 +31,10 @@ class DashboardController extends BaseController
 
         $assets = ['knob', 'calendar'];
         $data = [];
+        
+        $user_type = Auth::user('user')->user_type;
 
-        if (parent::hasRole('admin')) {
+        if ($user_type === 1 || $user_type === 2 || $user_type === 3) {
             $estimate = Billing::where('billing_type', '=', 'estimate')
                 ->get();
 
@@ -52,7 +54,7 @@ class DashboardController extends BaseController
             $completedProjects = Project::where('project_progress', '=', '100')
                 ->count('project_id');
 
-            $inCompletProjects = Project::where('project_progress', '!=', '100')
+            $inCompleteProjects = Project::where('project_progress', '!=', '100')
                 ->count('project_id');
 
             $projects = Project::where('project_progress', '!=', '100')
@@ -80,7 +82,7 @@ class DashboardController extends BaseController
                 'payable' => $payable,
                 'paid' => $paid,
                 'completedProjects' => $completedProjects,
-                'inCompletProjects' => $inCompletProjects,
+                'inCompletProjects' => $inCompleteProjects,
                 'projects' => $projects,
                 'bugs' => $bugs,
                 'tickets' => $tickets,
@@ -88,7 +90,7 @@ class DashboardController extends BaseController
                 'events' => $events,
                 'tasks' => $tasks
             ];
-        } elseif (parent::hasRole('staff')) {
+        } elseif ($user_type === 4) {
 
             $projects = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
@@ -184,6 +186,7 @@ class DashboardController extends BaseController
                 ->get();
 
             $data = [
+                'clients' => $client,
                 'projects' => $projects,
                 'bugs' => $bugs,
                 'tickets' => $tickets,
