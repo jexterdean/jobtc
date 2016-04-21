@@ -7,7 +7,7 @@
 
 
         </div>
-    <</div>
+    </div>
 
 @stop
 

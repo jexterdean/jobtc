@@ -39,10 +39,9 @@
                     </h3>
                     <div class="text-right">
                         <div class="col-sm-8 col-sm-offset-3">
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: {{ $percentage . '%' }};">
-                                {{ $percentage . '%' }}
-                                </div>
+                            <div class="progress-custom">
+                                <span class="progress-val">{{ $percentage . '%' }}</span>
+                                <span class="progress-bar-custom"><span class="progress-in" style="width: {{ $percentage . '%' }}"></span></span>
                             </div>
                         </div>
                     </div>
@@ -196,11 +195,11 @@ $(function(e){
             }
         });
     var _percentage = (count / over_all) * 100;
-    _body.find(".progress-bar")
+    _body.find(".progress-in")
         .animate({
             width: _percentage.toFixed(2) + '%'
-        }, 100)
-        .html(_percentage.toFixed(2) + '%');
+        }, 100);
+    _body.find('.progress-val').html(_percentage.toFixed(2) + '%');
     };
 
     /*region Check List*/
