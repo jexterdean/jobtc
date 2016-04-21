@@ -46,7 +46,7 @@ class TaskController extends BaseController {
                             'task.*', 'users.first_name', 'user.email'
                     )
                     ->get();*/
-            $tasks = Task::where('username', '=', Auth::user('user')->email)
+            $tasks = Task::where('user_id', '=', Auth::user('user')->user_id)
                     ->orderBy('created_at', 'desc')
                     ->get();
         }
@@ -70,14 +70,14 @@ class TaskController extends BaseController {
     public function show($id) {
         //
         $task = [];
-        $user_type = '';
+        $user_type = 1;//Auth::user('user')->user_type;
         //if (parent::userHasRole('Admin')) {
         if ($user_type === 1 || $user_type === 2 || $user_type === 3) { 
             $task = Task::find($id);
         } elseif (parent::userHasRole('Client')) {
             $task = DB::table('task')
                     //->join('user', 'user.client_id', '=', 'task.client_id')
-                    ->where('user_id', '=', Auth::user('user')->id)
+                    ->where('user_id', '=', Auth::user('user')->user_id)
                     ->where('task_id', '=', $id)
                     ->first();
         //} elseif (parent::userHasRole('Staff')) {
@@ -85,12 +85,12 @@ class TaskController extends BaseController {
             $task = DB::table('task')
                     ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                     ->where('belongs_to', '=', 'project')
-                    ->where('username', '=', Auth::user('user')->email)
+                    ->where('user_id', '=', Auth::user('user')->user_id)
                     ->where('project_id', '=', $id)
                     ->first();
         }
         $task_timer = DB::table('task_timer')
-                ->leftJoin('user', 'task_timer.user_id', '=', 'user.id')
+                ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
                         'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
@@ -115,9 +115,8 @@ class TaskController extends BaseController {
 
         $checkList = TaskChecklist::where('task_id', '=', $id)->get();
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
-        $finish_checklist = TaskChecklist::where('is_finished', '=', 1)->count();
-        $percentage = ($finish_checklist / $total_checklist) * 100;
-
+        $finish_checklist = TaskChecklist::where('is_finished', '=', 1)->where('task_id', '=', $id)->count();
+        $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
         $links = Link::select('links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'link_categories.name as category_name')
                 ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
                 ->where('task_id', '=', $id)
@@ -165,8 +164,7 @@ class TaskController extends BaseController {
         $validation = Validator::make($request->all(), [
                     'task_title' => 'required',
                     'belongs_to' => 'required',
-                    'unique_id' => 'required',
-                    'is_visible' => 'required|in:yes,no'
+                    'unique_id' => 'required'
         ]);
 
         if ($validation->fails()) {
