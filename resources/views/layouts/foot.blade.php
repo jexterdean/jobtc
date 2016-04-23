@@ -1,11 +1,12 @@
 <form id="form-delete" action="" method="post" style="width: 0px;height: 0px;">
     {!! csrf_field() !!}
     {!! method_field('delete') !!}
-    </form>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+</form>
 
+{!! HTML::script('assets/js/jquery.min.js') !!}
+{!! HTML::script('assets/js/jquery-ui.min.js') !!}
+{!! HTML::script('assets/js/bootstrap.min.js') !!}
+{!! HTML::script('assets/js/jquery.validate.min.js') !!}
 {!! HTML::script('assets/js/AdminLTE/app.js')  !!}
 {!!  HTML::script('assets/js/bootbox.js')  !!}
 
