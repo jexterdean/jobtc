@@ -14,11 +14,12 @@ class AlterUsernameColumn extends Migration
     {
         //
         Schema::table('task', function (Blueprint $table) {
-            if (!Schema::hasColumn('user_id'))
-            {
+
+            //if (!Schema::hasColumn('user_id'))
+            //{
                 $table->dropColumn('username');
                 $table->integer('user_id');
-            }
+            //}
 
         });
     }

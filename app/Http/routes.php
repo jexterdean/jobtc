@@ -60,6 +60,12 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Staff
      */
+
+    /**
+     * CSS Reference
+     */
+    Route::resource('css', 'CssController');
+
     Route::resource('task', 'TaskController');
     Route::post('taskTimer/{id}', 'TaskController@taskTimer');
     Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');

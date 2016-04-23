@@ -12,7 +12,7 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    @include('layouts/navbar')
+                    @include('layouts.navbar')
                 </ul>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">

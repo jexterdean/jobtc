@@ -9,7 +9,6 @@
     {!!  HTML::style('assets/css/font-awesome.min.css')  !!}
     {!!  HTML::style('assets/css/ionicons.min.css')  !!}
     {!!  HTML::style('assets/css/jquery-ui.min.css')  !!}
-
     {!!  HTML::style('assets/custom.css')  !!}
     {!! HTML::style('assets/css/AdminLTE.css')  !!}
     {{--{!!  HTML::style('assets/css/app.css')  !!}--}}

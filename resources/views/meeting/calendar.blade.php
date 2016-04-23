@@ -1,5 +1,5 @@
-<div class="box box-primary">
-    <div class="box-body no-padding">
+<div class="box">
+    <div class="box-body">
         <div id="meeting_calendar"></div>
     </div>
 </div>

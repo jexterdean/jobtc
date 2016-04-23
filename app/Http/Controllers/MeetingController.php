@@ -38,7 +38,7 @@ class MeetingController extends BaseController
 
         //find user timezone and get current offset (like +08:00)
         $user_timezone = DB::table('timezone')
-            ->where('timezone.timezone_id', '=', parent::getActiveUser()->timezone_id)
+            //->where('timezone.timezone_id', '=', parent::getActiveUser()->timezone_id)
             ->pluck('timezone_name');
         date_default_timezone_set($user_timezone);
         $p = date('P');

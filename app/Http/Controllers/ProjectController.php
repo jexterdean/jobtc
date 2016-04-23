@@ -152,9 +152,7 @@ class ProjectController extends BaseController
             ->where('unique_id', '=', $id)
             ->get();
 
-        $assign_username = AssignedUser::where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)
-            ->lists('username', 'username')
+        $assign_username = User::lists('name', 'user_id')
             ->toArray();
 
         $user = User::where('client_id', '=', '')
@@ -197,18 +195,6 @@ class ProjectController extends BaseController
                 ->get();
         }
 
-        $timer = Timer::where('project_id', '=', $id)
-            ->orderBy('start_time', 'desc')
-            ->get();
-
-        $timer_check = Timer::where('project_id', '=', $id)
-            ->where('end_time', '=', null)
-            ->first();
-
-        $progress_option = [];
-        for ($i = 0; $i <= 100; $i++)
-            $progress_option[] = $i . " %";
-
         $assets = ['datepicker'];
 
         return view('project.show', [
@@ -218,9 +204,6 @@ class ProjectController extends BaseController
             'users' => $user,
             'comments' => $comment,
             'attachments' => $attachment,
-            'timers' => $timer,
-            'timer_check' => $timer_check,
-            'progress_option' => $progress_option,
             'tasks' => $task,
             'assignedUsers' => $assignedUser,
             'assign_username' => $assign_username,

@@ -30,11 +30,6 @@
         <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
     </a>
 </li>
-<li>
-    <a href="{{ url('task') }}">
-        <i class="fa fa-tasks"></i> <span>{{Lang::get('messages.Task')}}</span>
-    </a>
-</li>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>
@@ -74,8 +69,7 @@
 <li>
     <a href="{{ route('links.index') }}">
         <i class="fa fa-globe"></i>
-        <span>Links</span>
-    </a>
+        <span>Links</span></a>
 </li>
 
 @role('admin')
@@ -93,5 +87,9 @@
                         class="fa fa-folder-o"></i> {{Lang::get('messages.Email Templates')}}</a></li>
     </ul>
 </li>
-
 @endrole
+<li>
+    <a href="{{ route('css.index') }}" >
+        <i class="fa fa-globe"></i>
+        <span>CSS Classes</span></a>
+</li>
