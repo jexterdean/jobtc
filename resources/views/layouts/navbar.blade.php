@@ -66,9 +66,8 @@
     </a>
 </li>
 
-<li class="dropdown">
-    <a href="{{ route('links.index') }}" class="dropdown-toggle" data-toggle="dropdown"
-       role="button" aria-haspopup="true" aria-expanded="false">
+<li>
+    <a href="{{ route('links.index') }}">
         <i class="fa fa-globe"></i>
         <span>Links</span></a>
 </li>
@@ -88,5 +87,9 @@
                         class="fa fa-folder-o"></i> {{Lang::get('messages.Email Templates')}}</a></li>
     </ul>
 </li>
-
 @endrole
+<li>
+    <a href="{{ route('css.index') }}" >
+        <i class="fa fa-globe"></i>
+        <span>CSS Classes</span></a>
+</li>

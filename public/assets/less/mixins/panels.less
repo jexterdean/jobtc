@@ -2,9 +2,19 @@
 
 .panel-variant(@border; @heading-text-color; @heading-bg-color; @heading-border) {
   border: 1px solid darken(@border,10%)!important;
+  & .panel-body{
+    &.panel-body-border{
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      border-bottom: 10px solid @border * 0.8!important;
+      border-right: 10px solid @border * 0.8!important;
+      border-left: 10px solid @border * 0.8!important;
+    }
+  }
   & > .panel-heading {
     color: @heading-text-color!important;
-    background-color: @heading-bg-color!important;
+    background-color: @heading-bg-color * 0.8!important;
     border-color: darken(@heading-border,10%)!important;
 
     + .panel-collapse > .panel-body {

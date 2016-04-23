@@ -215,7 +215,7 @@ $(function(e){
         var check_list_container = $('#list_group_' + this.id);
         _this.attr('disabled','disabled');
         check_list_container.prepend(text_area_ele);
-        $('textarea[name="checklist"]').focus();
+        _body.find('textarea[name="checklist"]').focus();
         check_list_container.on('click','.submit-checklist',function(){
             var data = $('.task-form').serializeArray();
             $.post(public_path + 'checkList', data,function(d){
@@ -299,9 +299,9 @@ $(function(e){
         var _id = checkbox.attr('id');
         var data = [];
         data.push(
-            {'name':'_token','value':$('input[name="_token"]').val()},
-            {'name':'task_id','value':$('input[name="task_id"]').val()},
-            {'name':'user_id','value':$('input[name="user_id"]').val()}
+            {'name':'_token','value':_body.find('input[name="_token"]').val()},
+            {'name':'task_id','value':_body.find('input[name="task_id"]').val()},
+            {'name':'user_id','value':_body.find('input[name="user_id"]').val()}
         );
         if(checkbox.is(':checked')){
             data.push({'name':'is_finished','value':checkbox.val()});
