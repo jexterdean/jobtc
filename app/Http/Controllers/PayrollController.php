@@ -20,44 +20,53 @@ class PayrollController extends Controller
     {
         $assets = [];
 
-        $u = DB::table('user')
-            ->select(DB::raw('user_id, IF(name IS NULL, username, name) as name'))
+        $c = DB::table('client')
+            ->select('client_id', 'company_name')
             ->get();
-        $user = array_pluck($u, 'name', 'user_id');
+        $company = array_pluck($c, 'company_name', 'client_id');
 
         return View::make('payroll.default', [
             'assets' => $assets,
-            'user' => $user
+            'company' => $company
         ]);
     }
 
     public function payrollJson(){
         header("Content-type: application/json");
 
-        $payroll = array();
-        $user_id = isset($_GET['user_id']) ? $_GET['user_id'] : '';
-        if($user_id) {
-            $payroll = DB::table('task_timer')
-                ->select(DB::raw(
-                    'DATE_FORMAT(fp_task_timer.start_time, "%d %b %Y") as date,
-                    fp_task.task_title,
-                    CONCAT(
-                        DATE_FORMAT(fp_task_timer.start_time, "%h:%i %p"),
-                        " - ",
-                        DATE_FORMAT(fp_task_timer.end_time, "%h:%i %p")
-                    ) as time,
-                    CONCAT(
-                        ROUND(ROUND(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time)/3600, 2) * fp_user_payroll_setting.hourly_rate, 2),
-                        " ", fp_user_payroll_setting.currency
-                    ) as amount'
-                ))
-                ->leftJoin('task', 'task.task_id', '=', 'task_timer.task_id')
-                ->leftJoin('user_payroll_setting', 'user_payroll_setting.user_id', '=', 'task_timer.user_id')
-                ->where('task_timer.user_id', '=', $user_id)
+        $result = array();
+        $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : '';
+        if($company_id) {
+            $result = DB::table('employees')
+                ->where('company_id', '=', $company_id)
                 ->get();
+
+            if(count($result) > 0){
+                foreach($result as $v){
+                    $v->payroll = DB::table('task_timer')
+                        ->select(DB::raw(
+                            'fp_task.task_title,
+                            CONCAT(
+                                DATE_FORMAT(fp_task_timer.start_time, "%a %d"),
+                                ", ",
+                                DATE_FORMAT(fp_task_timer.start_time, "%h:%i %p"),
+                                " - ",
+                                DATE_FORMAT(fp_task_timer.end_time, "%h:%i %p")
+                            ) as time,
+                            CONCAT(
+                                ROUND(ROUND(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time)/3600, 2) * fp_user_payroll_setting.hourly_rate, 2),
+                                " ", fp_user_payroll_setting.currency
+                            ) as amount'
+                        ))
+                        ->leftJoin('task', 'task.task_id', '=', 'task_timer.task_id')
+                        ->leftJoin('user_payroll_setting', 'user_payroll_setting.user_id', '=', 'task_timer.user_id')
+                        ->where('task_timer.user_id', '=', $v->user_id)
+                        ->get();
+                }
+            }
         }
 
-        return response()->json($payroll);
+        return response()->json($result);
     }
 
     /**

@@ -1,7 +1,7 @@
 <form id="form-delete" action="" method="post" style="width: 0px;height: 0px;">
     {!! csrf_field() !!}
     {!! method_field('delete') !!}
-    </form>
+</form>
 
     {!! HTML::script('assets/js/jquery.min.js') !!}
     {!! HTML::script('assets/js/jquery-ui.min.js') !!}
