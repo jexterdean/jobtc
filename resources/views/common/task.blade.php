@@ -45,9 +45,7 @@
 <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion_" data-target="#task-details" aria-expanded="true">
         <h4 class="panel-title">Task List
-            <a data-toggle="modal" href="#add_task">
-                <button class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
-            </a>
+            <a data-toggle="modal" class="pull-right" href="#add_task"><i class="fa fa-plus"></i></a>
         </h4>
     </div>
     <div id="task-details" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
@@ -60,21 +58,14 @@
 
                             <tr>
                                 <td>{{ $task->task_title }}</td>
-                                <td>{{ date("d M Y",strtotime($task->due_date)) }}</td>
                                 <td>{{ $task->name }}</td>
-                                @if(!Auth::user()->is('Client'))
-                                    <td class="text-right">
-                                        <a href="{{ route('task.edit',$task->task_id) }}" class="show_edit_form"><i class="fa fa-2x fa-pencil"></i></a>
-                                        <a href="{{ route('project.destroy',$task->task_id) }}" class="alert_delete"><i class="fa fa-2x fa-trash-o"></i></a>
-                                    </td>
-                                @endif
                             </tr>
 
                         @endif
                     @endforeach
                 @else
                      <tr>
-                        <td colspan="6">No data was found.</td>
+                        <td colspan="2">No data was found.</td>
                     </tr>
                 @endif
             </table>

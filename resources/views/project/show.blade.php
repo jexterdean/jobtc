@@ -55,7 +55,7 @@
                         </div>
                         <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse {{ $ref != 1 ? '' : 'in' }}" role="tabpanel" aria-labelledby="headingOne">
                           <div class="panel-body">
-                            <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}"></div>
+                            <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}" style="margin-top: -10px;"></div>
                           </div>
                         </div>
                     </div>

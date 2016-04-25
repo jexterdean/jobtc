@@ -300,3 +300,13 @@ address {
   font-style: normal;
   line-height: @line-height-base;
 }
+
+//Inset Text
+.inset-text {
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff * 1.1;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
+}
+/* Don't show shadows when selecting text */
+::-moz-selection { background: #5af; color: #fff; text-shadow: none; }
+::selection { background: #5af; color: #fff; text-shadow: none; }

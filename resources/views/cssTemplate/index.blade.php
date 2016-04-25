@@ -16,33 +16,33 @@ script.code {
                 <hr/>
                 <div class="col-sm-6">
                     <label>btn btn-primary</label>
-                    <input type="button" class="btn btn-primary" value="Primary"><br/><br/>
+                    <input type="button" class="btn btn-primary" value="Edit"><br/><br/>
                     <label>btn btn-success</label>
-                    <input type="button" class="btn btn-success" value="Success"><br/><br/>
+                    <input type="button" class="btn btn-success" value="Submit"><br/><br/>
                     <label>btn btn-default</label>
                     <input type="button" class="btn btn-default" value="Default"><br/><br/>
                     <label>btn btn-info</label>
-                    <input type="button" class="btn btn-info" value="Info"><br/><br/>
+                    <input type="button" class="btn btn-info" value="Assign"><br/><br/>
                     <label>btn btn-warning</label>
-                    <input type="button" class="btn btn-warning" value="Warning"><br/><br/>
+                    <input type="button" class="btn btn-warning" value="Finish"><br/><br/>
                     <label>btn btn-danger</label>
-                    <input type="button" class="btn btn-danger" value="Danger"><br/><br/>
+                    <input type="button" class="btn btn-danger" value="Delete"><br/><br/>
                     <label>btn btn-priority</label>
                     <input type="button" class="btn btn-priority" value="Priority"><br/><br/>
                     <label>btn btn-stop</label>
-                    <input type="button" class="btn btn-stop" value="Stop"><br/><br/>
+                    <input type="button" class="btn btn-stop" value="Start Timer"><br/><br/>
                     <label>btn btn-black</label>
                     <input type="button" class="btn btn-black" value="Black"><br/><br/>
                 </div>
                 <div class="col-sm-6">
                     <label>btn-shadow</label>
-                    <input type="button" class="btn-shadow btn btn-primary" value="Primary"><br/><br/>
+                    <input type="button" class="btn-shadow btn btn-primary" value="Edit"><br/><br/>
                     <label>btn-transparent</label>
-                    <input type="button" class="btn-transparent btn btn-primary" value="Primary"><br/><br/>
+                    <input type="button" class="btn-transparent btn btn-primary" value="Edit"><br/><br/>
                     <label>btn-sm</label>
-                    <input type="button" class="btn btn-primary btn-sm" value="Primary"><br/><br/>
+                    <input type="button" class="btn btn-primary btn-sm" value="Edit"><br/><br/>
                     <label>btn-lg</label>
-                    <input type="button" class="btn btn-primary btn-lg" value="Primary"><br/><br/>
+                    <input type="button" class="btn btn-primary btn-lg" value="Edit"><br/><br/>
                 </div>
             </div>
             <div class="col-sm-7">
@@ -79,15 +79,6 @@ script.code {
                             This is a box body
                         </div>
                     </div>
-                    <label>box-default</label>
-                    <div class="box box-default">
-                        <div class="box-header">
-                            <h3 class="box-title">Box Title</h3>
-                        </div>
-                        <div class="box-body">
-                            This is a box body
-                        </div>
-                    </div>
                 </div>
                 <div class="col-sm-6">
                     <label>box-info</label>
@@ -117,12 +108,12 @@ script.code {
                             This is a box body
                         </div>
                     </div>
-                    <label>box-body box-body-border</label>
-                    <div class="box box-primary">
+                    <label>box-body </label>
+                    <div class="box box-default">
                         <div class="box-header">
                             <h3 class="box-title">Box Title</h3>
                         </div>
-                        <div class="box-body box-body-border">
+                        <div class="box-body ">
                             This is a box body
                         </div>
                     </div>
@@ -142,9 +133,6 @@ script.code {
     <div class="panel-body">
         This is a panel body
     </div>
-    <div class="panel-footer">
-        This is a panel footer
-    </div>
 </div>
                    </script>
                 </pre>
@@ -157,9 +145,6 @@ script.code {
                         <div class="panel-body">
                             This is a panel body
                         </div>
-                        <div class="panel-footer">
-                            This is a panel footer
-                        </div>
                     </div>
                     <label>panel-success</label>
                     <div class="panel panel-success">
@@ -168,9 +153,6 @@ script.code {
                         </div>
                         <div class="panel-body">
                             This is a panel body
-                        </div>
-                        <div class="panel-footer">
-                            This is a panel footer
                         </div>
                     </div>
                     <label>panel-default</label>
@@ -181,18 +163,15 @@ script.code {
                         <div class="panel-body">
                             This is a box body
                         </div>
-                        <div class="panel-footer">
-                            This is a panel footer
-                        </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <label>panel-body panel-body-border</label>
+                    <label>panel-body</label>
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">Box Title</h3>
                         </div>
-                        <div class="panel-body panel-body-border">
+                        <div class="panel-body">
                             This is a panel body
                         </div>
                     </div>
@@ -205,9 +184,6 @@ script.code {
                         <div class="panel-body">
                             This is a panel body
                         </div>
-                        <div class="panel-footer">
-                            This is a panel footer
-                        </div>
                     </div>
                     <label>panel-warning</label>
                     <div class="panel panel-warning">
@@ -217,9 +193,6 @@ script.code {
                         <div class="panel-body">
                             This is a panel body
                         </div>
-                        <div class="panel-footer">
-                            This is a panel footer
-                        </div>
                     </div>
                     <label>panel-danger</label>
                     <div class="panel panel-danger">
@@ -228,9 +201,6 @@ script.code {
                         </div>
                         <div class="panel-body">
                             This is a panel body
-                        </div>
-                        <div class="panel-footer">
-                            This is a panel footer
                         </div>
                     </div>
                 </div>

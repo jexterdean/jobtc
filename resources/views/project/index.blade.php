@@ -84,7 +84,6 @@
                 </tbody>
             </table>
         </div>
-        <div style="clear:both;"></div>
     </div>
 </div>
 @stop
