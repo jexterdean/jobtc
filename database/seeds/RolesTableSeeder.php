@@ -33,6 +33,17 @@ class RolesTableSeeder extends Seeder
         $staffRole->level = 2;
         $staffRole->save();
 
-
+        $user = \DB::table('user')
+            ->get();
+        if(count($user) > 0){
+            foreach($user as $v){
+                $post = [
+                    'role_id' => 1,
+                    'user_id' => $v->user_id
+                ];
+                \DB::table('role_user')
+                    ->insert($post);
+            }
+        }
     }
 }
