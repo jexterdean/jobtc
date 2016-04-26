@@ -231,7 +231,7 @@ class TeamBuilderController extends BaseController
                 $duplicate_id = Input::get('duplicate_id');
                 $t = DB::table('team_member')
                     ->select('user_id')
-                    ->where('team_id', '=', $duplicate_id)
+                    ->where('project_id', '=', $duplicate_id)
                     ->get();
                 if(count($t) > 0){
                     foreach($t as $v){
@@ -254,7 +254,7 @@ class TeamBuilderController extends BaseController
                 $validation = Validator::make($request->all(), [
                     'role_id' => 'required',
                     'name' => 'required',
-                    'email' => 'required',
+                    'email' => 'email|required',
                     'username' => 'required',
                     'password' => 'required'
                 ]);
