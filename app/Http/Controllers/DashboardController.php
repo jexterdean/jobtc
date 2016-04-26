@@ -29,7 +29,7 @@ class DashboardController extends BaseController
             ->orWhere('public', '=', '1')
             ->get();
 
-        $assets = ['knob', 'calendar'];
+        $assets = ['knob', 'calendar', 'date', 'select', 'magicSuggest', 'waiting'];
         $data = [];
 
         if (parent::hasRole('admin')) {
