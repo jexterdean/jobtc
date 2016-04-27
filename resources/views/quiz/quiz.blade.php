@@ -13,7 +13,7 @@
                 @foreach($test as $v)
                 <div class="media">
                     <div class="media-left">
-                        {!! HTML::image('/assets/img/test/' . $v->test_photo, '', array('style' => 'width: 64px;max-width: 64px!important;')) !!}
+                        {!! HTML::image('/storage/img/test/' . $v->test_photo, '', array('style' => 'width: 64px;max-width: 64px!important;')) !!}
                     </div>
                     <div class="media-body">
                         <h4 class="media-heading">{{ $v->title }}</h4>
