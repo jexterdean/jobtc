@@ -125,6 +125,11 @@ Route::group(['middleware' => 'auth'], function () {
     */
     Route::resource('payroll', 'PayrollController');
     Route::get('payrollJson', 'PayrollController@payrollJson');
+
+    /*
+     * Quiz
+    */
+    Route::resource('quiz', 'QuizController');
 });
 
 Route::group(['prefix' => 'api'], function () {

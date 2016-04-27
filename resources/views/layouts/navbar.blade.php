@@ -70,6 +70,11 @@
         <i class="fa fa-credit-card"></i> <span>{{Lang::get('Payroll')}}</span>
     </a>
 </li>
+<li>
+    <a href="{{ url('quiz') }}">
+        <i class="fa fa-university"></i> <span>{{Lang::get('Quiz')}}</span>
+    </a>
+</li>
 
 <li>
     <a href="{{ route('links.index') }}">
