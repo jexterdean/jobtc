@@ -57,7 +57,7 @@
             <div class="row">
                 <div class="col-sm-1">
                     <a href="#" class="btn btn-primary btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
-                    <a href="#" class="btn btn-primary btn-sm btn-shadow"><i class="fa fa-plus"></i> Notes</a>
+                    <a href="#" class="btn btn-primary btn-sm btn-shadow add-notes-btn" style="display: none" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
                 </div>
                 <div class="col-sm-3">
                     @foreach($links as $val)
@@ -120,7 +120,9 @@
                     </div>
                 </div>
             </div><br/>
-            <div class="firepad-column-{{ $task->task_id }}" style="display: none">
+            <div class="note-text">
+            </div>
+            <div class="firepad-column collapse" id="firepad-column-{{ $task->task_id }}">
                 <div class="row">
                     <div class="col-sm-12">
                         <div id="firepad-{{ $task->task_id }}" data-hash="task-list-{{ $task->task_id }}"></div>
@@ -230,18 +232,16 @@ $(function(e){
         check_list_container.prepend(text_area_ele);
         _body.find('textarea[name="checklist"]').focus();
         check_list_container.on('click','.submit-checklist',function(){
-            var data = $('.task-form').serializeArray();
+            var data = _body.find('.task-form').serializeArray();
             $.post(public_path + 'checkList', data,function(d){
                 var _return_data = jQuery.parseJSON(d);
                 var ele = '';
                 alert_msg('Successfully added checklist!!','alert-success');
                 $.each(_return_data,function(index,val){
+                var is_finished = val.is_finished ? 'checked' : '';
                     ele += '<li class="list-group-item">';
-                        ele += '<label class="checklist-label">';
-                        ele += '<div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">';
-                            ele += '<input type="checkbox" class="checkbox" style="position: absolute; opacity: 0;">';
-                            ele += '<ins class="iCheck-helper" style="position: absolute; top: 0; left: 0; display: block; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; background: rgb(255, 255, 255);"></ins>';
-                        ele += '</div>&nbsp;';
+                        ele += '<label class="checkbox-inline checklist-label">';
+                            ele += '<input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="' + val.id + '" ' + is_finished + '>';
                         ele += val.checklist;
                         ele += '</label>';
                         ele += '<div class="pull-right">';
@@ -251,6 +251,7 @@ $(function(e){
                     ele += '</li>';
                 });
                 check_list_container.html(ele);
+                _this.removeAttr('disabled');
             });
         })
         .on('click','.cancel-checklist',function(){
@@ -424,6 +425,7 @@ $(function(e){
 
         });
     /*endregion*/
+    /*region Firepad*/
     var firepad_task = 'firepad-{{ $task->task_id }}';
     function init() {
           //// Initialize Firebase.
@@ -437,9 +439,25 @@ $(function(e){
               { richTextToolbar: true, richTextShortcuts: true });
 
           firepad.on('ready', function() {
+              var _note_text_area = _body.find('.note-text');
+              var _this = $(this);
+              var ele = '<strong>Note: <span class="bg-red" style="font-weight: normal!important;padding: 0 5px;">Double click to edit.</span></strong>';
+              ele += firepad.getHtml();
               if (firepad.isHistoryEmpty()) {
                 firepad.setText('');
+                _body.find('.add-notes-btn').css({display:'inline'});
               }
+              else{
+                _note_text_area.html(ele);
+                _body.find('.add-notes-btn').css({display:'none'});
+              }
+
+              _this.focusout(function(){
+                _note_text_area
+                    .html(ele)
+                    .css({display:'inline'});
+                _body.find('.firepad-column').css({display:'none'})
+              });
             });
 
         }
@@ -455,10 +473,21 @@ $(function(e){
             ref = ref.push(); // generate unique location.
           }
           if (typeof console !== 'undefined')
-            console.log('Firebase data: ', ref.toString());
+            //console.log('Firebase data: ', ref.toString());
 
           return ref;
         }
         init();
+        _body
+            .on('click','.add-notes-btn',function(){
+                $(this).css({display:'none'});
+                _body.find('.firepad-column').css({display:'inline'});
+            })
+            .on('dblclick','.note-text',function(){
+                $(this).css({display:'none'});
+                _body.find('.firepad-column').css({display:'inline'});
+            });
+
+    /*endregion*/
 })
 </script>

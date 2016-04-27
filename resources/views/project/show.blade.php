@@ -3,6 +3,7 @@
 <style>
 .firepad{
     height: 400px!important;
+    background-color: #f62; /* dark orange background */
 }
 .powered-by-firepad{
     display: none!important;
