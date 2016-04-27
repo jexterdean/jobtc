@@ -266,6 +266,7 @@
                     ;
         });
         _body.on('click', '.update-checklist', function (e) {
+        //_body.on('click','.checklist-item',function(e){
             e.preventDefault();
             var url = $(this).attr('href');
             var checklist_label = $(this).parent().parent().find('.checklist-label');
