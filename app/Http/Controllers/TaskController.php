@@ -215,7 +215,7 @@ class TaskController extends BaseController {
 
         $task->update($data);
 
-        return redirect()->route('task.show', $id);
+        return Redirect::back()->withSuccess('Updated successfully!!');
     }
 
     public function destroy($task_id) {
@@ -229,10 +229,12 @@ class TaskController extends BaseController {
     }
 
     public function taskTimer(Request $request, $id) {
-        $taskTimer = new TaskTimer($request->all());
+        $input = $request->except(['is_finished']);
+        $taskTimer = new TaskTimer($input);
         $taskTimer->save();
+
         $data['table'] = DB::table('task_timer')
-                ->leftJoin('user', 'task_timer.user_id', '=', 'user.id')
+                ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
                         'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
@@ -242,6 +244,7 @@ class TaskController extends BaseController {
                 ->where('task_timer.task_id', '=', $id)
                 ->orderBy('start_time', 'desc')
                 ->get();
+
         $data['return_task_timer'] = $taskTimer->id;
         return json_encode($data);
     }
