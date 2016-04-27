@@ -195,7 +195,7 @@ class ProjectController extends BaseController
                 ->get();
         }
 
-        $assets = ['datepicker'];
+        $assets = ['datepicker','firepad'];
 
         return view('project.show', [
             'project' => $project,

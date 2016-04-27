@@ -1,7 +1,7 @@
 <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion_" data-target="#project-attachment" aria-expanded="true">
+    <div class="panel-heading">
         <h3 class="panel-title">
-            Attachments
+            <a href="#project-attachment" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion_" aria-expanded="true">Attachments</a>
             <a data-toggle="modal" class="pull-right" href="#add_attachment"><i class="fa fa-plus"></i></a>
         </h3>
     </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Link;
+use App\Models\Task;
 use App\Models\LinkCategory;
 use Illuminate\Http\Request;
 
@@ -59,7 +60,8 @@ class LinkController extends BaseController
         $link = new Link($request->all());
         $link->save();
 
-        return $request->task_id ? redirect()->route('task.show', $request->task_id) : redirect()->route('links.index');
+        $task = Task::find($request->task_id);
+        return $request->task_id ? redirect()->route('project.show', $task->project_id) : redirect()->route('links.index');
     }
 
     /**

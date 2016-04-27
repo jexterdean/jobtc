@@ -43,8 +43,8 @@
     </div>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion_" data-target="#task-details" aria-expanded="true">
-        <h4 class="panel-title">Task List
+    <div class="panel-heading">
+        <h4 class="panel-title"><a href="#task-details" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion_" aria-expanded="true">Task List</a>
             <a data-toggle="modal" class="pull-right" href="#add_task"><i class="fa fa-plus"></i></a>
         </h4>
     </div>

@@ -5918,6 +5918,9 @@ button.list-group-item-danger.active:focus {
   border-left: 5px solid #8a949d !important;
 }
 .panel-default > .panel-heading {
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   color: #fff !important;
   background-color: #8a949d !important;
   border-color: #75838e !important;
@@ -5944,6 +5947,9 @@ button.list-group-item-danger.active:focus {
   border-left: 5px solid #3174ae !important;
 }
 .panel-primary > .panel-heading {
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   color: #fff !important;
   background-color: #3174ae !important;
   border-color: #286090 !important;
@@ -5970,6 +5976,9 @@ button.list-group-item-danger.active:focus {
   border-left: 5px solid #55a555 !important;
 }
 .panel-success > .panel-heading {
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   color: #fff !important;
   background-color: #55a555 !important;
   border-color: #468e46 !important;
@@ -5996,6 +6005,9 @@ button.list-group-item-danger.active:focus {
   border-left: 5px solid #56b6d3 !important;
 }
 .panel-info > .panel-heading {
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   color: #fff !important;
   background-color: #56b6d3 !important;
   border-color: #31b0d5 !important;
@@ -6022,6 +6034,9 @@ button.list-group-item-danger.active:focus {
   border-left: 5px solid #e4a44a !important;
 }
 .panel-warning > .panel-heading {
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   color: #fff !important;
   background-color: #e4a44a !important;
   border-color: #ec971f !important;
@@ -6048,6 +6063,9 @@ button.list-group-item-danger.active:focus {
   border-left: 5px solid #ce4f4b !important;
 }
 .panel-danger > .panel-heading {
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   color: #fff !important;
   background-color: #ce4f4b !important;
   border-color: #c9302c !important;
@@ -6180,6 +6198,9 @@ button.list-group-item-danger.active:focus {
 }
 .box .box-header {
   position: relative;
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   border-bottom: 0 solid #f4f4f4;
 }
 .box .box-header:before,

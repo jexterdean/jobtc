@@ -1,6 +1,6 @@
 <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion_" data-target="#project-notes" aria-expanded="true">
-        <h3 class="panel-title">Notes {{ Auth::user()->name }}</h3>
+    <div class="panel-heading">
+        <h3 class="panel-title"><a role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion_" href="#project-notes" aria-expanded="true">Notes {{ Auth::user()->name }}</a></h3>
     </div>
     <div id="project-notes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
         <div class="panel-body">

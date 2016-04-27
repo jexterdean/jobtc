@@ -1,6 +1,6 @@
 <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingFive" data-toggle="collapse" data-parent="#accordion_" data-target="#project-comments" aria-expanded="true">
-        <h3 class="panel-title">Comments</h3>
+    <div class="panel-heading">
+        <h3 class="panel-title"><a href="#project-comments" role="tab" id="headingFive" data-toggle="collapse" data-parent="#accordion_" aria-expanded="true">Comments</a></h3>
     </div>
     <div id="project-comments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
         <div class="panel-body">
