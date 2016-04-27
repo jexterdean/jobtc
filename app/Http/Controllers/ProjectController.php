@@ -86,11 +86,9 @@ class ProjectController extends BaseController
         //
         $validation = Validator::make($request->all(), [
             'project_title' => 'required|unique:project',
-            'client_id' => 'required',
-            'start_date' => 'required|date_format:"d-m-Y"',
-            'deadline' => 'required|date_format:"d-m-Y"|after:start_date',
-            'rate_type' => 'required',
-            'rate_value' => 'required|numeric'
+            'start_date' => 'date_format:"d-m-Y"',
+            'deadline' => 'date_format:"d-m-Y"|after:start_date',
+            'rate_value' => 'numeric'
         ]);
 
         if ($validation->fails()) {
