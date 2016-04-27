@@ -2,9 +2,6 @@
   position: relative;
   background: #ffffff;
   margin-bottom: 20px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
   width: 100%;
   .box-shadow(2px 2px 5px -1px rgba(0, 0, 0, 0.50));
   //.box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
@@ -29,6 +26,7 @@
   .box-header{
     position: relative;
     //background: @panel-default-border;
+    .inset-text();
     .box-shadow-variant();
     &:before,&:after{
       display: table;
@@ -39,10 +37,10 @@
     }
     > .fa, > .glyphicon, > .ion, .box-title{
       display: inline-block;
-      padding: 10px 10px 10px 10px;
+      padding: 5px;
       margin: 0;
       font-size: 20px;
-      font-weight: 400;
+      font-weight: 600;
       float: left;
       cursor: default;
     }
@@ -135,9 +133,9 @@
     }
     &.collapsed-box{
       .box-header{
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
+        //-webkit-border-radius: 3px;
+        //-moz-border-radius: 3px;
+        //border-radius: 3px;
       }
     }
     &[class*='bg']{

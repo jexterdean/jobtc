@@ -21,16 +21,17 @@
                     {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
                     input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
                 </div>
-                @role('admin')
+                @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
                     <div class="form-group">
-                        {!!  Form::select('assign_username', $assign_username, isset
-                        ($task->assign_username) ? $task->assign_username : '', ['class' => 'form-control input-xlarge select2me',
-                        'placeholder' => 'Assign User', 'tabindex' => '3'] )  !!}
+                            {!!  Form::select('username', $assign_username, isset
+                            ($task->user_id) ? $task->user_id : '',
+                             ['class' => 'form-control input-xlarge select2me',
+                            'placeholder' => 'Assign User',] )  !!}
                     </div>
-                @endrole
-                @role('staff')
-                    {!!  Form::hidden('assign_username',Auth::user()->username,['readonly' => true])  !!}
-                @endrole
+                @endif
+                @if(Auth::user('user')->user_type === 4)
+                    {!!  Form::hidden('assign_username',Auth::user('user')->email,['readonly' => true])  !!}
+                @endif
             </div>
             <div class="modal-footer">
                 <div class="form-group">
@@ -41,43 +42,33 @@
         </div>
     </div>
 </div>
-<div class="box box-default">
-    <div class="box-header">
-        <h3 class="box-title">Task List</h3>
-        <div class="box-tools pull-right">
-            <a data-toggle="modal" href="#add_task">
-                <button class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> Add Task</button>
-            </a>
-            <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title"><a href="#task-details" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion_" aria-expanded="true">Task List</a>
+            <a data-toggle="modal" class="pull-right" href="#add_task"><i class="fa fa-plus"></i></a>
+        </h4>
     </div>
-    <div class="box-body">
-        <table class="table table-hover table-striped">
-            @if(count($tasks) > 0)
-                @foreach($tasks as $task)
-                    @if((Auth::user()->is('client') && $task->is_visible == 'yes') ||
-                         !Auth::user()->is('client'))
+    <div id="task-details" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+        <div class="panel-body">
+            <table class="table table-hover table-striped">
+                @if(count($tasks) > 0)
+                    @foreach($tasks as $task)
+                        @if((Auth::user()->is('client') && $task->is_visible == 'yes') ||
+                             !Auth::user()->is('client'))
 
-                        <tr>
-                            <td>{{ $task->task_title }}</td>
-                            <td>{{ date("d M Y",strtotime($task->due_date)) }}</td>
-                            <td>{{ $task->name }}</td>
-                            @if(!Auth::user()->is('Client'))
-                                <td class="text-right">
-                                    <a href="{{ url('task/'.$task->task_id) }}"><i class="fa fa-2x fa-external-link"></i></a>
-                                    <a href="{{ route('task.edit',$task->task_id) }}" class="show_edit_form"><i class="fa fa-2x fa-pencil"></i></a>
-                                    <a href="{{ route('project.destroy',$task->task_id) }}" class="alert_delete"><i class="fa fa-2x fa-trash-o"></i></a>
-                                </td>
-                            @endif
-                        </tr>
+                            <tr>
+                                <td>{{ $task->task_title }}</td>
+                                <td>{{ $task->name }}</td>
+                            </tr>
 
-                    @endif
-                @endforeach
-            @else
-                 <tr>
-                    <td colspan="6">No data was found.</td>
-                </tr>
-            @endif
-        </table>
+                        @endif
+                    @endforeach
+                @else
+                     <tr>
+                        <td colspan="2">No data was found.</td>
+                    </tr>
+                @endif
+            </table>
+        </div>
     </div>
 </div>

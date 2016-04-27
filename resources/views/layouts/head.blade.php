@@ -6,15 +6,9 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     {!!  HTML::style('assets/css/bootstrap.css')  !!}
-
     {!!  HTML::style('assets/css/font-awesome.min.css')  !!}
     {!!  HTML::style('assets/css/ionicons.min.css')  !!}
     {!!  HTML::style('assets/css/jquery-ui.min.css')  !!}
-
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="https://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
-
     {!!  HTML::style('assets/custom.css')  !!}
     {!! HTML::style('assets/css/AdminLTE.css')  !!}
     {{--{!!  HTML::style('assets/css/app.css')  !!}--}}

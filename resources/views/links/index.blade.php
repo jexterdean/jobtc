@@ -39,12 +39,10 @@
                             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                             <strong>You dont have to perform this action!!</strong>
                         </div>
-                        @endrole
+                        @endif
                 </div>
             </div>
-            @endrole
         </div>
-        @endif
     </div>
     <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">

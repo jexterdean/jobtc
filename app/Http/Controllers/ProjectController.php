@@ -86,11 +86,9 @@ class ProjectController extends BaseController
         //
         $validation = Validator::make($request->all(), [
             'project_title' => 'required|unique:project',
-            'client_id' => 'required',
-            'start_date' => 'required|date_format:"d-m-Y"',
-            'deadline' => 'required|date_format:"d-m-Y"|after:start_date',
-            'rate_type' => 'required',
-            'rate_value' => 'required|numeric'
+            'start_date' => 'date_format:"d-m-Y"',
+            'deadline' => 'date_format:"d-m-Y"|after:start_date',
+            'rate_value' => 'numeric'
         ]);
 
         if ($validation->fails()) {
@@ -152,9 +150,7 @@ class ProjectController extends BaseController
             ->where('unique_id', '=', $id)
             ->get();
 
-        $assign_username = AssignedUser::where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)
-            ->lists('username', 'username')
+        $assign_username = User::lists('name', 'user_id')
             ->toArray();
 
         $user = User::where('client_id', '=', '')
@@ -197,19 +193,7 @@ class ProjectController extends BaseController
                 ->get();
         }
 
-        $timer = Timer::where('project_id', '=', $id)
-            ->orderBy('start_time', 'desc')
-            ->get();
-
-        $timer_check = Timer::where('project_id', '=', $id)
-            ->where('end_time', '=', null)
-            ->first();
-
-        $progress_option = [];
-        for ($i = 0; $i <= 100; $i++)
-            $progress_option[] = $i . " %";
-
-        $assets = ['datepicker'];
+        $assets = ['datepicker','firepad'];
 
         return view('project.show', [
             'project' => $project,
@@ -218,9 +202,6 @@ class ProjectController extends BaseController
             'users' => $user,
             'comments' => $comment,
             'attachments' => $attachment,
-            'timers' => $timer,
-            'timer_check' => $timer_check,
-            'progress_option' => $progress_option,
             'tasks' => $task,
             'assignedUsers' => $assignedUser,
             'assign_username' => $assign_username,

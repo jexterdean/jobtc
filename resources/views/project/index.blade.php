@@ -8,7 +8,7 @@
                 <h4 class="modal-title">Add Project</h4>
             </div>
             <div class="modal-body">
-                @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+                @role('admin')
                 {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
                 @include('project/partials/_form')
                 {!! Form::close()  !!}
@@ -84,7 +84,6 @@
                 </tbody>
             </table>
         </div>
-        <div style="clear:both;"></div>
     </div>
 </div>
 @stop

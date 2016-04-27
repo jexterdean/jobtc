@@ -44,7 +44,7 @@ $(function() {
     /*     
      * Add collapse and remove events to boxes
      */
-    $("[data-widget='collapse']").click(function() {
+    $("body").on('click','[data-widget="collapse"]',function() {
         //Find the box parent        
         var box = $(this).parents(".box").first();
         //Find the body and the footer
