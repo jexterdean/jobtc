@@ -240,7 +240,7 @@
         _body.on('click', '.check-list-btn', function () {
             var text_area_ele = '<li class="list-group-item text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3"></textarea><br/>';
-            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm submit-checklist" type="button">Submit</button>&nbsp;&nbsp;&nbsp;';
+            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
             text_area_ele += '</li>';
 
@@ -252,7 +252,8 @@
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
-
+                e.preventDefault();
+                e.stopImmediatePropagation();
                 var data = _body.find('.task-form').serializeArray();
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
@@ -285,14 +286,11 @@
                     check_list_container.html(ele);
                     _this.removeAttr('disabled');
                 });
-            })
-                    .on('click', '.cancel-checklist', function () {
+            }).on('click', '.cancel-checklist', function () {
                         _this.removeClass('disabled');
-                        _this.parent().find('.text-area-content').remove();
-                    }).on('click', '.submit-checklist', function () {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-            });
+                        //_this.parent().find('.text-area-content').remove();
+                        $('.text-area-content').remove();
+                    });
         });
         //_body.on('click', '.update-checklist', function (e) {
         _body.on('click', '.checklist-item', function (e) {
@@ -305,19 +303,17 @@
             var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
-            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm update-checklist" type="button">Submit</button>&nbsp;&nbsp;&nbsp;';
-            text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
+            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+            //text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
             text_area_ele += '</div>';
 
             checklist_item
                     .css({'display': 'none'})
                     .before(text_area_ele);
 
-            _body
-                    .on('click', '.cancel-checklist', function () {
+            _body.on('click', '.cancel-checklist', function () {
                         $('.text-area-content').remove();
                         checklist_item.removeAttr('style');
-
                     });
 
 
