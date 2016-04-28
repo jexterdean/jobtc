@@ -1,5 +1,8 @@
 .box-variant(@color, @font: #ffffff){
-  border: 1px solid #ffffff!important;
+  border-top: 3px solid @color * 1.5!important;
+  border-bottom: 3px solid @color * 0.9!important;
+  border-right: 3px solid @color * 0.9!important;
+  border-left: 3px solid @color * 1.5!important;
   > .box-header{
     color: @font!important;
     background: @color * 0.95!important;
@@ -14,21 +17,28 @@
       border-bottom: 5px solid @color * 0.95!important;
       border-right: 5px solid @color * 0.95!important;
       border-left: 5px solid @color * 0.95!important;
+    & .box-content{
+      padding: 10px;
+      border-top: 3px solid @color * 0.9!important;
+      border-bottom: 3px solid @color * 1.5!important;
+      border-right: 3px solid @color * 1.5!important;
+      border-left: 3px solid @color * 0.9!important;
+    }
   }
 }
 
 .box-shadow-variant(){
-  //-webkit-border-top-left-radius: 3px;
-  //-webkit-border-top-right-radius: 3px;
-  //-webkit-border-bottom-right-radius: 0;
-  //-webkit-border-bottom-left-radius: 0;
-  //-moz-border-radius-topleft: 3px;
-  //-moz-border-radius-topright: 3px;
-  //-moz-border-radius-bottomright: 0;
-  //-moz-border-radius-bottomleft: 0;
-  //border-top-left-radius: 3px;
-  //border-top-right-radius: 3px;
-  //border-bottom-right-radius: 0;
-  //border-bottom-left-radius: 0;
+  /*-webkit-border-top-left-radius: 3px;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;*/
   border-bottom: 0 solid #f4f4f4;
 }
