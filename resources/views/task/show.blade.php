@@ -8,12 +8,12 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="row">
-            <div class="col-sm-4">
+            <!--div class="col-sm-4">
                 <label class="control-label">Description:</label>
                 <p class="text-justify">{{ $task->task_description }}</p>
 
-            </div>
-            <div class="col-sm-8">
+            </div-->
+            <div class="col-sm-12">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="text-right">
@@ -32,13 +32,22 @@
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $val)
                                 <li class="list-group-item">
-                                    <div class="checklist-item">
-                                        <label class="checkbox-inline checklist-label">
-                                            <input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}>{{ $val->checklist }}
-                                        </label>
-                                        <div class="pull-right">
-                                            <a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a>&nbsp;
-                                            <a href="{{ url('deleteCheckList/' . $val->id ) }}" class="alert_delete"><i class="glyphicon glyphicon-lg glyphicon-trash"></i></a>
+                                    <div class="row">
+                                        <div class="col-md-2">                                            
+                                            <input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <label class="checkbox-inline checklist-label">
+                                                <div class="checklist-item">
+                                                    {{ $val->checklist }}
+                                                </div>
+                                            </label>
+                                        </div>                                            
+                                        <div class="col-md-2">
+                                            <div class="pull-right">
+                                        <!--a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a-->&nbsp;
+                                                <a href="{{ url('deleteCheckList/' . $val->id ) }}" class="alert_delete"><i class="glyphicon glyphicon-lg glyphicon-trash"></i></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -218,7 +227,6 @@
         };
 
         /*region Check List*/
-
         _body.on('click', '.check-list-btn', function () {
             var text_area_ele = '<li class="list-group-item text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3"></textarea><br/>';
@@ -240,14 +248,24 @@
                     $.each(_return_data, function (index, val) {
                         var is_finished = val.is_finished ? 'checked' : '';
                         ele += '<li class="list-group-item">';
-                        ele += '<label class="checkbox-inline checklist-label">';
+                        ele += '<div class="row">';
+                        ele += '<div class="col-md-2">';
                         ele += '<input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="' + val.id + '" ' + is_finished + '>';
+                        ele += '</div>'; //col-md-2
+                        ele += '<div class="col-md-7">';
+                        ele += '<label class="checkbox-inline checklist-label">';
+                        ele += '<div class="checklist-item">';
                         ele += val.checklist;
+                        ele += '</div>';
                         ele += '</label>';
+                        ele += '</div>'; //col-md-7
+                        ele += '<div class="col-md-3">';
                         ele += '<div class="pull-right">';
-                        ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
+                        //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
                         ele += '<a href="/deleteCheckList/' + val.id + '" class="alert_delete"><i class="glyphicon glyphicon-trash glyphicon-lg"></i></a>';
                         ele += '</div>';
+                        ele += '</div>'; //col-md-3
+                        ele += '</div>'; //row
                         ele += '</li>';
                     });
                     check_list_container.html(ele);
@@ -265,12 +283,16 @@
                     })
                     ;
         });
-        _body.on('click', '.update-checklist', function (e) {
-        //_body.on('click','.checklist-item',function(e){
+        //_body.on('click', '.update-checklist', function (e) {
+        _body.on('click', '.checklist-item', function (e) {
             e.preventDefault();
-            var url = $(this).attr('href');
-            var checklist_label = $(this).parent().parent().find('.checklist-label');
-            var checklist_item = $(this).parent().parent().parent().find('.checklist-item');
+            var index = $(this).parent().parent().parent().index();
+
+            var url = $('.alert_delete').eq(index).attr('href');
+            //var checklist_label = $('.alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
+            //var checklist_item = $('.alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+            var checklist_label = $('.alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
+            var checklist_item = $(this);
             var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
@@ -290,11 +312,13 @@
                     });
 
             _body.on('click', '.submit-checklist', function (e) {
-                var data = _body.find('.task-form').serializeArray();
+                //var data = _body.find('.task-form').serializeArray();
+                
+                var data = _body.find('.');
+                
                 $.post(url, data, function (_data) {
                     var _return_data = jQuery.parseJSON(_data);
                     $('.text-area-content').remove();
-
                     var ele = '<label class="checklist-label">';
                     ele += '<div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">';
                     ele += '<input type="checkbox" class="checkbox" style="position: absolute; opacity: 0;">';
