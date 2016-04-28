@@ -47,6 +47,7 @@
                                             <div class="pull-right">
                                         <!--a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a-->&nbsp;
                                                 <a href="{{ url('deleteCheckList/' . $val->id ) }}" class="alert_delete"><i class="glyphicon glyphicon-lg glyphicon-trash"></i></a>
+                                                <input type="hidden" class="task_list_id" value="{{$val->id}}" />
                                             </div>
                                         </div>
                                     </div>
@@ -239,8 +240,11 @@
             _this.addClass('disabled');
             check_list_container.prepend(text_area_ele);
             _body.find('textarea[name="checklist"]').focus();
-            check_list_container.on('click', '.submit-checklist', function () {
-                var data = _body.find('.task-form').serializeArray();
+
+            check_list_container.on('click', '.submit-checklist', function (e) {
+                _this.removeClass('disabled');
+                
+            var data = _body.find('.task-form').serializeArray();
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
                     var ele = '';
@@ -263,6 +267,7 @@
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
                         ele += '<a href="/deleteCheckList/' + val.id + '" class="alert_delete"><i class="glyphicon glyphicon-trash glyphicon-lg"></i></a>';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
                         ele += '</div>';
                         ele += '</div>'; //col-md-3
                         ele += '</div>'; //row
@@ -275,28 +280,24 @@
                     .on('click', '.cancel-checklist', function () {
                         _this.removeClass('disabled');
                         _this.parent().find('.text-area-content').remove();
-                    })
-                    .on('click', '.submit-checklist', function (e) {
+                    }).on('click','.submit-checklist', function(){
                         e.preventDefault();
                         e.stopImmediatePropagation();
-                        _this.removeClass('disabled');
-                    })
-                    ;
+                    });
         });
         //_body.on('click', '.update-checklist', function (e) {
         _body.on('click', '.checklist-item', function (e) {
             e.preventDefault();
-            var index = $(this).parent().parent().parent().index();
 
-            var url = $('.alert_delete').eq(index).attr('href');
-            //var checklist_label = $('.alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
-            //var checklist_item = $('.alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+            //Get list item index
+            var index = $(this).parent().parent().parent().parent().index();
+
             var checklist_label = $('.alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
-            var checklist_item = $(this);
+            var checklist_item = $('.alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
             var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
-            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm submit-checklist" type="button">Submit</button>&nbsp;&nbsp;&nbsp;';
+            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm update-checklist" type="button">Submit</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
             text_area_ele += '</div>';
 
@@ -311,31 +312,33 @@
 
                     });
 
-            _body.on('click', '.submit-checklist', function (e) {
-                //var data = _body.find('.task-form').serializeArray();
-                
-                var data = _body.find('.');
-                
-                $.post(url, data, function (_data) {
-                    var _return_data = jQuery.parseJSON(_data);
-                    $('.text-area-content').remove();
-                    var ele = '<label class="checklist-label">';
-                    ele += '<div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">';
-                    ele += '<input type="checkbox" class="checkbox" style="position: absolute; opacity: 0;">';
-                    ele += '<ins class="iCheck-helper" style="position: absolute; top: 0; left: 0; display: block; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; background: rgb(255, 255, 255);"></ins>';
-                    ele += '</div>&nbsp;';
-                    ele += _return_data.checklist;
-                    ele += '</label>';
-                    ele += '<div class="pull-right">';
-                    ele += '<a href="/updateCheckList/' + _return_data.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
-                    ele += '<a href="/deleteCheckList/' + _return_data.id + '" class="alert_delete"><i class="glyphicon glyphicon-trash glyphicon-lg"></i></a>';
-                    ele += '</div>';
 
-                    checklist_item
-                            .removeAttr('style')
-                            .html(ele);
+        });
 
-                });
+        _body.on('click', '.update-checklist', function (e) {
+            //e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var index = $(this).parent().parent().parent().parent().parent().index();
+
+            var checklist_item = $('.alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+
+            var tasklist_id = $('.checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_id').val();
+
+            var data = _body.find('.task-form').serializeArray();
+
+            url = '/updateCheckList/' + tasklist_id;
+
+            $.post(url, data, function (_data) {
+                var _return_data = jQuery.parseJSON(_data);
+                $('.text-area-content').remove();
+
+                var ele = _return_data.checklist;
+
+                checklist_item
+                        .removeAttr('style')
+                        .html(ele);
+
             });
         });
 

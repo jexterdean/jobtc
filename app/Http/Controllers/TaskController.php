@@ -275,11 +275,16 @@ class TaskController extends BaseController {
         return Redirect::back()->withSuccess('Deleted successfully!!');
     }
 
+    public function getChecklist(Request $request) {
+        $tasklist = TaskChecklist::where('task_id', $request->task_id)->get();
+        
+        return json_encode($tasklist);
+    }
+    
     public function checkList(Request $request) {
         $taskCheckList = new TaskChecklist($request->all());
         $taskCheckList->save();
-        $data = TaskChecklist::where('task_id', '=', $request->task_id)
-                ->get();
+        $data = TaskChecklist::where('task_id', '=', $request->task_id)->get();
 
         return json_encode($data);
     }
@@ -291,7 +296,7 @@ class TaskController extends BaseController {
 
         $taskCheckList->update($data);
 
-        return json_encode($data);
+        return json_encode($taskCheckList);
     }
 
     public function deleteCheckList($id){
