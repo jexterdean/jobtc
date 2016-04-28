@@ -26,7 +26,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        
+
                         <div class="check-list-container">
                             <ul class="list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
@@ -65,17 +65,25 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-1">
-                <a href="#" class="btn btn-success btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> New </a><br/><br/>
-                <a href="#" class="btn btn-primary btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
-                <a href="#" class="btn btn-primary btn-sm btn-shadow add-notes-btn" style="display: none" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
+            <div class="col-sm-2">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <a href="#" class="btn btn-success btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> New </a><br/><br/>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="#" class="btn btn-primary btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
+                    </div>
+                    <div class="col-sm-4">
+                        @foreach($links as $val)
+                        <a href="{{ $val->url }}" target="_blank"><strong>{{ $val->title }}</strong></a><br/>
+                        @endforeach
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                @foreach($links as $val)
-                <a href="{{ $val->url }}" target="_blank"><strong>{{ $val->title }}</strong></a><br/>
-                @endforeach
+                <a href="#" class="btn btn-primary btn-sm btn-shadow add-notes-btn" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-7">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="col-sm-3">
@@ -244,8 +252,8 @@
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
-                
-            var data = _body.find('.task-form').serializeArray();
+
+                var data = _body.find('.task-form').serializeArray();
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
                     var ele = '';
@@ -281,10 +289,10 @@
                     .on('click', '.cancel-checklist', function () {
                         _this.removeClass('disabled');
                         _this.parent().find('.text-area-content').remove();
-                    }).on('click','.submit-checklist', function(){
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                    });
+                    }).on('click', '.submit-checklist', function () {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            });
         });
         //_body.on('click', '.update-checklist', function (e) {
         _body.on('click', '.checklist-item', function (e) {
@@ -327,7 +335,7 @@
 
             var data = _body.find('.task-form').serializeArray();
 
-            url = public_path +'/updateCheckList/' + tasklist_id;
+            url = public_path + '/updateCheckList/' + tasklist_id;
 
             $.post(url, data, function (_data) {
                 var _return_data = jQuery.parseJSON(_data);
