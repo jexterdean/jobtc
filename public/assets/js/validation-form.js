@@ -692,7 +692,7 @@ var Validate = function () {
             handleUser();
             handleChangePassword();
             handleProfile();
-            handleProject();
+            //handleProject();
             handleDatePickers();
             handleBug();
             handleItem();
@@ -702,7 +702,7 @@ var Validate = function () {
             handleAttachment();
             handleTicket();
             handleMessage();
-            handleTaks();
+            //handleTaks();
             handleBilling();
             handleInstall();
             handlePayment();
