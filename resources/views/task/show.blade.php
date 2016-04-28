@@ -288,7 +288,6 @@
         //_body.on('click', '.update-checklist', function (e) {
         _body.on('click', '.checklist-item', function (e) {
             e.preventDefault();
-
             //Get list item index
             var index = $(this).parent().parent().parent().parent().index();
 
@@ -327,7 +326,7 @@
 
             var data = _body.find('.task-form').serializeArray();
 
-            url = '/updateCheckList/' + tasklist_id;
+            url = public_path +'/updateCheckList/' + tasklist_id;
 
             $.post(url, data, function (_data) {
                 var _return_data = jQuery.parseJSON(_data);
