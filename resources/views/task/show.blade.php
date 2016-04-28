@@ -238,7 +238,7 @@
 
         /*region Check List*/
         _body.on('click', '.check-list-btn', function () {
-            var text_area_ele = '<li class="list-group-item text-area-content">';
+            var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
             text_area_ele += '<button class="btn btn-success btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
@@ -288,7 +288,7 @@
                 });
             }).on('click', '.cancel-checklist', function () {
                         _this.removeClass('disabled');
-                        $('.list-group-item li').eq(0).find('.text-area-content').remove();
+                        $('#add-new-task').remove();
                         //$('.text-area-content').remove();
                     });
         });
