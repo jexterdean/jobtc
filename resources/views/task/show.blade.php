@@ -67,13 +67,13 @@
         <div class="row">
             <div class="col-sm-2">
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <a href="#" class="btn btn-success btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> List Item </a><br/><br/>
                     </div>
                     <div class="col-sm-4">
                         <a href="#" class="btn btn-primary btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         @foreach($links as $val)
                         <a href="{{ $val->url }}" target="_blank"><strong>{{ $val->title }}</strong></a><br/>
                         @endforeach
