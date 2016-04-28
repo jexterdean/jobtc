@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Models\Note;
 use Input;
@@ -8,16 +9,19 @@ use DB;
 use Redirect;
 use Auth;
 
-class NoteController extends BaseController
+class NewNoteController extends BaseController
 {
 
     public function index()
     {
+        
     }
 
-    public function show()
+    public function show(){
+    }
+    public function showNotes()
     {
-
+        
     }
 
     public function create()

@@ -142,3 +142,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'v1'], function () {
     });
 });
+/*
+* New Note
+*/
+Route::get('newnote', 'NewNoteController@showNotes');
+

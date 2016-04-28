@@ -241,7 +241,7 @@ $(function(e){
                 var is_finished = val.is_finished ? 'checked' : '';
                     ele += '<li class="list-group-item">';
                         ele += '<label class="checkbox-inline checklist-label">';
-                            ele += '<input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="' + val.id + '" ' + is_finished + '>';
+                            ele += '<input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="' + val.id + '" ' + is_finished I.chck+ '>';
                         ele += val.checklist;
                         ele += '</label>';
                         ele += '<div class="pull-right">';

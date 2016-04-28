@@ -14,7 +14,6 @@ class AlterUsernameColumn extends Migration
     {
         //
         Schema::table('task', function (Blueprint $table) {
-
             //if (!Schema::hasColumn('user_id'))
             //{
                 $table->dropColumn('username');
