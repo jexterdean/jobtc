@@ -131,3 +131,36 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'v1'], function () {
     });
 });
+
+    /*
+    * New Note
+    */
+
+    //Route::get('newnote', 'NewNoteController@showNotes');                 ..should transfer to Controller
+    Route::get('newnote', function (){
+       $username = Auth::user()->username;
+       $matchThese = ['username' => $username, 'belongs_to' => $username];
+        if(Request::ajax()){
+            $notes = DB::table('newnote')
+                ->where($matchThese)
+                ->get();
+            return Response::json($notes);
+        }
+        return view('common/newnote');
+    });
+
+    Route::post('newnote', function (){
+        if(Request::ajax()){
+            if (Request::has('note_content')){
+                $updated_content = Request::input('note_content');
+                $editor = Auth::user()->username;
+                $matchThis = ['username' => $editor];
+                
+                DB::table('newnote')
+                ->where($matchThis)
+                ->update(['note_content' => $updated_content]);
+                return var_dump(Response::json(Request::all())); 
+            }
+            
+        }
+    });
