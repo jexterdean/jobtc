@@ -30,7 +30,7 @@
                             <ul class="list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $val)
-                                <li class="list-group-item">
+                                <li id="task_item_{{$val->id}}" class="list-group-item">
                                     <div class="row">
                                         <div class="col-md-2">                                            
                                             <input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}>
@@ -42,17 +42,11 @@
                                                 </div>
                                             </label>
                                         </div>                                            
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <div class="pull-right">
-                                        <!--a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a-->&nbsp;
                                                 <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                                 <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                                 <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <div class="pull-right">
-                                                <a href="#" class="draggable"><i class="fa fa-arrow-up" aria-hidden="true"></i><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -191,10 +185,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Add Task</h4>
             </div>
+    </div>
             <div class="modal-body">
             </div>
         </div>
-    </div>
 </div>
 <div class="modal fade" id="add_link" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
@@ -214,6 +208,16 @@
 </div>
 <script>
     $(function (e) {
+        
+        $('.list-group').sortable({
+            update: function(event,ui){
+                var task_list_id = $(this).find('.task_list_id').val();
+                var data = $(this).sortable('serialize');
+                var url = public_path + '/sortCheckList/' + task_list_id; 
+                $.post(url,data);
+            }
+        });
+        
         var _body = $('#collapse-' + '{{ $task->task_id }}');
         var task_id = '{{ $task->task_id }}';
         var alert_msg = function (msg, _class) {
@@ -277,7 +281,7 @@
                         ele += '</div>';
                         ele += '</label>';
                         ele += '</div>'; //col-md-7
-                        ele += '<div class="col-md-2">';
+                        ele += '<div class="col-md-3">';
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
                         ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
@@ -285,11 +289,6 @@
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>'; //pull-right
                         ele += '</div>'; //col-md-2
-                        ele += '<div class="col-md-1">';
-                        ele += '<div class="pull-right">';
-                        ele += '<a href="#" class="draggable"><i class="fa fa-arrow-up" aria-hidden="true"></i><i class="fa fa-arrow-down" aria-hidden="true"></i></a>';
-                        ele += '</div>';
-                        ele += '</div>';
                         ele += '</div>'; //row
                         ele += '</li>';
                     });
@@ -317,9 +316,10 @@
             var checklist_item = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
             var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var text_area_ele = '<div class="text-area-content">';
+            text_area_ele += '<div class="form-group">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
+            text_area_ele += '</div>'; //form-group
             text_area_ele += '<button class="btn btn-success btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
-            //text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
             text_area_ele += '</div>';
 
             checklist_item

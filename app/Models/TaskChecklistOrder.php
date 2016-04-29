@@ -4,19 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TaskChecklist extends Model
+class TaskChecklistOrder extends Model
 {
     //
 
     protected $fillable = [
-        'id',
         'task_id',
-        'user_id',
-        'checklist',
-        'is_finished',
-        'position'
+        'task_id_order'
     ];
 
     protected $primaryKey = 'id';
-    protected $table = 'task_check_list';
+    protected $table = 'task_check_list_order';
 }

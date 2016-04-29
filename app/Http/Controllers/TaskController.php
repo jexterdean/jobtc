@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\TaskTimer;
 use App\Models\TaskChecklist;
+use App\Models\TaskChecklistOrder;
 use App\Models\Link;
 use App\Models\LinkCategory;
 use View;
@@ -72,17 +73,17 @@ class TaskController extends BaseController {
         //
         $task = [];
         $user_type = 1;//Auth::user('user')->user_type;
-        //if (parent::userHasRole('Admin')) {
-        if ($user_type === 1 || $user_type === 2 || $user_type === 3) { 
+        if (parent::userHasRole('Admin')) {
             $task = Task::find($id);
         } elseif (parent::userHasRole('Client')) {
+            
+            
             $task = DB::table('task')
                     //->join('user', 'user.client_id', '=', 'task.client_id')
                     ->where('user_id', '=', Auth::user('user')->user_id)
                     ->where('task_id', '=', $id)
                     ->first();
-        //} elseif (parent::userHasRole('Staff')) {
-        } elseif ($user_type === 4) {
+        } elseif (parent::userHasRole('Staff')) {
             $task = DB::table('task')
                     ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                     ->where('belongs_to', '=', 'project')
@@ -113,8 +114,19 @@ class TaskController extends BaseController {
                 ->where('task_timer.task_id', '=', $id)
                 ->where('task_timer.end_time', '=', '0000-00-00 00:00:00')
                 ->first();
-
-        $checkList = TaskChecklist::where('task_id', '=', $id)->get();
+        
+        //Check if there is an entry in the taskchecklist order table
+        $task_order_count = TaskChecklistOrder::where('task_id',$id)->count();
+        
+        if ($task_order_count > 0) {
+            $task_order = TaskChecklistOrder::where('task_id',$id)->first();
+            $checkList = TaskChecklist::where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,'.$task_order->task_id_order.')'))->get();
+        } else {
+            $task_order = TaskChecklistOrder::where('task_id',$id)->first();
+            $checkList = TaskChecklist::where('task_id', '=', $id)->get();
+        }
+        
+        
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
         $finish_checklist = TaskChecklist::where('is_finished', '=', 1)->where('task_id', '=', $id)->count();
         $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
@@ -289,6 +301,32 @@ class TaskController extends BaseController {
         return json_encode($data);
     }
 
+    public function sortCheckList(Request $request,$id) {
+        
+       $taskCheckListOrder = new TaskChecklistOrder();
+       
+       $task_list_id_array = '"'.implode("\",\"",$request->get('task_item')).'"';
+       
+       $task_list_id_count = TaskChecklistOrder::where('task_id',$id)->count();
+       
+       
+       if($task_list_id_count > 0) {
+           
+           $taskCheckListOrder->where('task_id',$id)->update([
+               'task_id_order' => $task_list_id_array
+           ]);
+           
+       } else {
+           
+           $taskCheckListOrder->task_id = $id;
+           $taskCheckListOrder->task_id_order = $task_list_id_array;
+           $taskCheckListOrder->save();
+       }
+       
+       return json_encode($task_list_id_array); 
+    }
+    
+    
     public function updateCheckList(Request $request, $id){
         $taskCheckList = TaskChecklist::find($id);
         $data = $request->all();
