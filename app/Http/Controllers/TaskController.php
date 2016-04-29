@@ -305,10 +305,11 @@ class TaskController extends BaseController {
         
        $taskCheckListOrder = new TaskChecklistOrder();
        
+       //Turn list of task item ids into a string
        $task_list_id_array = '"'.implode("\",\"",$request->get('task_item')).'"';
        
+       //Check if the task id has an ordering list
        $task_list_id_count = TaskChecklistOrder::where('task_id',$id)->count();
-       
        
        if($task_list_id_count > 0) {
            
