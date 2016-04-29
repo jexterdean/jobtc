@@ -26,7 +26,6 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-
                         <div class="check-list-container">
                             <ul class="list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
@@ -47,7 +46,13 @@
                                             <div class="pull-right">
                                         <!--a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a-->&nbsp;
                                                 <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                                <input type="hidden" class="task_list_id" value="{{$val->id}}" />
+                                                <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="pull-right">
+                                                <a href="#" class="draggable"><i class="fa fa-arrow-up" aria-hidden="true"></i><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -272,13 +277,19 @@
                         ele += '</div>';
                         ele += '</label>';
                         ele += '</div>'; //col-md-7
-                        ele += '<div class="col-md-3">';
+                        ele += '<div class="col-md-2">';
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
                         ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_item_id" value="'+val.id+'">';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>'; //pull-right
-                        ele += '</div>'; //col-md-3
+                        ele += '</div>'; //col-md-2
+                        ele += '<div class="col-md-1">';
+                        ele += '<div class="pull-right">';
+                        ele += '<a href="#" class="draggable"><i class="fa fa-arrow-up" aria-hidden="true"></i><i class="fa fa-arrow-down" aria-hidden="true"></i></a>';
+                        ele += '</div>';
+                        ele += '</div>';
                         ele += '</div>'; //row
                         ele += '</li>';
                     });
@@ -294,11 +305,16 @@
         //_body.on('click', '.update-checklist', function (e) {
         _body.on('click', '.checklist-item', function (e) {
             e.preventDefault();
+            
             //Get list item index
             var index = $(this).parent().parent().parent().parent().index();
-
-            var checklist_label = $('.alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
-            var checklist_item = $('.alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+            //Get the list group id
+            var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
+            
+            var task_list_id = $('#' +list_group_id+' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_id').val();
+            
+            var checklist_label = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
+            var checklist_item = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
             var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
@@ -321,16 +337,22 @@
         _body.on('click', '.update-checklist', function (e) {
             //e.preventDefault();
             e.stopImmediatePropagation();
-
-            var index = $(this).parent().parent().parent().parent().parent().index();
-
-            var checklist_item = $('.alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
             
-            var tasklist_id = $('.checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_id').val();
+            //Get list item index
+            var index = $(this).parent().parent().parent().parent().parent().index();
+            
+            //Get the list group id
+            var list_group_id = $(this).parent().parent().parent().parent().parent().parent().attr('id');
+            
+            //Get checklist item with the list group id
+            var checklist_item = $('#'+list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+
+            //Get task item id
+            var task_list_item_id = $('#'+list_group_id+' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_item_id').val();
 
             var data = _body.find('.task-form').serializeArray();
 
-            url = public_path + '/updateCheckList/' + tasklist_id;
+            url = public_path + '/updateCheckList/' + task_list_item_id;
 
             $.post(url, data, function (_data) {
                 var _return_data = jQuery.parseJSON(_data);
@@ -351,11 +373,14 @@
 
             var index = $(this).parent().parent().parent().parent().index();
 
-            var tasklist_id = $(this).siblings('.task_list_id').val();
+            var task_list_item_id = $(this).siblings('.task_list_item_id').val();
             
-            $('.list-group li').eq(index).remove();
+            //Get the list group id
+            var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
+            
+            $('#'+list_group_id+' li').eq(index).remove();
 
-            var url = public_path + 'deleteCheckList/' + tasklist_id;
+            var url = public_path + 'deleteCheckList/' + task_list_item_id;
 
             $.post(url);
 
