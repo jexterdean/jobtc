@@ -258,7 +258,6 @@
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
                     var ele = '';
-                    alert_msg('Successfully added checklist!!', 'alert-success');
                     $.each(_return_data, function (index, val) {
                         var is_finished = val.is_finished ? 'checked' : '';
                         ele += '<li class="list-group-item">';
@@ -276,9 +275,9 @@
                         ele += '<div class="col-md-3">';
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
-                        ele += '<a href="/deleteCheckList/' + val.id + '" class="alert_delete"><i class="glyphicon glyphicon-trash glyphicon-lg"></i></a>';
+                        ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
-                        ele += '</div>';
+                        ele += '</div>'; //pull-right
                         ele += '</div>'; //col-md-3
                         ele += '</div>'; //row
                         ele += '</li>';
