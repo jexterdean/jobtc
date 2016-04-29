@@ -46,7 +46,7 @@
                                         <div class="col-md-2">
                                             <div class="pull-right">
                                         <!--a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a-->&nbsp;
-                                                <a href="{{ url('deleteCheckList/' . $val->id ) }}" class="alert_delete"><i class="glyphicon glyphicon-lg glyphicon-trash"></i></a>
+                                                <a href="#" class="alert_delete"><i class="glyphicon glyphicon-lg glyphicon-trash"></i></a>
                                                 <input type="hidden" class="task_list_id" value="{{$val->id}}" />
                                             </div>
                                         </div>
@@ -287,10 +287,10 @@
                     _this.removeAttr('disabled');
                 });
             }).on('click', '.cancel-checklist', function () {
-                        _this.removeClass('disabled');
-                        $('#add-new-task').remove();
-                        //$('.text-area-content').remove();
-                    });
+                _this.removeClass('disabled');
+                $('#add-new-task').remove();
+                //$('.text-area-content').remove();
+            });
         });
         //_body.on('click', '.update-checklist', function (e) {
         _body.on('click', '.checklist-item', function (e) {
@@ -312,9 +312,9 @@
                     .before(text_area_ele);
 
             _body.on('click', '.cancel-checklist', function () {
-                        $('.text-area-content').remove();
-                        checklist_item.removeAttr('style');
-                    });
+                $('.text-area-content').remove();
+                checklist_item.removeAttr('style');
+            });
 
 
         });
@@ -326,7 +326,7 @@
             var index = $(this).parent().parent().parent().parent().parent().index();
 
             var checklist_item = $('.alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
-
+            
             var tasklist_id = $('.checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_id').val();
 
             var data = _body.find('.task-form').serializeArray();
@@ -344,6 +344,22 @@
                         .html(ele);
 
             });
+        });
+
+
+        _body.on('click', '.alert_delete', function (e) {
+            e.preventDefault();
+
+            var index = $(this).parent().parent().parent().parent().index();
+
+            var tasklist_id = $(this).siblings('.task_list_id').val();
+            
+            $('.list-group li').eq(index).remove();
+
+            var url = public_path + 'deleteCheckList/' + tasklist_id;
+
+            $.post(url);
+
         });
 
         _body.on('click', '.checklist-label,.checklist-checkbox,.iCheck-helper', function (e) {
