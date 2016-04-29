@@ -46,7 +46,7 @@
                                         <div class="col-md-2">
                                             <div class="pull-right">
                                         <!--a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a-->&nbsp;
-                                                <a href="#" class="alert_delete"><i class="glyphicon glyphicon-lg glyphicon-trash"></i></a>
+                                                <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                                 <input type="hidden" class="task_list_id" value="{{$val->id}}" />
                                             </div>
                                         </div>
