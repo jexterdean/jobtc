@@ -10,21 +10,6 @@
     </a>
 </li>
 @endrole
-@if(!Auth::user()->is('staff'))
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle">
-            <i class="fa fa-tablet"></i>
-            <span>{{ Lang::get('messages.Billing')}} </span>
-            <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li><a href="{{ url('billing/estimate') }}"><i
-                            class="fa fa-file-o"></i> {{Lang::get('messages.Estimate')}}</a></li>
-            <li><a href="{{ url('billing/invoice') }}"><i
-                            class="fa fa-file-text-o"></i> {{Lang::get('messages.Invoice')}}</a></li>
-        </ul>
-    </li>
-
-@endif
 <li>
     <a href="{{ url('project') }}">
         <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>

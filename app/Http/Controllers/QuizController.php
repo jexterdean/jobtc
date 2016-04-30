@@ -28,7 +28,7 @@ class QuizController extends BaseController
     public function index()
     {
         $data = [
-            'assets' => ['waiting'],
+            'assets' => ['input-mask', 'waiting'],
             'page' => 'add'
         ];
         $this->setData($data);
@@ -102,20 +102,25 @@ class QuizController extends BaseController
             $test->save();
 
             if (Input::file('test_photo')) {
+                $photo_dir = public_path() . '/assets/img/test/';
+                if(!is_dir($photo_dir)){
+                    mkdir($photo_dir, 0777, TRUE);
+                }
+
                 $extension = Input::file('test_photo')->getClientOriginalExtension();
                 $fileName = $test->id . "." . $extension;
-                Input::file('test_photo')->move(public_path() . '/assets/img/test/', $fileName);
+                Input::file('test_photo')->move($photo_dir, $fileName);
 
                 DB::table('test')
                     ->where('id', '=', $test->id)
                     ->update(['test_photo' => $fileName]);
             }
-
             $t = Input::get('question_type_id');
             $q = Input::get('question');
             $c = Input::has('question_choices') ? Input::get('question_choices') : array();
             $a = Input::has('question_answer') ? Input::get('question_answer') : array();
             $l = Input::get('length');
+            $p = Input::get('points');
             if (count($t) > 0) {
                 $order = 1;
                 foreach ($t as $k => $i) {
@@ -125,9 +130,25 @@ class QuizController extends BaseController
                     $question->question = array_key_exists($k, $q) ? $q[$k] : '';
                     $question->question_choices = array_key_exists($k, $c) ? json_encode($c[$k]) : '[]';
                     $question->question_answer = array_key_exists($k, $a) ? $a[$k] : '';
-                    $question->length = array_key_exists($k, $l) ? $l[$k] : '';
+                    $question->length = array_key_exists($k, $l) ? '00:' . $l[$k] : '';
+                    $question->points = array_key_exists($k, $p) ? $p[$k] : 1;
                     $question->order = $order;
                     $question->save();
+
+                    if (Input::file('question_photo_' . $k)) {
+                        $photo_dir = public_path() . '/assets/img/question/';
+                        if(!is_dir($photo_dir)){
+                            mkdir($photo_dir, 0777, TRUE);
+                        }
+
+                        $extension = Input::file('question_photo_' . $k)->getClientOriginalExtension();
+                        $fileName = $question->id . "." . $extension;
+                        Input::file('question_photo_' . $k)->move($photo_dir, $fileName);
+
+                        DB::table('question')
+                            ->where('id', '=', $question->id)
+                            ->update(['question_photo' => $fileName]);
+                    }
 
                     $order++;
                 }
@@ -165,6 +186,7 @@ class QuizController extends BaseController
             ->first();
         $questions_info = DB::table('question')
             ->where('test_id', '=', $id)
+            ->orderBy('order', 'ASC')
             ->get();
         if(count($questions_info) > 0){
             foreach($questions_info as $v){
@@ -187,7 +209,7 @@ class QuizController extends BaseController
     public function edit($id)
     {
         $data = [
-            'assets' => ['waiting'],
+            'assets' => ['input-mask', 'waiting'],
             'page' => 'edit'
         ];
         $this->setData($data);
@@ -197,6 +219,7 @@ class QuizController extends BaseController
             ->first();
         $questions_info = DB::table('question')
             ->where('test_id', '=', $id)
+            ->orderBy('order', 'ASC')
             ->get();
         $data['tests_info'] = $tests_info;
         $data['questions_info'] = $questions_info;
@@ -240,9 +263,14 @@ class QuizController extends BaseController
             $test->save();
 
             if (Input::file('test_photo')) {
+                $photo_dir = public_path() . '/assets/img/test/';
+                if(!is_dir($photo_dir)){
+                    mkdir($photo_dir, 0777, TRUE);
+                }
+
                 $extension = Input::file('test_photo')->getClientOriginalExtension();
                 $fileName = $test->id . "." . $extension;
-                Input::file('test_photo')->move(public_path() . '/assets/img/test/', $fileName);
+                Input::file('test_photo')->move($photo_dir, $fileName);
 
                 DB::table('test')
                     ->where('id', '=', $test->id)
@@ -254,6 +282,7 @@ class QuizController extends BaseController
             $c = Input::has('question_choices') ? Input::get('question_choices') : array();
             $a = Input::has('question_answer') ? Input::get('question_answer') : array();
             $l = Input::get('length');
+            $p = Input::get('points');
 
             //region Delete Question that has been remove
             $qIds = array_filter(array_keys($t), function ($id) {
@@ -283,9 +312,26 @@ class QuizController extends BaseController
                     $question->question = array_key_exists($k, $q) ? $q[$k] : '';
                     $question->question_choices = array_key_exists($k, $c) ? json_encode($c[$k]) : '[]';
                     $question->question_answer = array_key_exists($k, $a) ? $a[$k] : '';
-                    $question->length = array_key_exists($k, $l) ? $l[$k] : '';
+                    $question->length = array_key_exists($k, $l) ? '00:' . $l[$k] : '';
+                    $question->points = array_key_exists($k, $p) ? $p[$k] : 1;
                     $question->order = $order;
                     $question->save();
+
+                    $file_key = 'question_photo_' . $k;
+                    if (Input::file($file_key)) {
+                        $photo_dir = public_path() . '/assets/img/question/';
+                        if(!is_dir($photo_dir)){
+                            mkdir($photo_dir, 0777, TRUE);
+                        }
+
+                        $extension = Input::file($file_key)->getClientOriginalExtension();
+                        $fileName = $question->id . "." . $extension;
+                        Input::file($file_key)->move($photo_dir, $fileName);
+
+                        DB::table('question')
+                            ->where('id', '=', $question->id)
+                            ->update(['question_photo' => $fileName]);
+                    }
 
                     $order++;
                 }
