@@ -7,6 +7,8 @@ use App\Http\Controllers\BaseController;
 use App\Models\Country;
 use App\Models\Client;
 use App\Models\Ticket;
+use App\Models\User;
+use App\Models\Project;
 
 use Entrust;
 use View;
@@ -111,15 +113,15 @@ class ClientController extends BaseController
         return Redirect::to('client')->withSuccess("Client updated successfully!!");
     }
 
-    public function destroy()
+    public function delete()
     {
     }
 
-    public function delete($client_id)
+    public function destroy($client_id)
     {
         $client = Client::find($client_id);
 
-        if (!$client || !Entrust::hasRole('Admin'))
+        if (!$client || !parent::hasRole('Admin'))
             return Redirect::to('client')->withErrors('This is not a valid link!!');
 
         $user = User::find($client_id);

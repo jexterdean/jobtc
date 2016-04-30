@@ -16,13 +16,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="client_edit" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="client_show" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -47,9 +40,9 @@
                 $DATA = array();
                 $QA = array();
                 foreach ($clients as $client) {
-                    $linkToEdit = "<a href='client/$client->id/edit' data-toggle='modal' data-target='#client_edit'> <i class='fa fa-2x fa-edit'></i> </a>";
-                    $linkToView = "<a href='client/$client->id' data-toggle='modal' data-target='#client_show'> <i class='fa fa-2x fa-external-link'></i> </a>";
-                    $linkToDelete = "<a href='client/$client->id/delete' class='alert_delete'> <i class='fa fa-2x fa-trash-o'></i> </a>";
+                    $linkToEdit = "<a href='". route('client.edit', $client->client_id). "' data-toggle='modal' data-target='#client_edit'> <i class='fa fa-2x fa-edit'></i> </a>";
+                    $linkToView = "<a href='". route('client.show', $client->client_id). "' data-toggle='modal' data-target='#client_show'> <i class='fa fa-2x fa-external-link'></i> </a>";
+                    $linkToDelete = "<a href='". route('client.destroy', $client->client_id). "' class='alert_delete'> <i class='fa fa-2x fa-trash-o'></i> </a>";
                     $Option = "$linkToView <span class=hspacer></span> $linkToEdit <span class=hspacer></span> $linkToDelete";
                     $QA[] = array($client->company_name, $client->contact_person, $client->email, isset($countries[$client->country_id]) ? $countries[$client->country_id] : '', $Option);
                 }

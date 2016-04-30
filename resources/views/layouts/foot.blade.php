@@ -182,7 +182,7 @@
         });
     });
 
-    $(document).on("click", ".alert_delete", function (e) {
+    /*$(document).on("click", ".alert_delete", function (e) {
         var link = $(this).attr("href");
 
         e.preventDefault();
@@ -195,7 +195,7 @@
 //                document.location.href = link;
             }
         });
-    });
+    });*/
 
     @if(in_array('calendar',$assets))
     $(function () {

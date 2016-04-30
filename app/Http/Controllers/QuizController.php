@@ -109,7 +109,9 @@ class QuizController extends BaseController
 
                 $extension = Input::file('test_photo')->getClientOriginalExtension();
                 $fileName = $test->id . "." . $extension;
+
                 Input::file('test_photo')->move($photo_dir, $fileName);
+                Input::file('test_photo')->move('/assets/img/test/', $fileName);
 
                 DB::table('test')
                     ->where('id', '=', $test->id)
