@@ -68,7 +68,7 @@
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             {!!  Form::hidden('billing_type',$data['billing_type'])  !!}
-            {!!  Form::submit(isset($buttonText) ? $buttonText : 'Save',['class' => 'btn btn-primary',
+            {!!  Form::submit(isset($buttonText) ? $buttonText : 'Save',['class' => 'btn btn-edit',
             'tabindex'
             => '10'])  !!}
         </div>

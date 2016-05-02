@@ -51,13 +51,15 @@ script.code {
                 <div class="col-sm-6">
                     <pre>
                        <script class="code" type="text/plain">
-<div class="box box-primary">
-    <div class="box-header">
-        <h3 class="box-title">Box Title</h3>
-    </div>
-    <div class="box-body">
-        <div class="box-content">
-            This is a box body
+<div class="box box-default">
+    <div class="box-container">
+        <div class="box-header">
+            <h3 class="box-title">Box Title</h3>
+        </div>
+        <div class="box-body">
+            <div class="box-content">
+                This is a box body
+            </div>
         </div>
     </div>
 </div>
@@ -67,12 +69,14 @@ script.code {
                 <div class="col-sm-6">
                     <label>box-default</label>
                     <div class="box box-default">
-                        <div class="box-header">
-                            <h3 class="box-title">Box Title</h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="box-content">
-                                This is a box body
+                        <div class="box-container">
+                            <div class="box-header">
+                                <h3 class="box-title">Box Title</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="box-content">
+                                    This is a box body
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -178,10 +182,10 @@ script.code {
                             <div class="col-sm-6">
                             <pre>
             <script class="code" type="text/plain">
-            <div class="progress-custom">
-                <span class="progress-val">50%</span>
-                <span class="progress-bar-custom"><span class="progress-in" style="width: 50%"></span></span>
-            </div></script>
+<div class="progress-custom">
+    <span class="progress-val">50%</span>
+    <span class="progress-bar-custom"><span class="progress-in" style="width: 50%"></span></span>
+</div></script>
                             </pre>
                             </div>
                             <div class="col-sm-6">

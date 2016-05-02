@@ -46,7 +46,7 @@
     <div class="form-group">
         <label class="col-md-3"></label>
         <div class="col-md-9">
-        {!!  Form::submit('Submit',['class' => 'btn btn-primary'])  !!}
+        {!!  Form::submit('Submit',['class' => 'btn btn-edit'])  !!}
         </div>
     </div>
 </div>
