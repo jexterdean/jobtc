@@ -34,8 +34,8 @@ class TaskController extends BaseController {
     public function index() {
 
         $user_type = Auth::user('user')->user_type;
-        //if (parent::hasRole('staff')) {
-        if ($user_type === 4) {
+        if (parent::hasRole('staff')) {
+        //if ($user_type === 4) {
 
             $tasks = Task::where('username', '=', Auth::user('user')->email)
                     ->orderBy('created_at', 'desc')
@@ -128,7 +128,7 @@ class TaskController extends BaseController {
         
         
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
-        $finish_checklist = TaskChecklist::where('is_finished', '=', 1)->where('task_id', '=', $id)->count();
+        $finish_checklist = TaskChecklist::where('status', '=', 'Completed')->where('task_id', '=', $id)->count();
         $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
         $links = Link::select('links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'link_categories.name as category_name')
                 ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
@@ -331,7 +331,8 @@ class TaskController extends BaseController {
     public function updateCheckList(Request $request, $id){
         $taskCheckList = TaskChecklist::find($id);
         $data = $request->all();
-        $data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
+        //$data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
+        
 
         $taskCheckList->update($data);
 

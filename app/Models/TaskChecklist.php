@@ -13,8 +13,7 @@ class TaskChecklist extends Model
         'task_id',
         'user_id',
         'checklist',
-        'is_finished',
-        'position'
+        'status'
     ];
 
     protected $primaryKey = 'id';

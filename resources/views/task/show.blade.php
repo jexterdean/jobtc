@@ -29,7 +29,15 @@
                                     <div class="row">
                                         <div class="col-md-2">                                            
                                             <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
-                                            <div class="btn bg-gray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            @if ($val->status === 'Default')
+                                            <div class="btn bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            @elseif($val->status === 'Ongoing')
+                                            <div class="btn bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            @elseif($val->status === 'Completed')
+                                            <div class="btn bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            @elseif($val->status === 'Urgent')
+                                            <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            @endif
                                         </div>
                                         <div class="col-md-7">
                                             <label class="checkbox-inline checklist-label">
@@ -181,10 +189,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Add Task</h4>
             </div>
-    </div>
-            <div class="modal-body">
-            </div>
         </div>
+        <div class="modal-body">
+        </div>
+    </div>
 </div>
 <div class="modal fade" id="add_link" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
@@ -204,39 +212,35 @@
 </div>
 <script>
     $(function (e) {
-        
-        
-        
+
         //For Draggability
         $('.list-group').sortable({
-            update: function(event,ui){
+            update: function (event, ui) {
                 var task_list_id = $(this).find('.task_list_id').val();
                 var data = $(this).sortable('serialize');
-                var url = public_path + '/sortCheckList/' + task_list_id; 
-                $.post(url,data);
+                var url = public_path + '/sortCheckList/' + task_list_id;
+                $.post(url, data);
             }
         });
-        
+
         //For Delete Hover
-       $('.list-group .alert_delete').hover(function(e){
+        $('.list-group .alert_delete').hover(function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-           var index = $(this).parent().parent().parent().parent().index();
-           var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
-           
-           $('#'+checklist_item_id+' li:eq('+index+')').css('border','1px solid #ff0000');
-           
-       },function(e){
-           e.preventDefault();
+            var index = $(this).parent().parent().parent().parent().index();
+            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
+
+            $('#' + checklist_item_id + ' li:eq(' + index + ')').css('border', '1px solid #ff0000');
+
+        }, function (e) {
+            e.preventDefault();
             e.stopImmediatePropagation();
-           var index = $(this).parent().parent().parent().parent().index();
-           var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
-           
-           $('#'+checklist_item_id+' li:eq('+index+')').css('border','1px solid #ddd');
-       }); 
-       
-       
-        
+            var index = $(this).parent().parent().parent().parent().index();
+            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
+
+            $('#' + checklist_item_id + ' li:eq(' + index + ')').css('border', '1px solid #ddd');
+        });
+
         var _body = $('#collapse-' + '{{ $task->task_id }}');
         var task_id = '{{ $task->task_id }}';
         var alert_msg = function (msg, _class) {
@@ -250,9 +254,9 @@
         var finish_checklist = function () {
             var count = 0;
             var over_all = 0;
-            _body.find('.checklist-checkbox').each(function () {
+            _body.find('.checklist-status').each(function () {
                 over_all++;
-                if ($(this).is(':checked')) {
+                if ($(this).hasClass('bg-green')) {
                     count++;
                 }
             });
@@ -264,7 +268,58 @@
             _body.find('.progress-val').html(_percentage.toFixed(2) + '%');
         };
 
+        var update_checklist_status = function (id,status) {
+
+            var data = [];
+            data.push(
+                    {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+            {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
+            {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+            {'name': 'status', 'value': status}
+            );
+
+            $.post(public_path + 'updateCheckList/' + id, data, function (e) {
+            });
+
+        };
+
         /*region Check List*/
+        //For Checklist Status
+        $('.checklist-status').click(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var index = $(this).parent().parent().parent().index();
+            var id = $(this).parent().siblings().find('.task_list_item_id').val();
+
+            /*From Default, Change to ongoing*/
+            if ($(this).hasClass('bg-gray')) {
+                $(this).switchClass('bg-gray', 'bg-orange',function(){
+                    update_checklist_status(id,'Ongoing');
+                });
+            }
+            /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
+            if ($(this).hasClass('bg-orange')) {
+                $(this).switchClass('bg-orange', 'bg-green', function () {
+                    finish_checklist();
+                    update_checklist_status(id,'Completed');
+                });
+            }
+            /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
+            if ($(this).hasClass('bg-green')) {
+                $(this).switchClass('bg-green', 'bg-red', function () {
+                    finish_checklist();
+                    update_checklist_status(id,'Urgent');
+                });
+            }
+            /*From Urgent, Change to back to Default*/
+            if ($(this).hasClass('bg-red')) {
+                $(this).switchClass('bg-red', 'bg-gray',function(){
+                    update_checklist_status(id,'Default');
+                });
+            }
+        });
+
         _body.on('click', '.check-list-btn', function () {
             var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
@@ -287,11 +342,11 @@
                     var _return_data = jQuery.parseJSON(d);
                     var ele = '';
                     $.each(_return_data, function (index, val) {
-                        var is_finished = val.is_finished ? 'checked' : '';
+                        var status = val.status;
                         ele += '<li class="list-group-item">';
                         ele += '<div class="row">';
                         ele += '<div class="col-md-2">';
-                        ele += '<input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="' + val.id + '" ' + is_finished + '>';
+                        ele += '<div class="btn bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
                         ele += '</div>'; //col-md-2
                         ele += '<div class="col-md-7">';
                         ele += '<label class="checkbox-inline checklist-label">';
@@ -304,7 +359,7 @@
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
                         ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="'+val.id+'">';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>'; //pull-right
                         ele += '</div>'; //col-md-2
@@ -324,16 +379,16 @@
         _body.on('click', '.checklist-item', function (e) {
             //Prevents default behavior
             e.preventDefault();
-            
+
             //Get list item index
             var index = $(this).parent().parent().parent().parent().index();
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
-            
-            var task_list_id = $('#' +list_group_id+' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_id').val();
-            
-            var checklist_label = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
-            var checklist_item = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+
+            var task_list_id = $('#' + list_group_id + ' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_id').val();
+
+            var checklist_label = $('#' + list_group_id + ' .alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
+            var checklist_item = $('#' + list_group_id + ' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
             //var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var _text = checklist_label.text();
             var text_area_ele = '<div class="text-area-content">';
@@ -351,28 +406,26 @@
                 $('.text-area-content').remove();
                 checklist_item.removeAttr('style');
             });
-            
-            //$('#'+list_group_id+' .checklist-item').find('textarea').wysihtml5();
-            
-            $('#'+list_group_id+' li').eq(index).find('textarea').wysihtml5();
-            
+
+            $('#' + list_group_id + ' li').eq(index).find('textarea').wysihtml5();
+
         });
 
         _body.on('click', '.update-checklist', function (e) {
             //Stops multiple calls to the this event
             e.stopImmediatePropagation();
-            
+
             //Get list item index
             var index = $(this).parent().parent().parent().parent().parent().index();
-            
+
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().parent().parent().attr('id');
-            
+
             //Get checklist item with the list group id
-            var checklist_item = $('#'+list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+            var checklist_item = $('#' + list_group_id + ' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
 
             //Get task item id
-            var task_list_item_id = $('#'+list_group_id+' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_item_id').val();
+            var task_list_item_id = $('#' + list_group_id + ' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_item_id').val();
 
             var data = _body.find('.task-form').serializeArray();
 
@@ -398,11 +451,11 @@
             var index = $(this).parent().parent().parent().parent().index();
 
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-            
+
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
-            
-            $('#'+list_group_id+' li').eq(index).remove();
+
+            $('#' + list_group_id + ' li').eq(index).remove();
 
             var url = public_path + 'deleteCheckList/' + task_list_item_id;
 
@@ -410,22 +463,22 @@
 
         });
 
-        _body.on('click', '.checklist-label,.checklist-checkbox,.iCheck-helper', function (e) {
-            finish_checklist();
-            var checkbox = $(this).parent().parent().find('.checklist-checkbox');
-            var _id = checkbox.attr('id');
-            var data = [];
-            data.push(
-                    {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
-            {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-            {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()}
-            );
-            if (checkbox.is(':checked')) {
-                data.push({'name': 'is_finished', 'value': checkbox.val()});
-            }
-            $.post(public_path + 'updateCheckList/' + _id, data, function (e) {
-            });
-        });
+        /*_body.on('click', '.checklist-label,.checklist-status,.iCheck-helper', function (e) {
+         finish_checklist();
+         var checkbox = $(this).parent().parent().find('.checklist-checkbox');
+         var _id = checkbox.attr('id');
+         var data = [];
+         data.push(
+         {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+         {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
+         {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()}
+         );
+         if (checkbox.is(':checked')) {
+         data.push({'name': 'is_finished', 'value': checkbox.val()});
+         }
+         $.post(public_path + 'updateCheckList/' + _id, data, function (e) {
+         });
+         });*/
         /*endregion*/
         /*region Timer*/
         var element = _body.find('.timer-text');
