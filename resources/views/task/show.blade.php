@@ -27,7 +27,7 @@
                                 @foreach($checkList as $val)
                                 <li id="task_item_{{$val->id}}" class="list-group-item">
                                     <div class="row">
-                                        <div class="col-md-2">                                            
+                                        <div class="col-md-1">                                            
                                             <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
                                             @if ($val->status === 'Default')
                                             <div class="btn bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
@@ -38,6 +38,9 @@
                                             @elseif($val->status === 'Urgent')
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
+                                        </div>
+                                        <div class="col-md-1">
+                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-item.png') }}'/>
                                         </div>
                                         <div class="col-md-7">
                                             <label class="checkbox-inline checklist-label">
@@ -215,6 +218,7 @@
 
         //For Draggability
         $('.list-group').sortable({
+            handle: '.drag-handle',
             update: function (event, ui) {
                 var task_list_id = $(this).find('.task_list_id').val();
                 var data = $(this).sortable('serialize');
