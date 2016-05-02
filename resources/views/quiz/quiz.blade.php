@@ -1,61 +1,80 @@
-<div class="row">
+<div class="row test-area">
+    <div class="col-md-8">
+        @include('quiz.' . $page)
+    </div>
     <div class="col-md-4">
-        <div class="box box-solid box-success">
+        <div class="box box-default">
             <div class="box-header">
-                <h3 class="box-title">Test Library</h3>
+                <h3 class="box-title" style="width: 80%;" data-toggle="collapse" data-target="#test-library">Test Library</h3>
                 <div class="box-tools pull-right">
-                    <a href="{{ url('quiz') }}" class="btn btn-primary">
+                    <a href="{{ url('quiz') }}" class="btn btn-success">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>
             </div>
-            <div class="box-body">
-                @foreach($test as $v)
-                <div class="media">
-                    <div class="media-left">
-                        {!! HTML::image('/assets/img/test/' . $v->test_photo, '', array('style' => 'width: 64px;max-width: 64px!important;')) !!}
-                    </div>
-                    <div class="media-body">
-                        <h4 class="media-heading">{{ $v->title }}</h4>
-                        <strong>Number of Question:</strong> {{ $v->num_question }}<br />
+            <div class="box-body collapse in" id="test-library">
+                <?php
+                foreach($test as $v){
+                    $len = strlen($v->description);
+                    $max = 90;
+                    ?>
+                    <div class="media">
+                        <div class="media-left hidden">
+                            {!! HTML::image('/assets/img/test/' . $v->test_photo, '', array('style' => 'width: 64px;max-width: 64px!important;')) !!}
+                        </div>
+                        <div class="media-body">
+                            <h3 class="media-heading">{{ $v->title }}</h3>
+                            <em class="description-area">
+                            {{ substr($v->description, 0, $max) }}
+                            @if($len > $max)
+                                <span class="read-more collapse">
+                                {{ substr($v->description, $max, $len) }}
+                                </span>
+                                <a href="#" class="read-more-btn">[Read More]</a>
+                            @endif
+                            </em>
+                            <br />
+                            Question: {{ $v->num_question }}<br />
 
-                        <a href="{{ url('quiz/' . $v->id) }}" class="btn btn-default">
-                            <i class="fa fa-eye"></i>
-                        </a>
-                        <a href="{{ url('quiz/' . $v->id . '/edit') }}" class="btn btn-default">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <button class="btn btn-danger test-delete-btn" id="{{ $v->id }}">
-                            <i class="fa fa-trash-o"></i>
-                        </button>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <a href="{{ url('quiz/' . $v->id) }}" class="btn btn-default">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </div>
+                                <div class="col-sm-2">
+                                    <a href="{{ url('quiz/' . $v->id . '/edit') }}" class="btn btn-warning">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-danger test-delete-btn" id="{{ $v->id }}">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
                     </div>
-                </div>
-                @endforeach
+                    <?php
+                }
+                ?>
             </div>
         </div>
     </div>
-    <div class="col-md-8">
-        @include('quiz.' . $page)
-    </div>
 </div>
 
-<div class="modal fade deleteModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Delete Test</h4>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger yes-btn">Delete</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+    .test-area, .form-control, .btn{
+        font-size: 17px!important;
+    }
+    .description-area{
+        text-align: justify;
+    }
+    .read-more.collapse.in{
+        display: inline;
+    }
+</style>
 
 @section('js_footer')
 @parent
@@ -68,6 +87,10 @@
             .append(qBox.clone().removeClass('question-default'))
             .html();
         var qAHtml = $('.question-answer-1').html();
+        var existingBoxIds = [];
+        $('.box-question').each(function(e) {
+                boxCounter = boxCounter < this.id ? this.id : boxCounter;
+        });
         $(document).on('click', '.add-question-btn', function(e){
             $('.box-question .box-body').collapse('hide');
 
@@ -76,21 +99,40 @@
             var thisQBox = $(this).closest('.box-question');
             var thisBox = qBoxHtml;
             thisBox = thisBox.replace(/(\[[0-9]+\])/g, "[" + boxCounter + "]");
+            thisBox = thisBox.replace('question_photo_1', "question_photo_" + boxCounter);
             thisBox = thisBox.replace('hidden', "");
             thisBox = thisBox.replace(/(disabled="disabled")/g, "");
 
             if(thisQBox.length == 0){
-                $('.question-area').append(thisBox);
+                $('.question-area').prepend(thisBox);
             }
             else{
                 thisQBox.after(thisBox);
+            }
+            $('.time-form').inputmask("59:59", {
+                placeholder: '0',
+                definitions: {
+                    '5': {
+                        validator: "[0-5]",
+                        cardinality: 1
+                    }
+                }
+            });
+        });
+        $('.time-form').inputmask("59:59", {
+            placeholder: '0',
+            definitions: {
+                '5': {
+                    validator: "[0-5]",
+                    cardinality: 1
+                }
             }
         });
         $(document).on('click', '.remove-question-btn', function(e){
             $(this).closest('.box-question').remove();
         });
-        $(document).on('click', '.collapse-btn', function(e){
-            $(this).closest('.box-header').next('.box-body').collapse('toggle');
+        $(document).on('click', '.question-header', function(e){
+            $(this).parent().next('.box-body').collapse('toggle');
         });
         $(document).on('change', '.question-type-dp', function(e){
             var showThisQArea = $(this).val();
@@ -112,27 +154,39 @@
             $(this).closest('.row').remove();
         });
 
+        //sort question
+        $('.question-area')
+            .sortable({
+                handle: ".box-header"
+            });
+
         var delete_btn = $('.test-delete-btn');
-        var yes_btn = $('.yes-btn');
-        var deleteModal = $('.deleteModal');
         delete_btn.click(function(e){
             var thisId = this.id;
             var thisUrl = '{{ URL::to('quiz') }}/' + thisId;
 
-            deleteModal.modal('show');
-            yes_btn.click(function(e){
-                deleteModal.modal('hide');
-                waitingDialog.show('Pleas wait...');
-                $.ajax({
-                    url: thisUrl,
-                    method: "DELETE",
-                    success: function(doc) {
-                        location.reload();
-                    }
-                });
+            waitingDialog.show('Pleas wait...');
+            $.ajax({
+                url: thisUrl,
+                method: "DELETE",
+                success: function(doc) {
+                    location.reload();
+                }
             });
         });
         //endregion
+
+        $('.read-more-btn').click(function(){
+            var $this = $(this);
+            $this.parent().find('.read-more').collapse('toggle');
+            $this.toggleClass('read-more-btn');
+            if($this.hasClass('read-more-btn')){
+                $this.text('[Read More]');
+            }
+            else {
+                $this.text('[Read Less]');
+            }
+        });
     });
 </script>
 @stop
