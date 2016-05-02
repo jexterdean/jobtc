@@ -53,6 +53,10 @@
     {!! HTML::script('assets/js/bootstrap.waiting.js') !!}
 @endif
 
+@if(in_array('input-mask', $assets))
+    {!!  HTML::script('assets/js/inputmask.js')  !!}
+@endif
+
 {!!  HTML::script('assets/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')  !!}
 
 {!! HTML::script('assets/js/validation-form.js')  !!}
