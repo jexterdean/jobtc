@@ -390,7 +390,7 @@
             var checklist_label = $('#' + list_group_id + ' .alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
             var checklist_item = $('#' + list_group_id + ' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
             //var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
-            var _text = checklist_label.text();
+            var _text = checklist_label.html();
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<div class="form-group">';
             text_area_ele += '<textarea class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
@@ -462,23 +462,6 @@
             $.post(url);
 
         });
-
-        /*_body.on('click', '.checklist-label,.checklist-status,.iCheck-helper', function (e) {
-         finish_checklist();
-         var checkbox = $(this).parent().parent().find('.checklist-checkbox');
-         var _id = checkbox.attr('id');
-         var data = [];
-         data.push(
-         {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
-         {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-         {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()}
-         );
-         if (checkbox.is(':checked')) {
-         data.push({'name': 'is_finished', 'value': checkbox.val()});
-         }
-         $.post(public_path + 'updateCheckList/' + _id, data, function (e) {
-         });
-         });*/
         /*endregion*/
         /*region Timer*/
         var element = _body.find('.timer-text');
