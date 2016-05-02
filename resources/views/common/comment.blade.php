@@ -11,7 +11,7 @@
                 {!!  Form::textarea('comment','',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Comment', 'tabindex' => '11']) !!}
             </div>
             <div class="form-group">
-                {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '12'])  !!}
+                {!!  Form::submit('Add',['class' => 'btn btn-edit', 'tabindex' => '12'])  !!}
             </div>
             {!!  Form::close()  !!}
 

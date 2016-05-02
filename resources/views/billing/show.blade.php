@@ -177,7 +177,7 @@
                                         <div class="form-group">
                                             {!!  Form::hidden('billing_id',$billing->billing_id) !!}
                                             {!! Form::hidden('billing_type',$billing->billing_type) !!}
-                                            {!! Form::submit('Add',['class' => 'btn btn-primary'])  !!}
+                                            {!! Form::submit('Add',['class' => 'btn btn-edit'])  !!}
                                         </div>
                                         {!!  Form::close()  !!}
 
@@ -220,7 +220,7 @@
                                                     'Bank'], '', ['class' => 'form-control', 'placeholder' => 'Payment To'] )  !!}
                                                 </div>
                                                 <div class="form-group">
-                                                    {!!  Form::submit('Add',['class' => 'btn btn-primary'])  !!}
+                                                    {!!  Form::submit('Add',['class' => 'btn btn-edit'])  !!}
                                                     {!!  Form::hidden('billing_id',$billing->billing_id)  !!}
                                                 </div>
                                             </div>

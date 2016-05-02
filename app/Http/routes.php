@@ -66,6 +66,9 @@ Route::group(['middleware' => 'auth'], function () {
      */
     Route::resource('css', 'CssController');
 
+    /**
+     * Task List
+     */
     Route::resource('task', 'TaskController');
     Route::post('taskTimer/{id}', 'TaskController@taskTimer');
     Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
@@ -73,7 +76,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('checkList', 'TaskController@checkList');
     Route::post('updateCheckList/{id}', 'TaskController@updateCheckList');
     Route::any('deleteCheckList/{id}', 'TaskController@deleteCheckList');
-
+    Route::post('sortCheckList/{id}','TaskController@sortCheckList');
+    
+    
     Route::get('/data/{cacheKey}','CacheDataController@getCache');
     Route::resource('event', 'EventsController');
     Route::resource('project', 'ProjectController');
@@ -142,3 +147,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'v1'], function () {
     });
 });
+/*
+* New Note
+*/
+Route::get('newnote', 'NewNoteController@showNotes');
+

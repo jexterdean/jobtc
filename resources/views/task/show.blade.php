@@ -8,12 +8,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="row">
-            <div class="col-sm-4">
-                <label class="control-label">Description:</label>
-                <p class="text-justify">{{ $task->task_description }}</p>
-
-            </div>
-            <div class="col-sm-8">
+            <div class="col-sm-12">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="text-right">
@@ -26,19 +21,28 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <a href="#" class="btn btn-success btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Checklist</a><br/><br/>
                         <div class="check-list-container">
                             <ul class="list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $val)
-                                <li class="list-group-item">
-                                    <div class="checklist-item">
-                                        <label class="checkbox-inline checklist-label">
-                                            <input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}>{{ $val->checklist }}
-                                        </label>
-                                        <div class="pull-right">
-                                            <a href="{{ url('updateCheckList/' . $val->id ) }}" class="update-checklist"><i class="glyphicon glyphicon-lg glyphicon-pencil"></i></a>&nbsp;
-                                            <a href="{{ url('deleteCheckList/' . $val->id ) }}" class="alert_delete"><i class="glyphicon glyphicon-lg glyphicon-trash"></i></a>
+                                <li id="task_item_{{$val->id}}" class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-2">                                            
+                                            <input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <label class="checkbox-inline checklist-label">
+                                                <div class="checklist-item">
+                                                    {{ $val->checklist }}
+                                                </div>
+                                            </label>
+                                        </div>                                            
+                                        <div class="col-md-3">
+                                            <div class="pull-right">
+                                                <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -55,16 +59,25 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-1">
-                <a href="#" class="btn btn-primary btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
-                <a href="#" class="btn btn-primary btn-sm btn-shadow add-notes-btn" style="display: none" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
+            <div class="col-sm-2">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> List Item </a><br/><br/>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
+                    </div>
+                    <div class="col-sm-2">
+                        @foreach($links as $val)
+                        <a href="{{ $val->url }}" target="_blank"><strong>{{ $val->title }}</strong></a><br/>
+                        @endforeach
+                    </div>
+                </div>
             </div>
             <div class="col-sm-3">
-                @foreach($links as $val)
-                <a href="{{ $val->url }}" target="_blank"><strong>{{ $val->title }}</strong></a><br/>
-                @endforeach
+                <a href="#" class="btn btn-edit btn-sm btn-shadow add-notes-btn" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
             </div>
-            <div class="col-sm-8">
+            <div class="col-sm-7">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="col-sm-3">
@@ -134,21 +147,21 @@
                 <div class="row">
 
                     <div class="col-sm-8">
-                        <a class="btn btn-shadow btn-info">Assign</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-shadow btn-assign">Assign</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-shadow btn-priority">Priority</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-shadow btn-success">Comment</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-shadow btn-warning">Finish</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{ url('task/' . $task->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn btn-shadow btn-primary show_edit_form">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{ route('task.destroy', $task->task_id) }}" class="alert_delete btn btn-shadow btn-danger">Delete</a>&nbsp;
+                        <a class="btn btn-shadow btn-submit">Comment</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-shadow btn-finish">Finish</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="{{ url('task/' . $task->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn btn-shadow btn-edit show_edit_form">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="{{ route('task.destroy', $task->task_id) }}" class="alert_delete btn btn-shadow btn-delete">Delete</a>&nbsp;
                     </div>
                     <div class="col-sm-4">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="pull-right">
                                     @if($current_time)
-                                    <a class="btn btn-shadow btn-danger timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
+                                    <a class="btn btn-shadow btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
                                     @else
-                                    <a class="btn btn-shadow btn-stop timer-btn start_time">Start Time</a>
+                                    <a class="btn btn-shadow btn-timer timer-btn start_time">Start Time</a>
                                     @endif
                                 </div>
                             </div>
@@ -167,10 +180,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Add Task</h4>
             </div>
+    </div>
             <div class="modal-body">
             </div>
         </div>
-    </div>
 </div>
 <div class="modal fade" id="add_link" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
@@ -190,6 +203,16 @@
 </div>
 <script>
     $(function (e) {
+        
+        $('.list-group').sortable({
+            update: function(event,ui){
+                var task_list_id = $(this).find('.task_list_id').val();
+                var data = $(this).sortable('serialize');
+                var url = public_path + '/sortCheckList/' + task_list_id; 
+                $.post(url,data);
+            }
+        });
+        
         var _body = $('#collapse-' + '{{ $task->task_id }}');
         var task_id = '{{ $task->task_id }}';
         var alert_msg = function (msg, _class) {
@@ -218,12 +241,11 @@
         };
 
         /*region Check List*/
-
         _body.on('click', '.check-list-btn', function () {
-            var text_area_ele = '<li class="list-group-item text-area-content">';
-            text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3"></textarea><br/>';
-            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm submit-checklist" type="button">Submit</button>&nbsp;&nbsp;&nbsp;';
-            text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
+            var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content">';
+            text_area_ele += '<textarea class="form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
+            text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+            text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
             text_area_ele += '</li>';
 
             var _this = $(this);
@@ -231,88 +253,132 @@
             _this.addClass('disabled');
             check_list_container.prepend(text_area_ele);
             _body.find('textarea[name="checklist"]').focus();
-            check_list_container.on('click', '.submit-checklist', function () {
+
+            check_list_container.on('click', '.submit-checklist', function (e) {
+                _this.removeClass('disabled');
+                e.preventDefault();
+                e.stopImmediatePropagation();
                 var data = _body.find('.task-form').serializeArray();
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
                     var ele = '';
-                    alert_msg('Successfully added checklist!!', 'alert-success');
                     $.each(_return_data, function (index, val) {
                         var is_finished = val.is_finished ? 'checked' : '';
                         ele += '<li class="list-group-item">';
-                        ele += '<label class="checkbox-inline checklist-label">';
+                        ele += '<div class="row">';
+                        ele += '<div class="col-md-2">';
                         ele += '<input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="' + val.id + '" ' + is_finished + '>';
+                        ele += '</div>'; //col-md-2
+                        ele += '<div class="col-md-7">';
+                        ele += '<label class="checkbox-inline checklist-label">';
+                        ele += '<div class="checklist-item">';
                         ele += val.checklist;
-                        ele += '</label>';
-                        ele += '<div class="pull-right">';
-                        ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
-                        ele += '<a href="/deleteCheckList/' + val.id + '" class="alert_delete"><i class="glyphicon glyphicon-trash glyphicon-lg"></i></a>';
                         ele += '</div>';
+                        ele += '</label>';
+                        ele += '</div>'; //col-md-7
+                        ele += '<div class="col-md-3">';
+                        ele += '<div class="pull-right">';
+                        //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
+                        ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="'+val.id+'">';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>'; //pull-right
+                        ele += '</div>'; //col-md-2
+                        ele += '</div>'; //row
                         ele += '</li>';
                     });
                     check_list_container.html(ele);
                     _this.removeAttr('disabled');
                 });
-            })
-                    .on('click', '.cancel-checklist', function () {
-                        _this.removeClass('disabled');
-                        _this.parent().find('.text-area-content').remove();
-                    })
-                    .on('click', '.submit-checklist', function (e) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                        _this.removeClass('disabled');
-                    })
-                    ;
+            }).on('click', '.cancel-checklist', function () {
+                _this.removeClass('disabled');
+                $('#add-new-task').remove();
+                //$('.text-area-content').remove();
+            });
         });
-        _body.on('click', '.update-checklist', function (e) {
-        //_body.on('click','.checklist-item',function(e){
+        //_body.on('click', '.update-checklist', function (e) {
+        _body.on('click', '.checklist-item', function (e) {
             e.preventDefault();
-            var url = $(this).attr('href');
-            var checklist_label = $(this).parent().parent().find('.checklist-label');
-            var checklist_item = $(this).parent().parent().parent().find('.checklist-item');
+            
+            //Get list item index
+            var index = $(this).parent().parent().parent().parent().index();
+            //Get the list group id
+            var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
+            
+            var task_list_id = $('#' +list_group_id+' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_id').val();
+            
+            var checklist_label = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
+            var checklist_item = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
             var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var text_area_ele = '<div class="text-area-content">';
+            text_area_ele += '<div class="form-group">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
-            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm submit-checklist" type="button">Submit</button>&nbsp;&nbsp;&nbsp;';
-            text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
+            text_area_ele += '</div>'; //form-group
+            text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '</div>';
 
             checklist_item
                     .css({'display': 'none'})
                     .before(text_area_ele);
 
-            _body
-                    .on('click', '.cancel-checklist', function () {
-                        $('.text-area-content').remove();
-                        checklist_item.removeAttr('style');
-
-                    });
-
-            _body.on('click', '.submit-checklist', function (e) {
-                var data = _body.find('.task-form').serializeArray();
-                $.post(url, data, function (_data) {
-                    var _return_data = jQuery.parseJSON(_data);
-                    $('.text-area-content').remove();
-
-                    var ele = '<label class="checklist-label">';
-                    ele += '<div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">';
-                    ele += '<input type="checkbox" class="checkbox" style="position: absolute; opacity: 0;">';
-                    ele += '<ins class="iCheck-helper" style="position: absolute; top: 0; left: 0; display: block; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; background: rgb(255, 255, 255);"></ins>';
-                    ele += '</div>&nbsp;';
-                    ele += _return_data.checklist;
-                    ele += '</label>';
-                    ele += '<div class="pull-right">';
-                    ele += '<a href="/updateCheckList/' + _return_data.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
-                    ele += '<a href="/deleteCheckList/' + _return_data.id + '" class="alert_delete"><i class="glyphicon glyphicon-trash glyphicon-lg"></i></a>';
-                    ele += '</div>';
-
-                    checklist_item
-                            .removeAttr('style')
-                            .html(ele);
-
-                });
+            _body.on('click', '.cancel-checklist', function () {
+                $('.text-area-content').remove();
+                checklist_item.removeAttr('style');
             });
+
+
+        });
+
+        _body.on('click', '.update-checklist', function (e) {
+            //e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            //Get list item index
+            var index = $(this).parent().parent().parent().parent().parent().index();
+            
+            //Get the list group id
+            var list_group_id = $(this).parent().parent().parent().parent().parent().parent().attr('id');
+            
+            //Get checklist item with the list group id
+            var checklist_item = $('#'+list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+
+            //Get task item id
+            var task_list_item_id = $('#'+list_group_id+' .checklist-item').eq(index).parent().parent().siblings().children().find('.task_list_item_id').val();
+
+            var data = _body.find('.task-form').serializeArray();
+
+            url = public_path + '/updateCheckList/' + task_list_item_id;
+
+            $.post(url, data, function (_data) {
+                var _return_data = jQuery.parseJSON(_data);
+                $('.text-area-content').remove();
+
+                var ele = _return_data.checklist;
+
+                checklist_item
+                        .removeAttr('style')
+                        .html(ele);
+
+            });
+        });
+
+
+        _body.on('click', '.alert_delete', function (e) {
+            e.preventDefault();
+
+            var index = $(this).parent().parent().parent().parent().index();
+
+            var task_list_item_id = $(this).siblings('.task_list_item_id').val();
+            
+            //Get the list group id
+            var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
+            
+            $('#'+list_group_id+' li').eq(index).remove();
+
+            var url = public_path + 'deleteCheckList/' + task_list_item_id;
+
+            $.post(url);
+
         });
 
         _body.on('click', '.checklist-label,.checklist-checkbox,.iCheck-helper', function (e) {
@@ -408,8 +474,8 @@
                         startEditTimer(0);
                         _this
                                 .html('Stop Time')
-                                .removeClass('btn-stop start_time')
-                                .addClass('btn-danger stop_time');
+                                .removeClass('btn-timer start_time')
+                                .addClass('btn-delete stop_time');
                         element
                                 .removeClass('bg-red-gradient')
                                 .addClass('bg-green');
@@ -421,8 +487,8 @@
                         var url = public_path + 'updateTaskTimer/' + this.id;
                         $(this)
                                 .html('Start Time')
-                                .removeClass('btn-danger stop_time')
-                                .addClass('btn-stop start_time');
+                                .removeClass('btn-delete stop_time')
+                                .addClass('btn-timer start_time');
                         element
                                 .removeClass('bg-green')
                                 .addClass('bg-red-gradient');

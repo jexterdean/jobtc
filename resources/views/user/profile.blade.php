@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    {!!  Form::submit('Update',['class' => 'btn btn-primary'])  !!}
+                    {!!  Form::submit('Update',['class' => 'btn btn-edit'])  !!}
                 </div>
                 {!!  Form::close()  !!}
             </div>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    {!!  Form::submit('Change Password',['class' => 'btn btn-primary'])  !!}
+                    {!!  Form::submit('Change Password',['class' => 'btn btn-edit'])  !!}
                 </div>
                 {!!  Form::close()  !!}
             </div>

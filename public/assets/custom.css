@@ -12,5 +12,19 @@
   background-image: url("img/remove-icon-small.png") !important;
 }
 .static-info{border-bottom:1px solid #eee;}
-.alert_delete{color:red;}
+.list-group .alert_delete{
+    color: #8d8d8d;
+    font-size: 28px;
+}
+.list-group .alert_delete:hover {
+    color: red;
+}
+
 .ver-inline-menu{list-style:none;}
+
+textarea.form-control {
+    max-height: 100%;
+    max-width: 100%;
+    width:1227px;
+    height:200px;
+}

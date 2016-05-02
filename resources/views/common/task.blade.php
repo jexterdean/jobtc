@@ -35,7 +35,7 @@
             </div>
             <div class="modal-footer">
                 <div class="form-group">
-                    {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '5'])  !!}
+                    {!!  Form::submit('Add',['class' => 'btn btn-edit', 'tabindex' => '5'])  !!}
                 </div>
             </div>
             {!!  Form::close() !!}
