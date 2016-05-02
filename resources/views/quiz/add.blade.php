@@ -6,7 +6,7 @@
                 <div class="box-header">
                     <h3 class="box-title" style="width: 80%;" data-toggle="collapse" data-target="#test-area">Test Add</h3>
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-success btn-sm add-question-btn">
+                        <button type="button" class="btn btn-submit btn-sm add-question-btn">
                             <i class="fa fa-plus"></i> Add Question
                         </button>
                     </div>
@@ -49,10 +49,10 @@
                     <div class="box-header">
                         <h3 class="box-title question-header" style="width: 80%;height: 40px;">Question</h3>
                         <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-success btn-sm add-question-btn">
+                            <button type="button" class="btn btn-submit btn-sm add-question-btn">
                                 <i class="fa fa-plus"></i>
                             </button>
-                            <button type="button" class="btn btn-danger btn-sm remove-question-btn hidden">
+                            <button type="button" class="btn btn-delete btn-sm remove-question-btn hidden">
                                 <i class="fa fa-times"></i>
                             </button>
                         </div>
@@ -113,7 +113,7 @@
                                 </div>
                                 @endfor
                                 <div class="text-right" style="margin-top: 10px;">
-                                    <input type="button" value="Add Choice" class="add-choice-btn btn btn-success" />
+                                    <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit" />
                                 </div>
                             </div>
                             <div class="question-type-area" data-type="2" style="display: none;">
@@ -131,7 +131,7 @@
 </div>
 <div class="row">
     <div class="col-md-12 text-right">
-        <input type="submit" name="submit" class="btn btn-primary" value="Save" />
+        <input type="submit" name="submit" class="btn btn-submit" value="Save" />
     </div>
 </div>
 {!! Form::close() !!}

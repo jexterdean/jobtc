@@ -8,7 +8,7 @@
                 <div class="box-header">
                     <h3 class="box-title" style="width: 80%;" data-toggle="collapse" data-target="#test-library">Test Library</h3>
                     <div class="box-tools pull-right">
-                        <a href="{{ url('quiz') }}" class="btn btn-success">
+                        <a href="{{ url('quiz') }}" class="btn btn-submit">
                             <i class="fa fa-plus"></i>
                         </a>
                     </div>
@@ -45,12 +45,12 @@
                                             </a>
                                         </div>
                                         <div class="col-sm-2">
-                                            <a href="{{ url('quiz/' . $v->id . '/edit') }}" class="btn btn-warning">
+                                            <a href="{{ url('quiz/' . $v->id . '/edit') }}" class="btn btn-edit">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
                                         </div>
                                         <div class="col-sm-2">
-                                            <button class="btn btn-danger test-delete-btn" id="{{ $v->id }}">
+                                            <button class="btn btn-delete test-delete-btn" id="{{ $v->id }}">
                                                 <i class="fa fa-times" aria-hidden="true"></i>
                                             </button>
                                         </div>

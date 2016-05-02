@@ -9,7 +9,7 @@
                     <div class="slider-div text-center active">
                         <div class="slider-body">
                             <h1>{{ $tests_info->start_message }}</h1>
-                            <button class="btn btn-success btn-next">Start</button>
+                            <button class="btn btn-submit btn-next">Start</button>
                         </div>
                     </div>
                     @foreach($questions_info as $ref=>$v)
@@ -37,10 +37,10 @@
                                 </div>
                             @endif
                             <div class="text-center">
-                                <button class="btn btn-warning btn-prev">Previous</button>
-                                <button class="btn btn-success btn-next">Next</button>
-                                <button class="btn btn-info time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
-                                    <span class="timer-area">{{ $v->length ? $v->length : '' }}</span>
+                                <button class="btn btn-delete btn-prev">Previous</button>
+                                <button class="btn btn-submit btn-next">Next</button>
+                                <button class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
+                                    <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
                                     <span class="glyphicon glyphicon-time"></span>
                                 </button>
                             </div>
@@ -50,8 +50,8 @@
                     <div class="slider-div text-center">
                         <div class="slider-body">
                             <h1>{{ $tests_info->completion_message }}</h1>
-                            <button class="btn btn-warning btn-prev">Back</button>
-                            <button class="btn btn-success">Complete</button>
+                            <button class="btn btn-delete btn-prev">Back</button>
+                            <button class="btn btn-finish">Complete</button>
                         </div>
                     </div>
                 </div>
@@ -145,7 +145,6 @@
         var s = parseInt(a[2]);
         // minutes are worth 60 seconds. Hours are worth 60 minutes.
         var time_limit = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
-
         interval = setInterval(function(e){
             if(time_limit == 0){
                 clearInterval(interval);
@@ -154,11 +153,11 @@
 
             m = Math.floor(time_limit/60); //Get remaining minutes
             s = time_limit - (m * 60);
-            var time = h + ":" + (m < 10 ? '0' + m : m) + ":" + (s < 10 ? '0' + s : s);
+            var time = (m < 10 ? '0' + m : m) + ":" + (s < 10 ? '0' + s : s);
             timer.html(time);
 
             time_limit --;
-        }, time_limit);
+        }, 1000);
     };
 </script>
 @stop
