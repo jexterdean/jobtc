@@ -14,7 +14,7 @@ class AlterIsFinishedColumnTaskChecklist extends Migration
     {
          Schema::table('task_check_list', function (Blueprint $table) {
                 $table->dropColumn('is_finished');
-                $table->string('status');
+                $table->string('status')->default('Default');
         });
     }
 
