@@ -30,7 +30,7 @@
                 <h3 class="box-title">Client List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_client">
-                        <button class="btn btn-shadow btn-success btn-sm"><i class="fa fa-plus-circle"></i> Add New Client</button>
+                        <button class="btn btn-shadow btn-submit btn-sm"><i class="fa fa-plus-circle"></i> Add New Client</button>
                     </a>
                     <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>

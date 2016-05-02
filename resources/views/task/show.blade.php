@@ -8,11 +8,6 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="row">
-            <!--div class="col-sm-4">
-                <label class="control-label">Description:</label>
-                <p class="text-justify">{{ $task->task_description }}</p>
-
-            </div-->
             <div class="col-sm-12">
                 <div class="row">
                     <div class="col-sm-12">
@@ -67,10 +62,10 @@
             <div class="col-sm-2">
                 <div class="row">
                     <div class="col-sm-6">
-                        <a href="#" class="btn btn-success btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> List Item </a><br/><br/>
+                        <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> List Item </a><br/><br/>
                     </div>
                     <div class="col-sm-4">
-                        <a href="#" class="btn btn-primary btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
+                        <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
                     </div>
                     <div class="col-sm-2">
                         @foreach($links as $val)
@@ -80,7 +75,7 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                <a href="#" class="btn btn-primary btn-sm btn-shadow add-notes-btn" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
+                <a href="#" class="btn btn-edit btn-sm btn-shadow add-notes-btn" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
             </div>
             <div class="col-sm-7">
                 <div class="row">
@@ -152,21 +147,21 @@
                 <div class="row">
 
                     <div class="col-sm-8">
-                        <a class="btn btn-shadow btn-info">Assign</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-shadow btn-assign">Assign</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-shadow btn-priority">Priority</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-shadow btn-success">Comment</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-shadow btn-warning">Finish</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{ url('task/' . $task->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn btn-shadow btn-primary show_edit_form">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="{{ route('task.destroy', $task->task_id) }}" class="alert_delete btn btn-shadow btn-danger">Delete</a>&nbsp;
+                        <a class="btn btn-shadow btn-submit">Comment</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-shadow btn-finish">Finish</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="{{ url('task/' . $task->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn btn-shadow btn-edit show_edit_form">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="{{ route('task.destroy', $task->task_id) }}" class="alert_delete btn btn-shadow btn-delete">Delete</a>&nbsp;
                     </div>
                     <div class="col-sm-4">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="pull-right">
                                     @if($current_time)
-                                    <a class="btn btn-shadow btn-danger timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
+                                    <a class="btn btn-shadow btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
                                     @else
-                                    <a class="btn btn-shadow btn-stop timer-btn start_time">Start Time</a>
+                                    <a class="btn btn-shadow btn-timer timer-btn start_time">Start Time</a>
                                     @endif
                                 </div>
                             </div>
@@ -249,8 +244,8 @@
         _body.on('click', '.check-list-btn', function () {
             var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
-            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
-            text_area_ele += '<button class="btn btn-danger btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
+            text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+            text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
             text_area_ele += '</li>';
 
             var _this = $(this);
@@ -319,7 +314,7 @@
             text_area_ele += '<div class="form-group">';
             text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
             text_area_ele += '</div>'; //form-group
-            text_area_ele += '<button class="btn btn-success btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+            text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '</div>';
 
             checklist_item
@@ -479,8 +474,8 @@
                         startEditTimer(0);
                         _this
                                 .html('Stop Time')
-                                .removeClass('btn-stop start_time')
-                                .addClass('btn-danger stop_time');
+                                .removeClass('btn-timer start_time')
+                                .addClass('btn-delete stop_time');
                         element
                                 .removeClass('bg-red-gradient')
                                 .addClass('bg-green');
@@ -492,8 +487,8 @@
                         var url = public_path + 'updateTaskTimer/' + this.id;
                         $(this)
                                 .html('Start Time')
-                                .removeClass('btn-danger stop_time')
-                                .addClass('btn-stop start_time');
+                                .removeClass('btn-delete stop_time')
+                                .addClass('btn-timer start_time');
                         element
                                 .removeClass('bg-green')
                                 .addClass('bg-red-gradient');

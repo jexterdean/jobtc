@@ -2,19 +2,33 @@
 
 .panel-variant(@border; @heading-text-color; @heading-bg-color; @heading-border) {
   border: 1px solid #ffffff!important;
-  & .panel-body{
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box;
-      border-bottom: 5px solid @border * 0.95!important;
-      border-right: 5px solid @border * 0.95!important;
-      border-left: 5px solid @border * 0.95!important;
+  .panel-container{
+    border-top: 3px solid @border * 1.2!important;
+    border-bottom: 3px solid @border * 0.9!important;
+    border-right: 3px solid @border * 0.9!important;
+    border-left: 3px solid @border * 1.2!important;
   }
-  & > .panel-heading {
+  & .panel-body{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95!important;
+    border-right: 5px solid @border * 0.95!important;
+    border-left: 5px solid @border * 0.95!important;
+    & .panel-content{
+      padding: 10px;
+      border-top: 3px solid @border * 0.9!important;
+      border-bottom: 3px solid @border * 1.5!important;
+      border-right: 3px solid @border * 1.5!important;
+      border-left: 3px solid @border * 0.9!important;
+    }
+  }
+  & .panel-heading {
     .inset-text();
     color: @heading-text-color!important;
     background-color: @heading-bg-color * 0.95!important;
     border-color: darken(@heading-border,10%)!important;
+    font-size: 20px;
 
     + .panel-collapse > .panel-body {
       border-top-color: @border;

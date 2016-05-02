@@ -16,7 +16,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
-  background: #A9B7C4;
+  /*background: #1933c4;*//*#A9B7C4;*/
 }
 a {
   color: #3c8dbc;
@@ -109,10 +109,10 @@ body.fixed .wrapper {
   margin-top: 50px;
 }
 /* Content */
-.content {
+/*.content {
   padding: 20px 15px;
   background: #A9B7C4;
-}
+}*/
 /* Utility */
 /* H1 - H6 font */
 h1,

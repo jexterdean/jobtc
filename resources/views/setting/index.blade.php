@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    {!!   Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '13']) !!}
+                    {!!   Form::submit('Save',['class' => 'btn btn-edit', 'tabindex' => '13']) !!}
                 </div>
                 {!!  Form::close()  !!}
             </div>
@@ -131,7 +131,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    {!!  Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '20'])  !!}
+                    {!!  Form::submit('Save',['class' => 'btn btn-edit', 'tabindex' => '20'])  !!}
                 </div>
                 {!!  Form::close()  !!}
             </div>

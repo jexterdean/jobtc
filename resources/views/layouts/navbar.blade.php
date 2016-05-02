@@ -1,6 +1,6 @@
 <li>
     <a href="{{ url('dashboard') }}">
-        <i class="fa fa-home"></i> <span>{{Lang::get('messages.DashBoard')}}</span>
+        <i class="fa fa-home"></i> <span>Dash</span>
     </a>
 </li>
 @role('admin')
@@ -96,5 +96,5 @@
 <li>
     <a href="{{ route('css.index') }}" >
         <i class="fa fa-globe"></i>
-        <span>CSS Classes</span></a>
+        <span>CSS</span></a>
 </li>
