@@ -125,7 +125,7 @@
                                 </div>
                                 @endfor
                                 <div class="text-right" style="margin-top: 10px;">
-                                    <input type="button" value="Add Choice" class="add-choice-btn btn btn-success" />
+                                    <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit" />
                                 </div>
                             </div>
                             <div class="question-type-area" data-type="2" style="display: none;">
@@ -224,7 +224,7 @@
                                     </div>
                                     @endforeach
                                     <div class="text-right" style="margin-top: 10px;">
-                                        <input type="button" value="Add Choice" class="add-choice-btn btn btn-success" />
+                                        <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit" />
                                     </div>
                                 </div>
                                 <div class="question-type-area" data-type="2" <?php echo $v->question_type_id == 2 ? '' : 'style="display: none;"'; ?>>
