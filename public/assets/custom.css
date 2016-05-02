@@ -17,7 +17,7 @@
     font-size: 28px;
 }
 .list-group .alert_delete:hover {
-    color: red;
+    color: #000;
 }
 
 .ver-inline-menu{list-style:none;}
@@ -27,4 +27,8 @@ textarea.form-control {
     max-width: 100%;
     width:1227px;
     height:200px;
+}
+
+.list-group-item {
+    margin-bottom: 0px;
 }

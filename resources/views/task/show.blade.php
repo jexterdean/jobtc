@@ -28,12 +28,13 @@
                                 <li id="task_item_{{$val->id}}" class="list-group-item">
                                     <div class="row">
                                         <div class="col-md-2">                                            
-                                            <input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}>
+                                            <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
+                                            <div class="btn bg-gray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                         </div>
                                         <div class="col-md-7">
                                             <label class="checkbox-inline checklist-label">
                                                 <div class="checklist-item">
-                                                    {{ $val->checklist }}
+                                                    {!!nl2br(e($val->checklist))!!}
                                                 </div>
                                             </label>
                                         </div>                                            
@@ -204,6 +205,7 @@
 <script>
     $(function (e) {
         
+        //For Draggability
         $('.list-group').sortable({
             update: function(event,ui){
                 var task_list_id = $(this).find('.task_list_id').val();
@@ -212,6 +214,26 @@
                 $.post(url,data);
             }
         });
+        
+        //For Delete Hover
+       $('.list-group .alert_delete').hover(function(e){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+           var index = $(this).parent().parent().parent().parent().index();
+           var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
+           
+           $('#'+checklist_item_id+' li:eq('+index+')').css('border','1px solid #ff0000');
+           
+       },function(e){
+           e.preventDefault();
+            e.stopImmediatePropagation();
+           var index = $(this).parent().parent().parent().parent().index();
+           var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
+           
+           $('#'+checklist_item_id+' li:eq('+index+')').css('border','1px solid #ddd');
+       }); 
+       
+       
         
         var _body = $('#collapse-' + '{{ $task->task_id }}');
         var task_id = '{{ $task->task_id }}';
@@ -298,6 +320,7 @@
         });
         //_body.on('click', '.update-checklist', function (e) {
         _body.on('click', '.checklist-item', function (e) {
+            //Prevents default behavior
             e.preventDefault();
             
             //Get list item index
@@ -312,7 +335,7 @@
             var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<div class="form-group">';
-            text_area_ele += '<textarea class="form-control" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
+            text_area_ele += '<textarea class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
             text_area_ele += '</div>'; //form-group
             text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '</div>';
@@ -330,7 +353,7 @@
         });
 
         _body.on('click', '.update-checklist', function (e) {
-            //e.preventDefault();
+            //Stops multiple calls to the this event
             e.stopImmediatePropagation();
             
             //Get list item index
@@ -481,7 +504,7 @@
                                 .addClass('bg-green');
                         data.push({'name': 'start_time', 'value': now});
                         _post_timer(form.attr('action'), data, _this);
-                        alert_msg('Successfully added start time!!', 'alert-success');
+                        //alert_msg('Successfully added start time!!', 'alert-success');
                     }
                     else {
                         var url = public_path + 'updateTaskTimer/' + this.id;
@@ -495,7 +518,7 @@
                         $.stopCountDownTimer();
                         data.push({'name': 'end_time', 'value': now});
                         _post_timer(url, data);
-                        alert_msg('Successfully stop timer!!', 'alert-success');
+                        //alert_msg('Successfully stop timer!!', 'alert-success');
                     }
 
                 });
