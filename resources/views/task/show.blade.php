@@ -34,7 +34,7 @@
                                         <div class="col-md-7">
                                             <label class="checkbox-inline checklist-label">
                                                 <div class="checklist-item">
-                                                    {!!nl2br(e($val->checklist))!!}
+                                                    {!! $val->checklist !!}
                                                 </div>
                                             </label>
                                         </div>                                            
@@ -205,6 +205,8 @@
 <script>
     $(function (e) {
         
+        
+        
         //For Draggability
         $('.list-group').sortable({
             update: function(event,ui){
@@ -332,7 +334,8 @@
             
             var checklist_label = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
             var checklist_item = $('#' +list_group_id+' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
-            var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
+            //var _text = checklist_label.text().replace(/(^\s+|[^a-zA-Z0-9 ]+|\s+$)/g, '');
+            var _text = checklist_label.text();
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<div class="form-group">';
             text_area_ele += '<textarea class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
@@ -348,8 +351,11 @@
                 $('.text-area-content').remove();
                 checklist_item.removeAttr('style');
             });
-
-
+            
+            //$('#'+list_group_id+' .checklist-item').find('textarea').wysihtml5();
+            
+            $('#'+list_group_id+' li').eq(index).find('textarea').wysihtml5();
+            
         });
 
         _body.on('click', '.update-checklist', function (e) {
