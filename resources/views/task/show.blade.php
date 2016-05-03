@@ -252,7 +252,7 @@
             var index = $(this).parent().parent().parent().parent().index();
             var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
 
-            $('#' + checklist_item_id + ' li:eq(' + index + ')').css('border', '1px solid #ff0000');
+            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ff0000');
 
         }, function (e) {
             e.preventDefault();
@@ -260,7 +260,7 @@
             var index = $(this).parent().parent().parent().parent().index();
             var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
 
-            $('#' + checklist_item_id + ' li:eq(' + index + ')').css('border', '1px solid #ddd');
+            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ddd');
         });
 
         var _body = $('#collapse-' + '{{ $task->task_id }}');
@@ -430,7 +430,7 @@
                 checklist_item.removeAttr('style');
             });
 
-            $('#' + list_group_id + ' li').eq(index).find('textarea').wysihtml5();
+            $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').wysihtml5();
 
         });
 
@@ -478,7 +478,7 @@
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
 
-            $('#' + list_group_id + ' li').eq(index).remove();
+            $('#' + list_group_id + ' .list-group-item').eq(index).remove();
 
             var url = public_path + 'deleteCheckList/' + task_list_item_id;
 
