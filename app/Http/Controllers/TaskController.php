@@ -294,10 +294,18 @@ class TaskController extends BaseController {
     }
     
     public function checkList(Request $request) {
+        //Save the task list item immediately
         $taskCheckList = new TaskChecklist($request->all());
         $taskCheckList->save();
         $data = TaskChecklist::where('task_id', '=', $request->task_id)->get();
-
+        
+        //then get the new task list item id and append it as the last item on the order
+        $taskCheckListOrderString = TaskChecklistOrder::where('task_id',$request->task_id)->pluck('task_id_order');
+        $task_list_id_array = $taskCheckListOrderString .',"'.$taskCheckList->id.'"';
+        $taskCheckListOrder = TaskChecklistOrder::where('task_id',$request->task_id)->update([
+            'task_id_order' => $task_list_id_array
+        ]);
+        
         return json_encode($data);
     }
 
@@ -328,12 +336,11 @@ class TaskController extends BaseController {
     }
     
     
-    public function updateCheckList(Request $request, $id){
+    public function updateCheckList(Request $request,$id){
         $taskCheckList = TaskChecklist::find($id);
         $data = $request->all();
         //$data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
         
-
         $taskCheckList->update($data);
 
         return json_encode($taskCheckList);
@@ -344,6 +351,16 @@ class TaskController extends BaseController {
         $checkList->delete($id);
 
         return Redirect::back()->withSuccess('Deleted successfully!!');
+    }
+    
+    public function changeCheckList(Request $request,$task_id,$task_list_item_id) {
+     
+        $taskCheckList = TaskCheckList::where('id',$task_list_item_id)
+                        ->update([
+                            'task_id' => $task_id
+                        ]);
+        
+        return json_encode($taskCheckList);
     }
 }
 

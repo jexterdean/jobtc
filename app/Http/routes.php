@@ -77,7 +77,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('updateCheckList/{id}', 'TaskController@updateCheckList');
     Route::any('deleteCheckList/{id}', 'TaskController@deleteCheckList');
     Route::post('sortCheckList/{id}','TaskController@sortCheckList');
-    
+    Route::post('changeCheckList/{task_id}/{task_list_item_id}','TaskController@changeCheckList');
     
     Route::get('/data/{cacheKey}','CacheDataController@getCache');
     Route::resource('event', 'EventsController');

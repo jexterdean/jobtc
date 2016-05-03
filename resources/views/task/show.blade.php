@@ -39,8 +39,9 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                         </div>
-                                        <div class="col-md-1">
-                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-item.png') }}'/>
+                                        <div class="drag-handle col-md-1">
+                                            <img src='{{ url('/assets/img/draggable-item.png') }}'/>
+                                            <img src='{{ url('/assets/img/draggable-item.png') }}'/>
                                         </div>
                                         <div class="col-md-7">
                                             <label class="checkbox-inline checklist-label">
@@ -51,7 +52,7 @@
                                         </div>                                            
                                         <div class="col-md-3">
                                             <div class="pull-right">
-                                                <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                <a href="#" class="btn btn-delete alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                                 <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                                 <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                             </div>
@@ -147,17 +148,9 @@
         </div><br/>
         <div class="note-text">
         </div>
-        <div class="firepad-column collapse" id="firepad-column-{{ $task->task_id }}">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div id="firepad-{{ $task->task_id }}" data-hash="task-list-{{ $task->task_id }}"></div>
-                </div>
-            </div><br/>
-        </div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="row">
-
                     <div class="col-sm-8">
                         <a class="btn btn-shadow btn-assign">Assign</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-shadow btn-priority">Priority</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -218,14 +211,39 @@
 
         //For Draggability
         $('.list-group').sortable({
+            dropOnEmpty: true,
+            connectWith: ".list-group",
             handle: '.drag-handle',
             update: function (event, ui) {
+                
+                var list_group_id = $(this).attr('id').split('_').pop();
+
                 var task_list_id = $(this).find('.task_list_id').val();
+                
+                var task_list_item_id = $(this).find('.task_list_item_id').val();
+
                 var data = $(this).sortable('serialize');
-                var url = public_path + '/sortCheckList/' + task_list_id;
-                $.post(url, data);
+
+                var url;
+
+                if (list_group_id === task_list_id) {
+
+                    url = public_path + '/sortCheckList/' + list_group_id;
+
+                    $.post(url, data);
+
+                } else {
+                    //alert('list_group_id :' + list_group_id + ' task_list_id :' +task_list_id);
+                    
+                    url = public_path + '/changeCheckList/' + list_group_id + '/' +task_list_item_id;
+                    
+                    //Remove warning that no data is found if dragged to an empty list
+                    $(this).find('li:contains("No data was found.")').remove();
+                    
+                    $.post(url);
+                }
             }
-        });
+        }).disableSelection();
 
         //For Delete Hover
         $('.list-group .alert_delete').hover(function (e) {
@@ -272,7 +290,7 @@
             _body.find('.progress-val').html(_percentage.toFixed(2) + '%');
         };
 
-        var update_checklist_status = function (id,status) {
+        var update_checklist_status = function (id, status) {
 
             var data = [];
             data.push(
@@ -289,7 +307,8 @@
 
         /*region Check List*/
         //For Checklist Status
-        $('.checklist-status').click(function (e) {
+        _body.on('click', '.checklist-status', function (e) {
+        //$('.checklist-status').click(function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 
@@ -298,28 +317,28 @@
 
             /*From Default, Change to ongoing*/
             if ($(this).hasClass('bg-gray')) {
-                $(this).switchClass('bg-gray', 'bg-orange',function(){
-                    update_checklist_status(id,'Ongoing');
+                $(this).switchClass('bg-gray', 'bg-orange', function () {
+                    update_checklist_status(id, 'Ongoing');
                 });
             }
             /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
             if ($(this).hasClass('bg-orange')) {
                 $(this).switchClass('bg-orange', 'bg-green', function () {
                     finish_checklist();
-                    update_checklist_status(id,'Completed');
+                    update_checklist_status(id, 'Completed');
                 });
             }
             /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
             if ($(this).hasClass('bg-green')) {
                 $(this).switchClass('bg-green', 'bg-red', function () {
                     finish_checklist();
-                    update_checklist_status(id,'Urgent');
+                    update_checklist_status(id, 'Urgent');
                 });
             }
             /*From Urgent, Change to back to Default*/
             if ($(this).hasClass('bg-red')) {
-                $(this).switchClass('bg-red', 'bg-gray',function(){
-                    update_checklist_status(id,'Default');
+                $(this).switchClass('bg-red', 'bg-gray', function () {
+                    update_checklist_status(id, 'Default');
                 });
             }
         });
@@ -351,7 +370,7 @@
                         ele += '<div class="row">';
                         ele += '<div class="col-md-2">';
                         ele += '<div class="btn bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>',
-                        ele += '</div>'; //col-md-2
+                                ele += '</div>'; //col-md-2
                         ele += '<div class="col-md-7">';
                         ele += '<label class="checkbox-inline checklist-label">';
                         ele += '<div class="checklist-item">';
@@ -570,7 +589,7 @@
                 });
         /*endregion*/
         /*region Firepad*/
-        var firepad_task = 'firepad-{{ $task->task_id }}';
+        /*var firepad_task = 'firepad-{{ $task->task_id }}';*/
         function init() {
             //// Initialize Firebase.
             var firepadRef = getExampleRef();
@@ -621,7 +640,7 @@
 
                 return ref;
         }
-        init();
+        //init();
         _body
                 .on('click', '.add-notes-btn', function () {
                     $(this).css({display: 'none'});

@@ -19,7 +19,7 @@
     font-size: 28px;
 }
 .list-group .alert_delete:hover {
-    color: #000;
+    color: #000 !important;
 }
 
 .ver-inline-menu{list-style:none;}
@@ -33,4 +33,13 @@ textarea.form-control {
 
 .list-group-item {
     margin-bottom: 0px;
+}
+
+.list-group {
+    padding-top: 5px;
+}
+
+.drag-handle {
+    cursor: -webkit-grab; 
+    cursor: -moz-grab;
 }
