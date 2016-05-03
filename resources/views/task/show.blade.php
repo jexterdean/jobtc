@@ -381,7 +381,7 @@
                         ele += '<div class="col-md-3">';
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
-                        ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
+                        ele += '<a href="#" class="btn btn-delete alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>'; //pull-right
