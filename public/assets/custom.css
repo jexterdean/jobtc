@@ -14,11 +14,11 @@
 .static-info{border-bottom:1px solid #eee;}
 /*Task List Items CSS*/
 
-.list-group .alert_delete{
+.list-group .alert_delete, .delete-tasklist{
     color: #8d8d8d;
     font-size: 28px;
 }
-.list-group .alert_delete:hover {
+.list-group .alert_delete:hover , .delete-tasklist:hover{
     color: #000 !important;
 }
 
@@ -35,6 +35,14 @@ textarea.form-control {
     margin-bottom: 0px;
 }
 
+.checklist-item {
+    cursor: pointer;
+}
+
+.checklist-header {
+    font-size: 18px;
+}
+
 .list-group {
     padding-top: 5px;
 }
@@ -42,4 +50,8 @@ textarea.form-control {
 .drag-handle {
     cursor: -webkit-grab; 
     cursor: -moz-grab;
+}
+
+.task-item-collapse {
+    border: 5px solid #ddd;
 }

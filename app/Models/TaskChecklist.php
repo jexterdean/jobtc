@@ -12,6 +12,7 @@ class TaskChecklist extends Model
         'id',
         'task_id',
         'user_id',
+        'checklist_header',
         'checklist',
         'status'
     ];

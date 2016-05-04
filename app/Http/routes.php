@@ -36,7 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
      * Admin only
      */
     Route::group(['middleware'=> 'role:admin'], function(){
-
         Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
             ->where('billing_type', 'invoice|estimate');
         Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
@@ -70,6 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
      * Task List
      */
     Route::resource('task', 'TaskController');
+    Route::any('task/delete/{id}', 'TaskController@delete');
     Route::post('taskTimer/{id}', 'TaskController@taskTimer');
     Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
     Route::any('deleteTaskTimer/{id}', 'TaskController@deleteTaskTimer');

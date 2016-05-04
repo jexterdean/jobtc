@@ -6019,7 +6019,7 @@ button.list-group-item-danger.active:focus {
   color: #ffffff;
   text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
   color: #fff !important;
-  background-color: #55a555 !important;
+  background-color: #ffffff !important;
   border-color: #468e46 !important;
   font-size: 20px;
 }
