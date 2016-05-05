@@ -34,7 +34,7 @@
   margin-top: 0;
   margin-bottom: 0;
   //font-size: ceil((@font-size-base * 1.125));
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: inherit;
 
@@ -61,8 +61,8 @@
 // By default, space out list group content from panel headings to account for
 // any kind of custom content between the two.
 
-.panel {
-  .panel-container{
+.panel-container{
+  .panel {
     > .list-group,
     > .panel-collapse > .list-group {
       margin-bottom: 0;
@@ -110,8 +110,8 @@
 // Place a non-bordered `.table` within a panel (not within a `.panel-body`) and
 // watch it go full width.
 
-.panel {
-  .panel-container{
+.panel-container{
+  .panel {
     > .table,
     > .table-responsive > .table,
     > .panel-collapse > .table {
@@ -229,10 +229,10 @@
   margin-bottom: @line-height-computed;
 
   // Tighten up margin so it's only between panels
-  .panel {
-    margin-bottom: 10px;
-    //border-radius: @panel-border-radius;
-    .panel-container{
+  .panel-container{
+    .panel {
+      margin-bottom: 10px;
+      //border-radius: @panel-border-radius;
       + .panel {
         margin-top: 5px;
       }

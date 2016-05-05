@@ -324,10 +324,32 @@
 // Dropdown menus
 
 // Menu position and menu carets
-.navbar-nav > li > .dropdown-menu {
-  margin-top: 0;
-  .border-top-radius(0);
+.navbar-nav > li {
+  @media (max-width: @screen-sm-min) {
+    &.dropdown{
+      &:hover > .dropdown-menu{
+        position: inherit;
+        min-width: 100%!important;
+        background-color: inherit!important;
+        box-shadow: none!important;
+        li > a {
+          color: #FFFFFF!important;
+          text-shadow: 1px 1px rgba(69, 69, 69, 0.90);
+          &:hover,
+          &:focus {
+            color: #ffff00!important;
+            background: none!important;
+          }
+        }
+      }
+    }
+  }
+  > .dropdown-menu{
+    margin-top: 0;
+    .border-top-radius(0);
+  }
 }
+
 // Menu position and menu caret support for dropups via extra dropup class
 .navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {
   margin-bottom: 0;
@@ -527,14 +549,13 @@
 // Inverse navbar
 
 .navbar-inverse {
-  background-color: #0f1f76;//@brand-default * 0.9;
+  //background-color: @brand-default * 0.9;
   //border-color: @navbar-inverse-border;
   .navbar-brand {
     color: @navbar-inverse-brand-color;
     &:hover,
     &:focus {
-      color: @navbar-inverse-brand-hover-color;
-      background-color: @navbar-inverse-brand-hover-bg;
+      color: #ffff00;
     }
   }
 
@@ -544,13 +565,13 @@
 
   .navbar-nav {
     > li > a {
-      color: #2d5cff;//@brand-default * 2;
-      text-shadow: 1px 1px rgba(225,225,225,1);
+      color: #ffffff;
+      text-shadow: 1px 1px rgba(69, 69, 69, 0.90);
       &:hover,
       &:focus {
-        text-shadow: 1px 1px rgba(15,15,15,1)!important;
-        color: @navbar-inverse-link-hover-color;
-        background-color: @navbar-inverse-link-hover-bg;
+        //text-shadow: 1px 1px rgba(0, 0, 0, 0.9)!important;
+        //color: @navbar-inverse-link-hover-color;
+        color: #ffff00;
       }
     }
     > .active > a {
@@ -598,7 +619,6 @@
         color: @navbar-inverse-link-active-color;
       }
     }
-
     @media (max-width: @grid-float-breakpoint-max) {
       // Dropdowns get custom display
       .open .dropdown-menu {
