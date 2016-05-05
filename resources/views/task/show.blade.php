@@ -387,6 +387,8 @@
             _body.find('textarea[name="checklist_header"]').focus();
 
             CKEDITOR.replace('add-new-task-textarea');
+            
+            
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
@@ -399,10 +401,8 @@
                     {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
                     {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
                     {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
-                    {'name': 'checklist', 'value': _body.find('textarea[name="checklist"]').text()}
+                    {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
                     );
-                
-                alert(JSON.stringify(data));
                 
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
