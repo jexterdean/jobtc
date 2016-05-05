@@ -15,6 +15,11 @@
         <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
     </a>
 </li>
+<li>
+    <a href="{{ url('teamBuilder') }}">
+        <i class="fa fa-users"></i> <span>{{Lang::get('Team')}}</span>
+    </a>
+</li>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="fa fa-laptop"></i>

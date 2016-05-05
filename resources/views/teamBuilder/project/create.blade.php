@@ -1,7 +1,7 @@
-{!! Form::open(array('url' => 'teamBuilder?p=team')) !!}
+{!! Form::open(array('url' => 'teamBuilder?p=project&t=' . $team_id)) !!}
 <div class="form-group">
-    <label>Team Name:</label>
-    <input type="text" name="title" class="form-control" />
+    <label>Project:</label>
+    {!! Form::select('project_id', $project, '', array('class' => 'form-control')) !!}
 </div>
 <div class="form-group pull-right">
     <button type="submit" name="submit" class="btn btn-submit">Add</button>
