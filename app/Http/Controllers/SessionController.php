@@ -12,7 +12,7 @@ use \Redirect;
 class SessionController extends BaseController {
 
     public function create(Request $request) {
-        if (Auth::check('user') || Auth::viaRemember('user')) {
+        if (Auth::check() || Auth::viaRemember()) {
             return Redirect::to('dashboard');
         }
         return View::make('session.create');
