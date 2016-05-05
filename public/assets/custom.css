@@ -37,6 +37,7 @@ textarea.form-control {
 
 .checklist-item {
     cursor: pointer;
+    padding: 10px;
 }
 
 .checklist-header {

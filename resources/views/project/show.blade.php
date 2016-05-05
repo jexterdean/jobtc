@@ -70,7 +70,7 @@
                             <div class="col-xs-6">
                                 <div class="pull-right">
                                     <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn btn-shadow btn-edit show_edit_form">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="{{ url('task/delete/'.$val->task_id) }}" class="btn btn-delete delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                    <a href="{{ url('task/delete/'.$val->task_id) }}" class="delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                         </div>
