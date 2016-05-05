@@ -27,6 +27,11 @@
                                 @foreach($checkList as $val)
                                 <li id="task_item_{{$val->id}}" class="list-group-item">
                                     <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="checklist-header">{!! $val->checklist_header !!}</label>
+                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                        </div>                                            
                                         <div class="col-md-1">                                            
                                             <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
                                         </div>
@@ -45,11 +50,6 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                         </div>
-                                        <div class="col-md-6">
-                                            <label class="checklist-header">{!! $val->checklist_header !!}</label>
-                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
-                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                        </div>                                            
                                         <div class="col-md-3">
                                             <div class="pull-right">
                                                 <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
@@ -60,9 +60,7 @@
                                     </div>
                                     <div class="row">
                                         <div id="task-item-collapse-{{$val->id}}" class="task-item-collapse collapse">
-                                            <div class="checklist-item">                                                           
-                                                {!! $val->checklist !!}
-                                            </div>
+                                            <div class="checklist-item">{!! $val->checklist !!}</div>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -292,7 +290,7 @@
 
         };
 
-        var update_checklist_data = function (id,details,checklist_item) {
+        var update_checklist_data = function (id, details, checklist_item) {
 
             var data = [];
             data.push(
@@ -303,17 +301,17 @@
             );
 
             $.post(public_path + 'updateCheckList/' + id, data, function (_data) {
-                var _return_data = jQuery.parseJSON(_data);                
+                var _return_data = jQuery.parseJSON(_data);
                 $('.text-area-content').remove();
-                
+
                 var ele = _return_data.checklist;
-                
+
                 checklist_item.removeAttr('style').html(ele);
 
             });
 
         };
-        
+
         var update_checklist_header = function (id, header, checklist_header) {
 
             var data = [];
@@ -327,7 +325,7 @@
             $.post(public_path + 'updateCheckList/' + id, data, function (_data) {
                 var _return_data = jQuery.parseJSON(_data);
                 $('.text-area-content').remove();
-                
+
                 var ele = _return_data.checklist_header;
 
                 checklist_header.removeAttr('style').html(ele);
@@ -388,8 +386,8 @@
             _body.find('textarea[name="checklist_header"]').focus();
 
             CKEDITOR.replace('add-new-task-textarea');
-            
-            
+
+
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
@@ -397,17 +395,17 @@
                 e.stopImmediatePropagation();
                 //var data = _body.find('.task-form').serializeArray();
                 var data = [];
-                    data.push(
-                    {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
-                    {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-                    {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
-                    {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
-                    {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
-                    );
-                
+                data.push(
+                        {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+                {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
+                {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+                {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
+                {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
+                );
+
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
-                    
+
                     var ele = '';
                     $.each(_return_data, function (index, val) {
                         var status = val.status;
@@ -427,11 +425,16 @@
                                 statusClass = 'bg-red'
                                 break;
                         }
-                        
+
                         ele += '<li id="task_item_' + val.id + '" class="list-group-item">';
                         ele += '<div class="row">';
+                        ele += '<div class="col-md-6">';
+                        ele += '<label class="checklist-header">' + val.checklist_header + '</label>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>'; //col-md-6
                         ele += '<div class="drag-handle col-md-1">';
-                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-'+val.id+'"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>';
+                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-' + val.id + '"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>';
                         ele += '</div>';
                         ele += '<div class="drag-handle col-md-1">';
                         ele += '<img src="' + public_path + 'assets/img/draggable-handle-2.png"/>';
@@ -439,11 +442,6 @@
                         ele += '<div class="col-md-1">';
                         ele += '<div class="btn ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
                         ele += '</div>'; //col-md-1
-                        ele += '<div class="col-md-6">';
-                        ele += '<label class="checklist-header">'+ val.checklist_header +'</label>';                        
-                        ele += '<input type="hidden" class="task_list_item_id" value="'+val.id+'" />';
-                        ele += '<input type="hidden" class="task_list_id" value="'+val.task_id+'" />';                                            
-                        ele += '</div>'; //col-md-7
                         ele += '<div class="col-md-3">';
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
@@ -454,12 +452,12 @@
                         ele += '</div>'; //col-md-2
                         ele += '</div>'; //row-1
                         ele += '<div class="row">';
-                        ele += '<div id="task-item-collapse-'+val.id+'" class="task-item-collapse collapse">';
+                        ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
                         ele += '<div class="checklist-item">';
                         ele += val.checklist;
                         ele += '</div>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="'+val.id+'" />';
-                        ele += '<input type="hidden" class="task_list_id" value="'+val.task_id+'" />';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>'; //task-item-collapse
                         ele += '</div>'; //row2
                         ele += '</li>';
@@ -473,29 +471,29 @@
                 //$('.text-area-content').remove();
             });
         });
-        
-        
+
+
         _body.on('click', '.checklist-header', function (e) {
             e.preventDefault();
             var _text = $(this).html();
-            
+
             var text_area_ele = '<div class="text-area-content">';
             text_area_ele += '<div class="form-group">';
-            text_area_ele += '<input type="text" name="checklist_header" class="form-control edit-checklist-header" placeholder="Task Header" value="'+_text+'"/>';
+            text_area_ele += '<input type="text" name="checklist_header" class="form-control edit-checklist-header" placeholder="Task Header" value="' + _text + '"/>';
             text_area_ele += '</div>'; //form-group
             text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-header-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '</div>';
-            
+
             var task_list_id = $(this).siblings('.task_list_id').val();
 
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-            
+
             $(this).css({'display': 'none'}).before(text_area_ele);
-        
+
         });
-        
+
         _body.on('click', '.update-header-checklist', function (e) {
-             //Stops multiple calls to the this event
+            //Stops multiple calls to the this event
             e.stopImmediatePropagation();
 
             //Get list item index
@@ -503,7 +501,7 @@
 
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().parent().parent().attr('id');
-            
+
             var task_list_id = $(this).siblings('.task_list_id').val();
 
             var task_list_item_id = $(this).parent().siblings('.task_list_item_id').val();
@@ -511,10 +509,10 @@
             var task_list_header = $(this).parent().find('.edit-checklist-header').val();
 
             var checklist_header = $(this).parent().parent().find('.checklist-header');
-            
+
             update_checklist_header(task_list_item_id, task_list_header, checklist_header);
         });
-        
+
         _body.on('click', '.checklist-item', function (e) {
             //Prevents default behavior
             e.preventDefault();
@@ -524,7 +522,7 @@
 
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
-            
+
             var task_list_id = $(this).siblings('.task_list_id').val();
 
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
@@ -561,7 +559,7 @@
 
             //Get checklist item with the list group id
             var checklist_item = $(this).parent().parent().find('.checklist-item');
-                
+
             //Get task item id
             var task_list_item_id = $(this).parent().parent().parent().find('.task_list_item_id').val();
 
