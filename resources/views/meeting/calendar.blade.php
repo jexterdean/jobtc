@@ -185,7 +185,7 @@
                         $.each(teams, function(i, t){
                             fc_header
                                 .find('.team-selector')
-                                .append($("<option/>").text(t.project_title).attr('value', t.project_id));
+                                .append($("<option/>").text(t.title).attr('value', t.id));
                         });
 
                         teamChange();

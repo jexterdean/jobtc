@@ -77,8 +77,8 @@
     <br />
 
     <div class="form-group pull-right">
-        <button type="button" name="submitMemberBtn" class="btn btn-success submitMemberBtn">Add</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" name="submitMemberBtn" class="btn btn-submit submitMemberBtn">Add</button>
+        <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
     </div>
     <br style="clear: both;" />
 </div>
@@ -89,7 +89,7 @@
         var us = $('#userSearch').magicSuggest({
             allowFreeEntries: false,
             method: 'get',
-            data: '{!! URL::to('teamBuilderExistingUserJson?t=' . $project_id) !!}',
+            data: '{!! URL::to('teamBuilderExistingUserJson?t=' . $team_id) !!}',
             renderer: function(data){
                 return '<div style="padding: 5px; overflow:hidden;">' +
                     '<div style="float: left;">{!! HTML::image("assets/user/avatar.png") !!}</div>' +
@@ -108,7 +108,7 @@
         submitMemberBtn.click(function(e){
             var activeTab = $('.tab-pane.active').attr('id').replace('_tab', '');
             var d = {
-                project_id: '{!! $project_id !!}'
+                team_id: '{!! $team_id !!}'
             };
             if(activeTab == "existing"){
                 d.user = userIds;

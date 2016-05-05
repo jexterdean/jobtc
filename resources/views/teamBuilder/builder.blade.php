@@ -1,54 +1,108 @@
 <div class="row">
-    <div class="col-md-12">
-        <a data-toggle="modal" href="#create_team">
-            <button class="btn btn-sm"><i class="fa fa-floppy-o"></i> Create New Team</button>
-        </a>
-    </div>
-    <div class="col-md-12"><br /></div>
-    @foreach($team as $v)
-        <div class="col-md-12">
-            <div class="box box-solid box-primary">
+    <div class="col-md-8">
+        @foreach($team as $v)
+        <div class="box box-default">
+            <div class="box-container">
                 <div class="box-header">
-                    <h3 class="box-title">{!! $v->title !!} Team - Project: <em>{!! $v->project_title !!}</em></h3>
+                    <h3 class="box-title" style="width: 80%;" data-target="#member-{{ $v->id }}" data-toggle="collapse">{{ $v->title }}</h3>
                     <div class="box-tools pull-right">
-                        <button class="btn btn-primary btn-sm" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <a href="#" class="btn btn-submit btn-add-member" id="{{ $v->id }}" data-toggle="modal" data-target="#add_member">
+                            <i class="fa fa-plus"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="box box-solid box-primary">
-                                <div class="box-header">
-                                    <h4 class="box-title" style="font-size: 14px;">Team Box</h4>
-                                    <div class="box-tools pull-right">
-                                        <button class="btn btn-sm addMemberBtn" id="{!! $v->id !!}"><i class="fa fa-plus-circle"></i> Add</button>
-                                    </div>
-                                </div>
-                                <div class="box-body">
+                <div class="box-body collapse" id="member-{{ $v->id }}">
+                    <div class="box-content">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="row">
                                     @foreach($v->member as $m)
-                                    <div class="media">
-                                        <div class="media-left">
-                                            <a href="#">
-                                                {!! HTML::image("assets/user/avatar.png", 'class="media-object"') !!}
-                                            </a>
-                                        </div>
-                                        <div class="media-body">
-                                            <h4 class="media-heading">{{ $m->name }}</h4>
-                                            {{ $m->email }}
+                                    <div class="col-sm-6">
+                                        <div class="media">
+                                            <div class="media-left">
+                                                {!! HTML::image('/assets/user/avatar.png', '', array('style' => 'width: 64px;max-width: 64px!important;')) !!}
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <h3 class="media-heading">{{ $m->name }}</h3>
+                                                        {{ $m->email }}
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <button class="btn btn-delete" data-type="member" id="{{ $m->id }}">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     @endforeach
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div id="team_calendar"></div>
+                            <div class="col-sm-4">
+                                <div class="box box-default">
+                                    <div class="box-container">
+                                        <div class="box-header">
+                                            <h3 class="box-title" style="width: 70%;">Projects</h3>
+                                            <div class="box-tools pull-right">
+                                                <a href="#" class="btn btn-submit add-project-btn" id="{{ $v->id }}">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="box-content">
+                                                @foreach($v->projects as $p)
+                                                <div class="row">
+                                                    <div class="col-sm-8">{{ $p->project_title }}</div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-delete" data-type="project" id="{{ $p->project_id }}">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    @endforeach
+        @endforeach
+    </div>
+    <div class="col-md-4">
+        <div class="box box-default">
+            <div class="box-container">
+                <div class="box-header">
+                    <h3 class="box-title" style="width: 80%;" data-toggle="collapse" data-target="#team-library">Teams</h3>
+                    <div class="box-tools pull-right">
+                        <a href="#" class="btn btn-submit" data-toggle="modal" data-target="#create_team">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="box-body collapse in" id="team-library">
+                    <div class="box-content">
+                        @foreach($team as $v)
+                        <div class="row">
+                            <div class="col-sm-10">{{ $v->title }}</div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-delete" data-type="team" id="{{ $v->id }}">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="create_team">
@@ -73,113 +127,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="add_project">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Project</h4>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
 
 @section('js_footer')
 @parent
 <script>
     $(function(e){
-        var paddingLeft = function (paddingValue, str) {
-           return String(paddingValue + str).slice(-paddingValue.length);
-        };
-
-        var team_calendar = $('#team_calendar');
-        var currentTimezone = '';
-        var timezone = [];
-
-        $.ajax({
-            url: '{{ URL::to('meetingTimezone') }}',
-            success: function(doc) {
-                currentTimezone = doc.current_timezone;
-                timezone = doc.timezone;
-                renderCalendar();
-            }
-        });
-
-        function renderCalendar(){
-            team_calendar.fullCalendar({
-                timezone: currentTimezone,
-                defaultView: 'agendaWeek',
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                buttonText: {
-                    today: 'today',
-                    month: 'month',
-                    week: 'week',
-                    day: 'day'
-                },
-                titleFormat: {
-                    month:  "[<strong style='font-size: 20px;'>]MMMM YYYY[</strong>]",
-                    week:  "[<strong style='font-size: 20px;'>]MMM D YYYY[</strong>]",
-                    day:  "[<strong style='font-size: 20px;'>]MMMM D YYYY[</strong>]"
-                },
-                columnFormat: {
-                    week: 'ddd MMMM D' //to customize the weekly title from Sun 4/4 to Sun April 4
-                },
-                theme: 1,
-                eventRender: function(event, element, view) {
-                    //hide time as requested by Tom
-                    element.find('.fc-event-time').css('display', 'none');
-
-                    //custom title content for each calendar meeting
-                    var title = '';
-                    element
-                        .find('.fc-event-title')
-                        .html(title);
-
-                    // render the timezone offset below the event title
-                    if (event.start.hasZone()) {
-                         element
-                            .find('.fc-event-title')
-                            .after($('<div class="tzo"/>').text(event.start.format('Z'))
-                        );
-                    }
-                },
-                eventAfterAllRender: function( view ){
-                    var header_left = $('.fc-header-left');
-                    if(header_left.find('.timezoneArea').length == 0){ //only append if drop down timezone doesn't exist yet
-                        var tStr =
-                            '<span class="form-inline timezoneArea" style="margin-left: 10px;">' +
-                                '<select class="timezone-selector form-control" style="width: 130px;font-size: 12px;"></select>' +
-                             '</span>';
-                        header_left.append(tStr);
-
-                        //add the options for timezone drop down
-                        $.each(timezone, function(i, t){
-                            header_left
-                                .find('.timezone-selector')
-                                .append($("<option/>").text(t).attr('value', t));
-                        });
-
-                        //set the default value and add event when the timezone dp is change
-                        header_left
-                            .find('.timezone-selector')
-                            .val(currentTimezone)
-                            .on('change', function() {
-                                currentTimezone = $(this).val(); //pass new value
-                                team_calendar.fullCalendar('destroy'); //remove existing calendar
-                                renderCalendar(); //create new calendar
-                            });
-                    }
-                },
-                events: function(start, end, timezone, callback) {
-
-                },
-                dayClick: function(date, jsEvent, view) {
-
-                },
-                eventClick: function(calEvent, jsEvent, view) {
-
-                },
-                editable: true,
-                eventDrop: function(event, delta, revertFunc) {
-
-                }
-            });
-        }
-
         var create_team = $('#create_team');
         create_team.on('show.bs.modal', function(e){
             $.ajax({
@@ -190,9 +153,9 @@
             });
         });
 
-        var addMemberBtn = $('.addMemberBtn');
+        var add_member_btn = $('.btn-add-member');
         var add_member = $('#add_member');
-        addMemberBtn.click(function(e){
+        add_member_btn.click(function(e){
             var thisId = this.id;
             var thisUrl = '{{ URL::to("/teamBuilder/create?p=member") }}&id=' + thisId;
             $.ajax({
@@ -200,6 +163,36 @@
                 success: function(doc) {
                     add_member.modal('show');
                     add_member.find('.modal-body').html(doc);
+                }
+            });
+        });
+
+        var add_project_btn = $('.add-project-btn');
+        var add_project = $('#add_project');
+        add_project_btn.click(function(e){
+            var thisId = this.id;
+            var thisUrl = '{{ URL::to("/teamBuilder/create?p=project") }}&id=' + thisId;
+            $.ajax({
+                url: thisUrl,
+                success: function(doc) {
+                    add_project.modal('show');
+                    add_project.find('.modal-body').html(doc);
+                }
+            });
+        });
+
+        var btn_delete = $('.btn-delete');
+        btn_delete.click(function(e){
+            var thisId = this.id;
+            var type = $(this).data('type');
+            var thisUrl = '{{ URL::to('teamBuilder') }}/' + thisId + '?p=' + type;
+
+            waitingDialog.show('Pleas wait...');
+            $.ajax({
+                url: thisUrl,
+                method: "DELETE",
+                success: function(doc) {
+                    location.reload();
                 }
             });
         });

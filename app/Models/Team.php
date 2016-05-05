@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TeamMember extends Model
+class Team extends Model
 {
     public $timestamps = true;
     protected $fillable = [
-        'created_by',
-        'team_id',
-        'user_id'
+        'author_id',
+        'title'
     ];
     protected $primaryKey = 'id';
-    protected $table = 'team_member';
+    protected $table = 'team';
 }
