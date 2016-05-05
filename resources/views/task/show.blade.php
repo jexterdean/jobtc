@@ -28,7 +28,13 @@
                                 <li id="task_item_{{$val->id}}" class="list-group-item">
                                     <div class="row">
                                         <div class="col-md-1">                                            
+                                            <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="drag-handle col-md-1">
                                             <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
+                                            <img src='{{ url('/assets/img/draggable-handle-2.png') }}'/>
+                                        </div>
+                                        <div class="col-md-1">
                                             @if ($val->status === 'Default')
                                             <div class="btn bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @elseif($val->status === 'Ongoing')
@@ -39,12 +45,7 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                         </div>
-                                        <div class="drag-handle col-md-1">
-                                            <img src='{{ url('/assets/img/draggable-handle-2.png') }}'/>
-                                        </div>
-                                        <div class="col-md-7">
-                                            <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
-                                                &nbsp;
+                                        <div class="col-md-6">
                                             <label class="checklist-header">{!! $val->checklist_header !!}</label>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
@@ -429,14 +430,16 @@
                         
                         ele += '<li id="task_item_' + val.id + '" class="list-group-item">';
                         ele += '<div class="row">';
-                        ele += '<div class="col-md-1">';
-                        ele += '<div class="btn ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
-                        ele += '</div>'; //col-md-1
+                        ele += '<div class="drag-handle col-md-1">';
+                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-'+val.id+'"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>';
+                        ele += '</div>';
                         ele += '<div class="drag-handle col-md-1">';
                         ele += '<img src="' + public_path + 'assets/img/draggable-handle-2.png"/>';
                         ele += '</div>';
-                        ele += '<div class="col-md-7">';
-                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-'+val.id+'"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;';
+                        ele += '<div class="col-md-1">';
+                        ele += '<div class="btn ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
+                        ele += '</div>'; //col-md-1
+                        ele += '<div class="col-md-6">';
                         ele += '<label class="checklist-header">'+ val.checklist_header +'</label>';                        
                         ele += '<input type="hidden" class="task_list_item_id" value="'+val.id+'" />';
                         ele += '<input type="hidden" class="task_list_id" value="'+val.task_id+'" />';                                            

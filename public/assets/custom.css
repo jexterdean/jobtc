@@ -38,7 +38,10 @@ textarea.form-control {
 .checklist-item {
     cursor: pointer;
     padding: 10px;
+    position: relative;
+    left: 215px;
 }
+
 
 .checklist-header {
     font-size: 18px;
@@ -54,5 +57,5 @@ textarea.form-control {
 }
 
 .task-item-collapse {
-    border: 5px solid #ddd;
+    
 }
