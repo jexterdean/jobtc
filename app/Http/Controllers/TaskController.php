@@ -384,7 +384,32 @@ class TaskController extends BaseController {
             'task_id' => $task_id
         ]);
 
-        return json_encode($taskCheckList);
+        
+        $taskCheckListOrder = new TaskChecklistOrder();
+
+        //Check if the task id has an ordering list
+        $task_list_id_count = TaskChecklistOrder::where('task_id', $task_id)->count();
+
+        //Turn list of task item ids into a string
+        $task_list_id_array = implode(",", str_replace("\"",'',$request->get('task_item')));
+
+        if ($task_list_id_count > 0) {
+
+            $taskCheckListOrder->where('task_id', $task_id)->delete();
+            
+            $taskCheckListOrder->task_id = $task_id;
+            $taskCheckListOrder->task_id_order = $task_list_id_array;
+            $taskCheckListOrder->save();
+            
+        } else {
+
+            $taskCheckListOrder->task_id = $task_id;
+            $taskCheckListOrder->task_id_order = $task_list_id_array;
+            $taskCheckListOrder->save();
+        }
+
+        return json_encode($task_list_id_array);
+        
     }
 
 }

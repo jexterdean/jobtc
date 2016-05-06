@@ -199,8 +199,32 @@
             dropOnEmpty: true,
             connectWith: ".list-group",
             handle: '.drag-handle',
-            update: function (event, ui) {
+            receive: function (event, ui) {
+                //For receiving 
+                var itemText = ui.item.attr('id');
 
+                var list_group_id = $(this).attr('id').split('_').pop();
+
+                var task_list_id = $(this).find('.task_list_id').val();
+
+                //var task_list_item_id = $(this).find('.task_list_item_id').val();
+                var task_list_item_id = ui.item.attr('id').split('_').pop();
+
+                var data = $(this).sortable('serialize');
+
+                //alert('list_group_id :' + list_group_id + ' task_list_id :' +task_list_id);
+
+                url = public_path + '/changeCheckList/' + list_group_id + '/' + task_list_item_id;
+
+                //Remove warning that no data is found if dragged to an empty list
+                $(this).find('li:contains("No data was found.")').remove();
+
+                $.post(url, data);
+
+            },
+            update: function (event, ui) {
+                
+                //For Sorting within lists
                 var list_group_id = $(this).attr('id').split('_').pop();
 
                 var task_list_id = $(this).find('.task_list_id').val();
@@ -211,22 +235,10 @@
 
                 var url;
 
-                if (list_group_id === task_list_id) {
+                url = public_path + '/sortCheckList/' + list_group_id;
 
-                    url = public_path + '/sortCheckList/' + list_group_id;
+                $.post(url, data);
 
-                    $.post(url, data);
-
-                } else {
-                    //alert('list_group_id :' + list_group_id + ' task_list_id :' +task_list_id);
-
-                    url = public_path + '/changeCheckList/' + list_group_id + '/' + task_list_item_id;
-
-                    //Remove warning that no data is found if dragged to an empty list
-                    $(this).find('li:contains("No data was found.")').remove();
-
-                    $.post(url);
-                }
             }
         }).disableSelection();
 
@@ -386,8 +398,6 @@
             _body.find('textarea[name="checklist_header"]').focus();
 
             CKEDITOR.replace('add-new-task-textarea');
-
-
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
