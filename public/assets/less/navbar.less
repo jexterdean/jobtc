@@ -334,7 +334,7 @@
         box-shadow: none!important;
         li > a {
           color: #FFFFFF!important;
-          text-shadow: 1px 1px rgba(69, 69, 69, 0.90);
+          text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000!important;
           &:hover,
           &:focus {
             color: #ffff00!important;
@@ -342,6 +342,13 @@
           }
         }
       }
+    }
+  }
+  > a {
+    color: #FFFFFF!important;
+    text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000!important;
+    &:hover{
+      color: #ffff00!important;
     }
   }
   > .dropdown-menu{
@@ -566,7 +573,6 @@
   .navbar-nav {
     > li > a {
       color: #ffffff;
-      text-shadow: 1px 1px rgba(69, 69, 69, 0.90);
       &:hover,
       &:focus {
         //text-shadow: 1px 1px rgba(0, 0, 0, 0.9)!important;
