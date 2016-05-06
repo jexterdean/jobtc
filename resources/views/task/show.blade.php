@@ -27,7 +27,7 @@
                                 @foreach($checkList as $val)
                                 <li id="task_item_{{$val->id}}" class="list-group-item">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-5">
                                             <label class="checklist-header">{!! $val->checklist_header !!}</label>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
@@ -50,7 +50,7 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <div class="pull-right">
                                                 <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                                 <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
@@ -242,23 +242,7 @@
             }
         }).disableSelection();
 
-        //For Delete Hover
-        $('.list-group .alert_delete').hover(function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            var index = $(this).parent().parent().parent().parent().index();
-            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
-
-            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ff0000');
-
-        }, function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            var index = $(this).parent().parent().parent().parent().index();
-            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
-
-            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ddd');
-        });
+        
 
         var _body = $('#collapse-' + '{{ $task->task_id }}');
         var task_id = '{{ $task->task_id }}';
@@ -270,6 +254,25 @@
             alert += '</div>';
             $('section.content').prepend(alert);
         };
+        
+        //For Delete Hover
+        _body.find('.list-group .alert_delete').hover(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var index = $(this).parent().parent().parent().parent().index();
+            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
+
+            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ff0000');
+            
+        }, function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var index = $(this).parent().parent().parent().parent().index();
+            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
+
+            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ddd');
+        });
+        
         var finish_checklist = function () {
             var count = 0;
             var over_all = 0;
@@ -438,7 +441,7 @@
 
                         ele += '<li id="task_item_' + val.id + '" class="list-group-item">';
                         ele += '<div class="row">';
-                        ele += '<div class="col-md-6">';
+                        ele += '<div class="col-md-5">';
                         ele += '<label class="checklist-header">' + val.checklist_header + '</label>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
@@ -452,7 +455,7 @@
                         ele += '<div class="col-md-1">';
                         ele += '<div class="btn ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
                         ele += '</div>'; //col-md-1
-                        ele += '<div class="col-md-3">';
+                        ele += '<div class="col-md-4">';
                         ele += '<div class="pull-right">';
                         //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
                         ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
