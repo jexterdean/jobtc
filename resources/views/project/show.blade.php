@@ -60,12 +60,12 @@
             @if(count($tasks) > 0)
                 @foreach($tasks as $val)
                 <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapse-{{ $val->task_id }}" aria-expanded="true" aria-controls="collapseOne">
+                    <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-{{ $val->task_id }}" aria-expanded="true" aria-controls="collapseOne">
                       <h4 class="panel-title">
                           {{ $val->task_title }}
                       </h4>
                     </div>
-                    <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse {{ $ref != 1 ? '' : 'in' }}" role="tabpanel" aria-labelledby="headingOne">
                       <div class="panel-body">
                         <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}" style="margin-top: -10px;"></div>
                       </div>
