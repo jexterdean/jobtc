@@ -90,10 +90,8 @@
             <div class="panel-group" id="accordion_" role="tablist" aria-multiselectable="true">
                 @include('common.task',['tasks' => $tasks, 'belongs_to' => 'project', 'unique_id' => $project->project_id,'project_id' => $project->project_id])
                 <div class="panel panel-default">
-                    <div class="panel-heading collapsed">
-                        <h4 class="panel-title">
-                            <a href="#collapseTwo" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion_" aria-expanded="false" aria-controls="collapseTwo">Project Details</a><span class="pull-right">{{ $project->ref_no }}</span>
-                        </h4>
+                    <div class="panel-heading collapsed" data-target="#collapseTwo" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion_" aria-expanded="false" aria-controls="collapseTwo">
+                        <h4 class="panel-title">Project Details<span class="pull-right">{{ $project->ref_no }}</span></h4>
                     </div>
                     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                         <div class="panel-body">
