@@ -67,6 +67,10 @@
 {!! HTML::script('assets/js/countdown.timer.js')  !!}
 {!! HTML::script('assets/js/jquery-dateFormat.js')  !!}
 
+<!--Wysiwyg Editor-->
+{!! HTML::script('assets/ckeditor/ckeditor.js')  !!}
+
+
 
 <script>
     $(function () {

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-9">
         @foreach($team as $v)
         <div class="box box-default">
             <div class="box-container">
@@ -24,11 +24,11 @@
                                             </div>
                                             <div class="media-body">
                                                 <div class="row">
-                                                    <div class="col-sm-8">
+                                                    <div class="col-sm-9">
                                                         <h3 class="media-heading">{{ $m->name }}</h3>
                                                         {{ $m->email }}
                                                     </div>
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-3">
                                                         <button class="btn btn-delete" data-type="member" id="{{ $m->id }}">
                                                             <i class="fa fa-times" aria-hidden="true"></i>
                                                         </button>
@@ -55,8 +55,8 @@
                                             <div class="box-content">
                                                 @foreach($v->projects as $p)
                                                 <div class="row">
-                                                    <div class="col-sm-8">{{ $p->project_title }}</div>
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-9">{{ $p->project_title }}</div>
+                                                    <div class="col-sm-3">
                                                         <button class="btn btn-delete" data-type="project" id="{{ $p->project_id }}">
                                                             <i class="fa fa-times" aria-hidden="true"></i>
                                                         </button>
@@ -75,7 +75,7 @@
         </div>
         @endforeach
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="box box-default">
             <div class="box-container">
                 <div class="box-header">
@@ -90,8 +90,8 @@
                     <div class="box-content">
                         @foreach($team as $v)
                         <div class="row">
-                            <div class="col-sm-10">{{ $v->title }}</div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-9">{{ $v->title }}</div>
+                            <div class="col-sm-3">
                                 <button class="btn btn-delete" data-type="team" id="{{ $v->id }}">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                 </button>
