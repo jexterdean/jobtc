@@ -58,3 +58,7 @@ textarea.form-control {
 .task-item-collapse {
     
 }
+
+.task-list-header {
+    font-size: 25px;
+}

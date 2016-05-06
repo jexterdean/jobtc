@@ -63,7 +63,7 @@
                     <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapse-{{ $val->task_id }}" aria-expanded="true" aria-controls="collapseOne">
                         <div class="row">
                             <div class="col-xs-6">
-                                <h4 class="panel-title">
+                                <h4 class="panel-title task-list-header">
                                     {{ $val->task_title }}
                                 </h4>
                             </div>
