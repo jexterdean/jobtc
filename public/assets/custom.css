@@ -39,12 +39,12 @@ textarea.form-control {
     cursor: pointer;
     padding: 10px;
     position: relative;
-    left: 215px;
+    left: 20px;
 }
 
 
 .checklist-header {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .list-group {
