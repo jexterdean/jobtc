@@ -36,7 +36,6 @@ textarea.form-control {
 }
 
 .checklist-item {
-    cursor: pointer;
     padding: 10px;
     position: relative;
     left: 20px;
@@ -50,6 +49,10 @@ textarea.form-control {
     padding-top: 5px;
 }
 
+.task-list-item {
+    border: none;
+}
+
 .drag-handle {
     cursor: -webkit-grab; 
     cursor: -moz-grab;
@@ -60,5 +63,5 @@ textarea.form-control {
 }
 
 .task-list-header {
-    font-size: 25px;
+    font-size: 22px;
 }

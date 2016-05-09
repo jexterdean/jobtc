@@ -25,7 +25,7 @@
                             <ul class="list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $val)
-                                <li id="task_item_{{$val->id}}" class="list-group-item">
+                                <li id="task_item_{{$val->id}}" class="list-group-item task-list-item">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <label class="checklist-header">{!! $val->checklist_header !!}</label>
@@ -35,9 +35,14 @@
                                         <div class="col-md-1">                                            
                                             <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
                                         </div>
-                                        <div class="drag-handle col-md-1">
+                                        <div class="col-md-1">
+                                            <a class="btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                        </div>
+                                        <div class="col-md-1">
                                             <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
-                                            <img src='{{ url('/assets/img/draggable-handle-2.png') }}'/>
+                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>
                                         </div>
                                         <div class="col-md-1">
                                             @if ($val->status === 'Default')
@@ -50,7 +55,8 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                         </div>
-                                        <div class="col-md-4">
+                                        
+                                        <div class="col-md-3">
                                             <div class="pull-right">
                                                 <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                                 <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
@@ -82,7 +88,7 @@
             <div class="col-sm-2">
                 <div class="row">
                     <div class="col-sm-6">
-                        <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> List Item </a><br/><br/>
+                        <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Task </a><br/><br/>
                     </div>
                     <div class="col-sm-4">
                         <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
@@ -95,7 +101,7 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                <a href="#" class="btn btn-edit btn-sm btn-shadow add-notes-btn" data-target="#firepad-column-{{ $task->task_id }}" data-toggle="collapse" aria-expanded="true"><i class="fa fa-plus"></i> Notes</a>
+                
             </div>
             <div class="col-sm-2">
                 @if($current_time)
@@ -240,7 +246,7 @@
                 $.post(url, data);
 
             }
-        }).disableSelection();
+        });
 
         
 
@@ -485,26 +491,6 @@
             });
         });
 
-
-        _body.on('click', '.checklist-header', function (e) {
-            e.preventDefault();
-            var _text = $(this).html();
-
-            var text_area_ele = '<div class="text-area-content">';
-            text_area_ele += '<div class="form-group">';
-            text_area_ele += '<input type="text" name="checklist_header" class="form-control edit-checklist-header" placeholder="Task Header" value="' + _text + '"/>';
-            text_area_ele += '</div>'; //form-group
-            text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-header-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
-            text_area_ele += '</div>';
-
-            var task_list_id = $(this).siblings('.task_list_id').val();
-
-            var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-
-            $(this).css({'display': 'none'}).before(text_area_ele);
-
-        });
-
         _body.on('click', '.update-header-checklist', function (e) {
             //Stops multiple calls to the this event
             e.stopImmediatePropagation();
@@ -526,38 +512,57 @@
             update_checklist_header(task_list_item_id, task_list_header, checklist_header);
         });
 
-        _body.on('click', '.checklist-item', function (e) {
+        _body.on('click', '.edit-task-list-item', function (e) {
             //Prevents default behavior
             e.preventDefault();
 
             //Get list item index
-            var index = $(this).parent().parent().parent().parent().index();
+            var index = $(this).parent().parent().parent().index();
 
             //Get the list group id
-            var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
+            var list_group_id = $(this).parent().parent().parent().parent().attr('id');
 
             var task_list_id = $(this).siblings('.task_list_id').val();
-
+            
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
 
-            var checklist_label = $('#' + list_group_id + ' .alert_delete').eq(index).parent().parent().parent().find('.checklist-label');
-            var checklist_item = $('#' + list_group_id + ' .alert_delete').eq(index).parent().parent().parent().parent().find('.checklist-item');
+            //Header Element
+            var task_item_header = $(this).parent().parent().parent().find('.checklist-header');
+            //Content Element
+            var task_item_content = $(this).parent().parent().parent().find('.checklist-item');
+
+            //Get Header Text 
+            var header_text = $(this).parent().parent().parent().find('.checklist-header').text();
+            
             //Get Text
-            var _text = $(this).html();
+            var content_text = $(this).parent().parent().parent().find('.checklist-item').html();
+            
+            //Header Editor
+            var header_text_area_ele = '<div class="text-area-content">';
+            header_text_area_ele += '<div class="form-group">';
+            header_text_area_ele += '<input type="text" name="checklist_header" class="form-control edit-checklist-header" placeholder="Task Header" value="' + header_text + '"/>';
+            header_text_area_ele += '</div>'; //form-group
+            header_text_area_ele += '</div>';
+            
+            //Content Editor
+            var content_text_area_ele = '<div class="text-area-content">';
+            content_text_area_ele += '<div class="form-group">';
+            content_text_area_ele += '<textarea id="editChecklistItem' + task_list_item_id + '" class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + content_text + '</textarea><br/>';
+            content_text_area_ele += '</div>'; //form-group
+            content_text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+            content_text_area_ele += '</div>';
 
-            var text_area_ele = '<div class="text-area-content">';
-            text_area_ele += '<div class="form-group">';
-            text_area_ele += '<textarea id="editChecklistItem' + task_list_item_id + '" class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + _text + '</textarea><br/>';
-            text_area_ele += '</div>'; //form-group
-            text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
-            text_area_ele += '</div>';
-
-            $(this).css({'display': 'none'}).before(text_area_ele);
+            
+            task_item_header.css({'display': 'none'}).before(header_text_area_ele);
+            
+            task_item_content.css({'display': 'none'}).before(content_text_area_ele);
 
             //var textarea_id = $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').attr('id');
-            var textarea_id = $(this).parent().find('textarea').attr('id');
-
+            var textarea_id = $(this).parent().parent().parent().find('.edit-checklist-item').attr('id');
+            
             CKEDITOR.replace(textarea_id);
+            
+            $('#task-item-collapse-'+task_list_item_id).collapse('show');
         });
 
         _body.on('click', '.update-checklist', function (e) {
@@ -572,6 +577,9 @@
 
             //Get checklist item with the list group id
             var checklist_item = $(this).parent().parent().find('.checklist-item');
+            
+            //Get checklist header with the list group id
+            var checklist_header = $(this).parent().parent().parent().parent().find('.checklist-header');
 
             //Get task item id
             var task_list_item_id = $(this).parent().parent().parent().find('.task_list_item_id').val();
@@ -579,12 +587,15 @@
             //Get Data from CKEditor
             var textarea_id = $(this).parent().find('textarea').attr('id');
 
-            var task_list_header = $(this).parent().find('.edit-checklist-header').val();
+            var task_list_header = $(this).parent().parent().parent().parent().find('.edit-checklist-header').val();
 
             var task_list_data = CKEDITOR.instances[textarea_id].getData();
 
+            update_checklist_header(task_list_item_id, task_list_header, checklist_header);
+
             update_checklist_data(task_list_item_id, task_list_data, checklist_item);
 
+            $('#task-item-collapse-'+task_list_item_id).collapse('hide');
         });
 
 
