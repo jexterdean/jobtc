@@ -552,6 +552,7 @@
             
             //Toggle the content area to show
             $('#task-item-collapse-'+task_list_item_id).collapse('show');
+            $(this).addClass('disabled');
         });
 
         _body.on('click', '.update-checklist', function (e) {
@@ -586,6 +587,8 @@
             
             //Hide the content area
             $('#task-item-collapse-'+task_list_item_id).collapse('hide');
+            
+            $('.edit-task-list-item').removeClass('disabled');
         });
 
 
