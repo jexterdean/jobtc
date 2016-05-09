@@ -459,8 +459,8 @@
                         ele += '<div class="col-md-1">';
                         ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-' + val.id + '"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>';
                         ele += '</div>';
-                        ele += '<div class="drag-handle col-md-1">';
-                        ele += '<img src="' + public_path + 'assets/img/draggable-handle-2.png"/>';
+                        ele += '<div class="col-md-1">';
+                        ele += '<img class="drag-handle" src="' + public_path + 'assets/img/draggable-handle-2.png"/>';
                         ele += '</div>';
                         ele += '<div class="col-md-1">';
                         ele += '<a class="btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
