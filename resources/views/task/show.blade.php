@@ -311,13 +311,14 @@
 
         };
 
-        var update_checklist_data = function (id, details, checklist_item) {
+        var update_checklist_data = function (id, header, details, checklist_header ,checklist_item) {
 
             var data = [];
             data.push(
                     {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
             {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
             {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+            {'name': 'checklist_header', 'value': header},
             {'name': 'checklist', 'value': details}
             );
 
@@ -325,9 +326,12 @@
                 var _return_data = jQuery.parseJSON(_data);
                 $('.text-area-content').remove();
 
-                var ele = _return_data.checklist;
+                var header = _return_data.checklist_header;
+                var content = _return_data.checklist;
+                
 
-                checklist_item.removeAttr('style').html(ele);
+                checklist_header.removeAttr('style').html(header);
+                checklist_item.removeAttr('style').html(content);
 
             });
 
@@ -491,27 +495,6 @@
             });
         });
 
-        _body.on('click', '.update-header-checklist', function (e) {
-            //Stops multiple calls to the this event
-            e.stopImmediatePropagation();
-
-            //Get list item index
-            var index = $(this).parent().parent().parent().parent().parent().index();
-
-            //Get the list group id
-            var list_group_id = $(this).parent().parent().parent().parent().parent().parent().attr('id');
-
-            var task_list_id = $(this).siblings('.task_list_id').val();
-
-            var task_list_item_id = $(this).parent().siblings('.task_list_item_id').val();
-
-            var task_list_header = $(this).parent().find('.edit-checklist-header').val();
-
-            var checklist_header = $(this).parent().parent().find('.checklist-header');
-
-            update_checklist_header(task_list_item_id, task_list_header, checklist_header);
-        });
-
         _body.on('click', '.edit-task-list-item', function (e) {
             //Prevents default behavior
             e.preventDefault();
@@ -562,6 +545,7 @@
             
             CKEDITOR.replace(textarea_id);
             
+            //Toggle the content area to show
             $('#task-item-collapse-'+task_list_item_id).collapse('show');
         });
 
@@ -591,10 +575,11 @@
 
             var task_list_data = CKEDITOR.instances[textarea_id].getData();
 
-            update_checklist_header(task_list_item_id, task_list_header, checklist_header);
+            //update_checklist_header(task_list_item_id, task_list_header, checklist_header);
 
-            update_checklist_data(task_list_item_id, task_list_data, checklist_item);
-
+            update_checklist_data(task_list_item_id, task_list_header, task_list_data, checklist_header ,checklist_item);
+            
+            //Hide the content area
             $('#task-item-collapse-'+task_list_item_id).collapse('hide');
         });
 
