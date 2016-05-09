@@ -276,7 +276,7 @@
             var index = $(this).parent().parent().parent().parent().index();
             var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
 
-            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ddd');
+            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', 'none');
         });
         
         var finish_checklist = function () {
