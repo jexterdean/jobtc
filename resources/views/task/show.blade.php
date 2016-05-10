@@ -33,14 +33,6 @@
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
                                         <div class="pull-right" style="margin-right: 10px">
-                                            <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <a class="btn edit-task-list-item btn-shadow"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
-                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-
-                                            <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
-                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>&nbsp;&nbsp;&nbsp;
-
                                             @if ($val->status === 'Default')
                                             <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @elseif($val->status === 'Ongoing')
@@ -51,7 +43,15 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                             &nbsp;&nbsp;&nbsp;
-                                            <a href="#" class="btn btn-shadow btn-default alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                            <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                            <a class="btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+
+                                            <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
+                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>&nbsp;&nbsp;&nbsp;
+
+                                            <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -431,8 +431,6 @@
                         ele += '<div class="pull-right" style="margin-right: 10px">';
                         ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<a class="btn edit-task-list-item btn-shadow"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<input type="hidden" class="task_list_item_id" value="{{$val->id}}" />';
-                        ele += '<input type="hidden" class="task_list_id" value="{{$task->task_id}}" />';
                         ele += '<img class="drag-handle" src="' + public_path + 'assets/img/draggable-handle-2.png"/>&nbsp;&nbsp;&nbsp;';
                         ele += '<div class="btn btn-default btn-shadow '+statusClass+' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
                         ele += '<a href = "#" class = "btn btn-shadow btn-default alert_delete"><i class="fa fa-times" aria-hidden = "true"> </i></a>';

@@ -71,7 +71,7 @@
                                 <div class="col-xs-6">
                                     <div class="pull-right" style="margin-right: 20px">
                                         <a href="#collapse-{{ $val->task_id }}" class="btn-shadow btn btn-default toggle-tasklist" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne"><i class="fa fa-chevron-down"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn-shadow btn btn-sm btn-default edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn-shadow btn btn-default edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                         <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>&nbsp;&nbsp;&nbsp;
                                         <a href="{{ url('task/delete/'.$val->task_id) }}" class="btn-shadow btn btn-default delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
                                     </div>
