@@ -433,7 +433,7 @@
                         ele += '<a class="btn edit-task-list-item btn-shadow"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<img class="drag-handle" src="' + public_path + 'assets/img/draggable-handle-2.png"/>&nbsp;&nbsp;&nbsp;';
                         ele += '<div class="btn btn-default btn-shadow '+statusClass+' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
-                        ele += '<a href = "#" class = "btn btn-shadow btn-default alert_delete"><i class="fa fa-times" aria-hidden = "true"> </i></a>';
+                        ele += '<a href = "#" class = "alert_delete"><i class="fa fa-times" aria-hidden = "true"> </i></a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>'
