@@ -303,7 +303,7 @@
 
         };
 
-        var update_checklist_data = function (id, header, details, checklist_header ,checklist_item) {
+        var update_checklist_data = function (id, header, details, checklist_header, checklist_item) {
 
             var data = [];
             data.push(
@@ -441,46 +441,34 @@
                                 break;
                         }
 
-                        ele += '<li id="task_item_' + val.id + '" class="list-group-item">';
-                        ele += '<div class="row">';
+                        ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
+                        ele += '<div class="row task-list-details">';
                         ele += '<div class="col-md-5">';
                         ele += '<label class="checklist-header">' + val.checklist_header + '</label>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>'; //col-md-5
-                        ele += '<div class="col-md-1">';
-                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-' + val.id + '"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>';
                         ele += '</div>';
-                        ele += '<div class="col-md-1">';
-                        ele += '<img class="drag-handle" src="' + public_path + 'assets/img/draggable-handle-2.png"/>';
-                        ele += '</div>';
-                        ele += '<div class="col-md-1">';
-                        ele += '<a class="btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                        ele += '<div class="pull-right" style="margin-right: 10px">';
+                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                        ele += '<a class="btn edit-task-list-item btn-shadow"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                        ele += '<input type="hidden" class="task_list_item_id" value="{{$val->id}}" />';
+                        ele += '<input type="hidden" class="task_list_id" value="{{$task->task_id}}" />';
+                        ele += '<img class="drag-handle" src="' + public_path + 'assets/img/draggable-handle-2.png"/>&nbsp;&nbsp;&nbsp;';
+                        ele += '<div class="btn btn-default btn-shadow '+statusClass+' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                        ele += '<a href = "#" class = "btn btn-shadow btn-default alert_delete"><i class="fa fa-times" aria-hidden = "true"> </i></a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>'
-                        ele += '<div class="col-md-1">';
-                        ele += '<div class="btn ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
-                        ele += '</div>'; //col-md-1
-                        ele += '<div class="col-md-3">';
-                        ele += '<div class="pull-right">';
-                        //ele += '<a href="/updateCheckList/' + val.id + '"><i class="glyphicon glyphicon-pencil glyphicon-lg"></i></a>&nbsp;';
-                        ele += '<a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
+                        ele += '</div>'
+                        ele += '<div class="row">'
+                        ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
+                        ele += '<div class="checklist-item">' + val.checklist + '</div>'
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>'; //pull-right
-                        ele += '</div>'; //col-md-3
-                        ele += '</div>'; //row-1
-                        ele += '<div class="row">';
-                        ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
-                        ele += '<div class="checklist-item">';
-                        ele += val.checklist;
                         ele += '</div>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>'; //task-item-collapse
-                        ele += '</div>'; //row2
+                        ele += '</div>';
                         ele += '</li>';
+
                     });
                     check_list_container.html(ele);
                     _this.removeAttr('disabled');
@@ -543,7 +531,7 @@
             CKEDITOR.replace(textarea_id);
 
             //Toggle the content area to show
-            $('#task-item-collapse-'+task_list_item_id).collapse('show');
+            $('#task-item-collapse-' + task_list_item_id).collapse('show');
             $(this).addClass('disabled');
         });
 
@@ -575,10 +563,10 @@
 
             //update_checklist_header(task_list_item_id, task_list_header, checklist_header);
 
-            update_checklist_data(task_list_item_id, task_list_header, task_list_data, checklist_header ,checklist_item);
+            update_checklist_data(task_list_item_id, task_list_header, task_list_data, checklist_header, checklist_item);
 
             //Hide the content area
-            $('#task-item-collapse-'+task_list_item_id).collapse('hide');
+            $('#task-item-collapse-' + task_list_item_id).collapse('hide');
 
             $('.edit-task-list-item').removeClass('disabled');
         });
