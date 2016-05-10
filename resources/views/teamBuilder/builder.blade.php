@@ -148,6 +148,10 @@
     </div>
 </div>
 <style>
+    .member-list{
+        height: 86px;
+        margin-bottom: 90px;
+    }
     .member-item{
         z-index: 99;
     }
