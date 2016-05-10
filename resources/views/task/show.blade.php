@@ -429,7 +429,7 @@
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
                         ele += '<div class="pull-right" style="margin-right: 10px">';
-                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-'+val.id+'"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<a class="btn edit-task-list-item btn-shadow"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<img class="drag-handle" src="' + public_path + 'assets/img/draggable-handle-2.png"/>&nbsp;&nbsp;&nbsp;';
                         ele += '<div class="btn btn-default btn-shadow '+statusClass+' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
