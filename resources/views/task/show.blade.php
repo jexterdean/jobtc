@@ -259,15 +259,16 @@
             e.stopImmediatePropagation();
             var index = $(this).parent().parent().parent().index();
             var checklist_item_id = $(this).parent().parent().parent().parent().attr('id');
-            console.log(index);
+            //console.log(index);
             $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').addClass('has-border');
+            
 
         }, function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
             var index = $(this).parent().parent().parent().index();
             var checklist_item_id = $(this).parent().parent().parent().parent().attr('id');
-            console.log(checklist_item_id);
+            //console.log(checklist_item_id);
             $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').removeClass('has-border');
         });
 
@@ -325,27 +326,6 @@
                 checklist_header.removeAttr('style').html(header);
                 checklist_item.removeAttr('style').html(content);
 
-            });
-
-        };
-
-        var update_checklist_header = function (id, header, checklist_header) {
-
-            var data = [];
-            data.push(
-                    {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
-            {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-            {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
-            {'name': 'checklist_header', 'value': header}
-            );
-
-            $.post(public_path + 'updateCheckList/' + id, data, function (_data) {
-                var _return_data = jQuery.parseJSON(_data);
-                $('.text-area-content').remove();
-
-                var ele = _return_data.checklist_header;
-
-                checklist_header.removeAttr('style').html(ele);
             });
 
         };
@@ -575,19 +555,19 @@
         _body.on('click', '.alert_delete', function (e) {
             e.preventDefault();
 
-            var index = $(this).parent().parent().parent().parent().index();
-
+            var index = $(this).parent().parent().parent().index();
+            
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-
+            
             //Get the list group id
-            var list_group_id = $(this).parent().parent().parent().parent().parent().attr('id');
-
+            var list_group_id = $(this).parent().parent().parent().parent().attr('id');
+            
             $('#' + list_group_id + ' .list-group-item').eq(index).remove();
 
             var url = public_path + 'deleteCheckList/' + task_list_item_id;
 
             $.post(url);
-
+            
         });
 
         //For Tasklist Delete
