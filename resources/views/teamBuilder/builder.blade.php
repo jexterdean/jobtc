@@ -272,6 +272,7 @@
 
         var btn_delete = $('.btn-delete');
         btn_delete.click(function(e){
+            var thisElement = $(this).closest('.member-item');
             var thisId = this.id;
             var type = $(this).data('type');
             var thisUrl = '{{ URL::to('teamBuilder') }}/' + thisId + '?p=' + type;
@@ -281,7 +282,9 @@
                 url: thisUrl,
                 method: "DELETE",
                 success: function(doc) {
-                    location.reload();
+                    thisElement.fadeOut(function(e){
+
+                    }, 1500);
                 }
             });
         });
