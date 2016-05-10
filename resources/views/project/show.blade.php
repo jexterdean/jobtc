@@ -59,25 +59,31 @@
                 ?>
                 @if(count($tasks) > 0)
                 @foreach($tasks as $val)
-                <div id="collapse-container-{{ $val->task_id }}" class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#collapse-{{ $val->task_id }}" aria-expanded="true" aria-controls="collapseOne">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <h4 class="panel-title task-list-header">
-                                    {{ $val->task_title }}
-                                </h4>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="pull-right">
-                                    <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn btn-shadow btn-edit show_edit_form">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="{{ url('task/delete/'.$val->task_id) }}" class="delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <div id="collapse-container-{{ $val->task_id }}" class="panel panel-default task-list">
+                    <div class="panel-container">
+                        <div class="panel-heading task-header">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <h4 class="panel-title task-list-header">
+                                        {{ $val->task_title }}
+                                    </h4>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="pull-right" style="margin-right: 20px">
+                                        <a href="#collapse-{{ $val->task_id }}" class="btn-shadow btn btn-default toggle-tasklist" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne"><i class="fa fa-chevron-down"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="btn-shadow btn btn-sm btn-default edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>&nbsp;&nbsp;&nbsp;
+                                        <a href="{{ url('task/delete/'.$val->task_id) }}" class="btn-shadow btn btn-default delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                        <div class="panel-body">
-                            <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}" style="margin-top: -10px;"></div>
+                        <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <div class="panel-content">
+                                    <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}" style="margin-top: -10px;"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,6 +94,7 @@
         </div>
         <div class="col-md-4">
             <div class="panel-group" id="accordion_" role="tablist" aria-multiselectable="true">
+                @include('common.note',['note' => $note, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
                 @include('common.task',['tasks' => $tasks, 'belongs_to' => 'project', 'unique_id' => $project->project_id,'project_id' => $project->project_id])
                 <div class="panel panel-default">
                     <div class="panel-heading collapsed" data-target="#collapseTwo" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion_" aria-expanded="false" aria-controls="collapseTwo">
@@ -153,7 +160,6 @@
                     </div>
                 </div>
                 @include('common.attachment',['attachments' => $attachments])
-                @include('common.note',['note' => $note, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
                 @include('common.comment',['comments' => $comments, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
             </div>
         </div>

@@ -26,42 +26,34 @@
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $val)
                                 <li id="task_item_{{$val->id}}" class="list-group-item task-list-item">
-                                    <div class="row">
+                                    <div class="row task-list-details">
                                         <div class="col-md-5">
                                             <label class="checklist-header">{!! $val->checklist_header !!}</label>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                        </div>                                            
-                                        <div class="col-md-1">                                            
-                                            <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
                                         </div>
-                                        <div class="col-md-1">
-                                            <a class="btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <div class="pull-right" style="margin-right: 10px">
+                                            <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                            <a class="btn edit-task-list-item btn-shadow"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                        </div>
-                                        <div class="col-md-1">
+
                                             <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
-                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>
-                                        </div>
-                                        <div class="col-md-1">
+                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>&nbsp;&nbsp;&nbsp;
+
                                             @if ($val->status === 'Default')
-                                            <div class="btn bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @elseif($val->status === 'Ongoing')
-                                            <div class="btn bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @elseif($val->status === 'Completed')
-                                            <div class="btn bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @elseif($val->status === 'Urgent')
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
-                                        </div>
-                                        
-                                        <div class="col-md-3">
-                                            <div class="pull-right">
-                                                <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                                <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
-                                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                            </div>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <a href="#" class="btn btn-shadow btn-default alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
                                     </div>
                                     <div class="row">
@@ -101,7 +93,7 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                
+
             </div>
             <div class="col-sm-2">
                 @if($current_time)
@@ -206,7 +198,7 @@
             connectWith: ".list-group",
             handle: '.drag-handle',
             receive: function (event, ui) {
-                //For receiving 
+                //For receiving
                 var itemText = ui.item.attr('id');
 
                 var list_group_id = $(this).attr('id').split('_').pop();
@@ -229,7 +221,7 @@
 
             },
             update: function (event, ui) {
-                
+
                 //For Sorting within lists
                 var list_group_id = $(this).attr('id').split('_').pop();
 
@@ -248,7 +240,7 @@
             }
         });
 
-        
+
 
         var _body = $('#collapse-' + '{{ $task->task_id }}');
         var task_id = '{{ $task->task_id }}';
@@ -260,25 +252,25 @@
             alert += '</div>';
             $('section.content').prepend(alert);
         };
-        
+
         //For Delete Hover
         _body.find('.list-group .alert_delete').hover(function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var index = $(this).parent().parent().parent().parent().index();
-            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
+            var index = $(this).parent().parent().parent().index();
+            var checklist_item_id = $(this).parent().parent().parent().parent().attr('id');
+            console.log(index);
+            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').addClass('has-border');
 
-            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', '1px solid #ff0000');
-            
         }, function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var index = $(this).parent().parent().parent().parent().index();
-            var checklist_item_id = $(this).parent().parent().parent().parent().parent().attr('id');
-
-            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').css('border', 'none');
+            var index = $(this).parent().parent().parent().index();
+            var checklist_item_id = $(this).parent().parent().parent().parent().attr('id');
+            console.log(checklist_item_id);
+            $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').removeClass('has-border');
         });
-        
+
         var finish_checklist = function () {
             var count = 0;
             var over_all = 0;
@@ -328,7 +320,7 @@
 
                 var header = _return_data.checklist_header;
                 var content = _return_data.checklist;
-                
+
 
                 checklist_header.removeAttr('style').html(header);
                 checklist_item.removeAttr('style').html(content);
@@ -511,7 +503,7 @@
             var list_group_id = $(this).parent().parent().parent().parent().attr('id');
 
             var task_list_id = $(this).siblings('.task_list_id').val();
-            
+
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
 
             //Header Element
@@ -519,19 +511,19 @@
             //Content Element
             var task_item_content = $(this).parent().parent().parent().find('.checklist-item');
 
-            //Get Header Text 
+            //Get Header Text
             var header_text = $(this).parent().parent().parent().find('.checklist-header').text();
-            
+
             //Get Text
             var content_text = $(this).parent().parent().parent().find('.checklist-item').html();
-            
+
             //Header Editor
             var header_text_area_ele = '<div class="text-area-content">';
             header_text_area_ele += '<div class="form-group">';
             header_text_area_ele += '<input type="text" name="checklist_header" class="form-control edit-checklist-header" placeholder="Task Header" value="' + header_text + '"/>';
             header_text_area_ele += '</div>'; //form-group
             header_text_area_ele += '</div>';
-            
+
             //Content Editor
             var content_text_area_ele = '<div class="text-area-content">';
             content_text_area_ele += '<div class="form-group">';
@@ -540,16 +532,16 @@
             content_text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             content_text_area_ele += '</div>';
 
-            
+
             task_item_header.css({'display': 'none'}).before(header_text_area_ele);
-            
+
             task_item_content.css({'display': 'none'}).before(content_text_area_ele);
 
             //var textarea_id = $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').attr('id');
             var textarea_id = $(this).parent().parent().parent().find('.edit-checklist-item').attr('id');
-            
+
             CKEDITOR.replace(textarea_id);
-            
+
             //Toggle the content area to show
             $('#task-item-collapse-'+task_list_item_id).collapse('show');
             $(this).addClass('disabled');
@@ -567,7 +559,7 @@
 
             //Get checklist item with the list group id
             var checklist_item = $(this).parent().parent().find('.checklist-item');
-            
+
             //Get checklist header with the list group id
             var checklist_header = $(this).parent().parent().parent().parent().find('.checklist-header');
 
@@ -584,10 +576,10 @@
             //update_checklist_header(task_list_item_id, task_list_header, checklist_header);
 
             update_checklist_data(task_list_item_id, task_list_header, task_list_data, checklist_header ,checklist_item);
-            
+
             //Hide the content area
             $('#task-item-collapse-'+task_list_item_id).collapse('hide');
-            
+
             $('.edit-task-list-item').removeClass('disabled');
         });
 

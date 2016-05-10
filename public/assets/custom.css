@@ -14,11 +14,11 @@
 .static-info{border-bottom:1px solid #eee;}
 /*Task List Items CSS*/
 
-.list-group .alert_delete, .delete-tasklist{
+.list-group .alert_delete, .delete-tasklist, .edit-tasklist, .toggle-tasklist{
     color: #8d8d8d;
-    font-size: 28px;
+    /*font-size: 28px;*/
 }
-.list-group .alert_delete:hover , .delete-tasklist:hover{
+.list-group .alert_delete:hover , .delete-tasklist:hover, .edit-tasklist:hover,.toggle-tasklist:hover{
     color: #000 !important;
 }
 
@@ -51,6 +51,9 @@ textarea.form-control {
 
 .task-list-item {
     border: none;
+}
+.has-border {
+    border: 1px solid #ff0000!important;
 }
 
 .drag-handle {

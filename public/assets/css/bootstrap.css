@@ -5700,9 +5700,8 @@ button.list-group-item-danger.active:focus {
   box-shadow: 2px 2px 5px -1px rgba(15, 15, 15, 0.34);
 }
 .panel-heading {
-  padding: 5px;
+  padding: 5px!important;
   border-bottom: 1px solid transparent;
-  vertical-align: middle;
 }
 .panel-heading > .dropdown .dropdown-toggle {
   color: inherit;
@@ -7653,4 +7652,32 @@ button.close {
   .hidden-print {
     display: none !important;
   }
+}
+.task-list-item {
+  border: none!important;
+  padding: 0!important;
+  border-radius: 0!important;
+}
+.task-list-item .task-list-details {
+  padding: 0 10px 0 0!important;
+}
+.task-list-item .task-item-collapse {
+  padding: 10px!important;
+}
+.task-list .task-header {
+  padding: 0 5px!important;
+}
+.task-list .task-header .row {
+  padding: 0!important;
+  margin: 0!important;
+}
+.task-list .task-header a {
+  text-shadow: none!important;
+}
+.task-list .task-header .panel-title {
+  margin: 10px 0;
+}
+.edit-checklist-header,
+input[name="checklist_header"] {
+  font-weight: bold;
 }
