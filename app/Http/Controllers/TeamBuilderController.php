@@ -39,6 +39,7 @@ class TeamBuilderController extends BaseController
             foreach($team as $v){
                 $v->member = TeamMember::select(DB::raw(
                     'fp_team_member.id,
+                    fp_team_member.user_id,
                     IF(fp_user.name IS NULL, fp_user.username, fp_user.name) as name,
                     fp_user.email'
                 ))
@@ -367,7 +368,26 @@ class TeamBuilderController extends BaseController
      */
     public function edit($id)
     {
-        //
+        $assets = [];
+        $team = array();
+        $page = isset($_GET['p']) ? $_GET['p'] : 'member';
+
+        if($page == 'team'){
+            $team = Team::find($id)
+                ->first();
+        }
+        else if($page == 'member'){
+
+        }
+        else if($page == 'project'){
+
+        }
+
+        return View::make('teamBuilder.' . $page . '.edit', [
+            'assets' => $assets,
+            'team_id' => $id,
+            'team' => $team,
+        ]);
     }
 
     /**
@@ -379,7 +399,26 @@ class TeamBuilderController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $page = isset($_GET['p']) ? $_GET['p'] : 'member';
+
+        if($page == 'team') {
+            $validation = Validator::make($request->all(), [
+                'title' => 'required'
+            ]);
+
+            if ($validation->fails()) {
+                return Redirect::to('teamBuilder')
+                    ->withInput()
+                    ->withErrors($validation->messages());
+            }
+
+            $meeting = Team::find($id);
+            $meeting->title = Input::get('title');
+            $meeting->save();
+
+            return Redirect::to('teamBuilder')
+                ->withSuccess("Team updated successfully!!");
+        }
     }
 
     /**
