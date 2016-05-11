@@ -27,8 +27,8 @@
                                 @foreach($checkList as $val)
                                 <li id="task_item_{{$val->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
-                                        <div class="col-md-5">
-                                            <label class="checklist-header">{!! $val->checklist_header !!}</label>
+                                        <div class="col-md-7">
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{!! $val->checklist_header !!}</a>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -43,14 +43,12 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                             &nbsp;&nbsp;&nbsp;
-                                            <a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-{{$val->id}}"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <a class="btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                            <a href="#" class="edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
 
                                             <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
-                                            <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>&nbsp;&nbsp;&nbsp;
-
+                                            <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
                                             <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
@@ -77,7 +75,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 <div class="row">
                     <div class="col-sm-6">
                         <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Task </a><br/><br/>
@@ -92,10 +90,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
-
-            </div>
-            <div class="col-sm-2">
+            <div class="col-sm-offset-2 col-sm-2">
                 @if($current_time)
                 <a class="btn btn-shadow btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
                 @else
@@ -105,19 +100,19 @@
             <div class="col-sm-5">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="col-sm-3">
+                        <div class="col-sm-5">
                             <h4 class="text-center text-bold bg-black timer-text" id="timer" style="font-size: 20px!important;padding: 0 5px;">
                                 00:00:00
                             </h4>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-7">
                             <div class="row">
-                                <div class="col-sm-5">
-                                    <h4 class="text-center text-bold bg-black" id="timer" style="font-size: 20px!important;">
+                                <div class="col-sm-8">
+                                    <h4 class="text-left text-bold bg-black" id="timer" style="font-size: 20px!important;">
                                         Time: <strong class="total-time">{{ $_total }}</strong>
                                     </h4>
                                 </div>
-                                <div class="col-sm-7" >
+                                <div class="col-sm-4" >
                                     <a href="#timer-table-{{ $task->task_id }}" class="btn btn-sm btn-black pull-right" aria-expanded="true" data-widget="collapse" data-toggle="collapse"><i class="fa fa-2x fa-chevron-down"></i></a>
                                 </div>
                             </div>
@@ -284,9 +279,9 @@
             var _percentage = (count / over_all) * 100;
             _body.find(".progress-in")
                     .animate({
-                        width: _percentage.toFixed(2) + '%'
+                        width: _percentage.toFixed(0) + '%'
                     }, 100);
-            _body.find('.progress-val').html(_percentage.toFixed(2) + '%');
+            _body.find('.progress-val').html(_percentage.toFixed(0) + '%');
         };
 
         var update_checklist_status = function (id, status) {

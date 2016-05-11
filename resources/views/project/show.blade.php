@@ -59,30 +59,25 @@
                 ?>
                 @if(count($tasks) > 0)
                 @foreach($tasks as $val)
-                <div id="collapse-container-{{ $val->task_id }}" class="panel panel-default task-list">
-                    <div class="panel-container">
-                        <div class="panel-heading task-header">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <h4 class="panel-title task-list-header">
-                                        {{ $val->task_title }}
-                                    </h4>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="pull-right">
-                                        <a href="#collapse-{{ $val->task_id }}" class="toggle-tasklist" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne"><i class="fa fa-chevron-down"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <img class="drag-handle" src='{{ url('/assets/img/draggable-handle-2.png') }}'/>&nbsp;&nbsp;&nbsp;
-                                        <a href="{{ url('task/delete/'.$val->task_id) }}" class="delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                    </div>
+                <div id="collapse-container-{{ $val->task_id }}" class="panel task-list">
+                    <div class="panel-heading task-header" data-target="#collapse-{{ $val->task_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h4 class="panel-title task-list-header">{{ $val->task_title }}</h4>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="btn-group pull-right">
+                                <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="{{ url('task/delete/'.$val->task_id) }}" class="delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
                                 </div>
                             </div>
                         </div>
-                        <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                            <div class="panel-body">
-                                <div class="panel-content">
-                                    <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}" style="margin-top: -10px;"></div>
-                                </div>
+                    </div>
+                    <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <div class="panel-content">
+                                <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}" style="margin-top: -10px;"></div>
                             </div>
                         </div>
                     </div>
@@ -97,66 +92,66 @@
                 @include('common.note',['note' => $note, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
                 @include('common.task',['tasks' => $tasks, 'belongs_to' => 'project', 'unique_id' => $project->project_id,'project_id' => $project->project_id])
                 <div class="panel panel-default">
-                    <div class="panel-heading collapsed" data-target="#collapseTwo" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion_" aria-expanded="false" aria-controls="collapseTwo">
-                        <h4 class="panel-title">Project Details<span class="pull-right">{{ $project->ref_no }}</span></h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-container">
+                        <div class="panel-heading collapsed" data-target="#collapseTwo" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion_" aria-expanded="false" aria-controls="collapseTwo">
+                            <h4 class="panel-title">Project Details<span class="pull-right">{{ $project->ref_no }}</span></h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                         <div class="panel-body">
-                            <table class="table table-striped">
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Title:</strong></td>
-                                        <td>{{ $project->project_title }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Description:</strong></td>
-                                        <td>{{ $project->project_description }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Account:</strong></td>
-                                        <td>{{ $project->account }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Company:</strong></td>
-                                        <td>{{ $clients[$project->client_id] }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Project Type:</strong></td>
-                                        <td>{{ $project->project_type }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Start & Deadline:</strong></td>
-                                        <td>
-                                            {{ date("d M Y, h:ia", strtotime($project->start_date)) }}
-                                            <strong>To</strong>
-                                            {{ date("d M Y, h:ia", strtotime($project->deadline)) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Currency & Rate:</strong></td>
-                                        <td>
-                                            {{ $project->currency }}
-                                            {{ $project->rate_value }}
-                                        </td>
-                                    </tr>
-                                    @role('admin')
-                                    <tr>
-                                        <td><strong>Rate Type:</strong></td>
-                                        <td>
-                                            {{ $project->rate_type }}
-                                        </td>
-                                    </tr>
-                                    @endrole
-                                </tbody>
-                            </table>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <a href="{{ route('project.destroy',$project->project_id) }}" class="alert_delete"><i class='fa-2x fa fa-trash-o'></i></a>&nbsp;&nbsp;&nbsp;
-                                    <a href="{{ route('project.edit',$project->project_id) }}" class="show_edit_form" data-toggle='modal' data-target='#ajax'><i class='fa-2x fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;
-                                    <a role="menuitem" tabindex="-1" href="{{ url('project') }}" class="pull-right"><i class='fa-2x fa fa-arrow-left'></i></a>
+                            <div class="panel-content">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Title:</strong></td>
+                                            <td>{{ $project->project_title }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Description:</strong></td>
+                                            <td>{{ $project->project_description }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Account:</strong></td>
+                                            <td>{{ $project->account }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Company:</strong></td>
+                                            <td>{{ $clients[$project->client_id] }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Project Type:</strong></td>
+                                            <td>{{ $project->project_type }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Start & Deadline:</strong></td>
+                                            <td>
+                                                {{ date("d M Y, h:ia", strtotime($project->start_date)) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Deadline:</strong></td>
+                                            <td>
+                                                {{ date("d M Y, h:ia", strtotime($project->deadline)) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Currency & Rate:</strong></td>
+                                            <td>
+                                                {{ $project->currency }}
+                                                {{ $project->rate_value }}
+                                                {{ $project->rate_type }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <a href="{{ route('project.destroy',$project->project_id) }}" class="alert_delete"><i class='fa-2x fa fa-trash-o'></i></a>&nbsp;&nbsp;&nbsp;
+                                        <a href="{{ route('project.edit',$project->project_id) }}" class="show_edit_form" data-toggle='modal' data-target='#ajax'><i class='fa-2x fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
                 @include('common.attachment',['attachments' => $attachments])

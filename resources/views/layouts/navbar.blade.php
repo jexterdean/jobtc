@@ -10,10 +10,28 @@
     </a>
 </li>
 @endrole
-<li>
-    <a href="{{ url('project') }}">
-        <i class="fa fa-lightbulb-o"></i> <span>{{Lang::get('messages.Projects')}}</span>
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle">
+        <i class="fa fa-lightbulb-o"></i>
+        <span> {{Lang::get('messages.Projects')}} </span>
+        <span class="caret"></span>
     </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="#add_project" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Project</span></a>
+        </li>
+        <li class="divider"></li>
+    <?php $project = \App\Helpers\Helper::getProjectLinks();?>
+    @if(count($project) > 0)
+        @foreach($project as $val)
+            <li>
+                <a href="{{ url('project/' . $val->project_id) }}">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
+                </a>
+            </li>
+        @endforeach
+    @endif
+    </ul>
 </li>
 <li>
     <a href="{{ url('teamBuilder') }}">

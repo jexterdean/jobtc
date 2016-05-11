@@ -14,11 +14,12 @@
 .static-info{border-bottom:1px solid #eee;}
 /*Task List Items CSS*/
 
-.list-group .alert_delete, .delete-tasklist, .edit-tasklist, .toggle-tasklist{
-    color: #8d8d8d;
-    font-size: 18px;
+.list-group .alert_delete, .delete-tasklist, .edit-tasklist, .toggle-tasklist,.move-tasklist,.edit-task-list-item{
+    color: #B7B5D8;/*#8d8d8d;*/
+    font-size: 25px;
 }
-.list-group .alert_delete:hover , .delete-tasklist:hover, .edit-tasklist:hover,.toggle-tasklist:hover{
+.list-group .alert_delete:hover , .delete-tasklist:hover, .edit-tasklist:hover,.toggle-tasklist:hover,.move-tasklist:hover,
+.task-list-details:hover .pull-right a,.edit-task-list-item:hover{
     color: #000 !important;
 }
 
@@ -32,7 +33,7 @@ textarea.form-control {
 }
 
 .list-group-item {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .checklist-item {
@@ -43,6 +44,11 @@ textarea.form-control {
 
 .checklist-header {
     font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+.checklist-header:hover{
+    color: #1933c4!important;
 }
 
 .list-group {
@@ -67,4 +73,25 @@ textarea.form-control {
 
 .task-list-header {
     font-size: 22px;
+}
+.task-header{
+    cursor: pointer;
+}
+.task-header .btn-group,.task-header{
+    height: 30px;
+}
+.task-header .btn-group{
+    margin: -3px 0;
+}
+.task-list{
+    border: none!important;
+}
+.task-list .task-header:hover{
+    background: #1830ba!important;
+    color: #FFFFFF!important;
+    border: 1px solid #FFFFFF!important;
+}
+.task-list .task-header .task-list-header{
+    text-shadow: none!important;
+    font-weight: bold;
 }

@@ -1,3 +1,25 @@
+<div class="modal fade" id="add_project" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Project</h4>
+            </div>
+            <div class="modal-body">
+                @role('admin')
+                {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
+                @include('project/partials/_form')
+                {!! Form::close()  !!}
+                @else
+                <div class='alert alert-danger alert-dismissable'>
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+                    <strong>You dont have to perform this action!!</strong>
+                </div>
+                @endrole
+            </div>
+        </div>
+    </div>
+</div>
 <form id="form-delete" action="" method="post" style="width: 0px;height: 0px;">
     {!! csrf_field() !!}
     {!! method_field('delete') !!}

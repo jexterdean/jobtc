@@ -66,6 +66,14 @@ class Helper
             return "<span class='label label-sm label-success'>Completed</span>";
     }
 
+    public static function getProjectLinks(){
+        $project = DB::table('project')
+            ->orderBy('project_title', 'asc')
+            ->get();
+
+        return $project;
+    }
+
 
     public static function br2nl($string)
     {

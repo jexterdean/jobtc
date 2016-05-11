@@ -47,13 +47,6 @@
         </div>
     </div>
     <div class="form-group">
-        {!!  Form::label('reverence','Reverence',['class' => 'col-md-3 control-label']) !!}
-        <div class="col-md-9">
-            {!!  Form::textarea('reverence',isset($project->reverence) ?
-            $project->reverence : '',['size' => '30x3', 'class' => 'form-control', 'placeholder' => 'Reverence', 'tabindex' => '6']) !!}
-        </div>
-    </div>
-    <div class="form-group">
         {!!  Form::label('start_date','Start',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-3">
             {!!  Form::input('text','start_date',isset($project->start_date) ? date("d-m-Y",strtotime
