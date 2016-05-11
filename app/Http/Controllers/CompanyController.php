@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
 use App\Models\Country;
-use App\Models\Client;
+use App\Models\Company;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Project;
@@ -16,7 +16,7 @@ use Redirect;
 use Validator;
 use DB;
 use Input;
-class ClientController extends BaseController
+class CompanyController extends BaseController
 {
 
     public function index()
@@ -25,45 +25,45 @@ class ClientController extends BaseController
             ->lists('country_name', 'country_id')
         ->toArray();
 
-        $client = Client::all();
+        $companies = Company::all();
 
         $assets = ['table'];
 
-        return View::make('client.index', [
-            'clients' => $client,
+        return View::make('company.index', [
+            'companies' => $companies,
             'countries' => $countries_option,
             'assets' => $assets
         ]);
     }
 
-    public function show($client_id)
+    public function show($company_id)
     {
-        $client = Client::find($client_id);
+        $companies = Company::find($company_id);
 
         $countries_option = Country::orderBy('country_name', 'asc')
             ->lists('country_name', 'country_id');
 
-        return View::make('client.show', [
-            'client' => $client,
+        return View::make('company.show', [
+            'companies' => $companies,
             'countries' => $countries_option
         ]);
     }
 
     public function create()
     {
-        return View::make('client.create');
+        return View::make('company.create');
     }
 
-    public function edit($client_id)
+    public function edit($company_id)
     {
-        $client = Client::find($client_id);
+        $companies = Company::find($company_id);
 
         $countries_option = Country::orderBy('country_name', 'asc')
             ->lists('country_name', 'country_id')
         ->toArray();
 
-        return View::make('client.edit', [
-            'client' => $client,
+        return View::make('company.edit', [
+            'company' => $companies,
             'countries' => $countries_option
         ]);
     }
@@ -72,7 +72,7 @@ class ClientController extends BaseController
     {
 
         $validation = Validator::make(Input::all(), [
-            'company_name' => 'required|unique:client',
+            'company_name' => 'required|unique:companies',
             'contact_person' => 'required',
             'email' => 'required|email',
             'zipcode' => 'numeric',
@@ -83,21 +83,21 @@ class ClientController extends BaseController
             return Redirect::back()->withInput()->withErrors($validation->messages());
         }
 
-        $client = new Client;
+        $companies = new Company;
         $data = Input::all();
         $data['client_status'] = 'Active';
         $client->fill($data);
         $client->save();
 
-        return Redirect::to('client')->withSuccess("Client added successfully!!");
+        return Redirect::to('client')->withSuccess("Company added successfully!!");
     }
 
-    public function update($client_id)
+    public function update($company_id)
     {
-        $client = Client::find($client_id);
+        $companies= Company::find($company_id);
 
         $validation = Validator::make(Input::all(), [
-            'company_name' => 'required|unique:client,company_name,' . $client_id . ',client_id',
+            'company_name' => 'required|unique:companies,company_name,' . $company_id . ',company_id',
             'contact_person' => 'required',
             'email' => 'required|email',
             'zipcode' => 'numeric',
@@ -110,46 +110,47 @@ class ClientController extends BaseController
         $data = Input::all();
         $client->fill($data);
         $client->save();
-        return Redirect::to('client')->withSuccess("Client updated successfully!!");
+        return Redirect::to('client')->withSuccess("Company updated successfully!!");
     }
 
     public function delete()
     {
     }
 
-    public function destroy($client_id)
+    public function destroy($company_id)
     {
-        $client = Client::find($client_id);
+        $company = Company::find($company_id);
 
         if (!$client || !parent::hasRole('Admin'))
-            return Redirect::to('client')->withErrors('This is not a valid link!!');
+            return Redirect::to('company')->withErrors('This is not a valid link!!');
 
-        $user = User::find($client_id);
+        $user = User::find($company_id);
 
-        $project = Project::where('client_id', '=', $client->client_id)->get();
+        $project = Project::where('company_id', '=', $company->id)->get();
 
-        if (count($project))
-            return Redirect::to('client')->withErrors('This client has some projects!! Delete that project first!!');
-
-        $ticket = Ticket::where('username', '=', $user->username)->get();
+        if (count($project)) {
+            return Redirect::to('company')->withErrors('This client has some projects!! Delete that project first!!');
+        }
+        
+        $ticket = Ticket::where('user_id',$user->id)->get();
 
         if (count($ticket))
             return Redirect::to('client')->withErrors('This client has some ticket!! Delete that ticket first!!');
 
         DB::table('message')
-            ->where('from_username', '=', $user->username)
-            ->orWhere('to_username', '=', $user->username)
+            ->where('from_user_id', '=', $user->id)
+            ->orWhere('to_user_id', '=', $user->id)
             ->delete();
 
         DB::table('events')
-            ->where('username', '=', $user->username)
+            ->where('user_id', '=', $user->id)
             ->delete();
 
         $user->delete();
 
-        $client->delete();
+        $company->delete();
 
-        return Redirect::to('client')->withSuccess('Client deleted successfully!!');
+        return Redirect::to('client')->withSuccess('Company deleted successfully!!');
 
     }
 }

@@ -1,4 +1,4 @@
 @extends('layouts.default')
 @section('content')
-    {{ $user->username}}
+    {{ $user->name}}
 @stop

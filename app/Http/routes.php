@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('item', 'ItemController');
         Route::resource('payment', 'PaymentController');
         Route::resource('user', 'UserController');
-        Route::resource('client', 'ClientController');
+        Route::resource('company', 'CompanyController');
         Route::resource('assigneduser', 'AssignedController');
 
     });
@@ -101,7 +101,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard', 'DashboardController@index');
     Route::get('user/{user_id}/delete', 'UserController@delete');
     Route::get('event/{event_id}/delete', 'EventsController@delete');
-    Route::get('client/{client_id}/delete', 'ClientController@delete');
+    Route::get('company/{company_id}/delete', 'CompanyController@delete');
     Route::get('billing/{billing_id}/delete', 'BillingController@delete');
     Route::get('project/{project_id}/delete', 'ProjectController@delete');
     Route::get('bug/{bug_id}/delete', 'BugController@delete');

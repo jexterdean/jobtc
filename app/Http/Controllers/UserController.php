@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
 use App\Models\User;
-use App\Models\Client;
+use App\Models\Company;
+use App\Models\Profile;
 use Bican\Roles\Models\Role;
 
 use DB;
@@ -22,25 +23,23 @@ class UserController extends BaseController
     public function index()
     {
         $user = DB::table('user')
-            ->select('user.user_id','user.user_status', 'user.name','user.email','user.username',
-                'role_user.role_id','user.client_id')
-            ->join('role_user', 'role_user.user_id', '=', 'user.user_id')
-            ->join('roles', 'roles.id', '=', 'role_user.role_id')
-            ->where('roles.level', '<>', '1')
+            ->select('user.user_id','user.user_status', 'user.name','user.email','profiles.role_id')
+            ->join('profiles','profiles.user_id','=','user.user_id')    
             ->get();
 
+        $profile = Profile::get();
+        
         $role = Role::orderBy('name', 'asc')
-            ->lists('name', 'id')
-            ->toArray();
+            ->pluck('name', 'id');
 
-        $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id')
-            ->toArray();
+        $client_options = Company::orderBy('name', 'asc')
+            ->pluck('name', 'id');
 
         $assets = ['table', 'select2'];
 
         return View::make('user.index', [
             'users' => $user,
+            'profiles' => $profile,
             'clients' => $client_options,
             'roles' => $role,
             'assets' => $assets
@@ -73,7 +72,7 @@ class UserController extends BaseController
 
         $role = Role::orderBy('name', 'asc')->lists('name', 'id');
 
-        $client_options = Client::orderBy('company_name', 'asc')
+        $client_options = Company::orderBy('company_name', 'asc')
             ->lists('company_name', 'client_id')->toArray();
 
         if ($user) {

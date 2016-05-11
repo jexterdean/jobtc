@@ -7,7 +7,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests;
 use App\Models\Project;
 use App\Models\User;
-use App\Models\Client;
+use App\Models\Company;
 use App\Models\AssignedUser;
 use App\Models\Note;
 use App\Models\Attachment;
@@ -31,9 +31,9 @@ class ProjectController extends BaseController
     public function index()
     {
         //
-        if ( parent::userHasRole('admin'))
+        if ( parent::userHasRole('admin')) {
             $projects = Project::all();
-        elseif (parent::userHasRole('Client')) {
+        } elseif (parent::userHasRole('client')) {
             $projects = DB::table('project')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->get();
@@ -48,15 +48,15 @@ class ProjectController extends BaseController
         $user = User::orderBy('name', 'asc')
             ->lists('name', 'user_id');
 
-        $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id')
+        $client_options = Company::orderBy('name', 'asc')
+            ->lists('name','id')
             ->toArray();
 
         $assets = ['table', 'datepicker'];
 
         return view('project.index', [
             'projects' => $projects,
-            'clients' => $client_options,
+            'companies' => $client_options,
             'users' => $user,
             'assets' => $assets
         ]);
@@ -125,7 +125,7 @@ class ProjectController extends BaseController
         if (parent::userHasRole('Admin')){
             $project = Project::find($id);
         }
-        elseif (parent::userHasRole('Client')) {
+        elseif (parent::userHasRole('client')) {
             $project = DB::table('project')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->where('project_id', '=', $id)
@@ -138,9 +138,10 @@ class ProjectController extends BaseController
                 ->first();
         }
 
-        if (!$project)
+        if (!$project) {
             return redirect()->route('project.show', $id);
-
+        }
+        
         $assignedUser = AssignedUser::where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $id)
             ->get();
@@ -149,11 +150,10 @@ class ProjectController extends BaseController
             ->toArray();
 
         $user = User::orderBy('name', 'asc')
-            ->lists('name', 'email')
-            ->toArray();
+            ->pluck('name', 'email');
 
-        $client_options = Client::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+        $client_options = Company::orderBy('name', 'asc')
+            ->pluck('name','id');
 
         $note = Note::where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $id)
@@ -189,7 +189,7 @@ class ProjectController extends BaseController
 
         return view('project.show', [
             'project' => $project,
-            'clients' => $client_options,
+            'companies' => $client_options,
             'note' => $note,
             'users' => $user,
             'comments' => $comment,
@@ -211,7 +211,7 @@ class ProjectController extends BaseController
     {
         //
         $project = Project::find($id);
-        $client_options = Client::orderBy('company_name', 'asc')
+        $client_options = Company::orderBy('company_name', 'asc')
             ->lists('company_name', 'client_id');
 
         $user = User::where('client_id', '=', '')

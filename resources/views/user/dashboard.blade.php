@@ -7,10 +7,10 @@
                     <div class="small-box bg-aqua">
                         <div class="inner">
                             <h3>
-                                {{ count($clients) }}
+                                {{ count($companies) }}
                             </h3>
                             <p>
-                                Clients
+                                Companies
                             </p>
                         </div>
                         <div class="icon">

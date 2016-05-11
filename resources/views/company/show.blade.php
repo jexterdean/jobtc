@@ -1,13 +1,13 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-    <h4 class="modal-title">Client Detail</h4>
+    <h4 class="modal-title">Company Detail</h4>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
             <div class="box box-solid box-default">
                 <div class="box-header">
-                    <h3 class="box-title">{{ $client->contact_person }}</h3>
+                    <h3 class="box-title">{{ $companies->contact_person }}</h3>
                 </div>
                 <div class="box-body">
                     <div class="row static-info">
@@ -15,7 +15,7 @@
                             Company Name
                         </div>
                         <div class="col-md-7 value">
-                            {{ $client->company_name }}
+                            {{ $companies->company_name }}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -23,7 +23,7 @@
                             Email
                         </div>
                         <div class="col-md-7 value">
-                            {{{ $client->email or 'NA' }}}
+                            {{{ $companies->email or 'NA' }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -31,7 +31,7 @@
                             Phone
                         </div>
                         <div class="col-md-7 value">
-                            {{{ $client->phone or 'NA' }}}
+                            {{{ $companies->phone or 'NA' }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -39,7 +39,7 @@
                             Adddress
                         </div>
                         <div class="col-md-7 value">
-                            {{{ $client->address or 'NA' }}}
+                            {{{ $companies->address or 'NA' }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -47,7 +47,7 @@
                             City
                         </div>
                         <div class="col-md-7 value">
-                            {{{ $client->city or 'NA' }}}
+                            {{{ $companies->city or 'NA' }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -55,7 +55,7 @@
                             Zipcode
                         </div>
                         <div class="col-md-7 value">
-                            {{{ $client->zipcode or 'NA' }}}
+                            {{{ $companies->zipcode or 'NA' }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -63,7 +63,7 @@
                             State
                         </div>
                         <div class="col-md-7 value">
-                            {{{ $client->state or 'NA' }}}
+                            {{{ $companies->state or 'NA' }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -71,7 +71,7 @@
                             Country
                         </div>
                         <div class="col-md-7 value">
-                            {{{ $countries[$client->country_id] or 'NA' }}}
+                            {{{ $companies->country }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -79,7 +79,7 @@
                             Created at
                         </div>
                         <div class="col-md-7 value">
-                            {{{ date("d M Y",strtotime($client->created_at)) }}}
+                            {{{ date("d M Y",strtotime($companies->created_at)) }}}
                         </div>
                     </div>
                     <div class="row static-info">
@@ -87,7 +87,7 @@
                             Last Updated at
                         </div>
                         <div class="col-md-7 value">
-                            {{{ date("d M Y",strtotime($client->updated_at)) }}}
+                            {{{ date("d M Y",strtotime($companies->updated_at)) }}}
                         </div>
                     </div>
                 </div>

@@ -115,7 +115,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Company:</strong></td>
-                                            <td>{{ $clients[$project->client_id] }}</td>
+                                            <td>{{ $companies[$project->company_id] }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Project Type:</strong></td>

@@ -5,8 +5,8 @@
 </li>
 @role('admin')
 <li>
-    <a href="{{ url('client') }}">
-        <i class="fa fa-users"></i> <span>{{Lang::get('messages.Clients')}}</span>
+    <a href="{{ url('company') }}">
+        <i class="fa fa-users"></i> <span>Companies</span>
     </a>
 </li>
 @endrole
@@ -109,7 +109,7 @@
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="glyphicon glyphicon-user"></i>
-        <span>{{ Auth::user()->username }} <i class="caret"></i></span>
+        <span>{{ Auth::user()->name }} <i class="caret"></i></span>
     </a>
     <ul class="dropdown-menu">
         <li>

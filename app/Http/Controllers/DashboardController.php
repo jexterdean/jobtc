@@ -9,7 +9,7 @@ use \Form;
 use \Input;
 use \Redirect;
 use \DB;
-use App\Models\Client;
+use App\Models\Company;
 use App\Models\User;
 use App\Models\Events;
 use App\Models\Bug;
@@ -23,9 +23,9 @@ class DashboardController extends BaseController
 
     public function index(Request $request)
     {
-        $client = Client::all();
+        $companies = Company::all();
         $user = User::all();
-        $events = Events::where('username', '=', parent::getActiveUser()->username)
+        $events = Events::where('user_id', '=', parent::getActiveUser()->user_id)
             ->orWhere('public', '=', '1')
             ->get();
 
@@ -64,7 +64,7 @@ class DashboardController extends BaseController
             $tickets = Ticket::where('ticket_status', '=', 'open')
                 ->get();
 
-            $events = Events::where('username', '=', Auth::user()->username)
+            $events = Events::where('user_id', '=', Auth::user()->id)
                 ->orWhere('public', '=', '1')
                 ->get();
 
@@ -73,7 +73,7 @@ class DashboardController extends BaseController
 
 
             $data = [
-                'clients' => $client,
+                'companies' => $companies,
                 'users' => $user,
                 'estimates' => $estimate,
                 'invoices' => $invoice,
@@ -93,7 +93,7 @@ class DashboardController extends BaseController
             $projects = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
-                ->where('username', '=', Auth::user()->username)
+                ->where('user_id', '=', Auth::user()->id)
                 ->where('project_progress', '!=', '100')
                 ->get();
 
@@ -101,39 +101,39 @@ class DashboardController extends BaseController
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
                 ->where('project_progress', '=', '100')
-                ->where('username', '=', Auth::user()->username)
+                ->where('user_id', '=', Auth::user()->id)
                 ->get();
 
             $bugs = DB::table('bug')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'bug.bug_id')
                 ->where('belongs_to', '=', 'bug')
                 ->where('bug_status', '!=', 'resolved')
-                ->where('username', '=', Auth::user()->username)
+                ->where('user_id', '=', Auth::user()->id)
                 ->get();
 
             $total_bugs = DB::table('bug')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'bug.bug_id')
                 ->where('belongs_to', '=', 'bug')
                 ->where('bug_status', '=', 'resolved')
-                ->where('username', '=', Auth::user()->username)
+                ->where('user_id', '=', Auth::user()->id)
                 ->get();
 
             $tickets = DB::table('ticket')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
                 ->where('belongs_to', '=', 'ticket')
-                ->where('assigned_user.username', '=', Auth::user()->username)
+                ->where('assigned_user.user_id', '=', Auth::user()->id)
                 ->where('ticket_status', '=', 'open')
                 ->get();
 
             $total_tickets = DB::table('ticket')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'ticket.ticket_id')
                 ->where('belongs_to', '=', 'ticket')
-                ->where('assigned_user.username', '=', Auth::user()->username)
+                ->where('assigned_user.user_id', '=', Auth::user()->id)
                 ->where('ticket_status', '=', 'close')
                 ->get();
 
             $tasks = Task::where('task_status', '!=', 'completed')
-                ->where('username', '=', Auth::user()->username)
+                ->where('user_id', '=', Auth::user()->id)
                 ->get();
 
             $data = [
@@ -152,13 +152,13 @@ class DashboardController extends BaseController
         elseif (parent::hasRole('client')) {
             $projects = DB::table('project')
                 ->join('user', 'user.client_id', '=', 'project.client_id')
-                ->where('user_id', '=', Auth::user()->user_id)
+                ->where('user_id', '=', Auth::user()->id)
                 ->where('project_progress', '!=', '100')
                 ->get();
 
             $total_projects = DB::table('project')
                 ->join('user', 'user.client_id', '=', 'project.client_id')
-                ->where('user_id', '=', Auth::user()->user_id)
+                ->where('user_id', '=', Auth::user()->id)
                 ->where('project_progress', '=', '100')
                 ->get();
 
@@ -166,21 +166,21 @@ class DashboardController extends BaseController
                 ->join('project', 'project.project_id', '=', 'bug.project_id')
                 ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('bug_status', '!=', 'resolved')
-                ->where('user.user_id', '=', Auth::user()->user_id)
+                ->where('user.user_id', '=', Auth::user()->id)
                 ->get();
 
             $total_bugs = DB::table('bug')
                 ->join('project', 'project.project_id', '=', 'bug.project_id')
                 ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('bug_status', '=', 'resolved')
-                ->where('user.user_id', '=', Auth::user()->user_id)
+                ->where('user.user_id', '=', Auth::user()->id)
                 ->get();
 
-            $tickets = Ticket::where('username', '=', Auth::user()->username)
+            $tickets = Ticket::where('user_id', '=', Auth::user()->id)
                 ->where('ticket_status', '=', 'open')
                 ->get();
 
-            $total_tickets = Ticket::where('username', '=', Auth::user()->username)
+            $total_tickets = Ticket::where('user_id', '=', Auth::user()->id)
                 ->where('ticket_status', '=', 'close')
                 ->get();
 

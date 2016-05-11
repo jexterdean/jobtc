@@ -54,7 +54,7 @@
                 $Option = "$linkToView <span class='hspacer'></span> $linkToEdit <span class='hspacer'></span> $linkToDelete";
                 $QA[] = array(
                     $project->project_title,
-                    isset($clients[$project->client_id]) ? $clients[$project->client_id] : '',
+                    isset($companies[$project->company_id]) ? $companies[$project->company_id] : '',
                     $project->ref_no, date("d M Y", strtotime($project->start_date)),
                     date("d M Y", strtotime($project->deadline)),
                     $project->rate_type,

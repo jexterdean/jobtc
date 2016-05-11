@@ -1,6 +1,6 @@
 <div class="form-body">
     <div class="form-group">
-        {!!  Form::label('client_id','Company Name',['class' => 'col-md-3 control-label']) !!}
+        {!!  Form::label('company_id','Company Name',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::select('client_id', $clients, isset($user->client_id) ?
             $user->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '1'] )  !!}

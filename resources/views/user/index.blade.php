@@ -44,29 +44,19 @@
                 <?php $DATA = array();
                 $QA = array();
                 foreach ($users as $user) {
-                    if ($user->client_id == '')
-                        $company_name = '-';
-                    else
-                        $company_name = $clients[$user->client_id];
-
-                    if ($user->user_status == 'Active'){
-                        $user_status = " <span class='label label-success'>Active</span>";
-                    }
-                    else{
-                        $user_status = " <span class='label label-danger'>Banned</span>";
-                    }
-
+                    
+                    $user_status = " <span class='label label-success'>".$user->user_status."</span>";
+                    
                     $linkToEdit = "<a href='user/$user->user_id/edit' data-toggle='modal' data-target='#ajax'> <i
                     class='fa fa-edit fa-2x'></i> </a>";
                     $linkToDelete = "<a href='user/$user->user_id/delete'> <i class='fa fa-trash-o alert_delete fa-2x
                     '></i> </a>";
                     $Options = "$linkToEdit $linkToDelete";
                     $QA[] = array($user->name,
-                            $user->username,
                             $user_status,
                             $user->email,
-                            $roles[$user->role_id],
-                            $company_name,
+                            $user->role_id,
+                            '',
                             $Options);
                 }
                     $cacheKey = md5('user.list.'. session()->getId());
@@ -77,9 +67,6 @@
                     <tr>
                         <th>
                             Name
-                        </th>
-                        <th>
-                            Username
                         </th>
                         <th>
                             Status

@@ -24,7 +24,7 @@ class TaskController extends BaseController {
     function __construct() {
         //Only staff and admin can access
         if (parent::hasRole('client')) {
-            throw new RoleDeniedException('Client or Admin');
+            throw new RoleDeniedException('Company or Admin');
         }
     }
 
@@ -33,20 +33,17 @@ class TaskController extends BaseController {
      */
     public function index() {
 
-        $user_type = Auth::user('user')->user_type;
         if (parent::hasRole('staff')) {
-            //if ($user_type === 4) {
-
+            
             $tasks = Task::orderBy('created_at', 'desc')
                     ->get();
         } else {
-            /* $tasks = Task::orderBy('created_at', 'desc')
+             /*$tasks = Task::orderBy('created_at', 'desc')
               ->join('user', 'task.user_id', '=', 'users.id')
               ->select(
               'task.*', 'users.first_name', 'user.email'
-              )
-              ->get(); */
-            $tasks = Task::where('user_id', '=', Auth::user('user')->user_id)
+              )->get(); */
+            $tasks = Task::where('user_id', '=', Auth::user()->user_id)
                     ->orderBy('created_at', 'desc')
                     ->get();
         }
@@ -62,7 +59,7 @@ class TaskController extends BaseController {
                     'assets' => $assets,
                     'tasks' => $tasks,
                     'belongs_to' => $belongsTo,
-                    'isClient' => parent::hasRole('client'),
+                    'isCompany' => parent::hasRole('client'),
                     'assign_username' => $assign_username
         ]);
     }
@@ -73,8 +70,7 @@ class TaskController extends BaseController {
         $user_type = 1; //Auth::user('user')->user_type;
         if (parent::userHasRole('Admin')) {
             $task = Task::find($id);
-        } elseif (parent::userHasRole('Client')) {
-
+        } elseif (parent::userHasRole('client')) {
 
             $task = DB::table('task')
                     //->join('user', 'user.client_id', '=', 'task.client_id')
@@ -124,7 +120,6 @@ class TaskController extends BaseController {
             $checkList = TaskChecklist::where('task_id', '=', $id)->get();
         }
 
-
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
         $finish_checklist = TaskChecklist::where('status', '=', 'Completed')->where('task_id', '=', $id)->count();
         $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
@@ -165,7 +160,7 @@ class TaskController extends BaseController {
         if (count($task) > 0) {
             return view('task.edit', [
                 'task' => $task,
-                'isClient' => parent::hasRole('client'),
+                'isCompany' => parent::hasRole('client'),
                 'assign_username' => $assign_username
             ]);
         }
