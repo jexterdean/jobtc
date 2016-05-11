@@ -150,5 +150,5 @@ Route::group(['prefix' => 'api'], function () {
 /*
 * New Note
 */
-Route::get('newnote', 'NewNoteController@showNotes');
+Route::resource('newnote', 'NewNoteController');
 

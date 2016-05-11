@@ -39,7 +39,7 @@
 		    		$(document).ready(function(){
 		    			$.ajax({
 			    				type: "GET",
-			    				url: "newnote",
+			    				url: '{{ route('newnote.store') }}',
 			    				dataType: 'json',
 			    				success: function(data){
 			    					for (var x = 0; x < data.length; x++) {
@@ -55,7 +55,7 @@
 			    			var newcontent = "note_content="+newtext;
 			    			$.ajax({
 			    				type: "POST",
-			    				url: "newnote",
+			    				url: '{{ route('newnote.store') }}',
 			    				data: newcontent,
 			    				success: function(data){
 			    					console.log(data);
