@@ -26,7 +26,11 @@
     <div class="form-group">
         {!!  Form::label('client_id','Company',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('client_id', $clients, isset($project->client_id) ?
+            <?php
+            //change code because causes error on other pages
+            $clients = App\Models\Client::orderBy('company_name', 'asc')->lists('company_name', 'client_id');
+            ?>
+            {!! Form::select('client_id', $clients, isset($project->client_id) ?
             $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company Name', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
