@@ -13,7 +13,7 @@
                 @else
                 <div class='alert alert-danger alert-dismissable'>
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
-                    <strong>You dont have to perform this action!!</strong>
+                    <strong>You don't have to perform this action!!</strong>
                 </div>
                 @endrole
             </div>

@@ -92,13 +92,12 @@ class ProjectController extends BaseController
         ]);
 
         if ($validation->fails()) {
-            return redirect()->to('project')->withInput()->withErrors($validation->messages());
+            return redirect()->back();
         }
 
         $project = new Project();
         $project->project_title = $request->get('project_title');
         $project->account = $request->get('account');
-        $project->reverence = Input::get('reverence');
         $project->currency = $request->get('currency');
         $project->project_type = $request->get('project_type');
         $project->client_id = $request->get('client_id');
@@ -113,7 +112,7 @@ class ProjectController extends BaseController
         $update_project_ref->ref_no = $project->project_id;
         $update_project_ref->save();
 
-        return redirect()->to('project')->withSuccess("Project added successfully !!");
+        return redirect()->route('project.show', $project->project_id);
     }
 
     /**
@@ -144,7 +143,7 @@ class ProjectController extends BaseController
         }
 
         if (!$project)
-            return redirect()->to('project')->withErrors('This is not a valid link!!');
+            return redirect()->route('project.show', $id);
 
         $assignedUser = AssignedUser::where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $id)
@@ -255,12 +254,11 @@ class ProjectController extends BaseController
         ]);
 
         if ($validation->fails()) {
-            return redirect()->to('project')->withErrors($validation->messages());
+            return redirect()->back();
         }
 
         $project->project_title = Input::get('project_title');
         $project->account = Input::get('account');
-        $project->reverence = Input::get('reverence');
         $project->currency = Input::get('currency');
         $project->project_type = Input::get('project_type');
         $project->client_id = Input::get('client_id');
@@ -271,7 +269,7 @@ class ProjectController extends BaseController
         $project->rate_value = Input::get('rate_value');
         $project->save();
 
-        return redirect()->to('project')->withSuccess("Project updated successfully!!");
+        return redirect()->route('project.show',$id);
     }
 
     /**
@@ -286,7 +284,7 @@ class ProjectController extends BaseController
         $project = Project::find($id);
 
         if (!$project || !parent::userHasRole('Admin'))
-            return redirect()->to('project')->withErrors('This is not a valid link!!');
+            return redirect()->route('project.show',$id);
 
         DB::table('assigned_user')
             ->where('belongs_to', '=', 'project')
@@ -320,7 +318,7 @@ class ProjectController extends BaseController
 
         $project->delete();
 
-        return redirect()->to('project')->withSuccess('Delete Successfully!!!');
+        return redirect()->back();
     }
 
     public function startTimer()
@@ -337,11 +335,11 @@ class ProjectController extends BaseController
         ]);
 
         if ($validation->fails()) {
-            return redirect()->to('project')->withErrors($validation->messages());
+            return redirect()->back();
         } elseif (!$project) {
-            return redirect()->back()->withErrors('Wrong URL!!');
+            return redirect()->back();
         } elseif ($timer_check) {
-            return redirect()->back()->withErrors('Timer already started!!');
+            return redirect()->back();
         }
 
         $timer = new Timer;
@@ -351,7 +349,7 @@ class ProjectController extends BaseController
         $timer->fill($data);
         $timer->save();
 
-        return redirect()->back()->withSuccess('Successfully started!!');
+        return redirect()->back();
     }
 
     public function endTimer()
@@ -370,13 +368,13 @@ class ProjectController extends BaseController
         $timer = Timer::find(Input::get('timer_id'));
 
         if ($validation->fails()) {
-            return redirect()->to('project')->withErrors($validation->messages());
+            return redirect()->back();
         } elseif (!$project) {
-            return redirect()->back()->withErrors('Wrong URL!!');
+            return redirect()->back();
         } elseif (!$timer_check) {
-            return redirect()->back()->withErrors('Timer already ended!!');
+            return redirect()->back();
         } elseif (!$timer) {
-            return redirect()->back()->withErrors('Wrong URL!!');
+            return redirect()->back();
         }
 
         $data = Input::all();
@@ -384,7 +382,7 @@ class ProjectController extends BaseController
         $timer->fill($data);
         $timer->save();
 
-        return redirect()->back()->withSuccess('Successfully ended!!');
+        return redirect()->back();
     }
 
     public function deleteTimer()
@@ -392,10 +390,10 @@ class ProjectController extends BaseController
         $timer = Timer::find(Input::get('timer_id'));
 
         if (!$timer || !parent::userHasRole('Admin'))
-            return redirect()->back()->withErrors('Wrong URL!!');
+            return redirect()->back();
 
         $timer->delete(Input::get('timer_id'));
-        return redirect()->back()->withSuccess('Deleted successfully!!');
+        return redirect()->back();
     }
 
     public function updateProgress()
@@ -409,15 +407,15 @@ class ProjectController extends BaseController
         ]);
 
         if ($validation->fails()) {
-            return redirect()->back()->withErrors($validation->messages());
+            return redirect()->back();
         } elseif (!$project) {
-            return redirect()->back()->withErrors('Wrong URL!!');
+            return redirect()->back();
         }
 
         $project->project_progress = Input::get('project_progress');
         $project->save();
 
-        return redirect()->back()->withSuccess('Saved!!');
+        return redirect()->back();
 
     }
 }
