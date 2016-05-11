@@ -20,7 +20,7 @@ class SessionController extends BaseController {
 
     public function store()
     {
-        if (Auth::attempt(Input::only('username', 'password'), Input::get('remember'))) {
+        if (Auth::attempt(Input::only('email', 'password'), Input::get('remember'))) {
             if (Auth::user()->user_status != 'Active') {
                 $name = Auth::user()->name;
                 Auth::logout();

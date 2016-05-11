@@ -35,7 +35,6 @@ class ProjectController extends BaseController
             $projects = Project::all();
         elseif (parent::userHasRole('Client')) {
             $projects = DB::table('project')
-                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->get();
         } elseif (parent::userHasRole('Staff')) {
@@ -46,8 +45,7 @@ class ProjectController extends BaseController
                 ->get();
         }
 
-        $user = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
+        $user = User::orderBy('name', 'asc')
             ->lists('name', 'user_id');
 
         $client_options = Client::orderBy('company_name', 'asc')
@@ -130,7 +128,6 @@ class ProjectController extends BaseController
         }
         elseif (parent::userHasRole('Client')) {
             $project = DB::table('project')
-                ->join('user', 'user.client_id', '=', 'project.client_id')
                 ->where('user_id', '=', Auth::user()->user_id)
                 ->where('project_id', '=', $id)
                 ->first();
@@ -138,7 +135,6 @@ class ProjectController extends BaseController
             $project = DB::table('project')
                 ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
                 ->where('belongs_to', '=', 'project')
-                ->where('username', '=', Auth::user()->username)
                 ->where('project_id', '=', $id)
                 ->first();
         }
@@ -153,9 +149,8 @@ class ProjectController extends BaseController
         $assign_username = User::lists('name', 'user_id')
             ->toArray();
 
-        $user = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
-            ->lists('name', 'username')
+        $user = User::orderBy('name', 'asc')
+            ->lists('name', 'email')
             ->toArray();
 
         $client_options = Client::orderBy('company_name', 'asc')
@@ -163,13 +158,11 @@ class ProjectController extends BaseController
 
         $note = Note::where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $id)
-            ->where('username', '=', Auth::user()->username)
             ->first();
 
         $comment = DB::table('comment')
             ->where('belongs_to', '=', 'project')
             ->where('unique_id', '=', $id)
-            ->join('user', 'comment.username', '=', 'user.username')
             ->orderBy('comment.created_at', 'desc')
             ->get();
 
@@ -224,7 +217,7 @@ class ProjectController extends BaseController
 
         $user = User::where('client_id', '=', '')
             ->orderBy('name', 'asc')
-            ->lists('name', 'username');
+            ->lists('name', 'email');
 
         return view('project.edit', [
             'project' => $project,

@@ -24,9 +24,9 @@
         </div>
     </div>
     <div class="form-group">
-        {!!  Form::label('client_id','Company',['class' => 'col-md-3 control-label']) !!}
+        {!!  Form::label('company_id','Company',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('client_id', $clients, isset($project->client_id) ?
+            {!!  Form::select('company_id', $clients, isset($project->client_id) ?
             $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company Name', 'tabindex' =>'2'] )  !!}
         </div>
     </div>

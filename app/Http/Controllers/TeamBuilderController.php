@@ -40,7 +40,7 @@ class TeamBuilderController extends BaseController
                 $v->member = TeamMember::select(DB::raw(
                     'fp_team_member.id,
                     fp_team_member.user_id,
-                    IF(fp_user.name IS NULL, fp_user.username, fp_user.name) as name,
+                    fp_user.name as name,
                     fp_user.email'
                 ))
                 ->leftJoin('user', 'user.user_id', '=', 'team_member.user_id')
@@ -87,7 +87,7 @@ class TeamBuilderController extends BaseController
         $r = DB::table('user')
             ->select(DB::raw(
                 'user_id as id,
-                IF(name IS NULL, username, name) as name,
+                name,
                 email,
                 user_avatar'
             ))

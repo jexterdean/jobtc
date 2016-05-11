@@ -9,7 +9,7 @@
             {!! \App\Helpers\Helper::showMessage() !!}
 
             <div class="form-group">
-                {!!   Form::text('username', '', array('tabindex' => '1', 'class' => 'form-control', 'placeholder'
+                {!!   Form::text('email', '', array('tabindex' => '1', 'class' => 'form-control', 'placeholder'
                 => 'Username', 'autocomplete' => 'off', 'required' => true))!!}
             </div>
             <div class="form-group">

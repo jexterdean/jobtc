@@ -37,8 +37,7 @@ class TaskController extends BaseController {
         if (parent::hasRole('staff')) {
             //if ($user_type === 4) {
 
-            $tasks = Task::where('username', '=', Auth::user('user')->email)
-                    ->orderBy('created_at', 'desc')
+            $tasks = Task::orderBy('created_at', 'desc')
                     ->get();
         } else {
             /* $tasks = Task::orderBy('created_at', 'desc')
@@ -94,7 +93,7 @@ class TaskController extends BaseController {
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
-                        'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
+                        'task_timer.*', 'user.name', 'task.task_title', DB::raw(
                                 'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
                         ), DB::raw(
                                 'TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, now()) as _time'
@@ -254,7 +253,7 @@ class TaskController extends BaseController {
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
-                        'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
+                        'task_timer.*', 'user.name', 'task.task_title', DB::raw(
                                 'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
                         )
                 )
@@ -274,7 +273,7 @@ class TaskController extends BaseController {
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
-                        'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
+                        'task_timer.*', 'user.name', 'task.task_title', DB::raw(
                                 'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
                         )
                 )
