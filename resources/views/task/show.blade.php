@@ -565,8 +565,17 @@
             $.post(url);
             
         });
+        var task_list_ = $('.task-list');
+        task_list_
+            .on('show.bs.collapse', function () {
+              // do something…
+              $(this).addClass('is-selected');
+            })
+            .on('hidden.bs.collapse', function () {
+                $(this).removeClass('is-selected');
+            });
 
-        //For Tasklist Delete
+        //region For Tasklist Delete
         $('#accordion').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
@@ -577,7 +586,6 @@
 
             $.post(url);
         });
-
         /*endregion*/
         /*region Timer*/
         var element = _body.find('.timer-text');
