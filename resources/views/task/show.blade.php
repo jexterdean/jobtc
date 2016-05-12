@@ -28,7 +28,7 @@
                                 <li id="task_item_{{$val->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
-                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{{ $val->checklist_header }}</a>
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{!! $val->checklist_header !!}</a>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -472,7 +472,7 @@
             var task_item_content = $(this).parent().parent().parent().find('.checklist-item');
 
             //Get Header Text
-            var header_text = $(this).parent().parent().parent().find('.checklist-header').text();
+            var header_text = $(this).parent().parent().parent().find('.checklist-header').html();
 
             //Get Text
             var content_text = $(this).parent().parent().parent().find('.checklist-item').html();
@@ -566,15 +566,32 @@
             
         });
         var task_list_ = $('.task-list');
+        var task_list_item = $('.task-list .task-list-item');
         task_list_
             .on('show.bs.collapse', function () {
-              // do something…
-              $(this).addClass('is-selected');
-            })
-            .on('hidden.bs.collapse', function () {
-                $(this).removeClass('is-selected');
-            });
-
+                    console.log(this.id);
+                    $('#' + this.id).addClass('is-selected');
+                    task_list_item
+                          .on('show.bs.collapse', function () {
+                                var _this = this;
+                                $('#' + _this.id).addClass('is-selected');
+                          })
+                          .on('hidden.bs.collapse', function () {
+                                var _this = this;
+                                $('#' + _this.id).removeClass('is-selected');
+                          });
+              })
+              .on('hidden.bs.collapse', function () {
+                    $('#' + this.id).removeClass('is-selected');
+              });
+         /*task_list_item
+              .on('show.bs.collapse', function () {
+                    console.log(this.id);
+                    $('#' + this.id).addClass('is-selected');
+              })
+              .on('hidden.bs.collapse', function () {
+                    $('#' + this.id).removeClass('is-selected');
+              });*/
         //region For Tasklist Delete
         $('#accordion').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
