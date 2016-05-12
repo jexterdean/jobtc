@@ -28,11 +28,11 @@
                                 <li id="task_item_{{$val->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
-                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{!! $val->checklist_header !!}</a>
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{{ $val->checklist_header }}</a>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
-                                        <div class="pull-right" style="margin-right: 10px">
+                                        <div class="pull-right">
                                             @if ($val->status === 'Default')
                                             <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @elseif($val->status === 'Ongoing')
@@ -43,13 +43,13 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                             &nbsp;&nbsp;&nbsp;
-                                            <a href="#" class="edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                            <a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
 
                                             <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
-                                            <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <a href="#" class="alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                            <a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
+                                            <a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -187,7 +187,7 @@
 <script>
     $(function (e) {
 
-        //For Draggability
+        //region For Draggability
         $('.list-group').sortable({
             dropOnEmpty: true,
             connectWith: ".list-group",
@@ -234,9 +234,7 @@
 
             }
         });
-
-
-
+        //endregion
         var _body = $('#collapse-' + '{{ $task->task_id }}');
         var task_id = '{{ $task->task_id }}';
         var alert_msg = function (msg, _class) {
@@ -248,7 +246,7 @@
             $('section.content').prepend(alert);
         };
 
-        //For Delete Hover
+        //region For Delete Hover
         _body.find('.list-group .alert_delete').hover(function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -256,7 +254,6 @@
             var checklist_item_id = $(this).parent().parent().parent().parent().attr('id');
             //console.log(index);
             $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').addClass('has-border');
-            
 
         }, function (e) {
             e.preventDefault();
@@ -266,6 +263,8 @@
             //console.log(checklist_item_id);
             $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').removeClass('has-border');
         });
+
+        //endregion
 
         var finish_checklist = function () {
             var count = 0;
@@ -364,7 +363,7 @@
         });
 
         _body.on('click', '.check-list-btn', function () {
-            var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content">';
+            var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content area-content">';
             text_area_ele += '<input class="form-control" name="checklist_header" placeholder="New Task Header" value="" />';
             text_area_ele += '<textarea id="add-new-task-textarea" class=" form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
             text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
@@ -486,7 +485,7 @@
             header_text_area_ele += '</div>';
 
             //Content Editor
-            var content_text_area_ele = '<div class="text-area-content">';
+            var content_text_area_ele = '<div class="text-area-content area-content">';
             content_text_area_ele += '<div class="form-group">';
             content_text_area_ele += '<textarea id="editChecklistItem' + task_list_item_id + '" class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + content_text + '</textarea><br/>';
             content_text_area_ele += '</div>'; //form-group
@@ -505,7 +504,9 @@
 
             //Toggle the content area to show
             $('#task-item-collapse-' + task_list_item_id).collapse('show');
-            $(this).addClass('disabled');
+            $(this)
+            .addClass('disabled')
+            .css({'pointer-events':'none'});
         });
 
         _body.on('click', '.update-checklist', function (e) {
@@ -541,7 +542,9 @@
             //Hide the content area
             $('#task-item-collapse-' + task_list_item_id).collapse('hide');
 
-            $('.edit-task-list-item').removeClass('disabled');
+            $('.edit-task-list-item')
+                .removeClass('disabled')
+                .removeAttr('style');
         });
 
 
@@ -562,8 +565,17 @@
             $.post(url);
             
         });
+        var task_list_ = $('.task-list');
+        task_list_
+            .on('show.bs.collapse', function () {
+              // do something…
+              $(this).addClass('is-selected');
+            })
+            .on('hidden.bs.collapse', function () {
+                $(this).removeClass('is-selected');
+            });
 
-        //For Tasklist Delete
+        //region For Tasklist Delete
         $('#accordion').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
@@ -574,7 +586,6 @@
 
             $.post(url);
         });
-
         /*endregion*/
         /*region Timer*/
         var element = _body.find('.timer-text');

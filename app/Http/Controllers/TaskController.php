@@ -141,7 +141,7 @@ class TaskController extends BaseController {
             'task_timer' => $task_timer,
             'checkList' => $checkList,
             'current_time' => $current_time,
-            'percentage' => number_format($percentage, 2),
+            'percentage' => number_format($percentage, 0),
             'links' => $links,
             'categories' => $categories
         ]);
@@ -175,7 +175,7 @@ class TaskController extends BaseController {
         ]);
 
         if ($validation->fails()) {
-            return Redirect::back()->withInput()->withErrors($validation->messages());
+            return Redirect::back();
         }
 
         $task = new Task;
@@ -188,7 +188,7 @@ class TaskController extends BaseController {
         $task->fill($data);
         $task->save();
 
-        return Redirect::back()->withSuccess('Successfully added!!');
+        return Redirect::back();
     }
 
     public function updateTaskStatus() {
@@ -208,7 +208,7 @@ class TaskController extends BaseController {
         $task->task_status = Input::get('task_status');
         $task->save();
 
-        return Redirect::back()->withSuccess('Saved!!');
+        return Redirect::back();
     }
 
     public function update(Request $request, $id) {
@@ -220,7 +220,7 @@ class TaskController extends BaseController {
 
         $task->update($data);
 
-        return Redirect::back()->withSuccess('Updated successfully!!');
+        return Redirect::back();
     }
 
     public function destroy($task_id) {
@@ -230,7 +230,7 @@ class TaskController extends BaseController {
         }
         $task->delete($task_id);
 
-        return Redirect::back()->withSuccess('Deleted successfully!!');
+        return Redirect::back();
     }
 
     public function delete(Request $request, $id) {
@@ -283,7 +283,7 @@ class TaskController extends BaseController {
         $task = TaskTimer::find($id);
         $task->delete($id);
 
-        return Redirect::back()->withSuccess('Deleted successfully!!');
+        return Redirect::back();
     }
 
     public function getChecklist(Request $request) {
@@ -368,7 +368,7 @@ class TaskController extends BaseController {
 
         //Delete the task item
         $checkList->delete($id);
-        return Redirect::back()->withSuccess('Deleted successfully!!');
+        return Redirect::back();
     }
 
     public function changeCheckList(Request $request, $task_id, $task_list_item_id) {

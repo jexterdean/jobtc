@@ -5937,7 +5937,9 @@ button.list-group-item-danger.active:focus {
   border-left: 5px solid #f2f2f2;
 }
 .task-list .panel-body .panel-content {
-  padding: 10px;
+  padding: 10px 2px;
+}
+.task-list .panel-body .panel-content {
   border-top: 3px solid #e6e6e6;
   border-bottom: 3px solid #ffffff;
   border-right: 3px solid #ffffff;
@@ -5981,6 +5983,8 @@ button.list-group-item-danger.active:focus {
 }
 .panel-default .panel-body .panel-content {
   padding: 10px;
+}
+.panel-default .panel-body .panel-content {
   border-top: 3px solid #172eb0;
   border-bottom: 3px solid #264dff;
   border-right: 3px solid #264dff;
@@ -6024,6 +6028,8 @@ button.list-group-item-danger.active:focus {
 }
 .panel-primary .panel-body .panel-content {
   padding: 10px;
+}
+.panel-primary .panel-body .panel-content {
   border-top: 3px solid #2e6ea5;
   border-bottom: 3px solid #4db7ff;
   border-right: 3px solid #4db7ff;
@@ -6067,6 +6073,8 @@ button.list-group-item-danger.active:focus {
 }
 .panel-success .panel-body .panel-content {
   padding: 10px;
+}
+.panel-success .panel-body .panel-content {
   border-top: 3px solid #509d50;
   border-bottom: 3px solid #86ff86;
   border-right: 3px solid #86ff86;
@@ -6110,6 +6118,8 @@ button.list-group-item-danger.active:focus {
 }
 .panel-info .panel-body .panel-content {
   padding: 10px;
+}
+.panel-info .panel-body .panel-content {
   border-top: 3px solid #52adc8;
   border-bottom: 3px solid #89ffff;
   border-right: 3px solid #89ffff;
@@ -6153,6 +6163,8 @@ button.list-group-item-danger.active:focus {
 }
 .panel-warning .panel-body .panel-content {
   padding: 10px;
+}
+.panel-warning .panel-body .panel-content {
   border-top: 3px solid #d89c46;
   border-bottom: 3px solid #ffff75;
   border-right: 3px solid #ffff75;
@@ -6196,6 +6208,8 @@ button.list-group-item-danger.active:focus {
 }
 .panel-danger .panel-body .panel-content {
   padding: 10px;
+}
+.panel-danger .panel-body .panel-content {
   border-top: 3px solid #c34b47;
   border-bottom: 3px solid #ff7d77;
   border-right: 3px solid #ff7d77;
@@ -7706,7 +7720,7 @@ button.close {
   border-radius: 0!important;
 }
 .task-list-item .task-list-details {
-  padding: 0 10px 0 0!important;
+  padding: 0 7px 0 0!important;
 }
 .task-list-item .task-item-collapse {
   padding: 5px!important;

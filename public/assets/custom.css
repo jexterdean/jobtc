@@ -19,10 +19,15 @@
     font-size: 25px;
 }
 .list-group .alert_delete:hover , .delete-tasklist:hover, .edit-tasklist:hover,.toggle-tasklist:hover,.move-tasklist:hover,
-.task-list-details:hover .pull-right a,.edit-task-list-item:hover{
+.edit-task-list-item:hover{
     color: #000 !important;
 }
-
+.task-list .panel-heading .btn-group a{
+    text-shadow: none!important;
+}
+.col-md-7:hover + .pull-right a.icon{
+    color: #000;
+}
 .ver-inline-menu{list-style:none;}
 
 textarea.form-control {
@@ -38,7 +43,7 @@ textarea.form-control {
 
 .checklist-item {
     padding: 10px;
-    position: relative;
+    /*position: relative;*/
     left: 20px;
 }
 
@@ -46,6 +51,9 @@ textarea.form-control {
     font-size: 20px;
     font-weight: bold;
     color: #000000;
+}
+a:active,a:focus{
+    color: #000000!important;
 }
 .checklist-header:hover{
     color: #1933c4!important;
@@ -94,4 +102,17 @@ textarea.form-control {
 .task-list .task-header .task-list-header{
     text-shadow: none!important;
     font-weight: bold;
+}
+.task-list .panel-body .panel-content,.checklist-item,.area-content{
+    /*border-top: 5px solid rgba(230,230,230, 0.9)!important;
+    border-bottom: 5px solid rgba(234, 234, 234, 0.50) !important;
+    border-right: 5px solid rgba(234, 234, 234, 0.50);
+    border-left: 5px solid rgba(230,230,230, 0.9);*/
+}
+.is-selected{
+    border-top: 5px solid #172eb0 !important;
+    border-bottom: 5px solid #172eb0 !important;
+}
+.area-content{
+    padding: 5px;
 }
