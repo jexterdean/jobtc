@@ -1,6 +1,6 @@
 // Panels
 
-.panel-variant(@border; @heading-text-color; @heading-bg-color; @heading-border) {
+.panel-variant(@border; @heading-text-color; @heading-bg-color; @heading-border; @is-task-list : false) {
   border: 1px solid #ffffff;
   .panel-container{
     border-top: 3px solid @border * 1.2;
@@ -15,8 +15,17 @@
     border-bottom: 5px solid @border * 0.95;
     border-right: 5px solid @border * 0.95;
     border-left: 5px solid @border * 0.95;
+    & when(@is-task-list = true){
+      & .panel-content {
+        padding: 10px 2px;
+      }
+    }
+    & when(@is-task-list = false){
+      & .panel-content {
+        padding: 10px;
+      }
+    }
     & .panel-content{
-      padding: 10px;
       border-top: 3px solid @border * 0.9;
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;

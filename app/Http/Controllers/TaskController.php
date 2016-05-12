@@ -147,7 +147,7 @@ class TaskController extends BaseController {
             'task_timer' => $task_timer,
             'checkList' => $checkList,
             'current_time' => $current_time,
-            'percentage' => number_format($percentage, 2),
+            'percentage' => number_format($percentage, 0),
             'links' => $links,
             'categories' => $categories
         ]);
