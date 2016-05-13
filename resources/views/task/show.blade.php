@@ -375,6 +375,7 @@
             _this.addClass('disabled');
             check_list_container.append(text_area_ele);
             _body.find('textarea[name="checklist_header"]').focus();
+		
 
             CKEDITOR.replace('add-new-task-textarea');
 
@@ -472,7 +473,7 @@
             var task_item_content = $(this).parent().parent().parent().find('.checklist-item');
 
             //Get Header Text
-            var header_text = $(this).parent().parent().parent().find('.checklist-header').html();
+            var header_text = $(this).parent().parent().parent().find('.checklist-header').text();
 
             //Get Text
             var content_text = $(this).parent().parent().parent().find('.checklist-item').html();
