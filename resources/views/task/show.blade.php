@@ -513,7 +513,10 @@
         _body.on('click', '.update-checklist', function (e) {
             //Stops multiple calls to the this event
             e.stopImmediatePropagation();
-
+            //Get Task item header
+            var task_item_id = $(this).parent().parent().find('.task_list_item_id').val(),
+                _task_item = $('#task_item_' + task_item_id);
+            _task_item.removeClass('is-task-item-selected');
             //Get list item index
             var index = $(this).parent().parent().parent().parent().parent().index();
 
@@ -566,33 +569,29 @@
             $.post(url);
             
         });
-        var task_list_ = $('.task-list');
-        var task_list_item = $('.task-list .task-list-item');
-        task_list_
-            .on('show.bs.collapse', function () {
-                    console.log(this.id);
-                    $('#' + this.id).addClass('is-selected');
-                    task_list_item
-                          .on('show.bs.collapse', function () {
-                                var _this = this;
-                                $('#' + _this.id).addClass('is-selected');
-                          })
-                          .on('hidden.bs.collapse', function () {
-                                var _this = this;
-                                $('#' + _this.id).removeClass('is-selected');
-                          });
-              })
-              .on('hidden.bs.collapse', function () {
-                    $('#' + this.id).removeClass('is-selected');
-              });
-         /*task_list_item
-              .on('show.bs.collapse', function () {
-                    console.log(this.id);
-                    $('#' + this.id).addClass('is-selected');
-              })
-              .on('hidden.bs.collapse', function () {
-                    $('#' + this.id).removeClass('is-selected');
-              });*/
+        $('.task-list').on('show.bs.collapse',function(){
+            var id = this.id.match(/\d+/);
+            var task_list = $('#collapse-container-' + id);
+            task_list.addClass('is-selected');
+        });
+        $('.task-list .panel-heading .col-xs-6')
+            .click(function(){
+                var data_target = $(this).parent().parent().parent().find('.task-header').data('target');
+                var id = data_target.match(/\d+/);
+                var task_list = $('#collapse-container-' + id);
+                task_list.removeClass('is-selected');
+            });
+        $('.task-list-item .checklist-header, .task-list-details .edit-task-list-item').click(function(event){
+              var href = !$(this).hasClass('icon') ? $(this).attr('href') : $(this).parent().parent().find('.checklist-header').attr('href');
+              var id = href.match(/\d+/);
+              var task_list_item = $('#task_item_' + parseInt(id));
+              task_list_item.addClass('is-task-item-selected');
+        });
+        $('.list-group-item.task-list-item').on('hidden.bs.collapse',function(){
+            var id = this.id.match(/\d+/);
+            var task_list = $('#task_item_' + id);
+            task_list.removeClass('is-task-item-selected');
+        });
         //region For Tasklist Delete
         $('#accordion').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
