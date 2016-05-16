@@ -207,7 +207,21 @@
             $('#ajax').modal('show');
         });
     });
-
+    /*region Hover Task List*/
+    $('.task-list .task-header').hover(
+        function(){
+            var id = $(this).data('target');
+            var task_list = $('#collapse-container-' + id.match(/\d+/));
+            if(!task_list.hasClass('is-selected')){
+                task_list.addClass('hovered');
+            }
+        },
+        function(){
+            var id = $(this).data('target');
+            $('#collapse-container-' + id.match(/\d+/)).removeClass('hovered');
+        }
+    );
+    /*endregion*/
     /*$(document).on("click", ".alert_delete", function (e) {
         var link = $(this).attr("href");
 

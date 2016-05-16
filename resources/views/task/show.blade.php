@@ -490,7 +490,7 @@
             content_text_area_ele += '<div class="form-group">';
             content_text_area_ele += '<textarea id="editChecklistItem' + task_list_item_id + '" class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + content_text + '</textarea><br/>';
             content_text_area_ele += '</div>'; //form-group
-            content_text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+            content_text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save & Close</button>&nbsp;&nbsp;&nbsp;';
             content_text_area_ele += '</div>';
 
 
@@ -591,6 +591,11 @@
             var id = this.id.match(/\d+/);
             var task_list = $('#task_item_' + id);
             task_list.removeClass('is-task-item-selected');
+        });
+        $('.task-list-item').bind('dblclick',function(){
+            var edit_btn = $(this).find('.icon-btn.edit-task-list-item');
+            edit_btn.bind().trigger('click');
+            console.log('trigger');
         });
         //region For Tasklist Delete
         $('#accordion').on('click', '.delete-tasklist', function (e) {
