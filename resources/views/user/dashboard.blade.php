@@ -350,7 +350,6 @@
     }
     ?>
 @stop
-
 @section('js_footer')
 @parent
 <script>

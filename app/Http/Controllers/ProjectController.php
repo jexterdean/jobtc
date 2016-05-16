@@ -98,7 +98,8 @@ class ProjectController extends BaseController
         $project->account = $request->get('account');
         $project->currency = $request->get('currency');
         $project->project_type = $request->get('project_type');
-        $project->client_id = $request->get('client_id');
+        $project->user_id = Auth::user()->user_id;
+        $project->company_id = $request->get('company_id');
         $project->start_date = date("Y-m-d H:i:s", strtotime(Input::get('start_date')));
         $project->deadline = date("Y-m-d H:i:s", strtotime(Input::get('deadline')));
         $project->project_description = Input::get('project_description');

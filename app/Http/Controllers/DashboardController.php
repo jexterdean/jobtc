@@ -25,7 +25,8 @@ class DashboardController extends BaseController
     {
         $companies = Company::all();
         $user = User::all();
-        $events = Events::where('user_id', '=', parent::getActiveUser()->user_id)
+        
+        $events = Events::where('user_id', '=', Auth::user()->id)
             ->orWhere('public', '=', '1')
             ->get();
 

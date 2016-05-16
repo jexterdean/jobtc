@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\Profile;
 use Bican\Roles\Models\Role;
 
+use Illuminate\Support\Facades\Storage;
 use DB;
 use Illuminate\Http\Request;
 use Validator;
@@ -22,35 +23,36 @@ class UserController extends BaseController
 
     public function index()
     {
-        $user = DB::table('user')
-            ->select('user.user_id','user.user_status', 'user.name','user.email','profiles.role_id')
-            ->join('profiles','profiles.user_id','=','user.user_id')    
-            ->get();
-
-        $profile = Profile::get();
+        /*$user = DB::table('user')
+                ->join('profiles','profiles.user_id','=','user.user_id')
+                ->join('roles','profiles.role_id','=','roles.id')
+                ->join('companies','profiles.company_id','=','companies.id')
+                ->select('user.user_id','user.user_status', 'user.name','user.email','roles.id as role_id','roles.name as role','companies.name as company_name')
+                ->get();*/
+        
+        //The profiles already contain all user, role and company information (it's fields belong to all 3 tables)
+        $profiles = Profile::all();
         
         $role = Role::orderBy('name', 'asc')
-            ->pluck('name', 'id');
+            ->lists('name','id');
 
         $client_options = Company::orderBy('name', 'asc')
-            ->pluck('name', 'id');
+            ->lists('name', 'id');
 
         $assets = ['table', 'select2'];
 
         return View::make('user.index', [
-            'users' => $user,
-            'profiles' => $profile,
-            'clients' => $client_options,
+            'profiles' => $profiles,
+            'companies' => $client_options,
             'roles' => $role,
             'assets' => $assets
         ]);
     }
 
-    public function show($username)
+    public function show($user_id)
     {
 
-        $user = User::whereUsername($username)
-            ->first();
+        $user = User::where('user_id',$user_id)->first();
 
         return View::make('user.show', ['user' => $user]);
     }
@@ -92,8 +94,7 @@ class UserController extends BaseController
 
         $role = Role::orderBy('name', 'asc')->lists('name', 'id');
 
-        $validation = Validator::make(Input::all(), [
-            'username' => 'required|unique:user',
+        $validation = Validator::make($request->all(), [
             'password' => 'required',
             'email' => 'required',
             'name' => 'required',
@@ -104,29 +105,34 @@ class UserController extends BaseController
             return Redirect::to('user')->withErrors($validation->messages());
         }
 
-        $clientRole = Role::where('id', Input::get('role_id'))->first();
-        if ($clientRole && $clientRole->slug === 'client') {
-
-            // no company id then return.
-            if (!Input::get('client_id')) {
-
-                return Redirect::to('user')->withInput($request->except('password'))
-                    ->withErrors('A client should have a company!!');
-            }
-
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photo_save = $photo->move('user' , $photo->getClientOriginalName());
+            //Storage::disk('local')->put('photo',$photo);
+            $photo_path = $photo_save->getPathname();
+        } else {
+            $photo_path = "";
         }
-
+        
         $user = new User;
-        $user->client_id = Input::get('client_id');
-        $user->name = Input::get('name');
-        $user->username = Input::get('username');
-        $user->password = Hash::make(Input::get('password'));
-        $user->email = Input::get('email');
-        $user->phone = Input::get('phone');
+        $user->name = $request->input('name');
+        $user->password = bcrypt($request->input('password')); 
+        $user->email = $request->input('email'); 
+        $user->phone = $request->input('phone'); 
+        $user->photo = $photo_path;
         $user->user_status = 'Active';
+        
+        
+        
         $user->save();
 
-        $user->attachRole(Input::get('role_id'));
+        $profile = new Profile;
+        $profile->user_id = $user->user_id;
+        $profile->company_id = $request->input('company_id');
+        $profile->role_id = $request->input('role_id');
+        $profile->save();
+        
+        $user->attachRole($request->input('role_id'));
 
         return Redirect::to('user')->withSuccess("User added successfully!!");
     }

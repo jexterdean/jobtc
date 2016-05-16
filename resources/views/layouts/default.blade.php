@@ -2,7 +2,6 @@
 <body>
 
 @include('layouts.header')
-
 <div class="wrapper row-offcanvas row-offcanvas-left">
 
     <section class="content">
@@ -10,5 +9,4 @@
         @yield('content')
     </section>
 </div>
-
 @include('layouts.foot')

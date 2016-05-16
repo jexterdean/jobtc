@@ -8,7 +8,7 @@ class Team extends Model
 {
     public $timestamps = true;
     protected $fillable = [
-        'author_id',
+        'user_id',
         'title'
     ];
     protected $primaryKey = 'id';

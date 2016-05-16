@@ -1,5 +1,5 @@
 ﻿/**
- * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
@@ -13,10 +13,10 @@
  * (1) http://ckeditor.com/builder
  *     Visit online builder to build CKEditor from scratch.
  *
- * (2) http://ckeditor.com/builder/cb60a883cd6c0fc090c361532caef6a7
+ * (2) http://ckeditor.com/builder/f1b7f8dbfbf8e9a84f96f1fa277ec07a
  *     Visit online builder to build CKEditor, starting with the same setup as before.
  *
- * (3) http://ckeditor.com/builder/download/cb60a883cd6c0fc090c361532caef6a7
+ * (3) http://ckeditor.com/builder/download/f1b7f8dbfbf8e9a84f96f1fa277ec07a
  *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
  *
  * NOTE:
@@ -25,7 +25,7 @@
  */
 
 var CKBUILDER_CONFIG = {
-	skin: 'moono-dark',
+	skin: 'moono',
 	preset: 'full',
 	ignore: [
 		'.bender',
@@ -50,26 +50,17 @@ var CKBUILDER_CONFIG = {
 		'tests'
 	],
 	plugins : {
-		'Audio' : 1,
 		'a11yhelp' : 1,
 		'about' : 1,
-		'ajax' : 1,
-		'autolink' : 1,
-		'autosave' : 1,
 		'basicstyles' : 1,
 		'bidi' : 1,
 		'blockquote' : 1,
-		'btquicktable' : 1,
-		'ckwebspeech' : 1,
-		'cleanuploader' : 1,
 		'clipboard' : 1,
-		'codemirror' : 1,
 		'colorbutton' : 1,
 		'colordialog' : 1,
 		'contextmenu' : 1,
 		'dialogadvtab' : 1,
 		'div' : 1,
-		'dropdownmenumanager' : 1,
 		'elementspath' : 1,
 		'enterkey' : 1,
 		'entities' : 1,
@@ -84,7 +75,7 @@ var CKBUILDER_CONFIG = {
 		'htmlwriter' : 1,
 		'iframe' : 1,
 		'image' : 1,
-		'imgupload' : 1,
+		'imageresize' : 1,
 		'indentblock' : 1,
 		'indentlist' : 1,
 		'justify' : 1,
@@ -92,7 +83,6 @@ var CKBUILDER_CONFIG = {
 		'link' : 1,
 		'list' : 1,
 		'liststyle' : 1,
-		'liveedit' : 1,
 		'magicline' : 1,
 		'maximize' : 1,
 		'newpage' : 1,
@@ -103,7 +93,6 @@ var CKBUILDER_CONFIG = {
 		'print' : 1,
 		'removeformat' : 1,
 		'resize' : 1,
-		'resizewithwindow' : 1,
 		'save' : 1,
 		'scayt' : 1,
 		'selectall' : 1,
@@ -115,13 +104,10 @@ var CKBUILDER_CONFIG = {
 		'stylescombo' : 1,
 		'tab' : 1,
 		'table' : 1,
-		'tableresize' : 1,
 		'tabletools' : 1,
 		'templates' : 1,
 		'toolbar' : 1,
-		'uicolor' : 1,
 		'undo' : 1,
-		'widgettemplatemenu' : 1,
 		'wsc' : 1,
 		'wysiwygarea' : 1
 	},

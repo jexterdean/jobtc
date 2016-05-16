@@ -40,7 +40,7 @@ Class CommentController extends BaseController
 
         $comment = new Comment;
         $data = Input::all();
-        $data['username'] = Auth::user()->username;
+        $data['user_id'] = Auth::user()->id;
         $comment->fill($data);
         $comment->save();
 

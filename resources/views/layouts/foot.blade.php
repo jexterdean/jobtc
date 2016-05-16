@@ -13,7 +13,7 @@
                 @else
                 <div class='alert alert-danger alert-dismissable'>
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
-                    <strong>You dont have to perform this action!!</strong>
+                    <strong>You don't have to perform this action!!</strong>
                 </div>
                 @endrole
             </div>
@@ -42,19 +42,6 @@
 
 @if(in_array('knob',$assets))
     {!! HTML::script('assets/js/plugins/jqueryKnob/jquery.knob.js') !!}
-@endif
-
-@if(in_array('firepad',$assets))
-    <!-- Firebase -->
-    <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
-
-    <!-- CodeMirror -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.css"/>
-
-    <!-- Firepad -->
-    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.3.0/firepad.css" />
-    <script src="https://cdn.firebase.com/libs/firepad/1.3.0/firepad.min.js"></script>
 @endif
 
 @if(in_array('calendar',$assets))
@@ -92,6 +79,12 @@
 <!--Wysiwyg Editor-->
 {!! HTML::script('assets/ckeditor/ckeditor.js')  !!}
 
+
+<!--Page Specific scripts-->
+
+@if (in_array('companies',$assets))
+{!!  HTML::script('assets/js/page/companies.js')  !!}
+@endif
 
 
 <script>

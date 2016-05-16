@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 use Cache;
 
-class CacheDataController extends  BaseController
+class CacheDataController extends BaseController
 {
 
     public function getCache(Request $request, $cacheKey){

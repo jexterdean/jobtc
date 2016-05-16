@@ -17,9 +17,6 @@ class CreateProfileTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('company_id')->unsigned();
             $table->integer('role_id')->unsigned();
-            $table->string('email')->unique();
-            $table->string('phone')->unique();
-            $table->string('photo');
             $table->timestamps();
         });
         

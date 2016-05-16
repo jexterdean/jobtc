@@ -20,12 +20,14 @@ class User extends Model implements
 
     use Authenticatable,  CanResetPassword,HasRoleAndPermission;
 
-    protected $fillable = ['username', 'password', 'client_id', 'name',
-        'email', 'phone', 'user_status', 'user_status_detail', 'user_avatar'];
+    protected $fillable = ['email', 'password' ,'name','phone', 'photo' ,'user_status'];
 
     protected $primaryKey = 'user_id';
     protected $table = 'user';
 
     protected $hidden = array('password', 'remember_token');
-
+    
+    public function profile() {
+        return $this->hasMany('App\Models\Profile');
+    }
 }

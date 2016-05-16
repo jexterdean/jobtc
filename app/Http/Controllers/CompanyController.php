@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 
+use Illuminate\Http\Request;
+
 use App\Models\Country;
 use App\Models\Company;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Profile;
 use App\Models\Project;
 
-use Entrust;
+use Auth;
 use View;
 use Redirect;
 use Validator;
@@ -19,17 +22,25 @@ use Input;
 class CompanyController extends BaseController
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $countries_option = Country::orderBy('country_name', 'asc')
-            ->lists('country_name', 'country_id')
-        ->toArray();
+        
+        
+        $user_id = Auth::user()->user_id;
+        
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
 
         $companies = Company::all();
-
-        $assets = ['table'];
+        
+        $profiles = Profile::all();
+        
+        $projects = Project::where('user_id',$user_id)->get();
+        
+        $assets = ['table','companies'];
 
         return View::make('company.index', [
+            'projects' => $projects,
+            'profiles' => $profiles,
             'companies' => $companies,
             'countries' => $countries_option,
             'assets' => $assets
@@ -41,7 +52,7 @@ class CompanyController extends BaseController
         $companies = Company::find($company_id);
 
         $countries_option = Country::orderBy('country_name', 'asc')
-            ->lists('country_name', 'country_id');
+            ->pluck('country_name', 'country_id');
 
         return View::make('company.show', [
             'companies' => $companies,
@@ -63,7 +74,7 @@ class CompanyController extends BaseController
         ->toArray();
 
         return View::make('company.edit', [
-            'company' => $companies,
+            'companies' => $companies,
             'countries' => $countries_option
         ]);
     }
@@ -72,11 +83,9 @@ class CompanyController extends BaseController
     {
 
         $validation = Validator::make(Input::all(), [
-            'company_name' => 'required|unique:companies',
-            'contact_person' => 'required',
+            'name' => 'required|unique:companies',
             'email' => 'required|email',
-            'zipcode' => 'numeric',
-            'country_id' => 'required'
+            'country' => 'required'
         ]);
 
         if ($validation->fails()) {
@@ -86,10 +95,10 @@ class CompanyController extends BaseController
         $companies = new Company;
         $data = Input::all();
         $data['client_status'] = 'Active';
-        $client->fill($data);
-        $client->save();
+        $companies->fill($data);
+        $companies->save();
 
-        return Redirect::to('client')->withSuccess("Company added successfully!!");
+        return Redirect::to('company')->withSuccess("Company added successfully!!");
     }
 
     public function update($company_id)
@@ -108,8 +117,8 @@ class CompanyController extends BaseController
             return Redirect::to('client')->withErrors($validation->messages());
         }
         $data = Input::all();
-        $client->fill($data);
-        $client->save();
+        $companies->fill($data);
+        $companies->save();
         return Redirect::to('client')->withSuccess("Company updated successfully!!");
     }
 
@@ -121,7 +130,7 @@ class CompanyController extends BaseController
     {
         $company = Company::find($company_id);
 
-        if (!$client || !parent::hasRole('Admin'))
+        if (!$company || !parent::hasRole('Admin'))
             return Redirect::to('company')->withErrors('This is not a valid link!!');
 
         $user = User::find($company_id);

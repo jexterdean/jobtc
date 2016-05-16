@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <div class="box box-solid box-default">
                 <div class="box-header">
-                    <h3 class="box-title">{{ $companies->contact_person }}</h3>
+                    <h3 class="box-title">{{ $companies->name }}</h3>
                 </div>
                 <div class="box-body">
                     <div class="row static-info">
@@ -15,7 +15,7 @@
                             Company Name
                         </div>
                         <div class="col-md-7 value">
-                            {{ $companies->company_name }}
+                            {{ $companies->name }}
                         </div>
                     </div>
                     <div class="row static-info">

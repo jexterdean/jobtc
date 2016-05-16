@@ -28,7 +28,7 @@
                                 <li id="task_item_{{$val->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
-                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{{ $val->checklist_header }}</a>
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{!! $val->checklist_header !!}</a>
                                             <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -434,7 +434,7 @@
                         ele += '</div>'
                         ele += '<div class="row">'
                         ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
-                        ele += '<div class="checklist-item">' + val.checklist + '</div>'
+                        ele += '<div class="checklist-item">' + val.checklist + '</div>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
@@ -472,7 +472,7 @@
             var task_item_content = $(this).parent().parent().parent().find('.checklist-item');
 
             //Get Header Text
-            var header_text = $(this).parent().parent().parent().find('.checklist-header').text();
+            var header_text = $(this).parent().parent().parent().find('.checklist-header').html();
 
             //Get Text
             var content_text = $(this).parent().parent().parent().find('.checklist-item').html();

@@ -2,7 +2,7 @@
     <div class="form-group">
         {!!  Form::label('company_id','Company Name',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('client_id', $clients, isset($user->client_id) ?
+            {!!  Form::select('company_id', $companies, isset($user->company_id) ?
             $user->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '1'] )  !!}
         </div>
     </div>
@@ -20,34 +20,13 @@
             'placeholder' => 'Name', 'tabindex' => '3']) !!}
         </div>
     </div>
-    @if (!isset($user->username))
-        <div class="form-group">
-            {!!  Form::label('username','Username',['class' => 'col-md-3 control-label']) !!}
-            <div class="col-md-9">
-                {!!  Form::input('text','username',isset($user->username) ? $user->username : '',['class' =>
-                'form-control', 'placeholder' => 'Username', 'tabindex' => '4']) !!}
-            </div>
+    <div class="form-group">
+        {!!   Form::label('password','Password',['class' => 'col-md-3 control-label'])!!}
+        <div class="col-md-9">
+            {!!  Form::input('password','password','',['class' => 'form-control', 'placeholder' => 'Enter
+            Password', 'tabindex' => '5']) !!}
         </div>
-        <div class="form-group">
-            {!!   Form::label('password','Password',['class' => 'col-md-3 control-label'])!!}
-            <div class="col-md-9">
-                {!!  Form::input('password','password','',['class' => 'form-control', 'placeholder' => 'Enter
-                Password', 'tabindex' => '5']) !!}
-            </div>
-        </div>
-    @else
-        <div class="form-group">
-            <div class="col-md-3">
-                <label>{!!  Form::checkbox('user_status','Ban', ($user->user_status === 'Ban') ? true : false ,['class'
-                    => 'control-label', 'tabindex' => '6']) !!}
-                    Ban??</label>
-            </div>
-            <div class="col-md-9">
-                {!!  Form::input('text','user_status_detail','',['class' => 'form-control', 'placeholder' => 'Ban
-                Reason', 'tabindex' => '7']) !!}
-            </div>
-        </div>
-    @endif
+    </div>
     <div class="form-group">
         {!!   Form::label('email','Email',['class' => 'col-md-3 control-label'])!!}
         <div class="col-md-9">
@@ -60,6 +39,13 @@
         <div class="col-md-9">
             {!!  Form::input('text','phone',isset($user->phone) ? $user->phone : '',['class' => 'form-control',
             'placeholder' => 'Contact Number', 'tabindex' => '9']) !!}
+        </div>
+    </div>
+    <div class="form-group">
+        {!!  Form::label('photo','Photo',['class' => 'col-md-3 control-label']) !!}
+        <div class="col-md-9">
+            {!!  Form::input('file','photo',isset($user->photo) ? $user->photo: '',['class' => 'form-control',
+            'placeholder' => 'Photo', 'tabindex' => '9']) !!}
         </div>
     </div>
     <div class="row">

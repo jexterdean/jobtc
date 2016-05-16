@@ -28,9 +28,9 @@
         <div class="col-md-9">
             <?php
             //change code because causes error on other pages
-            $clients = App\Models\Client::orderBy('company_name', 'asc')->lists('company_name', 'client_id');
+            $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             ?>
-            {!! Form::select('client_id', $clients, isset($project->client_id) ?
+            {!! Form::select('company_id', $clients, isset($project->company_id) ?
             $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company Name', 'tabindex' =>'2'] )  !!}
         </div>
     </div>

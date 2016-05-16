@@ -1,8 +1,5 @@
 @extends('layouts.default')
 @section('content')
-
-
-
     <div class="modal fade" id="add_link" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -18,16 +15,12 @@
             </div>
         </div>
     </div>
-
-
     <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             </div>
         </div>
     </div>
-
-
     <div class="col-md-12">
         <div class="box box-default">
             <div class="box-header">

@@ -14,9 +14,14 @@ class CreateCompanyDivisions extends Migration
     {
         Schema::create('company_divisions',function(Blueprint $table){
             $table->increments('id');
-            $table->integer('company_id');
+            $table->integer('company_id')->unsigned();
             $table->string('division_name');
             $table->timestamps();
+        });
+        
+        //Assign Foreign keys
+        Schema::table('company_divisions', function (Blueprint $table) {
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
         });
     }
 
