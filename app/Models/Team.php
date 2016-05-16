@@ -8,9 +8,12 @@ class Team extends Model
 {
     public $timestamps = true;
     protected $fillable = [
-        'user_id',
-        'title'
+        'project_id'
     ];
     protected $primaryKey = 'id';
     protected $table = 'team';
+    
+    public function team_member() {
+        return $this->hasMany('App\Models\TeamMember');
+    }
 }

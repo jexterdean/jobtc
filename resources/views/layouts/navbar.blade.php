@@ -4,10 +4,28 @@
     </a>
 </li>
 @role('admin')
-<li>
-    <a href="{{ url('company') }}">
-        <i class="fa fa-users"></i> <span>Companies</span>
+<?php $companies = \App\Helpers\Helper::getCompanyLinks();?>
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle">
+        <i class="fa fa-users"></i> 
+        <span>Companies</span>
+        <span class="caret"></span>
     </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="#add_company" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Company</span></a>
+        </li>
+        <li class="divider"></li>
+        @if(count($companies) > 0)
+        @foreach($companies as $company)
+            <li>
+                <a href="{{ url('company/' . $company->id) }}">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $company->name }}</span>
+                </a>
+            </li>
+        @endforeach
+    @endif
+    </ul>
 </li>
 @endrole
 <li class="dropdown">

@@ -8,10 +8,13 @@ class TeamMember extends Model
 {
     public $timestamps = true;
     protected $fillable = [
-        'created_by',
         'team_id',
         'user_id'
     ];
     protected $primaryKey = 'id';
     protected $table = 'team_member';
+    
+    public function team() {
+        return $this->belongsToMany('App\Models\Team');
+    }
 }

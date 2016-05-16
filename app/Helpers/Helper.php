@@ -3,6 +3,8 @@ namespace App\Helpers;
 
 use Session;
 use DB;
+use Auth;
+use App\Models\Company;
 class Helper
 {
     public static function showMessage()
@@ -73,6 +75,18 @@ class Helper
 
         return $project;
     }
+    
+    public static function getCompanyLinks(){
+        
+        $companies = Company::with(['profile' => function($query) {
+            //Get user that is logged in
+            $user_id = Auth::user()->user_id;
+            $query->where('user_id',$user_id);
+        }])->get();
+
+        return $companies;
+    }
+    
 
 
     public static function br2nl($string)

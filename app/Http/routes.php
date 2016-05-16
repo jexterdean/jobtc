@@ -53,7 +53,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('user', 'UserController');
         Route::resource('company', 'CompanyController');
         Route::resource('assigneduser', 'AssignedController');
-
+        
+        /*For Assigning teams for each project with a team(Auto generated team)*/
+        Route::post('createTeam','CompanyController@createTeam');
+        
     });
 
     /**

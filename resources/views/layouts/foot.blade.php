@@ -20,6 +20,23 @@
         </div>
     </div>
 </div>
+
+<?php $countries = \App\Models\Country::orderBy('country_name', 'asc')->lists('country_name', 'country_id')->toArray();?>
+<div class="modal fade" id="add_company" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Company</h4>
+            </div>
+            <div class="modal-body">
+                {!!  Form::open(['route' => 'company.store','class' => 'form-horizontal client-form'])  !!}
+                @include('company/partials/_form')
+                {!!  Form::close()  !!}
+            </div>
+        </div>
+    </div>
+</div>
 <form id="form-delete" action="" method="post" style="width: 0px;height: 0px;">
     {!! csrf_field() !!}
     {!! method_field('delete') !!}
