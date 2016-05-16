@@ -14,7 +14,7 @@ class TeamProject extends Model
     protected $primaryKey = 'id';
     protected $table = 'team_project';
     
-    public function team_member() {
-        return $this->hasMany('App\Models\TeamMember');
+    public function project() {
+        return $this->belongsTo('App\Models\Project');
     }
 }

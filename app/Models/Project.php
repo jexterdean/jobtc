@@ -13,4 +13,8 @@ class Project extends Model
     protected $primaryKey = 'project_id';
     protected $table = 'project';
 
+    
+    public function team_project() {
+        return $this->HasOne('App\Models\TeamProject');
+    }
 }

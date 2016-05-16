@@ -53,8 +53,12 @@ class CompanyController extends BaseController {
 
         $companies = Company::where('id', $company_id)->get();
 
-        $teams = Team::with('team_member')->get();
+        $teams = Team::with(['team_member' => function($query){
+            $query->with('user')->get();
+        }])->get();
 
+        $team_grouping = Project::with('team_project')->where('company_id', $company_id)->get();
+        
         $profiles = Profile::where('company_id', $company_id)->orWhere('user_id', $user_id)->get();
 
         $projects = Project::where('user_id', $user_id)->where('company_id', $company_id)->get();
@@ -66,6 +70,7 @@ class CompanyController extends BaseController {
                     'profiles' => $profiles,
                     'companies' => $companies,
                     'teams' => $teams,
+                    'team_grouping' => $team_grouping,
                     'countries' => $countries_option,
                     'assets' => $assets
         ]);

@@ -7,6 +7,10 @@ $('.list-group').sortable({
     dropOnEmpty: true,
     connectWith: ".list-group",
     handle: '.drag-handle',
+    remove: function(event, ui) {
+        //Don't remove item when dropped to the project list group
+        $(this).append($(ui.item).clone());
+    },
     receive: function (event, ui) {
         
         project_id = $(this).siblings().val();

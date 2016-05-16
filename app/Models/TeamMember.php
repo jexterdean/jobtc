@@ -17,4 +17,8 @@ class TeamMember extends Model
     public function team() {
         return $this->belongsToMany('App\Models\Team');
     }
+    
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+    }
 }
