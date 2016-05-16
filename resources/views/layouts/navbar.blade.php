@@ -49,11 +49,6 @@
                 <i class="fa fa-bug"></i> <span>{{Lang::get('messages.Bugs')}}</span>
             </a>
         </li>
-        <li>
-            <a href="{{ url('ticket') }}">
-                <i class="fa fa-ticket"></i> <span>{{Lang::get('messages.Tickets')}}</span>
-            </a>
-        </li>
     </ul>
 </li>
 
@@ -78,6 +73,20 @@
         <i class="fa fa-university"></i> <span>{{Lang::get('Quiz')}}</span>
     </a>
 </li>
+
+@role('admin')
+<li>
+    <a href="{{ url('tickets-admin') }}">
+        <i class="fa fa-ticket"></i> <span>{{Lang::get('Ticket')}}</span>
+    </a>
+</li>
+@else
+<li>
+    <a href="{{ url('tickets') }}">
+        <i class="fa fa-ticket"></i> <span>{{Lang::get('Ticket')}}</span>
+    </a>
+</li>
+@endrole
 
 <li>
     <a href="{{ route('links.index') }}">

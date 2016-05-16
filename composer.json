@@ -12,7 +12,9 @@
         "intervention/image": "^2.3",
         "bican/roles": "2.1.*",
         "tymon/jwt-auth": "^0.5.9",
-        "doctrine/dbal": "v2.5.4"
+        "doctrine/dbal": "v2.5.4",
+        "kordy/ticketit": "0.*",
+        "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

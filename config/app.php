@@ -148,6 +148,10 @@ return [
         Bican\Roles\RolesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+
+        Kordy\Ticketit\TicketitServiceProvider::class,
+
+        Zizaco\Entrust\EntrustServiceProvider::class,
     ],
 
     /*
@@ -200,6 +204,8 @@ return [
         'HTML' => Collective\Html\HtmlFacade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
     ],
 
 ];

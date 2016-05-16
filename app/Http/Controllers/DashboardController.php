@@ -133,7 +133,7 @@ class DashboardController extends BaseController
                 ->get();
 
             $tasks = Task::where('task_status', '!=', 'completed')
-                ->where('username', '=', Auth::user()->username)
+                ->where('user_id', '=', Auth::user()->user_id)
                 ->get();
 
             $data = [

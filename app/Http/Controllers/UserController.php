@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Client;
 use Bican\Roles\Models\Role;
 
+use Entrust;
 use DB;
 use Illuminate\Http\Request;
 use Validator;
