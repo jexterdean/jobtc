@@ -7,10 +7,10 @@ body
 {
 	/* Font */
 	font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
-        font-size: 18px;
+	font-size: 18px;
 
 	/* Text color */
-        color: #000;
+	color: #000;
 
         /* Remove the background color to make it transparent */
         background-color: #fff;
@@ -20,7 +20,7 @@ body
 
 .cke_editable
 {
-	font-size: 13px;
+	font-size: 18px;
 	line-height: 1.6;
 
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
