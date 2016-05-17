@@ -13,7 +13,6 @@ use App\Models\Note;
 use App\Models\Attachment;
 use App\Models\Task;
 use App\Models\Timer;
-
 use \DB;
 use \Auth;
 use \View;
@@ -21,36 +20,35 @@ use \Validator;
 use \Input;
 use \Redirect;
 
-class ProjectController extends BaseController
-{
+class ProjectController extends BaseController {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //
-        if ( parent::userHasRole('admin')) {
+        if (parent::userHasRole('admin')) {
             $projects = Project::all();
         } elseif (parent::userHasRole('client')) {
             $projects = DB::table('project')
-                ->where('user_id', '=', Auth::user()->user_id)
-                ->get();
+                    ->where('user_id', '=', Auth::user()->user_id)
+                    ->get();
         } elseif (parent::userHasRole('Staff')) {
             $projects = DB::table('project')
-                ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
-                ->where('belongs_to', '=', 'project')
-                ->where('username', '=', Auth::user()->username)
-                ->get();
+                    ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
+                    ->where('belongs_to', '=', 'project')
+                    ->where('username', '=', Auth::user()->username)
+                    ->get();
         }
 
         $user = User::orderBy('name', 'asc')
-            ->lists('name', 'user_id');
+                ->lists('name', 'user_id');
 
         $client_options = Company::orderBy('name', 'asc')
-            ->lists('name','id')
-            ->toArray();
+                ->lists('name', 'id')
+                ->toArray();
 
         $assets = ['table', 'datepicker'];
 
@@ -67,8 +65,7 @@ class ProjectController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         //
         return view('project.create');
     }
@@ -79,14 +76,13 @@ class ProjectController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
         $validation = Validator::make($request->all(), [
-            'project_title' => 'required|unique:project',
-            'start_date' => 'date_format:"d-m-Y"',
-            'deadline' => 'date_format:"d-m-Y"|after:start_date',
-            'rate_value' => 'numeric'
+                    'project_title' => 'required|unique:project',
+                    'start_date' => 'date_format:"d-m-Y"',
+                    'deadline' => 'date_format:"d-m-Y"|after:start_date',
+                    'rate_value' => 'numeric'
         ]);
 
         if ($validation->fails()) {
@@ -120,73 +116,63 @@ class ProjectController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-        if (parent::userHasRole('Admin')){
+    public function show($id) {
+
+        $user_id = Auth::user()->user_id;
+
+        if (parent::userHasRole('Admin')) {
             $project = Project::find($id);
-        }
-        elseif (parent::userHasRole('client')) {
+        } elseif (parent::userHasRole('client')) {
             $project = DB::table('project')
-                ->where('user_id', '=', Auth::user()->user_id)
-                ->where('project_id', '=', $id)
-                ->first();
+                    ->where('user_id', '=', Auth::user()->user_id)
+                    ->where('project_id', '=', $id)
+                    ->first();
         } elseif (parent::userHasRole('Staff')) {
             $project = DB::table('project')
-                ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
-                ->where('belongs_to', '=', 'project')
-                ->where('project_id', '=', $id)
-                ->first();
+                    ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
+                    ->where('belongs_to', '=', 'project')
+                    ->where('project_id', '=', $id)
+                    ->first();
         }
 
         if (!$project) {
             return redirect()->route('project.show', $id);
         }
-        
+
         $assignedUser = AssignedUser::where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)
-            ->get();
+                ->where('unique_id', '=', $id)
+                ->get();
 
         $assign_username = User::lists('name', 'user_id')
-            ->toArray();
+                ->toArray();
 
         $user = User::orderBy('name', 'asc')
-            ->pluck('name', 'email');
+                ->pluck('name', 'email');
 
         $client_options = Company::orderBy('name', 'asc')
-            ->pluck('name','id');
+                ->pluck('name', 'id');
 
         $note = Note::where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)
-            ->first();
+                ->where('unique_id', '=', $id)
+                ->first();
 
         $comment = DB::table('comment')
-            ->where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)
-            ->orderBy('comment.created_at', 'desc')
-            ->get();
+                ->where('belongs_to', '=', 'project')
+                ->where('unique_id', '=', $id)
+                ->orderBy('comment.created_at', 'desc')
+                ->get();
 
         $attachment = Attachment::where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        if (!parent::userHasRole('Staff')) {
-            $task = Task::where('project_id', '=', $id)
-                ->leftJoin('user', 'task.user_id', '=', 'user.user_id')
-                ->orderBy('created_at', 'desc')
-                ->select('task.*','user.name')
-                ->get();
-        } else {
-            $task = Task::where('project_id', '=', $id)
-                ->leftJoin('user', 'task.user_id', '=', 'user.user_id')
-                ->where('user_id', '=', Auth::user()->user_id)
-                ->select('task.*','user.name')
+                ->where('unique_id', '=', $id)
                 ->orderBy('created_at', 'desc')
                 ->get();
-        }
 
-        $assets = ['datepicker','firepad'];
+        $task = Task::where('project_id', '=', $id)
+                //->where('user_id',$user_id)
+                ->orderBy('task_title', 'asc')
+                ->get();
+
+        $assets = ['datepicker', 'firepad'];
 
         return view('project.show', [
             'project' => $project,
@@ -208,16 +194,15 @@ class ProjectController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
         $project = Project::find($id);
         $client_options = Company::orderBy('company_name', 'asc')
-            ->lists('company_name', 'client_id');
+                ->lists('company_name', 'client_id');
 
         $user = User::where('client_id', '=', '')
-            ->orderBy('name', 'asc')
-            ->lists('name', 'email');
+                ->orderBy('name', 'asc')
+                ->lists('name', 'email');
 
         return view('project.edit', [
             'project' => $project,
@@ -233,18 +218,17 @@ class ProjectController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         //
         $project = Project::find($id);
 
         $validation = Validator::make($request->all(), [
-            'project_title' => 'required|unique:project,project_title',
-            'client_id' => 'required',
-            'start_date' => 'required|date_format:"d-m-Y"',
-            'deadline' => 'required|date_format:"d-m-Y"|after:start_date',
-            'rate_type' => 'required',
-            'rate_value' => 'required|numeric'
+                    'project_title' => 'required|unique:project,project_title',
+                    'client_id' => 'required',
+                    'start_date' => 'required|date_format:"d-m-Y"',
+                    'deadline' => 'required|date_format:"d-m-Y"|after:start_date',
+                    'rate_type' => 'required',
+                    'rate_value' => 'required|numeric'
         ]);
 
         if ($validation->fails()) {
@@ -263,7 +247,7 @@ class ProjectController extends BaseController
         $project->rate_value = Input::get('rate_value');
         $project->save();
 
-        return redirect()->route('project.show',$id);
+        return redirect()->route('project.show', $id);
     }
 
     /**
@@ -272,60 +256,58 @@ class ProjectController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
         $project = Project::find($id);
 
         if (!$project || !parent::userHasRole('Admin'))
-            return redirect()->route('project.show',$id);
+            return redirect()->route('project.show', $id);
 
         DB::table('assigned_user')
-            ->where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)->delete();
+                ->where('belongs_to', '=', 'project')
+                ->where('unique_id', '=', $id)->delete();
 
         $attachments = DB::table('attachment')
-            ->where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)->get();
+                        ->where('belongs_to', '=', 'project')
+                        ->where('unique_id', '=', $id)->get();
 
         foreach ($attachments as $attachment)
             File::delete('assets/attachment_files/' . $attachment->file);
 
         DB::table('attachment')
-            ->where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)->delete();
+                ->where('belongs_to', '=', 'project')
+                ->where('unique_id', '=', $id)->delete();
 
         DB::table('comment')
-            ->where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)->delete();
+                ->where('belongs_to', '=', 'project')
+                ->where('unique_id', '=', $id)->delete();
 
         DB::table('notes')
-            ->where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)->delete();
+                ->where('belongs_to', '=', 'project')
+                ->where('unique_id', '=', $id)->delete();
 
         DB::table('task')
-            ->where('belongs_to', '=', 'project')
-            ->where('unique_id', '=', $id)->delete();
+                ->where('belongs_to', '=', 'project')
+                ->where('unique_id', '=', $id)->delete();
 
         DB::table('timer')
-            ->where('project_id', '=', $id)->delete();
+                ->where('project_id', '=', $id)->delete();
 
         $project->delete();
 
         return redirect()->back();
     }
 
-    public function startTimer()
-    {
+    public function startTimer() {
 
         $project = Project::find(Input::get('project_id'));
 
         $timer_check = Timer::where('project_id', '=', Input::get('project_id'))
-            ->where('end_time', '=', null)
-            ->first();
+                ->where('end_time', '=', null)
+                ->first();
 
         $validation = Validator::make(Input::all(), [
-            'project_id' => 'required'
+                    'project_id' => 'required'
         ]);
 
         if ($validation->fails()) {
@@ -346,17 +328,16 @@ class ProjectController extends BaseController
         return redirect()->back();
     }
 
-    public function endTimer()
-    {
+    public function endTimer() {
 
         $project = Project::find(Input::get('project_id'));
 
         $timer_check = Timer::where('project_id', '=', Input::get('project_id'))
-            ->where('end_time', '=', null)
-            ->first();
+                ->where('end_time', '=', null)
+                ->first();
 
         $validation = Validator::make(Input::all(), [
-            'project_id' => 'required'
+                    'project_id' => 'required'
         ]);
 
         $timer = Timer::find(Input::get('timer_id'));
@@ -379,8 +360,7 @@ class ProjectController extends BaseController
         return redirect()->back();
     }
 
-    public function deleteTimer()
-    {
+    public function deleteTimer() {
         $timer = Timer::find(Input::get('timer_id'));
 
         if (!$timer || !parent::userHasRole('Admin'))
@@ -390,14 +370,13 @@ class ProjectController extends BaseController
         return redirect()->back();
     }
 
-    public function updateProgress()
-    {
+    public function updateProgress() {
 
         $project = Project::find(Input::get('project_id'));
 
         $validation = Validator::make(Input::all(), [
-            'project_id' => 'required',
-            'project_progress' => 'required|integer|max:100|min:0'
+                    'project_id' => 'required',
+                    'project_progress' => 'required|integer|max:100|min:0'
         ]);
 
         if ($validation->fails()) {
@@ -410,6 +389,6 @@ class ProjectController extends BaseController
         $project->save();
 
         return redirect()->back();
-
     }
+
 }

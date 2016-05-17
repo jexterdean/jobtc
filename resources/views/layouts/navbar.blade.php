@@ -4,7 +4,7 @@
     </a>
 </li>
 @role('admin')
-<?php $companies = \App\Helpers\Helper::getCompanyLinks();?>
+<?php $companies = \App\Helpers\Helper::getCompanyLinks(); ?>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="fa fa-users"></i> 
@@ -18,13 +18,13 @@
         <li class="divider"></li>
         @if(count($companies) > 0)
         @foreach($companies as $company)
-            <li>
-                <a href="{{ url('company/' . $company->id) }}">
-                    <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $company->name }}</span>
-                </a>
-            </li>
+        <li>
+            <a href="{{ url('company/' . $company->id) }}">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $company->name }}</span>
+            </a>
+        </li>
         @endforeach
-    @endif
+        @endif
     </ul>
 </li>
 @endrole
@@ -39,16 +39,16 @@
             <a href="#add_project" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Project</span></a>
         </li>
         <li class="divider"></li>
-    <?php $project = \App\Helpers\Helper::getProjectLinks();?>
-    @if(count($project) > 0)
+        <?php $project = \App\Helpers\Helper::getProjectLinks(); ?>
+        @if(count($project) > 0)
         @foreach($project as $val)
-            <li>
-                <a href="{{ url('project/' . $val->project_id) }}">
-                    <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
-                </a>
-            </li>
+        <li>
+            <a href="{{ url('project/' . $val->project_id ) }}">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
+            </a>
+        </li>
         @endforeach
-    @endif
+        @endif
     </ul>
 </li>
 <li>
@@ -122,9 +122,9 @@
         <li><a href="{{ url('user') }}"><i class="fa fa-user"></i> {{Lang::get('messages.User')}}</a>
         </li>
         <li><a href="{{ url('setting') }}"><i
-                        class="fa fa-wrench"></i> {{Lang::get('messages.General Setting')}}</a></li>
+                    class="fa fa-wrench"></i> {{Lang::get('messages.General Setting')}}</a></li>
         <li><a href="{{ url('template') }}"><i
-                        class="fa fa-folder-o"></i> {{Lang::get('messages.Email Templates')}}</a></li>
+                    class="fa fa-folder-o"></i> {{Lang::get('messages.Email Templates')}}</a></li>
     </ul>
 </li>
 @endrole

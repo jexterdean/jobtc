@@ -76,7 +76,7 @@
     <div class="form-group">
         {!!  Form::label('country_id','Country',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::select('country_id', $countries,( isset($companies->country_id) ?
+            {!!  Form::select('country_id', $countries,(isset($companies->country_id) ?
             $companies->country_id : ''), ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select One', 'tabindex' => '10'] )  !!}
         </div>
     </div>

@@ -56,6 +56,8 @@ Route::group(['middleware' => 'auth'], function () {
         
         /*For Assigning teams for each project with a team(Auto generated team)*/
         Route::post('createTeam','CompanyController@createTeam');
+        /*Unassigning Team members from a project*/
+        Route::post('unassignTeamMember','CompanyController@unassignTeamMember');
         
     });
 

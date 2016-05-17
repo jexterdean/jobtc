@@ -5,6 +5,11 @@ use Session;
 use DB;
 use Auth;
 use App\Models\Company;
+use App\Models\Project;
+use App\Models\Team;
+use App\Models\TeamMember;
+use App\Models\TeamProject;
+
 class Helper
 {
     public static function showMessage()
@@ -69,11 +74,45 @@ class Helper
     }
 
     public static function getProjectLinks(){
-        $project = DB::table('project')
+        /*$project = DB::table('project')
             ->orderBy('project_title', 'asc')
-            ->get();
-
-        return $project;
+            ->get();*/
+        
+        $user_id = Auth::user()->user_id;
+        
+        /*$team_projects = DB::table('project')
+                         ->join('team_project','team_project.project_id','=','project.project_id')
+                         ->join('team_member','team_member.team_id','=','team_project.team_id')
+                         ->distinct()
+                         ->select('team_member.user_id')
+                         ->get();*/
+        
+        $project_id_list = [];
+        
+        //Get owned projects
+        $owned_projects = Project::where('user_id',$user_id)->get();
+        
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id',$user_id)->get();
+        
+        $team_projects = TeamProject::all();
+        
+        foreach($owned_projects as $owned_project) {
+            array_push($project_id_list, $owned_project->project_id);
+        }
+        
+        //Use the team id to get the projects the users are involved with
+        foreach($team_members as $member) {
+            foreach($team_projects as $project) {
+                if ($member->team_id === $project->team_id) {
+                    array_push($project_id_list, $project->project_id);
+                }
+            }
+        }
+        
+        $project_list = Project::whereIn('project_id',$project_id_list)->get();
+        
+        return $project_list;
     }
     
     public static function getCompanyLinks(){

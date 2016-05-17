@@ -16,4 +16,8 @@ class Team extends Model
     public function team_member() {
         return $this->hasMany('App\Models\TeamMember');
     }
+    
+    public function team_project() {
+        return $this->hasMany('App\Models\TeamProject');
+    }
 }

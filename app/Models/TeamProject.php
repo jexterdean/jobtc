@@ -14,6 +14,14 @@ class TeamProject extends Model
     protected $primaryKey = 'id';
     protected $table = 'team_project';
     
+    public function team() {
+        return $this->belongsTo('App\Models\Project');
+    }
+    
+    public function team_member() {
+        return $this->hasOne('App\Models\TeamMember');
+    }
+    
     public function project() {
         return $this->belongsTo('App\Models\Project');
     }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Freelance Plus</title>
+    <title>Job.tc</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <meta http-equiv="Expires" content="Tue, 01 Jan 1995 12:12:12 GMT">
     {!!  HTML::style('assets/css/bootstrap.css')  !!}

@@ -5,7 +5,7 @@
     <div class="col-md-5">
         @if (count($projects) > 0)
         @foreach($projects as $project)
-        <div class="box box-default">
+        <div id="project-{{$project->project_id}}" class="box box-default">
             <div class="box-container">
                 <div class="box-header">
                     <h3 class="box-title">{{$project->project_title}}</h3>
@@ -19,9 +19,14 @@
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-6">{{$team_members->user->name}}</div>
-                                    <div class="pull-right">
-                                        <a href="#" class="drag-handle icon icon-btn move-tasklist">
+                                    <div class="btn-group pull-right">
+                                        <a href="#" class="drag-handle">
                                             <i class="fa fa-arrows"></i>
+                                        </a>
+                                        <a href="#" class="unassign-member">
+                                            <i class="fa fa-times"></i>
+                                            <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
+                                            <input class="team_id" type="hidden" value="{{$team_members->team_id}}"/>
                                         </a>
                                     </div>
                                 </div>
@@ -29,8 +34,8 @@
                             @endforeach
                             @endif
                             @endforeach
-                            <!--li class="list-group-item">No Employees assigned to this project.</li-->
                         </ul>
+                        <!--li class="list-group-item">No Employees assigned to this project.</li-->
                         <input type="hidden" class="project_id" value="{{$project->project_id}}"/>
                     </div>
                 </div>
@@ -67,11 +72,37 @@
                             @foreach($profiles as $profile)
                             <li id="list-group-item-{{$profile->user->user_id}}" class="list-group-item">
                                 <div class="row">
-                                    <div class="col-md-6">{{$profile->user->name}}</div>
-                                    <div class="pull-right">
-                                        <a href="#" class="drag-handle icon icon-btn move-tasklist">
+                                    <div class="col-md-6"><a data-toggle="collapse" href="#profile-collapse-{{$profile->id}}">{{$profile->user->name}}</a></div>
+                                    <div class="btn-group pull-right">
+                                        <a href="#" class="drag-handle">
                                             <i class="fa fa-arrows"></i>
                                         </a>
+                                        <a href="#" class="hidden unassign-member">
+                                            <i class="fa fa-times"></i>
+                                            <input class="user_id" type="hidden" value="{{$profile->user->user_id}}"/>
+                                            <input class="team_id" type="hidden" value=""/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="profile-collapse-{{$profile->id}}" class="collapse">
+                                        <div class="profile-container">
+                                            <ul class="list-group">
+                                                <li class="list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;{{$profile->user->email}}</li>
+                                                <li class="list-group-item"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;{{$profile->user->phone}}</li>
+                                                <li class="list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;{{$profile->user->skype}}</li>
+                                                <li class="list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_1}}</li>
+                                                <li class="list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_2}}</li>
+                                                <li class="list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->zipcode}}</li>
+                                                @foreach($countries as $country)
+                                                @if($country->country_id === $profile->user->country_id)
+                                                <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{$country->country_name}}</li>
+                                                @endif
+                                                @endforeach
+                                                <li class="list-group-item"><i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;{{$profile->user->facebook}}</li>
+                                                <li class="list-group-item"><i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;{{$profile->user->linkedin}}</li>
+                                            </ul>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </li>
@@ -91,11 +122,13 @@
                 <div class="box-body">
                     <div class="box-content">
                         <ul class="list-group">
-                        @foreach($team_grouping->team_project as $team_projects)
-                        @foreach($team_projects as $team_project)
-                        <li class="list-group-item">{{$team_project}}</li>
-                        @endforeach
-                        @endforeach
+                            @if(count($team_grouping) > 0)
+                            @foreach($team_grouping[0]->team_project as $team_projects)
+                            <li class="list-group-item">{{$team_projects->team_id}}</li>
+                            @endforeach
+                            @else
+                            <li class="list-group-item">No Teams Available.</li>
+                            @endif
                         </ul>
                     </div>
                 </div>

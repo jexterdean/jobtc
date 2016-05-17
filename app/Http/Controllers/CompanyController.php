@@ -53,15 +53,38 @@ class CompanyController extends BaseController {
 
         $companies = Company::where('id', $company_id)->get();
 
-        $teams = Team::with(['team_member' => function($query){
-            $query->with('user')->get();
-        }])->get();
+        $teams = Team::with(['team_member' => function($query) {
+                        $query->with('user')->get();
+                    }])->get();
 
         $team_grouping = Project::with('team_project')->where('company_id', $company_id)->get();
-        
+
         $profiles = Profile::where('company_id', $company_id)->orWhere('user_id', $user_id)->get();
 
-        $projects = Project::where('user_id', $user_id)->where('company_id', $company_id)->get();
+        $project_id_list = [];
+
+        //Get owned projects
+        $owned_projects = Project::where('user_id', $user_id)->where('company_id',$company_id)->get();
+
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id', $user_id)->get();
+
+        $team_projects = TeamProject::all();
+
+        foreach ($owned_projects as $owned_project) {
+            array_push($project_id_list, $owned_project->project_id);
+        }
+
+        //Use the team id to get the projects the users are involved with
+        foreach ($team_members as $member) {
+            foreach ($team_projects as $project) {
+                if ($member->team_id === $project->team_id) {
+                    array_push($project_id_list, $project->project_id);
+                }
+            }
+        }
+
+        $projects = Project::whereIn('project_id', $project_id_list)->get();
 
         $assets = ['companies'];
 
@@ -176,11 +199,11 @@ class CompanyController extends BaseController {
     //Create a team for a project,     
     public function createTeam(Request $request) {
 
-        //Create a new team if that project isn't map to a team yet
+        //Create a new team if that project isn't mapped to a team yet
         $team = new Team();
         $team_member = new TeamMember();
         $team_project = new TeamProject();
-        
+
         $user_id = $request->input('user_id');
         $project_id = $request->input('project_id');
 
@@ -219,17 +242,27 @@ class CompanyController extends BaseController {
             $team_member->user_id = $user_id;
             $team_member->save();
 
+            //Map Project to the team id    
             $team_project->team_id = $team_id;
             $team_project->project_id = $project_id;
 
             $team_project->save();
-
-            //Map Project to the team id
         }
 
         return $team;
     }
 
-}
+    public function unassignTeamMember(Request $request) {
 
+        $user_id = $request->input('user_id');
+        $team_id = $request->input('team_id');
+
+        //Delete team member from the Team Member table to unassign them from the project
+        $team_member = TeamMember::where('user_id', $user_id)->where('team_id', $team_id);
+        $team_member->delete();
+
+        return $user_id;
+    }
+
+}
 ?>

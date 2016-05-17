@@ -20,24 +20,23 @@ class User extends Model implements
 
     use Authenticatable,  CanResetPassword,HasRoleAndPermission;
 
-    protected $fillable = ['email', 'password' ,'name','phone', 'photo' ,'address_1','address_2','zipcode','country_id','user_status'];
-    protected $fillable = [
-        'username',
-        'password',
-        'client_id',
-        'accounts_id',
+    protected $fillable = ['email', 
+        'password' ,
         'name',
-        'email',
-        'phone',
+        'phone', 
+        'photo' ,
+        'address_1',
+        'address_2',
+        'zipcode',
+        'country_id',
         'user_status',
-        'user_status_detail',
-        'user_avatar',
-
+        'skype',
+        'facebook',
+        'linkedin',
         'timezone_id',
         'ticketit_admin',
-        'ticketit_agent',
-    ];
-
+        'ticketit_agent',];
+    
     protected $primaryKey = 'user_id';
     protected $table = 'user';
 

@@ -67,11 +67,9 @@ class TaskController extends BaseController {
     public function show($id) {
         //
         $task = [];
-        $user_type = 1; //Auth::user('user')->user_type;
         if (parent::userHasRole('Admin')) {
             $task = Task::find($id);
         } elseif (parent::userHasRole('client')) {
-
             $task = DB::table('task')
                     //->join('user', 'user.client_id', '=', 'task.client_id')
                     ->where('user_id', '=', Auth::user('user')->user_id)
@@ -183,7 +181,7 @@ class TaskController extends BaseController {
         $data['task_status'] = 'pending';
         $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
 
-        $data['user_id'] = Input::get('user_id', 'Open');
+        $data['user_id'] = Auth::user()->user_id;
 
         $task->fill($data);
         $task->save();

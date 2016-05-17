@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
 use App\Models\User;
+use App\Models\Country;
 use App\Models\Company;
 use App\Models\Profile;
 use Bican\Roles\Models\Role;
@@ -29,6 +30,11 @@ class UserController extends BaseController
                 ->join('companies','profiles.company_id','=','companies.id')
                 ->select('user.user_id','user.user_status', 'user.name','user.email','roles.id as role_id','roles.name as role','companies.name as company_name')
                 ->get();*/
+
+         //Get countries for dropdown       
+         $countries = Country::orderBy('country_name', 'asc')
+                ->lists('country_name', 'country_id')
+                ->toArray();
         
         //The profiles already contain all user, role and company information (it's fields belong to all 3 tables)
         $profiles = Profile::all();
@@ -44,6 +50,7 @@ class UserController extends BaseController
         return View::make('user.index', [
             'profiles' => $profiles,
             'companies' => $client_options,
+            'countries' => $countries,
             'roles' => $role,
             'assets' => $assets
         ]);
@@ -120,9 +127,14 @@ class UserController extends BaseController
         $user->email = $request->input('email'); 
         $user->phone = $request->input('phone'); 
         $user->photo = $photo_path;
+        $user->address_1 = $request->input('address_1'); 
+        $user->address_2 = $request->input('address_2'); 
+        $user->zipcode = $request->input('zipcode'); 
+        $user->country_id = $request->input('country_id'); 
+        $user->skype = $request->input('skype'); 
+        $user->facebook = $request->input('facebook'); 
+        $user->linkedin = $request->input('linkedin');
         $user->user_status = 'Active';
-        
-        
         
         $user->save();
 
@@ -193,8 +205,9 @@ class UserController extends BaseController
     {
         $user = User::find($user_id);
 
-        if (!$user || !Entrust::hasRole('Admin'))
-            return Redirect::to('user')->withErrors('This is not a valid link!!');
+        $user->delete();
+        
+        return Redirect::to('user')->withSuccess("User deleted successfully!!");
     }
 }
 
