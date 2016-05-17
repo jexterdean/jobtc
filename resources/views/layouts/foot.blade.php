@@ -94,7 +94,9 @@
 {!! HTML::script('assets/js/jquery-dateFormat.js')  !!}
 
 <!--Wysiwyg Editor-->
+@if(!Request::is('tickets/*'))
 {!! HTML::script('assets/ckeditor/ckeditor.js')  !!}
+@endif
 
 
 <!--Page Specific scripts-->

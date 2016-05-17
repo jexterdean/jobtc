@@ -100,6 +100,12 @@ class Helper
         $string = nl2br($string);
         return ($string);
     }
+
+    public static function DisplayArray($ar, $color = "000"){
+        echo '<pre style="color: #' . $color . '">';
+        print_r($ar);
+        echo '</pre>';
+    }
 }
 
 ?>
