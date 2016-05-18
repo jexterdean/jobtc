@@ -149,7 +149,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
 
-        //Kordy\Ticketit\TicketitServiceProvider::class,
+        Kordy\Ticketit\TicketitServiceProvider::class,
 
         Zizaco\Entrust\EntrustServiceProvider::class,
     ],
