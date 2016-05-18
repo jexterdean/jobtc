@@ -30,7 +30,7 @@ $('.list-group').sortable({
         $(ui.item).find('.unassign-member').removeClass('hidden');
 
         //Create Team if 
-        url = public_path + 'createTeam/';
+        url = public_path + '/pm/createTeam/';
         data = {
             'project_id': project_id,
             'user_id': user_id
