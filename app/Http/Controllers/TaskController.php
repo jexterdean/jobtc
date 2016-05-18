@@ -300,7 +300,7 @@ class TaskController extends BaseController {
         if ($has_order_list > 0) {
             //then get the new task list item id and append it as the last item on the order
             $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->pluck('task_id_order');
-            $task_list_id_array = "\"" . $taskCheckListOrderString . "\"";
+            $task_list_id_array = $taskCheckListOrderString .',' .$taskCheckList->id;
             $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $request->task_id)->update([
                 'task_id_order' => $task_list_id_array
             ]);
