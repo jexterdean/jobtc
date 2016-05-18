@@ -124,12 +124,18 @@ $('.list-group').on('click', '.edit-profile', function () {
     var linkedin_text = $(this).parent().parent().parent().find('.linkedin').text();
 
     //Name Editor
-    //var name_ele = '<div class="text-area-content">';
-    //name_ele += '<div class="input-group">';
     var name_ele = '<input type="text" name="name" class="form-control edit-name" placeholder="Edit Name" value="' + name_text + '"/>';
-    //name_ele += '</div>'; //input-group
-    //name_ele += '</div>';
 
+    //Password Editor
+    var password_ele = '<input type="password" name="password" class="form-control edit-password" placeholder="Edit Password" value=""/>';;
+    
+    var password_ele = '<div class="text-area-content">';
+    password_ele += '<div class="input-group">';
+    password_ele += '<span class="input-group-addon" id="password-addon" ><i class="fa fa-lock" aria-hidden="true"></i></span>';
+    password_ele += '<input type="password" name="password" class="form-control edit-password" placeholder="Enter New Password" aria-describedby="password-addon" value=""/>';
+    password_ele += '</div>'; //input-group
+    password_ele += '</div>';
+    
     //Email Editor
     var email_ele = '<div class="text-area-content">';
     email_ele += '<div class="input-group">';
@@ -198,6 +204,7 @@ $('.list-group').on('click', '.edit-profile', function () {
 
     name_element.css({'display': 'none'}).before(name_ele);
     email_element.css({'display': 'none'}).before(email_ele);
+    email_element.after(password_ele);
     phone_element.css({'display': 'none'}).before(phone_ele);
     skype_element.css({'display': 'none'}).before(skype_ele);
     address_1_element.css({'display': 'none'}).before(address_1_ele);
@@ -239,6 +246,7 @@ $('.list-group').on('click', '.update-profile', function (e) {
 
     var name = name_container.find('.edit-name').val().trim();
     var email = profile_container.find('.edit-email').val().trim();
+    var password = profile_container.find('.edit-password').val().trim();
     var phone = profile_container.find('.edit-phone').val().trim();
     var skype = profile_container.find('.edit-skype').val().trim();
     var address_1 = profile_container.find('.edit-address-1').val().trim();
@@ -254,6 +262,7 @@ $('.list-group').on('click', '.update-profile', function (e) {
     data.push(
             {'name': 'user_id', 'value': user_id},
     {'name': 'name', 'value': name},
+    {'name': 'password', 'value': password},
     {'name': 'email', 'value': email},
     {'name': 'phone', 'value': phone},
     {'name': 'skype', 'value': skype},

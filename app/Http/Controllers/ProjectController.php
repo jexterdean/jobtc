@@ -172,7 +172,7 @@ class ProjectController extends BaseController {
                 ->orderBy('task_title', 'asc')
                 ->get();
 
-        $assets = ['datepicker', 'firepad'];
+        $assets = ['datepicker'];
 
         return view('project.show', [
             'project' => $project,

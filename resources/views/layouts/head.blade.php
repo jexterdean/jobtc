@@ -42,7 +42,7 @@
     
     <!--Page Specific css-->
     @if(in_array('companies',$assets))
-    {!!  HTML::style('assets/css/page/company.css')  !!}
+    {!!  HTML::style('assets/css/page/companies.css')  !!}
     @endif
 
     <script> var public_path = "{{ URL::to('/') }}/"; </script>

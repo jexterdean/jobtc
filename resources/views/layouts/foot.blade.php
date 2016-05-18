@@ -105,6 +105,9 @@
 {!!  HTML::script('assets/js/page/companies.js')  !!}
 @endif
 
+@if (in_array('tasklist',$assets))
+{!!  HTML::script('assets/js/page/tasklist.js')  !!}
+@endif
 
 <script>
     $(function () {

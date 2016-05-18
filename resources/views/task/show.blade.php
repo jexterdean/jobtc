@@ -203,7 +203,7 @@
 
                 var data = $(this).sortable('serialize');
                 data.push({'name': '_token', 'value': _body.find('input[name="_token"]').val()})
-                
+
                 url = public_path + '/changeCheckList/' + list_group_id + '/' + task_list_item_id;
 
                 //Remove warning that no data is found if dragged to an empty list
@@ -371,10 +371,20 @@
             var check_list_container = $('#list_group_' + this.id);
             _this.addClass('disabled');
             check_list_container.append(text_area_ele);
-            _body.find('textarea[name="checklist_header"]').focus();
-
 
             CKEDITOR.replace('add-new-task-textarea');
+
+            if (check_list_container.length > 10) {
+
+                $('body').animate({
+                    scrollTop: _body.get(0).scrollHeight / 2
+                }, 500);
+
+            } else {
+                $('body').animate({
+                    scrollTop: 0
+                }, 500);
+            }
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
@@ -389,10 +399,10 @@
                 {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
                 {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
                 );
-                
+
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
-                    
+
                     var ele = '';
                     $.each(_return_data, function (index, val) {
                         var status = val.status;
@@ -421,7 +431,7 @@
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
                         ele += '<div class="pull-right">';
-                        ele += '<div class="btn btn-default btn-shadow '+statusClass+' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                        ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
                         ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
@@ -441,7 +451,7 @@
                         ele += '</li>';
 
                     });
-                    
+
                     $('#add-new-task').remove();
                     check_list_container.children('li:contains("No data was found.")').remove();
                     check_list_container.html(ele);
@@ -563,7 +573,9 @@
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().attr('id');
 
-            $('#' + list_group_id + ' .list-group-item').eq(index).remove();
+            var list_group = $('#' + list_group_id +' .list-group-item');
+
+            list_group.eq(index).remove();
 
             var url = public_path + 'deleteCheckList/' + task_list_item_id;
 
