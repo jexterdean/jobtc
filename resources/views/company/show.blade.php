@@ -47,7 +47,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         @endforeach
         @else
@@ -98,9 +97,9 @@
                                     <div id="profile-collapse-{{$profile->user->user_id}}" class="collapse">
                                         <div class="profile-container">
                                             <ul class="list-group">
-                                                <li class="email list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;{{$profile->user->email}}</li>
-                                                <li class="phone list-group-item"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;{{$profile->user->phone}}</li>
-                                                <li class="skype list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;{{$profile->user->skype}}</li>
+                                                <li class="email list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;<a href="mailto:{{$profile->user->email}}">{{$profile->user->email}}</a></li>
+                                                <li class="phone list-group-item"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;<a href="tel:{{$profile->user->phone}}">{{$profile->user->phone}}<a></li>
+                                                <li class="skype list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;<a href="skype:{{$profile->user->skype}}">{{$profile->user->skype}}</a></li>
                                                 <li class="address_1 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_1}}</li>
                                                 <li class="address_2 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_2}}</li>
                                                 <li class="zipcode list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->zipcode}}</li>
