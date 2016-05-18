@@ -39,6 +39,11 @@
     @endif
 
     {!!  HTML::style('assets/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}
+    
+    <!--Page Specific css-->
+    @if(in_array('companies',$assets))
+    {!!  HTML::style('assets/css/page/company.css')  !!}
+    @endif
 
     <script> var public_path = "{{ URL::to('/') }}/"; </script>
 </head>

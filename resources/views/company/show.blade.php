@@ -18,16 +18,23 @@
                             @foreach($team->team_member as $team_members)
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-md-6">{{$team_members->user->name}}</div>
-                                    <div class="btn-group pull-right">
-                                        <a href="#" class="drag-handle">
-                                            <i class="fa fa-arrows"></i>
-                                        </a>
-                                        <a href="#" class="unassign-member">
-                                            <i class="fa fa-times"></i>
-                                            <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
-                                            <input class="team_id" type="hidden" value="{{$team_members->team_id}}"/>
-                                        </a>
+                                    <div class="col-md-6">
+                                        {{$team_members->user->name}}
+                                    </div>
+                                    <div class="pull-right">
+                                        <a class="icon icon-btn edit-profile">
+                                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            </a>
+                                        <div class="btn-group pull-right">
+                                            <a href="#" class="drag-handle">
+                                                <i class="fa fa-arrows"></i>
+                                            </a>
+                                            <a href="#" class="unassign-member">
+                                                <i class="fa fa-times"></i>
+                                                <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
+                                                <input class="team_id" type="hidden" value="{{$team_members->team_id}}"/>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -73,7 +80,10 @@
                             <li id="list-group-item-{{$profile->user->user_id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-6"><a data-toggle="collapse" href="#profile-collapse-{{$profile->id}}">{{$profile->user->name}}</a></div>
-                                    <div class="btn-group pull-right">
+                                    <div class="pull-right">
+                                        <a class="icon icon-btn edit-profile">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a>
                                         <a href="#" class="drag-handle">
                                             <i class="fa fa-arrows"></i>
                                         </a>
