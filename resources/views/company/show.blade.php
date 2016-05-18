@@ -23,8 +23,8 @@
                                     </div>
                                     <div class="pull-right">
                                         <a class="icon icon-btn edit-profile">
-                                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                                            </a>
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a>
                                         <div class="btn-group pull-right">
                                             <a href="#" class="drag-handle">
                                                 <i class="fa fa-arrows"></i>
@@ -77,9 +77,9 @@
                     <div class="box-content">
                         <ul class="list-group">
                             @foreach($profiles as $profile)
-                            <li id="list-group-item-{{$profile->user->user_id}}" class="list-group-item">
+                            <li id="profile-{{$profile->user->user_id}}" class="list-group-item">
                                 <div class="row">
-                                    <div class="col-md-6"><a data-toggle="collapse" href="#profile-collapse-{{$profile->id}}">{{$profile->user->name}}</a></div>
+                                    <div class="col-md-11"><a class="name" data-toggle="collapse" href="#profile-collapse-{{$profile->user->user_id}}">{{$profile->user->name}}</a></div>
                                     <div class="pull-right">
                                         <a class="icon icon-btn edit-profile">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -95,22 +95,44 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div id="profile-collapse-{{$profile->id}}" class="collapse">
+                                    <div id="profile-collapse-{{$profile->user->user_id}}" class="collapse">
                                         <div class="profile-container">
                                             <ul class="list-group">
-                                                <li class="list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;{{$profile->user->email}}</li>
-                                                <li class="list-group-item"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;{{$profile->user->phone}}</li>
-                                                <li class="list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;{{$profile->user->skype}}</li>
-                                                <li class="list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_1}}</li>
-                                                <li class="list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_2}}</li>
-                                                <li class="list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->zipcode}}</li>
-                                                @foreach($countries as $country)
-                                                @if($country->country_id === $profile->user->country_id)
-                                                <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{$country->country_name}}</li>
-                                                @endif
-                                                @endforeach
-                                                <li class="list-group-item"><i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;{{$profile->user->facebook}}</li>
-                                                <li class="list-group-item"><i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;{{$profile->user->linkedin}}</li>
+                                                <li class="email list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;{{$profile->user->email}}</li>
+                                                <li class="phone list-group-item"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;{{$profile->user->phone}}</li>
+                                                <li class="skype list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;{{$profile->user->skype}}</li>
+                                                <li class="address_1 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_1}}</li>
+                                                <li class="address_2 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_2}}</li>
+                                                <li class="zipcode list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->zipcode}}</li>
+                                                <li class="country list-group-item">
+                                                    <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;
+                                                    @foreach($countries as $country)
+                                                    @if($country->country_id === $profile->user->country_id)
+                                                    {{$country->country_name}}
+                                                    @endif
+                                                    @endforeach
+                                                </li>
+                                                <li class="country-dropdown hidden list-group-item">
+                                                    <form role="form">
+                                                        <div class="form-group">
+                                                            <label><i class="fa fa-globe" aria-hidden="true"></i></label>
+                                                            &nbsp;
+                                                            <div class="btn-group">
+                                                                <select class="form-control edit-country" name="country_id" aria-describedby="country-addon">
+                                                                    @foreach($countries as $country)
+                                                                    @if($country->country_id === $profile->user->country_id)
+                                                                    <option selected="selected" value="{{$country->country_id}}">{{$country->country_name}}</option>
+                                                                    @else
+                                                                    <option value="{{$country->country_id}}">{{$country->country_name}}</option>
+                                                                    @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </form>    
+                                                </li>
+                                                <li class="facebook list-group-item"><i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;{{$profile->user->facebook}}</li>
+                                                <li class="linkedin list-group-item"><i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;{{$profile->user->linkedin}}</li>
                                             </ul>
                                         </div>                                        
                                     </div>

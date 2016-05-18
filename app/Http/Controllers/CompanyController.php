@@ -237,6 +237,9 @@ class CompanyController extends BaseController {
             $team->project_id = $project_id;
             $team->save();
 
+            //Get the team id
+            $team_id = $team->id;
+            
             //Save the user as a team member
             $team_member->team_id = $team_id;
             $team_member->user_id = $user_id;
@@ -249,7 +252,7 @@ class CompanyController extends BaseController {
             $team_project->save();
         }
 
-        return $team;
+        return $team_id;
     }
 
     public function unassignTeamMember(Request $request) {

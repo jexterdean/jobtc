@@ -2,8 +2,8 @@
 {!! Form::hidden('task_id',$task->task_id) !!}
 {!! Form::hidden('user_id',$task->user_id) !!}
 <?php $_total = 0; ?>
-@foreach($task_timer as $val)
-<?php $_total += $val->time ?>
+@foreach($task_timer as $timer)
+<?php $_total += $timer->time ?>
 @endforeach
 <div class="row">
     <div class="col-sm-12">
@@ -24,40 +24,39 @@
                         <div class="check-list-container">
                             <ul class="list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
-                                @foreach($checkList as $val)
-                                <li id="task_item_{{$val->id}}" class="list-group-item task-list-item">
+                                @foreach($checkList as $list_item)
+                                <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
-                                            <a data-toggle="collapse" href="#task-item-collapse-{{$val->id}}" class="checklist-header">{!! $val->checklist_header !!}</a>
-                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header">{!! $list_item->checklist_header !!}</a>
+                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
                                         <div class="pull-right">
-                                            @if ($val->status === 'Default')
+                                            @if ($list_item->status === 'Default')
                                             <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            @elseif($val->status === 'Ongoing')
+                                            @elseif($list_item->status === 'Ongoing')
                                             <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            @elseif($val->status === 'Completed')
+                                            @elseif($list_item->status === 'Completed')
                                             <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            @elseif($val->status === 'Urgent')
+                                            @elseif($list_item->status === 'Urgent')
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                             &nbsp;&nbsp;&nbsp;
                                             <a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
 
-                                            <!--input type="checkbox" class="checkbox checklist-checkbox" name="is_finished" value="1" id="{{ $val->id }}" {{ $val->is_finished ? 'checked' : '' }}-->
                                             <a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
                                             <a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div id="task-item-collapse-{{$val->id}}" class="task-item-collapse collapse">
-                                            <div class="checklist-item">{!! $val->checklist !!}</div>
-                                            <input type="hidden" class="task_list_item_id" value="{{$val->id}}" />
+                                        <div id="task-item-collapse-{{$list_item->id}}" class="task-item-collapse collapse">
+                                            <div class="checklist-item">{!! $list_item->checklist !!}</div>
+                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
                                     </div>
@@ -84,8 +83,8 @@
                         <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
                     </div>
                     <div class="col-sm-2">
-                        @foreach($links as $val)
-                        <a href="{{ $val->url }}" target="_blank"><strong>{{ $val->title }}</strong></a><br/>
+                        @foreach($links as $link)
+                        <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a><br/>
                         @endforeach
                     </div>
                 </div>
@@ -200,13 +199,11 @@
 
                 var task_list_id = $(this).find('.task_list_id').val();
 
-                //var task_list_item_id = $(this).find('.task_list_item_id').val();
                 var task_list_item_id = ui.item.attr('id').split('_').pop();
 
                 var data = $(this).sortable('serialize');
-
-                //alert('list_group_id :' + list_group_id + ' task_list_id :' +task_list_id);
-
+                data.push({'name': '_token', 'value': _body.find('input[name="_token"]').val()})
+                
                 url = public_path + '/changeCheckList/' + list_group_id + '/' + task_list_item_id;
 
                 //Remove warning that no data is found if dragged to an empty list
@@ -375,7 +372,7 @@
             _this.addClass('disabled');
             check_list_container.append(text_area_ele);
             _body.find('textarea[name="checklist_header"]').focus();
-		
+
 
             CKEDITOR.replace('add-new-task-textarea');
 
@@ -392,10 +389,10 @@
                 {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
                 {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
                 );
-
+                
                 $.post(public_path + 'checkList', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
-
+                    
                     var ele = '';
                     $.each(_return_data, function (index, val) {
                         var status = val.status;
@@ -418,31 +415,35 @@
 
                         ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
                         ele += '<div class="row task-list-details">';
-                        ele += '<div class="col-md-5">';
-                        ele += '<label class="checklist-header">' + val.checklist_header + '</label>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
+                        ele += '<div class="col-md-7">';
+                        ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header">' + val.checklist_header + '</a>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
-                        ele += '<div class="pull-right" style="margin-right: 10px">';
-                        ele += '<a class="btn btn-shadow" data-toggle="collapse" href="#task-item-collapse-'+val.id+'"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<a class="btn edit-task-list-item btn-shadow"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<img class="drag-handle" src="' + public_path + 'assets/img/draggable-handle-2.png"/>&nbsp;&nbsp;&nbsp;';
+                        ele += '<div class="pull-right">';
                         ele += '<div class="btn btn-default btn-shadow '+statusClass+' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
-                        ele += '<a href = "#" class = "alert_delete"><i class="fa fa-times" aria-hidden = "true"> </i></a>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
+                        ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
+                        ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
+                        ele += '<a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>'
-                        ele += '</div>'
-                        ele += '<div class="row">'
+                        ele += '</div>';
+                        ele += '</div>';
+                        ele += '<div class="row">';
                         ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
                         ele += '<div class="checklist-item">' + val.checklist + '</div>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '">';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
                         ele += '</div>';
                         ele += '</li>';
 
                     });
+                    
+                    $('#add-new-task').remove();
+                    check_list_container.children('li:contains("No data was found.")').remove();
                     check_list_container.html(ele);
                     _this.removeAttr('disabled');
                 });
@@ -506,8 +507,8 @@
             //Toggle the content area to show
             $('#task-item-collapse-' + task_list_item_id).collapse('show');
             $(this)
-            .addClass('disabled')
-            .css({'pointer-events':'none'});
+                    .addClass('disabled')
+                    .css({'pointer-events': 'none'});
         });
 
         _body.on('click', '.update-checklist', function (e) {
@@ -515,7 +516,7 @@
             e.stopImmediatePropagation();
             //Get Task item header
             var task_item_id = $(this).parent().parent().find('.task_list_item_id').val(),
-                _task_item = $('#task_item_' + task_item_id);
+                    _task_item = $('#task_item_' + task_item_id);
             _task_item.removeClass('is-task-item-selected');
             //Get list item index
             var index = $(this).parent().parent().parent().parent().parent().index();
@@ -547,8 +548,8 @@
             $('#task-item-collapse-' + task_list_item_id).collapse('hide');
 
             $('.edit-task-list-item')
-                .removeClass('disabled')
-                .removeAttr('style');
+                    .removeClass('disabled')
+                    .removeAttr('style');
         });
 
 
@@ -556,43 +557,43 @@
             e.preventDefault();
 
             var index = $(this).parent().parent().parent().index();
-            
+
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-            
+
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().attr('id');
-            
+
             $('#' + list_group_id + ' .list-group-item').eq(index).remove();
 
             var url = public_path + 'deleteCheckList/' + task_list_item_id;
 
             $.post(url);
-            
+
         });
-        $('.task-list').on('show.bs.collapse',function(){
+        $('.task-list').on('show.bs.collapse', function () {
             var id = this.id.match(/\d+/);
             var task_list = $('#collapse-container-' + id);
             task_list.addClass('is-selected');
         });
         $('.task-list .panel-heading .col-xs-6')
-            .click(function(){
-                var data_target = $(this).parent().parent().parent().find('.task-header').data('target');
-                var id = data_target.match(/\d+/);
-                var task_list = $('#collapse-container-' + id);
-                task_list.removeClass('is-selected');
-            });
-        $('.task-list-item .checklist-header, .task-list-details .edit-task-list-item').click(function(event){
-              var href = !$(this).hasClass('icon') ? $(this).attr('href') : $(this).parent().parent().find('.checklist-header').attr('href');
-              var id = href.match(/\d+/);
-              var task_list_item = $('#task_item_' + parseInt(id));
-              task_list_item.addClass('is-task-item-selected');
+                .click(function () {
+                    var data_target = $(this).parent().parent().parent().find('.task-header').data('target');
+                    var id = data_target.match(/\d+/);
+                    var task_list = $('#collapse-container-' + id);
+                    task_list.removeClass('is-selected');
+                });
+        $('.task-list-item .checklist-header, .task-list-details .edit-task-list-item').click(function (event) {
+            var href = !$(this).hasClass('icon') ? $(this).attr('href') : $(this).parent().parent().find('.checklist-header').attr('href');
+            var id = href.match(/\d+/);
+            var task_list_item = $('#task_item_' + parseInt(id));
+            task_list_item.addClass('is-task-item-selected');
         });
-        $('.list-group-item.task-list-item').on('hidden.bs.collapse',function(){
+        $('.list-group-item.task-list-item').on('hidden.bs.collapse', function () {
             var id = this.id.match(/\d+/);
             var task_list = $('#task_item_' + id);
             task_list.removeClass('is-task-item-selected');
         });
-        $('.task-list-item').bind('dblclick',function(){
+        $('.task-list-item').bind('dblclick', function () {
             var edit_btn = $(this).find('.icon-btn.edit-task-list-item');
             edit_btn.bind().trigger('click');
             console.log('trigger');

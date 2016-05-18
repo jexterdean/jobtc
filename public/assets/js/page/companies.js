@@ -17,21 +17,17 @@ $('.list-group').sortable({
         list_group_user_id = $(ui.item).attr('id');
         user_id = list_group_user_id.split('-').pop();
 
-        var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.text() + ')').length;
+        //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
 
+        var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains('+ui.item.find('.name').text()+')').length;
+        
         //If a duplicate, remove it
         if (identicalItemCount > 1) {
-            $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.text() + ')').first().remove();
+            $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.name').text() + ')').first().remove();
         }
 
         //Show unassign button
         $(ui.item).find('.unassign-member').removeClass('hidden');
-
-        //Get other list group item's team and
-        team_id = $(ui.item).parent().find('.team_id').val();
-
-        //Assign it to the this list group item's input
-        $(ui.item).find('.team_id').val(team_id);
 
         //Create Team if 
         url = public_path + 'createTeam/';
@@ -40,7 +36,10 @@ $('.list-group').sortable({
             'user_id': user_id
         };
 
-        $.post(url, data);
+        $.post(url, data,function(team_id){
+            //Assign the team id to the this list group item's input
+            $(ui.item).find('.team_id').val(team_id);
+        });
 
         //Remove warning that no employee is assigned.
         $(this).find('li:contains("No Employees assigned to this project.")').remove();
@@ -56,7 +55,7 @@ $('.list-group').sortable({
 /*Unassign Team Member from project*/
 $('.list-group').on('click', '.unassign-member', function () {
 
-    var list_item = $(this).parent().parent().parent().remove();
+    var list_item = $(this).parent().parent().parent().parent().remove();
 
     //Remove the element immediately
     list_item.remove();
@@ -75,7 +74,217 @@ $('.list-group').on('click', '.unassign-member', function () {
 });
 
 
+/*Edit Profile of an employee*/
+$('.list-group').on('click', '.edit-profile', function () {
 
+    //Get the user profile id
+    var user_id = $(this).parent().parent().parent().attr('id').split('-').pop();
+
+    $('#profile-collapse-' + user_id).collapse('show');
+
+    //Name element
+    var name_element = $(this).parent().siblings().find('.name');
+    var name_text = $(this).parent().siblings().find('.name').text();
+
+    //Email element
+    var email_element = $(this).parent().parent().parent().find('.email');
+    var email_text = $(this).parent().parent().parent().find('.email').text();
+
+    //Phone element
+    var phone_element = $(this).parent().parent().parent().find('.phone');
+    var phone_text = $(this).parent().parent().parent().find('.phone').text();
+
+    //Skype element
+    var skype_element = $(this).parent().parent().parent().find('.skype');
+    var skype_text = $(this).parent().parent().parent().find('.skype').text();
+
+    //Address 1 element
+    var address_1_element = $(this).parent().parent().parent().find('.address_1');
+    var address_1_text = $(this).parent().parent().parent().find('.address_1').text();
+
+    //Address 2 element
+    var address_2_element = $(this).parent().parent().parent().find('.address_2');
+    var address_2_text = $(this).parent().parent().parent().find('.address_2').text();
+
+    //Zipcode element
+    var zipcode_element = $(this).parent().parent().parent().find('.zipcode');
+    var zipcode_text = $(this).parent().parent().parent().find('.zipcode').text();
+
+    //Country element
+    var country_element = $(this).parent().parent().parent().find('.country');
+    var country_dropdown = $(this).parent().parent().parent().find('.country-dropdown');
+    var country_text = $(this).parent().parent().parent().find('.country').text();
+
+    //Facebook element
+    var facebook_element = $(this).parent().parent().parent().find('.facebook');
+    var facebook_text = $(this).parent().parent().parent().find('.facebook').text();
+
+    //Linkedin element
+    var linkedin_element = $(this).parent().parent().parent().find('.linkedin');
+    var linkedin_text = $(this).parent().parent().parent().find('.linkedin').text();
+
+    //Name Editor
+    //var name_ele = '<div class="text-area-content">';
+    //name_ele += '<div class="input-group">';
+    var name_ele = '<input type="text" name="name" class="form-control edit-name" placeholder="Edit Name" value="' + name_text + '"/>';
+    //name_ele += '</div>'; //input-group
+    //name_ele += '</div>';
+
+    //Email Editor
+    var email_ele = '<div class="text-area-content">';
+    email_ele += '<div class="input-group">';
+    email_ele += '<span class="input-group-addon" id="email-addon" ><i class="fa fa-envelope-o" aria-hidden="true"></i></span>';
+    email_ele += '<input type="text" name="email" class="form-control edit-email" placeholder="Edit Email" aria-describedby="email-addon" value="' + email_text + '"/>';
+    email_ele += '</div>'; //input-group
+    email_ele += '</div>';
+
+    //Phone Editor
+    var phone_ele = '<div class="text-area-content">';
+    phone_ele += '<div class="input-group">';
+    phone_ele += '<span class="input-group-addon" id="phone-addon" ><i class="fa fa-phone-square" aria-hidden="true"></i></span>';
+    phone_ele += '<input type="text" name="email" class="form-control edit-phone" placeholder="Edit Phone Number" aria-describedby="phone-addon" value="' + phone_text + '"/>';
+    phone_ele += '</div>'; //input-group
+    phone_ele += '</div>';
+
+    //Skype Editor
+    var skype_ele = '<div class="text-area-content">';
+    skype_ele += '<div class="input-group">';
+    skype_ele += '<span class="input-group-addon" id="skype-addon" ><i class="fa fa-skype" aria-hidden="true"></i></span>';
+    skype_ele += '<input type="text" name="skype" class="form-control edit-skype" placeholder="Edit Skype" aria-describedby="skype-addon" value="' + skype_text + '"/>';
+    skype_ele += '</div>'; //input-group
+    skype_ele += '</div>';
+
+    //Address 1 Editor
+    var address_1_ele = '<div class="text-area-content">';
+    address_1_ele += '<div class="input-group">';
+    address_1_ele += '<span class="input-group-addon" id="address-1-addon" ><i class="fa fa-map-marker" aria-hidden="true"></i></span>';
+    address_1_ele += '<input type="text" name="skype" class="form-control edit-address-1" placeholder="Edit Address 1" aria-describedby="address-1-addon" value="' + address_1_text + '"/>';
+    address_1_ele += '</div>'; //input-group
+    address_1_ele += '</div>';
+
+    //Address 2 Editor
+    var address_2_ele = '<div class="text-area-content">';
+    address_2_ele += '<div class="input-group">';
+    address_2_ele += '<span class="input-group-addon" id="address-2-addon" ><i class="fa fa-map-marker" aria-hidden="true"></i></span>';
+    address_2_ele += '<input type="text" name="skype" class="form-control edit-address-2" placeholder="Edit Address 2" aria-describedby="address-2-addon" value="' + address_2_text + '"/>';
+    address_2_ele += '</div>'; //input-group
+    address_2_ele += '</div>';
+
+    //Zipcode Editor
+    var zipcode_ele = '<div class="text-area-content">';
+    zipcode_ele += '<div class="input-group">';
+    zipcode_ele += '<span class="input-group-addon" id="zipcode-addon" ><i class="fa fa-map-marker" aria-hidden="true"></i></span>';
+    zipcode_ele += '<input type="text" name="skype" class="form-control edit-zipcode" placeholder="Edit Zipcode" aria-describedby="zipcode-addon" value="' + zipcode_text + '"/>';
+    zipcode_ele += '</div>'; //input-group
+    zipcode_ele += '</div>';
+
+    //Facebook Editor
+    var facebook_ele = '<div class="text-area-content">';
+    facebook_ele += '<div class="input-group">';
+    facebook_ele += '<span class="input-group-addon" id="facebook-addon" ><i class="fa fa-facebook-square" aria-hidden="true"></i></span>';
+    facebook_ele += '<input type="text" name="skype" class="form-control edit-facebook" placeholder="Edit Facebook" aria-describedby="facebook-addon" value="' + facebook_text + '"/>';
+    facebook_ele += '</div>'; //input-group
+    facebook_ele += '</div>';
+
+    //Linkedin Editor
+    var linkedin_ele = '<div class="text-area-content">';
+    linkedin_ele += '<div class="input-group">';
+    linkedin_ele += '<span class="input-group-addon" id="linkedin-addon" ><i class="fa fa-linkedin-square" aria-hidden="true"></i></span>';
+    linkedin_ele += '<input type="text" name="skype" class="form-control edit-linkedin" placeholder="Edit Skype" aria-describedby="linkedin-addon" value="' + linkedin_text + '"/>';
+    linkedin_ele += '</div>'; //input-group
+    linkedin_ele += '</div>';
+
+    var save_button_ele = '<br /><button class="btn btn-submit btn-shadow btn-sm update-profile" type="button">Save & Close</button>&nbsp;&nbsp;&nbsp;';
+
+    name_element.css({'display': 'none'}).before(name_ele);
+    email_element.css({'display': 'none'}).before(email_ele);
+    phone_element.css({'display': 'none'}).before(phone_ele);
+    skype_element.css({'display': 'none'}).before(skype_ele);
+    address_1_element.css({'display': 'none'}).before(address_1_ele);
+    address_2_element.css({'display': 'none'}).before(address_2_ele);
+    zipcode_element.css({'display': 'none'}).before(zipcode_ele);
+
+    country_element.css({'display': 'none'});
+    country_dropdown.removeClass('hidden');
+
+    facebook_element.css({'display': 'none'}).before(facebook_ele);
+    linkedin_element.css({'display': 'none'}).before(linkedin_ele);
+
+    //Append Save button to the last element
+    linkedin_element.after(save_button_ele);
+
+});
+
+$('.list-group').on('click', '.update-profile', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var user_id = $(this).parent().parent().parent().attr('id').split('-').pop();
+
+    $('#profile-collapse-' + user_id).collapse('hide');
+
+    var name_container = $('#profile-'+user_id);
+    var profile_container = $(this).parent();
+    
+    var name_ele = name_container.find('.name');
+    var email_ele = profile_container.find('.email');
+    var phone_ele = profile_container.find('.phone');
+    var skype_ele = profile_container.find('.skype');
+    var address_1_ele = profile_container.find('.address_1');
+    var address_2_ele = profile_container.find('.address_2');
+    var zipcode_ele = profile_container.find('.zipcode');
+    var country_ele = profile_container.find('.country');
+    var facebook_ele = profile_container.find('.facebook');
+    var linkedin_ele = profile_container.find('.linkedin');
+
+    var name = name_container.find('.edit-name').val().trim();
+    var email = profile_container.find('.edit-email').val().trim();
+    var phone = profile_container.find('.edit-phone').val().trim();
+    var skype = profile_container.find('.edit-skype').val().trim();
+    var address_1 = profile_container.find('.edit-address-1').val().trim();
+    var address_2 = profile_container.find('.edit-address-2').val().trim();
+    var zipcode = profile_container.find('.edit-zipcode').val().trim();
+    var country_id = profile_container.find('.country-dropdown').find('.edit-country').val().trim();
+    var country = profile_container.find('.country-dropdown').find('.edit-country option:selected').text().trim();
+    var facebook = profile_container.find('.edit-facebook').val().trim();
+    var linkedin = profile_container.find('.edit-linkedin').val().trim();
+
+    var data = [];
+
+    data.push(
+            {'name': 'user_id', 'value': user_id},
+    {'name': 'name', 'value': name},
+    {'name': 'email', 'value': email},
+    {'name': 'phone', 'value': phone},
+    {'name': 'skype', 'value': skype},
+    {'name': 'address_1', 'value': address_1},
+    {'name': 'address_2', 'value': address_2},
+    {'name': 'zipcode', 'value': zipcode},
+    {'name': 'country_id', 'value': country_id},
+    {'name': 'facebook', 'value': facebook},
+    {'name': 'linkedin', 'value': linkedin}
+    );
+
+    $.post(public_path + '/updateProfile', data);
+    
+    name_container.find('.edit-name').remove();
+    name_container.find('.text-area-content').remove();
+    profile_container.find('.update-profile').remove();
+    profile_container.find('.country-dropdown').addClass('hidden');
+    
+    name_ele.removeAttr('style').html(name);
+    email_ele.removeAttr('style').html('<i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;'+email);
+    phone_ele.removeAttr('style').html('<i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;'+phone);
+    skype_ele.removeAttr('style').html('<i class="fa fa-skype" aria-hidden="true"></i>&nbsp;'+skype);
+    address_1_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;'+address_1);
+    address_2_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;'+address_2);
+    zipcode_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;'+zipcode);
+    country_ele.removeAttr('style').html('<i class="fa fa-globe" aria-hidden="true"></i>&nbsp;'+country);
+    facebook_ele.removeAttr('style').html('<i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;'+facebook);
+    linkedin_ele.removeAttr('style').html('<i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;'+linkedin);
+});
+
+//General Functions
 function removeDuplicates(listName, newItem) {
     var dupl = false;
     $("#" + listName + " > li").each(function () {

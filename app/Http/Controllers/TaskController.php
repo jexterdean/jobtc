@@ -34,11 +34,11 @@ class TaskController extends BaseController {
     public function index() {
 
         if (parent::hasRole('staff')) {
-            
+
             $tasks = Task::orderBy('created_at', 'desc')
                     ->get();
         } else {
-             /*$tasks = Task::orderBy('created_at', 'desc')
+            /* $tasks = Task::orderBy('created_at', 'desc')
               ->join('user', 'task.user_id', '=', 'users.id')
               ->select(
               'task.*', 'users.first_name', 'user.email'
@@ -295,16 +295,21 @@ class TaskController extends BaseController {
         $taskCheckList = new TaskChecklist($request->all());
         $taskCheckList->save();
 
+        $has_order_list = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->count();
 
-        //then get the new task list item id and append it as the last item on the order
-        $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->pluck('task_id_order');
-        $task_list_id_array = $taskCheckListOrderString . ',"' . $taskCheckList->id . '"';
-        $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $request->task_id)->update([
-            'task_id_order' => $task_list_id_array
-        ]);
+        if ($has_order_list > 0) {
+            //then get the new task list item id and append it as the last item on the order
+            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->pluck('task_id_order');
+            $task_list_id_array = "\"" . $taskCheckListOrderString . "\"";
+            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $request->task_id)->update([
+                'task_id_order' => $task_list_id_array
+            ]);
 
-        //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
-        $data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+            //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+            $data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+        } else {
+            $data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+        }
 
         return json_encode($data);
     }
@@ -317,16 +322,15 @@ class TaskController extends BaseController {
         $task_list_id_count = TaskChecklistOrder::where('task_id', $id)->count();
 
         //Turn list of task item ids into a string
-        $task_list_id_array = implode(",", str_replace("\"",'',$request->get('task_item')));
+        $task_list_id_array = implode(",", str_replace("\"", '', $request->get('task_item')));
 
         if ($task_list_id_count > 0) {
 
             $taskCheckListOrder->where('task_id', $id)->delete();
-            
+
             $taskCheckListOrder->task_id = $id;
             $taskCheckListOrder->task_id_order = $task_list_id_array;
             $taskCheckListOrder->save();
-            
         } else {
 
             $taskCheckListOrder->task_id = $id;
@@ -341,7 +345,7 @@ class TaskController extends BaseController {
         $taskCheckList = TaskChecklist::find($id);
         $data = $request->all();
         //$data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
-        
+
         $taskCheckList->update($data);
 
         return json_encode($data);
@@ -366,7 +370,16 @@ class TaskController extends BaseController {
 
         //Delete the task item
         $checkList->delete($id);
-        return Redirect::back();
+        
+        //If Checklist item was the last item in the list, delete the task order
+        $task_list_count = TaskChecklist::where('task_id',$checkList->task_id)->count();
+        
+        if (!$task_list_count > 0) {
+            
+            $delete_task_order = TaskChecklistOrder::where('task_id',$checkList->task_id)->delete();
+        }
+        
+        return $checkList;
     }
 
     public function changeCheckList(Request $request, $task_id, $task_list_item_id) {
@@ -376,23 +389,22 @@ class TaskController extends BaseController {
             'task_id' => $task_id
         ]);
 
-        
+
         $taskCheckListOrder = new TaskChecklistOrder();
 
         //Check if the task id has an ordering list
         $task_list_id_count = TaskChecklistOrder::where('task_id', $task_id)->count();
 
         //Turn list of task item ids into a string
-        $task_list_id_array = implode(",", str_replace("\"",'',$request->get('task_item')));
+        $task_list_id_array = implode(",", str_replace("\"", '', $request->get('task_item')));
 
         if ($task_list_id_count > 0) {
 
             $taskCheckListOrder->where('task_id', $task_id)->delete();
-            
+
             $taskCheckListOrder->task_id = $task_id;
             $taskCheckListOrder->task_id_order = $task_list_id_array;
             $taskCheckListOrder->save();
-            
         } else {
 
             $taskCheckListOrder->task_id = $task_id;
@@ -401,7 +413,6 @@ class TaskController extends BaseController {
         }
 
         return json_encode($task_list_id_array);
-        
     }
 
 }

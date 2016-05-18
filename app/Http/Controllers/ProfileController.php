@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 
+use Illuminate\Http\Request;
 use App\Models\User;
 
 use Hash;
@@ -39,9 +40,29 @@ class ProfileController extends BaseController
         }
     }
 
-    public function updateProfile()
+    public function updateProfile(Request $request)
     {
-        $setting = Setting::find(1);
+        
+        $user_id = $request->input('user_id');
+        
+        $user = User::where('user_id',$user_id);
+        
+        $user->update([
+           'name' => $request->input('name'), 
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'address_1' => $request->input('address_1'),
+            'address_2' => $request->input('address_2'),
+            'zipcode' => $request->input('zipcode'),
+            'country_id' => $request->input('country_id'),
+            'skype' => $request->input('skype'),
+            'facebook' => $request->input('facebook'),
+            'linkedin' => $request->input('linkedin'),
+        ]);
+        
+        return Redirect::back()->withSuccess("Profile saved!!");
+        
+        /*$setting = Setting::find(1);
         $user = Auth::user();
         $rules = array(
             'name' => 'required',
@@ -71,7 +92,7 @@ class ProfileController extends BaseController
         $user->email = Input::get('email');
         $user->phone = Input::get('phone');
         $user->save();
-        return Redirect::back()->withSuccess("Profile saved!!");
+        return Redirect::back()->withSuccess("Profile saved!!");*/
 
     }
 
