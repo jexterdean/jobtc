@@ -5,6 +5,7 @@ use Session;
 use DB;
 use Auth;
 use App\Models\Company;
+use App\Models\Profile;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -117,11 +118,15 @@ class Helper
     
     public static function getCompanyLinks(){
         
-        $companies = Company::with(['profile' => function($query) {
+        /*$companies = Company::with(['profile' => function($query) {
             //Get user that is logged in
             $user_id = Auth::user()->user_id;
-            $query->where('user_id',$user_id);
-        }])->get();
+            $query->where('user_id',$user_id)->get();
+        }])->get();*/
+        
+        $user_id = Auth::user()->user_id;
+        
+        $companies = Profile::with('company')->where('user_id',$user_id)->get();
 
         return $companies;
     }
