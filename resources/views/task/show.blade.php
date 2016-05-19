@@ -831,7 +831,7 @@
                 e.stopImmediatePropagation();
                 //var data = _body.find('.task-form').serializeArray();
                 
-                var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="http://job.tc:9000/'+spreadsheet_name+'"></iframe>';
+                var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/'+spreadsheet_name+'"></iframe>';
 
                 var data = [];
                 data.push(
