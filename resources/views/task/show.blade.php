@@ -798,7 +798,7 @@
             
             //Create a new spreadsheet page in ethercalc
             var request = new XMLHttpRequest();
-            request.open('POST', 'http://job.tc:9000');
+            request.open('POST', 'https://job.tc:9000/');
             request.setRequestHeader('Content-Type', 'application/json');
             request.onreadystatechange = function () {
                 if (this.readyState === 4) {
