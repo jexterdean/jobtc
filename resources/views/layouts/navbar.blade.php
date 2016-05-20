@@ -56,20 +56,6 @@
         <i class="fa fa-users"></i> <span>{{Lang::get('Team')}}</span>
     </a>
 </li>
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle">
-        <i class="fa fa-laptop"></i>
-        <span> Issue </span>
-        <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        <li>
-            <a href="{{ url('bug') }}">
-                <i class="fa fa-bug"></i> <span>{{Lang::get('messages.Bugs')}}</span>
-            </a>
-        </li>
-    </ul>
-</li>
-
 
 <li>
     <a href="{{ url('meeting') }}">
@@ -92,19 +78,46 @@
     </a>
 </li>
 
-@role('admin')
-<li>
-    <a href="{{ url('tickets-admin') }}">
-        <i class="fa fa-ticket"></i> <span>{{Lang::get('Ticket')}}</span>
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle">
+        <i class="fa fa-ticket"></i>
+        <span>{{Lang::get('Ticket')}}</span>
     </a>
+    <ul class="dropdown-menu">
+        <li>
+            @if(Auth::user()->ticketit_admin)
+            <a href="{{ url('tickets-admin') }}">
+                <i class="glyphicon glyphicon-th"></i>
+                <span>Ticket Dashboard</span>
+            </a>
+            @elseif(Auth::user()->ticketit_agent)
+            <a href="{{ url('tickets') }}">
+                <i class="glyphicon glyphicon-th"></i>
+                <span>{{Lang::get('Ticket')}}</span>
+            </a>
+            @endif
+        </li>
+        <li>
+            <a href="#add_ticket" data-toggle="modal">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <span>New Ticket</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ action('\Kordy\Ticketit\Controllers\TicketsController@indexComplete') }}" data-toggle="modal">
+                <i class="glyphicon glyphicon-thumbs-up"></i>
+                <span>Resolved Tickets</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ action('\Kordy\Ticketit\Controllers\ConfigurationsController@index') }}">
+                <i class="glyphicon glyphicon-wrench"></i>
+                {{ trans('ticketit::admin.nav-configuration') }}
+            </a>
+        </li>
+    </ul>
 </li>
-@else
-<li>
-    <a href="{{ url('tickets') }}">
-        <i class="fa fa-ticket"></i> <span>{{Lang::get('Ticket')}}</span>
-    </a>
-</li>
-@endrole
+
 
 <li>
     <a href="{{ route('links.index') }}">
