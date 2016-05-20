@@ -51,5 +51,5 @@ CKEDITOR.editorConfig = function (config) {
     config.skin = 'moono';
     
     //Css changes
-    //config.height = '800px';
+    config.height = '800px';
 };
