@@ -48,7 +48,7 @@ CKEDITOR.editorConfig = function (config) {
     };
     
     //Theme changes
-    config.skin = 'moono';
+    config.skin = 'moono-dark';
     
     //Css changes
     config.height = '800px';
