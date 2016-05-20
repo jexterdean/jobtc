@@ -23,19 +23,16 @@ CKEDITOR.editorConfig = function (config) {
 	{ name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
 	{ name: 'colors', items : [ 'TextColor','BGColor' ] },
 	{ name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] },
-        {name: 'ckwebspeech', items: ['webSpeechEnabled', 'webSpeechSettings' ]},
+        {name: 'ckwebspeech', items: ['webSpeechEnabled', 'webSpeechSettings' ]}
     ];
     
     
     config.extraPlugins = 'ckwebspeech';
     
-    
-    
     config.saveUrl = '/uploader/upload.php';
     config.pollUrl = '/uploader/upload.php';
     
-    
-    //For ckwebspeech s
+    //For ckwebspeechs
     config.ckwebspeech = {'culture': 'en',
         'commandvoice': 'command', //trigger voice commands
         'commands': [//command list
