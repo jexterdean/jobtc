@@ -11,11 +11,9 @@ $assets = [];
         {{ \App\Helpers\Helper::showMessage() }}
 
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
+            <div class="col-md-12">
             @yield('content')
             </div>
-            <div class="col-md-1"></div>
         </div>
     </section>
 </div>
