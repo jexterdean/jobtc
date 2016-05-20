@@ -16,8 +16,8 @@
                             @foreach($teams as $team)                            
                             @if($team->project_id === $project->project_id)
                             @foreach($team->team_member as $team_members)
-                            <li class="list-group-item">
-                                <div class="row">
+                            <li class="bg-gray list-group-item">
+                                <div class="row ">
                                     <div class="col-md-11">
                                         <a class="name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">{{$team_members->user->name}}</a>
                                     </div>
@@ -34,10 +34,12 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if($project->user_id === Auth::user()->user_id)
                                 <div class="row">
                                     <div id="team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}" class="collapse">
                                         <div class="task-list-container">
-                                            <ul class="list-group">
+                                            <label class='center-block taskgroup-title'>Task Group</label>
+                                            <ul class="taskgroup-list list-group">
                                                 @foreach($project->task as $task)
                                                 <li class="list-group-item">
                                                     <div class="row">
@@ -70,6 +72,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </li>
                             @endforeach
                             @endif

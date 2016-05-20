@@ -15,3 +15,15 @@
 .name {
     font-weight: bold;
 }
+
+.taskgroup-title {
+    margin: 0 auto;
+    width: 15%;
+    color: black;
+    font-weight: bold;
+    
+}
+
+.taskgroup-list list-group-item {
+    background-color: #fffcea;
+}
