@@ -34,7 +34,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if(Auth::user()->user_id === $project->user_id)
                                 <div class="row">
                                     <div id="team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}" class="collapse">
                                         <div class="task-list-container">
@@ -71,7 +70,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                             </li>
                             @endforeach
                             @endif
