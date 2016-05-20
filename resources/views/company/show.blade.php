@@ -36,7 +36,7 @@
                                 </div>
                                 @if(Auth::user()->user_id === $project->user_id)
                                 <div class="row">
-                                    <div id="team-member-collapse-{{$team_members->user->user_id}}" class="collapse">
+                                    <div id="team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}" class="collapse">
                                         <div class="task-list-container">
                                             <ul class="list-group">
                                                 @foreach($project->task as $task)
