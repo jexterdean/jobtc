@@ -109,12 +109,14 @@
                 <span>Resolved Tickets</span>
             </a>
         </li>
+        @if(Auth::user()->ticketit_admin)
         <li>
             <a href="{{ action('\Kordy\Ticketit\Controllers\ConfigurationsController@index') }}">
                 <i class="glyphicon glyphicon-wrench"></i>
                 {{ trans('ticketit::admin.nav-configuration') }}
             </a>
         </li>
+        @endif
     </ul>
 </li>
 
