@@ -12,12 +12,14 @@ class UpdateMessageTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasColumn('to_user_id','from_user_id')) {
         Schema::table('message',function(Blueprint $table){
             $table->dropColumn('to_username');
             $table->dropColumn('from_username');
             $table->integer('to_user_id')->before('message_id');
             $table->integer('from_user_id')->before('to_user_id');
         });
+        }
     }
 
     /**

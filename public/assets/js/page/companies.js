@@ -28,17 +28,20 @@ $('.list-group').sortable({
 
         //Show unassign button
         $(ui.item).find('.unassign-member').removeClass('hidden');
+        //Remove Edit profile button
+        $(ui.item).find('.edit-profile').remove();
 
-        //Create Team if 
-        url = public_path + 'createTeam';
-        data = {
+        //Create Team
+        team_url = public_path + 'createTeam';
+        team_data = {
             'project_id': project_id,
             'user_id': user_id
         };
 
-        $.post(url, data,function(team_id){
+        $.post(team_url, team_data,function(data){
             //Assign the team id to the this list group item's input
-            $(ui.item).find('.team_id').val(team_id);
+            //$(ui.item).find('.team_id').val(team_id);
+            $(ui.item).find('.profile-container').html(data);
         });
 
         //Remove warning that no employee is assigned.
@@ -293,6 +296,43 @@ $('.list-group').on('click', '.update-profile', function (e) {
     linkedin_ele.removeAttr('style').html('<i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;'+linkedin);
 });
 
+$('.list-group').on('click','.task-permission',function(e){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            var user_id = $(this).children('.user_id').val();
+            var task_id = $(this).children('.task_id').val();
+            var project_id = $(this).children('.project_id').val();
+
+            var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
+            assign_html += '<input class="user_id" type="hidden" value="'+user_id+'"/>';
+            assign_html += '<input class="task_id" type="hidden" value="'+task_id+'"/>';
+            assign_html += '<input class="project_id" type="hidden" value="'+project_id+'"/>';
+                                                                
+            var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
+            unassign_html += '<input class="user_id" type="hidden" value="'+user_id+'"/>';
+            unassign_html += '<input class="task_id" type="hidden" value="'+task_id+'"/>';
+            unassign_html += '<input class="project_id" type="hidden" value="'+project_id+'"/>';
+            
+            /*Assign the Task List to this user*/
+            if ($(this).hasClass('bg-gray')) {
+                $(this).switchClass('bg-gray', 'bg-green', function () {
+                    $(this).html(assign_html);
+                    assignTask(user_id,task_id,project_id);
+                });
+            }
+            /*Unassign the Task List from this user*/
+            if ($(this).hasClass('bg-green')) {
+                $(this).switchClass('bg-green', 'bg-gray', function () {
+                    $(this).html(unassign_html);
+                    unassignTask(user_id,task_id,project_id);
+                });
+            }
+            
+        });
+
+
+
 //General Functions
 function removeDuplicates(listName, newItem) {
     var dupl = false;
@@ -305,4 +345,30 @@ function removeDuplicates(listName, newItem) {
     });
 
     return !dupl;
+}
+
+function assignTask(user_id,task_id,project_id) {
+    
+    var url = public_path + 'assignTaskList';
+    
+    var data = {
+        'user_id':user_id,
+        'task_id': task_id,
+        'project_id': project_id
+    };
+    
+    $.post(url,data);
+}
+
+function unassignTask(user_id,task_id,project_id) {
+    
+    var url = public_path + 'unassignTaskList';
+    
+    var data = {
+        'user_id':user_id,
+        'task_id': task_id,
+        'project_id': project_id
+    };
+    
+    $.post(url,data);
 }

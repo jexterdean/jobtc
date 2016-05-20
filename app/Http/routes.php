@@ -59,6 +59,12 @@ Route::group(['middleware' => 'auth'], function () {
         /*Unassigning Team members from a project*/
         Route::any('unassignTeamMember','CompanyController@unassignTeamMember');
         
+        /*For assigning employees with tasks from the tasklist of a given project*/
+        Route::any('assignTaskList','CompanyController@assignTaskList');
+        Route::any('unassignTaskList','CompanyController@unassignTaskList');
+        
+        /*For Getting the tasklist when you're dropping an employee to a project*/
+        Route::any('getTaskList','CompanyController@getTaskList');
     });
 
     /**

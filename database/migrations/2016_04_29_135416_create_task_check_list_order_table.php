@@ -3,21 +3,22 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTaskCheckListOrderTable extends Migration
-{
+class CreateTaskCheckListOrderTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('task_check_list_order',function(Blueprint $table){
-            $table->increments('id');
-            $table->bigInteger('task_id');
-            $table->string('task_id_order');
-            $table->timestamps();
-        });
+    public function up() {
+        if (!Schema::hasTable('tack_check_list_order')) {
+            Schema::create('task_check_list_order', function(Blueprint $table) {
+                $table->increments('id');
+                $table->bigInteger('task_id');
+                $table->string('task_id_order');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -25,8 +26,8 @@ class CreateTaskCheckListOrderTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('task_check_list_order');
     }
+
 }

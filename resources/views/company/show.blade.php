@@ -18,13 +18,10 @@
                             @foreach($team->team_member as $team_members)
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        {{$team_members->user->name}}
+                                    <div class="col-md-11">
+                                        <a class="name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}">{{$team_members->user->name}}</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a class="icon icon-btn edit-profile">
-                                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                                        </a>
                                         <div class="btn-group pull-right">
                                             <a href="#" class="drag-handle">
                                                 <i class="fa fa-arrows"></i>
@@ -37,6 +34,44 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if(Auth::user()->user_id === $project->user_id)
+                                <div class="row">
+                                    <div id="team-member-collapse-{{$team_members->user->user_id}}" class="collapse">
+                                        <div class="task-list-container">
+                                            <ul class="list-group">
+                                                @foreach($project->task as $task)
+                                                <li class="list-group-item">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            {{$task->task_title}}
+                                                        </div>
+                                                        <div class="pull-right">
+                                                            @if ($project->task_permission->contains('task_id',$task->task_id) 
+                                                              && $project->task_permission->contains('user_id',$team_members->user->user_id) 
+                                                              && $project->task_permission->contains('project_id',$project->project_id))
+                                                            <div class="btn btn-default btn-shadow bg-green task-permission">
+                                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                                                <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
+                                                                <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
+                                                                <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                                            </div>                                                            
+                                                            @else
+                                                            <div class="btn btn-default btn-shadow bg-gray task-permission">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
+                                                                <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
+                                                                <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                                            </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
                             </li>
                             @endforeach
                             @endif
@@ -99,72 +134,72 @@
                                             <ul class="list-group">
                                                 <li class="email list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;<a href="mailto:{{$profile->user->email}}">{{$profile->user->email}}</a></li>
                                                 <li class="phone list-group-item"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;<a href="tel:{{$profile->user->phone}}">{{$profile->user->phone}}<a></li>
-                                                <li class="skype list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;<a href="skype:{{$profile->user->skype}}">{{$profile->user->skype}}</a></li>
-                                                <li class="address_1 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_1}}</li>
-                                                <li class="address_2 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_2}}</li>
-                                                <li class="zipcode list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->zipcode}}</li>
-                                                <li class="country list-group-item">
-                                                    <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;
-                                                    @foreach($countries as $country)
-                                                    @if($country->country_id === $profile->user->country_id)
-                                                    {{$country->country_name}}
-                                                    @endif
-                                                    @endforeach
-                                                </li>
-                                                <li class="country-dropdown hidden list-group-item">
-                                                    <form role="form">
-                                                        <div class="form-group">
-                                                            <label><i class="fa fa-globe" aria-hidden="true"></i></label>
-                                                            &nbsp;
-                                                            <div class="btn-group">
-                                                                <select class="form-control edit-country" name="country_id" aria-describedby="country-addon">
-                                                                    @foreach($countries as $country)
-                                                                    @if($country->country_id === $profile->user->country_id)
-                                                                    <option selected="selected" value="{{$country->country_id}}">{{$country->country_name}}</option>
-                                                                    @else
-                                                                    <option value="{{$country->country_id}}">{{$country->country_name}}</option>
-                                                                    @endif
-                                                                    @endforeach
-                                                                </select>
+                                                            <li class="skype list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;<a href="skype:{{$profile->user->skype}}">{{$profile->user->skype}}</a></li>
+                                                            <li class="address_1 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_1}}</li>
+                                                            <li class="address_2 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_2}}</li>
+                                                            <li class="zipcode list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->zipcode}}</li>
+                                                            <li class="country list-group-item">
+                                                                <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;
+                                                                @foreach($countries as $country)
+                                                                @if($country->country_id === $profile->user->country_id)
+                                                                {{$country->country_name}}
+                                                                @endif
+                                                                @endforeach
+                                                            </li>
+                                                            <li class="country-dropdown hidden list-group-item">
+                                                                <form role="form">
+                                                                    <div class="form-group">
+                                                                        <label><i class="fa fa-globe" aria-hidden="true"></i></label>
+                                                                        &nbsp;
+                                                                        <div class="btn-group">
+                                                                            <select class="form-control edit-country" name="country_id" aria-describedby="country-addon">
+                                                                                @foreach($countries as $country)
+                                                                                @if($country->country_id === $profile->user->country_id)
+                                                                                <option selected="selected" value="{{$country->country_id}}">{{$country->country_name}}</option>
+                                                                                @else
+                                                                                <option value="{{$country->country_id}}">{{$country->country_name}}</option>
+                                                                                @endif
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>    
+                                                            </li>
+                                                            <li class="facebook list-group-item"><i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;{{$profile->user->facebook}}</li>
+                                                            <li class="linkedin list-group-item"><i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;{{$profile->user->linkedin}}</li>
+                                                            </ul>
+                                                            </div>                                        
                                                             </div>
-                                                        </div>
-                                                    </form>    
-                                                </li>
-                                                <li class="facebook list-group-item"><i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;{{$profile->user->facebook}}</li>
-                                                <li class="linkedin list-group-item"><i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;{{$profile->user->linkedin}}</li>
-                                            </ul>
-                                        </div>                                        
-                                    </div>
-                                </div>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>  
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="box box-default">
-            <div class="box-container">
-                <div class="box-header">
-                    <h3 class="box-title">Teams</h3>
-                </div>
-                <div class="box-body">
-                    <div class="box-content">
-                        <ul class="list-group">
-                            @if(count($team_grouping) > 0)
-                            @foreach($team_grouping[0]->team_project as $team_projects)
-                            <li class="list-group-item">{{$team_projects->team_id}}</li>
-                            @endforeach
-                            @else
-                            <li class="list-group-item">No Teams Available.</li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@stop
+                                                            </div>
+                                                            </li>
+                                                            @endforeach
+                                                            </ul>
+                                                            </div>  
+                                                            </div>
+                                                            </div>
+                                                            </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <div class="box box-default">
+                                                                    <div class="box-container">
+                                                                        <div class="box-header">
+                                                                            <h3 class="box-title">Teams</h3>
+                                                                        </div>
+                                                                        <div class="box-body">
+                                                                            <div class="box-content">
+                                                                                <ul class="list-group">
+                                                                                    @if(count($team_grouping) > 0)
+                                                                                    @foreach($team_grouping[0]->team_project as $team_projects)
+                                                                                    <li class="list-group-item">{{$team_projects->team_id}}</li>
+                                                                                    @endforeach
+                                                                                    @else
+                                                                                    <li class="list-group-item">No Teams Available.</li>
+                                                                                    @endif
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                            @stop

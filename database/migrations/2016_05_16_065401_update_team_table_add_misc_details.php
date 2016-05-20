@@ -3,19 +3,20 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateTeamTableAddMiscDetails extends Migration
-{
+class UpdateTeamTableAddMiscDetails extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('team', function (Blueprint $table) {
-            $table->renameColumn('user_id','project_id');
-            $table->dropColumn('title');
-        });
+    public function up() {
+        if (!Schema::hasColumn('project_id', 'title')) {
+            Schema::table('team', function (Blueprint $table) {
+                $table->renameColumn('user_id', 'project_id');
+                $table->dropColumn('title');
+            });
+        }
     }
 
     /**
@@ -23,10 +24,10 @@ class UpdateTeamTableAddMiscDetails extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('team', function (Blueprint $table) {
-            $table->renameColumn('project_id','user_id');
+            $table->renameColumn('project_id', 'user_id');
         });
     }
+
 }

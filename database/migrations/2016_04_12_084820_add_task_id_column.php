@@ -3,19 +3,19 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTaskIdColumn extends Migration
-{
+class AddTaskIdColumn extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        //
-        Schema::table('links',function(Blueprint $table) {
-            $table->integer('task_id');
-        });
+    public function up() {
+        if (!Schema::hasColumn('task_id')) {
+            Schema::table('links', function(Blueprint $table) {
+                $table->integer('task_id');
+            });
+        }
     }
 
     /**
@@ -23,11 +23,11 @@ class AddTaskIdColumn extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         //
-        Schema::table('links',function(Blueprint $table) {
+        Schema::table('links', function(Blueprint $table) {
             $table->dropColumn('task_id');
         });
     }
+
 }

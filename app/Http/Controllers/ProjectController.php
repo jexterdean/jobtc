@@ -12,6 +12,7 @@ use App\Models\AssignedUser;
 use App\Models\Note;
 use App\Models\Attachment;
 use App\Models\Task;
+use App\Models\TaskCheckListPermission;
 use App\Models\Timer;
 use \DB;
 use \Auth;
@@ -167,11 +168,12 @@ class ProjectController extends BaseController {
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-        $task = Task::where('project_id', '=', $id)
-                //->where('user_id',$user_id)
+        $task = Task::where('project_id',$id)
                 ->orderBy('task_title', 'asc')
                 ->get();
 
+        $task_permissions = TaskCheckListPermission::where('project_id',$id)->where('user_id',$user_id)->get();
+        
         $assets = ['datepicker'];
 
         return view('project.show', [
@@ -182,6 +184,7 @@ class ProjectController extends BaseController {
             'comments' => $comment,
             'attachments' => $attachment,
             'tasks' => $task,
+            'task_permissions' => $task_permissions,
             'assignedUsers' => $assignedUser,
             'assign_username' => $assign_username,
             'assets' => $assets

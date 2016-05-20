@@ -3,21 +3,22 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePayPeriod extends Migration
-{
+class CreatePayPeriod extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('pay_period', function(Blueprint $table){
-            $table->increments('id')->unsigned();
-            $table->string('period');
+    public function up() {
+        if (!Schema::hasTable('pay_period')) {
+            Schema::create('pay_period', function(Blueprint $table) {
+                $table->increments('id')->unsigned();
+                $table->string('period');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -25,8 +26,8 @@ class CreatePayPeriod extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('pay_period');
     }
+
 }

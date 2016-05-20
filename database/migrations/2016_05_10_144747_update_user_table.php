@@ -3,23 +3,24 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateUserTable extends Migration
-{
+class UpdateUserTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('user', function (Blueprint $table) {
-            $table->dropColumn('username');
-            $table->dropColumn('client_id');
-            $table->dropColumn('accounts_id');
-            $table->dropColumn('user_status_detail');
-            $table->dropColumn('user_avatar');
-            $table->dropColumn('timezone_id');
-        });
+    public function up() {
+        if (Schema::hasColumn('username','client_id','accounts_id','user_status_detail','user_avatar','timezone_id')) {
+            Schema::table('user', function (Blueprint $table) {
+                $table->dropColumn('username');
+                $table->dropColumn('client_id');
+                $table->dropColumn('accounts_id');
+                $table->dropColumn('user_status_detail');
+                $table->dropColumn('user_avatar');
+                $table->dropColumn('timezone_id');
+            });
+        }
     }
 
     /**
@@ -27,9 +28,8 @@ class UpdateUserTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::table('user', function($table){
+    public function down() {
+        Schema::table('user', function($table) {
             $table->string('username');
             $table->bigInteger('client_id');
             $table->bigInteger('accounts_id');
@@ -38,4 +38,5 @@ class UpdateUserTable extends Migration
             $table->bigInteger('timezone_id');
         });
     }
+
 }

@@ -12,10 +12,12 @@ class UpdateProjectTableChangeClientIdToCompanyId extends Migration
      */
     public function up()
     {
+        if (!Schema::hasColumn('company_id')) {
         Schema::table('project', function (Blueprint $table) {
             $table->dropColumn('client_id');
             $table->bigInteger('company_id')->after('project_id');
         });
+        }
     }
 
     /**

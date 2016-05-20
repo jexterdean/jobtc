@@ -3,22 +3,22 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToProjectTable extends Migration
-{
+class AddColumnToProjectTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('project', function (Blueprint $table) {
-            //
-            $table->string('account', 100);
-            $table->text('reverence');
-            $table->text('currency', 100);
-            $table->text('project_type', 100);
-        });
+    public function up() {
+        if (!Schema::hasColumn('account', 'reverence', 'currency', 'project_type')) {
+            /*Schema::table('project', function (Blueprint $table) {
+                $table->string('account', 100);
+                $table->text('reverence');
+                $table->text('currency', 100);
+                $table->text('project_type', 100);
+            });*/
+        }
     }
 
     /**
@@ -26,8 +26,7 @@ class AddColumnToProjectTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('project', function (Blueprint $table) {
             //
             $table->dropColumn('account');
@@ -36,4 +35,5 @@ class AddColumnToProjectTable extends Migration
             $table->dropColumn('project_type');
         });
     }
+
 }

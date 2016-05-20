@@ -7,3 +7,7 @@
 .edit-profile {
     cursor: pointer;
 }
+
+.task-permission .fa-plus {
+    color: gray;
+}

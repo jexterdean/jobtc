@@ -3,20 +3,20 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnTaskChecklistTable extends Migration
-{
+class AddColumnTaskChecklistTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        //
-        Schema::table('task_check_list', function (Blueprint $table) {
-            //
-            $table->boolean('is_finished');
-        });
+    public function up() {
+        if (!Schema::hasColumn('is_finished')) {
+            Schema::table('task_check_list', function (Blueprint $table) {
+                //
+                $table->boolean('is_finished');
+            });
+        }
     }
 
     /**
@@ -24,12 +24,12 @@ class AddColumnTaskChecklistTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         //
         Schema::table('task_check_list', function (Blueprint $table) {
             //
             $table->dropColumn('is_finished');
         });
     }
+
 }

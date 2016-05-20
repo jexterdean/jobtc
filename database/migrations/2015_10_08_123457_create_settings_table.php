@@ -12,6 +12,7 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('ticketit_settings')) {
         Schema::create('ticketit_settings', function (Blueprint $table) {
             $table->increments('id');
             $table->string('lang')->unique()->nullable();
@@ -20,6 +21,7 @@ class CreateSettingsTable extends Migration
             $table->string('default');
             $table->timestamps();
         });
+        }
     }
 
     /**

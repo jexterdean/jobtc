@@ -3,18 +3,19 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateTeamMemberTableRemoveCreatedByColumn extends Migration
-{
+class UpdateTeamMemberTableRemoveCreatedByColumn extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('team_member',function(Blueprint $table){
-            $table->dropColumn('created_by');
-        });
+    public function up() {
+        if (Schema::hasColumn('created_by')) {
+            Schema::table('team_member', function(Blueprint $table) {
+                $table->dropColumn('created_by');
+            });
+        }
     }
 
     /**
@@ -22,10 +23,10 @@ class UpdateTeamMemberTableRemoveCreatedByColumn extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::table('team_member',function(Blueprint $table){
+    public function down() {
+        Schema::table('team_member', function(Blueprint $table) {
             $table->integer('created_by')->after('id');
         });
     }
+
 }
