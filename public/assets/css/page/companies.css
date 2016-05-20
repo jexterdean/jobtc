@@ -27,3 +27,7 @@
 .taskgroup-list .list-group-item {
     background-color: #ffffef;
 }
+
+.fa-chevron-down {
+    color: graytext;
+}

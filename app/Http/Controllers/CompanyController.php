@@ -358,14 +358,6 @@ class CompanyController extends BaseController {
         return $user_id;
     }
     
-    public function getTaskList(Request $request) {
-        $project_id = $request->input('project_id');
-        
-        $tasklist = Task::where('project_id',$project_id)->get();
-        
-        return json_encode($tasklist);
-    }
-
 }
 
 ?>
