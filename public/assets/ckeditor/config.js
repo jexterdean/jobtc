@@ -48,8 +48,9 @@ CKEDITOR.editorConfig = function (config) {
     };
     
     //Theme changes
-    config.skin = 'moono-dark';
-    config.uiColor = '#F3F4F5';
+    config.skin = 'moono';
+    //config.color = '#000000';
+    config.uiColor = '#1933c4';
     
     
     //Css changes
