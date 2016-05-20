@@ -19,7 +19,7 @@
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-11">
-                                        <a class="name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}">{{$team_members->user->name}}</a>
+                                        <a class="name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">{{$team_members->user->name}}</a>
                                     </div>
                                     <div class="pull-right">
                                         <div class="btn-group pull-right">
