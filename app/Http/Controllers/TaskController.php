@@ -427,7 +427,7 @@ class TaskController extends BaseController {
         $data = array(
         "uploaded" => 1,
         "fileName" => $file_name->getClientOriginalName(),
-        "url" => url('/assets/ckeditor_uploaded_images/'.$file_name->getClientOriginalName())
+        "url" => 'http://job.tc/pm/assets/ckeditor_uploaded_images/'.$file_name->getClientOriginalName()
         );
 
         return json_encode($data);
