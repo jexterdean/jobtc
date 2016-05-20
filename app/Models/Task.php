@@ -23,5 +23,9 @@ class Task extends Model
 
     protected $primaryKey = 'task_id';
     protected $table = 'task';
+    
+    public function task_permission(){
+        $this->hasMany('App\Models\TaskCheckListPermission');
+    }
 
 }

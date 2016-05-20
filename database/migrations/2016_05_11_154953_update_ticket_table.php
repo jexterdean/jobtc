@@ -12,10 +12,12 @@ class UpdateTicketTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasColumn('user_id')) {
         Schema::table('ticket',function(Blueprint $table){
             $table->dropColumn('username');
             $table->integer('user_id')->after('ticket_status');
         });
+        }
     }
 
     /**

@@ -22,6 +22,14 @@ class Project extends Model
     protected $primaryKey = 'project_id';
     protected $table = 'project';
 
+    public function task() {
+        return $this->hasMany('App\Models\Task');
+    }
+    
+    public function task_permission() {
+        return $this->hasMany('App\Models\TaskCheckListPermission');
+    }
+    
     public function team_member() {
         return $this->HasMany('App\Models\TeamMember','user_id');
     }

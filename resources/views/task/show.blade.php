@@ -78,6 +78,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Task </a><br/><br/>
+                        <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a><br/><br/>
                     </div>
                     <div class="col-sm-4">
                         <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
@@ -573,7 +574,7 @@
             //Get the list group id
             var list_group_id = $(this).parent().parent().parent().parent().attr('id');
 
-            var list_group = $('#' + list_group_id +' .list-group-item');
+            var list_group = $('#' + list_group_id + ' .list-group-item');
 
             list_group.eq(index).remove();
 
@@ -788,5 +789,134 @@
                 });
 
         /*endregion*/
+
+
+        //Add Spreadsheet
+        _body.on('click', '.add-spreadsheet', function () {
+
+            var spreadsheet_name = 'task-spreadsheet-' + makeid();
+
+            //Create a new spreadsheet page in ethercalc
+            var request = new XMLHttpRequest();
+            request.open('POST', 'https://job.tc:9000/');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.onreadystatechange = function () {
+                if (this.readyState === 4) {
+                    console.log('Status:', this.status);
+                    console.log('Headers:', this.getAllResponseHeaders());
+                    console.log('Body:', this.responseText);
+                }
+            };
+            var body = {
+                'room': spreadsheet_name
+            };
+            request.send(JSON.stringify(body));
+
+            var text_area_ele = '<li id="add-new-spreadsheet" class="list-group-item text-area-content area-content">';
+            text_area_ele += '<input class="form-control" name="spreadsheet_header" placeholder="New Spreadsheet Header" value="" />';
+            text_area_ele += '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
+            text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+            text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
+            text_area_ele += '</li>';
+
+            var _this = $(this);
+            var check_list_container = $('#list_group_' + this.id);
+            _this.addClass('disabled');
+            check_list_container.append(text_area_ele);
+
+
+            check_list_container.on('click', '.submit-checklist', function (e) {
+                _this.removeClass('disabled');
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                //var data = _body.find('.task-form').serializeArray();
+
+                var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
+
+                var data = [];
+                data.push(
+                        {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+                {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
+                {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+                {'name': 'checklist_header', 'value': _body.find('input[name="spreadsheet_header"]').val()},
+                {'name': 'checklist', 'value': spreadsheet_html}
+                );
+
+                $.post(public_path + 'checkList', data, function (d) {
+                    var _return_data = jQuery.parseJSON(d);
+
+                    var ele = '';
+                    $.each(_return_data, function (index, val) {
+                        var status = val.status;
+                        var statusClass;
+
+                        switch (status) {
+                            case 'Default':
+                                statusClass = 'bg-gray'
+                                break;
+                            case 'Ongoing':
+                                statusClass = 'bg-orange'
+                                break;
+                            case 'Completed':
+                                statusClass = 'bg-green'
+                                break;
+                            case 'Urgent':
+                                statusClass = 'bg-red'
+                                break;
+                        }
+
+                        ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
+                        ele += '<div class="row task-list-details">';
+                        ele += '<div class="col-md-7">';
+                        ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header">' + val.checklist_header + '</a>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>';
+                        ele += '<div class="pull-right">';
+                        ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                        ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
+                        ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
+                        ele += '<a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>';
+                        ele += '</div>';
+                        ele += '<div class="row">';
+                        ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
+                        ele += '<div class="checklist-item">' + val.checklist + '</div>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>';
+                        ele += '</div>';
+                        ele += '</li>';
+
+                    });
+
+                    $('#add-new-task').remove();
+                    check_list_container.children('li:contains("No data was found.")').remove();
+                    check_list_container.html(ele);
+                    _this.removeAttr('disabled');
+                });
+            }).on('click', '.cancel-checklist', function () {
+                _this.removeClass('disabled');
+                $('#add-new-spreadsheet').remove();
+                //$('.text-area-content').remove();
+            });
+        });
+
+
+        function makeid()
+        {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 5; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
+        }
+
     })
 </script>

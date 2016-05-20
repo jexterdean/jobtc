@@ -3,19 +3,20 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuestionTypeTable extends Migration
-{
+class CreateQuestionTypeTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('question_type', function(Blueprint $table){
-            $table->increments('id')->unsigned();
-            $table->string('type', 50);
-        });
+    public function up() {
+        if (!Schema::hasTable('question_type')) {
+            Schema::create('question_type', function(Blueprint $table) {
+                $table->increments('id')->unsigned();
+                $table->string('type', 50);
+            });
+        }
     }
 
     /**
@@ -23,8 +24,8 @@ class CreateQuestionTypeTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('question_type');
     }
+
 }

@@ -3,23 +3,26 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class AddHtmlcontentToTicketitAndComments extends Migration
-{
+class AddHtmlcontentToTicketitAndComments extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('ticketit', function (Blueprint $table) {
-            $table->longText('html')->nullable()->after('content');
-        });
+    public function up() {
 
-        Schema::table('ticketit_comments', function (Blueprint $table) {
-            $table->longText('html')->nullable()->after('content');
-            $table->longText('content')->change();
-        });
+        if (!Schema::hasColumn('ticketit')) {
+            Schema::table('ticketit', function (Blueprint $table) {
+                $table->longText('html')->nullable()->after('content');
+            });
+        }
+        if (!Schema::hasColumn('ticketit_comments')) {
+            Schema::table('ticketit_comments', function (Blueprint $table) {
+                $table->longText('html')->nullable()->after('content');
+                $table->longText('content')->change();
+            });
+        }
     }
 
     /**
@@ -27,8 +30,7 @@ class AddHtmlcontentToTicketitAndComments extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('ticketit', function (Blueprint $table) {
             $table->dropColumn('html');
         });
@@ -38,4 +40,5 @@ class AddHtmlcontentToTicketitAndComments extends Migration
             $table->text('content')->change();
         });
     }
+
 }

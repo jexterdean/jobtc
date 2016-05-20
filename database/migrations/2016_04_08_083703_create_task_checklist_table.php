@@ -3,23 +3,23 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTaskChecklistTable extends Migration
-{
+class CreateTaskChecklistTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        //
-        Schema::create('task_check_list',function(Blueprint $table){
-            $table->increments('id')->unsigned();
-            $table->integer('user_id');
-            $table->integer('task_id');
-            $table->text('checklist');
-            $table->timestamps();
-        });
+    public function up() {
+        if (!Schema::hasTable('task_check_list')) {
+            Schema::create('task_check_list', function(Blueprint $table) {
+                $table->increments('id')->unsigned();
+                $table->integer('user_id');
+                $table->integer('task_id');
+                $table->text('checklist');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -27,9 +27,9 @@ class CreateTaskChecklistTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         //
         Schema::drop('task_check_list');
     }
+
 }

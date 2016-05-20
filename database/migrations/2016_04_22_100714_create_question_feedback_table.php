@@ -3,23 +3,24 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuestionFeedbackTable extends Migration
-{
+class CreateQuestionFeedbackTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('question_feedback', function(Blueprint $table){
-            $table->increments('id')->unsigned();
-            $table->integer('question_id');
-            $table->integer('user_id');
-            $table->text('feedback');
+    public function up() {
+        if (!Schema::hasTable('question_feedback')) {
+            Schema::create('question_feedback', function(Blueprint $table) {
+                $table->increments('id')->unsigned();
+                $table->integer('question_id');
+                $table->integer('user_id');
+                $table->text('feedback');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -27,8 +28,8 @@ class CreateQuestionFeedbackTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('question_feedback');
     }
+
 }

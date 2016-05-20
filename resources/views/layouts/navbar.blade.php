@@ -19,8 +19,8 @@
         @if(count($companies) > 0)
         @foreach($companies as $company)
         <li>
-            <a href="{{ url('company/' . $company->id) }}">
-                <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $company->name }}</span>
+            <a href="{{ url('company/' . $company->company->id) }}">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $company->company->name }}</span>
             </a>
         </li>
         @endforeach

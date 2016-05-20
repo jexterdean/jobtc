@@ -6,13 +6,19 @@ use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\Company;
+use App\Models\CompanyDivision;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Role;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
+use App\Models\Task;
+use App\Models\TaskCheckList;
+use App\Models\TaskCheckListOrder;
+use App\Models\TaskCheckListPermission;
 use Auth;
 use View;
 use Redirect;
@@ -59,12 +65,12 @@ class CompanyController extends BaseController {
 
         $team_grouping = Project::with('team_project')->where('company_id', $company_id)->get();
 
-        $profiles = Profile::where('company_id', $company_id)->orWhere('user_id', $user_id)->get();
+        $profiles = Profile::where('company_id', $company_id)->get();
 
         $project_id_list = [];
 
         //Get owned projects
-        $owned_projects = Project::where('user_id', $user_id)->where('company_id',$company_id)->get();
+        $owned_projects = Project::where('user_id', $user_id)->where('company_id', $company_id)->get();
 
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)->get();
@@ -83,9 +89,12 @@ class CompanyController extends BaseController {
                 }
             }
         }
-
-        $projects = Project::whereIn('project_id', $project_id_list)->get();
-
+        
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }],'task_permission')->whereIn('project_id', $project_id_list)->get();
+            
         $assets = ['companies'];
 
         return View::make('company.show', [
@@ -116,7 +125,9 @@ class CompanyController extends BaseController {
         ]);
     }
 
-    public function store() {
+    public function store(Request $request) {
+
+        $user_id = Auth::user()->user_id;
 
         $validation = Validator::make(Input::all(), [
                     'name' => 'required|unique:companies',
@@ -128,13 +139,61 @@ class CompanyController extends BaseController {
             return Redirect::back()->withInput()->withErrors($validation->messages());
         }
 
+        //Save Company
         $companies = new Company;
-        $data = Input::all();
-        $data['client_status'] = 'Active';
-        $companies->fill($data);
+        $companies->name = $request->input('name');
+        $companies->email = $request->input('email');
+        $companies->phone = $request->input('phone');
+        $companies->number_of_employees = $request->input('number_of_employees');
+        $companies->address_1 = $request->input('address_1');
+        $companies->address_2 = $request->input('address_2');
+        $companies->province = $request->input('province');
+        $companies->zipcode = $request->input('zipcode');
+        $companies->website = $request->input('website');
+        $companies->country_id = $request->input('country_id');
         $companies->save();
 
-        return Redirect::to('company')->withSuccess("Company added successfully!!");
+        //Check if Company Division Exists
+        $company_division_trim = trim($request->input('company_division'));
+        $company_division_exists = CompanyDivision::where('division_name', $company_division_trim)->count();
+
+        if ($company_division_exists > 0) {
+            //Get Existing Company Division
+            $company_divisions = CompanyDivision::where('division_name', $company_division_trim)->first();
+        } else {
+            //Save Company Division
+            $company_divisions = new CompanyDivision();
+            $company_divisions->company_id = $companies->id;
+            $company_divisions->division_name = $company_division_trim;
+            $company_divisions->save();
+        }
+
+        //Check if Role already exists with the same company
+        $role_exists = Role::where('name', 'Admin')->where('company_id', $companies->id)->where('company_division_id', $company_divisions->id)->count();
+
+        if ($role_exists > 0) {
+
+            $role = Role::where('name', 'Admin')->where('company_id', $companies->id)->where('company_division_id', $company_divisions->id)->first();
+        } else {
+            //Save this user's role as a super user of this company
+            $role = new Role();
+            $role->company_id = $companies->id;
+            $role->company_division_id = $company_divisions->id;
+            $role->name = 'Admin';
+            $role->slug = 'admin-' . $companies->id;
+            $role->description = 'Administrator';
+            $role->level = '1';
+            $role->save();
+        }
+
+        //Map the company to the user's profile
+        $profile = new Profile();
+        $profile->user_id = $user_id;
+        $profile->company_id = $companies->id;
+        $profile->role_id = $role->id;
+        $profile->save();
+
+        return Redirect::to('company/' . $companies->id)->withSuccess("Company added successfully!!");
     }
 
     public function update($company_id) {
@@ -239,7 +298,7 @@ class CompanyController extends BaseController {
 
             //Get the team id
             $team_id = $team->id;
-            
+
             //Save the user as a team member
             $team_member->team_id = $team_id;
             $team_member->user_id = $user_id;
@@ -252,7 +311,13 @@ class CompanyController extends BaseController {
             $team_project->save();
         }
 
-        return $team_id;
+        //Get projects with their tasks and task permissions
+        $tasks = Task::where('project_id', $project_id)
+                ->orderBy('task_title','asc')
+                ->get();
+        $task_permissions = TaskCheckListPermission::where('project_id',$project_id)->get();
+        
+        return view('company.partials._tasklist',['tasks' =>$tasks,'task_permissions' => $task_permissions,'project_id' => $project_id,'user_id' => $user_id]);
     }
 
     public function unassignTeamMember(Request $request) {
@@ -267,5 +332,40 @@ class CompanyController extends BaseController {
         return $user_id;
     }
 
+    public function assignTaskList(Request $request) {
+        $user_id = $request->input('user_id');
+        $task_id = $request->input('task_id');
+        $project_id = $request->input('project_id');
+
+        $task_list_permission = new TaskCheckListPermission();
+
+        $task_list_permission->user_id = $user_id;
+        $task_list_permission->task_id = $task_id;
+        $task_list_permission->project_id = $project_id;
+        $task_list_permission->save();
+
+        return $user_id;
+    }
+
+    public function unassignTaskList(Request $request) {
+        $user_id = $request->input('user_id');
+        $task_id = $request->input('task_id');
+        $project_id = $request->input('project_id');
+
+        $task_list_permission = TaskCheckListPermission::where('user_id', $user_id)->where('task_id', $task_id)->where('project_id', $project_id);
+        $task_list_permission->delete();
+
+        return $user_id;
+    }
+    
+    public function getTaskList(Request $request) {
+        $project_id = $request->input('project_id');
+        
+        $tasklist = Task::where('project_id',$project_id)->get();
+        
+        return json_encode($tasklist);
+    }
+
 }
+
 ?>

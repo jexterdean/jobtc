@@ -3,21 +3,22 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTeamProjectTable extends Migration
-{
+class CreateTeamProjectTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('team_project',function(Blueprint $table){
-            $table->increments('id');
-            $table->integer('team_id');
-            $table->integer('project_id');
-            $table->timestamps();
-        });
+    public function up() {
+        if (!Schema::hasTable('team_project')) {
+            Schema::create('team_project', function(Blueprint $table) {
+                $table->increments('id');
+                $table->integer('team_id');
+                $table->integer('project_id');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -25,8 +26,8 @@ class CreateTeamProjectTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('team_project');
     }
+
 }

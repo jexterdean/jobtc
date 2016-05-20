@@ -12,12 +12,14 @@ class CreateMeetingTypeTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('meeting_type')) {
         Schema::create('meeting_type',function(Blueprint $table){
             $table->increments('id')->unsigned();
             $table->string('type', 50);
 
             $table->timestamps();
         });
+        }
     }
 
     /**
