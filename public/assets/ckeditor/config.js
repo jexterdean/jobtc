@@ -49,6 +49,8 @@ CKEDITOR.editorConfig = function (config) {
     
     //Theme changes
     config.skin = 'moono-dark';
+    config.uiColor = '#F3F4F5';
+    
     
     //Css changes
     config.height = '800px';
