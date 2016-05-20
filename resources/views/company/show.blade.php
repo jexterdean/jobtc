@@ -19,7 +19,10 @@
                             <li class="bg-gray list-group-item">
                                 <div class="row ">
                                     <div class="col-md-11">
-                                        <a class="name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">{{$team_members->user->name}}</a>
+                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                        <a class="name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">
+                                            {{$team_members->user->name}}
+                                        </a>
                                     </div>
                                     <div class="pull-right">
                                         <div class="btn-group pull-right">
@@ -38,7 +41,7 @@
                                 <div class="row">
                                     <div id="team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}" class="collapse">
                                         <div class="task-list-container">
-                                            <label class='center-block taskgroup-title'>Task Group</label>
+                                            <label class='center-block taskgroup-title'>Available Task Groups</label>
                                             <ul class="taskgroup-list list-group">
                                                 @foreach($project->task as $task)
                                                 <li class="list-group-item">
