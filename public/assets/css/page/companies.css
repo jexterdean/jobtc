@@ -11,3 +11,7 @@
 .task-permission .fa-plus {
     color: gray;
 }
+
+.name {
+    font-weight: bold;
+}
