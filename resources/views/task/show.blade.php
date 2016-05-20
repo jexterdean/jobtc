@@ -380,7 +380,7 @@
                         formData = new FormData(),
                         xhr = fileLoader.xhr;
 
-                xhr.open('PUT', fileLoader.uploadUrl, true);
+                xhr.open('PUT', public_path+fileLoader.uploadUrl, true);
                 formData.append('upload', fileLoader.file, fileLoader.fileName);
                 fileLoader.xhr.send(formData);
 
