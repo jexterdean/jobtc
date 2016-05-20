@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
+use Illuminate\Http\Request;
 
 class Helper
 {
@@ -131,8 +132,7 @@ class Helper
         return $companies;
     }
     
-
-
+    
     public static function br2nl($string)
     {
         return preg_replace('/\<br(\s*)?\/?\>/i', "", $string);

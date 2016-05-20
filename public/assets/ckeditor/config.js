@@ -23,14 +23,18 @@ CKEDITOR.editorConfig = function (config) {
 	{ name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
 	{ name: 'colors', items : [ 'TextColor','BGColor' ] },
 	{ name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] },
-        {name: 'ckwebspeech', items: ['webSpeechEnabled', 'webSpeechSettings' ]}
+        {name: 'ckwebspeech', items: ['webSpeechEnabled', 'webSpeechSettings' ]},
+        {name: 'uploadimage', items: ['filebrowserUploadUrl']}
     ];
     
     
-    config.extraPlugins = 'ckwebspeech';
+    config.extraPlugins = 'ckwebspeech,uploadimage';
     
-    config.saveUrl = '/uploader/upload.php';
-    config.pollUrl = '/uploader/upload.php';
+    config.saveUrl = '/saveImage';
+    config.pollUrl = '/autoSave';
+    
+    //For file uploads, specifically image uploads
+    config.filebrowserImageUploadUrl = '/saveImage';
     
     //For ckwebspeechs
     config.ckwebspeech = {'culture': 'en',
@@ -47,5 +51,5 @@ CKEDITOR.editorConfig = function (config) {
     config.skin = 'moono';
     
     //Css changes
-    config.height = '800px';
+    //config.height = '800px';
 };
