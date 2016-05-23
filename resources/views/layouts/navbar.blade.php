@@ -105,7 +105,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ action('\Kordy\Ticketit\Controllers\TicketsController@indexComplete') }}" data-toggle="modal">
+            <a href="{{ url('tickets-admin?c=complete') }}" data-toggle="modal">
                 <i class="glyphicon glyphicon-thumbs-up"></i>
                 <span>Resolved Tickets</span>
             </a>
