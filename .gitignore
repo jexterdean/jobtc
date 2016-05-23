@@ -15,3 +15,6 @@ Homestead.json
 /nbproject/
 public/assets/img/test/
 public/assets/img/question/
+/public/assets/job/
+/public/assets/applicant/photos/
+/public/assets/applicant/resumes/

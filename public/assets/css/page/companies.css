@@ -4,6 +4,13 @@
     Author     : Jexter Dean Buenaventura
 */
 
+.space {
+  padding: 15px;
+}
+.mini-space {
+  padding: 5px;
+}
+
 .edit-profile {
     cursor: pointer;
 }

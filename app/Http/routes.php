@@ -5,6 +5,16 @@ Route::resource('session', 'SessionController');
 Route::get('/', 'SessionController@create');
 Route::get('/login', 'SessionController@create');
 
+/*Job Routes*/
+//Should not be in any middleware so that 
+//job posting can be accessed by would be applicants(they need to view the posting without logging in
+Route::resource('job', 'JobController');
+Route::post('updateJob/{id}', 'JobController@update');
+
+Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
+Route::post('applyToJob', 'JobController@applyToJob');
+
+
 Route::group(['middleware' => 'guest'], function () {
 
     Route::get('forgotPassword', function () {
@@ -52,6 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('payment', 'PaymentController');
         Route::resource('user', 'UserController');
         Route::resource('company', 'CompanyController');
+        Route::resource('applicant', 'ApplicantController');
         Route::resource('assigneduser', 'AssignedController');
         
         /*For Assigning teams for each project with a team(Auto generated team)*/

@@ -48,6 +48,47 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="add_job" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Job</h4>
+            </div>
+            <div class="modal-body">
+                @role('admin')
+                {!!  Form::open(['route' => 'job.store','class' => 'form-horizontal project-form' ,'files' => true])  !!}
+                @include('jobs/partials/_form')
+                {!! Form::close() !!}
+                @else
+                <div class='alert alert-danger alert-dismissable'>
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+                    <strong>You don't have to perform this action!!</strong>
+                </div>
+                @endrole
+            </div>
+        </div>
+    </div>
+</div>
+<?php  
+$roles = \App\Models\Role::orderBy('name', 'asc')->lists('name','id'); 
+$companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
+?>
+<div class="modal fade" id="add_user" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add User</h4>
+            </div>
+            <div class="modal-body">
+                {!! Form::open(['route' => 'user.store','class' => 'form-horizontal user-form' ,'files' => true])  !!}
+                @include('user/partials/_form')
+                {!!  Form::close() !!}
+            </div>
+        </div>
+    </div>
+</div>
 <form id="form-delete" action="" method="post" style="width: 0px;height: 0px;">
     {!! csrf_field() !!}
     {!! method_field('delete') !!}
@@ -114,6 +155,13 @@
 
 @if (in_array('companies',$assets))
 {!!  HTML::script('assets/js/page/companies.js')  !!}
+@endif
+
+@if (in_array('jobs',$assets))
+{!!  HTML::script('assets/js/jquery-tagEditor/jquery.caret.min.js')  !!}
+{!!  HTML::script('assets/js/jquery-tagEditor/jquery.tag-editor.min.js')  !!}
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!!  HTML::script('assets/js/page/jobs.js')  !!}
 @endif
 
 @if (in_array('tasklist',$assets))

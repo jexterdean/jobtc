@@ -466,8 +466,6 @@
 
                     });
                     
-                    //Destroy the instance
-                    CKEDITOR.instances['add-new-task-textarea'].destroy();
                     //Remove Text area
                     $('#add-new-task').remove();
                     check_list_container.children('li:contains("No data was found.")').remove();
@@ -475,7 +473,6 @@
                     _this.removeAttr('disabled');
                 });
             }).on('click', '.cancel-checklist', function () {
-                CKEDITOR.instances['add-new-task-textarea'].destroy();
                 _this.removeClass('disabled');
                 $('#add-new-task').remove();
                 //$('.text-area-content').remove();
