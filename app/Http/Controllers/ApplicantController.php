@@ -5,6 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Job;
+use App\Models\Applicant;
+use App\Models\ApplicantTag;
+use App\Models\ApplicantRating;
+use App\Models\Comment;
+use App\Models\Video;
+use App\Models\VideoTag;
+
+
 
 class ApplicantController extends Controller {
 
@@ -42,8 +52,45 @@ class ApplicantController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        //
+    public function show(Request $request,$id) {
+        $applicant = Applicant::where('id', $id)->first();
+
+        if ($applicant !== NULL) {
+
+            //Get logged in User
+            if ($request->user() !== NULL) {
+                $user_id = $request->user()->user_id;
+
+                $user_info = User::where('user_id', $user_id)->with('profile')->first();
+
+                //$comments = Comment::with('user', 'profile')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
+                
+                $comments = Comment::with('user')->where('belongs_to','applicant')->where('unique_id',$id)->orderBy('comment_id','desc')->get();
+            } else {
+
+                $user_info = Applicant::where('id', $id)->first();
+
+                //$comments = Comment::with('applicant')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
+                //$comments = Applicant::with('comment')->where('id',$id)->orderBy('id', 'desc')->get();
+                $comments = Comment::with('applicant')->where('belongs_to','applicant')->where('unique_id',$id)->orderBy('comment_id','desc')->get();
+            }
+
+
+            $job = Job::where('id', $applicant->job_id)->first();
+
+            $statuses = ApplicantTag::where('applicant_id', $id)->first();
+
+            $prevApplicant = Applicant::where('id', '>', $id)->where('job_id', $applicant->job_id)->min('id');
+            $nextApplicant = Applicant::where('id', '<', $id)->where('job_id', $applicant->job_id)->max('id');
+
+            $rating = ApplicantRating::where('applicant_id', $id)->first();
+
+            $videos = Video::with('video_tags')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
+            
+            $assets = ['applicants'];
+
+            return view('applicants.show', ['applicant' => $applicant, 'user_info' => $user_info, 'comments' => $comments, 'statuses' => $statuses, 'job' => $job, 'previous_applicant' => $prevApplicant, 'next_applicant' => $nextApplicant, 'rating' => $rating, 'videos' => $videos, 'assets' => $assets,'count' => 0]);
+        }
     }
 
     /**
@@ -84,29 +131,29 @@ class ApplicantController extends Controller {
         $agent = new Agent(array(), $request->header('User-Agent'));
 
         if ($agent->isMobile()) {
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->where('job_id', $id)->orderBy('created_at', 'desc')->get();
 
             return view('templates.show.applicantListMobile', ['applicants' => $applicants, 'count' => 0]);
         } else {
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
 
-            return view('templates.show.applicantList', ['applicants' => $applicants, 'count' => 0]);
+            return view('jobs.partials.applicantList', ['applicants' => $applicants, 'count' => 0]);
         }
     }
 
     public function getSearchApplicants(Request $request, $term) {
 
-        $applicants_with_status = Status::get();
+        $applicants_with_status = ApplicantTag::get();
         $applicant_id_array = [];
 
         $agent = new Agent(array(), $request->header('User-Agent'));
 
         foreach ($applicants_with_status as $applicant) {
-            $statuses = explode(",", $applicant->status);
+            $statuses = explode(",", $applicant->tag);
             foreach ($statuses as $status) {
                 if ($status === $term) {
                     $applicant_id_array[] = $applicant->applicant_id;
@@ -115,13 +162,13 @@ class ApplicantController extends Controller {
         }
 
         if ($agent->isMobile()) {
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->whereIn('id', $applicant_id_array)->orderBy('created_at', 'desc')->get();
 
             return view('templates.show.applicantListMobile', ['applicants' => $applicants, 'count' => 0]);
         } else {
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->whereIn('id', $applicant_id_array)->orderBy('created_at', 'desc')->paginate(5);
 
@@ -135,14 +182,14 @@ class ApplicantController extends Controller {
 
         if ($agent->isMobile()) {
             $is_mobile = 'true';
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->where('job_id', $id)->orderBy('created_at', 'desc')->get();
 
             return view('templates.show.applicantListMobile', ['applicants' => $applicants, 'count' => 0]);
         } else {
             $is_mobile = 'false';
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(18);
 
@@ -176,7 +223,7 @@ class ApplicantController extends Controller {
 
                 $job = Job::where('id', $applicant->job_id)->first();
 
-                $statuses = Status::where('applicant_id', $id)->first();
+                $statuses = ApplicantTag::where('applicant_id', $id)->first();
 
                 $prevApplicant = Applicant::where('id', '>', $id)->where('job_id', $applicant->job_id)->min('id');
                 $nextApplicant = Applicant::where('id', '<', $id)->where('job_id', $applicant->job_id)->max('id');

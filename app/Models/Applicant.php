@@ -43,12 +43,12 @@ class Applicant extends Model implements AuthenticatableContract, CanResetPasswo
         return $this->belongsTo('App\Models\Job');
     }
     
-    public function status() {
-        return $this->hasMany('App\Models\Status','applicant_id','id');
+    public function tags() {
+        return $this->hasMany('App\Models\ApplicantTag','applicant_id','id');
     }
     
-    /*public function comment() {
-        return $this->hasMany('App\Comment','applicant_id','id');
-    }*/
+    public function comment() {
+        return $this->hasMany('App\Models\Comment','unique_id','id');
+    }
 }
 

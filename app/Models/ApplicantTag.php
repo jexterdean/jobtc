@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Status extends Model {
+class ApplicantTag extends Model {
 
     /**
      * The database table used by the model.
@@ -19,7 +19,7 @@ class Status extends Model {
      * @var array
      */
     
-    protected $fillable = ['user_id','applicant_id','job_id','status'];
+    protected $fillable = ['user_id','applicant_id','job_id','tags'];
 
     /**
      * The attributes excluded from the model's JSON form.

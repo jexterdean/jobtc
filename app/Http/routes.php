@@ -7,13 +7,27 @@ Route::get('/login', 'SessionController@create');
 
 /*Job Routes*/
 //Should not be in any middleware so that 
-//job posting can be accessed by would be applicants(they need to view the posting without logging in
+//job posting can be accessed by would be applicants(they need to view the job posting without logging in)
 Route::resource('job', 'JobController');
 Route::post('updateJob/{id}', 'JobController@update');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
 
+/*For Applicant*/
+Route::resource('a', 'ApplicantController');
+
+
+/* For Applicant Tags */
+Route::post('addTag', 'JobController@addTag');
+Route::get('getAvailableTags', 'JobController@getTags');
+
+/*For Comments*/
+Route::post('addComment','CommentController@addComment');
+
+/* For Video Status*/
+//Route::post('/add-video-status', 'ShowController@addVideoStatus');
+//Route::get('/get-available-video-tags', 'ShowController@getVideoTags');
 
 Route::group(['middleware' => 'guest'], function () {
 

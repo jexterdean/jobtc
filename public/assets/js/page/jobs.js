@@ -3,15 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 $('.edit-job').click(function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
     var job_id = $(this).siblings('.job_id').val();
-    var edit_job_form = '/job/' + job_id + '/edit';
-
-    console.log('job_id: ' +job_id);
+    var edit_job_form = public_path +'/job/' + job_id + '/edit';
 
     BootstrapDialog.show({
         title: 'Edit Job',
@@ -25,7 +21,7 @@ $('.edit-job').click(function (e) {
         buttons: [{
                 label: 'Save',
                 action: function (dialog) {
-                    var ajaxurl = '/updateJob/'+job_id;
+                    var ajaxurl = public_path +'/updateJob/'+job_id;
                     var form = $(".edit-job-form")[0];
                     
                     console.log(JSON.stringify(form));
@@ -120,7 +116,7 @@ $('.delete-job').click(function (e) {
 
     BootstrapDialog.confirm('Are you sure you want to delete this job?', function (result) {
         if (result) {
-            var ajaxurl = '/job/'+job_id;
+            var ajaxurl = public_path +'/job/'+job_id;
             var formData = new FormData();
             formData.append('job_id', job_id);
             formData.append('_token', $('.applicant-list').find('.token').val());
@@ -194,7 +190,7 @@ $('.delete-job').click(function (e) {
 
 $(".apply-to-job").click(function () {
 
-    var apply_to_job_form = "/applyToJobForm";
+    var apply_to_job_form = public_path + "/applyToJobForm";
     var job_id = $('.job_id').val();
     //var token = $('meta[name=csrf-token]').attr('content');
     //var token = $('.applicant-list').find('.token').val();
@@ -211,7 +207,7 @@ $(".apply-to-job").click(function () {
         buttons: [{
                 label: 'Save',
                 action: function (dialog) {
-                    var ajaxurl = '/applyToJob';
+                    var ajaxurl = public_path +'/applyToJob';
                     var form = $(".apply-to-job-form")[0];
                     var formData = new FormData(form);
                     formData.append('job_id', job_id);
@@ -298,10 +294,10 @@ $('.status-container').tagEditor({
     autocomplete: {
         delay: 0, // show suggestions immediately
         position: { collision: 'flip' }, // automatic menu position up/down
-        source: '/get-available-tags'
+        source: public_path +'/getAvailableTags'
     },
     onChange: function (field, editor, tags) {
-        var ajaxurl = '/add-status';
+        var ajaxurl = public_path + '/addTag';
 
         var job_id;
         var applicant_id;
@@ -328,7 +324,7 @@ $('.status-container').tagEditor({
         var formData = new FormData();
         formData.append('job_id', job_id);
         formData.append('applicant_id', applicant_id);
-        formData.append('status', tags);
+        formData.append('tags', tags);
         formData.append('_token', token);
         $.ajax({
             url: ajaxurl,

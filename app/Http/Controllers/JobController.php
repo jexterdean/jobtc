@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Job;
 use App\Models\Company;
 use App\Models\Applicant;
-use App\Models\Status;
+use App\Models\ApplicantTag;
 use App\Models\MailBox;
 use App\Models\MailBoxAlias;
 use Auth;
@@ -87,7 +87,7 @@ class JobController extends Controller {
 
         $job = Job::with('applicants')->where('id', $id)->first();
 
-        $applicants = Applicant::with(['status' => function ($query) {
+        $applicants = Applicant::with(['tags' => function ($query) {
                         $query->orderBy('created_at', 'desc');
                     }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
 
@@ -110,7 +110,7 @@ class JobController extends Controller {
     public function edit($id) {
         $job = Job::where('id', $id)->first();
 
-        return view('jobs.partials.editJobForm', ['job' => $job]);
+        return view('forms.editJobForm', ['job' => $job]);
     }
 
     /**
@@ -353,7 +353,7 @@ class JobController extends Controller {
     }
 
     public function getApplyToJobForm(Request $request) {
-        return view('jobs.partials.applyToJobForm');
+        return view('forms.applyToJobForm');
     }
 
     public function applyToJob(Request $request) {
@@ -518,18 +518,70 @@ class JobController extends Controller {
         $agent = new Agent(array(), $request->header('User-Agent'));
 
         if ($agent->isMobile()) {
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->where('job_id', $id)->orderBy('created_at', 'desc')->get();
 
             return view('templates.show.applicantListMobile', ['applicants' => $applicants, 'count' => 0]);
         } else {
-            $applicants = Applicant::with(['status' => function ($query) {
+            $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
 
             return view('templates.show.applicantList', ['applicants' => $applicants, 'count' => 0]);
         }
     }
+    
+    /* For Tags */
+    
+    public function addTag(Request $request) {
+        $user_id = $request->user()->user_id;
+        $job_id = $request->input('job_id');
+        $applicant_id = $request->input('applicant_id');
+        $tags = $request->input('tags');
 
+        $tag_exists = ApplicantTag::where('job_id', $job_id)->where('applicant_id', $applicant_id)->where('user_id', $user_id)->count();
+
+        if ($tag_exists === 0) {
+
+            $new_tag = new ApplicantTag([
+                'user_id' => $user_id,
+                'job_id' => $job_id,
+                'applicant_id' => $applicant_id,
+                'tags' => $tags
+            ]);
+
+            $new_tag->save();
+
+            $tag_item = ApplicantTag::where('id', $new_tag->id)->first();
+        } else {
+            $update_tag = ApplicantTag::where('job_id', $job_id)->where('applicant_id', $applicant_id)->where('user_id', $user_id)->update([
+                'tags' => $tags
+            ]);
+
+            $tag_item = ApplicantTag::where('id', $update_tag->id)->first();
+        }
+
+        return $tag_item->tags;
+    }
+
+     /* Get all tags made by all users */
+    public function getTags(Request $request) {
+
+        $term = $request->input('term');
+
+        $entries = ApplicantTag::where('tags', 'like', '%' . $term . '%')->get();
+        $tags = [];
+
+        foreach ($entries as $entry) {
+            $tags_string = explode(',', $entry->tags);
+            foreach ($tags_string as $string) {
+                $tags[] = $string;
+            }
+        }
+
+        return $tags;
+    }
+    
+    
 }

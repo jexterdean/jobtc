@@ -46,7 +46,7 @@
             </div>
         </div>
         @foreach($applicants as $applicant)
-        <div id="applicant-{{$applicant->id}}" class="row">
+        <div id="applicant-{{$applicant->id}}" class="row applicant-row">
             @if(ends_with($applicant->resume,'pdf'))
             <div class="col-xs-3">
                 <!--a target="_blank" href="https://docs.google.com/viewer?url={{url($applicant->resume)}}" class="applicant-resume"><img class="applicant-photo" src="{{url($applicant->photo)}}"/></a-->
@@ -64,10 +64,8 @@
                 <text class="applicant-post-date">{{date_format(date_create($applicant->created_at),'M d,Y')}}</text>
                 <br />
                 <textarea class="status-container">
-                    @if(isset($applicant->status[0]))
-                    {{$applicant->status[0]->status}}
-                    @else
-                    No Status Set Yet
+                    @if(isset($applicant->tags[0]))
+                    {{$applicant->tags[0]->tags}}
                     @endif
                 </textarea>
                 <input class="job_id" type="hidden" value="{{$applicant->job_id}}" />
@@ -89,10 +87,8 @@
                 <text class="applicant-post-date">{{date_format(date_create($applicant->created_at),'M d,Y')}}</text>
                 <br />
                 <textarea class="status-container">
-                    @if(isset($applicant->status[0]))
-                    {{$applicant->status[0]->status}}
-                    @else
-                    No Status Set Yet
+                    @if(isset($applicant->tags[0]))
+                    {{$applicant->tags[0]->tags}}
                     @endif
                 </textarea>
                 <input class="job_id" type="hidden" value="{{$applicant->job_id}}" />

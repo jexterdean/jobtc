@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateApplicantTagsTable extends Migration
+class CreateVideosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,13 +12,13 @@ class CreateApplicantTagsTable extends Migration
      */
     public function up()
     {
-         Schema::create('applicant_tags',function(Blueprint $table){
+        Schema::create('videos',function(Blueprint $table) {
            $table->increments('id'); 
-           $table->integer('user_id'); 
-           $table->integer('applicant_id'); 
-           $table->integer('job_id'); 
-           $table->string('tags'); 
-           $table->timestamps();
+           $table->integer('applicant_id');
+           $table->integer('job_id');
+           $table->integer('stream_id');
+           $table->string('video_type');
+           $table->string('video_url');
         });
     }
 
@@ -29,6 +29,6 @@ class CreateApplicantTagsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('applicant_tags');
+        Schema::drop('videos');
     }
 }

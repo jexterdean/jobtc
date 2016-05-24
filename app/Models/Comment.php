@@ -11,4 +11,12 @@ class Comment extends Model
     protected $primaryKey = 'comment_id';
     protected $table = 'comment';
 
+    public function user() {
+        return $this->hasOne('App\Models\User','user_id','user_id');
+    }
+    
+    public function applicant() {
+        return $this->hasOne('App\Models\Applicant','id','unique_id');
+    }
+    
 }
