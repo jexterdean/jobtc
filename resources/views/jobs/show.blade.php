@@ -22,7 +22,7 @@
                                         <input class="btn btn-info btn-lg pull-right apply-to-job" type="button" value="Apply"/>
                                         @endif
                                         <div class="media-middle">
-                                            <a target="_blank" href="/job/{{$job->id}}">
+                                            <a target="_blank" href="{{url('job/'.$job->id)}}">
                                                 @if(isset($job->photo))
                                                 <img class="job-photo" src="{{url($job->photo)}}" alt="Job Photo">
                                                 @else
@@ -46,7 +46,7 @@
                                             @endif
                                         </div>
                                         <div class="media-body">
-                                            <text class="media-heading"><a target="_blank" href="/job/{{$job->id}}">{{$job->title}}</a></text>
+                                            <text class="media-heading"><a target="_blank" href="{{url('job/'.$job->id)}}">{{$job->title}}</a></text>
                                         </div>
                                     </div>
                                 </div>
