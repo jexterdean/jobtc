@@ -16,11 +16,12 @@ $.fn.clickToggle = function(func1, func2) {
         return this;
     };
   
+  
 
 //For Dragging employees to projects
-$('.list-group').sortable({
+$('.taskgroup-list').sortable({
     dropOnEmpty: true,
-    connectWith: ".list-group",
+    connectWith: ".taskgroup-list",
     handle: '.drag-handle',
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
@@ -71,10 +72,68 @@ $('.list-group').sortable({
 });
 
 
+//For dragging tests to applicants or jobs
+
+$('.job-applicant-list').sortable({
+    dropOnEmpty: true,
+    connectWith: ".job-applicant-list",
+    handle: '.drag-handle',
+    remove: function (event, ui) {
+        //Don't remove item when dropped to the project list group
+        $(this).append($(ui.item).clone());
+    },
+    receive: function (event, ui) {
+        
+        test_id = $(ui.item).find('.test_id').val();
+        list_group_applicant_id = $(ui.item).parent().attr('id');
+        applicant_id = list_group_applicant_id.split('-').pop();
+
+        //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
+
+        var identicalItemCount = $("#applicant-" + applicant_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').length;
+        
+        //If a duplicate, remove it
+        if (identicalItemCount > 1) {
+            $("#applicant-" + applicant_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').remove();
+        }
+
+        //Show unassign button
+        $(ui.item).find('.unassign-test').removeClass('hidden');
+        
+        //Assign Test to Job
+        test_url = public_path + 'assignTestToApplicant';
+        test_data = {
+            'test_id': test_id,
+            'applicant_id': applicant_id
+        };
+
+        $.post(test_url, test_data,function(data){
+            //Assign the team id to the this list group item's input
+            //$(ui.item).find('.team_id').val(team_id);
+            $(ui.item).find('.profile-container').html(data);
+        });
+
+        //Remove warning that no employee is assigned.
+        $(this).find('li:contains("No Tests assigned to this applicant.")').remove();
+
+    },
+    update: function (event, ui) {
+
+    }
+});
+
+/*Unassign Test from Applicant*/
+$('.job-applicant-list').on('click', '.unassign-test', function () {
+    var list_item = $(this).parent().parent().parent();
+    
+    list_item.remove();
+});
+
+
 /*Unassign Team Member from project*/
 $('.list-group').on('click', '.unassign-member', function () {
 
-    var list_item = $(this).parent().parent().parent().parent().remove();
+    var list_item = $(this).parent().parent().parent().parent();
 
     //Remove the element immediately
     list_item.remove();
