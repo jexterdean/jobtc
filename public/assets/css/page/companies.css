@@ -38,3 +38,8 @@
 .fa-chevron-down {
     color: graytext;
 }
+
+.profile-container .list-group-item {
+    background-color: #ffffef;
+    border: none;
+}

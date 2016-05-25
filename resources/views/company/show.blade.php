@@ -132,9 +132,13 @@
                     <div class="box-content">
                         <ul class="list-group">
                             @foreach($profiles as $profile)
-                            <li id="profile-{{$profile->user->user_id}}" class="list-group-item">
+                            <li id="profile-{{$profile->user->user_id}}" class="bg-gray list-group-item">
                                 <div class="row">
-                                    <div class="col-md-11"><a class="name" data-toggle="collapse" href="#profile-collapse-{{$profile->user->user_id}}">{{$profile->user->name}}</a></div>
+                                    <div class="col-md-11">
+                                        <a class="name" data-toggle="collapse" href="#profile-collapse-{{$profile->user->user_id}}">
+                                            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                            {{$profile->user->name}}
+                                        </a></div>
                                     <div class="pull-right">
                                         <a class="icon icon-btn edit-profile">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
