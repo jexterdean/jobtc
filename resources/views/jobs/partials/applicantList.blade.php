@@ -50,12 +50,12 @@
             @if(ends_with($applicant->resume,'pdf'))
             <div class="col-xs-3">
                 <!--a target="_blank" href="https://docs.google.com/viewer?url={{url($applicant->resume)}}" class="applicant-resume"><img class="applicant-photo" src="{{url($applicant->photo)}}"/></a-->
-                <a target="_blank" href="/a/{{$applicant->id}}" class="applicant-resume"><img class="applicant-photo" src="{{url($applicant->photo)}}"/></a>
+                <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume"><img class="applicant-photo" src="{{url($applicant->photo)}}"/></a>
 
             </div>
             <div class="col-xs-9">
                 <!--a target="_blank" href="https://docs.google.com/viewer?url={{url($applicant->resume)}}" class="applicant-resume">{{$applicant->first_name}}&nbsp{{$applicant->last_name}}</a-->
-                <a target="_blank" href="/a/{{$applicant->id}}" class="applicant-resume">{{$applicant->name}}</a>
+                <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume">{{$applicant->name}}</a>
                 <br />
                 <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
                 <br />
