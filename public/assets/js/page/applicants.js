@@ -9,10 +9,10 @@ $('.status-container').tagEditor({
     autocomplete: {
         delay: 0, // show suggestions immediately
         position: { collision: 'flip' }, // automatic menu position up/down
-        source: public_path +'/getAvailableTags'
+        source: public_path +'getAvailableTags'
     },
     onChange: function (field, editor, tags) {
-        var ajaxurl = public_path + '/addTag';
+        var ajaxurl = public_path + 'addTag';
 
         var job_id;
         var applicant_id;
