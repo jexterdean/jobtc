@@ -74,15 +74,15 @@ and open the template in the editor.
 }
 .job-posting-container .job-applicant-list-container {
   padding: 10px;
-  background-color: #ffffff;
-  border-color: #fffdfb;
+  background-color: transparent;
+  border-color: transparent;
   -webkit-border-bottom-right-radius: 2px;
   -webkit-border-bottom-left-radius: 2px;
   -moz-border-radius-bottomright: 2px;
   -moz-border-radius-bottomleft: 2px;
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
-  box-shadow: 4px 6px 15px #bbbbbb;
+  //box-shadow: 4px 6px 15px #bbbbbb;
 }
 .job-posting-container .job-applicant-list-container .container-icon {
   font-size: 40px;
