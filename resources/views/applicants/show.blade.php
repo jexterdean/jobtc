@@ -8,12 +8,12 @@
             </div>
             <div class="col-xs-2">
                 @if($previous_applicant !== NULL)
-                <a class="btn btn-default btn-lg pager-previous pull-left" href="/a/{{$previous_applicant}}" rel="previous"><i class="fa fa-chevron-circle-left"></i>&nbsp;Previous</a>
+                <a class="btn btn-default btn-lg pager-previous pull-left" href="{{url('/a/'.$previous_applicant)}}" rel="previous"><i class="fa fa-chevron-circle-left"></i>&nbsp;Previous</a>
                 @endif
             </div>
             <div class="col-xs-3">
                 @if($next_applicant !== NULL)
-                <a class="btn btn-default btn-lg pager-next pull-right" href="/a/{{$next_applicant}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
+                <a class="btn btn-default btn-lg pager-next pull-right" href="{{url('/a/'.$next_applicant)}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
                 @endif
             </div>
             <a href="#" class="btn btn-default pull-right close-applicant"><i class="fa fa-times"></i></a>
