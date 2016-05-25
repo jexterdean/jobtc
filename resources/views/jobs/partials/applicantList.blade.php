@@ -3,7 +3,7 @@
     <div class="text-center hidden-sm hidden-xs">
         <ul class="pagination job-applicant-list-pager">
             @if($applicants->currentPage() > 1)
-            <li><a class="pager-previous" href="{{$applicants->previousPageUrl()}}" rel="previous">Previous</a></li> 
+            <li><a class="pager-previous" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li> 
             @endif
             @for($i = 1; $i <= $applicants->lastPage(); $i++)
             @if($i === $applicants->currentPage())
@@ -13,14 +13,14 @@
             @endif
             @endfor
             @if($applicants->currentPage() < $applicants->lastPage())
-            <li><a class="pager-next" href="{{$applicants->nextPageUrl()}}" rel="next">Next</a></li>
+            <li><a class="pager-next" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
             @endif
         </ul>
     </div>
     <div class="text-center hidden-lg hidden-md">
         <ul class="pagination job-applicant-list-pager">
             @if($applicants->currentPage() > 1)
-            <li><a class="pager-previous-mobile" href="{{$applicants->previousPageUrl()}}" rel="previous">Previous</a></li> 
+            <li><a class="pager-previous-mobile" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li> 
             @endif
             @for($i = 1; $i <= $applicants->lastPage(); $i++)
             @if($i === $applicants->currentPage())
@@ -30,7 +30,7 @@
             @endif
             @endfor
             @if($applicants->currentPage() < $applicants->lastPage())
-            <li><a class="pager-next-mobile" href="{{$applicants->nextPageUrl()}}" rel="next">Next</a></li>
+            <li><a class="pager-next-mobile" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
             @endif
         </ul>
     </div>
