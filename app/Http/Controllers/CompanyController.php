@@ -89,19 +89,16 @@ class CompanyController extends BaseController {
                 }
             }
         }
-        
+
         //Get projects with their tasks and task permissions
-        $projects = Project::with(['task' => function($query) {
-                        $query->orderBy('task_title', 'asc')->get();
-                    }],'task_permission')->whereIn('project_id', $project_id_list)->get();
-         
-        $permissions = TaskCheckListPermission::all();
-                    
+        $projects = Project::with(['task' => function($query){
+            $query->orderBy('task_title', 'asc')->get();
+        }],'task_permission')->whereIn('project_id', $project_id_list)->get();
+
         $assets = ['companies'];
 
         return View::make('company.show', [
                     'projects' => $projects,
-                    'permissions' => $permissions,
                     'profiles' => $profiles,
                     'companies' => $companies,
                     'teams' => $teams,
@@ -316,22 +313,26 @@ class CompanyController extends BaseController {
 
         //Get projects with their tasks and task permissions
         $tasks = Task::where('project_id', $project_id)
-                ->orderBy('task_title','asc')
+                ->orderBy('task_title', 'asc')
                 ->get();
-        $task_permissions = TaskCheckListPermission::where('project_id',$project_id)->get();
-        
-        return view('company.partials._tasklist',['tasks' =>$tasks,'task_permissions' => $task_permissions,'project_id' => $project_id,'user_id' => $user_id]);
+        $task_permissions = TaskCheckListPermission::where('project_id', $project_id)->where('user_id',$user_id)->get();
+
+        return view('company.partials._tasklist', ['tasks' => $tasks, 'task_permissions' => $task_permissions, 'project_id' => $project_id, 'user_id' => $user_id]);
     }
 
     public function unassignTeamMember(Request $request) {
 
         $user_id = $request->input('user_id');
         $team_id = $request->input('team_id');
+        $project_id = $request->input('project_id');
 
         //Delete team member from the Team Member table to unassign them from the project
         $team_member = TeamMember::where('user_id', $user_id)->where('team_id', $team_id);
         $team_member->delete();
 
+        //Delete permissions from tasklists
+        $permissions = TaskCheckListPermission::where('user_id', $user_id)->where('project_id',$project_id);
+        $permissions->delete();
         return $user_id;
     }
 
@@ -360,7 +361,7 @@ class CompanyController extends BaseController {
 
         return $user_id;
     }
-    
+
 }
 
 ?>
