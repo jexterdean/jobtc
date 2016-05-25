@@ -166,7 +166,7 @@
                 </div>
                 <div class="col-xs-2">
                     @if($next_applicant !== NULL)
-                    <a class="btn btn-default btn-lg pager-next pull-right" href="{{'/a/'.$next_applicant}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
+                    <a class="btn btn-default btn-lg pager-next pull-right" href="{{url('/a/'.$next_applicant)}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
                     @endif
                 </div>
                 <div class="col-xs-1">
