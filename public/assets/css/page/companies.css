@@ -42,4 +42,5 @@
 .profile-container .list-group-item {
     background-color: #ffffef;
     border: none;
+    padding: 4px 15px;
 }
