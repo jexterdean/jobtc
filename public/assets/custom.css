@@ -127,10 +127,6 @@ a:active,a:focus{
     color: #1830ba!important;
     background: white!important;
 }
-.hovered{
-    margin-top: 5px!important;
-    margin-bottom: 5px!important;
-}
 .task-list .task-header .task-list-header{
     text-shadow: none!important;
     font-weight: bold;
@@ -213,5 +209,3 @@ body.form-control.textarea.wysihtml5-editor{
 .section-list > .panel-heading > .row > .col-xs-6 .btn-group{
     margin: -7px 0;
 }
-
-.section-list

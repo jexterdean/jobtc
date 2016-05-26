@@ -5928,18 +5928,22 @@ button.list-group-item-danger.active:focus {
   border: 1px solid #ffffff;
 }
 .task-list .panel-container {
-  border-top: 3px solid #ffffff;
-  border-bottom: 3px solid #e6e6e6;
-  border-right: 3px solid #e6e6e6;
-  border-left: 3px solid #ffffff;
+  /*border-top: 3px solid @border * 1.2;
+    border-bottom: 3px solid @border * 0.9;
+    border-right: 3px solid @border * 0.9;
+    border-left: 3px solid @border * 1.2;*/
+  border: 3px solid #ffffff;
 }
 .task-list .panel-body {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-bottom: 5px solid #f2f2f2;
-  border-right: 5px solid #f2f2f2;
-  border-left: 5px solid #f2f2f2;
+  /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95;
+    border-right: 5px solid @border * 0.95;
+    border-left: 5px solid @border * 0.95;*/
+  -moz-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.24);
 }
 .task-list .panel-body .panel-content {
   padding: 10px 2px;
@@ -5970,18 +5974,22 @@ button.list-group-item-danger.active:focus {
   border: 1px solid #ffffff;
 }
 .panel-default .panel-container {
-  border-top: 3px solid #ffffff;
-  border-bottom: 3px solid #d9d9d9;
-  border-right: 3px solid #d9d9d9;
-  border-left: 3px solid #ffffff;
+  /*border-top: 3px solid @border * 1.2;
+    border-bottom: 3px solid @border * 0.9;
+    border-right: 3px solid @border * 0.9;
+    border-left: 3px solid @border * 1.2;*/
+  border: 3px solid #F1F1F1;
 }
 .panel-default .panel-body {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-bottom: 5px solid #e5e5e5;
-  border-right: 5px solid #e5e5e5;
-  border-left: 5px solid #e5e5e5;
+  /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95;
+    border-right: 5px solid @border * 0.95;
+    border-left: 5px solid @border * 0.95;*/
+  -moz-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.24);
 }
 .panel-default .panel-body .panel-content {
   padding: 10px;
@@ -6012,18 +6020,22 @@ button.list-group-item-danger.active:focus {
   border: 1px solid #ffffff;
 }
 .panel-primary .panel-container {
-  border-top: 3px solid #3e93dc;
-  border-bottom: 3px solid #2e6ea5;
-  border-right: 3px solid #2e6ea5;
-  border-left: 3px solid #3e93dc;
+  /*border-top: 3px solid @border * 1.2;
+    border-bottom: 3px solid @border * 0.9;
+    border-right: 3px solid @border * 0.9;
+    border-left: 3px solid @border * 1.2;*/
+  border: 3px solid #337ab7;
 }
 .panel-primary .panel-body {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-bottom: 5px solid #3174ae;
-  border-right: 5px solid #3174ae;
-  border-left: 5px solid #3174ae;
+  /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95;
+    border-right: 5px solid @border * 0.95;
+    border-left: 5px solid @border * 0.95;*/
+  -moz-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.24);
 }
 .panel-primary .panel-body .panel-content {
   padding: 10px;
@@ -6054,18 +6066,22 @@ button.list-group-item-danger.active:focus {
   border: 1px solid #ffffff;
 }
 .panel-success .panel-container {
-  border-top: 3px solid #6bd16b;
-  border-bottom: 3px solid #509d50;
-  border-right: 3px solid #509d50;
-  border-left: 3px solid #6bd16b;
+  /*border-top: 3px solid @border * 1.2;
+    border-bottom: 3px solid @border * 0.9;
+    border-right: 3px solid @border * 0.9;
+    border-left: 3px solid @border * 1.2;*/
+  border: 3px solid #59ae59;
 }
 .panel-success .panel-body {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-bottom: 5px solid #55a555;
-  border-right: 5px solid #55a555;
-  border-left: 5px solid #55a555;
+  /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95;
+    border-right: 5px solid @border * 0.95;
+    border-left: 5px solid @border * 0.95;*/
+  -moz-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.24);
 }
 .panel-success .panel-body .panel-content {
   padding: 10px;
@@ -6096,18 +6112,22 @@ button.list-group-item-danger.active:focus {
   border: 1px solid #ffffff;
 }
 .panel-info .panel-container {
-  border-top: 3px solid #6de6ff;
-  border-bottom: 3px solid #52adc8;
-  border-right: 3px solid #52adc8;
-  border-left: 3px solid #6de6ff;
+  /*border-top: 3px solid @border * 1.2;
+    border-bottom: 3px solid @border * 0.9;
+    border-right: 3px solid @border * 0.9;
+    border-left: 3px solid @border * 1.2;*/
+  border: 3px solid #5bc0de;
 }
 .panel-info .panel-body {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-bottom: 5px solid #56b6d3;
-  border-right: 5px solid #56b6d3;
-  border-left: 5px solid #56b6d3;
+  /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95;
+    border-right: 5px solid @border * 0.95;
+    border-left: 5px solid @border * 0.95;*/
+  -moz-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.24);
 }
 .panel-info .panel-body .panel-content {
   padding: 10px;
@@ -6138,18 +6158,22 @@ button.list-group-item-danger.active:focus {
   border: 1px solid #ffffff;
 }
 .panel-warning .panel-container {
-  border-top: 3px solid #ffd05e;
-  border-bottom: 3px solid #d89c46;
-  border-right: 3px solid #d89c46;
-  border-left: 3px solid #ffd05e;
+  /*border-top: 3px solid @border * 1.2;
+    border-bottom: 3px solid @border * 0.9;
+    border-right: 3px solid @border * 0.9;
+    border-left: 3px solid @border * 1.2;*/
+  border: 3px solid #f0ad4e;
 }
 .panel-warning .panel-body {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-bottom: 5px solid #e4a44a;
-  border-right: 5px solid #e4a44a;
-  border-left: 5px solid #e4a44a;
+  /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95;
+    border-right: 5px solid @border * 0.95;
+    border-left: 5px solid @border * 0.95;*/
+  -moz-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.24);
 }
 .panel-warning .panel-body .panel-content {
   padding: 10px;
@@ -6180,18 +6204,22 @@ button.list-group-item-danger.active:focus {
   border: 1px solid #ffffff;
 }
 .panel-danger .panel-container {
-  border-top: 3px solid #ff645f;
-  border-bottom: 3px solid #c34b47;
-  border-right: 3px solid #c34b47;
-  border-left: 3px solid #ff645f;
+  /*border-top: 3px solid @border * 1.2;
+    border-bottom: 3px solid @border * 0.9;
+    border-right: 3px solid @border * 0.9;
+    border-left: 3px solid @border * 1.2;*/
+  border: 3px solid #d9534f;
 }
 .panel-danger .panel-body {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border-bottom: 5px solid #ce4f4b;
-  border-right: 5px solid #ce4f4b;
-  border-left: 5px solid #ce4f4b;
+  /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom: 5px solid @border * 0.95;
+    border-right: 5px solid @border * 0.95;
+    border-left: 5px solid @border * 0.95;*/
+  -moz-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.24);
 }
 .panel-danger .panel-body .panel-content {
   padding: 10px;
