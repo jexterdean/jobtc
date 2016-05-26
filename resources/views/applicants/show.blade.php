@@ -157,7 +157,7 @@
             @if(Auth::user('user'))
             <div class="row single-applicant-pagination hidden-xs">
                 <div class="col-xs-7">
-                    <div id="job-title" class="btn btn-default bg-gray btn-lg pull-right"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;{{$job->title}}</div>
+                    <a href="{{url('job/'.$job->id)}}" id="job-title" class="btn btn-default bg-gray btn-lg pull-right"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;{{$job->title}}</a>
                 </div>
                 <div class="col-xs-2">
                     @if($previous_applicant !== NULL)
@@ -170,7 +170,7 @@
                     @endif
                 </div>
                 <div class="col-xs-1">
-                    <a href="#" class="btn btn-default btn-lg close-applicant"><i class="fa fa-times"></i></a>
+                    <!--a href="#" class="btn btn-default btn-lg close-applicant"><i class="fa fa-times"></i></a-->
                 </div>
             </div>
             <div class="mini-space"></div>
