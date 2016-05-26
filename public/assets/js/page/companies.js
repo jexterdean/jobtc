@@ -452,7 +452,7 @@ $('.list-group').on('click', '.update-profile', function (e) {
 
     //$.post(public_path + '/updateProfile', data);
 
-    var ajaxurl = public_path + '/updateProfile';
+    var ajaxurl = public_path + 'updateProfile';
     var formData = new FormData();
     formData.append('user_id',user_id);
     formData.append('name',name);
