@@ -34,13 +34,22 @@
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-      border-left: 3px solid @heading-bg-color * 0.95;
+      border: 5px solid @heading-bg-color;
+    }
+  }
+  & when(@is-task-list = true){
+    & .panel-heading {
+      background-color: @heading-bg-color * 0.95;
+    }
+  }
+  & when(@is-task-list = false){
+    & .panel-heading {
+      background-color: @heading-bg-color;//@heading-bg-color * 0.95;
     }
   }
   & .panel-heading {
     //.inset-text();
     color: @heading-text-color;
-    background-color: @heading-bg-color;//@heading-bg-color * 0.95;
     border-color: darken(@heading-border,10%);
     font-size: 20px;
 

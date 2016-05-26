@@ -1,7 +1,7 @@
 {!! Form::open(array('files' => true, 'url' => 'quiz/' . $tests_info->id, 'method' => 'PATCH')) !!}
 <div class="row">
     <div class="col-md-12">
-        <div class="box box-primary">
+        <div class="box box-default">
             <div class="box-container">
                 <div class="box-header">
                     <h3 class="box-title" style="width: 80%;" data-toggle="collapse" data-target="#test-area">{{ $tests_info->title }}</h3>
@@ -51,7 +51,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="question-area">
-            <div class="box box-info box-question question-default hidden">
+            <div class="box box-default box-question question-default hidden">
                 <div class="box-container">
                     <div class="box-header">
                         <h3 class="box-title question-header" style="width: 80%;height: 40px;">Question</h3>
@@ -140,7 +140,7 @@
             </div>
 
             @foreach($questions_info as $ref=>$v)
-                <div class="box box-info box-question" id="{{ $v->id }}">
+                <div class="box box-default box-question" id="{{ $v->id }}">
                     <div class="box-container">
                         <div class="box-header">
                             <h3 class="box-title question-header" style="width: 80%;height: 40px;">{{ $v->question ? $v->question : 'Question' }}</h3>
@@ -242,7 +242,7 @@
             @endforeach
         </div>
     </div>
-</div>
+</div><br/>
 <div class="row">
     <div class="col-md-12 text-right">
         <input type="submit" name="submit" class="btn btn-submit" value="Save" />

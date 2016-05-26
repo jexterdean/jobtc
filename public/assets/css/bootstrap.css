@@ -5950,11 +5950,13 @@ button.list-group-item-danger.active:focus {
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-  border-left: 3px solid #f2f2f2;
+  border: 5px solid #ffffff;
+}
+.task-list .panel-heading {
+  background-color: #f2f2f2;
 }
 .task-list .panel-heading {
   color: #000000;
-  background-color: #ffffff;
   border-color: #e6e6e6;
   font-size: 20px;
 }
@@ -5997,11 +5999,13 @@ button.list-group-item-danger.active:focus {
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-  border-left: 3px solid #e5e5e5;
+  border: 5px solid #F1F1F1;
+}
+.panel-default .panel-heading {
+  background-color: #F1F1F1;
 }
 .panel-default .panel-heading {
   color: #000000;
-  background-color: #F1F1F1;
   border-color: #d8d8d8;
   font-size: 20px;
 }
@@ -6044,11 +6048,13 @@ button.list-group-item-danger.active:focus {
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-  border-left: 3px solid #3174ae;
+  border: 5px solid #337ab7;
+}
+.panel-primary .panel-heading {
+  background-color: #337ab7;
 }
 .panel-primary .panel-heading {
   color: #fff;
-  background-color: #337ab7;
   border-color: #286090;
   font-size: 20px;
 }
@@ -6091,11 +6097,13 @@ button.list-group-item-danger.active:focus {
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-  border-left: 3px solid #55a555;
+  border: 5px solid #59ae59;
+}
+.panel-success .panel-heading {
+  background-color: #59ae59;
 }
 .panel-success .panel-heading {
   color: #fff;
-  background-color: #59ae59;
   border-color: #468e46;
   font-size: 20px;
 }
@@ -6138,11 +6146,13 @@ button.list-group-item-danger.active:focus {
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-  border-left: 3px solid #56b6d3;
+  border: 5px solid #5bc0de;
+}
+.panel-info .panel-heading {
+  background-color: #5bc0de;
 }
 .panel-info .panel-heading {
   color: #fff;
-  background-color: #5bc0de;
   border-color: #31b0d5;
   font-size: 20px;
 }
@@ -6185,11 +6195,13 @@ button.list-group-item-danger.active:focus {
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-  border-left: 3px solid #e4a44a;
+  border: 5px solid #f0ad4e;
+}
+.panel-warning .panel-heading {
+  background-color: #f0ad4e;
 }
 .panel-warning .panel-heading {
   color: #fff;
-  background-color: #f0ad4e;
   border-color: #ec971f;
   font-size: 20px;
 }
@@ -6232,11 +6244,13 @@ button.list-group-item-danger.active:focus {
       border-bottom: 3px solid @border * 1.5;
       border-right: 3px solid @border * 1.5;
       border-left: 3px solid @border * 0.9;*/
-  border-left: 3px solid #ce4f4b;
+  border: 5px solid #d9534f;
+}
+.panel-danger .panel-heading {
+  background-color: #d9534f;
 }
 .panel-danger .panel-heading {
   color: #fff;
-  background-color: #d9534f;
   border-color: #c9302c;
   font-size: 20px;
 }
@@ -6253,7 +6267,6 @@ button.list-group-item-danger.active:focus {
 .box {
   position: relative;
   background: #ffffff;
-  margin-bottom: 20px;
   width: 100%;
   -webkit-box-shadow: 2px 2px 5px -1px rgba(0, 0, 0, 0.5);
   box-shadow: 2px 2px 5px -1px rgba(0, 0, 0, 0.5);
@@ -6288,7 +6301,7 @@ button.list-group-item-danger.active:focus {
   -moz-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
-  border: 3px solid #e5e5e5;
+  border: 5px solid #e5e5e5;
 }
 .box-success .box-container {
   /*border-top: 3px solid @color * 1.2!important;
@@ -6320,7 +6333,7 @@ button.list-group-item-danger.active:focus {
   -moz-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
-  border: 3px solid #55a555;
+  border: 5px solid #55a555;
 }
 .box-warning .box-container {
   /*border-top: 3px solid @color * 1.2!important;
@@ -6352,7 +6365,7 @@ button.list-group-item-danger.active:focus {
   -moz-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
-  border: 3px solid #e4a44a;
+  border: 5px solid #e4a44a;
 }
 .box-info .box-container {
   /*border-top: 3px solid @color * 1.2!important;
@@ -6384,7 +6397,7 @@ button.list-group-item-danger.active:focus {
   -moz-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
-  border: 3px solid #56b6d3;
+  border: 5px solid #56b6d3;
 }
 .box-danger .box-container {
   /*border-top: 3px solid @color * 1.2!important;
@@ -6416,7 +6429,7 @@ button.list-group-item-danger.active:focus {
   -moz-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
-  border: 3px solid #ce4f4b;
+  border: 5px solid #ce4f4b;
 }
 .box-primary .box-container {
   /*border-top: 3px solid @color * 1.2!important;
@@ -6448,7 +6461,7 @@ button.list-group-item-danger.active:focus {
   -moz-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
-  border: 3px solid #3174ae;
+  border: 5px solid #3174ae;
 }
 .box .box-container {
   border: 1px solid #ffffff;
@@ -6484,7 +6497,7 @@ button.list-group-item-danger.active:focus {
   display: inline-block;
   padding: 5px;
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   float: left;
   cursor: default;
