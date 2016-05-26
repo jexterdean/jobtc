@@ -6,18 +6,27 @@
                 {{$task->task_title}}
             </div>
             <div class="pull-right">
-                 @if ($task_permissions->contains('task_id',$task->task_id) 
-                     && $task_permissions->contains('user_id',$user_id) 
-                     && $task_permissions->contains('project_id',$project_id))
+                @if($task_permissions->count() > 0)
+                @foreach($task_permissions as $permission)
+                @if($task->task_id === $permission->task_id)
                 <div class="btn btn-default btn-shadow bg-green task-permission">
-                    <i class="fa fa-check" aria-hidden="true"></i>
+                    <i class="fa fa-check" aria-hidden="true"></i>                                                                
                     <input class="user_id" type="hidden" value="{{$user_id}}"/>
                     <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
                     <input class="project_id" type="hidden" value="{{$project_id}}"/>
-                </div>                                                            
+                </div>
                 @else
                 <div class="btn btn-default btn-shadow bg-gray task-permission">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <i class="fa fa-plus" aria-hidden="true"></i>                                                                
+                    <input class="user_id" type="hidden" value="{{$user_id}}"/>
+                    <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
+                    <input class="project_id" type="hidden" value="{{$project_id}}"/>
+                </div>
+                @endif
+                @endforeach
+                @else
+                <div class="btn btn-default btn-shadow bg-gray task-permission">
+                    <i class="fa fa-plus" aria-hidden="true"></i>                                                                
                     <input class="user_id" type="hidden" value="{{$user_id}}"/>
                     <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
                     <input class="project_id" type="hidden" value="{{$project_id}}"/>

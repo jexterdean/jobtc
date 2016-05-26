@@ -39,6 +39,7 @@
                                                 <i class="fa fa-times"></i>
                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
                                                 <input class="team_id" type="hidden" value="{{$team_members->team_id}}"/>
+                                                <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
                                             </a>
                                         </div>
                                     </div>
@@ -49,28 +50,44 @@
                                         <div class="task-list-container">
                                             <label class='center-block taskgroup-title'>Available Task Groups</label>
                                             <ul class="taskgroup-list list-group">
-                                                @for($i = 0 ; $i < count($project->task); $i++)
+                                                @foreach($project->task as $task)
+
                                                 <li class="list-group-item">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            {{$project->task[$i]->task_title}}
+                                                            {{$task->task_title}}
                                                         </div>
                                                         <div class="pull-right">
-                                                            <!--div class="btn btn-default btn-shadow bg-green task-permission">
-                                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                                            @if($project->task_permission
+                                                            ->where('user_id',$team_members->user->user_id)
+                                                            ->where('task_id',$task->task_id)
+                                                            ->where('project_id',$project->project_id)->count() > 0)
+                                                            
+                                                            @foreach($project->task_permission
+                                                            ->where('user_id',$team_members->user->user_id)
+                                                            ->where('task_id',$task->task_id)
+                                                            ->where('project_id',$project->project_id)    
+                                                            as $permission)
+                                                            <div class="btn btn-default btn-shadow bg-green task-permission">
+                                                                <i class="fa fa-check" aria-hidden="true"></i>                                                                
                                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
-                                                                <input class="task_id" type="hidden" value="{{$project->task[$i]->task_id}}"/>
-                                                                <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
-                                                            </div-->
-                                                            <div class="btn btn-default btn-shadow bg-gray task-permission">
-                                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                                <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
-                                                                <input class="task_id" type="hidden" value="{{$project->task[$i]->task_id}}"/>
+                                                                <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
                                                                 <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
                                                             </div>
+                                                            @endforeach
+                                                            @else
+                                                            <div class="btn btn-default btn-shadow bg-gray task-permission">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>                                                                
+                                                                <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
+                                                                <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
+                                                                <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                                            </div>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </li>
-                                                @endfor
+
+                                                @endforeach
                                             </ul>
                                         </div>
                                     </div>

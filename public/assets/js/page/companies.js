@@ -34,11 +34,12 @@ $('.list-group').sortable({
 
         //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
 
-        var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains('+ui.item.find('.name').text()+')').length;
+        var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.user_id').val() + ')').length;
         
+        console.log(identicalItemCount);
         //If a duplicate, remove it
         if (identicalItemCount > 1) {
-            $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.name').text() + ')').first().remove();
+            $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.user_id').val() + ')').remove();
         }
 
         //Show unassign button
@@ -80,10 +81,12 @@ $('.list-group').on('click', '.unassign-member', function () {
 
     var user_id = $(this).parent().find('.user_id').val();
     var team_id = $(this).parent().find('.team_id').val();
+    var project_id = $(this).parent().find('.project_id').val();
 
     data = {
         'team_id': team_id,
-        'user_id': user_id
+        'user_id': user_id,
+        'project_id': project_id
     };
 
     url = public_path + 'unassignTeamMember';
