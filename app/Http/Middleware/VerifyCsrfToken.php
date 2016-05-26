@@ -12,7 +12,7 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        //
+        '/saveImage&responseType=json'
     ];
 
     protected function tokensMatch($request)

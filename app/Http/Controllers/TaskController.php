@@ -300,7 +300,7 @@ class TaskController extends BaseController {
         if ($has_order_list > 0) {
             //then get the new task list item id and append it as the last item on the order
             $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->pluck('task_id_order');
-            $task_list_id_array = $taskCheckListOrderString .',' .$taskCheckList->id;
+            $task_list_id_array = $taskCheckListOrderString . ',' . $taskCheckList->id;
             $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $request->task_id)->update([
                 'task_id_order' => $task_list_id_array
             ]);
@@ -370,15 +370,15 @@ class TaskController extends BaseController {
 
         //Delete the task item
         $checkList->delete($id);
-        
+
         //If Checklist item was the last item in the list, delete the task order
-        $task_list_count = TaskChecklist::where('task_id',$checkList->task_id)->count();
-        
+        $task_list_count = TaskChecklist::where('task_id', $checkList->task_id)->count();
+
         if (!$task_list_count > 0) {
-            
-            $delete_task_order = TaskChecklistOrder::where('task_id',$checkList->task_id)->delete();
+
+            $delete_task_order = TaskChecklistOrder::where('task_id', $checkList->task_id)->delete();
         }
-        
+
         return $checkList;
     }
 
@@ -413,6 +413,24 @@ class TaskController extends BaseController {
         }
 
         return json_encode($task_list_id_array);
+    }
+
+    //For CKEditor Image uploads
+    public function saveImage(Request $request) {
+
+        $file_name = $request->file('upload');
+
+        $file_name->move(
+                'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
+        );
+
+        $data = array(
+        "uploaded" => 1,
+        "fileName" => $file_name->getClientOriginalName(),
+        "url" => 'http://job.tc/pm/assets/ckeditor_uploaded_images/'.$file_name->getClientOriginalName()
+        );
+
+        return json_encode($data);
     }
 
 }

@@ -375,6 +375,19 @@
 
             CKEDITOR.replace('add-new-task-textarea');
 
+            CKEDITOR.on('fileUploadRequest', function (evt) {
+                var fileLoader = evt.data.fileLoader,
+                        formData = new FormData(),
+                        xhr = fileLoader.xhr;
+
+                xhr.open('PUT', fileLoader.uploadUrl, true);
+                formData.append('upload', fileLoader.file, fileLoader.fileName);
+                fileLoader.xhr.send(formData);
+
+                // Prevented default behavior.
+                evt.stop();
+            }, null, null, 4); // Listener with priority 4 will be executed before priority 5.
+
             if (check_list_container.length > 10) {
 
                 $('body').animate({
@@ -452,13 +465,17 @@
                         ele += '</li>';
 
                     });
-
+                    
+                    //Destroy the instance
+                    CKEDITOR.instances['add-new-task-textarea'].destroy();
+                    //Remove Text area
                     $('#add-new-task').remove();
                     check_list_container.children('li:contains("No data was found.")').remove();
                     check_list_container.html(ele);
                     _this.removeAttr('disabled');
                 });
             }).on('click', '.cancel-checklist', function () {
+                CKEDITOR.instances['add-new-task-textarea'].destroy();
                 _this.removeClass('disabled');
                 $('#add-new-task').remove();
                 //$('.text-area-content').remove();
@@ -606,11 +623,11 @@
             var task_list = $('#task_item_' + id);
             task_list.removeClass('is-task-item-selected');
         });
-        $('.task-list-item').bind('dblclick', function () {
+        /*$('.task-list-item').bind('dblclick', function () {
             var edit_btn = $(this).find('.icon-btn.edit-task-list-item');
             edit_btn.bind().trigger('click');
             console.log('trigger');
-        });
+        });*/
         //region For Tasklist Delete
         $('#accordion').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
