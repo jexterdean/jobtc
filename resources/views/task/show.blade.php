@@ -798,7 +798,7 @@
             
             //Create a new spreadsheet page in ethercalc
             var request = new XMLHttpRequest();
-            request.open('POST', 'http://localhost:9000');
+            request.open('POST', 'https://job.tc:9000/');
             request.setRequestHeader('Content-Type', 'application/json');
             request.onreadystatechange = function () {
                 if (this.readyState === 4) {
@@ -814,7 +814,7 @@
             
             var text_area_ele = '<li id="add-new-spreadsheet" class="list-group-item text-area-content area-content">';
             text_area_ele += '<input class="form-control" name="spreadsheet_header" placeholder="New Spreadsheet Header" value="" />';
-            text_area_ele += '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="http://localhost:9000/'+spreadsheet_name+'"></iframe>';
+            text_area_ele += '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/'+spreadsheet_name+'"></iframe>';
             text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
             text_area_ele += '</li>';
@@ -831,7 +831,7 @@
                 e.stopImmediatePropagation();
                 //var data = _body.find('.task-form').serializeArray();
                 
-                var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="http://localhost:9000/'+spreadsheet_name+'"></iframe>';
+                var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/'+spreadsheet_name+'"></iframe>';
 
                 var data = [];
                 data.push(
