@@ -1,22 +1,18 @@
 /* 
  * Companies Page scripts
  */
-
-
 //For Click toggle
-$.fn.clickToggle = function(func1, func2) {
-        var funcs = [func1, func2];
-        this.data('toggleclicked', 0);
-        this.click(function() {
-            var data = $(this).data();
-            var tc = data.toggleclicked;
-            $.proxy(funcs[tc], this)();
-            data.toggleclicked = (tc + 1) % 2;
-        });
-        return this;
-    };
-  
-  
+$.fn.clickToggle = function (func1, func2) {
+    var funcs = [func1, func2];
+    this.data('toggleclicked', 0);
+    this.click(function () {
+        var data = $(this).data();
+        var tc = data.toggleclicked;
+        $.proxy(funcs[tc], this)();
+        data.toggleclicked = (tc + 1) % 2;
+    });
+    return this;
+};
 
 //For Dragging employees to projects
 $('.taskgroup-list').sortable({
@@ -36,7 +32,7 @@ $('.taskgroup-list').sortable({
         //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
 
         var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.user_id').val() + ')').length;
-        
+
         console.log(identicalItemCount);
         //If a duplicate, remove it
         if (identicalItemCount > 1) {
@@ -55,7 +51,7 @@ $('.taskgroup-list').sortable({
             'user_id': user_id
         };
 
-        $.post(team_url, team_data,function(data){
+        $.post(team_url, team_data, function (data) {
             //Assign the team id to the this list group item's input
             //$(ui.item).find('.team_id').val(team_id);
             $(ui.item).find('.profile-container').html(data);
@@ -83,7 +79,7 @@ $('.job-applicant-list').sortable({
         $(this).append($(ui.item).clone());
     },
     receive: function (event, ui) {
-        
+
         test_id = $(ui.item).find('.test_id').val();
         list_group_applicant_id = $(ui.item).parent().attr('id');
         applicant_id = list_group_applicant_id.split('-').pop();
@@ -91,7 +87,7 @@ $('.job-applicant-list').sortable({
         //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
 
         var identicalItemCount = $("#applicant-" + applicant_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').length;
-        
+
         //If a duplicate, remove it
         if (identicalItemCount > 1) {
             $("#applicant-" + applicant_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').remove();
@@ -99,7 +95,7 @@ $('.job-applicant-list').sortable({
 
         //Show unassign button
         $(ui.item).find('.unassign-test').removeClass('hidden');
-        
+
         //Assign Test to Job
         test_url = public_path + 'assignTestToApplicant';
         test_data = {
@@ -107,7 +103,7 @@ $('.job-applicant-list').sortable({
             'applicant_id': applicant_id
         };
 
-        $.post(test_url, test_data,function(data){
+        $.post(test_url, test_data, function (data) {
             //Assign the applicant id to the this list group item's input
             $(ui.item).find('.applicant_id').val(data);
             //$(ui.item).find('.profile-container').html(data);
@@ -132,7 +128,7 @@ $('.job-test-list').sortable({
         $(this).append($(ui.item).clone());
     },
     receive: function (event, ui) {
-        
+
         test_id = $(ui.item).find('.test_id').val();
         list_group_job_id = $(ui.item).parent().attr('id');
         job_id = list_group_job_id.split('-').pop();
@@ -140,7 +136,7 @@ $('.job-test-list').sortable({
         //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
 
         var identicalItemCount = $("#job-" + job_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').length;
-        
+
         //If a duplicate, remove it
         if (identicalItemCount > 1) {
             $("#job-" + job_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').remove();
@@ -148,7 +144,7 @@ $('.job-test-list').sortable({
 
         //Show unassign button
         $(ui.item).find('.unassign-test').removeClass('hidden');
-        
+
         //Assign Test to Job
         test_url = public_path + 'assignTestToJob';
         test_data = {
@@ -156,7 +152,7 @@ $('.job-test-list').sortable({
             'job_id': job_id
         };
 
-        $.post(test_url, test_data,function(data){
+        $.post(test_url, test_data, function (data) {
             //Assign the applicant id to the this list group item's input
             $(ui.item).find('.job_id').val(data);
             //$(ui.item).find('.profile-container').html(data);
@@ -174,16 +170,16 @@ $('.job-test-list').sortable({
 /*Unassign Test from Applicant*/
 $('.job-applicant-list').on('click', '.unassign-test', function () {
     var list_item = $(this).parent().parent().parent();
-    
+
     list_item.remove();
-    
+
     var test_id = $(this).find('.test_id').val();
     var applicant_id = $(this).find('.applicant_id').val();
-    
+
     console.log(test_id);
     console.log(applicant_id);
-   
-     data = {
+
+    data = {
         'test_id': test_id,
         'applicant_id': applicant_id
     };
@@ -191,22 +187,22 @@ $('.job-applicant-list').on('click', '.unassign-test', function () {
     url = public_path + 'unassignTestFromApplicant';
 
     $.post(url, data);
-    
+
 });
 
 /*Unassign Test from Job*/
 $('.job-test-list').on('click', '.unassign-test', function () {
     var list_item = $(this).parent().parent().parent();
-    
+
     list_item.remove();
-    
+
     var test_id = $(this).find('.test_id').val();
     var job_id = $(this).find('.job_id').val();
-    
+
     console.log(test_id);
     console.log(job_id);
-   
-     data = {
+
+    data = {
         'test_id': test_id,
         'job_id': job_id
     };
@@ -214,7 +210,7 @@ $('.job-test-list').on('click', '.unassign-test', function () {
     url = public_path + 'unassignTestFromJob';
 
     $.post(url, data);
-    
+
 });
 
 /*Unassign Team Member from project*/
@@ -248,6 +244,11 @@ $('.list-group').on('click', '.edit-profile', function () {
     var user_id = $(this).parent().parent().parent().attr('id').split('-').pop();
 
     $('#profile-collapse-' + user_id).collapse('show');
+
+    $(this).parent().siblings().find('.employee-photo').attr('style', 'height:150px;width:150px');
+
+    //Photo element
+    var photo_url = $(this).parent().siblings().find('.employee-photo').attr('src');
 
     //Name element
     var name_element = $(this).parent().siblings().find('.name');
@@ -290,19 +291,23 @@ $('.list-group').on('click', '.edit-profile', function () {
     var linkedin_element = $(this).parent().parent().parent().find('.linkedin');
     var linkedin_text = $(this).parent().parent().parent().find('.linkedin').text();
 
+    //Photo Editor
+    var photo_ele = '<input type="file" name="photo" class="form-control edit-photo" placeholder="Edit Photo" value="' + photo_url + '"/>';
+
     //Name Editor
     var name_ele = '<input type="text" name="name" class="form-control edit-name" placeholder="Edit Name" value="' + name_text + '"/>';
 
     //Password Editor
-    var password_ele = '<input type="password" name="password" class="form-control edit-password" placeholder="Edit Password" value=""/>';;
-    
+    var password_ele = '<input type="password" name="password" class="form-control edit-password" placeholder="Edit Password" value=""/>';
+    ;
+
     var password_ele = '<div class="text-area-content">';
     password_ele += '<div class="input-group">';
     password_ele += '<span class="input-group-addon" id="password-addon" ><i class="fa fa-lock" aria-hidden="true"></i></span>';
     password_ele += '<input type="password" name="password" class="form-control edit-password" placeholder="Enter New Password" aria-describedby="password-addon" value=""/>';
     password_ele += '</div>'; //input-group
     password_ele += '</div>';
-    
+
     //Email Editor
     var email_ele = '<div class="text-area-content">';
     email_ele += '<div class="input-group">';
@@ -369,7 +374,9 @@ $('.list-group').on('click', '.edit-profile', function () {
 
     var save_button_ele = '<br /><button class="btn btn-submit btn-shadow btn-sm update-profile" type="button">Save & Close</button>&nbsp;&nbsp;&nbsp;';
 
-    name_element.css({'display': 'none'}).before(name_ele);
+    name_element.css({'display': 'none'});
+    email_element.before(photo_ele);
+    email_element.before(name_ele);
     email_element.css({'display': 'none'}).before(email_ele);
     email_element.after(password_ele);
     phone_element.css({'display': 'none'}).before(phone_ele);
@@ -397,9 +404,9 @@ $('.list-group').on('click', '.update-profile', function (e) {
 
     $('#profile-collapse-' + user_id).collapse('hide');
 
-    var name_container = $('#profile-'+user_id);
+    var name_container = $('#profile-' + user_id);
     var profile_container = $(this).parent();
-    
+
     var name_ele = name_container.find('.name');
     var email_ele = profile_container.find('.email');
     var phone_ele = profile_container.find('.phone');
@@ -412,6 +419,7 @@ $('.list-group').on('click', '.update-profile', function (e) {
     var linkedin_ele = profile_container.find('.linkedin');
 
     var name = name_container.find('.edit-name').val().trim();
+    var photo = profile_container.find('.edit-photo').get(0).files[0];
     var email = profile_container.find('.edit-email').val().trim();
     var password = profile_container.find('.edit-password').val().trim();
     var phone = profile_container.find('.edit-phone').val().trim();
@@ -432,6 +440,7 @@ $('.list-group').on('click', '.update-profile', function (e) {
     {'name': 'password', 'value': password},
     {'name': 'email', 'value': email},
     {'name': 'phone', 'value': phone},
+    {'name': 'photo', 'value': photo},
     {'name': 'skype', 'value': skype},
     {'name': 'address_1', 'value': address_1},
     {'name': 'address_2', 'value': address_2},
@@ -441,66 +450,116 @@ $('.list-group').on('click', '.update-profile', function (e) {
     {'name': 'linkedin', 'value': linkedin}
     );
 
-    $.post(public_path + '/updateProfile', data);
+    //$.post(public_path + '/updateProfile', data);
+
+    var ajaxurl = public_path + '/updateProfile';
+    var formData = new FormData();
+    formData.append('user_id',user_id);
+    formData.append('name',name);
+    formData.append('password',password);
+    formData.append('email',email);
+    formData.append('phone',phone);
+    formData.append('photo',photo);
+    formData.append('skype',skype);
+    formData.append('address_1',address_1);
+    formData.append('address_2',address_2);
+    formData.append('zipcode',zipcode);
+    formData.append('country_id',country_id);
+    formData.append('facebook',facebook);
+    formData.append('linkedin',linkedin);
     
-    name_container.find('.edit-name').remove();
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            name_container.find('.employee-photo').attr('src',public_path + data);
+        },
+        error: function (xhr, status, error) {
+        }
+    }); //ajax
+
+    
     name_container.find('.text-area-content').remove();
+    profile_container.find('.edit-name').remove();
+    profile_container.find('.edit-photo').remove();
     profile_container.find('.update-profile').remove();
     profile_container.find('.country-dropdown').addClass('hidden');
     
+    name_container.find('.name').attr('style', '');
+    name_container.find('.employee-photo').attr('style', '');
+    
+
     name_ele.removeAttr('style').html(name);
-    email_ele.removeAttr('style').html('<i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;'+email);
-    phone_ele.removeAttr('style').html('<i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;'+phone);
-    skype_ele.removeAttr('style').html('<i class="fa fa-skype" aria-hidden="true"></i>&nbsp;'+skype);
-    address_1_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;'+address_1);
-    address_2_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;'+address_2);
-    zipcode_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;'+zipcode);
-    country_ele.removeAttr('style').html('<i class="fa fa-globe" aria-hidden="true"></i>&nbsp;'+country);
-    facebook_ele.removeAttr('style').html('<i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;'+facebook);
-    linkedin_ele.removeAttr('style').html('<i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;'+linkedin);
+    email_ele.removeAttr('style').html('<i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;' + email);
+    phone_ele.removeAttr('style').html('<i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;' + phone);
+    skype_ele.removeAttr('style').html('<i class="fa fa-skype" aria-hidden="true"></i>&nbsp;' + skype);
+    address_1_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;' + address_1);
+    address_2_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;' + address_2);
+    zipcode_ele.removeAttr('style').html('<i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;' + zipcode);
+    country_ele.removeAttr('style').html('<i class="fa fa-globe" aria-hidden="true"></i>&nbsp;' + country);
+    facebook_ele.removeAttr('style').html('<i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;' + facebook);
+    linkedin_ele.removeAttr('style').html('<i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;' + linkedin);
 });
 
-$('.list-group').on('click','.task-permission',function(e){
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            
-            var user_id = $(this).children('.user_id').val();
-            var task_id = $(this).children('.task_id').val();
-            var project_id = $(this).children('.project_id').val();
+$('.list-group').on('click', '.task-permission', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
 
-            var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
-            assign_html += '<input class="user_id" type="hidden" value="'+user_id+'"/>';
-            assign_html += '<input class="task_id" type="hidden" value="'+task_id+'"/>';
-            assign_html += '<input class="project_id" type="hidden" value="'+project_id+'"/>';
-                                                                
-            var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
-            unassign_html += '<input class="user_id" type="hidden" value="'+user_id+'"/>';
-            unassign_html += '<input class="task_id" type="hidden" value="'+task_id+'"/>';
-            unassign_html += '<input class="project_id" type="hidden" value="'+project_id+'"/>';
-            
-            /*Assign the Task List to this user*/
-            if ($(this).hasClass('bg-gray')) {
-                $(this).switchClass('bg-gray', 'bg-green', function () {
-                    $(this).html(assign_html);
-                    assignTask(user_id,task_id,project_id);
-                });
-            }
-            /*Unassign the Task List from this user*/
-            if ($(this).hasClass('bg-green')) {
-                $(this).switchClass('bg-green', 'bg-gray', function () {
-                    $(this).html(unassign_html);
-                    unassignTask(user_id,task_id,project_id);
-                });
-            }
-            
+    var user_id = $(this).children('.user_id').val();
+    var task_id = $(this).children('.task_id').val();
+    var project_id = $(this).children('.project_id').val();
+
+    var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
+    assign_html += '<input class="user_id" type="hidden" value="' + user_id + '"/>';
+    assign_html += '<input class="task_id" type="hidden" value="' + task_id + '"/>';
+    assign_html += '<input class="project_id" type="hidden" value="' + project_id + '"/>';
+
+    var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
+    unassign_html += '<input class="user_id" type="hidden" value="' + user_id + '"/>';
+    unassign_html += '<input class="task_id" type="hidden" value="' + task_id + '"/>';
+    unassign_html += '<input class="project_id" type="hidden" value="' + project_id + '"/>';
+
+    /*Assign the Task List to this user*/
+    if ($(this).hasClass('bg-gray')) {
+        $(this).switchClass('bg-gray', 'bg-green', function () {
+            $(this).html(assign_html);
+            assignTask(user_id, task_id, project_id);
         });
+    }
+    /*Unassign the Task List from this user*/
+    if ($(this).hasClass('bg-green')) {
+        $(this).switchClass('bg-green', 'bg-gray', function () {
+            $(this).html(unassign_html);
+            unassignTask(user_id, task_id, project_id);
+        });
+    }
 
-$('.name').clickToggle(function(){
-    $(this).css('font-size','23px');
-},
-function(){
-    $(this).attr('style','');
 });
+
+$('.profile-toggle').clickToggle(function () {
+    $(this).find('.name').attr('style', 'font-size:23px;position:relative;top:25px');
+    $(this).find('.employee-photo').attr('style', 'height:150px;width:150px');
+},
+        function () {
+            $(this).find('.name').attr('style', '');
+            $(this).find('.employee-photo').attr('style', '');
+        });
+        
+        $('.team-member').clickToggle(function () {
+    $(this).find('.name').attr('style', 'font-size:23px;position:relative;top:25px');
+    $(this).find('.employee-photo').attr('style', 'height:150px;width:150px');
+},
+        function () {
+            $(this).find('.name').attr('style', '');
+            $(this).find('.employee-photo').attr('style', '');
+        });
 
 //General Functions
 function removeDuplicates(listName, newItem) {
@@ -516,29 +575,29 @@ function removeDuplicates(listName, newItem) {
     return !dupl;
 }
 
-function assignTask(user_id,task_id,project_id) {
-    
+function assignTask(user_id, task_id, project_id) {
+
     var url = public_path + 'assignTaskList';
-    
+
     var data = {
-        'user_id':user_id,
+        'user_id': user_id,
         'task_id': task_id,
         'project_id': project_id
     };
-    
-    $.post(url,data);
+
+    $.post(url, data);
 }
 
-function unassignTask(user_id,task_id,project_id) {
-    
+function unassignTask(user_id, task_id, project_id) {
+
     var url = public_path + 'unassignTaskList';
-    
+
     var data = {
-        'user_id':user_id,
+        'user_id': user_id,
         'task_id': task_id,
         'project_id': project_id
     };
-    
-    $.post(url,data);
+
+    $.post(url, data);
 }
 

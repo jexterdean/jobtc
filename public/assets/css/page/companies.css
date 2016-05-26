@@ -63,3 +63,8 @@
     color: #fff;
     font-weight: bold;
 }
+
+.employee-photo {
+    height: 80px;
+    width: 80px;
+}

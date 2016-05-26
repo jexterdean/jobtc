@@ -114,11 +114,10 @@ class UserController extends BaseController
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
-            $photo_save = $photo->move('assets/user' , $photo->getClientOriginalName());
-            //Storage::disk('local')->put('photo',$photo);
+            $photo_save = $photo->move('assets/user/' , $photo->getClientOriginalName());
             $photo_path = $photo_save->getPathname();
         } else {
-            $photo_path = "";
+            $photo_path = "assets/user/avatar.png";
         }
         
         $ticketit_admin = $request->input('ticketit_admin');

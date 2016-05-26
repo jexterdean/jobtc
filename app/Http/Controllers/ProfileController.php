@@ -45,6 +45,14 @@ class ProfileController extends BaseController {
 
         $password = $request->input('password');
 
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+            $photo_path = $photo_save->getPathname();
+        } else {
+            $photo_path = "assets/user/avatar.png";
+        }
+
         if ($password !== '') {
 
             $user->update([
@@ -52,6 +60,7 @@ class ProfileController extends BaseController {
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('password')),
                 'phone' => $request->input('phone'),
+                'photo' => $photo_path,
                 'address_1' => $request->input('address_1'),
                 'address_2' => $request->input('address_2'),
                 'zipcode' => $request->input('zipcode'),
@@ -66,6 +75,7 @@ class ProfileController extends BaseController {
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'phone' => $request->input('phone'),
+                'photo' => $photo_path,
                 'address_1' => $request->input('address_1'),
                 'address_2' => $request->input('address_2'),
                 'zipcode' => $request->input('zipcode'),
@@ -76,7 +86,7 @@ class ProfileController extends BaseController {
             ]);
         }
 
-        return Redirect::back()->withSuccess("Profile saved!!");
+        return $photo_path;
 
         /* $setting = Setting::find(1);
           $user = Auth::user();
