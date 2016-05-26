@@ -2,6 +2,21 @@
  * Companies Page scripts
  */
 
+
+//For Click toggle
+$.fn.clickToggle = function(func1, func2) {
+        var funcs = [func1, func2];
+        this.data('toggleclicked', 0);
+        this.click(function() {
+            var data = $(this).data();
+            var tc = data.toggleclicked;
+            $.proxy(funcs[tc], this)();
+            data.toggleclicked = (tc + 1) % 2;
+        });
+        return this;
+    };
+  
+
 //For Dragging employees to projects
 $('.list-group').sortable({
     dropOnEmpty: true,
@@ -331,7 +346,12 @@ $('.list-group').on('click','.task-permission',function(e){
             
         });
 
-
+$('.name').clickToggle(function(){
+    $(this).css('font-size','23px');
+},
+function(){
+    $(this).attr('style','');
+});
 
 //General Functions
 function removeDuplicates(listName, newItem) {
@@ -372,3 +392,4 @@ function unassignTask(user_id,task_id,project_id) {
     
     $.post(url,data);
 }
+

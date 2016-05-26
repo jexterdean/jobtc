@@ -11,3 +11,19 @@
 .task-permission .fa-plus {
     color: gray;
 }
+
+.name {
+    font-weight: bold;
+}
+
+.taskgroup-title {
+    margin: 0 auto;
+    width: 25%;
+    color: black;
+    font-weight: bold;
+    
+}
+
+.taskgroup-list .list-group-item {
+    background-color: #ffffef;
+}
