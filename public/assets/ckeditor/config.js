@@ -48,7 +48,10 @@ CKEDITOR.editorConfig = function (config) {
     };
     
     //Theme changes
-    config.skin = 'moono';
+    config.skin = 'office2013';
+    //config.color = '#000000';
+    //config.uiColor = '#1933c4';
+    
     
     //Css changes
     config.height = '800px';
