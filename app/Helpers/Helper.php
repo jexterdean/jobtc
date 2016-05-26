@@ -7,6 +7,7 @@ use Auth;
 use App\Models\Company;
 use App\Models\Profile;
 use App\Models\Project;
+use App\Models\Job;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
@@ -130,6 +131,16 @@ class Helper
         $companies = Profile::with('company')->where('user_id',$user_id)->get();
 
         return $companies;
+    }
+    
+    public static function getJobLinks() {
+        
+        $user_id = Auth::user()->user_id;
+        
+        $jobs = Job::where('user_id',$user_id)->get();
+
+        return $jobs;
+        
     }
     
     

@@ -43,14 +43,13 @@ CKEDITOR.editorConfig = function (config) {
             {'newline': 'new line'}, //trigger to add a new line in CKEditor
             {'newparagraph': 'new paragraph'}, //trigger to add a new paragraph in CKEditor
             {'undo': 'undo'}, //trigger to undo changes in CKEditor
-            {'redo': 'redo'}                    //trigger to redo changes in CKEditor
+            {'redo': 'redo'} //trigger to redo changes in CKEditor
         ]
     };
     
     //Theme changes
     config.skin = 'office2013';
-    //config.color = '#000000';
-    //config.uiColor = '#1933c4';
+    //config.uiColor = '#F3F4F5';
     
     
     //Css changes

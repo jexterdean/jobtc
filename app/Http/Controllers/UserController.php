@@ -114,12 +114,24 @@ class UserController extends BaseController
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
-            $photo_save = $photo->move('user' , $photo->getClientOriginalName());
+            $photo_save = $photo->move('assets/user' , $photo->getClientOriginalName());
             //Storage::disk('local')->put('photo',$photo);
             $photo_path = $photo_save->getPathname();
         } else {
             $photo_path = "";
         }
+        
+        $ticketit_admin = $request->input('ticketit_admin');
+        $ticketit_agent = $request->input('ticketit_agent');
+        
+        
+        if ($ticketit_admin === NULL) {
+            $ticketit_admin = 0;
+        } 
+        
+        if ($ticketit_agent === NULL) {
+            $ticketit_agent = 0;
+        } 
         
         $user = new User;
         $user->name = $request->input('name');
@@ -134,6 +146,8 @@ class UserController extends BaseController
         $user->skype = $request->input('skype'); 
         $user->facebook = $request->input('facebook'); 
         $user->linkedin = $request->input('linkedin');
+        $user->ticketit_admin = $ticketit_admin;
+        $user->ticketit_agent = $ticketit_agent;
         $user->user_status = 'Active';
         
         $user->save();

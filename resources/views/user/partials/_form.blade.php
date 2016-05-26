@@ -51,15 +51,15 @@
     <div class="form-group">
         {!!  Form::label('address_1','Address 1',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::textarea('address_1',isset($user->address_1) ? $user->address_1 : '',['size' => '30x3', 'class' =>
-            'form-control', 'placeholder' => 'Enter Address 1', 'tabindex' => '8']) !!}
+            {!!  Form::input('text','address_1',isset($user->address_1) ? $user->address_1: '',['class' => 'form-control',
+            'placeholder' => 'Enter Address 1', 'tabindex' => '8']) !!}
         </div>
     </div>
     <div class="form-group">
         {!!  Form::label('address_2','Address 2',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
-            {!!  Form::textarea('address_2',isset($user->address_2) ? $user->address_2 : '',['size' => '30x3', 'class' =>
-            'form-control', 'placeholder' => 'Enter Address 1', 'tabindex' => '9']) !!}
+            {!!  Form::input('text','address_2',isset($user->address_2) ? $user->address_2: '',['class' => 'form-control',
+            'placeholder' => 'Enter Address 2', 'tabindex' => '9']) !!}
         </div>
     </div>
     
@@ -103,10 +103,23 @@
         </div>
     </div>
     
+    <div class="form-group">
+        {!!  Form::label('ticketit_admin','Ticketit Admin',['class' => 'col-md-3 control-label']) !!}
+        <div class="col-md-9">
+            <input class="form-control" name="ticketit_admin" type='checkbox' value='1' tabindex="15"/>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        {!!  Form::label('ticketit_agent','Ticketit Agent',['class' => 'col-md-3 control-label']) !!}
+        <div class="col-md-9">
+            <input class="form-control" name="ticketit_agent" type='checkbox' value='1' tabindex="16"/>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
             {!!  Form::submit(isset($buttonText) ? $buttonText : 'Add User',['class' => 'btn green', 'tabindex' =>
-            '15'])  !!}
+            '16'])  !!}
         </div>
     </div>
 </div>

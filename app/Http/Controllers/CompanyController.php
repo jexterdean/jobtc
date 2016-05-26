@@ -94,11 +94,14 @@ class CompanyController extends BaseController {
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
                     }],'task_permission')->whereIn('project_id', $project_id_list)->get();
-            
+         
+        $permissions = TaskCheckListPermission::all();
+                    
         $assets = ['companies'];
 
         return View::make('company.show', [
                     'projects' => $projects,
+                    'permissions' => $permissions,
                     'profiles' => $profiles,
                     'companies' => $companies,
                     'teams' => $teams,

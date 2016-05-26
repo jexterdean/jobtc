@@ -2,6 +2,12 @@
 @section('content')
 <div class="container"></div>
 <div class="row">
+    <a data-toggle="modal" href="#add_user">
+        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New User</button>
+    </a>
+</div>
+<div class="mini-space"></div>
+<div class="row">
     <div class="col-md-5">
         @if (count($projects) > 0)
         @foreach($projects as $project)
@@ -43,34 +49,28 @@
                                         <div class="task-list-container">
                                             <label class='center-block taskgroup-title'>Available Task Groups</label>
                                             <ul class="taskgroup-list list-group">
-                                                @foreach($project->task as $task)
+                                                @for($i = 0 ; $i < count($project->task); $i++)
                                                 <li class="list-group-item">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            {{$task->task_title}}
+                                                            {{$project->task[$i]->task_title}}
                                                         </div>
                                                         <div class="pull-right">
-                                                            @if ($project->task_permission->contains('task_id',$task->task_id) 
-                                                              && $project->task_permission->contains('user_id',$team_members->user->user_id) 
-                                                              && $project->task_permission->contains('project_id',$project->project_id))
-                                                            <div class="btn btn-default btn-shadow bg-green task-permission">
+                                                            <!--div class="btn btn-default btn-shadow bg-green task-permission">
                                                                 <i class="fa fa-check" aria-hidden="true"></i>
                                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
-                                                                <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
+                                                                <input class="task_id" type="hidden" value="{{$project->task[$i]->task_id}}"/>
                                                                 <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
-                                                            </div>                                                            
-                                                            @else
+                                                            </div-->
                                                             <div class="btn btn-default btn-shadow bg-gray task-permission">
                                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
-                                                                <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
+                                                                <input class="task_id" type="hidden" value="{{$project->task[$i]->task_id}}"/>
                                                                 <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
                                                             </div>
-                                                            @endif
-                                                        </div>
                                                     </div>
                                                 </li>
-                                                @endforeach
+                                                @endfor
                                             </ul>
                                         </div>
                                     </div>

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "69c49080d8407c229d261c79d32bb40a",
-    "content-hash": "7f614a632695c89dea176fd23471b7ae",
+    "hash": "21ceeccbf1eefb43c50c2ee931448e60",
+    "content-hash": "a2d86acd54f3088a08e399de34a87004",
     "packages": [
         {
             "name": "bican/roles",
@@ -2292,6 +2292,54 @@
             "time": "2016-03-09 05:03:14"
         },
         {
+            "name": "sarav/laravel-multiauth",
+            "version": "0.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sarav-S/Laravel-Multiauth.git",
+                "reference": "fcdad247adcaa978bf744f844b1ae77d2afad9eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sarav-S/Laravel-Multiauth/zipball/fcdad247adcaa978bf744f844b1ae77d2afad9eb",
+                "reference": "fcdad247adcaa978bf744f844b1ae77d2afad9eb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sarav\\Multiauth\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sarav",
+                    "email": "me@sarav.co"
+                }
+            ],
+            "description": "A Simple Laravel Package for handling multiple authentication",
+            "keywords": [
+                "Authentication",
+                "auth",
+                "laravel",
+                "laravel 5",
+                "login",
+                "multi",
+                "multiauth",
+                "multiple",
+                "signin",
+                "user"
+            ],
+            "time": "2015-11-19 18:45:37"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "v5.4.2",
             "source": {
@@ -3385,16 +3433,16 @@
         },
         {
             "name": "yajra/laravel-datatables-oracle",
-            "version": "v6.11.2",
+            "version": "v6.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yajra/laravel-datatables.git",
-                "reference": "aa95adb5822add6f7f0e7085aca66541a5d9aa73"
+                "reference": "e7c0aa99b66ce690ec034c10f2db565f89ca8698"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/aa95adb5822add6f7f0e7085aca66541a5d9aa73",
-                "reference": "aa95adb5822add6f7f0e7085aca66541a5d9aa73",
+                "url": "https://api.github.com/repos/yajra/laravel-datatables/zipball/e7c0aa99b66ce690ec034c10f2db565f89ca8698",
+                "reference": "e7c0aa99b66ce690ec034c10f2db565f89ca8698",
                 "shasum": ""
             },
             "require": {
@@ -3438,7 +3486,7 @@
                 "laravel4",
                 "laravel5"
             ],
-            "time": "2016-05-18 05:59:54"
+            "time": "2016-05-20 14:32:45"
         },
         {
             "name": "zizaco/entrust",
@@ -3659,16 +3707,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "0.9.4",
+            "version": "0.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b"
+                "reference": "4db079511a283e5aba1b3c2fb19037c645e70fc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/70bba85e4aabc9449626651f48b9018ede04f86b",
-                "reference": "70bba85e4aabc9449626651f48b9018ede04f86b",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/4db079511a283e5aba1b3c2fb19037c645e70fc2",
+                "reference": "4db079511a283e5aba1b3c2fb19037c645e70fc2",
                 "shasum": ""
             },
             "require": {
@@ -3720,7 +3768,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2015-04-02 19:54:00"
+            "time": "2016-05-22 21:52:33"
         },
         {
             "name": "phpdocumentor/reflection-docblock",

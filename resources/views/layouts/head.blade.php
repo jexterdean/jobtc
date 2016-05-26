@@ -44,6 +44,18 @@
     @if(in_array('companies',$assets))
     {!!  HTML::style('assets/css/page/companies.css')  !!}
     @endif
+    
+    @if(in_array('jobs',$assets))
+    {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
+    {!!  HTML::style('assets/bootstrap-dialog/src/css/bootstrap-dialog.css')  !!}
+    {!!  HTML::style('assets/css/page/jobs.css')  !!}
+    @endif
+    
+    @if(in_array('applicants',$assets))
+    {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
+    {!!  HTML::style('assets/css/page/applicants.css')  !!}
+    @endif
+    
 
     <script> var public_path = "{{ URL::to('/') }}/"; </script>
 </head>

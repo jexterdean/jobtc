@@ -5,6 +5,30 @@ Route::resource('session', 'SessionController');
 Route::get('/', 'SessionController@create');
 Route::get('/login', 'SessionController@create');
 
+/*Job Routes*/
+//Should not be in any middleware so that 
+//job posting can be accessed by would be applicants(they need to view the job posting without logging in)
+Route::resource('job', 'JobController');
+Route::post('updateJob/{id}', 'JobController@update');
+
+Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
+Route::post('applyToJob', 'JobController@applyToJob');
+
+/*For Applicant*/
+Route::resource('a', 'ApplicantController');
+
+
+/* For Applicant Tags */
+Route::post('addTag', 'JobController@addTag');
+Route::get('getAvailableTags', 'JobController@getTags');
+
+/*For Comments*/
+Route::post('addComment','CommentController@addComment');
+
+/* For Video Status*/
+//Route::post('/add-video-status', 'ShowController@addVideoStatus');
+//Route::get('/get-available-video-tags', 'ShowController@getVideoTags');
+
 Route::group(['middleware' => 'guest'], function () {
 
     Route::get('forgotPassword', function () {
@@ -52,6 +76,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('payment', 'PaymentController');
         Route::resource('user', 'UserController');
         Route::resource('company', 'CompanyController');
+        Route::resource('applicant', 'ApplicantController');
         Route::resource('assigneduser', 'AssignedController');
         
         /*For Assigning teams for each project with a team(Auto generated team)*/

@@ -1,20 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<div class="modal fade" id="add_user" tabindex="-1" role="basic" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Add User</h4>
-            </div>
-            <div class="modal-body">
-                {!! Form::open(['route' => 'user.store','class' => 'form-horizontal user-form'])  !!}
-                @include('user/partials/_form')
-                {!!  Form::close() !!}
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
     <div class="page-loading page-loading-boxed">

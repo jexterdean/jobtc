@@ -51,10 +51,28 @@
         @endif
     </ul>
 </li>
-<li>
-    <a href="{{ url('teamBuilder') }}">
-        <i class="fa fa-users"></i> <span>{{Lang::get('Team')}}</span>
+<?php $jobs = \App\Helpers\Helper::getJobLinks(); ?>
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle">
+        <i class="fa fa-list" aria-hidden="true"></i> 
+        <span>Jobs</span>
+        <span class="caret"></span>
     </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="#add_job" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Job</span></a>
+        </li>
+        <li class="divider"></li>
+        @if(count($jobs) > 0)
+        @foreach($jobs as $job)
+        <li>
+            <a href="{{ url('job/' . $job->id) }}">
+                <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $job->title }}</span>
+            </a>
+        </li>
+        @endforeach
+        @endif
+    </ul>
 </li>
 
 <li>
