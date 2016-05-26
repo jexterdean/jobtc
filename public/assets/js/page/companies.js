@@ -68,7 +68,7 @@ $('.list-group').on('click', '.unassign-member', function () {
         'user_id': user_id
     };
 
-    url = public_path + 'unassignTeamMember/';
+    url = public_path + 'unassignTeamMember';
 
     $.post(url, data);
 });
