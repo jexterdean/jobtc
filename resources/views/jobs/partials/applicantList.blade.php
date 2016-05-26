@@ -3,34 +3,34 @@
     <div class="text-center hidden-sm hidden-xs">
         <ul class="pagination job-applicant-list-pager">
             @if($applicants->currentPage() > 1)
-            <li><a class="pager-previous" href="{{$applicants->previousPageUrl()}}" rel="previous">Previous</a></li> 
+            <li><a class="pager-previous" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li> 
             @endif
             @for($i = 1; $i <= $applicants->lastPage(); $i++)
             @if($i === $applicants->currentPage())
-            <li class="active"><a id="pager-item-{{$i}}" class="pager-item" href="{{$applicants->url($i)}}">{{$i}}</a></li>
+            <li class="active"><a id="pager-item-{{$i}}" class="pager-item" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
             @else
-            <li><a id="pager-item-{{$i}}" class="pager-item" href="{{$applicants->url($i)}}">{{$i}}</a></li>
+            <li><a id="pager-item-{{$i}}" class="pager-item" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
             @endif
             @endfor
             @if($applicants->currentPage() < $applicants->lastPage())
-            <li><a class="pager-next" href="{{$applicants->nextPageUrl()}}" rel="next">Next</a></li>
+            <li><a class="pager-next" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
             @endif
         </ul>
     </div>
     <div class="text-center hidden-lg hidden-md">
         <ul class="pagination job-applicant-list-pager">
             @if($applicants->currentPage() > 1)
-            <li><a class="pager-previous-mobile" href="{{$applicants->previousPageUrl()}}" rel="previous">Previous</a></li> 
+            <li><a class="pager-previous-mobile" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li> 
             @endif
             @for($i = 1; $i <= $applicants->lastPage(); $i++)
             @if($i === $applicants->currentPage())
-            <li class="active"><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{$applicants->url($i)}}">{{$i}}</a></li>
+            <li class="active"><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
             @else
-            <li><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{$applicants->url($i)}}">{{$i}}</a></li>
+            <li><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
             @endif
             @endfor
             @if($applicants->currentPage() < $applicants->lastPage())
-            <li><a class="pager-next-mobile" href="{{$applicants->nextPageUrl()}}" rel="next">Next</a></li>
+            <li><a class="pager-next-mobile" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
             @endif
         </ul>
     </div>
