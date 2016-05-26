@@ -13,4 +13,8 @@ class TestPerJob extends Model
     ];
     protected $primaryKey = 'id';
     protected $table = 'test_per_job';
+    
+    public function tests() {
+        return $this->hasMany('App\Models\Test');
+    }
 }

@@ -13,8 +13,10 @@ use App\Models\ApplicantRating;
 use App\Models\Comment;
 use App\Models\Video;
 use App\Models\VideoTag;
-
-
+use App\Models\Test;
+use App\Models\TestPerApplicant;
+use App\Models\TestPerJob;
+use App\Models\Question;
 
 class ApplicantController extends Controller {
 
@@ -52,7 +54,7 @@ class ApplicantController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id) {
+    public function show(Request $request, $id) {
         $applicant = Applicant::where('id', $id)->first();
 
         if ($applicant !== NULL) {
@@ -64,15 +66,15 @@ class ApplicantController extends Controller {
                 $user_info = User::where('user_id', $user_id)->with('profile')->first();
 
                 //$comments = Comment::with('user', 'profile')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
-                
-                $comments = Comment::with('user')->where('belongs_to','applicant')->where('unique_id',$id)->orderBy('comment_id','desc')->get();
+
+                $comments = Comment::with('user')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
             } else {
 
                 $user_info = Applicant::where('id', $id)->first();
 
                 //$comments = Comment::with('applicant')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
                 //$comments = Applicant::with('comment')->where('id',$id)->orderBy('id', 'desc')->get();
-                $comments = Comment::with('applicant')->where('belongs_to','applicant')->where('unique_id',$id)->orderBy('comment_id','desc')->get();
+                $comments = Comment::with('applicant')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
             }
 
 
@@ -86,10 +88,47 @@ class ApplicantController extends Controller {
             $rating = ApplicantRating::where('applicant_id', $id)->first();
 
             $videos = Video::with('video_tags')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
-            
-            $assets = ['applicants'];
 
-            return view('applicants.show', ['applicant' => $applicant, 'user_info' => $user_info, 'comments' => $comments, 'statuses' => $statuses, 'job' => $job, 'previous_applicant' => $prevApplicant, 'next_applicant' => $nextApplicant, 'rating' => $rating, 'videos' => $videos, 'assets' => $assets,'count' => 0]);
+            //Get the test permissions
+
+            $test_ids = [];
+            $test_jobs = TestPerJob::where('job_id', $applicant->job_id)->get();
+            $test_applicants = TestPerApplicant::where('applicant_id', $applicant->id)->get();
+
+            foreach ($test_jobs as $test_job) {
+                array_push($test_ids, $test_job->test_id);
+            }
+
+            foreach ($test_applicants as $test_applicant) {
+                array_push($test_ids, $test_applicant->test_id);
+            }
+
+            $tests = Test::whereIn('id', array_unique($test_ids))->get();
+            $questions = Question::whereIn('test_id', array_unique($test_ids))
+                    ->orderBy('order', 'ASC')
+                    ->get();
+
+            if (count($questions) > 0) {
+                foreach ($questions as $v) {
+                    $v->question_choices = json_decode($v->question_choices);
+                }
+            }
+
+            $assets = ['applicants','quizzes'];
+
+            return view('applicants.show', ['applicant' => $applicant,
+                'user_info' => $user_info,
+                'comments' => $comments,
+                'statuses' => $statuses,
+                'job' => $job,
+                'tests' => $tests,
+                'questions' => $questions,
+                'previous_applicant' => $prevApplicant,
+                'next_applicant' => $nextApplicant,
+                'rating' => $rating,
+                'videos' => $videos,
+                'assets' => $assets,
+                'count' => 0]);
         }
     }
 

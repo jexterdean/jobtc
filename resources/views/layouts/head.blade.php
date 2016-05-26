@@ -56,6 +56,10 @@
     {!!  HTML::style('assets/css/page/applicants.css')  !!}
     @endif
     
+    @if(in_array('quizzes',$assets))
+    {!!  HTML::style('assets/css/page/quizzes.css')  !!}
+    @endif
+    
 
     <script> var public_path = "{{ URL::to('/') }}/"; </script>
 </head>

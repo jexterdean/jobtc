@@ -13,4 +13,8 @@ class TestPerApplicant extends Model
     ];
     protected $primaryKey = 'id';
     protected $table = 'test_per_applicant';
+    
+    public function tests() {
+        return $this->hasMany('App\Models\Test');
+    }
 }

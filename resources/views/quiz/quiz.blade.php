@@ -80,6 +80,7 @@
     }
 </style>
 
+<!--This needs to be revised so it can be placed in the page javascript file(quizzes.js)-->
 @section('js_footer')
 @parent
 <script>
@@ -169,7 +170,7 @@
             var thisId = this.id;
             var thisUrl = '{{ URL::to('quiz') }}/' + thisId;
 
-            waitingDialog.show('Pleas wait...');
+            waitingDialog.show('Please wait...');
             $.ajax({
                 url: thisUrl,
                 method: "DELETE",

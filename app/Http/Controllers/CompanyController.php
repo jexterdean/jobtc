@@ -107,6 +107,8 @@ class CompanyController extends BaseController {
         
         $test_applicants = TestPerApplicant::all();
         
+        $test_jobs = TestPerJob::all();
+        
         $assets = ['companies'];
 
         return View::make('company.show', [
@@ -114,6 +116,7 @@ class CompanyController extends BaseController {
                     'jobs' => $jobs,
                     'tests' => $tests,
                     'test_applicants' => $test_applicants,
+                    'test_jobs' => $test_jobs,
                     'profiles' => $profiles,
                     'companies' => $companies,
                     'teams' => $teams,
@@ -386,10 +389,10 @@ class CompanyController extends BaseController {
         $test_per_applicant->applicant_id = $applicant_id;
         $test_per_applicant->save();
         
-        return $test_id;
+        return $applicant_id;
     }
     
-    public function unassignTestToApplicant(Request $request) {
+    public function unassignTestFromApplicant(Request $request) {
         $test_id = $request->input('test_id');
         $applicant_id = $request->input('applicant_id');
         
@@ -403,20 +406,20 @@ class CompanyController extends BaseController {
         $test_id = $request->input('test_id');
         $job_id = $request->input('job_id');
         
-        $test_per_applicant = new TestPerApplicant();
-        $test_per_applicant->test_id = $test_id;
-        $test_per_applicant->job_id = $job_id;
-        $test_per_applicant->save();
+        $test_per_job = new TestPerJob();
+        $test_per_job->test_id = $test_id;
+        $test_per_job->job_id = $job_id;
+        $test_per_job->save();
         
-        return $test_id;
+        return $job_id;
     }
     
-    public function unassignTestToJob(Request $request) {
+    public function unassignTestFromJob(Request $request) {
         $test_id = $request->input('test_id');
         $job_id = $request->input('job_id');
         
-        $test_per_applicant = TestPerApplicant::where('test_id',$test_id)->where('job_id',$job_id);
-        $test_per_applicant->delete();
+        $test_per_job = TestPerJob::where('test_id',$test_id)->where('job_id',$job_id);
+        $test_per_job->delete();
         
         return $test_id;
     }

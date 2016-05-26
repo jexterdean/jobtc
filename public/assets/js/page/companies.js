@@ -76,7 +76,7 @@ $('.taskgroup-list').sortable({
 
 $('.job-applicant-list').sortable({
     dropOnEmpty: true,
-    connectWith: ".job-applicant-list",
+    connectWith: ".list-group",
     handle: '.drag-handle',
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
@@ -108,13 +108,62 @@ $('.job-applicant-list').sortable({
         };
 
         $.post(test_url, test_data,function(data){
-            //Assign the team id to the this list group item's input
-            //$(ui.item).find('.team_id').val(team_id);
-            $(ui.item).find('.profile-container').html(data);
+            //Assign the applicant id to the this list group item's input
+            $(ui.item).find('.applicant_id').val(data);
+            //$(ui.item).find('.profile-container').html(data);
         });
 
         //Remove warning that no employee is assigned.
         $(this).find('li:contains("No Tests assigned to this applicant.")').remove();
+
+    },
+    update: function (event, ui) {
+
+    }
+});
+
+//Assign tests to a job
+$('.job-test-list').sortable({
+    dropOnEmpty: true,
+    connectWith: ".list-group",
+    handle: '.drag-handle',
+    remove: function (event, ui) {
+        //Don't remove item when dropped to the project list group
+        $(this).append($(ui.item).clone());
+    },
+    receive: function (event, ui) {
+        
+        test_id = $(ui.item).find('.test_id').val();
+        list_group_job_id = $(ui.item).parent().attr('id');
+        job_id = list_group_job_id.split('-').pop();
+
+        //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
+
+        var identicalItemCount = $("#job-" + job_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').length;
+        
+        //If a duplicate, remove it
+        if (identicalItemCount > 1) {
+            $("#job-" + job_id + ' .list-group').children('li:contains(' + ui.item.find('.test_id').val() + ')').remove();
+        }
+
+        //Show unassign button
+        $(ui.item).find('.unassign-test').removeClass('hidden');
+        
+        //Assign Test to Job
+        test_url = public_path + 'assignTestToJob';
+        test_data = {
+            'test_id': test_id,
+            'job_id': job_id
+        };
+
+        $.post(test_url, test_data,function(data){
+            //Assign the applicant id to the this list group item's input
+            $(ui.item).find('.job_id').val(data);
+            //$(ui.item).find('.profile-container').html(data);
+        });
+
+        //Remove warning that no employee is assigned.
+        $(this).find('li:contains("Drag a test here to make it available for all applicants in this job posting.")').remove();
 
     },
     update: function (event, ui) {
@@ -127,8 +176,46 @@ $('.job-applicant-list').on('click', '.unassign-test', function () {
     var list_item = $(this).parent().parent().parent();
     
     list_item.remove();
+    
+    var test_id = $(this).find('.test_id').val();
+    var applicant_id = $(this).find('.applicant_id').val();
+    
+    console.log(test_id);
+    console.log(applicant_id);
+   
+     data = {
+        'test_id': test_id,
+        'applicant_id': applicant_id
+    };
+
+    url = public_path + 'unassignTestFromApplicant';
+
+    $.post(url, data);
+    
 });
 
+/*Unassign Test from Job*/
+$('.job-test-list').on('click', '.unassign-test', function () {
+    var list_item = $(this).parent().parent().parent();
+    
+    list_item.remove();
+    
+    var test_id = $(this).find('.test_id').val();
+    var job_id = $(this).find('.job_id').val();
+    
+    console.log(test_id);
+    console.log(job_id);
+   
+     data = {
+        'test_id': test_id,
+        'job_id': job_id
+    };
+
+    url = public_path + 'unassignTestFromJob';
+
+    $.post(url, data);
+    
+});
 
 /*Unassign Team Member from project*/
 $('.list-group').on('click', '.unassign-member', function () {
