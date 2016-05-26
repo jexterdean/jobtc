@@ -88,6 +88,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::any('assignTaskList','CompanyController@assignTaskList');
         Route::any('unassignTaskList','CompanyController@unassignTaskList');
         
+        /*For assigning tests to applicants*/
+        Route::any('assignTestToJob','CompanyController@assignTestToJob');
+        Route::any('unassignTestToJob','CompanyController@unassignTestToJob');
+        
+        /*For assigning tests to jobs*/
+        Route::any('assignTestToApplicant','CompanyController@assignTestToApplicant');
+        Route::any('unassignTestToApplicant','CompanyController@unassignTestToApplicant');
+        
         /*For Getting the tasklist when you're dropping an employee to a project*/
         Route::any('getTaskList','CompanyController@getTaskList');
         

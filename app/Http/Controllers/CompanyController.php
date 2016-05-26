@@ -19,6 +19,10 @@ use App\Models\Task;
 use App\Models\TaskCheckList;
 use App\Models\TaskCheckListOrder;
 use App\Models\TaskCheckListPermission;
+use App\Models\TestPerApplicant;
+use App\Models\TestPerJob;
+use App\Models\Job;
+use App\Models\Test;
 use Auth;
 use View;
 use Redirect;
@@ -53,6 +57,7 @@ class CompanyController extends BaseController {
 
     public function show($company_id) {
 
+        //Getting Assign Project Data
         $user_id = Auth::user()->user_id;
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
@@ -95,10 +100,20 @@ class CompanyController extends BaseController {
             $query->orderBy('task_title', 'asc')->get();
         }],'task_permission')->whereIn('project_id', $project_id_list)->get();
 
+        //Get Jobs by company and user
+        $jobs = Job::with('applicants')->where('user_id',$user_id)->where('company_id',$company_id)->get();
+        
+        $tests = Test::where('user_id',$user_id)->get();
+        
+        $test_applicants = TestPerApplicant::all();
+        
         $assets = ['companies'];
 
         return View::make('company.show', [
                     'projects' => $projects,
+                    'jobs' => $jobs,
+                    'tests' => $tests,
+                    'test_applicants' => $test_applicants,
                     'profiles' => $profiles,
                     'companies' => $companies,
                     'teams' => $teams,
@@ -362,6 +377,49 @@ class CompanyController extends BaseController {
         return $user_id;
     }
 
+    public function assignTestToApplicant(Request $request) {
+        $test_id = $request->input('test_id');
+        $applicant_id = $request->input('applicant_id');
+        
+        $test_per_applicant = new TestPerApplicant();
+        $test_per_applicant->test_id = $test_id;
+        $test_per_applicant->applicant_id = $applicant_id;
+        $test_per_applicant->save();
+        
+        return $test_id;
+    }
+    
+    public function unassignTestToApplicant(Request $request) {
+        $test_id = $request->input('test_id');
+        $applicant_id = $request->input('applicant_id');
+        
+        $test_per_applicant = TestPerApplicant::where('test_id',$test_id)->where('applicant_id',$applicant_id);
+        $test_per_applicant->delete();
+        
+        return $test_id;
+    }
+    
+    public function assignTestToJob(Request $request) {
+        $test_id = $request->input('test_id');
+        $job_id = $request->input('job_id');
+        
+        $test_per_applicant = new TestPerApplicant();
+        $test_per_applicant->test_id = $test_id;
+        $test_per_applicant->job_id = $job_id;
+        $test_per_applicant->save();
+        
+        return $test_id;
+    }
+    
+    public function unassignTestToJob(Request $request) {
+        $test_id = $request->input('test_id');
+        $job_id = $request->input('job_id');
+        
+        $test_per_applicant = TestPerApplicant::where('test_id',$test_id)->where('job_id',$job_id);
+        $test_per_applicant->delete();
+        
+        return $test_id;
+    }
 }
 
 ?>

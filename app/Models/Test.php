@@ -9,7 +9,7 @@ class Test extends Model
     public $timestamps = true;
     protected $fillable = [
         'id',
-        'author_id',
+        'user_id',
         'title',
         'description',
         'length',
