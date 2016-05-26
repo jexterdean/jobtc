@@ -1,12 +1,12 @@
 .box{
   position: relative;
   background: #ffffff;
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
   width: 100%;
   .box-shadow(2px 2px 5px -1px rgba(0, 0, 0, 0.50));
   //.box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
   &-default{
-    .box-variant(@brand-default);
+    .box-variant(@brand-default,#000000);
   }
   &-success{
     .box-variant(@brand-success);
@@ -29,7 +29,7 @@
   .box-header{
     position: relative;
     //background: @panel-default-border;
-    .inset-text();
+    //.inset-text();
     .box-shadow-variant();
     &:before,&:after{
       display: table;
@@ -42,7 +42,7 @@
       display: inline-block;
       padding: 5px;
       margin: 0;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
       float: left;
       cursor: default;

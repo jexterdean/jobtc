@@ -1,4 +1,4 @@
-<div class="box box-primary">
+<div class="box box-default">
     <div class="box-container">
         <div class="box-header">
             <h3 class="box-title">{{ $tests_info->title }}</h3>
@@ -8,7 +8,7 @@
                 <div class="slider-container">
                     <div class="slider-div text-center active">
                         <div class="slider-body">
-                            <h1>{{ $tests_info->start_message }}</h1>
+                            <h4>{{ $tests_info->start_message }}</h4>
                             <button class="btn btn-submit btn-next">Start</button>
                         </div>
                     </div>
@@ -73,12 +73,14 @@
         display: table-row;
     }
     .slider-body{
-        width: 500px;
+        padding: 15px;
+        /*width: 500px;*/
         vertical-align: middle;
         display: table-cell;
     }
     .answer-area{
         margin-left: 20px;
+        font-size: 19px;
     }
 </style>
 

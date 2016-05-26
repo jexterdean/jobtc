@@ -9,7 +9,7 @@
 // other navbar variations.
 
 .navbar {
-  //.box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
+  .box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
   position: relative;
   //min-height: @navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
   //border: 1px solid transparent;
@@ -353,7 +353,7 @@
   }
   > .dropdown-menu{
     margin-top: 0;
-    background: @brand-default;
+    background: @navbar-color;
     .border-top-radius(0);
     > li > a {
       color: #FFFFFF!important;
@@ -560,7 +560,7 @@
 // Inverse navbar
 
 .navbar-inverse {
-  //background-color: @brand-default * 0.9;
+  background-color: @navbar-color;//@brand-default * 0.9;
   //border-color: @navbar-inverse-border;
   .navbar-brand {
     color: @navbar-inverse-brand-color;

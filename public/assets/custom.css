@@ -69,7 +69,7 @@ a:active,a:focus{
 .task-list-item {
     border: none;
 }
-.task-list-item:hover{
+.task-list-item:not(.is-task-item-selected):hover{
     padding: 0!important;
     margin: 0!important;
     border-top: 4px solid #f2f2f2 !important;
@@ -103,13 +103,29 @@ a:active,a:focus{
 .task-list{
     border: none!important;
 }
+.task-list-default .box-body{
+    background: #1830ba!important;
+}
+.task-list-default .box-title, .task-list-default .box-footer,
+.new-task-content .box-title, .new-task-content .box-footer{
+    font-size: 20px!important;
+}
+.task-list-default .box-title,
+.new-task-content .box-title{
+    text-transform: uppercase!important;
+}
+.task-list-default .box .checklist-container,
+.new-task-content .box .checklist-container{
+    overflow: hidden!important;
+    max-height: 0!important;
+}
+.task-list-default .box-content{
+    padding: 0!important;
+    border: 0!important;
+}
 .task-list .task-header:hover{
     color: #1830ba!important;
     background: white!important;
-}
-.hovered{
-    margin-top: 5px!important;
-    margin-bottom: 5px!important;
 }
 .task-list .task-header .task-list-header{
     text-shadow: none!important;
@@ -128,16 +144,72 @@ a:active,a:focus{
     box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;
 }
 .is-selected h4{
-    font-size: 25px!important;
+    font-size: 28px!important;
 }
 .is-task-item-selected{
-    margin-top: 5px;
+    margin: 5px;
     padding-top: 15px!important;
-    border-top: 2px groove #696969 !important;
+    padding-left: 5px!important;
+    /*border-top: 2px groove #696969 !important;
     border-bottom: 2px groove #696969 !important;
-    background: #f2f2f2;
-    box-shadow: 0 5px 4px -2px rgba(15,15,15,0.34)!important;
+    box-shadow: 0 5px 4px -2px rgba(15,15,15,0.34)!important;*/
+    border-bottom: 1px groove #eaeaea !important;
+    -moz-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4);
+    -webkit-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4);
+    box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
+}
+.is-task-item-selected:hover{
+
 }
 .text-area-content .form-group{
     margin-bottom: 0!important;
+}
+.panel-content iframe{
+    width: 100%!important;
+}
+body.form-control.textarea.wysihtml5-editor{
+    font-size: 17px!important;
+}
+.wysihtml5-toolbar .btn-group .btn{
+    padding: 5px 10px;
+}
+.section-title{
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #1933c4;
+    text-shadow: none;
+}
+.section-list{
+    margin-bottom: 5px;
+}
+.section-list .panel-body{
+    border: none!important;
+}
+.section-list .panel-heading{
+    color: #000000;
+    background-color: #f2f2f2;
+    border-color: #e6e6e6;
+    font-size: 20px;
+}
+.section-list .panel-heading .pull-right a{
+    font-size: 25px;
+}
+.section-list .input-group-addon{
+    border: 1px solid #ccc!important;
+    border-radius: 0!important;
+    padding: 5px!important;
+}
+.section-list input[type=text]{
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.section-list .panel-heading {
+    font-size: 22px;
+    cursor: pointer;
+}
+.section-list:not('#new-section') .btn-group,.section-list .panel-heading{
+    height: 30px;
+}
+.section-list > .panel-heading > .row > .col-xs-6 .btn-group{
+    margin: -7px 0;
 }
