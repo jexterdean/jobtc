@@ -219,7 +219,15 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             $(tt.fnContainer()).insertBefore('div.dataTables_wrapper');
             @endif
 
-            $(".textarea").wysihtml5({"link": false, "image": false});
+            $(".textarea").wysihtml5({
+                "link": false,
+                "image": false,
+                "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+                "emphasis": false, //Italics, bold, etc. Default true
+                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+                "html": false, //Button which allows you to edit the generated HTML. Default false
+                "color": false //Button to change color of font
+            });
             $('#task-list-box').slimScroll({
     height: '250px'
     });
