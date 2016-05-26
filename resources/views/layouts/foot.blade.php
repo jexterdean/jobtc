@@ -20,6 +20,17 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="add_ticket" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Ticket</h4>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
 
 <?php $countries = \App\Models\Country::orderBy('country_name', 'asc')->lists('country_name', 'country_id')->toArray();?>
 <div class="modal fade" id="add_company" tabindex="-1" role="basic" aria-hidden="true">
@@ -122,7 +133,12 @@
 
         $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
         $("[data-mask]").inputmask();
+
+        $('#add_ticket').on('shown.bs.modal', function(e){
+            $(this).find('.modal-body').load('{{ $setting->grab('main_route').'/create' }}');
+        });
     });
+
     $(document).ajaxComplete(function () {
         $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
         $("[data-mask]").inputmask();
