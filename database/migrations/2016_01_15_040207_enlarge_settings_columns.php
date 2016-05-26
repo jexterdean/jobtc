@@ -3,20 +3,21 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class EnlargeSettingsColumns extends Migration
-{
+class EnlargeSettingsColumns extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        //make value, default columns bigger
-        Schema::table('ticketit_settings', function (Blueprint $table) {
-            $table->mediumText('value')->change();
-            $table->mediumText('default')->change();
-        });
+    public function up() {
+        if (!Schema::hasColumn('ticketit_settings')) {
+            //make value, default columns bigger
+            Schema::table('ticketit_settings', function (Blueprint $table) {
+                $table->mediumText('value')->change();
+                $table->mediumText('default')->change();
+            });
+        }
     }
 
     /**
@@ -24,11 +25,11 @@ class EnlargeSettingsColumns extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('ticketit_settings', function (Blueprint $table) {
             $table->string('value')->change();
             $table->string('default')->change();
         });
     }
+
 }

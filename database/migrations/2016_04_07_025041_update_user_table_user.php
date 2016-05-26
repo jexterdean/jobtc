@@ -12,10 +12,12 @@ class UpdateUserTableUser extends Migration
      */
     public function up()
     {
+        if (!Schema::hasColumn('timezone_id','accounts_id')) {
         Schema::table('user', function ($table) {
             $table->integer('timezone_id')->default(1)->after('remember_token');
             $table->integer('accounts_id')->after('client_id')->nullable();
         });
+        }
     }
 
     /**

@@ -3,22 +3,23 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuestionTagTable extends Migration
-{
+class CreateQuestionTagTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('question_tag', function(Blueprint $table){
-            $table->increments('id')->unsigned();
-            $table->integer('tag_id');
-            $table->integer('question_id');
+    public function up() {
+        if (!Schema::hasTable('question_tag')) {
+            Schema::create('question_tag', function(Blueprint $table) {
+                $table->increments('id')->unsigned();
+                $table->integer('tag_id');
+                $table->integer('question_id');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -26,8 +27,8 @@ class CreateQuestionTagTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('question_tag');
     }
+
 }

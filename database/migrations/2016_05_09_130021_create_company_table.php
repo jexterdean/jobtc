@@ -12,6 +12,7 @@ class CreateCompanyTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('companies')) {
         Schema::create('companies',function(Blueprint $table){
             $table->increments('id');
             $table->string('name');
@@ -21,6 +22,7 @@ class CreateCompanyTable extends Migration
             $table->string('country');
             $table->timestamps();
         });
+        }
     }
 
     /**

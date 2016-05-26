@@ -59,6 +59,7 @@
                 ?>
                 @if(count($tasks) > 0)
                 @foreach($tasks as $val)
+                @if($task_permissions->contains('task_id',$val->task_id) || $project->user_id === Auth::user()->user_id )
                 <div id="collapse-container-{{ $val->task_id }}" class="panel task-list">
                     <div class="panel-heading task-header" data-target="#collapse-{{ $val->task_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                         <div class="row">
@@ -83,6 +84,7 @@
                     </div>
                 </div>
                 <?php $ref++; ?>
+                @endif
                 @endforeach
                 @endif
             </div>

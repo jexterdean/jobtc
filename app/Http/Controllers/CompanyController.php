@@ -15,6 +15,10 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
+use App\Models\Task;
+use App\Models\TaskCheckList;
+use App\Models\TaskCheckListOrder;
+use App\Models\TaskCheckListPermission;
 use Auth;
 use View;
 use Redirect;
@@ -85,9 +89,12 @@ class CompanyController extends BaseController {
                 }
             }
         }
-
-        $projects = Project::whereIn('project_id', $project_id_list)->get();
-
+        
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }],'task_permission')->whereIn('project_id', $project_id_list)->get();
+            
         $assets = ['companies'];
 
         return View::make('company.show', [
@@ -165,16 +172,15 @@ class CompanyController extends BaseController {
         $role_exists = Role::where('name', 'Admin')->where('company_id', $companies->id)->where('company_division_id', $company_divisions->id)->count();
 
         if ($role_exists > 0) {
-            
+
             $role = Role::where('name', 'Admin')->where('company_id', $companies->id)->where('company_division_id', $company_divisions->id)->first();
-            
         } else {
             //Save this user's role as a super user of this company
             $role = new Role();
             $role->company_id = $companies->id;
             $role->company_division_id = $company_divisions->id;
             $role->name = 'Admin';
-            $role->slug = 'admin-'.$companies->id;
+            $role->slug = 'admin-' . $companies->id;
             $role->description = 'Administrator';
             $role->level = '1';
             $role->save();
@@ -187,7 +193,7 @@ class CompanyController extends BaseController {
         $profile->role_id = $role->id;
         $profile->save();
 
-        return Redirect::to('company/'.$companies->id)->withSuccess("Company added successfully!!");
+        return Redirect::to('company/' . $companies->id)->withSuccess("Company added successfully!!");
     }
 
     public function update($company_id) {
@@ -305,7 +311,13 @@ class CompanyController extends BaseController {
             $team_project->save();
         }
 
-        return $team_id;
+        //Get projects with their tasks and task permissions
+        $tasks = Task::where('project_id', $project_id)
+                ->orderBy('task_title','asc')
+                ->get();
+        $task_permissions = TaskCheckListPermission::where('project_id',$project_id)->get();
+        
+        return view('company.partials._tasklist',['tasks' =>$tasks,'task_permissions' => $task_permissions,'project_id' => $project_id,'user_id' => $user_id]);
     }
 
     public function unassignTeamMember(Request $request) {
@@ -320,5 +332,40 @@ class CompanyController extends BaseController {
         return $user_id;
     }
 
+    public function assignTaskList(Request $request) {
+        $user_id = $request->input('user_id');
+        $task_id = $request->input('task_id');
+        $project_id = $request->input('project_id');
+
+        $task_list_permission = new TaskCheckListPermission();
+
+        $task_list_permission->user_id = $user_id;
+        $task_list_permission->task_id = $task_id;
+        $task_list_permission->project_id = $project_id;
+        $task_list_permission->save();
+
+        return $user_id;
+    }
+
+    public function unassignTaskList(Request $request) {
+        $user_id = $request->input('user_id');
+        $task_id = $request->input('task_id');
+        $project_id = $request->input('project_id');
+
+        $task_list_permission = TaskCheckListPermission::where('user_id', $user_id)->where('task_id', $task_id)->where('project_id', $project_id);
+        $task_list_permission->delete();
+
+        return $user_id;
+    }
+    
+    public function getTaskList(Request $request) {
+        $project_id = $request->input('project_id');
+        
+        $tasklist = Task::where('project_id',$project_id)->get();
+        
+        return json_encode($tasklist);
+    }
+
 }
+
 ?>

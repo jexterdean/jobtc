@@ -3,19 +3,20 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class AlterUsersTable extends Migration
-{
+class AlterUsersTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::table('user', function (Blueprint $table) {
-            $table->boolean('ticketit_admin')->default(0);
-            $table->boolean('ticketit_agent')->default(0);
-        });
+    public function up() {
+        if (!Schema::hasColumn('ticketit_admin', 'ticketit_agent')) {
+            Schema::table('user', function (Blueprint $table) {
+                $table->boolean('ticketit_admin')->default(0);
+                $table->boolean('ticketit_agent')->default(0);
+            });
+        }
     }
 
     /**
@@ -23,10 +24,10 @@ class AlterUsersTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::table('user', function (Blueprint $table) {
             $table->dropColumn(['ticketit_admin', 'ticketit_agent']);
         });
     }
+
 }

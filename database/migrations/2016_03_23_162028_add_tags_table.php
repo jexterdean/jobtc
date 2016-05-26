@@ -3,21 +3,22 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTagsTable extends Migration
-{
+class AddTagsTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('link_tags',function(Blueprint $table){
-            $table->increments('id')->unsigned();
-            $table->string('name')->unique();
+    public function up() {
+        if (!Schema::hasTable('link_tags')) {
+            Schema::create('link_tags', function(Blueprint $table) {
+                $table->increments('id')->unsigned();
+                $table->string('name')->unique();
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -25,8 +26,8 @@ class AddTagsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('link_tags');
     }
+
 }

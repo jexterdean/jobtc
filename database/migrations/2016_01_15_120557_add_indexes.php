@@ -17,6 +17,7 @@ class AddIndexes extends Migration
      */
     public function up()
     {
+        if (!Schema::hasColumn('subject','status_id','priority_id','user_id','agent_id','category_id','completed_at')) {
         Schema::table('ticketit', function (Blueprint $table) {
             $table->index('subject');
             $table->index('status_id');
@@ -26,16 +27,19 @@ class AddIndexes extends Migration
             $table->index('category_id');
             $table->index('completed_at');
         });
-
+        }
+        if (!Schema::hasColumn('user_id','ticket_id')) {
         Schema::table('ticketit_comments', function (Blueprint $table) {
             $table->index('user_id');
             $table->index('ticket_id');
         });
-
+        }
+        if (!Schema::hasColumn('lang','slug')) {
         Schema::table('ticketit_settings', function (Blueprint $table) {
             $table->index('lang');
             $table->index('slug');
         });
+        }
     }
 
     /**
