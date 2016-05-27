@@ -25,8 +25,6 @@
                                             <a target="_blank" href="{{url('job/'.$job->id)}}">
                                                 @if(isset($job->photo))
                                                 <img class="job-photo" src="{{url($job->photo)}}" alt="Job Photo">
-                                                @else
-                                                <img class="job-photo" src="{{url('user/avatar.jpg')}}" alt="Job Photo">
                                                 @endif
                                             </a>
                                             @if(Auth::check())

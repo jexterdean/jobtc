@@ -64,9 +64,7 @@
             </div>
             
         </div>
-        <div class='col-md-6'>
-                
-            
+        <div class='col-md-6 col-sm-12'>
             @if(Auth::user('user'))
                 <div class="box box-default">
                     <div class="box-header">

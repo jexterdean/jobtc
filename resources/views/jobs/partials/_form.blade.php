@@ -9,7 +9,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <label class="control-label col-md-2" for="description">Description</label>
+            <label class="control-label col-md-2" for="description"></label>
             <div class="col-md-10">
                 <textarea id="description" class="form-control description" name="description"></textarea>
             </div>
@@ -17,7 +17,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <label class="control-label col-md-2" for="description">Description</label>
+            <label class="control-label col-md-2" for="description">Company</label>
             <div class="col-md-10">
                 <?php
                 //change code because causes error on other pages
