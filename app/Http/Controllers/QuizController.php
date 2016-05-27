@@ -437,5 +437,10 @@ class QuizController extends BaseController
                 ->where('test_id', '=', $id)
                 ->delete();
         }
+        else{
+            DB::table('question')
+                ->where('id', '=', $id)
+                ->delete();
+        }
     }
 }

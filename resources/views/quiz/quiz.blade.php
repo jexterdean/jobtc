@@ -73,7 +73,7 @@
                                                         <i class="fa fa-arrows"></i>
                                                     </a>
                                                     &nbsp;&nbsp;&nbsp;
-                                                    <a href="#" class="icon icon-btn alert_delete delete-question">
+                                                    <a href="#" id="{{ $q->id }}" class="icon icon-btn alert_delete delete-question-btn">
                                                         <i class="fa fa-times" aria-hidden="true"></i>
                                                     </a>
                                                 </div>
@@ -276,6 +276,22 @@
                 .css('display', 'block')
                 .find('.q-form')
                 .removeAttr('disabled');
+        });
+        //endregion
+
+        //region Question Delete
+
+        var delete_question_btn = $('.delete-question-btn');
+        delete_question_btn.click(function(e){
+            var thisId = this.id;
+            var thisQuestion = $(this).closest('.question-list');
+            $.ajax({
+                url: '{{ URL::to('quiz') }}/' + thisId + '?t=2',
+                method: "DELETE",
+                success: function(doc) {
+                    thisQuestion.remove();
+                }
+            });
         });
         //endregion
 
