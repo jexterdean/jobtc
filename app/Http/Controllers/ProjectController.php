@@ -14,6 +14,9 @@ use App\Models\Attachment;
 use App\Models\Task;
 use App\Models\TaskCheckListPermission;
 use App\Models\Timer;
+use App\Models\Team;
+use App\Models\TeamMember;
+use App\Models\TeamProject;
 use \DB;
 use \Auth;
 use \View;
@@ -168,17 +171,30 @@ class ProjectController extends BaseController {
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-        $task = Task::where('project_id',$id)
+        $task = Task::where('project_id', $id)
                 ->orderBy('task_title', 'asc')
                 ->get();
 
-        $task_permissions = TaskCheckListPermission::where('project_id',$id)->where('user_id',$user_id)->get();
-        
+        $task_permissions = TaskCheckListPermission::where('project_id', $id)->where('user_id', $user_id)->get();
+
         $assets = ['datepicker'];
+
+        $user_id_list = [];
+
+        $teams = Team::with(['team_member' => function($query) {
+                        $query->with('user')->get();
+                    }])->get();
+
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id', $user_id)->get();
+
+        
+
 
         return view('project.show', [
             'project' => $project,
             'companies' => $client_options,
+            'teams' => $teams,
             'note' => $note,
             'users' => $user,
             'comments' => $comment,

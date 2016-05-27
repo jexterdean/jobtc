@@ -92,7 +92,6 @@
         <div class="col-md-4">
             <div class="panel-group" id="accordion_" role="tablist" aria-multiselectable="true">
                 @include('common.note',['note' => $note, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
-                @include('common.task',['tasks' => $tasks, 'belongs_to' => 'project', 'unique_id' => $project->project_id,'project_id' => $project->project_id])
                 <div class="panel panel-default">
                     <div class="panel-container">
                         <div class="panel-heading collapsed" data-target="#collapseTwo" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion_" aria-expanded="false" aria-controls="collapseTwo">
@@ -155,9 +154,8 @@
                         </div>
                     </div>
                     </div>
-                </div>
-                @include('common.attachment',['attachments' => $attachments])
-                @include('common.comment',['comments' => $comments, 'belongs_to' => 'project', 'unique_id' => $project->project_id])
+                </div><!--End Project Details-->
+                @include('common.employeeList')
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@
         {!! Form::model([$project,$clients,$users],['method' => 'PATCH','route' => ['project.update',$project->project_id] ,'class' =>
         'form-horizontal project-form'])  !!}
 
-        @include('project/partials/_form', ['buttonText' => 'Update Project'] )
+        @include('jobs/partials/_form', ['buttonText' => 'Update Project'] )
         {!!  Form::close()  !!}
     @else
         <div class='alert alert-danger alert-dismissable'>
@@ -21,3 +21,4 @@
         Validate.init();
     });
 </script>
+

@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 $('.edit-job').click(function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    //e.preventDefault();
+    //e.stopImmediatePropagation();
     var job_id = $(this).siblings('.job_id').val();
     var edit_job_form = public_path +'/job/' + job_id + '/edit';
 
-    /*BootstrapDialog.show({
+    BootstrapDialog.show({
         title: 'Edit Job',
         size: 'size-normal',
         message: function (dialog) {
@@ -106,7 +106,7 @@ $('.edit-job').click(function (e) {
 
         },
         closable: false
-    });*/
+    });
 });
 
 $('.delete-job').click(function (e) {
