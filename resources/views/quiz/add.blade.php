@@ -96,9 +96,9 @@
                                 <textarea name="question[1]" class="q-form form-control"></textarea>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-4">Question Photo:</label>
-                                <div class="col-md-8">
-                                    <input type="file" name="question_photo_1" class="form-control" />
+                                <label class="col-md-3">Question Photo:</label>
+                                <div class="col-md-9">
+                                    <input type="file" name="question_photo_1" class="form-control" /><br/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -111,11 +111,13 @@
                                             </div>
                                         </div>
                                         <div class="col-md-1 text-center">
-                                            <input type="radio" class="q-form simple" name="question_answer[1]" value="{{ $i }}" />
+                                            {{--<input type="radio" class="q-form simple" name="question_answer[1]" value="{{ $i }}" />--}}
+                                            <input type="radio" class="q-form simple radio" name="question_answer[1]" id="radio-{{ $i }}" value="{{ $i }}" />
+                                            <label for="radio-{{ $i }}">&nbsp;</label>
                                         </div>
                                         <div class="col-md-1 text-center">
-                                            <a href="#" class="alert_delete remove-choice-btn">
-                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
+                                                <i class="fa fa fa-times" aria-hidden="true"></i>
                                             </a>
                                         </div>
                                     </div>

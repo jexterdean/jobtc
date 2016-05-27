@@ -27,8 +27,8 @@
                             @if($v->question_type_id == 1)
                                 @foreach($v->question_choices as $k=>$c)
                                     <div class="answer-area form-group">
-                                        <input type="radio" class="simple" name="answer[{{ $v->id }}]" value="{{ $k }}" />
-                                        {{ $c }}
+                                        <input type="radio" class="simple radio" name="answer[{{ $v->id }}]" id="radio-{{ $k }}-{{ $v->id }}" value="{{ $k }}" />
+                                        <label for="radio-{{ $k }}-{{ $v->id }}">{{ $c }}</label>
                                     </div>
                                 @endforeach
                             @elseif($v->question_type_id == 2)

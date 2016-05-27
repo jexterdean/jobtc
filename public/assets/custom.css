@@ -213,3 +213,59 @@ body.form-control.textarea.wysihtml5-editor{
 .section-list > .panel-heading > .row > .col-xs-6 .btn-group{
     margin: -7px 0;
 }
+/*Checkbox and Radio*/
+input[type=radio].radio,input[type=checkbox].checkbox {
+    position:absolute;
+    z-index:-1000;
+    left:-1000px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height:1px;
+    width:1px;
+    margin:-1px;
+    padding:0;
+    border:0;
+}
+
+input[type=radio].radio + label{
+    font-weight: normal;
+    margin-top: 5px;
+    padding-left:26px;
+    height:21px;
+    display:inline-block;
+    line-height:21px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    vertical-align:middle;
+    cursor:pointer;
+    background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_5ab92245cf78caac21ff087cfc374219.png);
+}
+input[type=checkbox].checkbox + label {
+    font-weight: normal;
+    margin-top: 5px;
+    padding-left:35px;
+    height:30px;
+    display:inline-block;
+    line-height:30px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    vertical-align:middle;
+    cursor:pointer;
+    background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_3e7c116decab5f0bdc492fba26fa6d26.png);
+
+}
+input[type=radio].radio:checked + label{
+    background-position: 0 -21px;
+}
+
+input[type=checkbox].checkbox:checked + label {
+    background-position: 0 -30px;
+}
+input[type=checkbox].checkbox + label,input[type=radio].radio + label{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

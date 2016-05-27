@@ -113,7 +113,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-1 text-center">
-                                        <input type="radio" class="q-form simple" name="question_answer[1]" value="{{ $i }}" disabled="disabled" />
+                                        <input type="radio" class="q-form simple radio" name="question_answer[1]" id="radio-{{ $i }}" value="{{ $i }}" disabled="disabled" />
+                                        <label for="radio-{{ $i }}"></label>
                                     </div>
                                     <div class="col-md-1 text-center">
                                         <div class="form-group">
@@ -212,7 +213,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-1 text-center">
-                                            <input type="radio" class="q-form simple" name="question_answer[e_{{ $v->id }}]" value="{{ $k }}" {{ $k == $v->question_answer ? 'checked' : '' }}/>
+                                            <input type="radio" class="q-form simple radio" name="question_answer[e_{{ $v->id }}]" id="radio-e_{{ $v->id }}" value="{{ $k }}" {{ $k == $v->question_answer ? 'checked' : '' }}/>
+                                            <label for="radio-e_{{ $v->id }}"></label>
                                         </div>
                                         <div class="col-md-1 text-center">
                                             <div class="form-group">
