@@ -2,15 +2,13 @@
     <div class="media">
         <div class="media-left">
             <a href="#">
-                @if($comment->user->photo !== '' && Auth::user()->user_id === $comment->user->user_id)
-                <img class="comment-photo" src="{{url($comment->user->photo)}}" alt="Employee Photo">
-                @elseif ($comment->user->photo === '' && Auth::user()->user_id === $comment->user->user_id)
-                <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
-                @elseif ($comment->applicant->photo !== '')
-                <img class="comment-photo" src="{{url($comment->applicant->photo)}}" alt="Employee Photo">
-                @else
-                <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
-                @endif
+                @if(isset($comment->user->photo))
+                                <img class="comment-photo" src="{{url($comment->user->photo)}}" alt="Employee Photo">
+                                @elseif(isset($comment->applicant->photo))
+                                <img class="comment-photo" src="{{url($comment->applicant->photo)}}" alt="Employee Photo">
+                                @else
+                                <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
+                                @endif
             </a>
             @if(isset($comment->user->name))
             <text class="media-heading">{{$comment->user->name}}</text>

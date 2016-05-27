@@ -199,10 +199,14 @@ class SessionController extends Controller {
     }
     
      public function destroy() {
-        
-        $name = Auth::user()->name;
-        Auth::logout('user');
-        Auth::logout('applicant');
-        return Redirect::to('login')->withSuccess("$name you are logged out!!");
+        if(Auth::check('user')) {
+            $name = Auth::user('user')->name;
+            Auth::logout('user');
+            return Redirect::to('login')->withSuccess("$name you are logged out!!");
+        } elseif(Auth::check('applicant')) {
+            $name = Auth::user('applicant')->name;
+            Auth::logout('applicant');
+            return Redirect::to('login')->withSuccess("$name you are logged out!!");
+        }
     }
 }

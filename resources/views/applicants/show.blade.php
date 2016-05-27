@@ -300,10 +300,7 @@
                             <a href="#">
                                 @if(isset($comment->user->photo))
                                 <img class="comment-photo" src="{{url($comment->user->photo)}}" alt="Employee Photo">
-                                @elseif ($comment->user->photo === '' && Auth::user('user')->user_id === $comment->user->user_id)
-                                <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
-                                @endif
-                                @if(isset($comment->applicant->photo))
+                                @elseif(isset($comment->applicant->photo))
                                 <img class="comment-photo" src="{{url($comment->applicant->photo)}}" alt="Employee Photo">
                                 @else
                                 <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
@@ -338,6 +335,7 @@
                 @endunless
             </div>
             <div class="mini-space"></div>
+            
             @include('forms.addCommentForm')
             @endif
         </div>

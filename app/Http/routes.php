@@ -13,8 +13,10 @@ Route::get('login', function() {
     return view('session.create');
 });
 
+//Don't put this into middleware as well since it will not let the applicant logout(applicant table
+//doesn't use the role manager for the User
 Route::post('/login', 'SessionController@login');
-
+Route::get('logout', 'SessionController@destroy');
 
 /*Job Routes*/
 //Should not be in any middleware so that 
@@ -156,7 +158,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('changePassword', 'ProfileController@changePassword');
     Route::post('updateProfile', 'ProfileController@updateProfile');
     Route::post('deleteTimer', 'ProjectController@deleteTimer');
-    Route::get('logout', 'SessionController@destroy');
+    
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index','https' => true] );
     Route::get('user/{user_id}/delete', 'UserController@delete');
     Route::get('event/{event_id}/delete', 'EventsController@delete');

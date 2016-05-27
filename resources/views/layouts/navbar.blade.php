@@ -3,7 +3,7 @@
         <i class="fa fa-home"></i> <span>Dash</span>
     </a>
 </li>
-@if(Auth::check('user'))
+@if(Auth::check())
 <?php $companies = \App\Helpers\Helper::getCompanyLinks(); ?>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
