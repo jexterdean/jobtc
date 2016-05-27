@@ -10,9 +10,9 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <label class="control-label col-md-2" for="description">Description</label>
+            <label class="control-label col-md-2" for="description"></label>
             <div class="col-md-10">
-                <textarea id="description" class="form-control description" name="description">{{htmlspecialchars_decode($job->description)}}</textarea>
+                <textarea id="edit-description" class="form-control description" name="description">{{$job->description}}</textarea>
             </div>
         </div>
     </div>
@@ -28,24 +28,3 @@
         </div>
     </div>
 </form>
-@section('js_footer')
-@parent
-<script>
-$.fn.modal.Constructor.prototype.enforceFocus = function() {
-    $( document )
-        .off( 'focusin.bs.modal' ) // guard against infinite focus loop
-        .on( 'focusin.bs.modal', $.proxy( function( e ) {
-            if (
-                this.$element[ 0 ] !== e.target && !this.$element.has( e.target ).length
-                // CKEditor compatibility fix start.
-                && !$( e.target ).closest( '.cke_dialog, .cke' ).length
-                // CKEditor compatibility fix end.
-            ) {
-                this.$element.trigger( 'focus' );
-            }
-        }, this ) );
-};
-
-CKEDITOR.replace('description');
-</script>    
-@stop

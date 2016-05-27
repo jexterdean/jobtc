@@ -121,10 +121,10 @@ class JobController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        $user_id = $request->user()->user_id;
-        $job_id = $request->input('job_id');
+        //$user_id = $request->user()->user_id;
+        //$job_id = $request->input('job_id');
         $title = $request->input('title');
-        $description = htmlspecialchars($request->input('description'));
+        $description = $request->input('description');
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -148,7 +148,7 @@ class JobController extends Controller {
         $user_id = $request->user()->user_id;
         $job_id = $request->input('job_id');
         $title = $request->input('title');
-        $description = htmlspecialchars($request->input('description'));
+        $description = $request->input('description');
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');

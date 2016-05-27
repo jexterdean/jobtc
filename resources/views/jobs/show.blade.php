@@ -61,7 +61,7 @@
                         <div class="mini-space"></div>
                         @if(Auth::check())
                         <div class="job-header pull-right">
-                            <a class="btn btn-warning btn-lg edit-job"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
+                            <a class="btn btn-warning btn-lg edit-job" data-toggle="modal"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
                             <a class="btn btn-danger btn-lg delete-job"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
                             <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
                         </div>
@@ -80,5 +80,4 @@
         </div>
     </div>
 @stop
-
 

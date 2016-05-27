@@ -11,7 +11,7 @@ $('.edit-job').click(function (e) {
 
     BootstrapDialog.show({
         title: 'Edit Job',
-        size: 'size-normal',
+        size: 'size-wide',
         message: function (dialog) {
             var $message = $('<div></div>');
             var pageToLoad = dialog.getData('pageToLoad');
@@ -24,7 +24,6 @@ $('.edit-job').click(function (e) {
                     var ajaxurl = public_path +'/updateJob/'+job_id;
                     var form = $(".edit-job-form")[0];
                     
-                    console.log(JSON.stringify(form));
                     var formData = new FormData(form);
                     formData.append('job_id', job_id);
                     
@@ -102,8 +101,8 @@ $('.edit-job').click(function (e) {
         data: {
             'pageToLoad': edit_job_form
         },
-        onshown: function () {
-
+        onshown: function (ref) {
+            initCkeditor(ref); 
         },
         closable: false
     });
@@ -344,3 +343,13 @@ $('.status-container').tagEditor({
         //alert(tags);
     }
 });
+
+function initCkeditor(ref) {
+  var editor = CKEDITOR.replace('edit-description', {
+  	startupFocus : true
+  });
+  
+  editor.on( 'change', function( evt ) {
+    $('#edit-description').text(evt.editor.getData());
+});
+}

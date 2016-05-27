@@ -188,9 +188,6 @@ class ProjectController extends BaseController {
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)->get();
 
-        
-
-
         return view('project.show', [
             'project' => $project,
             'companies' => $client_options,
