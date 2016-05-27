@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <label class="control-label col-md-2" for="description">Description</label>
             <div class="col-md-10">
-                <textarea class="form-control description" name="description"></textarea>
+                <textarea id="description" class="form-control description" name="description"></textarea>
             </div>
         </div>
     </div>
@@ -43,3 +43,4 @@
         </div>
     </div>
 </div>
+    

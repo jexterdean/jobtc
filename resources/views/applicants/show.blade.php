@@ -286,6 +286,7 @@
                     </div>
                 </div>
             </div>
+            @if(Auth::check('user') || Auth::check('applicant'))
             <!--div class="comment-list-header">Comments</div-->
             <div class="mini-space"></div>
             <div id="comment-list-{{$applicant->id}}" class="comment-list">
@@ -297,11 +298,12 @@
                     <div class="media">
                         <div class="media-left">
                             <a href="#">
-                                @if($comment->user->photo !== '' && Auth::user()->user_id === $comment->user->user_id)
+                                @if(isset($comment->user->photo))
                                 <img class="comment-photo" src="{{url($comment->user->photo)}}" alt="Employee Photo">
-                                @elseif ($comment->user->photo === '' && Auth::user()->user_id === $comment->user->user_id)
+                                @elseif ($comment->user->photo === '' && Auth::user('user')->user_id === $comment->user->user_id)
                                 <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
-                                @elseif ($comment->applicant->photo !== '')
+                                @endif
+                                @if(isset($comment->applicant->photo))
                                 <img class="comment-photo" src="{{url($comment->applicant->photo)}}" alt="Employee Photo">
                                 @else
                                 <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
@@ -320,7 +322,8 @@
                         <input class="comment_id" type="hidden" value="{{$comment->comment_id}}">
                         <input class="applicant_id" type="hidden" value="{{$comment->applicant->applicant_id}}">
                     </div>
-                    @if($user_info->user_id === $comment->user_id && Auth::check("user") || $comment->user_id === 0 && Auth::check("applicant"))
+                    @if($user_info->user_id === $comment->user_id && Auth::check("user") 
+                    || $comment->user_id === 0 && Auth::check("applicant"))
                     <table class="comment-utilities">
                         <tr>
                             <td><a href="#" class="edit-comment"><i class="fa fa-pencil"></i></a></td>
@@ -336,6 +339,7 @@
             </div>
             <div class="mini-space"></div>
             @include('forms.addCommentForm')
+            @endif
         </div>
     </div>
 </div>
@@ -348,22 +352,22 @@
 @section('js_footer')
 @parent
 <script>
-    $(function(e){
+    $(function (e) {
         //region Question
         var boxCounter = 1;
         var qBox = $('.question-default');
-        var qBoxHtml =  $('<div class="box box-solid box-info box-question" />')
-            .append(qBox.clone().removeClass('question-default'))
-            .html();
+        var qBoxHtml = $('<div class="box box-solid box-info box-question" />')
+                .append(qBox.clone().removeClass('question-default'))
+                .html();
         var qAHtml = $('.question-answer-1').html();
         var existingBoxIds = [];
-        $('.box-question').each(function(e) {
-                boxCounter = boxCounter < this.id ? this.id : boxCounter;
+        $('.box-question').each(function (e) {
+            boxCounter = boxCounter < this.id ? this.id : boxCounter;
         });
-        $(document).on('click', '.add-question-btn', function(e){
+        $(document).on('click', '.add-question-btn', function (e) {
             $('.box-question .box-body').collapse('hide');
 
-            boxCounter ++;
+            boxCounter++;
 
             var thisQBox = $(this).closest('.box-question');
             var thisBox = qBoxHtml;
@@ -372,10 +376,10 @@
             thisBox = thisBox.replace('hidden', "");
             thisBox = thisBox.replace(/(disabled="disabled")/g, "");
 
-            if(thisQBox.length == 0){
+            if (thisQBox.length == 0) {
                 $('.question-area').prepend(thisBox);
             }
-            else{
+            else {
                 thisQBox.after(thisBox);
             }
             $('.time-form').inputmask("59:59", {
@@ -397,40 +401,40 @@
                 }
             }
         });
-        $(document).on('click', '.remove-question-btn', function(e){
+        $(document).on('click', '.remove-question-btn', function (e) {
             $(this).closest('.box-question').remove();
         });
-        $(document).on('click', '.question-header', function(e){
+        $(document).on('click', '.question-header', function (e) {
             $(this).parent().next('.box-body').collapse('toggle');
         });
-        $(document).on('change', '.question-type-dp', function(e){
+        $(document).on('change', '.question-type-dp', function (e) {
             var showThisQArea = $(this).val();
             var qArea = $(this).closest('.box-body');
             qArea.find('.question-type-area')
-                .css('display', 'none')
-                .find('.q-form')
-                .attr('disabled', 'disabled');
+                    .css('display', 'none')
+                    .find('.q-form')
+                    .attr('disabled', 'disabled');
             qArea.find('.question-type-area[data-type="' + showThisQArea + '"]')
-                .css('display', 'block')
-                .find('.q-form')
-                .removeAttr('disabled');
+                    .css('display', 'block')
+                    .find('.q-form')
+                    .removeAttr('disabled');
         });
-        $(document).on('click', '.add-choice-btn', function(e){
+        $(document).on('click', '.add-choice-btn', function (e) {
             var thisChoice = '<div class="row">' + qAHtml + '</div>';
             $(this).parent().before(thisChoice);
         });
-        $(document).on('click', '.remove-choice-btn', function(e){
+        $(document).on('click', '.remove-choice-btn', function (e) {
             $(this).closest('.row').remove();
         });
 
         //sort question
         $('.question-area')
-            .sortable({
-                handle: ".box-header"
-            });
+                .sortable({
+                    handle: ".box-header"
+                });
 
         var delete_btn = $('.test-delete-btn');
-        delete_btn.click(function(e){
+        delete_btn.click(function (e) {
             var thisId = this.id;
             var thisUrl = '{{ URL::to('quiz') }}/' + thisId;
 
@@ -438,18 +442,18 @@
             $.ajax({
                 url: thisUrl,
                 method: "DELETE",
-                success: function(doc) {
+                success: function (doc) {
                     location.reload();
                 }
             });
         });
         //endregion
 
-        $('.read-more-btn').click(function(){
+        $('.read-more-btn').click(function () {
             var $this = $(this);
             $this.parent().find('.read-more').collapse('toggle');
             $this.toggleClass('read-more-btn');
-            if($this.hasClass('read-more-btn')){
+            if ($this.hasClass('read-more-btn')) {
                 $this.text('[Read More]');
             }
             else {

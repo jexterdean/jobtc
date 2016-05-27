@@ -1,9 +1,20 @@
 <?php
 
 
-Route::resource('session', 'SessionController');
-Route::get('/', 'SessionController@create');
-Route::get('/login', 'SessionController@create');
+//Route::resource('session', 'SessionController');
+//Route::get('/', 'SessionController@create');
+//Route::get('/login', 'SessionController@create');
+Route::get('/',['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants','https' => true]);
+Route::get('/home', ['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants','https' => true]);
+
+//Route::get('/login', 'SessionController@login');
+/* Authentication routes */
+Route::get('login', function() {
+    return view('session.create');
+});
+
+Route::post('/login', 'SessionController@login');
+
 
 /*Job Routes*/
 //Should not be in any middleware so that 
@@ -16,6 +27,7 @@ Route::post('applyToJob', 'JobController@applyToJob');
 
 /*For Applicant*/
 Route::resource('a', 'ApplicantController');
+Route::get('a/{id}',['as' => 'a', 'uses' => 'ApplicantController@show','https' => true]);
 
 
 /* For Applicant Tags */
@@ -145,7 +157,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('updateProfile', 'ProfileController@updateProfile');
     Route::post('deleteTimer', 'ProjectController@deleteTimer');
     Route::get('logout', 'SessionController@destroy');
-    Route::get('dashboard', 'DashboardController@index');
+    Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index','https' => true] );
     Route::get('user/{user_id}/delete', 'UserController@delete');
     Route::get('event/{event_id}/delete', 'EventsController@delete');
     Route::get('company/{company_id}/delete', 'CompanyController@delete');

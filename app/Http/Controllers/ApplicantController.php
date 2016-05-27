@@ -74,7 +74,7 @@ class ApplicantController extends Controller {
 
                 //$comments = Comment::with('applicant')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
                 //$comments = Applicant::with('comment')->where('id',$id)->orderBy('id', 'desc')->get();
-                $comments = Comment::with('applicant')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
+                $comments = Comment::with('user','applicant')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
             }
 
 
@@ -116,7 +116,8 @@ class ApplicantController extends Controller {
 
             $assets = ['applicants','quizzes'];
 
-            return view('applicants.show', ['applicant' => $applicant,
+            return view('applicants.show', [
+                'applicant' => $applicant,
                 'user_info' => $user_info,
                 'comments' => $comments,
                 'statuses' => $statuses,

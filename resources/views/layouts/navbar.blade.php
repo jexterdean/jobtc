@@ -3,7 +3,7 @@
         <i class="fa fa-home"></i> <span>Dash</span>
     </a>
 </li>
-@role('admin')
+@if(Auth::check('user'))
 <?php $companies = \App\Helpers\Helper::getCompanyLinks(); ?>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
@@ -27,7 +27,7 @@
         @endif
     </ul>
 </li>
-@endrole
+@endif
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="fa fa-lightbulb-o"></i>
@@ -131,29 +131,12 @@
     </ul>
 </li>
 
-
 <li>
     <a href="{{ route('links.index') }}">
         <i class="fa fa-globe"></i>
         <span>Links</span></a>
 </li>
 
-@role('admin')
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle">
-        <i class="fa fa-laptop"></i>
-        <span>{{Lang::get('messages.Setting')}}</span>
-        <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        <li><a href="{{ url('user') }}"><i class="fa fa-user"></i> {{Lang::get('messages.User')}}</a>
-        </li>
-        <li><a href="{{ url('setting') }}"><i
-                    class="fa fa-wrench"></i> {{Lang::get('messages.General Setting')}}</a></li>
-        <li><a href="{{ url('template') }}"><i
-                    class="fa fa-folder-o"></i> {{Lang::get('messages.Email Templates')}}</a></li>
-    </ul>
-</li>
-@endrole
 <li>
     <a href="{{ route('css.index') }}" >
         <i class="fa fa-globe"></i>
@@ -162,7 +145,7 @@
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="glyphicon glyphicon-user"></i>
-        <span>{{ Auth::user()->name }} <i class="caret"></i></span>
+        <span>{{ Auth::user('user')->name }} <i class="caret"></i></span>
     </a>
     <ul class="dropdown-menu">
         <li>

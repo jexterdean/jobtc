@@ -8,7 +8,7 @@
                 </div>
                 <div class="box-body">
                     <div class="box-content">
-                        <div class="panel panel-primary">
+                        <div class="panel panel-default">
                             <div class="panel-heading"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;All Applicants</div>
                             <div class="panel-body">
                                 <ul id="job-{{$job->id}}" class="job-test-list list-group">
@@ -47,7 +47,7 @@
                         <ul class="list-group">
                             @foreach($job->applicants as $applicant)
                             <li class="bg-gray list-group-item">
-                                <div class="panel panel-primary">
+                                <div class="panel panel-default">
                                     <div class="panel-heading"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{$applicant->name}}</div>
                                     <div class="panel-body">
                                         <ul id="applicant-{{$applicant->id}}" class="job-applicant-list list-group">
@@ -122,7 +122,5 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>

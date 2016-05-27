@@ -1,33 +1,5 @@
 @extends('layouts.login')
 @section('content')
-
-<!--div class="form-box" id="login-box">
-    <div class="header">Sign In</div>
-    {!! Form::open(['route' => 'session.store','class' => 'form-class', 'id' => 'login-form']) !!}
-    <div class="body bg-gray">
-
-        {!! \App\Helpers\Helper::showMessage() !!}
-
-        <div class="form-group">
-            {!!   Form::text('email', '', array('tabindex' => '1', 'class' => 'form-control', 'placeholder'
-            => 'Username', 'autocomplete' => 'off', 'required' => true))!!}
-        </div>
-        <div class="form-group">
-            {!!   Form::input('password', 'password', '', array('tabindex' => '2', 'class' => 'form-control',
-            'placeholder' => 'Password', 'autocomplete' => 'off', 'required' => true)) !!}
-        </div>
-        <div class="form-group">
-            <input type="checkbox" name="remember"/> Remember me
-        </div>
-    </div>
-    <div class="footer">
-        <button type="submit" class="btn bg-olive btn-block">Sign me in</button>
-        <p><a href="{{ url('forgotPassword') }}">I forgot my password</a></p>
-    </div>
-    {!! Form::close() !!}
-</div>
-<div style="font-family: 'Kaushan Script', cursive;font-weight: 500;text-align:center;">Freelance Plus</div-->
-
 <!-- resources/views/auth/login.blade.php -->
 <div class="content-container">
     <div class="main-content-container col-xs-12">
@@ -45,7 +17,7 @@
             <div class="col-xs-12">
                 <div class="space"></div>
 
-                <form action="{{route('session.store')}}" method="post" class="account_form" id="login-form">
+                <form action="{{url('login')}}" method="post" class="account_form" id="login-form">
 
                     {!! csrf_field() !!}
 

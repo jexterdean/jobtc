@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-6 col-sm-12">
-            @role('admin')
+            @if(Auth::check('user'))
                 <div class="col-lg-6">
                     <div class="small-box bg-aqua">
                         <div class="inner">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                 </div>
-            @endrole
+            @endif
             <div style="clear:both;"></div>
             <br/>
             <div class="box box-default">
@@ -190,7 +190,7 @@
                     @endif
                 </div>
             </div>
-            @if(!Auth::user()->is('client'))
+            @if(Auth::user('user'))
                 <div class="box box-default">
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
@@ -326,7 +326,7 @@
         <div class="col-md-12 col-sm-12">
             {{-- include the meeting calendar --}}
             {{-- replace the event calendar --}}
-            @include('meeting.calendar')
+            {{--@include('meeting.calendar')--}}
         </div>
     </div>
 

@@ -8,9 +8,16 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class Applicant extends Model implements AuthenticatableContract, CanResetPasswordContract{
+//use Bican\Roles\Traits\HasRoleAndPermission;
+//use Bican\Roles\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+
+class Applicant extends Model implements 
+    AuthenticatableContract, 
+        CanResetPasswordContract 
+    //HasRoleAndPermissionContract 
+                {
     
-    use Authenticatable, CanResetPassword;
+    use Authenticatable, CanResetPassword; //, HasRoleAndPermission;
     
     protected $connection = 'mysql';
     /**

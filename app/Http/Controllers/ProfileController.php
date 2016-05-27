@@ -50,7 +50,7 @@ class ProfileController extends BaseController {
             $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
             $photo_path = $photo_save->getPathname();
         } else {
-            $photo_path = "assets/user/avatar.png";
+            $photo_path = User::where('user_id', $user_id)->pluck('photo');
         }
 
         if ($password !== '') {

@@ -6,7 +6,7 @@
                 <h4 class="modal-title">Add Project</h4>
             </div>
             <div class="modal-body">
-                @role('admin')
+                @if(Auth::check('user'))
                 {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
                 @include('project/partials/_form')
                 {!! Form::close()  !!}
@@ -15,7 +15,7 @@
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                     <strong>You don't have to perform this action!!</strong>
                 </div>
-                @endrole
+                @endif
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
                 <h4 class="modal-title">Add Job</h4>
             </div>
             <div class="modal-body">
-                @role('admin')
+                @if(Auth::check('user'))
                 {!!  Form::open(['route' => 'job.store','class' => 'form-horizontal project-form' ,'files' => true])  !!}
                 @include('jobs/partials/_form')
                 {!! Form::close() !!}
@@ -65,7 +65,7 @@
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                     <strong>You don't have to perform this action!!</strong>
                 </div>
-                @endrole
+                @endif
             </div>
         </div>
     </div>
