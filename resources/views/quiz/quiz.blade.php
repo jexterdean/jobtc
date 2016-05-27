@@ -19,13 +19,15 @@
                     <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" class="panel test-list task-list">
                         <div class="panel-heading task-header" data-target="#collapse-{{ $val->id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-5">
                                     <h4 class="panel-title task-list-header">
                                         {{ $val->title }}
                                     </h4>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     <strong>Questions:</strong> {{ count($val->question) }}
+                                </div>
+                                <div class="col-xs-2">
                                     <strong>Time:</strong> {{ date('i:s', $val->total_time) }}
                                 </div>
                                 <div class="col-xs-3">
