@@ -2,5 +2,5 @@
 
 @section('content')
 @parent
-@include('quiz.quiz')
+@include('quiz.' . $page)
 @stop

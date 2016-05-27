@@ -14,11 +14,11 @@
 .static-info{border-bottom:1px solid #eee;}
 /*Task List Items CSS*/
 
-.list-group .alert_delete, .delete-tasklist, .edit-tasklist, .toggle-tasklist,.move-tasklist,.edit-task-list-item{
+.tc-icons, .list-group .alert_delete, .delete-tasklist, .edit-tasklist, .toggle-tasklist,.move-tasklist,.edit-task-list-item{
     color: #B7B5D8;/*#8d8d8d;*/
     font-size: 25px;
 }
-.list-group .alert_delete:hover , .delete-tasklist:hover, .edit-tasklist:hover,.toggle-tasklist:hover,.move-tasklist:hover,
+.tc-icons:hover, .list-group .alert_delete:hover , .delete-tasklist:hover, .edit-tasklist:hover,.toggle-tasklist:hover,.move-tasklist:hover,
 .edit-task-list-item:hover{
     color: #000 !important;
 }

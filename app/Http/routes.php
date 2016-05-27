@@ -188,6 +188,8 @@ Route::group(['middleware' => 'auth'], function () {
      * Quiz
     */
     Route::resource('quiz', 'QuizController');
+    Route::post('testSort','QuizController@testSort');
+    Route::post('questionSort','QuizController@questionSort');
 });
 
 Route::group(['prefix' => 'api'], function () {

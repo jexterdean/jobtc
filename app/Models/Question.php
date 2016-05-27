@@ -16,7 +16,8 @@ class Question extends Model
         'length',
         'question_photo',
         'score',
-        'order'
+        'order',
+        'explanation'
     ];
     protected $primaryKey = 'id';
     protected $table = 'question';
