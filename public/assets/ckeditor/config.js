@@ -54,4 +54,7 @@ CKEDITOR.editorConfig = function (config) {
     
     //Css changes
     config.height = '800px';
+
+    //config.autoParagraph = false;
+
 };
