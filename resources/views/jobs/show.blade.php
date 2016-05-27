@@ -23,7 +23,7 @@
                                         @endif
                                         <div class="media-middle">
                                             <a target="_blank" href="{{url('job/'.$job->id)}}">
-                                                @if(isset($job->photo))
+                                                @if($job->photo !== '')
                                                 <img class="job-photo" src="{{url($job->photo)}}" alt="Job Photo">
                                                 @endif
                                             </a>

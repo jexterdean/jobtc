@@ -61,7 +61,7 @@ class JobController extends Controller {
             $photo_save = $photo->move('assets/job/', $photo->getClientOriginalName());
             $photo_path = $photo_save->getPathname();
         } else {
-            $photo_path = 'assets/user/avatar.png';
+            $photo_path = '';
         }
 
 
