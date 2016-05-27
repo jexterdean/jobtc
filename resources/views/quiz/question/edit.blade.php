@@ -67,26 +67,49 @@
                 <?php
                 $choices = $questions_info->question_type_id == 1 ? json_decode($questions_info->question_choices) : array();
                 ?>
-                @foreach($choices as $k=>$c)
-                <div class="row question-answer">
-                    <div class="col-md-9">
-                        <div class="form-group">
-                            <input type="text" name="question_choices[]" class="question_choices q-form form-control" placeholder="Choices" value="{{ $c }}" />
+                @if(count($choices) > 0)
+                    @foreach($choices as $k=>$c)
+                    <div class="row question-answer">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <input type="text" name="question_choices[]" class="question_choices q-form form-control" placeholder="Choices" value="{{ $c }}" />
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-center">
+                            <input type="radio" class="q-form radio" id="radio-{{ $questions_info->id . $k }}" name="question_answer" value="{{ $k }}" {{ $k == $questions_info->question_answer ? 'checked' : '' }} />
+                            <label for="radio-{{ $questions_info->id . $k }}"></label>
+                        </div>
+                        <div class="col-md-1 text-center">
+                            <div class="form-group">
+                                <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
+                                    <i class="fa fa fa-times" aria-hidden="true"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-1 text-center">
-                        <input type="radio" class="q-form radio" id="radio-{{ $questions_info->id . $k }}" name="question_answer" value="{{ $k }}" {{ $k == $questions_info->question_answer ? 'checked' : '' }} />
-                        <label for="radio-{{ $questions_info->id . $k }}"></label>
-                    </div>
-                    <div class="col-md-1 text-center">
-                        <div class="form-group">
-                            <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
-                                <i class="fa fa fa-times" aria-hidden="true"></i>
-                            </a>
+                    @endforeach
+                @else
+                    @for($i = 0; $i < 4; $i ++)
+                    <div class="row question-answer">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <input type="text" name="question_choices[]" class="question_choices q-form form-control" placeholder="Choices" />
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-center">
+                            <input type="radio" class="q-form radio" id="radio-{{ $i }}" name="question_answer" value="{{ $i }}" {{ $i == 0 ? 'checked' : '' }} />
+                            <label for="radio-{{ $i }}"></label>
+                        </div>
+                        <div class="col-md-1 text-center">
+                            <div class="form-group">
+                                <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
+                                    <i class="fa fa fa-times" aria-hidden="true"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endforeach
+                    @endfor
+                @endif
                 <div class="text-right" style="margin-top: 10px;">
                     <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit" />
                 </div>
