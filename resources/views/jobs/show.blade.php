@@ -52,7 +52,7 @@
                             <div class="mini-space"></div>
                             <div class="row tasklist-row">
                                 <div id="applicant-list-{{$count}}" class="applicant-list col-md-12">
-                                    <p class="job-description">{!! nl2br(e($job->description)) !!}</p>
+                                    <p class="job-description">{!! $job->description !!}</p>
                                     <input class="token" name="_token" type="hidden" value="{{csrf_token()}}">
                                 </div>
                             </div>
