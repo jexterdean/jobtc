@@ -1,61 +1,72 @@
-<div class="box box-default">
-    <div class="box-container">
-        <div class="box-header">
-            <h3 class="box-title">{{ $tests_info->title }}</h3>
-        </div>
-        <div class="box-body">
-            <div class="box-content">
-                <div class="slider-container">
-                    <div class="slider-div text-center active">
-                        <div class="slider-body">
-                            <h4>{{ $tests_info->start_message }}</h4>
-                            <button class="btn btn-submit btn-next">Start</button>
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel-group test-group">
+                <div class="box box-default">
+                    <div class="box-container">
+                        <div class="box-header">
+                            <h3 class="box-title">{{ $tests_info->title }}</h3>
                         </div>
-                    </div>
-                    @foreach($questions_info as $ref=>$v)
-                    <div class="slider-div">
-                        <div class="slider-body">
-                            <div class="form-group">
-                                <h1>{{ $v->question }}</h1>
-                            </div>
-                            {!! $v->question_photo ?
-                                '<div class="form-group">' .
-                                HTML::image('/assets/img/question/' . $v->question_photo, '') .
-                                '</div>' :
-                                ''
-                            !!}
-                            @if($v->question_type_id == 1)
-                                @foreach($v->question_choices as $k=>$c)
-                                    <div class="answer-area form-group">
-                                        <input type="radio" class="simple" name="answer[{{ $v->id }}]" value="{{ $k }}" />
-                                        {{ $c }}
+                        <div class="box-body">
+                            <div class="box-content">
+                                <div class="slider-container">
+                                    <div class="slider-div text-center active">
+                                        <div class="slider-body">
+                                            <h4>{{ $tests_info->start_message }}</h4>
+                                            <button class="btn btn-submit btn-next">Start</button>
+                                        </div>
                                     </div>
-                                @endforeach
-                            @elseif($v->question_type_id == 2)
-                                <div class="form-group">
-                                    <input type="text" name="answer[{{ $v->id }}]" class="form-control" placeholder="answer here..." />
+                                    @foreach($questions_info as $ref=>$v)
+                                    <div class="slider-div">
+                                        <div class="slider-body">
+                                            <div class="form-group">
+                                                <h1>{{ $v->question }}</h1>
+                                            </div>
+                                            {!! $v->question_photo ?
+                                                '<div class="form-group">' .
+                                                HTML::image('/assets/img/question/' . $v->question_photo, '') .
+                                                '</div>' :
+                                                ''
+                                            !!}
+                                            @if($v->question_type_id == 1)
+                                                @foreach($v->question_choices as $k=>$c)
+                                                    <div class="answer-area form-group">
+                                                        <input type="radio" class="simple radio" name="answer[{{ $v->id }}]" id="radio-{{ $k }}-{{ $v->id }}" value="{{ $k }}" />
+                                                        <label for="radio-{{ $k }}-{{ $v->id }}">{{ $c }}</label>
+                                                    </div>
+                                                @endforeach
+                                            @elseif($v->question_type_id == 2)
+                                                <div class="form-group">
+                                                    <input type="text" name="answer[{{ $v->id }}]" class="form-control" placeholder="answer here..." />
+                                                </div>
+                                            @endif
+                                            <div class="text-center">
+                                                <button class="btn btn-delete btn-prev">Previous</button>
+                                                <button class="btn btn-submit btn-next">Next</button>
+                                                <button class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
+                                                    <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
+                                                    <span class="glyphicon glyphicon-time"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    <div class="slider-div text-center">
+                                        <div class="slider-body">
+                                            <h1>{{ $tests_info->completion_message }}</h1>
+                                            <button class="btn btn-delete btn-prev">Back</button>
+                                            <button class="btn btn-finish">Complete</button>
+                                        </div>
+                                    </div>
                                 </div>
-                            @endif
-                            <div class="text-center">
-                                <button class="btn btn-delete btn-prev">Previous</button>
-                                <button class="btn btn-submit btn-next">Next</button>
-                                <button class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
-                                    <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
-                                    <span class="glyphicon glyphicon-time"></span>
-                                </button>
                             </div>
-                        </div>
-                    </div>
-                    @endforeach
-                    <div class="slider-div text-center">
-                        <div class="slider-body">
-                            <h1>{{ $tests_info->completion_message }}</h1>
-                            <button class="btn btn-delete btn-prev">Back</button>
-                            <button class="btn btn-finish">Complete</button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4">
+
         </div>
     </div>
 </div>

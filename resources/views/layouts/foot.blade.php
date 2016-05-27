@@ -181,19 +181,18 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 
 <script>
     $(function () {
-    //to fix the ajax PATCH/POST method type of form not working
-    $.ajaxSetup(
-    {
-    headers:
-    {
-    'X-CSRF-Token': $('input[name="_token"]').val()
-    }
-    });
-            $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
-            $("[data-mask]").inputmask();
-            $('#add_ticket').on('shown.bs.modal', function(e){
-    $(this).find('.modal-body').load('{{ $setting->grab('main_route').' / create' }}');
-    });
+        //to fix the ajax PATCH/POST method type of form not working
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-Token': $('input[name="_token"]').val()
+            }
+        });
+        $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
+        $("[data-mask]").inputmask();
+
+        $('#add_ticket').on('shown.bs.modal', function(e){
+            $(this).find('.modal-body').load('{{ $setting->grab('main_route').'/create' }}');
+        });
     });
             $(document).ajaxComplete(function () {
     $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
