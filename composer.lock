@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "21ceeccbf1eefb43c50c2ee931448e60",
+    "hash": "02067d154a46c2b2a61e626d1454416d",
     "content-hash": "a2d86acd54f3088a08e399de34a87004",
     "packages": [
         {
@@ -108,20 +108,19 @@
         },
         {
             "name": "cviebrock/image-validator",
-            "version": "2.0.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cviebrock/image-validator.git",
-                "reference": "2a5ba9efdd96e05401da2f9ce1a51b3ceb1b2b7d"
+                "reference": "05bfc4535dd5b0450cf272b068456f774b52aecb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cviebrock/image-validator/zipball/2a5ba9efdd96e05401da2f9ce1a51b3ceb1b2b7d",
-                "reference": "2a5ba9efdd96e05401da2f9ce1a51b3ceb1b2b7d",
+                "url": "https://api.github.com/repos/cviebrock/image-validator/zipball/05bfc4535dd5b0450cf272b068456f774b52aecb",
+                "reference": "05bfc4535dd5b0450cf272b068456f774b52aecb",
                 "shasum": ""
             },
             "require": {
-                "ext-bcmath": "*",
                 "illuminate/support": "5.*",
                 "illuminate/translation": "5.*",
                 "illuminate/validation": "5.*",
@@ -155,7 +154,7 @@
                 "laravel",
                 "validator"
             ],
-            "time": "2016-04-11 19:10:43"
+            "time": "2016-05-27 16:18:35"
         },
         {
             "name": "danielstjules/stringy",
@@ -1172,16 +1171,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.1.35",
+            "version": "v5.1.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "50c7e026db1da8a265482fef4417c92f46cc5b78"
+                "reference": "5945837bc61227f21530c8c4455de0842dc18c9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/50c7e026db1da8a265482fef4417c92f46cc5b78",
-                "reference": "50c7e026db1da8a265482fef4417c92f46cc5b78",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5945837bc61227f21530c8c4455de0842dc18c9a",
+                "reference": "5945837bc61227f21530c8c4455de0842dc18c9a",
                 "shasum": ""
             },
             "require": {
@@ -1297,7 +1296,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-04-27 13:07:50"
+            "time": "2016-05-26 14:23:48"
         },
         {
             "name": "laravelcollective/html",

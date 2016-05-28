@@ -54,6 +54,10 @@
                 </div>
                 <div class="media-body">
                     <input type="file" name="question_photo" class="form-control" />
+                    <div class="pull-right">
+                        <input name="clear_photo" type="checkbox" value="1" id="checkbox" class="checkbox" />
+                        <label for="checkbox">Clear Photo</label>
+                    </div>
                 </div>
             </div>
         </div>

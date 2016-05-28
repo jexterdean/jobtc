@@ -12,6 +12,7 @@ use \Auth;
 
 use App\Models\Test;
 use App\Models\Question;
+use App\Models\TestResultModel;
 
 use Illuminate\Http\Request;
 
@@ -37,6 +38,40 @@ class QuizController extends BaseController
     }
 
     private function setData(&$data){
+        $t = DB::table('question_type')
+            ->select('id', 'type')
+            ->get();
+        $question_type = array_pluck($t, 'type', 'id');
+        $data['question_type'] = $question_type;
+
+        $result = DB::table('test_result')
+            ->select(DB::raw(
+                'fp_test.id as test_id,
+                fp_test.title,
+                fp_user.name,
+                (
+                    select count(a.id)
+                    from fp_test_result as a
+                    where
+                        a.test_id = fp_test_result.test_id AND
+                        a.user_id = fp_test_result.user_id AND
+                        a.result = 1
+                ) as score,
+                (
+                    select count(b.id)
+                    from fp_test_result as b
+                    where
+                        b.test_id = fp_test_result.test_id AND
+                        b.user_id = fp_test_result.user_id
+                ) as total_question'
+            ))
+            ->groupBy('test_result.user_id', 'test_result.test_id')
+            ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
+            ->leftJoin('user', 'user.user_id', '=', 'test_result.user_id')
+            ->orderBy('test_result.created_at', 'asc')
+            ->get();
+        $data['result'] = $result;
+
         $test = DB::table('test')
             ->select(DB::raw('
                 fp_test.*,
@@ -45,7 +80,14 @@ class QuizController extends BaseController
                     FROM fp_question
                     WHERE
                         fp_question.test_id = fp_test.id
-                ) as num_question
+                ) as num_question,
+                (
+                    SELECT count(fp_test_result.id) > 0
+                    FROM fp_test_result
+                    WHERE
+                        fp_test_result.test_id = fp_test.id AND
+                        fp_test_result.user_id = ' . Auth::user()->user_id . '
+                ) as review_only
             '))
             ->orderBy('order', 'asc')
             ->get();
@@ -64,17 +106,24 @@ class QuizController extends BaseController
                         $q->question_choices = json_decode($q->question_choices);
                     }
                 }
-
                 $t->question = $questions;
+
+                $score = 0;
+                $taker_count = 0;
+                if(count($result) > 0){
+                    foreach($result as $r){
+                        if($r->test_id == $t->id){
+                            $score += $r->score;
+                            $taker_count ++;
+                        }
+                    }
+                }
+                $ave = $score > 0 ? $score/$taker_count : $score;
+                $t->ave = number_format($ave, 2) . '/' . count($questions);
             }
         }
-        $data['test'] = $test;
 
-        $t = DB::table('question_type')
-            ->select('id', 'type')
-            ->get();
-        $question_type = array_pluck($t, 'type', 'id');
-        $data['question_type'] = $question_type;
+        $data['test'] = $test;
     }
 
     /**
@@ -106,9 +155,11 @@ class QuizController extends BaseController
     {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
         $id = isset($_GET['id']) ? $_GET['id'] : '';
+        $label = '';
 
         $validation = '';
         if($page == "test") {
+            $label = 'Test';
             $validation = Validator::make($request->all(), [
                 'title' => 'required',
                 'description' => 'required',
@@ -116,12 +167,17 @@ class QuizController extends BaseController
                 'completion_message' => 'required'
             ]);
         }
-        else{
+        else if($page == "question") {
+            $label = 'Question';
             $validation = Validator::make($request->all(), [
                 'question_type_id' => 'required',
                 'question' => 'required',
-                'explanation' => 'required',
                 'points' => 'required'
+            ]);
+        }
+        else if($page == "exam") {
+            $label = 'Exam';
+            $validation = Validator::make($request->all(), [
             ]);
         }
 
@@ -160,7 +216,7 @@ class QuizController extends BaseController
                         ->update(['test_photo' => $fileName]);
                 }
             }
-            else{
+            else if($page == "question"){
                 $question = new Question();
                 $question->test_id = $id;
                 $question->question_type_id = Input::get('question_type_id');
@@ -188,17 +244,32 @@ class QuizController extends BaseController
                         ->update(['question_photo' => $fileName]);
                 }
             }
+            else if($page == "exam"){
+                $q = Question::where('id', Input::get('question_id'))
+                    ->first();
+
+                $r = $q->question_type_id == 1 ?
+                    ($q->question_answer == Input::get('answer') ? 1 : 0) :
+                    (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0);
+                $result = new TestResultModel();
+                $result->test_id = $id;
+                $result->question_id = Input::get('question_id');
+                $result->user_id = Auth::user()->user_id;
+                $result->answer = Input::get('answer');
+                $result->result = $r;
+                $result->save();
+            }
 
             DB::commit();
 
             return Redirect::to('quiz')
-                ->withSuccess(($page == "test" ? "Test" : "Question") . " added successfully!");
+                ->withSuccess($label . " added successfully!");
         }
         catch (\Exception $e) {
             DB::rollback();
 
             return Redirect::to('quiz')
-                ->withErrors(($page == "test" ? "Test" : "Question") . " failure when adding!");
+                ->withErrors($label . " failure when adding!");
         }
     }
 
@@ -210,23 +281,73 @@ class QuizController extends BaseController
      */
     public function show($id)
     {
+        $page = isset($_GET['p']) ? $_GET['p'] : 'view';
+
+        //region if already taken the exam redirect to review page
+        $taken_question = DB::table('test_result')
+            ->where('test_id', '=', $id)
+            ->where('user_id', '=', Auth::user()->user_id)
+            ->count();
+        $total_question = DB::table('question')
+            ->where('test_id', '=', $id)
+            ->count();
+        $hasTaken = $taken_question == $total_question;
+        if($hasTaken && $page != 'review'){
+            return Redirect::to('quiz/' . $id . '?p=review');
+        }
+        //endregion
+
         $data = [
             'assets' => [],
-            'page' => 'view'
+            'page' => $page
         ];
         $this->setData($data);
 
         $tests_info = DB::table('test')
             ->where('id', '=', $id)
             ->first();
-        $questions_info = DB::table('question')
-            ->where('test_id', '=', $id)
-            ->orderBy('order', 'ASC')
-            ->get();
+        $questions_info = array();
+        if($page == 'review') {
+            $questions_info = DB::table('question')
+                ->where('test_id', '=', $id)
+                ->orderBy('order', 'ASC')
+                ->get();
+        }
+        else{
+            $questions_info = DB::table('question')
+                ->where('test_id', '=', $id)
+                ->whereRaw('
+                    (
+                        SELECT count(fp_test_result.id)
+                        FROM fp_test_result
+                        WHERE
+                            fp_test_result.question_id = fp_question.id AND
+                            fp_test_result.user_id = ' . Auth::user()->user_id . '
+                    ) = 0
+                ')
+                ->orderBy('order', 'ASC')
+                ->get();
+        }
         if(count($questions_info) > 0){
             foreach($questions_info as $v){
                 $v->question_choices = json_decode($v->question_choices);
             }
+        }
+
+        if($page == 'review'){
+            $r = DB::table('test_result')
+                ->where('test_result.test_id', '=', $id)
+                ->get();
+            $review_result = array();
+            if(count($r) > 0){
+                foreach($r as $v){
+                    $review_result[$v->question_id] = (Object)array(
+                        'answer' => $v->answer,
+                        'result' => $v->result,
+                    );
+                }
+            }
+            $data['review_result'] = $review_result;
         }
 
         $data['tests_info'] = $tests_info;
@@ -290,7 +411,6 @@ class QuizController extends BaseController
             $validation = Validator::make($request->all(), [
                 'question_type_id' => 'required',
                 'question' => 'required',
-                'explanation' => 'required',
                 'points' => 'required'
             ]);
         }
@@ -335,7 +455,15 @@ class QuizController extends BaseController
                 $question->question_answer = Input::get('question_answer');
                 $question->length = Input::get('length') ? '00:' . Input::get('length') : '';
                 $question->points = Input::get('points');
-                $question->explanation =  Input::get('explanation');
+                $question->explanation = Input::get('explanation');
+                if (Input::get('clear_photo')) {
+                    $photo_dir = public_path() . '/assets/img/question/';
+                    $photo_dir .= $question->question_photo;
+                    if(file_exists($photo_dir)){
+                        unlink($photo_dir);
+                        $question->question_photo = '';
+                    }
+                }
                 $question->save();
 
                 $file_key = 'question_photo';

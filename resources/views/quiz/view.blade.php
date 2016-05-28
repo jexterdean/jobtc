@@ -12,19 +12,20 @@
                                 <div class="slider-container">
                                     <div class="slider-div text-center active">
                                         <div class="slider-body">
-                                            <h4>{{ $tests_info->start_message }}</h4>
-                                            <button class="btn btn-submit btn-next">Start</button>
+                                            <span style="font-size: 23px;">{{ $tests_info->start_message }}</span>
+                                            <br />
+                                            <button type="button" class="btn btn-submit btn-next">Start</button>
                                         </div>
                                     </div>
                                     @foreach($questions_info as $ref=>$v)
                                     <div class="slider-div">
                                         <div class="slider-body">
                                             <div class="form-group">
-                                                <h1>{{ $v->question }}</h1>
+                                                <span style="font-size: 23px;">{{ $v->question }}</span>
                                             </div>
                                             {!! $v->question_photo ?
                                                 '<div class="form-group">' .
-                                                HTML::image('/assets/img/question/' . $v->question_photo, '') .
+                                                HTML::image('/assets/img/question/' . $v->question_photo, '', array('style' => 'width: 100%;')) .
                                                 '</div>' :
                                                 ''
                                             !!}
@@ -41,9 +42,8 @@
                                                 </div>
                                             @endif
                                             <div class="text-center">
-                                                <button class="btn btn-delete btn-prev">Previous</button>
-                                                <button class="btn btn-submit btn-next">Next</button>
-                                                <button class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
+                                                <button type="button" class="btn btn-submit btn-next" id="{{ $v->id }}">Next</button>
+                                                <button type="button" class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
                                                     <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
                                                     <span class="glyphicon glyphicon-time"></span>
                                                 </button>
@@ -53,9 +53,9 @@
                                     @endforeach
                                     <div class="slider-div text-center">
                                         <div class="slider-body">
-                                            <h1>{{ $tests_info->completion_message }}</h1>
-                                            <button class="btn btn-delete btn-prev">Back</button>
-                                            <button class="btn btn-finish">Complete</button>
+                                            <span style="font-size: 23px;">{{ $tests_info->completion_message }}</span>
+                                            <br />
+                                            <button type="submit" class="btn btn-finish">Complete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="col-md-4">
-
+            @include('quiz.result')
         </div>
     </div>
 </div>
@@ -105,35 +105,37 @@
         var btn_prev = $('.btn-prev');
 
         btn_next.click(function(e){
-            clearInterval(interval);
-            $(this)
-                .closest('.slider-div')
-                .removeClass('active')
-                .next('.slider-div')
-                .addClass('active');
-
-            var time_limit = $(this)
-                .closest('.slider-div')
-                .next('.slider-div')
-                .find('.time-limit');
-            if(time_limit.length != 0){
-                if(time_limit.data('length') != "00:00:00"){
-                    time_limit.removeClass('hidden');
-                    time_limit.timerStart();
-                }
+            var thisId = this.id;
+            var slider_div = $(this).closest('.slider-div');
+            if(thisId){
+                var thisElement = $('input[name="answer[' + thisId + ']"]');
+                var answer = thisElement.attr('type') == "radio" ?
+                    $('input[name="answer[' + thisId + ']"]:checked').val() :
+                    thisElement.val();
+                var data = {
+                   question_id: thisId,
+                   answer: answer == undefined ? '' : answer
+                };
+                $.ajax({
+                    url: '{{ URL::to('quiz') . '?id=' . $tests_info->id }}&p=exam',
+                    data: data,
+                    method: "POST",
+                    success: function(doc) {
+                        slider_div.remove();
+                    }
+                });
             }
-        });
-        btn_prev.click(function(e){
+
             clearInterval(interval);
             $(this)
                 .closest('.slider-div')
                 .removeClass('active')
-                .prev('.slider-div')
+                .next('.slider-div')
                 .addClass('active');
 
             var time_limit = $(this)
                 .closest('.slider-div')
-                .prev('.slider-div')
+                .next('.slider-div')
                 .find('.time-limit');
             if(time_limit.length != 0){
                 if(time_limit.data('length') != "00:00:00"){
