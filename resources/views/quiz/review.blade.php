@@ -14,7 +14,7 @@
                                         <div class="slider-body">
                                             <span style="font-size: 23px;">{{ $tests_info->start_message }}</span>
                                             <br />
-                                            <button type="button" class="btn btn-submit btn-next">Start Review</button>
+                                            <button type="button" class="btn btn-submit btn-shadow btn-next">Start Review</button>
                                         </div>
                                     </div>
                                     @foreach($questions_info as $ref=>$v)
@@ -80,9 +80,9 @@
                                             </div>
 
                                             <div class="text-center">
-                                                <button type="button" class="btn btn-delete btn-prev">Previous</button>
-                                                <button type="button" class="btn btn-submit btn-next">Next</button>
-                                                <button type="button" class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
+                                                <button type="button" class="btn btn-shadow btn-delete btn-prev">Previous</button>
+                                                <button type="button" class="btn btn-shadow btn-submit btn-next">Next</button>
+                                                <button type="button" class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
                                                     <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
                                                     <span class="glyphicon glyphicon-time"></span>
                                                 </button>
@@ -94,8 +94,8 @@
                                         <div class="slider-body">
                                             <span style="font-size: 23px;">{{ $tests_info->completion_message }}</span>
                                             <br />
-                                            <button type="button" class="btn btn-delete btn-prev">Back</button>
-                                            <button type="button" class="btn btn-finish hidden">Complete</button>
+                                            <button type="button" class="btn btn-shadow btn-delete btn-prev">Back</button>
+                                            <button type="button" class="btn btn-shadow btn-finish hidden">Complete</button>
                                         </div>
                                     </div>
                                 </div>

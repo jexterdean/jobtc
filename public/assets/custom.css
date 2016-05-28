@@ -226,10 +226,6 @@ body.form-control.textarea.wysihtml5-editor{
 .section-list > .panel-heading > .row > .col-xs-6 .btn-group{
     margin: -7px 0;
 }
-/*Test*/
-.question-list a{
-    font-size: 23px;
-}
 /*Checkbox and Radio*/
 input[type=radio].radio,input[type=checkbox].checkbox {
     position:absolute;
@@ -243,7 +239,9 @@ input[type=radio].radio,input[type=checkbox].checkbox {
     padding:0;
     border:0;
 }
-
+input[type=text],textarea{
+    box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4)!important;
+}
 input[type=radio].radio + label{
     font-weight: normal;
     margin-top: 5px;

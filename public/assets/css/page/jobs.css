@@ -26,7 +26,7 @@ and open the template in the editor.
 
  .job-posting-container .job {
     padding: 10px;
-    /*background-color: #ffffff;*/
+    background-color: #ffffff;
     border: 1px solid #fffdfb;
     -webkit-border-bottom-right-radius: 2px;
     -webkit-border-bottom-left-radius: 2px;
@@ -37,10 +37,6 @@ and open the template in the editor.
     /*box-shadow: 4px 6px 15px #bbbbbb;*/
     box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;
 }
- .job-posting-container .job .job-content{
-    padding: 10px;
-    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
- }
 .job-posting-container .job .container-icon {
     font-size: 40px;
     line-height: 40px;
@@ -133,7 +129,7 @@ and open the template in the editor.
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;
     /*box-shadow: 4px 6px 15px #bbbbbb;*/
-    box-shadow: inset 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;
+    /*box-shadow: inset 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;*/
 }
 .tasklist-row{
     /*box-shadow: inset 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;*/

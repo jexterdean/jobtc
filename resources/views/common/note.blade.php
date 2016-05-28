@@ -18,7 +18,7 @@
                     <div class="form-group">
                         {!!  Form::hidden('belongs_to',$belongs_to) !!}
                         {!!  Form::hidden('unique_id', $unique_id) !!}
-                        {!! Form::submit('Save',['class' => 'btn btn-edit'])  !!}
+                        {!! Form::submit('Save',['class' => 'btn btn-shadow btn-edit'])  !!}
                     </div>
                     {!!  Form::close()  !!}
                 </div>

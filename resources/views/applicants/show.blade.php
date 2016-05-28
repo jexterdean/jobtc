@@ -8,15 +8,15 @@
             </div>
             <div class="col-xs-2">
                 @if($previous_applicant !== NULL)
-                <a class="btn btn-default btn-lg pager-previous pull-left" href="{{url('/a/'.$previous_applicant)}}" rel="previous"><i class="fa fa-chevron-circle-left"></i>&nbsp;Previous</a>
+                <a class="btn btn-default btn-shadow btn-lg pager-previous pull-left" href="{{url('/a/'.$previous_applicant)}}" rel="previous"><i class="fa fa-chevron-circle-left"></i>&nbsp;Previous</a>
                 @endif
             </div>
             <div class="col-xs-3">
                 @if($next_applicant !== NULL)
-                <a class="btn btn-default btn-lg pager-next pull-right" href="{{url('/a/'.$next_applicant)}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
+                <a class="btn btn-default btn-shadow btn-lg pager-next pull-right" href="{{url('/a/'.$next_applicant)}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
                 @endif
             </div>
-            <a href="#" class="btn btn-default pull-right close-applicant"><i class="fa fa-times"></i></a>
+            <a href="#" class="btn btn-default btn-shadow pull-right close-applicant"><i class="fa fa-times"></i></a>
         </div>
         @endif
         <div class="mini-space"></div>
@@ -103,12 +103,12 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="video-options text-center">
-                                        <button class="btn btn-default mute-button"><i class="fa fa-microphone"></i>&nbsp;<span>Mute</span></button>
-                                        <button class="btn btn-default show-video-button"><i class="fa fa-eye"></i>&nbsp;<span>Stop Video</span></button>
+                                        <button class="btn btn-default btn-shadow mute-button"><i class="fa fa-microphone"></i>&nbsp;<span>Mute</span></button>
+                                        <button class="btn btn-default btn-shadow show-video-button"><i class="fa fa-eye"></i>&nbsp;<span>Stop Video</span></button>
                                         @if(Auth::user('user'))
-                                        <button class="btn btn-default record-button"><i class="fa fa-circle"></i>&nbsp;<span>Start Recording</span></button>
+                                        <button class="btn btn-default btn-shadow record-button"><i class="fa fa-circle"></i>&nbsp;<span>Start Recording</span></button>
                                         @endif
-                                        <button href="#" class="btn btn-success interview-applicant"><i class="fa fa-phone"></i>&nbsp;<span>Join Conference</span></button>
+                                        <button href="#" class="btn btn-success btn-shadow interview-applicant"><i class="fa fa-phone"></i>&nbsp;<span>Join Conference</span></button>
                                         <div class="video-options-text pull-right">
                                             <text class="save-progress"></text>
                                             <text class="total-files"></text>
@@ -137,7 +137,7 @@
                                         </video>
                                     </div>
                                     <div class="col-xs-2">
-                                        <button class="btn btn-danger pull-right delete-video"><i class="fa fa-times"></i></button>
+                                        <button class="btn btn-danger btn-shadow pull-right delete-video"><i class="fa fa-times"></i></button>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>
                                 </div>
@@ -156,7 +156,7 @@
                     <div role="tabpanel" class="tab-pane" id="tests-tab">
                         @foreach($tests as $test)
                         <div class="tests-container">
-                            <div class="box box-primary">
+                            <div class="box box-default">
                                 <div class="box-container">
                                     <div class="box-header">
                                         <h3 class="box-title">{{ $test->title }}</h3>
@@ -166,15 +166,15 @@
                                             <div class="slider-container">
                                                 <div class="slider-div text-center active">
                                                     <div class="slider-body">
-                                                        <h1>{{ $test->start_message }}</h1>
-                                                        <button class="btn btn-submit btn-next">Start</button>
+                                                        <h3 style="font-size: 23px;">{{ $test->start_message }}</h3>
+                                                        <button class="btn btn-shadow btn-submit btn-next">Start</button>
                                                     </div>
                                                 </div>
                                                 @foreach($questions->where('test_id',$test->id) as $question)
                                                 <div class="slider-div">
                                                     <div class="slider-body">
                                                         <div class="form-group">
-                                                            <h1>{{ $question->question }}</h1>
+                                                            <h3>{{ $question->question }}</h3>
                                                         </div>
                                                         {!! $question->question_photo ?
                                                         '<div class="form-group">' .
@@ -185,8 +185,8 @@
                                                         @if($question->question_type_id == 1)
                                                         @foreach($question->question_choices as $k=>$c)
                                                         <div class="answer-area form-group">
-                                                            <input type="radio" class="simple" name="answer[{{ $question->id }}]" value="{{ $k }}" />
-                                                            {{ $c }}
+                                                            <input type="radio" class="simple radio" name="answer[{{ $question->id }}]" id="radio-{{ $k }}-{{ $question->id }}" value="{{ $k }}" />
+                                                            <label for="radio-{{ $k }}-{{ $question->id }}">{{ $c }}</label>
                                                         </div>
                                                         @endforeach
                                                         @elseif($question->question_type_id == 2)
@@ -195,9 +195,9 @@
                                                         </div>
                                                         @endif
                                                         <div class="text-center">
-                                                            <button class="btn btn-delete btn-prev">Previous</button>
-                                                            <button class="btn btn-submit btn-next">Next</button>
-                                                            <button class="btn btn-timer time-limit hidden" data-length="{{ $question->length ? $question->length : '' }}">
+                                                            <button class="btn btn-shadow btn-delete btn-prev">Previous</button>
+                                                            <button class="btn btn-shadow btn-submit btn-next">Next</button>
+                                                            <button class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $question->length ? $question->length : '' }}">
                                                                 <span class="timer-area">{{ $question->length ? date('i:s', strtotime($question->length)) : '' }}</span>
                                                                 <span class="glyphicon glyphicon-time"></span>
                                                             </button>
@@ -207,9 +207,9 @@
                                                 @endforeach
                                                 <div class="slider-div text-center">
                                                     <div class="slider-body">
-                                                        <h1>{{ $test->completion_message }}</h1>
-                                                        <button class="btn btn-delete btn-prev">Back</button>
-                                                        <button class="btn btn-finish">Complete</button>
+                                                        <h3>{{ $test->completion_message }}</h3>
+                                                        <button class="btn btn-shadow btn-delete btn-prev">Back</button>
+                                                        <button class="btn btn-shadow btn-finish">Complete</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -227,16 +227,16 @@
             @if(Auth::user('user'))
             <div class="row single-applicant-pagination hidden-xs">
                 <div class="col-xs-7">
-                    <a href="{{url('job/'.$job->id)}}" id="job-title" class="btn btn-default bg-gray btn-lg pull-right"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;{{$job->title}}</a>
+                    <a href="{{url('job/'.$job->id)}}" id="job-title" class="btn btn-shadow btn-default bg-gray btn-lg pull-right"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;{{$job->title}}</a>
                 </div>
                 <div class="col-xs-2">
                     @if($previous_applicant !== NULL)
-                    <a class="btn btn-default btn-lg pager-previous pull-left" href="{{url('/a/'.$previous_applicant)}}" rel="previous"><i class="fa fa-chevron-circle-left"></i>&nbsp;Previous</a>
+                    <a class="btn btn-shadow btn-default btn-lg pager-previous pull-left" href="{{url('/a/'.$previous_applicant)}}" rel="previous"><i class="fa fa-chevron-circle-left"></i>&nbsp;Previous</a>
                     @endif
                 </div>
                 <div class="col-xs-2">
                     @if($next_applicant !== NULL)
-                    <a class="btn btn-default btn-lg pager-next pull-right" href="{{url('/a/'.$next_applicant)}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
+                    <a class="btn btn-shadow btn-default btn-lg pager-next pull-right" href="{{url('/a/'.$next_applicant)}}" rel="next">Next&nbsp;<i class="fa fa-chevron-circle-right"></i></a>
                     @endif
                 </div>
                 <div class="col-xs-1">
