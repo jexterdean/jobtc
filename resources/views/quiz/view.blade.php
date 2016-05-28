@@ -55,7 +55,7 @@
                                         <div class="slider-body">
                                             <span style="font-size: 23px;">{{ $tests_info->completion_message }}</span>
                                             <br />
-                                            <button type="submit" class="btn btn-finish">Complete</button>
+                                            <a class="btn btn-finish" href="{{ url('quiz/' . $v->test_id . '?p=review') }}">Complete</a>
                                         </div>
                                     </div>
                                 </div>
