@@ -3089,25 +3089,25 @@ fieldset[disabled] a.btn {
 }
 .btn-default {
   color: #333 !important;
-  background-color: #fff;
+  background-color: #f2f2f2;
   border-color: #ccc !important;
 }
 .btn-default:focus,
 .btn-default.focus {
   color: #333;
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
   border-color: #8c8c8c;
 }
 .btn-default:hover {
   color: #333;
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
   border-color: #adadad;
 }
 .btn-default:active,
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
   color: #333;
-  background-color: #e6e6e6;
+  background-color: #d9d9d9;
   border-color: #adadad;
 }
 .btn-default:active:hover,
@@ -3120,7 +3120,7 @@ fieldset[disabled] a.btn {
 .btn-default.active.focus,
 .open > .dropdown-toggle.btn-default.focus {
   color: #333;
-  background-color: #d4d4d4;
+  background-color: #c7c7c7;
   border-color: #8c8c8c;
 }
 .btn-default:active,
@@ -3137,34 +3137,34 @@ fieldset[disabled] .btn-default:focus,
 .btn-default.disabled.focus,
 .btn-default[disabled].focus,
 fieldset[disabled] .btn-default.focus {
-  background-color: #fff;
+  background-color: #f2f2f2;
   border-color: #ccc;
 }
 .btn-default .badge {
-  color: #fff;
+  color: #f2f2f2;
   background-color: #333;
 }
 .btn-edit {
   color: #fff !important;
-  background-color: #337ab7;
+  background-color: #4285F4;
   border-color: #fff !important;
 }
 .btn-edit:focus,
 .btn-edit.focus {
   color: #fff;
-  background-color: #286090;
+  background-color: #1266f1;
   border-color: #bfbfbf;
 }
 .btn-edit:hover {
   color: #fff;
-  background-color: #286090;
+  background-color: #1266f1;
   border-color: #e0e0e0;
 }
 .btn-edit:active,
 .btn-edit.active,
 .open > .dropdown-toggle.btn-edit {
   color: #fff;
-  background-color: #286090;
+  background-color: #1266f1;
   border-color: #e0e0e0;
 }
 .btn-edit:active:hover,
@@ -3177,7 +3177,7 @@ fieldset[disabled] .btn-default.focus {
 .btn-edit.active.focus,
 .open > .dropdown-toggle.btn-edit.focus {
   color: #fff;
-  background-color: #204d74;
+  background-color: #0c57d3;
   border-color: #bfbfbf;
 }
 .btn-edit:active,
@@ -3194,11 +3194,11 @@ fieldset[disabled] .btn-edit:focus,
 .btn-edit.disabled.focus,
 .btn-edit[disabled].focus,
 fieldset[disabled] .btn-edit.focus {
-  background-color: #337ab7;
+  background-color: #4285F4;
   border-color: #fff;
 }
 .btn-edit .badge {
-  color: #337ab7;
+  color: #4285F4;
   background-color: #fff;
 }
 .btn-submit {
@@ -6931,6 +6931,9 @@ button.close {
   border-bottom: 1px solid #e5e5e5;
   background: #4285F4;
   color: #ffffff!important;
+  /* Shadows are visible under slightly transparent text color */
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
 }
 .modal-header .close {
   margin-top: -2px;

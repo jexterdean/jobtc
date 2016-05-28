@@ -168,7 +168,10 @@ a:active,a:focus{
     border-bottom: 1px groove #eaeaea !important;
     -moz-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4);
     -webkit-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4);
-    box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
+    box-shadow: inset 0 0 15px rgba(0,0,0,.4)!important;
+}
+.is-task-item-selected a{
+    font-size: 24px!important;
 }
 .is-task-item-selected:hover{
 

@@ -133,9 +133,10 @@
                 @endif
                 @endforeach
                 @endif
+                <br/>
             </div>
             <div class="row">
-                <button class="btn btn-shadow btn-default" data-toggle="modal" data-target="#add_task"><i class="fa fa-plus"></i> New Subproject</button>
+                <button class="btn btn-shadow btn-default" data-toggle="modal" data-target="#add_task"><i class="fa fa-plus"></i> <strong>New Subproject</strong></button>
             </div>
         </div>
         <div class="col-md-4">
