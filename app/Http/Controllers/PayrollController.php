@@ -27,7 +27,7 @@ class PayrollController extends Controller
 
         return View::make('payroll.default', [
             'assets' => $assets,
-            'companies' => $company
+            'company' => $company
         ]);
     }
 

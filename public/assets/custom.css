@@ -130,6 +130,7 @@ a:active,a:focus{
 .task-list .task-header .task-list-header{
     text-shadow: none!important;
     font-weight: bold;
+    white-space: nowrap;
 }
 .task-list .panel-body .panel-content,.checklist-item,.area-content{
     /*border-top: 5px solid rgba(230,230,230, 0.9)!important;
@@ -142,6 +143,17 @@ a:active,a:focus{
     margin-top: 15px;
     margin-bottom: 35px!important;
     box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;
+
+}
+.task-list .panel-body .panel-content{
+    -moz-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
+    -webkit-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
+    box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
+    border-left: 5px solid #ffffff;
+    border-bottom: 5px solid #ffffff;
+    border-right: 5px solid #ffffff;
+    border-top: 0;
+    padding: 10px;
 }
 .is-selected h4{
     font-size: 28px!important;
@@ -173,6 +185,7 @@ body.form-control.textarea.wysihtml5-editor{
 .wysihtml5-toolbar .btn-group .btn{
     padding: 5px 10px;
 }
+/*Section*/
 .section-title{
     text-transform: uppercase;
     font-weight: bold;
@@ -212,6 +225,10 @@ body.form-control.textarea.wysihtml5-editor{
 }
 .section-list > .panel-heading > .row > .col-xs-6 .btn-group{
     margin: -7px 0;
+}
+/*Test*/
+.question-list a{
+    font-size: 23px;
 }
 /*Checkbox and Radio*/
 input[type=radio].radio,input[type=checkbox].checkbox {

@@ -58,7 +58,7 @@
                                             <div class="row task-list-details">
                                                 <div class="col-md-9">
                                                     <a data-toggle="collapse" href="#question-collapse-{{ $q->id }}" class="checklist-header">
-                                                        {{ substr($q->question, 0, 70) . (strlen($q->question) > 70 ? '...' : '') }}
+                                                        {{ substr($q->question, 0, 60) . (strlen($q->question) > 60 ? '...' : '') }}
                                                     </a>
                                                 </div>
                                                 <div class="col-md-1" style="white-space: nowrap;">
@@ -94,7 +94,7 @@
                                                                 @foreach($q->question_choices as $k=>$c)
                                                                     <li class="list-group-item">
                                                                         <div class="row">
-                                                                            <div class="col-md-11" style="font-size: 22px;">
+                                                                            <div class="col-md-11" style="font-size: 23px;">
                                                                                 {{ $c }}
                                                                             </div>
                                                                             <div class="col-md-1 text-center">
