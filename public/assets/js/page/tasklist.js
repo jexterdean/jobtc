@@ -193,7 +193,7 @@ $(function (e) {
 
         CKEDITOR.replace('add-new-task-textarea');
 
-        if (check_list_container.length > 10) {
+        /*if (check_list_container.length > 10) {
 
             $('body').animate({
                 scrollTop: _body.get(0).scrollHeight / 2
@@ -203,7 +203,7 @@ $(function (e) {
             $('body').animate({
                 scrollTop: 0
             }, 500);
-        }
+        }*/
 
         check_list_container.on('click', '.submit-checklist', function (e) {
             _this.removeClass('disabled');

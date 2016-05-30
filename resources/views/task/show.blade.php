@@ -77,7 +77,7 @@
             <div class="col-sm-3">
                 <div class="row">
                     <div class="col-sm-6">
-                        <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Task </a><br/><br/>
+                        <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Doc </a><br/><br/>
                         <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a><br/><br/>
                     </div>
                     <div class="col-sm-4">
