@@ -2,10 +2,10 @@
 .button_style{font-face:verdana;}
 .close {
   display: inline-block;
-  margin-top: 0px;
-  margin-right: 0px;
-  width: 9px;
-  height: 9px;
+  margin-top: 0;
+  margin-right: 0;
+  width: 25px;
+  height: 25px;
   background-repeat: no-repeat !important;
   text-indent: -10000px;
   outline: none;
@@ -29,7 +29,6 @@
     color: #000;
 }
 .ver-inline-menu{list-style:none;}
-
 textarea.form-control {
     max-height: 100%;
     max-width: 100%;

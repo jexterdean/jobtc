@@ -160,24 +160,24 @@
                                         {!!  Form::open(['route' => 'item.store','class' => 'item-form']) !!}
                                         <div class="form-group">
                                             {!!  Form::input('text','item_name','',['class' => 'form-control',
-                                            'placeholder' => 'Enter Item Name']) !!}
+                                            'placeholder' => 'Item Name']) !!}
                                         </div>
                                         <div class="form-group">
                                             {!!  Form::input('number','item_quantity','',['class' => 'form-control',
-                                            'placeholder' => 'Enter Item Quantity', 'step' => '.01'])  !!}
+                                            'placeholder' => 'Item Quantity', 'step' => '.01'])  !!}
                                         </div>
                                         <div class="form-group">
                                             {!!  Form::input('number','unit_price','',['class' => 'form-control',
-                                            'placeholder' => 'Enter Unit Price', 'step' => '.01']) !!}
+                                            'placeholder' => 'Unit Price', 'step' => '.01']) !!}
                                         </div>
                                         <div class="form-group">
                                             {!!  Form::textarea('item_description','',['size' => '30x3', 'class' =>
-                                            'form-control', 'placeholder' => 'Enter Item Description']) !!}
+                                            'form-control', 'placeholder' => 'Item Description']) !!}
                                         </div>
                                         <div class="form-group">
                                             {!!  Form::hidden('billing_id',$billing->billing_id) !!}
                                             {!! Form::hidden('billing_type',$billing->billing_type) !!}
-                                            {!! Form::submit('Add',['class' => 'btn btn-edit'])  !!}
+                                            {!! Form::submit('Add',['class' => 'btn btn-edit btn-shadow'])  !!}
                                         </div>
                                         {!!  Form::close()  !!}
 

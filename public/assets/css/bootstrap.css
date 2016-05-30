@@ -6929,7 +6929,7 @@ button.close {
 .modal-header {
   padding: 15px;
   border-bottom: 1px solid #e5e5e5;
-  background: #4285F4;
+  background: #4285F4 !important;
   color: #ffffff!important;
   /* Shadows are visible under slightly transparent text color */
   color: #ffffff;

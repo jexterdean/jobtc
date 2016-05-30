@@ -3,7 +3,7 @@
         {!!   Form::label('ref_no','Ref No',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','ref_no',isset($billing->ref_no) ? $billing->ref_no : '',['class' =>
-            'form-control', 'placeholder' => 'Enter Ref No', 'tabindex' => '1']) !!}
+            'form-control', 'placeholder' => 'Ref. No', 'tabindex' => '1']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -17,7 +17,7 @@
         {!!  Form::label('issue_date','Issue Date',['class' => 'col-md-3 control-label'])  !!}
         <div class="col-md-3">
             {!!  Form::input('text','issue_date',isset($billing->issue_date) ? date("d-m-Y",strtotime
-            ($billing->issue_date)) : '', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Enter Issue Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+            ($billing->issue_date)) : '', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Issue Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
         </div>
     </div>
     @if($data['billing_type'] == 'invoice')

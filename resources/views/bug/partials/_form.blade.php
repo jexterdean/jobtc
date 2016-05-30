@@ -3,7 +3,7 @@
         {!!  Form::label('ref_no','Reference No',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','ref_no',isset($bugs->ref_no) ? $bugs->ref_no : '',['class' => 'form-control',
-            'placeholder' => 'Enter Reference No', 'tabindex' => '1']) !!}
+            'placeholder' => 'Reference No', 'tabindex' => '1']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -18,14 +18,14 @@
         date-picker']) !!}
         <div class="col-md-9">
             {!!  Form::input('text','reported_on',isset($bugs->reported_on) ? date("d M Y H:i",strtotime
-            ($bugs->reported_on)) : '',['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Enter Report Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+            ($bugs->reported_on)) : '',['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Report Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
         </div>
     </div>
     <div class="form-group">
         {!!  Form::label('bug_description','Description',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-9">
             {!!  Form::textarea('bug_description',isset($bugs->bug_description) ? $bugs->bug_description : '',['size'
-            => '30x3', 'class' => 'form-control', 'placeholder' => 'Enter Project Description', 'tabindex' => '4']) !!}
+            => '30x3', 'class' => 'form-control', 'placeholder' => 'Project Description', 'tabindex' => '4']) !!}
         </div>
     </div>
     <div class="form-group">

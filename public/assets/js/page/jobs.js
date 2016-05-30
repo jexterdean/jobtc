@@ -20,6 +20,7 @@ $('.edit-job').click(function (e) {
         },
         buttons: [{
                 label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
                 action: function (dialog) {
                     var ajaxurl = public_path +'/updateJob/'+job_id;
                     var form = $(".edit-job-form")[0];
@@ -59,6 +60,7 @@ $('.edit-job').click(function (e) {
                                 message: data,
                                 buttons: [{
                                         label: 'Ok',
+                                        cssClass: 'btn-edit btn-shadow',
                                         action: function (dialog) {
                                             dialog.close();
                                         }
@@ -82,6 +84,7 @@ $('.edit-job').click(function (e) {
                                 message: status,
                                 buttons: [{
                                         label: 'Ok',
+                                        cssClass: 'btn-edit btn-shadow',
                                         action: function (dialog) {
                                             dialog.close();
                                         }
@@ -94,6 +97,7 @@ $('.edit-job').click(function (e) {
                 }
             }, {
                 label: 'Close',
+                cssClass: 'btn-delete btn-shadow',
                 action: function (dialog) {
                     dialog.close();
                 }
@@ -205,6 +209,7 @@ $(".apply-to-job").click(function () {
         },
         buttons: [{
                 label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
                 action: function (dialog) {
                     var ajaxurl = public_path +'/applyToJob';
                     var form = $(".apply-to-job-form")[0];
@@ -229,6 +234,7 @@ $(".apply-to-job").click(function () {
                                 message: data,
                                 buttons: [{
                                         label: 'Ok',
+                                        cssClass: 'btn-edit btn-shadow',
                                         action: function (dialog) {
                                             dialog.close();
                                         }
@@ -240,6 +246,7 @@ $(".apply-to-job").click(function () {
                                 message: data,
                                 buttons: [{
                                         label: 'Ok',
+                                        cssClass: 'btn-edit btn-shadow',
                                         action: function (dialog) {
                                             dialog.close();
                                         }
@@ -261,6 +268,7 @@ $(".apply-to-job").click(function () {
                                 message: error,
                                 buttons: [{
                                         label: 'Ok',
+                                        cssClass: 'btn-edit btn-shadow',
                                         action: function (dialog) {
                                             dialog.close();
                                         }
@@ -273,6 +281,7 @@ $(".apply-to-job").click(function () {
                 }
             }, {
                 label: 'Close',
+                cssClass: 'btn-delete btn-shadow',
                 action: function (dialog) {
                     dialog.close();
                 }
@@ -289,7 +298,7 @@ $(".apply-to-job").click(function () {
 
 $('.status-container').tagEditor({
     maxTags: 9999,
-    placeholder: 'Enter tags ...',
+    placeholder: 'Tags ...',
     autocomplete: {
         delay: 0, // show suggestions immediately
         position: { collision: 'flip' }, // automatic menu position up/down
