@@ -7,7 +7,7 @@ body
 {
 	/* Font */
 	font-family: sans-serif, Verdana , Arial, "Trebuchet MS";
-	font-size: 18px;
+	font-size: 19px;
 
 	/* Text color */
 	color: #000;
@@ -20,7 +20,7 @@ body
 
 .cke_editable
 {
-	font-size: 19px;
+	font-size: 20px;
 	//line-height: 1;
 
 	/* Fix for missing scrollbars with RTL texts. (#10488) */
@@ -67,7 +67,7 @@ ol,ul,dl
 h1,h2,h3,h4,h5,h6
 {
 	font-weight: normal;
-	line-height: 1.2;
+	line-height: 1;
 }
 
 hr

@@ -2,8 +2,8 @@
 @section('content')
     <div class="row">
         <div class="col-md-6 col-sm-12">
-            <div style="clear:both;"></div>
-            <br/>
+            {{--<div style="clear:both;"></div>
+            <br/>--}}
             <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-lightbulb-o"></i> Pending Projects</h3>

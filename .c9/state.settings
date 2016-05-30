@@ -1,0 +1,518 @@
+{
+    "ace": {
+        "search": {
+            "@backwards": "false",
+            "@highlightmatches": "true",
+            "@matchcase": "false",
+            "@preservecase": "false",
+            "@regex": "false",
+            "@wholeword": "false",
+            "@wraparound": "true"
+        }
+    },
+    "console": {
+        "@expanded": true,
+        "@height": 219,
+        "@maximized": "false",
+        "json()": {
+            "meta": {
+                "accessList": [
+                    "tab0",
+                    "tab9",
+                    "tab7",
+                    "tab1",
+                    "tab5",
+                    "tab3"
+                ]
+            },
+            "name": "pane1",
+            "nodes": [
+                {
+                    "type": "tab",
+                    "name": "tab0",
+                    "path": "",
+                    "className": [
+                        "tab0"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "filter": true,
+                        "title": "bash - \"job.tc\"",
+                        "tooltip": "bash - \"job.tc\"",
+                        "terminal": {
+                            "id": "devel_52",
+                            "cwd": "",
+                            "width": 0,
+                            "height": 0,
+                            "scrollTop": -1
+                        },
+                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
+                        "meta": {
+                            "timestamp": 1464599117847
+                        }
+                    },
+                    "editorType": "terminal",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab1",
+                    "path": "",
+                    "className": [
+                        "tab1"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "Immediate (Javascript (browser))",
+                        "tooltip": "Immediate (Javascript (browser))",
+                        "immediate": {
+                            "folds": [],
+                            "scrolltop": 0,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 2,
+                                    "column": 0
+                                },
+                                "end": {
+                                    "row": 2,
+                                    "column": 0
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": 0,
+                            "type": "jsbrowser",
+                            "history": [],
+                            "pos": 0
+                        },
+                        "hash": "bc37e9908b413249fe666f189265c03143e4d841",
+                        "meta": {},
+                        "changed": false
+                    },
+                    "editorType": "immediate",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab5",
+                    "path": "",
+                    "className": [
+                        "tab5"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "public/assets/css/page/companies.css - Idle",
+                        "tooltip": "public/assets/css/page/companies.css - Idle",
+                        "output": {
+                            "id": "output491820",
+                            "width": 1848,
+                            "height": 193,
+                            "scrollTop": 230.20016479492188,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/css/page/companies.css",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        },
+                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
+                        "meta": {
+                            "timestamp": 1464599806313
+                        },
+                        "changed": false
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab3",
+                    "path": "",
+                    "className": [
+                        "tab3"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "public/assets/ckeditor/contents.css - Stopped",
+                        "tooltip": "public/assets/ckeditor/contents.css - Stopped",
+                        "output": {
+                            "id": "output835570",
+                            "width": 1848,
+                            "height": 193,
+                            "scrollTop": 302,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/ckeditor/contents.css",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        },
+                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
+                        "meta": {
+                            "timestamp": 1464608163060
+                        },
+                        "changed": false
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab7",
+                    "path": "",
+                    "className": [
+                        "tab7"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1464612293774
+                        },
+                        "filter": true,
+                        "title": "public/assets/ckeditor/config.js - Idle",
+                        "tooltip": "public/assets/ckeditor/config.js - Idle",
+                        "output": {
+                            "id": "output915323",
+                            "width": 1544,
+                            "height": 193,
+                            "config": {
+                                "runner": "Node.js",
+                                "command": "public/assets/ckeditor/config.js",
+                                "toolbar": true,
+                                "debug": true,
+                                "name": ""
+                            }
+                        }
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab9",
+                    "path": "",
+                    "className": [
+                        "tab9"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1464613855213
+                        },
+                        "filter": true,
+                        "title": "resources/views/task/show.blade.php - Idle",
+                        "tooltip": "resources/views/task/show.blade.php - Idle",
+                        "output": {
+                            "id": "output615430",
+                            "width": 1544,
+                            "height": 193,
+                            "config": {
+                                "runner": "PHP (built-in web server)",
+                                "command": "resources/views/task/show.blade.php",
+                                "toolbar": true,
+                                "debug": true
+                            },
+                            "running": {
+                                "name": "output615430",
+                                "running": 1,
+                                "runner": [
+                                    {
+                                        "cmd": [
+                                            "php",
+                                            "${debug?-d}",
+                                            "${debug?xdebug.remote_enable=1}",
+                                            "-S",
+                                            "$ip:$port"
+                                        ],
+                                        "selector": "^.*\\.(php)$",
+                                        "working_dir": "$project_path",
+                                        "debugger": "xdebug",
+                                        "debugport": 9000,
+                                        "env": {
+                                            "XDEBUG_CONFIG": "idekey=cloud9ide remote_host=localhost remote_port=9000 remote_mode=req"
+                                        },
+                                        "info": "Starting PHP built-in web server, serving \\033[01;34m$hostname_path\\033[00m.",
+                                        "caption": "PHP (built-in web server)",
+                                        "$builtin": true
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "editorType": "output",
+                    "active": true
+                }
+            ],
+            "skin": "editor_tab",
+            "skinset": "default",
+            "type": "pane"
+        }
+    },
+    "experiments": {
+        "@@enabled": true,
+        "@autosave": 0,
+        "@flat-dark": 0,
+        "@git": 1,
+        "@go_completion": 0,
+        "@mount": 0,
+        "@plugin-manager": 1,
+        "@plugins": 0,
+        "@sdk": 0,
+        "@test": 0
+    },
+    "ext": {
+        "counters": {
+            "@ace": 1,
+            "@acestatus": 1,
+            "@datagrid": 1,
+            "@divider": 4,
+            "@document": 10,
+            "@form": 5,
+            "@immediate": 1,
+            "@menu": 5,
+            "@menuitem": 13,
+            "@pane": 3,
+            "@postmessage": 1,
+            "@preferences": 1,
+            "@preview": 1,
+            "@session": 8,
+            "@tab": 10,
+            "@tree": 2,
+            "@undoManager": 10
+        }
+    },
+    "findinfiles": {
+        "@console": "true",
+        "@matchcase": "false",
+        "@regex": "false",
+        "@scope": "selection",
+        "@wholeword": "false"
+    },
+    "menus": {
+        "@minimized": "false"
+    },
+    "nak": {
+        "@installed": true
+    },
+    "panecycle": {
+        "json()": [
+            "tab8",
+            "tab9"
+        ]
+    },
+    "panels": {
+        "@active-left": "tree",
+        "@width-left": 304,
+        "commands.panel": {
+            "@enabled": "true",
+            "@name": "commands.panel"
+        },
+        "debugger": {
+            "@enabled": "true",
+            "@name": "debugger"
+        },
+        "navigate": {
+            "@enabled": "true",
+            "@name": "navigate"
+        },
+        "outline": {
+            "@enabled": "true",
+            "@name": "outline"
+        },
+        "scm": {
+            "@enabled": "true",
+            "@name": "scm"
+        },
+        "tree": {
+            "@enabled": "true",
+            "@name": "tree"
+        }
+    },
+    "projecttree": {
+        "@scrollpos": 2922,
+        "@showfs": true,
+        "expanded": {
+            "json()": [
+                "/",
+                "/public",
+                "/public/assets/css",
+                "/public/assets/css/page",
+                "/app",
+                "/app/Http",
+                "/app/Http/Controllers",
+                "/public/assets/js",
+                "/public/assets",
+                "/storage/app",
+                "/storage/app/purifier",
+                "/bootstrap",
+                "/bootstrap/cache",
+                "/app/Http/Controllers/Auth",
+                "/public/assets/ckeditor",
+                "/resources",
+                "/resources/views",
+                "/resources/views/task"
+            ]
+        }
+    },
+    "recentfiles": {
+        "json()": []
+    },
+    "tabs": {
+        "json()": {
+            "focus": "/resources/views/task/show.blade.php",
+            "meta": {
+                "accessList": [
+                    "tab8",
+                    "tab6",
+                    "tab4",
+                    "tab2"
+                ]
+            },
+            "name": "pane0",
+            "nodes": [
+                {
+                    "type": "tab",
+                    "name": "tab4",
+                    "path": "/public/assets/css/page/companies.css",
+                    "className": [
+                        "tab4"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "companies.css",
+                        "tooltip": "/public/assets/css/page/companies.css",
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 60,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 29,
+                                    "column": 22
+                                },
+                                "end": {
+                                    "row": 29,
+                                    "column": 22
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": {
+                                "row": 3,
+                                "state": "comment",
+                                "mode": "ace/mode/css"
+                            }
+                        },
+                        "hash": "814afd8b8057dd84a9665d9ed22ab81c230ff95b",
+                        "meta": {
+                            "timestamp": 1464599866122
+                        },
+                        "changed": false
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab2",
+                    "path": "/public/assets/ckeditor/contents.css",
+                    "className": [
+                        "tab2"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "contents.css",
+                        "tooltip": "/public/assets/ckeditor/contents.css",
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 60,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 9,
+                                    "column": 14
+                                },
+                                "end": {
+                                    "row": 9,
+                                    "column": 14
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": 0
+                        },
+                        "hash": "3d227bac5779f4313d8510d84af5f53adbc1c795",
+                        "meta": {
+                            "timestamp": 1464608308952
+                        },
+                        "changed": false
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab6",
+                    "path": "/public/assets/ckeditor/config.js",
+                    "className": [
+                        "tab6"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1464612293957
+                        },
+                        "filter": true,
+                        "title": "config.js",
+                        "tooltip": "/public/assets/ckeditor/config.js",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab8",
+                    "path": "/resources/views/task/show.blade.php",
+                    "className": [
+                        "tab8",
+                        "focus"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1464613855082
+                        },
+                        "filter": true,
+                        "title": "show.blade.php",
+                        "tooltip": "/resources/views/task/show.blade.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": true
+                }
+            ],
+            "skin": "editor_tab",
+            "skinset": "default",
+            "type": "pane"
+        }
+    },
+    "tree_selection": {
+        "json()": [
+            "/resources/views/task/show.blade.php"
+        ]
+    }
+}
