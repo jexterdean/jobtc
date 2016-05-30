@@ -68,3 +68,12 @@
     height: 80px;
     width: 80px;
 }
+
+.task-list {
+    margin-bottom: 0px;
+}
+
+.check-list-container {
+    max-height: none !important;
+    overflow-y: inherit !important;
+}

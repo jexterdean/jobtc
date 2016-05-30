@@ -98,7 +98,7 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query){
             $query->orderBy('task_title', 'asc')->get();
-        }],'task_permission')->whereIn('project_id', $project_id_list)->get();
+        }],'task_permission')->where('company_id',$company_id)->whereIn('project_id', $project_id_list)->get();
 
         //Get Jobs by company and user
         $jobs = Job::with('applicants')->where('user_id',$user_id)->where('company_id',$company_id)->get();
@@ -108,6 +108,10 @@ class CompanyController extends BaseController {
         $test_applicants = TestPerApplicant::all();
         
         $test_jobs = TestPerJob::all();
+        
+        //$total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
+        //$finish_checklist = TaskChecklist::where('status', '=', 'Completed')->where('task_id', '=', $id)->count();
+        //$percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
         
         $assets = ['companies'];
 
