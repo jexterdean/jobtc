@@ -39,10 +39,10 @@ Login CSS
   padding: 3px;
 }
 .login-container ul li i {
-  font-size: 18px;
+  font-size: 20px;
 }
 .login-container .fa-lock {
-  font-size: 20px;
+  font-size: 22px;
 }
 .login-container .checkbox input[type=checkbox] {
   margin-left: 0px;
@@ -120,12 +120,12 @@ Login CSS
     padding: 3px;
   }
   .job-posting-container .job ul li i {
-    font-size: 18px;
+    font-size: 20px;
   }
   .job-posting-container .job .job-info .media-heading {
     color: #000;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 20px;
   }
   .job-posting-container .apply-to-job-mobile {
     display: inline;

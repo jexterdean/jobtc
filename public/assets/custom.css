@@ -29,7 +29,7 @@
     color: #000;
 }
 .ver-inline-menu{list-style:none;}
-textarea.form-control {
+textarea.form-control.edit-checklist-item {
     max-height: 100%;
     max-width: 100%;
     width:1227px;
@@ -285,4 +285,21 @@ input[type=checkbox].checkbox + label,input[type=radio].radio + label{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+/*File Upload*/
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }

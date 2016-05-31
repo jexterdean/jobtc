@@ -114,9 +114,9 @@
                                 <div class="btn-group pull-right">
                                 <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    @if(Auth::user('user')->user_id === $val->user_id)
+                                    {{--@if(Auth::user('user')->user_id === $val->user_id)
                                     <a href="{{ url('task/delete/'.$val->task_id) }}" class="delete-tasklist"><i class="fa fa-times" aria-hidden="true"></i></a>
-                                    @endif
+                                    @endif--}}
                                 </div>
                             </div>
                         </div>

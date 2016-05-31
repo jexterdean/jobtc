@@ -213,11 +213,10 @@ class ProjectController extends BaseController {
     public function edit($id) {
         //
         $project = Project::find($id);
-        $client_options = Company::orderBy('company_name', 'asc')
-                ->lists('company_name', 'client_id');
+        $client_options = Company::orderBy('name', 'asc')
+                ->lists('name', 'id');
 
-        $user = User::where('client_id', '=', '')
-                ->orderBy('name', 'asc')
+        $user = User::orderBy('name', 'asc')
                 ->lists('name', 'email');
 
         return view('project.edit', [

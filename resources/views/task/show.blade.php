@@ -58,6 +58,16 @@
                                             <div class="checklist-item">{!! $list_item->checklist !!}</div>
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            <hr/>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="pull-right">
+                                                        <a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
+                                                        <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
+                                                        <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -74,30 +84,26 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Doc </a><br/><br/>
-                        <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a><br/><br/>
-                    </div>
-                    <div class="col-sm-4">
-                        <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;
-                    </div>
-                    <div class="col-sm-2">
-                        @foreach($links as $link)
-                        <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a><br/>
-                        @endforeach
-                    </div>
+            <div class="col-sm-8">
+                <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
+                <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
+
+                <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
+                {{--@if(Auth::user('user')->user_id === $task->user_id)--}}
+                    <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
+                {{--@endif--}}
+                @if($current_time)
+                    <a class="btn btn-shadow btn-sm btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
+                @else
+                    <a class="btn btn-shadow btn-sm btn-timer timer-btn start_time">Start Time</a>
+                @endif
+                <div class="col-sm-4">
+                    @foreach($links as $link)
+                    <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a><br/>
+                    @endforeach
                 </div>
             </div>
-            <div class="col-sm-offset-2 col-sm-2">
-                @if($current_time)
-                <a class="btn btn-shadow btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
-                @else
-                <a class="btn btn-shadow btn-timer timer-btn start_time">Start Time</a>
-                @endif
-            </div>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="col-sm-5">
@@ -113,7 +119,7 @@
                                     </h4>
                                 </div>
                                 <div class="col-sm-4" >
-                                    <a href="#timer-table-{{ $task->task_id }}" class="btn btn-sm btn-black pull-right" aria-expanded="true" data-widget="collapse" data-toggle="collapse"><i class="fa fa-2x fa-chevron-down"></i></a>
+                                    <a href="#timer-table-{{ $task->task_id }}" class="btn btn-sm btn-black pull-right" aria-expanded="true" data-widget="collapse" data-toggle="collapse"><i class="fa fa-chevron-down"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -450,9 +456,6 @@
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
                         ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
                         ele += '</div>';
                         ele += '<div class="row">';
@@ -460,6 +463,17 @@
                         ele += '<div class="checklist-item">' + val.checklist + '</div>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+
+                        ele += '<hr/>';
+                        ele += '<div class="row">';
+                        ele += '<div class="col-md-12">';
+                        ele += '<div class="pull-right">';
+                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>';
+                        ele += '</div>';
+                        ele += '</div>';
                         ele += '</div>';
                         ele += '</div>';
                         ele += '</li>';
@@ -581,16 +595,15 @@
         _body.on('click', '.alert_delete', function (e) {
             e.preventDefault();
 
-            var index = $(this).parent().parent().parent().index();
+            //var index = $(this).parent().parent().parent().index();
 
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-
             //Get the list group id
-            var list_group_id = $(this).parent().parent().parent().parent().attr('id');
+            //var list_group_id = $(this).parent().parent().parent().parent().attr('id');
 
-            var list_group = $('#' + list_group_id + ' .list-group-item');
+            var list_item = $('#task_item_' + task_list_item_id);
 
-            list_group.eq(index).remove();
+            list_item.remove();
 
             var url = public_path + 'deleteCheckList/' + task_list_item_id;
 

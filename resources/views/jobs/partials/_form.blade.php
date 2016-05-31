@@ -11,12 +11,13 @@
             $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             ?>
             {!! Form::select('company_id', $clients, isset($project->company_id) ?
-            $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company Name', 'tabindex' =>'2'] )  !!}
+            $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-12">
-            <input class="form-control" name="photo" type="file" value="" />
+        <div class="fileUpload btn btn-edit btn-shadow btn-sm">
+            <span>Upload Logo</span>
+            <input class="upload" name="photo" type="file" value="" />
         </div>
     </div>
     <div class="form-group">

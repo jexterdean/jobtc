@@ -15,7 +15,10 @@
             @if(isset($job->photo))
             <img class="profile-pic" src="{{url($job->photo)}}"/>
             @endif
-            <input class="form-control" name="photo" type="file" value="" />
+            <div class="fileUpload btn btn-edit btn-shadow btn-sm">
+                <span>Upload Logo</span>
+                <input class="upload" name="photo" type="file" value="" />
+            </div>
         </div>
     </div>
 </form>

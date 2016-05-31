@@ -8,7 +8,7 @@
             <div class="modal-body">
                 @if(Auth::check('user'))
                 {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
-                @include('project/partials/_form')
+                @include('project/partials/_add_form')
                 {!! Form::close()  !!}
                 @else
                 <div class='alert alert-danger alert-dismissable'>
@@ -100,6 +100,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!! HTML::script('assets/js/jquery.validate.min.js') !!}
 {!! HTML::script('assets/js/AdminLTE/app.js')  !!}
 {!!  HTML::script('assets/js/bootbox.js')  !!}
+{!!  HTML::script('assets/js/moment.min.js')  !!}
 
 @if(in_array('table',$assets))
 {!!   HTML::script('assets/js/plugins/datatables/jquery.dataTables.js') !!}
@@ -114,7 +115,6 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @endif
 
 @if(in_array('calendar',$assets))
-{!!  HTML::script('assets/js/moment.js')  !!}
 {!!  HTML::script('assets/js/fullcalendar.min.js')  !!}
 {!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
 @endif
@@ -144,6 +144,10 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 
 {!! HTML::script('assets/js/countdown.timer.js')  !!}
 {!! HTML::script('assets/js/jquery-dateFormat.js')  !!}
+
+{{--Bootstrap Datetimepicker--}}
+{!! HTML::script('assets/js/bootstrap-datetimepicker.js')  !!}
+{!! HTML::style('assets/css/bootstrap-datetimepicker.css')  !!}
 
 <!--Wysiwyg Editor-->
 @if(!(Request::is('tickets/*') || Request::is('quiz/*')))
@@ -193,6 +197,11 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 
         $('#add_ticket').on('shown.bs.modal', function(e){
             $(this).find('.modal-body').load('{{ $setting->grab('main_route').'/create' }}');
+        });
+        $('.datetimepicker').datetimepicker({
+            format: "DD/MM/YYYY",
+            useCurrent: false,
+            pickTime: false
         });
     });
             $(document).ajaxComplete(function () {
