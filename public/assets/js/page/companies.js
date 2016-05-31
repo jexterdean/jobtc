@@ -72,7 +72,7 @@ $('.taskgroup-list').sortable({
 //For Dragging tests to applicants
 $('.job-applicant-list').sortable({
     dropOnEmpty: true,
-    connectWith: ".job-applicant-list",
+    connectWith: ".job-applicant-list,.job-test-list",
     handle: '.drag-handle',
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
@@ -171,7 +171,7 @@ $('.job-test-list').sortable({
 $('.role-list').sortable({
     dropOnEmpty: true,
     connectWith: ".role-list",
-    handle: '.drag-handle',
+    
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
         //$(this).append($(ui.item).clone());
