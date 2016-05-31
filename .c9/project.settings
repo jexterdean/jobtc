@@ -51,5 +51,10 @@
             "@inited": "true",
             "json()": {}
         }
+    },
+    "share": {
+        "@app": false,
+        "@preview": false,
+        "@useOwnerSettings": false
     }
 }

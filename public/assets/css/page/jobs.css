@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 .space {
-  padding: 15px;
+  padding: 25px;
 }
 .mini-space {
   padding: 5px;
@@ -46,10 +46,10 @@ and open the template in the editor.
     padding: 3px;
 }
 .job-posting-container .job ul li i {
-    font-size: 18px;
+    font-size: 20px;
 }
 .job-posting-container .job-logged-out {
-    padding: 10px;
+    padding: 20px;
     background-color: #ffffff;
     border-color: #fffdfb;
     -webkit-border-bottom-right-radius: 2px;
@@ -72,7 +72,7 @@ and open the template in the editor.
     padding: 3px;
 }
 .job-posting-container .job-logged-out ul li i {
-    font-size: 18px;
+    font-size: 20px;
 }
 .job-posting-container .job-applicant-list-container {
     padding: 10px;
