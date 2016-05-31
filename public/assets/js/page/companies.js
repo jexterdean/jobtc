@@ -171,6 +171,7 @@ $('.job-test-list').sortable({
 $('.role-list').sortable({
     dropOnEmpty: true,
     connectWith: ".role-list",
+    handle: '.drag-handle',
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
         //$(this).append($(ui.item).clone());
