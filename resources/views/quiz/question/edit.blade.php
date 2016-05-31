@@ -1,7 +1,7 @@
 {!! Form::open(array('files' => true, 'url' => 'quiz/' . $questions_info->id . '?p=question', 'method' => 'PATCH')) !!}
 <div class="row">
     <div class="col-md-6 form-group">
-        <label class="col-sm-4">Question Type:</label>
+        <label class="col-sm-4 text-right">Question Type:</label>
         <div class="col-md-8">
             <?php
             echo Form::select(
@@ -18,7 +18,7 @@
             <input type='text' name="length" style="width: 100px;" class="q-form time-form form-control" value="{{ $questions_info->length ? date('i:s', strtotime($questions_info->length)) : '' }}" />
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>">
         <div class="form-inline">
             <label>Points:</label>
             <input type="number" name="points" style="width: 100px;" class="q-form form-control" value="{{ $questions_info->points }}" />
@@ -27,7 +27,7 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2">Question:</label>
+        <label class="col-sm-2 text-right">Question:</label>
         <div class="col-md-10">
             <textarea name="question" class="q-form form-control">{{ $questions_info->question }}</textarea>
         </div>
@@ -43,7 +43,7 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2">Question Photo:</label>
+        <label class="col-sm-2 text-right">Question Photo:</label>
         <div class="col-md-10">
             <div class="media">
                 <div class="media-left">
@@ -63,11 +63,11 @@
         </div>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>">
     <div class="row">
-        <label class="col-sm-2">Question Answers:</label>
+        <label class="col-sm-2 text-right">Question Answers:</label>
         <div class="col-md-10">
-            <div class="question-type-area" data-type="1" <?php echo $questions_info->question_type_id == 1 ? '' : 'style="display: none;"'; ?>>
+            <div class="question-type-area<?php echo $questions_info->question_type_id == 1 ? '' : ' hidden'; ?>" data-type="1">
                 <?php
                 $choices = $questions_info->question_type_id == 1 ? json_decode($questions_info->question_choices) : array();
                 ?>
@@ -118,7 +118,7 @@
                     <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit" />
                 </div>
             </div>
-            <div class="question-type-area" data-type="2" <?php echo $questions_info->question_type_id == 2 ? '' : 'style="display: none;"'; ?>>
+            <div class="question-type-area<?php echo $questions_info->question_type_id == 2 ? '' : ' hidden'; ?>" data-type="2">
                 <input type="text" name="question_answer" class="q-form form-control" <?php
                     echo $questions_info->question_type_id == 1 ? 'disabled' : 'value="' . $questions_info->question_answer . '"';
                     ?> />

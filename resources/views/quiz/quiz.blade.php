@@ -9,17 +9,13 @@
                             <div class="row">
                                 <div class="col-xs-5">
                                     <h4 class="panel-title task-list-header">
-                                        {{ $val->title }}
+                                        {{ substr($val->title, 0, 25) . (strlen($val->title) > 25 ? '...' : '') }}
                                     </h4>
                                 </div>
-                                <div class="col-xs-2">
-                                    <strong>Questions:</strong> {{ count($val->question) }}
-                                </div>
-                                <div class="col-xs-2">
-                                    <strong>Time:</strong> {{ date('i:s', $val->total_time) }}
-                                </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-7">
                                     <div class="btn-group pull-right">
+                                        <strong>Questions:</strong> {{ count($val->question) }}&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Time:</strong> {{ date('i:s', $val->total_time) }}&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="tc-icons">
                                             <i class="fa fa-eye"></i>
                                         </a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -45,7 +41,7 @@
                                         <li id="question-{{ $q->id }}" data-id="{{ $q->id }}" class="list-group-item task-list-item question-list">
                                             <div class="row task-list-details">
                                                 <div class="col-md-8">
-                                                    <a data-toggle="collapse" href="#question-collapse-{{ $q->id }}" class="checklist-header" style="font-size: 20px;">
+                                                    <a data-toggle="collapse" href="#question-collapse-{{ $q->id }}" class="checklist-header" style="font-size: 22px;">
                                                         {{ substr($q->question, 0, 50) . (strlen($q->question) > 50 ? '...' : '') }}
                                                     </a>
                                                 </div>
@@ -120,6 +116,14 @@
                     @endforeach
                 @endif
             </div>
+            <br/>
+            <div class="row">
+                <a class="btn btn-shadow btn-default trigger-links" href="{{ url('quiz/create?p=test') }}" data-method="GET" data-title="Add Test">
+                    <i class="fa fa-plus"></i>
+                    <strong>New Test</strong>
+                </a>
+            </div>
+
         </div>
         <div class="col-md-4">
             @include('quiz.result')
