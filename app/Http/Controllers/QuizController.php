@@ -70,6 +70,14 @@ class QuizController extends BaseController
             ->leftJoin('user', 'user.user_id', '=', 'test_result.user_id')
             ->orderBy('test_result.created_at', 'asc')
             ->get();
+        if(count($result) > 0){
+            foreach($result as $r){
+                $average = $r->score > 0 ? $r->score/$r->total_question : $r->score;
+                $average *= 100;
+                $r->average = number_format($average) . '%';
+            }
+        }
+
         $data['result'] = $result;
 
         $test = DB::table('test')
@@ -113,15 +121,19 @@ class QuizController extends BaseController
                 if(count($result) > 0){
                     foreach($result as $r){
                         if($r->test_id == $t->id){
-                            $score += $r->score;
+                            $average = $r->score > 0 ? $r->score/count($questions) : $r->score;
+                            $average *= 100;
+                            $average = (float)number_format($average);
+                            $score += $average;
                             $taker_count ++;
                         }
                     }
                 }
-                $ave = $score > 0 ? $score/$taker_count : $score;
-                $t->ave = number_format($ave, 2) . '/' . count($questions);
+                $t->average = $score > 0 ? number_format($score/$taker_count) : $score;
+                $t->average .= '%';
             }
         }
+        //exit;
 
         $data['test'] = $test;
     }
@@ -135,10 +147,16 @@ class QuizController extends BaseController
     {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
         $id = isset($_GET['id']) ? $_GET['id'] : '';
+
+        $default_time = DB::table('test')
+            ->where('id', '=', $id)
+            ->pluck('default_time');
+
         $data = [
             'assets' => ['input-mask', 'waiting'],
             'page' => 'edit',
-            'test_id' => $id
+            'test_id' => $id,
+            'default_time' => $default_time
         ];
         $this->setData($data);
 
@@ -169,11 +187,15 @@ class QuizController extends BaseController
         }
         else if($page == "question") {
             $label = 'Question';
-            $validation = Validator::make($request->all(), [
+            $required = [
                 'question_type_id' => 'required',
-                'question' => 'required',
-                'points' => 'required'
-            ]);
+                'question' => 'required'
+            ];
+            if(Input::get('question_type_id') != 3){
+                $required['points'] = 'required';
+            }
+
+            $validation = Validator::make($request->all(), $required);
         }
         else if($page == "exam") {
             $label = 'Exam';
@@ -197,6 +219,7 @@ class QuizController extends BaseController
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
                 $test->completion_message = Input::get('completion_message');
+                $test->default_time = Input::get('default_time') ? '00:' . Input::get('default_time') : '';
                 $test->save();
 
                 if (Input::file('test_photo')) {
@@ -248,9 +271,14 @@ class QuizController extends BaseController
                 $q = Question::where('id', Input::get('question_id'))
                     ->first();
 
-                $r = $q->question_type_id == 1 ?
-                    ($q->question_answer == Input::get('answer') ? 1 : 0) :
-                    (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0);
+                $r = $q->question_type_id == 3 ?
+                    0 :
+                    (
+                        $q->question_type_id == 1 ?
+                            ($q->question_answer == Input::get('answer') ? 1 : 0) :
+                            (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0)
+                    );
+
                 $result = new TestResultModel();
                 $result->test_id = $id;
                 $result->question_id = Input::get('question_id');
@@ -430,6 +458,7 @@ class QuizController extends BaseController
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
                 $test->completion_message = Input::get('completion_message');
+                $test->default_time = Input::get('default_time') ? '00:' . Input::get('default_time') : '';
                 $test->save();
 
                 if (Input::file('test_photo')) {

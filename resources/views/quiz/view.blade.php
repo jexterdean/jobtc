@@ -40,9 +40,13 @@
                                                 <div class="form-group">
                                                     <input type="text" name="answer[{{ $v->id }}]" class="form-control" placeholder="answer here..." />
                                                 </div>
+                                            @elseif($v->question_type_id == 3)
+                                                <div class="form-group">
+                                                    <textarea name="answer[{{ $v->id }}]" class="form-control summernote-editor" rows="3" placeholder="answer here..."></textarea>
+                                                </div>
                                             @endif
                                             <div class="text-center">
-                                                <button type="button" class="btn btn-submit btn-next" id="{{ $v->id }}">Next</button>
+                                                <button type="button" data-type="{{ $v->question_type_id }}" class="btn btn-submit btn-next" id="{{ $v->id }}">Next</button>
                                                 <button type="button" class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
                                                     <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
                                                     <span class="glyphicon glyphicon-time"></span>
@@ -97,6 +101,16 @@
 
 @section('js_footer')
 @parent
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.min.js"></script>
+<style>
+    .note-editable{
+        height: 400px;
+    }
+</style>
 <script>
     var interval;
     $(function(e){
@@ -106,12 +120,18 @@
 
         btn_next.click(function(e){
             var thisId = this.id;
+            var type = $(this).data('type');
             var slider_div = $(this).closest('.slider-div');
             if(thisId){
                 var thisElement = $('input[name="answer[' + thisId + ']"]');
-                var answer = thisElement.attr('type') == "radio" ?
-                    $('input[name="answer[' + thisId + ']"]:checked').val() :
-                    thisElement.val();
+                var answer =
+                    type == 3 ?
+                    $('textarea[name="answer[' + thisId + ']"]').summernote('code') :
+                    (
+                        thisElement.attr('type') == "radio" ?
+                            $('input[name="answer[' + thisId + ']"]:checked').val() :
+                            thisElement.val()
+                    );
                 var data = {
                    question_id: thisId,
                    answer: answer == undefined ? '' : answer
@@ -122,6 +142,9 @@
                     method: "POST",
                     success: function(doc) {
                         slider_div.remove();
+                    },
+                    error: function(a, b, c){
+
                     }
                 });
             }
@@ -144,6 +167,32 @@
                 }
             }
         });
+
+        //region summer note
+        var options = $.extend(true,
+            {
+                lang: '' ,
+                codemirror: {
+                    theme: 'monokai',
+                    mode: 'text/html',
+                    htmlMode: true,
+                    lineWrapping: true
+                }
+            } ,
+            {
+                "toolbar": [
+                    ["style", ["style"]],
+                    ["font", ["bold", "underline", "italic", "clear"]],
+                    ["color", ["color"]],
+                    ["para", ["ul", "ol", "paragraph"]],
+                    ["table", ["table"]],
+                    ["insert", ["link", "picture", "video"]],
+                    ["view", ["fullscreen", "codeview", "help"]]
+                ]
+            }
+        );
+        $("textarea.summernote-editor").summernote(options);
+        //endregion
     });
 
     $.fn.timerStart = function(){

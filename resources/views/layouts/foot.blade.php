@@ -146,7 +146,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!! HTML::script('assets/js/jquery-dateFormat.js')  !!}
 
 <!--Wysiwyg Editor-->
-@if(!Request::is('tickets/*'))
+@if(!(Request::is('tickets/*') || Request::is('quiz/*')))
 {!! HTML::script('assets/ckeditor/ckeditor.js')  !!}
 @endif
 

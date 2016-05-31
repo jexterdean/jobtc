@@ -1,7 +1,7 @@
 {!! Form::open(array('files' => true, 'url' => 'quiz?p=question&id=' . $test_id, 'method' => 'POST')) !!}
 <div class="row">
     <div class="col-md-6 form-group">
-        <label class="col-sm-4">Question Type:</label>
+        <label class="col-sm-4 text-right">Question Type:</label>
         <div class="col-md-8">
             <?php
             echo Form::select(
@@ -15,10 +15,10 @@
     <div class="col-md-3">
         <div class="form-inline">
             <label>Time Limit:</label>
-            <input type='text' name="length" style="width: 100px;" class="q-form time-form form-control" />
+            <input type='text' name="length" style="width: 100px;" class="q-form time-form form-control" value="{{ $default_time ? date('i:s', strtotime($default_time)) : '' }}" />
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 question-points-area">
         <div class="form-inline">
             <label>Points:</label>
             <input type="number" name="points" style="width: 100px;" class="q-form form-control" />
@@ -27,7 +27,7 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2">Question:</label>
+        <label class="col-sm-2 text-right">Question:</label>
         <div class="col-md-10">
             <textarea name="question" class="q-form form-control"></textarea>
         </div>
@@ -35,7 +35,7 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2">Explanation:</label>
+        <label class="col-sm-2 text-right">Explanation:</label>
         <div class="col-md-10">
             <textarea name="explanation" class="q-form form-control"></textarea>
         </div>
@@ -43,15 +43,15 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2">Question Photo:</label>
+        <label class="col-sm-2 text-right">Question Photo:</label>
         <div class="col-md-10">
             <input type="file" name="question_photo" class="form-control" />
         </div>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group question-answer-area">
     <div class="row">
-        <label class="col-sm-2">Question Answers:</label>
+        <label class="col-sm-2 text-right">Question Answers:</label>
         <div class="col-md-10">
             <div class="question-type-area" data-type="1">
                 @for($i = 0; $i < 4; $i ++)
@@ -78,7 +78,7 @@
                     <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit" />
                 </div>
             </div>
-            <div class="question-type-area" data-type="2" style="display: none;">
+            <div class="question-type-area hidden" data-type="2">
                 <input type="text" name="question_answer" class="q-form form-control" disabled />
             </div>
         </div>

@@ -4,9 +4,6 @@
             <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#task-details" data-parent="#accordion_" aria-expanded="true">
                 <h4 class="panel-title">
                     Test List
-                    <a class="pull-right trigger-links" href="{{ url('quiz/create?p=test') }}" data-method="GET" data-title="Add Test">
-                        <i class="fa fa-plus"></i>
-                    </a>
                 </h4>
             </div>
             <div id="task-details" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
@@ -17,7 +14,7 @@
                                 @foreach($test as $v)
                                     <tr>
                                         <td>{{ $v->title }}</td>
-                                        <td>{{ $v->ave }}</td>
+                                        <td>{{ 'Ave. '. $v->average }}</td>
                                     </tr>
                                 @endforeach
                             @else
@@ -50,7 +47,7 @@
                                         <td>{{ $v->score . '/' . $v->total_question }}</td>
                                         <td>
                                             <a href="{{ url('quiz/' . $v->test_id . '?p=review') }}">
-                                                <i class="fa fa-external-link"></i>
+                                                <i class="fa fa-external-link" style="font-size: 2em;"></i>
                                             </a>
                                         </td>
                                     </tr>

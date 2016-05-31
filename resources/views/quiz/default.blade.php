@@ -115,14 +115,26 @@
         $(document).on('change', '.question-type-dp', function(e){
             var showThisQArea = $(this).val();
             var qArea = $(this).closest('.modal-body');
-            qArea.find('.question-type-area')
-                .css('display', 'none')
-                .find('.q-form')
-                .attr('disabled', 'disabled');
-            qArea.find('.question-type-area[data-type="' + showThisQArea + '"]')
-                .css('display', 'block')
-                .find('.q-form')
-                .removeAttr('disabled');
+            if($.inArray(showThisQArea, ["1", "2"]) == -1){
+                qArea
+                    .find('.question-answer-area, .question-points-area')
+                    .addClass('hidden');
+            }
+            else{
+                qArea
+                    .find('.question-answer-area, .question-points-area')
+                    .removeClass('hidden');
+                qArea
+                    .find('.question-type-area')
+                    .addClass('hidden')
+                    .find('.q-form')
+                    .attr('disabled', 'disabled');
+                qArea
+                    .find('.question-type-area[data-type="' + showThisQArea + '"]')
+                    .removeClass('hidden')
+                    .find('.q-form')
+                    .removeAttr('disabled');
+            }
         });
         //endregion
 
