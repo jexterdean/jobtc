@@ -1,5 +1,6 @@
-<div class="row">    
-    @foreach($projects as $project)
+@foreach($projects->chunk(2) as $chunk)
+<div class="row">
+@foreach($chunk as $project)
     <div class="col-md-6">
         <div  class="box box-default">
             <div class="box-container">
@@ -40,5 +41,7 @@
             </div>
         </div>
     </div>
-    @endforeach
+@endforeach
 </div>
+@endforeach
+
