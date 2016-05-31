@@ -72,7 +72,7 @@ $('.taskgroup-list').sortable({
 //For Dragging tests to applicants
 $('.job-applicant-list').sortable({
     dropOnEmpty: true,
-    connectWith: ".list-group",
+    connectWith: ".job-applicant-list",
     handle: '.drag-handle',
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
@@ -121,7 +121,7 @@ $('.job-applicant-list').sortable({
 //Assign tests to a job
 $('.job-test-list').sortable({
     dropOnEmpty: true,
-    connectWith: ".list-group",
+    connectWith: ".job-test-list",
     handle: '.drag-handle',
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
@@ -168,16 +168,27 @@ $('.job-test-list').sortable({
 });
 
 //Assigning users to levels
-$('.org-chart').sortable({
+$('.role-list').sortable({
     dropOnEmpty: true,
-    connectWith: ".org-chart",
+    connectWith: ".role-list",
     remove: function (event, ui) {
         //Don't remove item when dropped to the project list group
         //$(this).append($(ui.item).clone());
     },
     receive: function (event, ui) {
+        var role_id = $(ui.item).parent().attr('id').split('-').pop();
+        var user_id = $(ui.item).find('.user_id').val();
+        var company_id = $(ui.item).find('.company_id').val();
         
-
+        var url = public_path + 'updateRole';
+        var data = {
+            'role_id': role_id,
+            'user_id': user_id,
+            'company_id': company_id
+        };
+        
+        $.post(url,data);
+    
     },
     update: function (event, ui) {
 
@@ -623,4 +634,20 @@ function unassignTask(user_id, task_id, project_id) {
 }
 
 
+
 //For Organizational Chart
+
+//var company_id = window.location.href.split('/').pop();
+
+//var chartdata = public_path + '/getChartData/' + company_id;
+
+/*$.get(chartdata, function (data) { 
+    $("#org-chart").orgchart({
+        'data': data,
+        'depth': 100,
+        'direction': 't2b',
+        'draggable': true,
+        'nodeContent': 'title'
+    });
+});*/
+

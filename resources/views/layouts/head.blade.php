@@ -42,7 +42,7 @@
     
     <!--Page Specific css-->
     @if(in_array('companies',$assets))
-    {!!  HTML::style('assets/js/jOrgChart/jquery.jOrgChart.css')  !!}
+    {!!  HTML::style('assets/js/OrgChart/dist/css/jquery.orgchart.css')  !!}
     {!!  HTML::style('assets/css/page/companies.css')  !!}
     @endif
     
