@@ -23,6 +23,9 @@ Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
 Route::post('saveJobNotes','JobController@saveJobNotes');
 
+/*For Registration*/
+Route::get('register','UserController@getRegisterForm');
+Route::post('register','UserController@register');
 
 /*For Applicant*/
 Route::resource('a', 'ApplicantController');

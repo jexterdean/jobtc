@@ -195,23 +195,41 @@ class CompanyController extends BaseController {
         }
 
         //Check if Role already exists with the same company
-        $role_exists = Role::where('name', 'Admin')->where('company_id', $companies->id)->where('company_division_id', $company_divisions->id)->count();
+        $role_exists = Role::where('name', 'Admin')->where('company_id', $companies->id)->count();
 
         if ($role_exists > 0) {
 
-            $role = Role::where('name', 'Admin')->where('company_id', $companies->id)->where('company_division_id', $company_divisions->id)->first();
+            $role = Role::where('name', 'Admin')->where('company_id', $companies->id)->first();
         } else {
             //Save this user's role as a super user of this company
-            $role = new Role();
-            $role->company_id = $companies->id;
-            $role->company_division_id = $company_divisions->id;
-            $role->name = 'Admin';
-            $role->slug = 'admin-' . $companies->id;
-            $role->description = 'Administrator';
-            $role->level = '1';
-            $role->save();
+            $admin = new Role();
+            $admin->company_id = $companies->id;
+            $admin->company_division_id = $company_divisions->id;
+            $admin->name = 'Admin';
+            $admin->slug = 'admin-' . $companies->id;
+            $admin->description = 'Administrator';
+            $admin->level = '1';
+            $admin->save();
+            
+            $staff = new Role();
+            $staff->company_id = $companies->id;
+            $staff->company_division_id = $company_divisions->id;
+            $staff->name = 'Staff';
+            $staff->slug = 'staff-' . $companies->id;
+            $staff->description = 'Staff';
+            $staff->level = '2';
+            $staff->save();
+            
+            $client = new Role();
+            $client->company_id = $companies->id;
+            $client->company_division_id = $company_divisions->id;
+            $client->name = 'Client';
+            $client->slug = 'client-' . $companies->id;
+            $client->description = 'Client';
+            $client->level = '3';
+            $client->save();
         }
-
+        
         //Map the company to the user's profile
         $profile = new Profile();
         $profile->user_id = $user_id;

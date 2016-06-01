@@ -222,6 +222,70 @@ class UserController extends BaseController
         
         return Redirect::to('user')->withSuccess("User deleted successfully!!");
     }
+    
+    public function getRegisterForm() {
+        
+        $companies = Company::all();
+        $countries = Country::all();
+        
+        return view('user.register',['companies' => $companies,'countries' => $countries]);
+    }
+    
+    public function register(Request $request) {
+        
+        $validation = Validator::make($request->all(), [
+            'password' => 'required',
+            'email' => 'required',
+            'name' => 'required'
+        ]);
+
+        if ($validation->fails()) {
+            return Redirect::to('register')->withErrors($validation->messages());
+        }
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photo_save = $photo->move('assets/user/' , $photo->getClientOriginalName());
+            $photo_path = $photo_save->getPathname();
+        } else {
+            $photo_path = "assets/user/default-avatar.jpg";
+        }
+        
+        //Get the Client Role for the company
+        $client_role = Role::where('company_id',$request->input('company'))->where('level',3)->first();
+        
+        
+        $user = new User;
+        $user->name = $request->input('name');
+        $user->password = bcrypt($request->input('password')); 
+        $user->email = $request->input('email'); 
+        $user->phone = $request->input('phone'); 
+        $user->photo = $photo_path;
+        $user->address_1 = $request->input('address_1'); 
+        $user->address_2 = $request->input('address_2'); 
+        $user->zipcode = $request->input('zipcode'); 
+        $user->country_id = $request->input('country_id'); 
+        $user->skype = $request->input('skype'); 
+        $user->facebook = $request->input('facebook'); 
+        $user->linkedin = $request->input('linkedin');
+        $user->ticketit_admin = 0;
+        $user->ticketit_agent = 0;
+        $user->user_status = 'Active';
+        
+        $user->save();
+
+        
+        $profile = new Profile;
+        $profile->user_id = $user->user_id;
+        $profile->company_id = $request->input('company');
+        $profile->role_id = $client_role->id;
+        $profile->save();
+        
+        $user->attachRole($request->input('role_id'));
+
+        return Redirect::to('user')->withSuccess("User added successfully!!");
+        
+    }
 }
 
 ?>
