@@ -86,6 +86,7 @@
                         </div>
                     </div>
                     @endif
+                    @if(Auth::check() && Auth::user()->level() === 1 || Auth::check() && Auth::user()->user_id === $job->user_id)
                     <div class="row">
                         <div class="col-md-12">
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -119,7 +120,9 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
+                @if(Auth::check() && Auth::user()->level() === 1 || Auth::check() && Auth::user()->user_id === $job->user_id)
                  @if($applicants->total() > 1)
                 <div class="text-center hidden-sm hidden-xs">
                     <ul class="pagination job-applicant-list-pager">
@@ -163,6 +166,7 @@
                 <div class="col-md-6 hidden-sm hidden-xs job-applicant-list-container">
                     @include('jobs.partials.applicantList')
                 </div>
+                @endif
                 @endif
             </div>
         </div>
