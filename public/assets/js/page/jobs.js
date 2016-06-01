@@ -362,3 +362,33 @@ function initCkeditor(ref) {
     $('#edit-description').text(evt.editor.getData());
 });
 }
+
+//For Job Notes
+var job_notes = CKEDITOR.replace('job-notes');
+
+job_notes.on('change',function(evt) {
+    
+    var ajaxurl = public_path + 'saveJobNotes';
+    var job_id = window.location.href.split("/").pop();
+    
+     var formData = new FormData();
+        formData.append('job_id', job_id);
+        formData.append('notes', evt.editor.getData());
+      
+        $.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: formData,
+            // THIS MUST BE DONE FOR FILE UPLOADING
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+            },
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+
+            }
+        }); //ajax
+    
+});

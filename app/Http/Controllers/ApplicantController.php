@@ -297,4 +297,15 @@ class ApplicantController extends Controller {
         return $message;
     }
 
+    public function saveApplicantNotes(Request $request) {
+        $applicant_id = $request->input('applicant_id');
+        $notes = $request->input('notes');
+        
+        $applicant = Applicant::where('id',$applicant_id);
+        $applicant->update([
+            'notes' => $notes
+        ]);
+        
+        return "true";
+    }
 }

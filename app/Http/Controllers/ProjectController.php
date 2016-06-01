@@ -94,17 +94,17 @@ class ProjectController extends BaseController {
         }
 
         $project = new Project();
-        $project->project_title = $request->get('project_title');
-        $project->account = $request->get('account');
-        $project->currency = $request->get('currency');
-        $project->project_type = $request->get('project_type');
-        $project->user_id = Auth::user()->user_id;
-        $project->company_id = $request->get('company_id');
-        $project->start_date = date("Y-m-d H:i:s", strtotime(Input::get('start_date')));
-        $project->deadline = date("Y-m-d H:i:s", strtotime(Input::get('deadline')));
-        $project->project_description = Input::get('project_description');
-        $project->rate_type = Input::get('rate_type');
-        $project->rate_value = Input::get('rate_value');
+        $project->project_title = $request->input('project_title');
+        $project->account = $request->input('account');
+        $project->currency = $request->input('currency');
+        $project->project_type = $request->input('project_type');
+        $project->user_id = Auth::user('user')->user_id;
+        $project->company_id = $request->input('company_id');
+        $project->start_date = date("Y-m-d H:i:s", strtotime($request->input('start_date')));
+        $project->deadline = date("Y-m-d H:i:s", strtotime($request->input('deadline')));
+        $project->project_description = $request->input('project_description');
+        $project->rate_type = $request->input('rate_type');
+        $project->rate_value = $request->input('rate_value');
         $project->save();
 
         $update_project_ref = Project::find($project->project_id);
@@ -122,21 +122,15 @@ class ProjectController extends BaseController {
      */
     public function show($id) {
 
-        $user_id = Auth::user()->user_id;
-
-        if (parent::userHasRole('Admin')) {
+        $user_id = Auth::user('user')->user_id;
+        
+        $user = User::find($user_id);
+        
+        if ($user->level() === 1) {
             $project = Project::find($id);
-        } elseif (parent::userHasRole('client')) {
-            $project = DB::table('project')
-                    ->where('user_id', '=', Auth::user()->user_id)
-                    ->where('project_id', '=', $id)
-                    ->first();
-        } elseif (parent::userHasRole('Staff')) {
-            $project = DB::table('project')
-                    ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
-                    ->where('belongs_to', '=', 'project')
-                    ->where('project_id', '=', $id)
-                    ->first();
+        
+        } elseif ($user->level() > 1) {
+            $project = Project::find($id);
         }
 
         if (!$project) {
@@ -178,8 +172,6 @@ class ProjectController extends BaseController {
         $task_permissions = TaskCheckListPermission::where('project_id', $id)->where('user_id', $user_id)->get();
 
         $assets = ['datepicker'];
-
-        $user_id_list = [];
 
         $teams = Team::with(['team_member' => function($query) {
                         $query->with('user')->get();

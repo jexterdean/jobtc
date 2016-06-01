@@ -59,7 +59,7 @@ class CompanyController extends BaseController {
     public function show($company_id) {
 
         //Getting Assign Project Data
-        $user_id = Auth::user()->user_id;
+        $user_id = Auth::user('user')->user_id;
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 

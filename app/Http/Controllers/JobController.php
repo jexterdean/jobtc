@@ -583,5 +583,16 @@ class JobController extends Controller {
         return $tags;
     }
     
+    public function saveJobNotes(Request $request) {
+        $job_id = $request->input('job_id');
+        $notes = $request->input('notes');
+        
+        $job = Job::where('id',$job_id);
+        $job->update([
+            'notes' => $notes
+        ]);
+        
+        return "true";
+    }
     
 }

@@ -21,11 +21,13 @@ Route::post('updateJob/{id}', 'JobController@update');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
+Route::post('saveJobNotes','JobController@saveJobNotes');
+
 
 /*For Applicant*/
 Route::resource('a', 'ApplicantController');
 Route::get('a/{id}',['as' => 'a', 'uses' => 'ApplicantController@show','https' => true]);
-
+Route::post('saveApplicantNotes','ApplicantController@saveApplicantNotes');
 
 /* For Applicant Tags */
 Route::post('addTag', 'JobController@addTag');

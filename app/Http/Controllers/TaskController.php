@@ -76,12 +76,7 @@ class TaskController extends BaseController {
                     ->where('task_id', '=', $id)
                     ->first();
         } elseif (parent::userHasRole('Staff')) {
-            $task = DB::table('task')
-                    ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
-                    ->where('belongs_to', '=', 'project')
-                    ->where('user_id', '=', Auth::user('user')->user_id)
-                    ->where('project_id', '=', $id)
-                    ->first();
+            $task = Task::find($id);
         }
         $task_timer = DB::table('task_timer')
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
