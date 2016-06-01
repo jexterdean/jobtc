@@ -11,6 +11,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Role;
+use App\Models\RoleUser;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -440,6 +441,12 @@ class CompanyController extends BaseController {
         $update_profile->update([
             'role_id' => $role_id
         ]);
+        
+        $update_role = RoleUser::where('user_id',$user_id);
+        $update_role->update([
+            'role_id' => $role_id
+        ]);
+        
         return "true";
     }
 

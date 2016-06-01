@@ -7,54 +7,55 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Applicant;
 use App\Models\User;
+use App\Models\Profile;
 use \Auth;
 use \View;
 use \Form;
 use \Input;
 use \Redirect;
 
-/*class SessionController extends BaseController {
+/* class SessionController extends BaseController {
 
-    public function create(Request $request) {
+  public function create(Request $request) {
 
-        if (Auth::check('user') || Auth::viaRemember('user')) {
-            return Redirect::to('dashboard');
-        } elseif (Auth::check('applicant') || Auth::viaRemember('applicant')) {
-            return Redirect::to('a/' . Auth::user('applicant')->id);
-        }
+  if (Auth::check('user') || Auth::viaRemember('user')) {
+  return Redirect::to('dashboard');
+  } elseif (Auth::check('applicant') || Auth::viaRemember('applicant')) {
+  return Redirect::to('a/' . Auth::user('applicant')->id);
+  }
 
-        return View::make('session.create');
-    }
+  return View::make('session.create');
+  }
 
-    public function store(Request $request) {
-        if (Auth::attempt('user',Input::only('email', 'password'), Input::get('remember'))) {
-          if (Auth::user('user')->user_status != 'Active') {
-          $name = Auth::user('user')->name;
-          Auth::logout('user');
-          return Redirect::to('login')->withErrors("$name you are not allowed to login!!");
-          
-          } else {
-            return Redirect::intended('dashboard');
-          }
-          
-          } if (Auth::attempt('applicant',Input::only('email', 'password'), Input::get('remember'))) {
-          
-              $applicant = Applicant::where('email',$request->input('email'))->first();
-              
-              return Redirect::intended('a/'.$applicant->id);
-              
-          } else {
-              return Redirect::back()->withErrors("Wrong username or password!!");
-          }
-    }
+  public function store(Request $request) {
+  if (Auth::attempt('user',Input::only('email', 'password'), Input::get('remember'))) {
+  if (Auth::user('user')->user_status != 'Active') {
+  $name = Auth::user('user')->name;
+  Auth::logout('user');
+  return Redirect::to('login')->withErrors("$name you are not allowed to login!!");
 
-    public function destroy() {
-        $name = Auth::user('user')->name;
-        Auth::logout('user');
-        return Redirect::to('login')->withSuccess("$name you are logged out!!");
-    }
+  } else {
+  return Redirect::intended('dashboard');
+  }
 
-}*/
+  } if (Auth::attempt('applicant',Input::only('email', 'password'), Input::get('remember'))) {
+
+  $applicant = Applicant::where('email',$request->input('email'))->first();
+
+  return Redirect::intended('a/'.$applicant->id);
+
+  } else {
+  return Redirect::back()->withErrors("Wrong username or password!!");
+  }
+  }
+
+  public function destroy() {
+  $name = Auth::user('user')->name;
+  Auth::logout('user');
+  return Redirect::to('login')->withSuccess("$name you are logged out!!");
+  }
+
+  } */
 
 class SessionController extends Controller {
 
@@ -67,18 +68,28 @@ class SessionController extends Controller {
         //$this->middleware('guest', ['except' => 'getLogout']);
     }
 
-    
     public function create(Request $request) {
 
+        //Get the authority level for the user
+
+
         if (Auth::check('user') || Auth::viaRemember('user')) {
-            return redirect()->route('dashboard');
+
+            $user = User::where('user_id', Auth::user('user')->user_id)->first();
+            $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+
+            if ($user->level() === 1) {
+                return redirect()->route('dashboard');
+            } else {
+                return redirect()->route('company', [$profile->company_id]);
+            }
         } elseif (Auth::check('applicant') || Auth::viaRemember('applicant')) {
             return redirect()->route('a', [Auth::user('applicant')->id]);
         }
 
         return View::make('session.create');
     }
-    
+
     /**
      * landing page for user
      *
@@ -109,18 +120,25 @@ class SessionController extends Controller {
         } else {
             if (Auth::attempt("user", ['email' => $email, 'password' => $pass], $remember)) {
 
-                return redirect()->route('dashboard');
-                
+                //return redirect()->route('dashboard');
+
+                $user = User::where('user_id', Auth::user('user')->user_id)->first();
+                $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+
+                if ($user->level() === 1) {
+                    return redirect()->route('dashboard');
+                } else {
+                    return redirect()->route('company', [$profile->company_id]);
+                }
             } else if (Auth::attempt("applicant", ['email' => $email, 'password' => $pass], $remember)) {
-                
-                $applicant = Applicant::where('email',$email)->first();
-                
+
+                $applicant = Applicant::where('email', $email)->first();
+
                 return redirect()->route('a', [$applicant->id]);
-                
             } else {
-                
+
                 //$applicant = Applicant::where('email',$email)->where('password',bcrypt($pass))->first();
-                
+
                 return redirect()->route('home')->withErrors($validator, 'login')->withInput();
                 //return redirect()->route('a', [$applicant->id]);
             }
@@ -191,22 +209,23 @@ class SessionController extends Controller {
             // Authentication passed...
             return redirect()->intended('dashboard');
         } else if (Auth::check("applicant") || Auth::viaRemember("applicant")) {
-           //return redirect()->route('a', [Auth::user("applicant")->id]);   
+            //return redirect()->route('a', [Auth::user("applicant")->id]);   
             return redirect()->intended('dashboard');
         } else {
             return redirect()->intended('dashboard');
         }
     }
-    
-     public function destroy() {
-        if(Auth::check('user')) {
+
+    public function destroy() {
+        if (Auth::check('user')) {
             $name = Auth::user('user')->name;
             Auth::logout('user');
             return Redirect::to('login')->withSuccess("$name you are logged out!!");
-        } elseif(Auth::check('applicant')) {
+        } elseif (Auth::check('applicant')) {
             $name = Auth::user('applicant')->name;
             Auth::logout('applicant');
             return Redirect::to('login')->withSuccess("$name you are logged out!!");
         }
     }
+
 }
