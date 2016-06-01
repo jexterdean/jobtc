@@ -281,7 +281,7 @@ class UserController extends BaseController
         $profile->role_id = $client_role->id;
         $profile->save();
         
-        $user->attachRole($request->input('role_id'));
+        $user->attachRole($client_role->id);
 
         return Redirect::to('user')->withSuccess("User added successfully!!");
         
