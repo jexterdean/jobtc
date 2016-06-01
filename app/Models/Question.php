@@ -17,7 +17,10 @@ class Question extends Model
         'question_photo',
         'score',
         'order',
-        'explanation'
+        'points',
+        'explanation',
+        'marking_criteria',
+        'max_point'
     ];
     protected $primaryKey = 'id';
     protected $table = 'question';

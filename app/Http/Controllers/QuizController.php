@@ -248,7 +248,9 @@ class QuizController extends BaseController
                 $question->question_answer = Input::get('question_answer');
                 $question->length = Input::get('length') ? '00:' . Input::get('length') : '';
                 $question->points = Input::get('points');
-                $question->explanation =  Input::get('explanation');
+                $question->explanation = Input::get('explanation');
+                $question->marking_criteria = Input::get('marking_criteria');
+                $question->max_point = Input::get('max_point');
                 $question->save();
 
                 $file_key = 'question_photo';
@@ -485,6 +487,8 @@ class QuizController extends BaseController
                 $question->length = Input::get('length') ? '00:' . Input::get('length') : '';
                 $question->points = Input::get('points');
                 $question->explanation = Input::get('explanation');
+                $question->marking_criteria = Input::get('marking_criteria');
+                $question->max_point = Input::get('max_point');
                 if (Input::get('clear_photo')) {
                     $photo_dir = public_path() . '/assets/img/question/';
                     $photo_dir .= $question->question_photo;

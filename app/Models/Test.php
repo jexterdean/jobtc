@@ -17,7 +17,8 @@ class Test extends Model
         'average_score',
         'test_photo',
         'start_message',
-        'completion_message'
+        'completion_message',
+        'order'
     ];
     protected $primaryKey = 'id';
     protected $table = 'test';

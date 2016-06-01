@@ -18,10 +18,16 @@
             <input type='text' name="length" style="width: 100px;" class="q-form time-form form-control" value="{{ $questions_info->length ? date('i:s', strtotime($questions_info->length)) : '' }}" />
         </div>
     </div>
-    <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>">
+    <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>" data-type="">
         <div class="form-inline">
             <label>Points:</label>
-            <input type="number" name="points" style="width: 100px;" class="q-form form-control" value="{{ $questions_info->points }}" />
+            <input type="number" name="points" style="width: 100px;" class="q-form points-form form-control" value="{{ $questions_info->points }}" />
+        </div>
+    </div>
+    <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? '' : ' hidden'; ?>" data-type="3">
+        <div class="form-inline">
+            <label>Maximum Score:</label>
+            <input type="number" name="max_point" style="width: 70px;" class="q-form points-form form-control" value="{{ $questions_info->max_point }}" />
         </div>
     </div>
 </div>
@@ -63,7 +69,7 @@
         </div>
     </div>
 </div>
-<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>">
+<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>" data-type="">
     <div class="row">
         <label class="col-sm-2 text-right">Question Answers:</label>
         <div class="col-md-10">
@@ -126,6 +132,14 @@
         </div>
     </div>
 </div>
+<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 3 ? '' : ' hidden'; ?>" data-type="3">
+    <div class="row">
+        <label class="col-sm-2 text-right">Marking Criteria:</label>
+        <div class="col-md-10">
+            <textarea name="marking_criteria" class="q-form form-control summernote-editor" rows="3">{{ $questions_info->marking_criteria }}</textarea>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12 text-right">
         <input type="submit" name="submit" class="btn btn-submit" value="Save" />
@@ -145,5 +159,31 @@
                 }
             }
         });
+
+        //region summer note
+        var options = $.extend(true,
+            {
+                lang: '' ,
+                codemirror: {
+                    theme: 'monokai',
+                    mode: 'text/html',
+                    htmlMode: true,
+                    lineWrapping: true
+                }
+            } ,
+            {
+                "toolbar": [
+                    ["style", ["style"]],
+                    ["font", ["bold", "underline", "italic", "clear"]],
+                    ["color", ["color"]],
+                    ["para", ["ul", "ol", "paragraph"]],
+                    ["table", ["table"]],
+                    ["insert", ["link", "picture", "video"]],
+                    ["view", ["fullscreen", "codeview", "help"]]
+                ]
+            }
+        );
+        $("textarea.summernote-editor").summernote(options);
+        //endregion
     });
 </script>
