@@ -55,7 +55,7 @@
                                 <p class="job-description">{!! $job->description !!}</p>
                                 <input class="token" name="_token" type="hidden" value="{{csrf_token()}}">
                             </div>
-                            @if(Auth::user()->level() === 1)
+                            @if(Auth::user()->level() === 1 || Auth::user()->user_id === $job->user_id)
                             <div class="row">
                                 <div class="col-md-12">
                                     <div  class="box box-default">
