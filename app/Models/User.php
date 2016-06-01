@@ -49,4 +49,8 @@ class User extends Model implements
     public function team_member() {
         return $this->hasMany('App\Models\TeamMember');
     }
+    
+    public function role_user() {
+        return $this->hasOne('App\Models\RoleUser');
+    }
 }

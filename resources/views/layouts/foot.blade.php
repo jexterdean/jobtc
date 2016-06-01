@@ -158,6 +158,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 <!--Page Specific scripts-->
 
 @if (in_array('companies',$assets))
+{!!  HTML::script('assets/js/jOrgChart/jquery.jOrgChart.js')  !!}
 {!!  HTML::script('assets/js/page/companies.js')  !!}
 @endif
 

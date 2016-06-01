@@ -56,7 +56,11 @@ CKEDITOR.editorConfig = function (config) {
     config.height = '200px';
 
     //config.autoParagraph = false;
+<<<<<<< HEAD
     
+=======
+    // Remove one plugin.
+>>>>>>> b4834f8af53dc2570d787b8bd934cd81b69e8e0e
     config.removePlugins = 'autosave';
 
 };

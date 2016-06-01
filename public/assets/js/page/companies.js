@@ -2,6 +2,7 @@
  * Companies Page scripts
  */
 //For Click toggle
+
 $.fn.clickToggle = function (func1, func2) {
     var funcs = [func1, func2];
     this.data('toggleclicked', 0);
@@ -68,8 +69,7 @@ $('.taskgroup-list').sortable({
 });
 
 
-//For dragging tests to applicants or jobs
-
+//For Dragging tests to applicants
 $('.job-applicant-list').sortable({
     dropOnEmpty: true,
     connectWith: ".list-group",
@@ -160,6 +160,23 @@ $('.job-test-list').sortable({
 
         //Remove warning that no employee is assigned.
         $(this).find('li:contains("Drag a test here to make it available for all applicants in this job posting.")').remove();
+
+    },
+    update: function (event, ui) {
+
+    }
+});
+
+//Assigning users to levels
+$('.org-chart').sortable({
+    dropOnEmpty: true,
+    connectWith: ".org-chart",
+    remove: function (event, ui) {
+        //Don't remove item when dropped to the project list group
+        //$(this).append($(ui.item).clone());
+    },
+    receive: function (event, ui) {
+        
 
     },
     update: function (event, ui) {
@@ -454,20 +471,20 @@ $('.list-group').on('click', '.update-profile', function (e) {
 
     var ajaxurl = public_path + 'updateProfile';
     var formData = new FormData();
-    formData.append('user_id',user_id);
-    formData.append('name',name);
-    formData.append('password',password);
-    formData.append('email',email);
-    formData.append('phone',phone);
-    formData.append('photo',photo);
-    formData.append('skype',skype);
-    formData.append('address_1',address_1);
-    formData.append('address_2',address_2);
-    formData.append('zipcode',zipcode);
-    formData.append('country_id',country_id);
-    formData.append('facebook',facebook);
-    formData.append('linkedin',linkedin);
-    
+    formData.append('user_id', user_id);
+    formData.append('name', name);
+    formData.append('password', password);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('photo', photo);
+    formData.append('skype', skype);
+    formData.append('address_1', address_1);
+    formData.append('address_2', address_2);
+    formData.append('zipcode', zipcode);
+    formData.append('country_id', country_id);
+    formData.append('facebook', facebook);
+    formData.append('linkedin', linkedin);
+
     $.ajax({
         url: ajaxurl,
         type: "POST",
@@ -479,22 +496,22 @@ $('.list-group').on('click', '.update-profile', function (e) {
 
         },
         success: function (data) {
-            name_container.find('.employee-photo').attr('src',public_path + data);
+            name_container.find('.employee-photo').attr('src', public_path + data);
         },
         error: function (xhr, status, error) {
         }
     }); //ajax
 
-    
+
     name_container.find('.text-area-content').remove();
     profile_container.find('.edit-name').remove();
     profile_container.find('.edit-photo').remove();
     profile_container.find('.update-profile').remove();
     profile_container.find('.country-dropdown').addClass('hidden');
-    
+
     name_container.find('.name').attr('style', '');
     name_container.find('.employee-photo').attr('style', '');
-    
+
 
     name_ele.removeAttr('style').html(name);
     email_ele.removeAttr('style').html('<i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;' + email);
@@ -551,8 +568,8 @@ $('.profile-toggle').clickToggle(function () {
             $(this).find('.name').attr('style', '');
             $(this).find('.employee-photo').attr('style', '');
         });
-        
-        $('.team-member').clickToggle(function () {
+
+$('.team-member').clickToggle(function () {
     $(this).find('.name').attr('style', 'font-size:23px;position:relative;top:25px');
     $(this).find('.employee-photo').attr('style', 'height:150px;width:150px');
 },
@@ -560,6 +577,10 @@ $('.profile-toggle').clickToggle(function () {
             $(this).find('.name').attr('style', '');
             $(this).find('.employee-photo').attr('style', '');
         });
+
+
+
+
 
 //General Functions
 function removeDuplicates(listName, newItem) {
@@ -601,3 +622,5 @@ function unassignTask(user_id, task_id, project_id) {
     $.post(url, data);
 }
 
+
+//For Organizational Chart

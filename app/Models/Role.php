@@ -15,4 +15,8 @@ class Role extends Model
         return $this->belongsTo('App\Models\Company');
     }
     
+    public function role_user() {
+        return $this->hasOne('App\Models\RoleUser');
+    }
+    
 }
