@@ -19,7 +19,7 @@ class Job extends Model
      * @var array
      */
     
-    protected $fillable = ['user_id','company_id','title','description','photo'];
+    protected $fillable = ['user_id','company_id','title','description','photo','notes'];
 
     /**
      * The attributes excluded from the model's JSON form.

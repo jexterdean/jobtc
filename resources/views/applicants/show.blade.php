@@ -81,6 +81,11 @@
                     <li role="presentation">
                         <a href="#tests-tab" aria-controls="profile" role="tab" data-toggle="tab">Tests</a>
                     </li>
+                    @if(Auth::user()->level() === 1)
+                    <li role="presentation">
+                        <a href="#notes-tab" aria-controls="profile" role="tab" data-toggle="tab">Notes</a>
+                    </li>
+                    @endif
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="resume-tab">
@@ -219,6 +224,9 @@
                             </div>
                         </div>
                         @endforeach
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="notes-tab">
+                        <textarea id="applicant-notes">{{$applicant->notes}}</textarea>
                     </div>
                 </div>
             </div>

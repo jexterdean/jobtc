@@ -107,3 +107,34 @@ $(".submit-comment").click(function (e) {
         }); //ajax
     }
 });
+
+
+//For Applicant Notes
+var applicant_notes = CKEDITOR.replace('applicant-notes');
+
+applicant_notes.on('change',function(evt) {
+    
+    var ajaxurl = public_path + 'saveApplicantNotes';
+    var applicant_id = window.location.href.split("/").pop();
+    
+     var formData = new FormData();
+        formData.append('applicant_id', applicant_id);
+        formData.append('notes', evt.editor.getData());
+      
+        $.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: formData,
+            // THIS MUST BE DONE FOR FILE UPLOADING
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+            },
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+
+            }
+        }); //ajax
+    
+});

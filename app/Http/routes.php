@@ -1,20 +1,15 @@
 <?php
 
-
-//Route::resource('session', 'SessionController');
-//Route::get('/', 'SessionController@create');
-//Route::get('/login', 'SessionController@create');
+/* Authentication routes */
 Route::get('/',['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants','https' => true]);
 Route::get('/home', ['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants','https' => true]);
 
-//Route::get('/login', 'SessionController@login');
-/* Authentication routes */
 Route::get('login', function() {
     return view('session.create');
 });
 
-//Don't put this into middleware as well since it will not let the applicant logout(applicant table
-//doesn't use the role manager for the User
+//Don't put this into middleware as well since it will not let the applicant logout
+//(applicant table doesn't use the role manager for the User)
 Route::post('/login', 'SessionController@login');
 Route::get('logout', 'SessionController@destroy');
 
@@ -26,11 +21,13 @@ Route::post('updateJob/{id}', 'JobController@update');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
+Route::post('saveJobNotes','JobController@saveJobNotes');
+
 
 /*For Applicant*/
 Route::resource('a', 'ApplicantController');
 Route::get('a/{id}',['as' => 'a', 'uses' => 'ApplicantController@show','https' => true]);
-
+Route::post('saveApplicantNotes','ApplicantController@saveApplicantNotes');
 
 /* For Applicant Tags */
 Route::post('addTag', 'JobController@addTag');
@@ -77,9 +74,9 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     /**
-     * Admin only
+     * Admin only(Level 1 access)
      */
-    Route::group(['middleware'=> 'role:admin'], function(){
+    Route::group(['middleware'=> 'level:1'], function(){
         Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
             ->where('billing_type', 'invoice|estimate');
         Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
@@ -121,6 +118,8 @@ Route::group(['middleware' => 'auth'], function () {
         
         //For CkEditor Image file upload
         Route::any('saveImage&responseType=json','TaskController@saveImage');
+        
+        Route::get('company/{id}',['as' => 'company', 'uses' => 'CompanyController@show','https' => true]);
     });
 
     /**
