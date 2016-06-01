@@ -1,39 +1,18 @@
 <div class="applicant-list-container container-fluid">
-    @if($applicants->total() > 1)
-    <div class="text-center hidden-sm hidden-xs">
-        <ul class="pagination job-applicant-list-pager">
-            @if($applicants->currentPage() > 1)
-            <li><a class="pager-previous" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li> 
+    @if(Auth::check())
+        <div class="pull-right">
+            @if($job->applicants->count() > 1)
+            <a class="view-applicants hidden-sm hidden-xs"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicants</a>
+            <a class="view-applicants-mobile hidden-lg hidden-md"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicants</a>
+            @elseif ($job->applicants->count() === 1)
+            <a class="view-applicants hidden-sm hidden-xs"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicant</a>
+            <a class="view-applicants-mobile hidden-lg hidden-md"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicant</a>
+            @elseif ($job->applicants->count() === 0)
+            <a class="view-applicants hidden-sm hidden-xs"><i class="fa fa-user"></i>&nbsp;&nbsp;No Applicants</a>
+            <a class="view-applicants-mobile hidden-lg hidden-md"><i class="fa fa-user"></i>&nbsp;&nbsp;No Applicants</a>
             @endif
-            @for($i = 1; $i <= $applicants->lastPage(); $i++)
-            @if($i === $applicants->currentPage())
-            <li class="active"><a id="pager-item-{{$i}}" class="pager-item" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
-            @else
-            <li><a id="pager-item-{{$i}}" class="pager-item" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
-            @endif
-            @endfor
-            @if($applicants->currentPage() < $applicants->lastPage())
-            <li><a class="pager-next" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
-            @endif
-        </ul>
-    </div>
-    <div class="text-center hidden-lg hidden-md">
-        <ul class="pagination job-applicant-list-pager">
-            @if($applicants->currentPage() > 1)
-            <li><a class="pager-previous-mobile" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li> 
-            @endif
-            @for($i = 1; $i <= $applicants->lastPage(); $i++)
-            @if($i === $applicants->currentPage())
-            <li class="active"><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
-            @else
-            <li><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
-            @endif
-            @endfor
-            @if($applicants->currentPage() < $applicants->lastPage())
-            <li><a class="pager-next-mobile" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
-            @endif
-        </ul>
-    </div>
+            <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
+        </div>
     @endif
     {!! csrf_field() !!}
     @unless($applicants->count())

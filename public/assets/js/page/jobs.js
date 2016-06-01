@@ -363,6 +363,13 @@ function initCkeditor(ref) {
 });
 }
 
+var assessment_editor = CKEDITOR.replace('assessment-instruction', {
+    startupFocus : true
+});
+
+assessment_editor.on( 'change', function( evt ) {
+    $('#assessment-instruction').text(evt.editor.getData());
+});
 //For Job Notes
 var job_notes = CKEDITOR.replace('job-notes');
 
@@ -390,5 +397,4 @@ job_notes.on('change',function(evt) {
 
             }
         }); //ajax
-    
 });

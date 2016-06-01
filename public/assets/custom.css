@@ -122,9 +122,11 @@ a:active,a:focus{
     padding: 0!important;
     border: 0!important;
 }
-.task-list .task-header:hover{
+.task-list:not(.is-selected) .task-header:hover{
     color: #1830ba!important;
     background: white!important;
+    /*border: 1px solid #1830ba!important;*/
+    box-shadow: inset 3px 5px 2px -1px rgba(24, 48, 186, 0.34) !important;
 }
 .task-list .task-header .task-list-header{
     text-shadow: none!important;
@@ -158,16 +160,26 @@ a:active,a:focus{
     font-size: 28px!important;
 }
 .is-task-item-selected{
-    margin: 5px;
+    margin: 5px 0;
     padding-top: 15px!important;
     padding-left: 5px!important;
     /*border-top: 2px groove #696969 !important;
     border-bottom: 2px groove #696969 !important;
     box-shadow: 0 5px 4px -2px rgba(15,15,15,0.34)!important;*/
     border-bottom: 1px groove #eaeaea !important;
-    -moz-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4);
-    -webkit-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4);
-    box-shadow: inset 0 0 15px rgba(0,0,0,.4)!important;
+    -moz-box-shadow: inset 0 0 15px rgba(0,0,0,.4);
+    -webkit-box-shadow: inset 0 0 15px rgba(0,0,0,.4);
+    box-shadow: inset 0 0 15px rgba(0,0,0,.4);
+}
+.box .box-body .task-list.is-selected{
+    -moz-box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+}
+.box .box-body .task-list.is-selected .panel-body .panel-content{
+    -moz-box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
 }
 .is-task-item-selected a{
     font-size: 24px!important;
