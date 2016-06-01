@@ -65,19 +65,16 @@ class TaskController extends BaseController {
     }
 
     public function show($id) {
-        //
+        
+        $user_id = Auth::user('user')->user_id;
+        $user = User::find($user_id);
+        
         $task = [];
-        if (parent::userHasRole('Admin')) {
+        if ($user->level() === 1) {
             $task = Task::find($id);
-        } elseif (parent::userHasRole('client')) {
-            $task = DB::table('task')
-                    //->join('user', 'user.client_id', '=', 'task.client_id')
-                    ->where('user_id', '=', Auth::user('user')->user_id)
-                    ->where('task_id', '=', $id)
-                    ->first();
-        } elseif (parent::userHasRole('Staff')) {
+        } elseif ($user->level() > 1) {
             $task = Task::find($id);
-        }
+        } 
         $task_timer = DB::table('task_timer')
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')

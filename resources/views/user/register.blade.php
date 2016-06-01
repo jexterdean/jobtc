@@ -52,30 +52,31 @@
                                 <input type="password" class="form-control text required" aria-describedby="password-span" placeholder="Password" name="password" tabindex="2" id="login_password" value="" />
                             </div>
                             <br/>
-                            <div class="input-group">
+                            <!--div class="input-group">
                                 <span class="input-group-addon" id="photo-span"><i class="fa fa-picture-o" aria-hidden="true"></i></span>
                                 <input type="file" class="form-control text" aria-describedby="photo-span" placeholder="Photo" name="photo" tabindex="2" id="login_photo" value="" />
-                            </div>
+                            </div-->
                             <br/>
                             <div class="input-group">
                                 <span class="input-group-addon" id="address-1-span"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="address-1-span" placeholder="Enter Address 1" name="address_1" tabindex="2" id="login_address_1" value="" />
+                                <input type="text" class="form-control text" aria-describedby="address-1-span" placeholder="Address 1" name="address_1" tabindex="2" id="login_address_1" value="" />
                             </div>
                             <br/>
                             <div class="input-group">
                                 <span class="input-group-addon" id="address-2-span"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="address-2-span" placeholder="Enter Address 2" name="address_2" tabindex="2" id="login_address_2" value="" />
+                                <input type="text" class="form-control text" aria-describedby="address-2-span" placeholder="Address 2" name="address_2" tabindex="2" id="login_address_2" value="" />
                             </div>
                             <br/>
                             <div class="input-group">
                                 <span class="input-group-addon" id="zipcode-span"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="zipcode-span" placeholder="Enter Zipcode" name="zipcode" tabindex="2" id="login_zipcode" value="" />
+                                <input type="text" class="form-control text" aria-describedby="zipcode-span" placeholder="Zipcode" name="zipcode" tabindex="2" id="login_zipcode" value="" />
                             </div>
                             <br/>
                             <div class="form-group">
-                                <label for="country">Select Country:</label>
                                 <select name="country_id" class="form-control" id="country">
+                                    <option for="country">Select Country:</option>
                                     @foreach($countries as $country)
+                                    
                                     <option value="{{$country->country_id}}">{{$country->country_name}}</option>
                                     @endforeach
                                 </select>
@@ -86,7 +87,7 @@
                                 <input type="text" class="form-control text" aria-describedby="phone-span" placeholder="Enter Phone Number" name="phone" tabindex="2" id="login_phone" value="" />
                             </div>
                             <br/>
-                            <div class="input-group">
+                            <!--div class="input-group">
                                 <span class="input-group-addon" id="skype-span"><i class="fa fa-skype" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control text" aria-describedby="skype-span" placeholder="Enter Skype" name="skype" tabindex="2" id="login_skype" value="" />
                             </div>
@@ -109,7 +110,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <br />
+                            <br /-->
                             <div class="input-group">
                                 <input type="submit" class="btn btn-primary submit" name="register" tabindex="4" value="Register" />
                             </div>

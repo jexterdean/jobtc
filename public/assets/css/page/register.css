@@ -15,10 +15,10 @@ Register CSS
 
 .login-container {
   margin: auto;
-  height: 950px;
+  height: 650px;
   width: 25%;
   padding: 10px;
-  background-color: #ffffff;
+  background-color: #f2f2f2;
   border-color: #fffdfb;
   -webkit-border-bottom-right-radius: 2px;
   -webkit-border-bottom-left-radius: 2px;
@@ -139,4 +139,12 @@ Register CSS
   border-radius: 10px;
   display: table;
   vertical-align: middle;
+}
+
+.input-group-addon {
+    background-color: #144371 !important;
+}
+
+.input-group-addon i{ 
+    color:#fff;
 }

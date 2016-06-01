@@ -69,12 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      *  Client
      */
-    Route::group(['middleware' => 'role:client'], function () {
-        Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
-            ->where('billing_type', 'invoice|estimate');
-        Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
-            ->where('billing_type', 'invoice|estimate');
-    });
+    
 
     /**
      * Admin only(Level 1 access)

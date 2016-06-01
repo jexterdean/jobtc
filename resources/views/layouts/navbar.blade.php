@@ -51,6 +51,7 @@
         @endif
     </ul>
 </li>
+@if(Auth::check('user') && Auth::user('user')->level() === 1)
 <?php $jobs = \App\Helpers\Helper::getJobLinks(); ?>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
@@ -74,7 +75,8 @@
         @endif
     </ul>
 </li>
-
+@endif
+@if(Auth::check('user') && Auth::user('user')->level() === 1)
 <li>
     <a href="{{ url('meeting') }}">
         <i class="fa fa-calendar"></i> <span>{{Lang::get('Meetings')}}</span>
@@ -142,6 +144,8 @@
         <i class="fa fa-globe"></i>
         <span>CSS</span></a>
 </li>
+@endif
+
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="glyphicon glyphicon-user"></i>
