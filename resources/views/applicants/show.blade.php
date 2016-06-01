@@ -81,7 +81,7 @@
                     <li role="presentation">
                         <a href="#tests-tab" aria-controls="profile" role="tab" data-toggle="tab">Tests</a>
                     </li>
-                    @if(Auth::user()->level() === 1)
+                    @if(Auth::check() && Auth::user()->level() === 1)
                     <li role="presentation">
                         <a href="#notes-tab" aria-controls="profile" role="tab" data-toggle="tab">Notes</a>
                     </li>
