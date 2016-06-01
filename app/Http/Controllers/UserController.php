@@ -252,7 +252,8 @@ class UserController extends BaseController
         }*/
         
         //Get the Client Role for the company
-        $client_role = Role::where('company_id',1)->where('level',2)->first();
+        //$client_role = Role::where('company_id',1)->where('level',2)->first();
+        $client_role = Role::where('company_id',6)->where('level',2)->first();
         
         
         $user = new User;
@@ -277,8 +278,8 @@ class UserController extends BaseController
         
         $profile = new Profile;
         $profile->user_id = $user->user_id;
-        //$profile->company_id = 6;
-        $profile->company_id = 1;
+        $profile->company_id = 6;
+        //$profile->company_id = 1;
         $profile->role_id = $client_role->id;
         $profile->save();
         
