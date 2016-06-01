@@ -21,7 +21,7 @@ and open the template in the editor.
 
 .job-posting-container {
     margin: 0 auto;
-    width: 95%;
+    width: 99%;
 }
 
  .job-posting-container .job {
@@ -44,6 +44,9 @@ and open the template in the editor.
     color: #000000;
     border-radius: 0px;
     padding: 3px;
+}
+.job-posting-container .pagination{
+    margin: 10px 0 -25px;
 }
 .job-posting-container .job ul li i {
     font-size: 20px;

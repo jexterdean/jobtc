@@ -362,3 +362,11 @@ function initCkeditor(ref) {
     $('#edit-description').text(evt.editor.getData());
 });
 }
+
+var assessment_editor = CKEDITOR.replace('assessment-instruction', {
+    startupFocus : true
+});
+
+assessment_editor.on( 'change', function( evt ) {
+    $('#assessment-instruction').text(evt.editor.getData());
+});

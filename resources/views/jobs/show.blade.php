@@ -27,21 +27,6 @@
                                                 <img class="job-photo" src="{{url($job->photo)}}" alt="Job Photo">
                                                 @endif
                                             </a>
-                                            @if(Auth::check())
-                                            <div class="pull-right">
-                                                @if($job->applicants->count() > 1)
-                                                <a class="view-applicants hidden-sm hidden-xs"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicants</a>
-                                                <a class="view-applicants-mobile hidden-lg hidden-md"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicants</a>
-                                                @elseif ($job->applicants->count() === 1)
-                                                <a class="view-applicants hidden-sm hidden-xs"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicant</a>
-                                                <a class="view-applicants-mobile hidden-lg hidden-md"><i class="fa fa-user"></i>&nbsp;&nbsp;{{$job->applicants->count()}} Applicant</a>
-                                                @elseif ($job->applicants->count() === 0)
-                                                <a class="view-applicants hidden-sm hidden-xs"><i class="fa fa-user"></i>&nbsp;&nbsp;No Applicants</a>
-                                                <a class="view-applicants-mobile hidden-lg hidden-md"><i class="fa fa-user"></i>&nbsp;&nbsp;No Applicants</a>
-                                                @endif
-                                                <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
-                                            </div>
-                                            @endif
                                         </div>
                                         <div class="media-body">
                                             <text class="media-heading"><a target="_blank" href="{{url('job/'.$job->id)}}">{{$job->title}}</a></text>
@@ -60,13 +45,88 @@
                         </div>
                         <div class="mini-space"></div>
                         @if(Auth::check())
-                        <div class="job-header pull-right">
-                            <a class="btn btn-edit btn-lg btn-shadow edit-job" data-toggle="modal"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
-                            <a class="btn btn-delete btn-lg btn-shadow delete-job"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
-                            <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
+                        <div style="margin: 25px 0 10px">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="pull-right">
+                                        <a class="btn btn-edit btn-lg btn-shadow edit-job" data-toggle="modal"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
+                                        <a class="btn btn-delete btn-lg btn-shadow delete-job"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                        <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         @endif
+                       <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                    <div id="collapse-container-1" class="panel task-list">
+                                        <div class="panel-heading task-header" data-target="#collapse-1" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                            <div class="row">
+                                                <h4 class="panel-title task-list-header">Applicant Assessment Instuctions</h4>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                            <div class="panel-body">
+                                                <div class="panel-content">
+                                                    <textarea class="form-control assessment-instruction" id="assessment-instruction"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="collapse-container-2" class="panel task-list">
+                                        <div class="panel-heading task-header" data-target="#collapse-2" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                            <div class="row">
+                                                <h4 class="panel-title task-list-header">Assessment Scores</h4>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                            <div class="panel-body">
+                                                <div class="panel-content">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                     @if($applicants->total() > 1)
+                    <div class="text-center hidden-sm hidden-xs">
+                        <ul class="pagination job-applicant-list-pager">
+                            @if($applicants->currentPage() > 1)
+                            <li><a class="pager-previous" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li>
+                            @endif
+                            @for($i = 1; $i <= $applicants->lastPage(); $i++)
+                            @if($i === $applicants->currentPage())
+                            <li class="active"><a id="pager-item-{{$i}}" class="pager-item" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
+                            @else
+                            <li><a id="pager-item-{{$i}}" class="pager-item" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
+                            @endif
+                            @endfor
+                            @if($applicants->currentPage() < $applicants->lastPage())
+                            <li><a class="pager-next" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
+                            @endif
+                        </ul>
+                    </div>
+                    <div class="text-center hidden-lg hidden-md">
+                        <ul class="pagination job-applicant-list-pager">
+                            @if($applicants->currentPage() > 1)
+                            <li><a class="pager-previous-mobile" href="{{url($applicants->previousPageUrl())}}" rel="previous">Previous</a></li>
+                            @endif
+                            @for($i = 1; $i <= $applicants->lastPage(); $i++)
+                            @if($i === $applicants->currentPage())
+                            <li class="active"><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
+                            @else
+                            <li><a id="pager-item-mobile-{{$i}}" class="pager-item-mobile" href="{{url($applicants->url($i))}}">{{$i}}</a></li>
+                            @endif
+                            @endfor
+                            @if($applicants->currentPage() < $applicants->lastPage())
+                            <li><a class="pager-next-mobile" href="{{url($applicants->nextPageUrl())}}" rel="next">Next</a></li>
+                            @endif
+                        </ul>
+                    </div>
+                    @endif
                     @if(Auth::check())
                     <div class="job-header">
                         <div>&nbsp;</div>
