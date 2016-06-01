@@ -39,6 +39,12 @@ Route::get('getAvailableTags', 'JobController@getTags');
 /*For Comments*/
 Route::post('addComment','CommentController@addComment');
 
+/*For Organizational Chart*/
+Route::get('getChartData/{id}','CompanyController@getChartData');
+
+/*For Assigning User Roles*/
+Route::post('updateRole','CompanyController@updateRole');
+
 /* For Video Status*/
 //Route::post('/add-video-status', 'ShowController@addVideoStatus');
 //Route::get('/get-available-video-tags', 'ShowController@getVideoTags');

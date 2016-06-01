@@ -96,30 +96,31 @@ class CompanyController extends BaseController {
         }
 
         //Get projects with their tasks and task permissions
-        $projects = Project::with(['task' => function($query){
-            $query->orderBy('task_title', 'asc')->get();
-        }],'task_permission')->whereIn('project_id', $project_id_list)->get();
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission')->whereIn('project_id', $project_id_list)->get();
 
         //Get Jobs by company and user
-        $jobs = Job::with('applicants')->where('user_id',$user_id)->where('company_id',$company_id)->get();
-        
-        $tests = Test::where('user_id',$user_id)->get();
-        
+        $jobs = Job::with('applicants')->where('user_id', $user_id)->where('company_id', $company_id)->get();
+
+        $tests = Test::where('user_id', $user_id)->get();
+
         $test_applicants = TestPerApplicant::all();
-        
+
         $test_jobs = TestPerJob::all();
-        
-        $company_users = Profile::with('user')->where('company_id',$company_id)->get();
-        
-        $authority_levels = Role::where('company_id',$company_id)->get();
-        
+
+        $company_users = Profile::with('user')->where('company_id', $company_id)->get();
+
+        $authority_levels = Role::where('company_id', $company_id)->orderBy('level', 'asc')->get();
+
+
         $assets = ['companies'];
 
         return View::make('company.show', [
                     'projects' => $projects,
                     'jobs' => $jobs,
-                    'authority_levels' => $authority_levels,
                     'company_users' => $company_users,
+                    'authority_levels' => $authority_levels,
                     'tests' => $tests,
                     'test_applicants' => $test_applicants,
                     'test_jobs' => $test_jobs,
@@ -339,7 +340,7 @@ class CompanyController extends BaseController {
         $tasks = Task::where('project_id', $project_id)
                 ->orderBy('task_title', 'asc')
                 ->get();
-        $task_permissions = TaskCheckListPermission::where('project_id', $project_id)->where('user_id',$user_id)->get();
+        $task_permissions = TaskCheckListPermission::where('project_id', $project_id)->where('user_id', $user_id)->get();
 
         return view('company.partials._tasklist', ['tasks' => $tasks, 'task_permissions' => $task_permissions, 'project_id' => $project_id, 'user_id' => $user_id]);
     }
@@ -355,7 +356,7 @@ class CompanyController extends BaseController {
         $team_member->delete();
 
         //Delete permissions from tasklists
-        $permissions = TaskCheckListPermission::where('user_id', $user_id)->where('project_id',$project_id);
+        $permissions = TaskCheckListPermission::where('user_id', $user_id)->where('project_id', $project_id);
         $permissions->delete();
         return $user_id;
     }
@@ -389,46 +390,93 @@ class CompanyController extends BaseController {
     public function assignTestToApplicant(Request $request) {
         $test_id = $request->input('test_id');
         $applicant_id = $request->input('applicant_id');
-        
+
         $test_per_applicant = new TestPerApplicant();
         $test_per_applicant->test_id = $test_id;
         $test_per_applicant->applicant_id = $applicant_id;
         $test_per_applicant->save();
-        
+
         return $applicant_id;
     }
-    
+
     public function unassignTestFromApplicant(Request $request) {
         $test_id = $request->input('test_id');
         $applicant_id = $request->input('applicant_id');
-        
-        $test_per_applicant = TestPerApplicant::where('test_id',$test_id)->where('applicant_id',$applicant_id);
+
+        $test_per_applicant = TestPerApplicant::where('test_id', $test_id)->where('applicant_id', $applicant_id);
         $test_per_applicant->delete();
-        
+
         return $test_id;
     }
-    
+
     public function assignTestToJob(Request $request) {
         $test_id = $request->input('test_id');
         $job_id = $request->input('job_id');
-        
+
         $test_per_job = new TestPerJob();
         $test_per_job->test_id = $test_id;
         $test_per_job->job_id = $job_id;
         $test_per_job->save();
-        
+
         return $job_id;
     }
-    
+
     public function unassignTestFromJob(Request $request) {
         $test_id = $request->input('test_id');
         $job_id = $request->input('job_id');
-        
-        $test_per_job = TestPerJob::where('test_id',$test_id)->where('job_id',$job_id);
+
+        $test_per_job = TestPerJob::where('test_id', $test_id)->where('job_id', $job_id);
         $test_per_job->delete();
-        
+
         return $test_id;
     }
+
+    public function updateRole(Request $request) {
+        $user_id = $request->input('user_id');
+        $role_id = $request->input('role_id');
+        $company_id = $request->input('company_id');
+
+        $update_profile = Profile::where('user_id', $user_id)->where('company_id', $company_id);
+        $update_profile->update([
+            'role_id' => $role_id
+        ]);
+        return "true";
+    }
+
+    public function getChartData(Request $request, $id) {
+
+        $company_users = Profile::with('user')->where('company_id', $id)->get();
+
+        $authority_levels = Role::where('company_id', $id)->get();
+
+        $chart_data = [];
+        $count = 0;
+
+        foreach ($authority_levels->where('level', 1) as $key => $level) {
+            foreach ($company_users as $profile) {
+                if ($profile->role_id === $level->id) {
+                    $chart_data['name'][] = $profile->user->name;
+                    $chart_data['title'][] = $level->name;
+                    $chart_data['relationship'][] = 011;
+                }
+            }
+        }
+
+        foreach ($authority_levels->where('level', 2) as $level2) {
+            foreach ($company_users as $profile) {
+                if ($profile->role_id === $level2->level) {
+                    $chart_data['children'][] = array(
+                        'name' => $profile->user->name,
+                        'title' => $level2->name,
+                    );
+                }
+            }
+        }
+
+
+        return $chart_data;
+    }
+
 }
 
 ?>

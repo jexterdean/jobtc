@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="check-list-container">
-                            <ul class="list-group" id="list_group_{{ $task->task_id }}">
+                            <ul class="tasklist-group list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $list_item)
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
@@ -194,9 +194,9 @@
     $(function (e) {
 
         //region For Draggability
-        $('.list-group').sortable({
+        $('.tasklist-group').sortable({
             dropOnEmpty: true,
-            connectWith: ".list-group",
+            connectWith: ".tasklist-group",
             handle: '.drag-handle',
             receive: function (event, ui) {
                 //For receiving

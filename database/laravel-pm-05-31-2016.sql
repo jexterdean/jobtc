@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2016 at 04:40 PM
+-- Generation Time: May 31, 2016 at 12:51 PM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -34,6 +34,79 @@ CREATE TABLE IF NOT EXISTS `fp_accounts` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_applicants`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_applicants` (
+`id` int(10) unsigned NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `resume` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `photo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `remember_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_applicants`
+--
+
+INSERT INTO `fp_applicants` (`id`, `job_id`, `name`, `email`, `phone`, `resume`, `photo`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(4, 10, 'Jane Doe', 'janedoe@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\resume_sample_photo.jpg', '$2y$10$rlXQGFPbq58NxUWLUPEDyeNDSqXihFAqE5Aj44Wp3l7.veZmd98m2', 'CQd0RsVzmas4kHuYXbygGnnsd8hChmCzcV7wQ8M2JvOgnfCrPzwFkJ0eMrQ2', '2016-05-23 10:56:55', '2016-05-27 03:47:14'),
+(5, 10, 'John Doe', 'johndoe@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$eN9t.cCJ4RyDfzi42YSdmu..ca4aR1jML7k6URNFd1MmAq/rsPnKq', '', '2016-05-23 22:09:16', '2016-05-23 22:09:16'),
+(6, 10, 'Keith Murner', 'keithmurner@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\sample_company_photo_2.jpg', '$2y$10$2GpkmgEEHE8ZB8fhmOvQQeqJmjO2OAwlDGeCIJeCYWoLijoA.eGEG', '', '2016-05-23 22:11:40', '2016-05-23 22:11:40'),
+(7, 10, 'Michelle Mackey', 'michellemackey@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\sample_company_photo_5.jpg', '$2y$10$nRQMNqd/1IHQK6uMKYJZjO7UVe5gf7J/y9xfeASLRd6/EJ7eMf25i', '', '2016-05-23 22:12:22', '2016-05-23 22:12:22'),
+(8, 10, 'John Wick', 'johnwick@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$7voXqcMtvs4/szsJkZyOg.qYkiNEJaIvMtFiN0m6zJ.EROAAaa16C', '', '2016-05-23 22:22:48', '2016-05-23 22:22:48'),
+(9, 10, 'Philip Fox', 'philipfox@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$qcy.ZGtzdQVJxkgW7xSvzuISg8wZKk06IihXFPw23dl3IaqRiZQzu', 'fivSv6mMEwNDzrYucmmcmsQA8EB0Ia0P7vKgbTLXpspBfkOKbX51A4GAEUFZ', '2016-05-23 22:23:59', '2016-05-27 04:48:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_applicant_ratings`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_applicant_ratings` (
+`id` int(10) unsigned NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `score` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_applicant_tags`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_applicant_tags` (
+`id` int(10) unsigned NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `tags` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_applicant_tags`
+--
+
+INSERT INTO `fp_applicant_tags` (`id`, `user_id`, `applicant_id`, `job_id`, `tags`, `created_at`, `updated_at`) VALUES
+(1, 18, 4, 10, 'test,tester,testing', '2016-05-23 21:36:56', '2016-05-23 21:58:52'),
+(2, 18, 5, 10, 'testing', '2016-05-23 22:10:10', '2016-05-23 22:10:10'),
+(3, 18, 9, 10, 'test,test2,test3', '2016-05-23 22:48:21', '2016-05-25 03:39:59'),
+(4, 18, 8, 10, 'testing,tester', '2016-05-23 23:39:34', '2016-05-24 02:55:07'),
+(5, 18, 7, 10, 'tester', '2016-05-23 23:39:38', '2016-05-23 23:40:58');
 
 -- --------------------------------------------------------
 
@@ -187,14 +260,47 @@ CREATE TABLE IF NOT EXISTS `fp_comment` (
   `comment` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fp_comment`
 --
 
 INSERT INTO `fp_comment` (`comment_id`, `user_id`, `belongs_to`, `unique_id`, `comment`, `created_at`, `updated_at`) VALUES
-(2, 0, 'bug', 1, 'How it is going, ab ?', '2016-03-15 06:13:14', '2016-03-15 06:13:14');
+(2, 0, 'bug', 1, 'How it is going, ab ?', '2016-03-15 06:13:14', '2016-03-15 06:13:14'),
+(3, 18, 'applicant', 9, 'Test', '2016-05-24 04:11:36', '2016-05-24 04:11:36'),
+(4, 18, 'applicant', 9, 'Test', '2016-05-24 04:12:03', '2016-05-24 04:12:03'),
+(5, 18, 'applicant', 9, 'Test', '2016-05-24 04:12:57', '2016-05-24 04:12:57'),
+(6, 18, 'applicant', 9, 'Test', '2016-05-24 04:13:27', '2016-05-24 04:13:27'),
+(7, 18, 'applicant', 9, 'Test', '2016-05-24 04:14:04', '2016-05-24 04:14:04'),
+(8, 18, 'applicant', 9, 'Test', '2016-05-24 04:14:56', '2016-05-24 04:14:56'),
+(9, 18, 'applicant', 9, 'Test', '2016-05-24 04:17:09', '2016-05-24 04:17:09'),
+(10, 18, 'applicant', 9, 'Test', '2016-05-24 04:19:49', '2016-05-24 04:19:49'),
+(11, 18, 'applicant', 9, 'Test', '2016-05-24 04:23:59', '2016-05-24 04:23:59'),
+(12, 18, 'applicant', 9, 'Test', '2016-05-24 04:24:54', '2016-05-24 04:24:54'),
+(13, 18, 'applicant', 9, 'Test', '2016-05-24 04:25:59', '2016-05-24 04:25:59'),
+(14, 18, 'applicant', 9, 'Test', '2016-05-24 04:28:16', '2016-05-24 04:28:16'),
+(15, 18, 'applicant', 9, 'Test', '2016-05-24 04:43:10', '2016-05-24 04:43:10'),
+(16, 18, 'applicant', 8, 'Test', '2016-05-24 04:55:31', '2016-05-24 04:55:31'),
+(17, 18, 'applicant', 4, 'Test', '2016-05-24 04:58:18', '2016-05-24 04:58:18'),
+(18, 18, 'applicant', 4, 'Test', '2016-05-24 05:11:43', '2016-05-24 05:11:43'),
+(19, 18, 'applicant', 4, 'Testing comment', '2016-05-24 05:11:57', '2016-05-24 05:11:57'),
+(20, 18, 'applicant', 5, 'Test', '2016-05-24 05:18:36', '2016-05-24 05:18:36'),
+(21, 18, 'applicant', 5, 'Test', '2016-05-24 05:21:20', '2016-05-24 05:21:20'),
+(22, 18, 'applicant', 4, 'Testing Again\r\n', '2016-05-24 05:23:59', '2016-05-24 05:23:59'),
+(23, 18, 'applicant', 4, 'Testing Test\r\n', '2016-05-24 05:24:50', '2016-05-24 05:24:50'),
+(24, 18, 'applicant', 4, 'Testing Again\r\n', '2016-05-24 05:25:22', '2016-05-24 05:25:22'),
+(25, 18, 'applicant', 4, 'Testing\r\n', '2016-05-24 05:26:56', '2016-05-24 05:26:56'),
+(26, 18, 'applicant', 4, 'Test', '2016-05-24 05:27:05', '2016-05-24 05:27:05'),
+(27, 18, 'applicant', 4, 'Tester\r\n', '2016-05-24 05:27:31', '2016-05-24 05:27:31'),
+(28, 18, 'applicant', 4, 'Test', '2016-05-24 05:34:43', '2016-05-24 05:34:43'),
+(29, 18, 'applicant', 4, 'Testing this comment\r\n', '2016-05-24 05:36:11', '2016-05-24 05:36:11'),
+(30, 18, 'applicant', 4, 'Test', '2016-05-24 05:36:46', '2016-05-24 05:36:46'),
+(31, 18, 'applicant', 9, 'Test 2', '2016-05-24 06:41:18', '2016-05-24 06:41:18'),
+(32, 0, 'applicant', 4, 'Test', '2016-05-27 04:02:27', '2016-05-27 04:02:27'),
+(33, 0, 'applicant', 4, 'Test 1\r\n', '2016-05-27 04:15:41', '2016-05-27 04:15:41'),
+(34, 0, 'applicant', 4, 'Test 2', '2016-05-27 04:15:45', '2016-05-27 04:15:45'),
+(35, 18, 'applicant', 4, 'Test 3', '2016-05-27 04:18:57', '2016-05-27 04:18:57');
 
 -- --------------------------------------------------------
 
@@ -216,7 +322,7 @@ CREATE TABLE IF NOT EXISTS `fp_companies` (
   `country_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_companies`
@@ -227,7 +333,8 @@ INSERT INTO `fp_companies` (`id`, `name`, `email`, `phone`, `number_of_employees
 (2, 'Test', 'test@gmail.com', '123456789', '1', 'Test', NULL, NULL, NULL, NULL, 15, '2016-05-12 05:29:02', '2016-05-12 05:29:02'),
 (3, 'Test2', 'test2@gmail.com', 'test2@gmail.com', '1', '1234567890', NULL, NULL, NULL, NULL, 15, '2016-05-12 05:31:14', '2016-05-12 05:31:14'),
 (4, 'Test 3', 'test3@gmail.com', '1234567890', '1', '', NULL, NULL, NULL, NULL, 15, '2016-05-15 20:26:32', '2016-05-15 20:26:32'),
-(5, 'Test 4', 'test4@gmail.com', '12345656890', '1', 'Test', NULL, NULL, NULL, NULL, 15, '2016-05-15 20:29:53', '2016-05-15 20:29:53');
+(5, 'Test 4', 'test4@gmail.com', '12345656890', '1', 'Test', NULL, NULL, NULL, NULL, 15, '2016-05-15 20:29:53', '2016-05-15 20:29:53'),
+(15, 'Test Company', 'testcompany@gmail.com', '1234567890', 'more than 200', 'Test', 'Test', 'Benguet', '2600', '', 185, '2016-05-18 23:59:10', '2016-05-18 23:59:10');
 
 -- --------------------------------------------------------
 
@@ -241,14 +348,15 @@ CREATE TABLE IF NOT EXISTS `fp_company_divisions` (
   `division_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_company_divisions`
 --
 
 INSERT INTO `fp_company_divisions` (`id`, `company_id`, `division_name`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Oshawa', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+(1, 1, 'Oshawa', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(8, 15, 'Test Division', '2016-05-18 23:59:10', '2016-05-18 23:59:10');
 
 -- --------------------------------------------------------
 
@@ -577,6 +685,34 @@ INSERT INTO `fp_item` (`item_id`, `billing_id`, `item_name`, `item_quantity`, `u
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fp_jobs`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_jobs` (
+`id` int(10) unsigned NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `photo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_jobs`
+--
+
+INSERT INTO `fp_jobs` (`id`, `user_id`, `company_id`, `title`, `description`, `photo`, `created_at`, `updated_at`) VALUES
+(10, 18, 1, 'Testing 1', 'Testing 1', 'assets/job\\company_logo_2.jpg', '2016-05-23 06:02:59', '2016-05-30 02:02:58'),
+(11, 18, 1, 'Test 5', '<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n', 'assets/job\\company_logo_3.png', '2016-05-23 06:10:17', '2016-05-27 10:22:05'),
+(12, 18, 1, 'Test 1', 'Test  1', 'assets/job\\company_logo_2.jpg', '2016-05-23 09:39:42', '2016-05-23 09:40:10'),
+(13, 18, 1, 'Test', '<p>Test</p>\r\n', 'assets/user/avatar.png', '2016-05-27 05:46:42', '2016-05-27 05:46:42'),
+(14, 18, 1, 'Test 4', '<p>Test 4</p>\r\n', '', '2016-05-27 07:48:48', '2016-05-27 07:48:48');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fp_links`
 --
 
@@ -741,6 +877,48 @@ CREATE TABLE IF NOT EXISTS `fp_migrations` (
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `fp_migrations`
+--
+
+INSERT INTO `fp_migrations` (`migration`, `batch`) VALUES
+('2014_10_12_100000_create_password_resets_table', 1),
+('2015_07_22_115516_create_ticketit_tables', 2),
+('2015_07_22_123254_alter_users_table', 3),
+('2015_09_29_123456_add_completed_at_column_to_ticketit_table', 3),
+('2015_10_08_123457_create_settings_table', 3),
+('2016_01_15_002617_add_htmlcontent_to_ticketit_and_comments', 3),
+('2016_01_15_040207_enlarge_settings_columns', 3),
+('2016_01_15_120557_add_indexes', 3),
+('2015_01_15_105324_create_roles_table', 4),
+('2015_01_15_114412_create_role_user_table', 5),
+('2015_01_26_115212_create_permissions_table', 5),
+('2015_01_26_115523_create_permission_role_table', 5),
+('2015_02_09_132439_create_permission_user_table', 5),
+('2016_03_23_155421_add_category_table', 5),
+('2016_03_23_155435_add_links_table', 5),
+('2016_03_23_162028_add_tags_table', 5),
+('2016_04_02_070419_add_column_to_project_table', 6),
+('2016_04_03_073424_create_meeting_table', 6),
+('2016_04_03_084800_create_meeting_type_table', 6),
+('2016_04_03_085458_create_meeting_priority_table', 6),
+('2016_05_19_141425_create_task_checklist_permission_table', 7),
+('2016_05_19_153450_update_task_checklist_permissions_table', 8),
+('2016_05_23_065219_create_jobs_table', 9),
+('2016_05_23_065537_create_applicants_table', 9),
+('2016_05_23_160158_create_applicant_tags_table', 10),
+('2016_05_23_081750_create_applicant_ratings_table', 11),
+('2016_05_24_071706_create_videos_table', 12),
+('2016_05_24_072847_create_video_tags_table', 12),
+('2016_05_25_170952_create_test_per_applicant_table', 13),
+('2016_05_25_171015_create_test_per_job', 13),
+('2016_05_25_151202_update_test_table_change_author_id_to_user_id', 14),
+('2016_05_26_153206_update_jobs_table_description_to_text', 15),
+('2016_05_12_100510_update_test_table', 16),
+('2016_05_26_095856_update_question_table', 16),
+('2016_05_27_093838_create_applicant_roles', 16),
+('2016_05_28_071227_create_test_result_table', 17);
+
 -- --------------------------------------------------------
 
 --
@@ -895,7 +1073,7 @@ CREATE TABLE IF NOT EXISTS `fp_profiles` (
   `role_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_profiles`
@@ -904,7 +1082,13 @@ CREATE TABLE IF NOT EXISTS `fp_profiles` (
 INSERT INTO `fp_profiles` (`id`, `user_id`, `company_id`, `role_id`, `created_at`, `updated_at`) VALUES
 (1, 18, 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (21, 41, 2, 1, '2016-05-17 00:03:22', '2016-05-17 00:03:22'),
-(22, 42, 1, 1, '2016-05-17 00:06:31', '2016-05-17 00:06:31');
+(22, 42, 1, 1, '2016-05-17 00:06:31', '2016-05-17 00:06:31'),
+(23, 18, 15, 7, '2016-05-18 23:59:10', '2016-05-18 23:59:10'),
+(24, 43, 1, 1, '2016-05-20 08:35:54', '2016-05-20 08:35:54'),
+(35, 54, 1, 2, '2016-05-24 07:52:30', '2016-05-24 07:52:30'),
+(36, 55, 1, 2, '2016-05-24 07:53:49', '2016-05-24 07:53:49'),
+(37, 56, 1, 1, '2016-05-24 07:57:01', '2016-05-24 07:57:01'),
+(38, 57, 1, 1, '2016-05-24 07:58:02', '2016-05-24 07:58:02');
 
 -- --------------------------------------------------------
 
@@ -961,19 +1145,22 @@ CREATE TABLE IF NOT EXISTS `fp_question` (
   `order` double(8,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `points` double(8,2) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `points` double(8,2) NOT NULL,
+  `explanation` text COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_question`
 --
 
-INSERT INTO `fp_question` (`id`, `test_id`, `question_type_id`, `question`, `question_choices`, `question_answer`, `length`, `question_photo`, `score`, `order`, `created_at`, `updated_at`, `points`) VALUES
-(1, 1, 1, 'Test 2', '["a","b","c","d"]', '0', '00:10:00', '1.png', 0, 1.00, '2016-04-27 02:30:33', '2016-05-02 01:17:00', 0.00),
-(2, 2, 1, 'Test', '["a","b","c","d"]', '2', '00:00:10', '', 0, 1.00, '2016-04-27 02:32:35', '2016-05-02 01:18:14', 0.00),
-(3, 3, 1, 'Test', '["a","b","c","d"]', '2', '00:00:00', '', 0, 1.00, '2016-04-27 02:41:32', '2016-04-27 02:41:32', 0.00),
-(4, 4, 1, 'Test', '["a","b","c","d"]', '2', '00:01:20', '', 0, 1.00, '2016-04-27 02:58:27', '2016-04-27 02:58:27', 0.00),
-(5, 5, 1, 'Test', '["a","b","c","d"]', '3', '00:00:15', '', 0, 1.00, '2016-04-27 03:06:05', '2016-04-27 03:06:05', 0.00);
+INSERT INTO `fp_question` (`id`, `test_id`, `question_type_id`, `question`, `question_choices`, `question_answer`, `length`, `question_photo`, `score`, `order`, `created_at`, `updated_at`, `points`, `explanation`) VALUES
+(1, 1, 1, 'Test 2', '["a","b","c","d"]', '0', '00:10:00', '1.png', 0, 1.00, '2016-04-27 02:30:33', '2016-05-02 01:17:00', 0.00, ''),
+(2, 2, 1, 'Test', '["a","b","c","d"]', '2', '00:00:10', '', 0, 1.00, '2016-04-27 02:32:35', '2016-05-02 01:18:14', 0.00, ''),
+(3, 3, 1, 'Test', '["a","b","c","d"]', '2', '00:00:00', '', 0, 1.00, '2016-04-27 02:41:32', '2016-04-27 02:41:32', 0.00, ''),
+(4, 4, 1, 'Test', '["a","b","c","d"]', '2', '00:01:20', '', 0, 1.00, '2016-04-27 02:58:27', '2016-04-27 02:58:27', 0.00, ''),
+(5, 5, 1, 'Test', '["a","b","c","d"]', '3', '00:00:15', '', 0, 1.00, '2016-04-27 03:06:05', '2016-04-27 03:06:05', 0.00, ''),
+(6, 6, 1, 'Test 1', '["Test 1","Test 2","Test 3","Test 4","Test 5","Test 6"]', '0', '00:10:00', '', 0, 1.00, '2016-05-25 06:37:33', '2016-05-25 06:37:33', 1.00, ''),
+(7, 6, 1, 'Test 2', '["Test 1","Test 2","Test 3","Test 4"]', '2', '00:00:00', '', 0, 2.00, '2016-05-25 06:37:33', '2016-05-25 06:37:33', 1.00, '');
 
 -- --------------------------------------------------------
 
@@ -1039,7 +1226,7 @@ CREATE TABLE IF NOT EXISTS `fp_roles` (
   `level` int(11) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_roles`
@@ -1048,7 +1235,8 @@ CREATE TABLE IF NOT EXISTS `fp_roles` (
 INSERT INTO `fp_roles` (`id`, `company_id`, `company_division_id`, `name`, `slug`, `description`, `level`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 'Admin', 'admin', 'Administrator', 1, '2016-04-26 02:35:11', '2016-04-26 02:35:11'),
 (2, 1, 1, 'Client', 'client', 'Clients', 3, '2016-04-26 02:35:11', '2016-04-26 02:35:11'),
-(3, 1, 1, 'Staff', 'staff', 'The staff', 2, '2016-04-26 02:35:11', '2016-04-26 02:35:11');
+(3, 1, 1, 'Staff', 'staff', 'The staff', 2, '2016-04-26 02:35:11', '2016-04-26 02:35:11'),
+(7, 15, 8, 'Admin', 'admin-15', 'Administrator', 1, '2016-05-18 23:59:10', '2016-05-18 23:59:10');
 
 -- --------------------------------------------------------
 
@@ -1062,7 +1250,7 @@ CREATE TABLE IF NOT EXISTS `fp_role_user` (
   `user_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_role_user`
@@ -1071,7 +1259,12 @@ CREATE TABLE IF NOT EXISTS `fp_role_user` (
 INSERT INTO `fp_role_user` (`id`, `role_id`, `user_id`, `created_at`, `updated_at`) VALUES
 (8, 1, 18, '2016-05-09 05:44:24', '2016-05-09 05:44:24'),
 (30, 1, 41, '2016-05-17 00:03:22', '2016-05-17 00:03:22'),
-(31, 1, 42, '2016-05-17 00:06:31', '2016-05-17 00:06:31');
+(31, 1, 42, '2016-05-17 00:06:31', '2016-05-17 00:06:31'),
+(32, 1, 43, '2016-05-20 08:35:54', '2016-05-20 08:35:54'),
+(43, 1, 54, '2016-05-24 07:52:30', '2016-05-24 07:52:30'),
+(44, 1, 55, '2016-05-24 07:53:49', '2016-05-24 07:53:49'),
+(45, 1, 56, '2016-05-24 07:57:01', '2016-05-24 07:57:01'),
+(46, 1, 57, '2016-05-24 07:58:02', '2016-05-24 07:58:02');
 
 -- --------------------------------------------------------
 
@@ -1128,7 +1321,7 @@ CREATE TABLE IF NOT EXISTS `fp_task` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `user_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fp_task`
@@ -1142,7 +1335,12 @@ INSERT INTO `fp_task` (`task_id`, `belongs_to`, `unique_id`, `task_title`, `task
 (22, 'project', 5, 'Test 1', 'Test', '2016-05-17 04:20:22', 'yes', 'pending', '2016-05-16 20:19:22', '2016-05-16 20:19:22', 18, 5),
 (23, 'project', 5, 'Test 2', 'Test 2', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-16 20:20:34', '2016-05-16 20:20:34', 18, 5),
 (24, 'project', 5, 'Test 3', 'Test 3', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-16 20:20:44', '2016-05-16 20:20:44', 18, 5),
-(25, 'project', 5, '1', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-16 20:22:32', '2016-05-16 20:22:32', 18, 5);
+(25, 'project', 5, '1', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-16 20:22:32', '2016-05-16 20:22:32', 18, 5),
+(28, 'project', 2, 'Test', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 05:07:59', '2016-05-18 05:07:59', 18, 2),
+(29, 'project', 6, 'Test', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 05:20:10', '2016-05-18 05:20:10', 18, 6),
+(30, 'project', 6, 'Test 2', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 06:07:43', '2016-05-18 06:07:43', 18, 6),
+(31, 'project', 6, 'Test 3', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 06:19:16', '2016-05-18 06:19:16', 18, 6),
+(32, 'project', 6, 'Test 4', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 06:19:33', '2016-05-18 06:19:33', 18, 6);
 
 -- --------------------------------------------------------
 
@@ -1159,7 +1357,7 @@ CREATE TABLE IF NOT EXISTS `fp_task_check_list` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Default'
-) ENGINE=InnoDB AUTO_INCREMENT=279 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=352 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_task_check_list`
@@ -1188,7 +1386,7 @@ INSERT INTO `fp_task_check_list` (`id`, `user_id`, `task_id`, `checklist_header`
 (247, 0, 18, 'Testing 3', '<p><input name="test" type="checkbox" />Testing 3</p>\n', '2016-05-06 01:25:45', '2016-05-10 03:22:15', 'Ongoing'),
 (258, 0, 18, 'Testing 4', '<p>Testing 4</p>\n', '2016-05-10 03:21:39', '2016-05-10 03:22:18', 'Default'),
 (259, 0, 6, 'Testing 5', '<p>Testing 5</p>\n', '2016-05-10 03:21:48', '2016-05-13 07:35:50', 'Default'),
-(260, 0, 6, 'Testing 6', '<p>Testing 6</p>\n', '2016-05-10 03:22:00', '2016-05-13 07:35:52', 'Default'),
+(260, 18, 6, 'Testing 6', '<p>Testing 6</p>\n', '2016-05-10 03:22:00', '2016-05-30 04:39:21', 'Default'),
 (261, 0, 6, 'Testing 7', '<p>Testing 7</p>\n', '2016-05-10 04:22:25', '2016-05-12 06:26:52', 'Default'),
 (262, 0, 6, 'Testing 8', '<p>Testing 8</p>\n', '2016-05-10 06:01:49', '2016-05-13 07:36:06', 'Default'),
 (263, 0, 6, 'Testing 9', '<p>Testing 9</p>\n', '2016-05-10 09:38:14', '2016-05-10 09:38:14', 'Default'),
@@ -1203,7 +1401,46 @@ INSERT INTO `fp_task_check_list` (`id`, `user_id`, `task_id`, `checklist_header`
 (273, 0, 20, 'Test 6', '<p>Test 6</p>\n', '2016-05-16 04:32:36', '2016-05-16 04:32:36', 'Default'),
 (275, 0, 21, 'Test', '<p>Test</p>\n', '2016-05-16 04:50:45', '2016-05-16 04:50:45', 'Default'),
 (277, 0, 21, 'Test', '<p>Test</p>\n', '2016-05-16 04:53:27', '2016-05-16 04:53:27', 'Default'),
-(278, 18, 25, 'Test', '<p>Test</p>\n', '2016-05-17 02:57:39', '2016-05-17 02:57:39', 'Default');
+(278, 18, 25, 'Test', '<p>Test</p>\n', '2016-05-17 02:57:39', '2016-05-17 02:57:39', 'Default'),
+(279, 18, 24, 'Test', '<p>Test</p>\n', '2016-05-18 04:09:56', '2016-05-18 04:09:56', 'Default'),
+(280, 18, 24, 'Test 1', '<p>Test 1</p>\n', '2016-05-18 04:19:36', '2016-05-18 04:19:36', 'Default'),
+(281, 18, 6, 'Testing 11', '<p>Testing 11</p>\n', '2016-05-18 04:27:46', '2016-05-18 04:27:46', 'Default'),
+(284, 18, 6, 'Testing 12', '<p>Testing 12</p>\n', '2016-05-18 04:54:11', '2016-05-18 04:54:11', 'Default'),
+(285, 18, 6, 'Testing 14', '<p>Testing 14</p>\n', '2016-05-18 04:55:26', '2016-05-18 04:55:55', 'Default'),
+(286, 18, 28, 'Test', '<p>Test</p>\n', '2016-05-18 05:11:29', '2016-05-18 05:11:29', 'Default'),
+(287, 18, 28, 'Test', '<p>Test</p>\n', '2016-05-18 05:15:11', '2016-05-18 05:15:11', 'Default'),
+(308, 18, 32, 'Test 1', '<p>Test 1</p>\n', '2016-05-18 06:19:43', '2016-05-18 06:19:43', 'Default'),
+(309, 18, 32, 'Test 2', '<p>Test 2</p>\n', '2016-05-18 06:19:51', '2016-05-18 06:19:51', 'Default'),
+(310, 18, 32, 'Test 3', '<p>Test 3</p>\n', '2016-05-18 06:19:59', '2016-05-18 06:19:59', 'Default'),
+(311, 18, 32, 'Test 4', '<p>Test 4</p>\n', '2016-05-18 06:20:06', '2016-05-18 06:20:06', 'Default'),
+(312, 18, 32, 'Test 5', '<p>Test 5</p>\n', '2016-05-18 06:20:17', '2016-05-18 06:20:17', 'Default'),
+(313, 18, 32, 'Test 6', '<p>Test 6</p>\n', '2016-05-18 06:20:29', '2016-05-18 06:20:29', 'Default'),
+(314, 18, 32, 'Test 7', '<p>Test 7</p>\n', '2016-05-18 06:20:38', '2016-05-18 06:20:38', 'Default'),
+(315, 18, 32, 'Test 8', '', '2016-05-18 06:20:44', '2016-05-18 06:20:44', 'Default'),
+(316, 18, 32, 'Test 9', '<p>Test 9</p>\n', '2016-05-18 06:20:51', '2016-05-18 06:20:51', 'Default'),
+(317, 18, 32, 'Test 10', '', '2016-05-18 06:20:59', '2016-05-18 06:20:59', 'Default'),
+(318, 18, 32, 'Test 11', '<p>Test 11</p>\n', '2016-05-18 06:21:07', '2016-05-18 06:21:07', 'Default'),
+(319, 18, 32, 'Test 12', '<p>Test 12</p>\n', '2016-05-18 06:21:22', '2016-05-18 06:21:22', 'Default'),
+(320, 18, 32, 'Test 13', '<p>Test 13</p>\n', '2016-05-18 06:21:35', '2016-05-18 06:21:35', 'Default'),
+(321, 18, 32, 'Test 14', '', '2016-05-18 06:21:43', '2016-05-18 06:21:43', 'Default'),
+(322, 18, 32, 'Test 15', '<p>Test 15</p>\n', '2016-05-18 06:22:00', '2016-05-18 06:22:00', 'Default'),
+(323, 18, 32, 'Test 16', '<p>Test 16</p>\n', '2016-05-18 06:22:09', '2016-05-18 06:22:09', 'Default'),
+(324, 18, 32, 'Test 17', '', '2016-05-18 06:23:35', '2016-05-18 06:23:35', 'Default'),
+(325, 18, 32, 'Test 18', '<p>Test 18</p>\n', '2016-05-18 06:23:46', '2016-05-18 06:23:46', 'Default'),
+(326, 18, 32, 'Test 19', '<p>Test 19</p>\n', '2016-05-18 06:24:05', '2016-05-18 06:24:05', 'Default'),
+(327, 18, 32, 'Test 20', '<p>Test 20</p>\n', '2016-05-18 06:24:19', '2016-05-18 06:24:19', 'Default'),
+(328, 18, 32, 'Test 21', '<p>Test 21</p>\n', '2016-05-18 06:24:38', '2016-05-18 06:24:38', 'Default'),
+(329, 18, 32, 'Test 22', '<p>Test 22</p>\n', '2016-05-18 06:27:16', '2016-05-18 06:27:16', 'Default'),
+(330, 18, 32, 'Test 23', '<p>Test 23</p>\n', '2016-05-18 06:28:05', '2016-05-18 06:28:05', 'Default'),
+(331, 18, 32, 'Test 24', '<p>Test 24</p>\n', '2016-05-18 06:28:16', '2016-05-18 06:28:16', 'Default'),
+(332, 18, 32, 'Test 25', '<p>Test 25</p>\n', '2016-05-18 06:28:28', '2016-05-18 06:28:28', 'Default'),
+(345, 18, 29, 'Test 3', '<p>Test 3</p>\n', '2016-05-18 06:46:21', '2016-05-18 06:46:21', 'Default'),
+(346, 18, 24, 'Test', '<p><img height="224" src="/assets/ckeditor_uploaded_images/company_logo_sample.png" width="225" /></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n', '2016-05-20 06:02:31', '2016-05-20 07:15:03', 'Default'),
+(347, 18, 24, 'Testing', '<p>Test</p>\n', '2016-05-20 08:14:50', '2016-05-20 08:14:50', 'Default'),
+(348, 18, 24, 'Test 1', '<p>Test 1</p>\n', '2016-05-26 03:36:26', '2016-05-26 03:36:52', 'Default'),
+(349, 18, 28, 'Testing', '<p>Testing</p>\n', '2016-05-30 03:40:11', '2016-05-30 03:40:11', 'Default'),
+(350, 18, 28, 'Test', '<p>Test</p>\n', '2016-05-30 04:30:21', '2016-05-30 04:30:21', 'Default'),
+(351, 18, 6, 'Testing 12', '<p>Testing 12</p>\n', '2016-05-30 05:25:36', '2016-05-30 05:25:36', 'Default');
 
 -- --------------------------------------------------------
 
@@ -1217,7 +1454,7 @@ CREATE TABLE IF NOT EXISTS `fp_task_check_list_order` (
   `task_id_order` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=298 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_task_check_list_order`
@@ -1226,9 +1463,34 @@ CREATE TABLE IF NOT EXISTS `fp_task_check_list_order` (
 INSERT INTO `fp_task_check_list_order` (`id`, `task_id`, `task_id_order`, `created_at`, `updated_at`) VALUES
 (60, 14, '194,221', '2016-05-04 05:46:29', '2016-05-04 05:46:29'),
 (259, 18, '225,241,258,247', '2016-05-10 03:22:18', '2016-05-10 03:22:18'),
-(293, 19, '265,226,244,224,193', '2016-05-13 07:36:06', '2016-05-13 07:36:06'),
 (296, 20, '269,267,270,271,272,273', '2016-05-16 19:41:48', '2016-05-16 19:41:48'),
-(297, 6, '260,259,261,262,243,263,264,266', '2016-05-16 20:07:10', '2016-05-16 20:07:10');
+(307, 19, '265,244,224,193', '2016-05-30 04:41:12', '2016-05-30 04:41:12'),
+(308, 24, '348,279,280,347', '2016-05-30 04:41:36', '2016-05-30 04:41:36'),
+(311, 6, '243,264,285,262,284,260,259,261,263,266,351,281', '2016-05-30 07:12:48', '2016-05-30 07:12:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_task_check_list_permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_task_check_list_permissions` (
+`id` int(10) unsigned NOT NULL,
+  `task_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_task_check_list_permissions`
+--
+
+INSERT INTO `fp_task_check_list_permissions` (`id`, `task_id`, `user_id`, `project_id`, `created_at`, `updated_at`) VALUES
+(1, 22, 42, 5, '2016-05-27 00:22:27', '2016-05-27 00:22:27'),
+(3, 24, 54, 5, '2016-05-27 06:04:19', '2016-05-27 06:04:19'),
+(4, 19, 42, 2, '2016-05-27 06:04:26', '2016-05-27 06:04:26');
 
 -- --------------------------------------------------------
 
@@ -1259,7 +1521,7 @@ CREATE TABLE IF NOT EXISTS `fp_task_timer` (
   `end_time` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_task_timer`
@@ -1276,7 +1538,8 @@ INSERT INTO `fp_task_timer` (`id`, `user_id`, `task_id`, `start_time`, `end_time
 (27, 0, 6, '0000-00-00 00:00:00', '2016-05-05 00:14:57', '2016-05-02 04:38:21', '2016-05-04 08:14:57'),
 (28, 0, 6, '0000-00-00 00:00:00', '2016-05-05 00:15:04', '2016-05-02 04:46:05', '2016-05-04 08:15:04'),
 (29, 0, 6, '2016-05-05 00:15:05', '2016-05-05 00:15:07', '2016-05-04 08:15:05', '2016-05-04 08:15:07'),
-(30, 0, 6, '0000-00-00 00:00:00', '2016-05-05 21:46:19', '2016-05-05 01:33:15', '2016-05-05 05:46:19');
+(30, 0, 6, '0000-00-00 00:00:00', '2016-05-05 21:46:19', '2016-05-05 01:33:15', '2016-05-05 05:46:19'),
+(31, 18, 24, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2016-05-20 00:58:51', '2016-05-20 00:58:51');
 
 -- --------------------------------------------------------
 
@@ -1313,7 +1576,16 @@ CREATE TABLE IF NOT EXISTS `fp_team_member` (
   `user_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_team_member`
+--
+
+INSERT INTO `fp_team_member` (`id`, `team_id`, `user_id`, `created_at`, `updated_at`) VALUES
+(27, 12, 42, '2016-05-19 22:25:21', '2016-05-19 22:25:21'),
+(31, 11, 42, '2016-05-25 00:02:33', '2016-05-25 00:02:33'),
+(71, 12, 54, '2016-05-25 04:59:05', '2016-05-25 04:59:05');
 
 -- --------------------------------------------------------
 
@@ -1361,7 +1633,7 @@ CREATE TABLE IF NOT EXISTS `fp_template` (
 
 CREATE TABLE IF NOT EXISTS `fp_test` (
 `id` int(10) unsigned NOT NULL,
-  `author_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci NOT NULL,
   `length` time NOT NULL,
@@ -1371,19 +1643,21 @@ CREATE TABLE IF NOT EXISTS `fp_test` (
   `start_message` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `completion_message` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `order` double(8,2) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_test`
 --
 
-INSERT INTO `fp_test` (`id`, `author_id`, `title`, `description`, `length`, `version`, `average_score`, `test_photo`, `start_message`, `completion_message`, `created_at`, `updated_at`) VALUES
-(1, 18, 'Test', 'Test', '00:00:00', 0.00, 0.00, '', 'Test', 'Test', '2016-04-27 02:30:33', '2016-05-17 05:13:41'),
-(2, 6, 'Test 2', 'Test 2', '00:00:00', 0.00, 0.00, '', 'Test 2', 'Test 2', '2016-04-27 02:32:35', '2016-04-27 02:32:35'),
-(3, 6, 'Test 3', 'Test 3', '00:00:00', 0.00, 0.00, '', 'Test 3', 'Test 3', '2016-04-27 02:41:32', '2016-04-27 02:41:32'),
-(4, 6, 'Test 4', 'Test 4', '00:00:00', 0.00, 0.00, '4.png', 'Test 4', 'Test 4', '2016-04-27 02:58:27', '2016-04-27 02:58:27'),
-(5, 6, 'Test 5', 'Test 5', '00:00:00', 0.00, 0.00, '5.jpg', 'Test 5', 'Test 5', '2016-04-27 03:06:05', '2016-04-27 03:06:05');
+INSERT INTO `fp_test` (`id`, `user_id`, `title`, `description`, `length`, `version`, `average_score`, `test_photo`, `start_message`, `completion_message`, `created_at`, `updated_at`, `order`) VALUES
+(1, 18, 'Test', 'Test', '00:00:00', 0.00, 0.00, '', 'Test', 'Test', '2016-04-27 02:30:33', '2016-05-17 05:13:41', 0.00),
+(2, 6, 'Test 2', 'Test 2', '00:00:00', 0.00, 0.00, '', 'Test 2', 'Test 2', '2016-04-27 02:32:35', '2016-04-27 02:32:35', 0.00),
+(3, 6, 'Test 3', 'Test 3', '00:00:00', 0.00, 0.00, '', 'Test 3', 'Test 3', '2016-04-27 02:41:32', '2016-04-27 02:41:32', 0.00),
+(4, 6, 'Test 4', 'Test 4', '00:00:00', 0.00, 0.00, '4.png', 'Test 4', 'Test 4', '2016-04-27 02:58:27', '2016-04-27 02:58:27', 0.00),
+(5, 6, 'Test 5', 'Test 5', '00:00:00', 0.00, 0.00, '5.jpg', 'Test 5', 'Test 5', '2016-04-27 03:06:05', '2016-04-27 03:06:05', 0.00),
+(6, 18, 'Test 6', 'Testing the Quiz', '00:00:00', 0.00, 0.00, '', 'Test Intro', 'Congratulations!', '2016-05-25 06:37:33', '2016-05-25 06:37:33', 0.00);
 
 -- --------------------------------------------------------
 
@@ -1403,6 +1677,41 @@ CREATE TABLE IF NOT EXISTS `fp_test_feedback` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fp_test_per_applicant`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_test_per_applicant` (
+`id` int(10) unsigned NOT NULL,
+  `test_id` int(11) NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_test_per_applicant`
+--
+
+INSERT INTO `fp_test_per_applicant` (`id`, `test_id`, `applicant_id`, `created_at`, `updated_at`) VALUES
+(1, 6, 4, '2016-05-27 00:24:53', '2016-05-27 00:24:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_test_per_job`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_test_per_job` (
+`id` int(10) unsigned NOT NULL,
+  `test_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fp_test_question_tag`
 --
 
@@ -1412,6 +1721,31 @@ CREATE TABLE IF NOT EXISTS `fp_test_question_tag` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_test_result`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_test_result` (
+`id` int(10) unsigned NOT NULL,
+  `test_id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `answer` text COLLATE utf8_unicode_ci NOT NULL,
+  `result` tinyint(1) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_test_result`
+--
+
+INSERT INTO `fp_test_result` (`id`, `test_id`, `question_id`, `user_id`, `answer`, `result`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 42, '2', 0, '2016-05-30 06:55:05', '2016-05-30 06:55:05'),
+(2, 4, 4, 18, '3', 0, '2016-05-31 01:20:26', '2016-05-31 01:20:26');
 
 -- --------------------------------------------------------
 
@@ -1554,7 +1888,53 @@ CREATE TABLE IF NOT EXISTS `fp_ticketit_settings` (
   `default` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_ticketit_settings`
+--
+
+INSERT INTO `fp_ticketit_settings` (`id`, `lang`, `slug`, `value`, `default`, `created_at`, `updated_at`) VALUES
+(1, NULL, 'main_route', 'tickets', 'tickets', '2016-05-17 19:42:19', '2016-05-17 19:42:19'),
+(2, NULL, 'main_route_path', 'tickets', 'tickets', '2016-05-17 19:42:19', '2016-05-17 19:42:19'),
+(3, NULL, 'admin_route', 'tickets-admin', 'tickets-admin', '2016-05-17 19:42:19', '2016-05-17 19:42:19'),
+(4, NULL, 'admin_route_path', 'tickets-admin', 'tickets-admin', '2016-05-17 19:42:19', '2016-05-17 19:42:19'),
+(5, NULL, 'master_template', 'master', 'master', '2016-05-17 19:42:19', '2016-05-17 19:42:19'),
+(6, NULL, 'email.template', 'ticketit::emails.templates.ticketit', 'ticketit::emails.templates.ticketit', '2016-05-17 19:42:19', '2016-05-17 19:42:19'),
+(7, NULL, 'email.header', 'Ticket Update', 'Ticket Update', '2016-05-17 19:42:19', '2016-05-17 19:42:19'),
+(8, NULL, 'email.signoff', 'Thank you for your patience!', 'Thank you for your patience!', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(9, NULL, 'email.signature', 'Your friends', 'Your friends', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(10, NULL, 'email.dashboard', 'My Dashboard', 'My Dashboard', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(11, NULL, 'email.google_plus_link', '#', '#', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(12, NULL, 'email.facebook_link', '#', '#', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(13, NULL, 'email.twitter_link', '#', '#', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(14, NULL, 'email.footer', 'Powered by Ticketit', 'Powered by Ticketit', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(15, NULL, 'email.footer_link', 'https://github.com/thekordy/ticketit', 'https://github.com/thekordy/ticketit', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(16, NULL, 'email.color_body_bg', '#FFFFFF', '#FFFFFF', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(17, NULL, 'email.color_header_bg', '#44B7B7', '#44B7B7', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(18, NULL, 'email.color_content_bg', '#F46B45', '#F46B45', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(19, NULL, 'email.color_footer_bg', '#414141', '#414141', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(20, NULL, 'email.color_button_bg', '#AC4D2F', '#AC4D2F', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(21, NULL, 'default_status_id', '1', '1', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(22, NULL, 'default_close_status_id', '0', '0', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(23, NULL, 'default_reopen_status_id', '0', '0', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(24, NULL, 'paginate_items', '10', '10', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(25, NULL, 'length_menu', 'a:2:{i:0;a:3:{i:0;i:10;i:1;i:50;i:2;i:100;}i:1;a:3:{i:0;i:10;i:1;i:50;i:2;i:100;}}', 'a:2:{i:0;a:3:{i:0;i:10;i:1;i:50;i:2;i:100;}i:1;a:3:{i:0;i:10;i:1;i:50;i:2;i:100;}}', '2016-05-17 19:42:20', '2016-05-17 19:42:20'),
+(26, NULL, 'status_notification', '1', '1', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(27, NULL, 'comment_notification', '1', '1', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(28, NULL, 'queue_emails', '0', '0', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(29, NULL, 'assigned_notification', '1', '1', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(30, NULL, 'agent_restrict', '0', '0', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(31, NULL, 'close_ticket_perm', 'a:3:{s:5:"owner";b:1;s:5:"agent";b:1;s:5:"admin";b:1;}', 'a:3:{s:5:"owner";b:1;s:5:"agent";b:1;s:5:"admin";b:1;}', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(32, NULL, 'reopen_ticket_perm', 'a:3:{s:5:"owner";b:1;s:5:"agent";b:1;s:5:"admin";b:1;}', 'a:3:{s:5:"owner";b:1;s:5:"agent";b:1;s:5:"admin";b:1;}', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(33, NULL, 'delete_modal_type', 'builtin', 'builtin', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(34, NULL, 'editor_enabled', '1', '1', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(35, NULL, 'include_font_awesome', '1', '1', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(36, NULL, 'summernote_locale', 'en', 'en', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(37, NULL, 'editor_html_highlighter', '1', '1', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(38, NULL, 'codemirror_theme', 'monokai', 'monokai', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(39, NULL, 'summernote_options_json_file', 'vendor/kordy/ticketit/src/JSON/summernote_init.json', 'vendor/kordy/ticketit/src/JSON/summernote_init.json', '2016-05-17 19:42:21', '2016-05-17 19:42:21'),
+(40, NULL, 'purifier_config', 'a:3:{s:15:"HTML.SafeIframe";s:4:"true";s:20:"URI.SafeIframeRegexp";s:72:"%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%";s:18:"URI.AllowedSchemes";a:5:{s:4:"data";b:1;s:4:"http";b:1;s:5:"https";b:1;s:6:"mailto";b:1;s:3:"ftp";b:1;}}', 'a:3:{s:15:"HTML.SafeIframe";s:4:"true";s:20:"URI.SafeIframeRegexp";s:72:"%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%";s:18:"URI.AllowedSchemes";a:5:{s:4:"data";b:1;s:4:"http";b:1;s:5:"https";b:1;s:6:"mailto";b:1;s:3:"ftp";b:1;}}', '2016-05-17 19:42:21', '2016-05-17 19:42:21');
 
 -- --------------------------------------------------------
 
@@ -2046,16 +2426,21 @@ CREATE TABLE IF NOT EXISTS `fp_user` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ticketit_admin` tinyint(1) NOT NULL DEFAULT '0',
   `ticketit_agent` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fp_user`
 --
 
 INSERT INTO `fp_user` (`user_id`, `password`, `name`, `email`, `phone`, `photo`, `address_1`, `address_2`, `zipcode`, `country_id`, `skype`, `facebook`, `linkedin`, `user_status`, `remember_token`, `created_at`, `updated_at`, `ticketit_admin`, `ticketit_agent`) VALUES
-(18, '$2y$10$UEexUYG9axwYUWw9U/tsf.w7XnGSSx1qjMuwyVon8zhNfj3ghltaC', 'Jexter Dean Buenaventura', 'projectmanager@hdenergy.ca', '1234567890', '', '', NULL, '', 0, NULL, NULL, NULL, 'Active', 'ny1YfYNSWiXbSBMIFULoVDNNKlDywsHQIZtEEDyB61tLBFDMI593fodJjO6R', '2016-05-17 13:10:04', '2016-05-17 05:10:04', 0, 0),
+(18, '$2y$10$UEexUYG9axwYUWw9U/tsf.w7XnGSSx1qjMuwyVon8zhNfj3ghltaC', 'Jexter Dean Buenaventura', 'projectmanager@hdenergy.ca', '1234567890', 'assets/user\\Snapshot_20160526_2.JPG', '#14 A Wakat Suello Road', '', '2600', 185, 'arcblades', 'jexterdean', 'jexterdean', 'Active', 'xQLFez8OevOQ5PaEtVgD53jtsEf42UnalKhISp3K4mO9VmPl1xiGxL5NLeaJ', '2016-05-30 15:10:50', '2016-05-30 07:10:50', 1, 0),
 (41, '$2y$10$SyDLRHDaFq1ytX4wxitHp.KuD26I9oud4Ef0V6cK9G973Q6Qq.Ocm', 'John Doe', 'johndoe@gmail.com', '1234567890', '', 'Test', 'Test', '2600', 15, 'johndoe', 'johndoe', 'johndoe', 'Active', 'kvidrHq2eEGsuJLZfdKpuiauNs6hTc1AyKPJ6cDBZrXIoJtssCgyCUcamZHl', '2016-05-17 10:25:32', '2016-05-17 02:25:32', 0, 0),
-(42, '$2y$10$Gs8o/ybd7TEuJx07Jp0cHeCDsJxbtqgId5sI3I73co39q2G1/I5TW', 'Jane Doe', 'janedoe@gmail.com', '1234567890', '', 'Test', 'Test', '2600', 15, 'janedoe', 'janedoe', 'janedoe', 'Active', '1cuFTwo8gO2nZ8kQnWuUJQmkvETtCb6aMGUwFUKKlNLvStiKyiqm2tKQoAg9', '2016-05-17 13:03:05', '2016-05-17 05:03:05', 0, 0);
+(42, '$2y$10$IoeVSftbTouX41gyvAMeZeZpuRsl5K0legTnYRH0HsLqkPmkErQeC', 'Jane Doe', 'janedoe@gmail.com', '1234567890', 'assets/user\\resume_sample_photo.jpg', 'Test 1', 'Test 1', '2600', 43, 'janedoe', 'janedoe', 'janedoe', 'Active', 'R2nlacHdAt57Yo9McpgfIbIAdcHM3I8dONXeZlWsx71h9mqxLoFe8ktPoMmJ', '2016-05-30 15:08:18', '2016-05-30 07:08:18', 0, 0),
+(43, '$2y$10$D9arxdmJu6GNxCoOCBUINuQlvd57RVan55qHt4hzB2AssNb/XThOG', 'Test', 'test@gmail.com', '1234567890', 'assets/user\\sample_company_photo_2.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '7UGVewN3pvGerD5IzQ0t7btO1ErFSuwEqaDTcaRWLojIUVp5xVZiG9jRydGS', '2016-05-26 14:30:00', '2016-05-26 06:30:00', 0, 0),
+(54, '$2y$10$z7BC6nIpFVgH/NsJnbgguu8c7u2tn4t0EWHo1HxPBCdkyrGI8Xv.u', 'Kanji Tatsumi', 'kanji@gmail.com', '1234567890', '/assets/user\\sample_company_photo_2.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-26 14:33:10', '2016-05-26 06:33:10', 0, 0),
+(55, '$2y$10$x7pqd7aN8mcYAH9dkm1NW.3iYFLoGj6x.505Fhh8sK8htQkQg7HTm', 'Test 2', 'test2@gmail.com', '1234567890', 'assets/user\\sample_company_photo_3.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-26 14:34:38', '2016-05-26 06:34:38', 1, 1),
+(56, '$2y$10$P/SWFr0qh9o.ZElGbD/VpOYKy5qJqJCWPckfRQfQSd0541TAMEEzy', 'Test 3', 'test3@gmail.com', '1234567890', 'assets/user\\resume_sample_photo.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-26 14:34:56', '2016-05-26 06:34:56', 0, 0),
+(57, '$2y$10$ZXP7b3sXMqJGsQpgKV.nkereUnp34CS2vsQ/ZdNA042f.KxYHVT1m', 'Test 4', 'test4@gmail.com', '1234567890', '', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-24 07:58:02', '2016-05-24 07:58:02', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -2074,6 +2459,36 @@ CREATE TABLE IF NOT EXISTS `fp_user_payroll_setting` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_videos`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_videos` (
+`id` int(10) unsigned NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `stream_id` int(11) NOT NULL,
+  `video_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `video_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_video_tags`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_video_tags` (
+`id` int(10) unsigned NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `video_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `tags` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -2082,6 +2497,24 @@ CREATE TABLE IF NOT EXISTS `fp_user_payroll_setting` (
 -- Indexes for table `fp_accounts`
 --
 ALTER TABLE `fp_accounts`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_applicants`
+--
+ALTER TABLE `fp_applicants`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_applicant_ratings`
+--
+ALTER TABLE `fp_applicant_ratings`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_applicant_tags`
+--
+ALTER TABLE `fp_applicant_tags`
  ADD PRIMARY KEY (`id`);
 
 --
@@ -2155,6 +2588,12 @@ ALTER TABLE `fp_events`
 --
 ALTER TABLE `fp_item`
  ADD PRIMARY KEY (`item_id`), ADD UNIQUE KEY `item_id` (`item_id`);
+
+--
+-- Indexes for table `fp_jobs`
+--
+ALTER TABLE `fp_jobs`
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `fp_links`
@@ -2325,6 +2764,12 @@ ALTER TABLE `fp_task_check_list_order`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `fp_task_check_list_permissions`
+--
+ALTER TABLE `fp_task_check_list_permissions`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `fp_task_comment`
 --
 ALTER TABLE `fp_task_comment`
@@ -2373,9 +2818,27 @@ ALTER TABLE `fp_test_feedback`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `fp_test_per_applicant`
+--
+ALTER TABLE `fp_test_per_applicant`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_test_per_job`
+--
+ALTER TABLE `fp_test_per_job`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `fp_test_question_tag`
 --
 ALTER TABLE `fp_test_question_tag`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_test_result`
+--
+ALTER TABLE `fp_test_result`
  ADD PRIMARY KEY (`id`);
 
 --
@@ -2457,6 +2920,18 @@ ALTER TABLE `fp_user_payroll_setting`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `fp_videos`
+--
+ALTER TABLE `fp_videos`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_video_tags`
+--
+ALTER TABLE `fp_video_tags`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -2465,6 +2940,21 @@ ALTER TABLE `fp_user_payroll_setting`
 --
 ALTER TABLE `fp_accounts`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fp_applicants`
+--
+ALTER TABLE `fp_applicants`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `fp_applicant_ratings`
+--
+ALTER TABLE `fp_applicant_ratings`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fp_applicant_tags`
+--
+ALTER TABLE `fp_applicant_tags`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `fp_assigned_roles`
 --
@@ -2499,17 +2989,17 @@ MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `fp_comment`
 --
 ALTER TABLE `fp_comment`
-MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
 --
 -- AUTO_INCREMENT for table `fp_companies`
 --
 ALTER TABLE `fp_companies`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `fp_company_divisions`
 --
 ALTER TABLE `fp_company_divisions`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `fp_country`
 --
@@ -2525,6 +3015,11 @@ MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 ALTER TABLE `fp_item`
 MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `fp_jobs`
+--
+ALTER TABLE `fp_jobs`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `fp_links`
 --
@@ -2604,7 +3099,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_profiles`
 --
 ALTER TABLE `fp_profiles`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
 --
 -- AUTO_INCREMENT for table `fp_project`
 --
@@ -2614,7 +3109,7 @@ MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 -- AUTO_INCREMENT for table `fp_question`
 --
 ALTER TABLE `fp_question`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `fp_question_feedback`
 --
@@ -2634,12 +3129,12 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 -- AUTO_INCREMENT for table `fp_roles`
 --
 ALTER TABLE `fp_roles`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `fp_role_user`
 --
 ALTER TABLE `fp_role_user`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=47;
 --
 -- AUTO_INCREMENT for table `fp_setting`
 --
@@ -2649,17 +3144,22 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `fp_task`
 --
 ALTER TABLE `fp_task`
-MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
+MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `fp_task_check_list`
 --
 ALTER TABLE `fp_task_check_list`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=279;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=352;
 --
 -- AUTO_INCREMENT for table `fp_task_check_list_order`
 --
 ALTER TABLE `fp_task_check_list_order`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=298;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=312;
+--
+-- AUTO_INCREMENT for table `fp_task_check_list_permissions`
+--
+ALTER TABLE `fp_task_check_list_permissions`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `fp_task_comment`
 --
@@ -2669,7 +3169,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_task_timer`
 --
 ALTER TABLE `fp_task_timer`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=31;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT for table `fp_team`
 --
@@ -2679,7 +3179,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 -- AUTO_INCREMENT for table `fp_team_member`
 --
 ALTER TABLE `fp_team_member`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=58;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=72;
 --
 -- AUTO_INCREMENT for table `fp_team_project`
 --
@@ -2694,17 +3194,32 @@ MODIFY `template_id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_test`
 --
 ALTER TABLE `fp_test`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `fp_test_feedback`
 --
 ALTER TABLE `fp_test_feedback`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `fp_test_per_applicant`
+--
+ALTER TABLE `fp_test_per_applicant`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `fp_test_per_job`
+--
+ALTER TABLE `fp_test_per_job`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `fp_test_question_tag`
 --
 ALTER TABLE `fp_test_question_tag`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fp_test_result`
+--
+ALTER TABLE `fp_test_result`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `fp_test_tag`
 --
@@ -2744,7 +3259,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_ticketit_settings`
 --
 ALTER TABLE `fp_ticketit_settings`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=41;
 --
 -- AUTO_INCREMENT for table `fp_ticketit_statuses`
 --
@@ -2764,11 +3279,21 @@ MODIFY `timezone_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=420;
 -- AUTO_INCREMENT for table `fp_user`
 --
 ALTER TABLE `fp_user`
-MODIFY `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=43;
+MODIFY `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=58;
 --
 -- AUTO_INCREMENT for table `fp_user_payroll_setting`
 --
 ALTER TABLE `fp_user_payroll_setting`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fp_videos`
+--
+ALTER TABLE `fp_videos`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fp_video_tags`
+--
+ALTER TABLE `fp_video_tags`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables

@@ -1,6 +1,6 @@
-<ul class="list-group">
+<ul class="tasklist-group list-group">
     @foreach($tasks as $task)
-    <li class="list-group-item">
+    <li class="tasklist-group list-group-item">
         <div class="row">
             <div class="col-md-6">
                 {{$task->task_title}}

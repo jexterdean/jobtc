@@ -57,10 +57,14 @@ CKEDITOR.editorConfig = function (config) {
 
     //config.autoParagraph = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
     // Remove one plugin.
 >>>>>>> b4834f8af53dc2570d787b8bd934cd81b69e8e0e
+=======
+    
+>>>>>>> 6a2cc1177108b63fdbb31a86f52030eb7ba5c3b6
     config.removePlugins = 'autosave';
 
 };

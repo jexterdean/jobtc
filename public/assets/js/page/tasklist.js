@@ -6,9 +6,9 @@
 $(function (e) {
 
     //region For Draggability
-    $('.list-group').sortable({
+    $('.tasklist-group').sortable({
         dropOnEmpty: true,
-        connectWith: ".list-group",
+        connectWith: ".tasklist-group",
         handle: '.drag-handle',
         receive: function (event, ui) {
             //For receiving
