@@ -24,11 +24,23 @@
         height: 200px!important;
         transition: height 0.25s ease-in;
     }
+    .time-form, .points-form{
+        font-size: 22px!important;
+        font-weight: bold;
+    }
+    .note-editable{
+        height: 100px;
+    }
 </style>
 @stop
 
 @section('js_footer')
 @parent
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.min.js"></script>
+
 <script>
     $(function(e){
         var testModal = $('.test-modal');
@@ -117,8 +129,14 @@
             var qArea = $(this).closest('.modal-body');
             if($.inArray(showThisQArea, ["1", "2"]) == -1){
                 qArea
-                    .find('.question-answer-area, .question-points-area')
+                    .find('.question-answer-area[data-type=""], .question-points-area[data-type=""]')
                     .addClass('hidden');
+                qArea
+                    .find('')
+                    .addClass('hidden');
+                qArea
+                    .find('.question-answer-area[data-type="' + showThisQArea + '"], .question-points-area[data-type="' + showThisQArea + '"]')
+                    .removeClass('hidden');
             }
             else{
                 qArea
