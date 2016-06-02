@@ -26,7 +26,7 @@ $('.taskgroup-list').sortable({
     },
     receive: function (event, ui) {
 
-        project_id = $(this).siblings().val();
+        project_id = $(this).siblings().find('.project_id').val();
         list_group_user_id = $(ui.item).attr('id');
         user_id = list_group_user_id.split('-').pop();
 
@@ -34,7 +34,7 @@ $('.taskgroup-list').sortable({
 
         var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.user_id').val() + ')').length;
 
-        console.log(identicalItemCount);
+        console.log(project_id);
         //If a duplicate, remove it
         if (identicalItemCount > 1) {
             $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.user_id').val() + ')').remove();

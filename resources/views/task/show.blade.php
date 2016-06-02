@@ -70,6 +70,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <input class="project_id" type="hidden" value="{{$task->project_id}}"/>
                                 </li>
                                 @endforeach
                                 @else
