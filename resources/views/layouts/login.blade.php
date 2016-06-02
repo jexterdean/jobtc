@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <title>Job.tc</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    {{--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>--}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"
           type="text/css"/>
     <link href="{{ url('assets/css/AdminLTE.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{url('assets/css/page/login.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{url('assets/css/bootstrap.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{url('assets/custom.css')}}" rel="stylesheet" type="text/css"/>
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
