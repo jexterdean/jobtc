@@ -31,6 +31,9 @@ Route::post('register','UserController@register');
 Route::resource('a', 'ApplicantController');
 Route::get('a/{id}',['as' => 'a', 'uses' => 'ApplicantController@show','https' => true]);
 Route::post('saveApplicantNotes','ApplicantController@saveApplicantNotes');
+/*Add or Remove Applicant from the User Table*/
+Route::post('hireApplicant','ApplicantController@hireApplicant');
+Route::post('fireApplicant','ApplicantController@fireApplicant');
 
 /* For Applicant Tags */
 Route::post('addTag', 'JobController@addTag');

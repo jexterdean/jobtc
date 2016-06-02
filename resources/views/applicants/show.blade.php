@@ -38,7 +38,6 @@
                         </div>
                         <div class="media-body media-right">
                             @if(Auth::user('user'))
-
                             <a href="#" class="btn btn-default pull-right interview-applicant"><i class="fa fa-comment-o"></i></a>
                             <text class="media-heading">{{$applicant->name}}&nbsp;<a href="{{$applicant->id}}" class="delete-applicant"><i class="fa fa-trash"></i></a></text>
                             @else
@@ -271,7 +270,20 @@
                             </div>
                             <div class="media-body media-right">
                                 @if(Auth::user('user'))
-                                <text class="media-heading">{{$applicant->name}}&nbsp;<a href="{{$applicant->id}}" class="delete-applicant"><i class="fa fa-trash"></i></a></text>
+                                <text class="media-heading">
+                                {{$applicant->name}}&nbsp;
+                                @if(Auth::user('user')->user_id === $job->user_id)
+                                @if($applicant->hired === 'No')
+                                <a href="#" class='pull-right btn bg-light-blue-gradient hire'>Hire</a>
+                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                @else
+                                <a href="#" class='pull-right btn bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
+                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                @endif
+                                @endif
+                                </text>
                                 @else
                                 <text class="media-heading">{{$applicant->name}}</text>
                                 @endif
@@ -295,7 +307,6 @@
                 </div>
             </div>
             @if(Auth::check('user') || Auth::check('applicant'))
-            <!--div class="comment-list-header">Comments</div-->
             <div class="mini-space"></div>
             <div id="comment-list-{{$applicant->id}}" class="comment-list">
                 @unless($comments->count())
@@ -343,7 +354,6 @@
                 @endunless
             </div>
             <div class="mini-space"></div>
-            
             @include('forms.addCommentForm')
             @endif
         </div>
