@@ -35,7 +35,7 @@
                     </div>
                     <div class="input-group">
                         <div class="checkbox">
-                            <input type="checkbox" name="remember" tabindex="3" value="forever" checked="checked"/> 
+                            <input type="checkbox" name="remember" tabindex="3" value="forever" checked/> 
                             <label for="remember">Remember me</label>
                         </div>
                     </div>
