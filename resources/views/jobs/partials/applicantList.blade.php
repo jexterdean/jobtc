@@ -34,7 +34,20 @@
             </div>
             <div class="col-xs-9">
                 <!--a target="_blank" href="https://docs.google.com/viewer?url={{url($applicant->resume)}}" class="applicant-resume">{{$applicant->first_name}}&nbsp{{$applicant->last_name}}</a-->
-                <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume">{{$applicant->name}}</a>
+                <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume">
+                    {{$applicant->name}}
+                    @if(Auth::user('user')->user_id === $job->user_id)
+                    @if($applicant->hired === 'No')
+                    <a href="#" class='pull-right btn bg-light-blue-gradient hire'>Hire</a>
+                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                    @elseif($applicant->hired === 'Yes')
+                    <a href="#" class='pull-right btn bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
+                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                    @endif
+                    @endif
+                </a>
                 <br />
                 <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
                 <br />
@@ -64,7 +77,7 @@
                     <a href="#" class='pull-right btn bg-light-blue-gradient hire'>Hire</a>
                     <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
-                    @else
+                    @elseif($applicant->hired === 'Yes')
                     <a href="#" class='pull-right btn bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
                     <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
