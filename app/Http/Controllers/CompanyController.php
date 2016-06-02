@@ -113,7 +113,8 @@ class CompanyController extends BaseController {
         $company_users = Profile::with('user')->where('company_id', $company_id)->get();
 
         $authority_levels = Role::where('company_id', $company_id)->orderBy('level', 'asc')->get();
-
+        
+        $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
 
         $assets = ['companies'];
 
@@ -122,6 +123,7 @@ class CompanyController extends BaseController {
                     'jobs' => $jobs,
                     'company_users' => $company_users,
                     'authority_levels' => $authority_levels,
+                    'task_permissions' => $task_permissions,
                     'tests' => $tests,
                     'test_applicants' => $test_applicants,
                     'test_jobs' => $test_jobs,

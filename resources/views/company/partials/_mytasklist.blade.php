@@ -10,6 +10,7 @@
                 <div class="box-body">
                     <div id="project-collapse-{{ $project->project_id }}" class="box-content collapse in">
                         @foreach($project->task as $val)
+                        @if($task_permissions->contains('task_id',$val->task_id) || $project->user_id === Auth::user('user')->user_id )
                         <div id="collapse-container-{{ $val->task_id }}" class="panel task-list">
                             <div class="panel-heading task-header" data-target="#collapse-{{ $val->task_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                                 <div class="row">
@@ -32,6 +33,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                         @endforeach
                     </div><!--Box Container-->
                 </div>
