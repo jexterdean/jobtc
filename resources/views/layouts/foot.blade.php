@@ -199,9 +199,16 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             $(this).find('.modal-body').load('{{ $setting->grab('main_route').'/create' }}');
         });
         $('.datetimepicker').datetimepicker({
-            format: "DD/MM/YYYY",
+            format: "DD-MM-YYYY",
             useCurrent: false,
             pickTime: false
+        });
+       $('body').on('click','.datetimepicker',function(e){
+            $(this).datetimepicker({
+                format: "DD-MM-YYYY",
+                useCurrent: false,
+                pickTime: false
+            });
         });
     });
             $(document).ajaxComplete(function () {
@@ -295,13 +302,12 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             }, 2000);
             /*endregion*/
             $(document).on('click', '.show_edit_form', function(e){
-    e.preventDefault();
-            var link = e.currentTarget.href;
-            $.get(link, function(data){
-            $('#ajax .modal-content').html(data);
-                    $('#ajax').modal('show');
+                e.preventDefault();
+                var link = e.currentTarget.href;
+                var _modal_target = $(this).data('target');
+                $(_modal_target + ' .modal-content').load(link);
+                $(_modal_target).modal('show');
             });
-    });
             /*region Hover Task List*/
             $('.task-list .task-header').hover(
             function(){

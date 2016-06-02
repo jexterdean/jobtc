@@ -1,8 +1,14 @@
 <div class="mini-space"></div>
 <div class="row">
     <a data-toggle="modal" href="#add_user">
-        <button class="btn btn-sm"><i class="fa fa-plus-circle"></i> Add New User</button>
+        <button class="btn btn-sm btn-default btn-shadow"><i class="fa fa-plus-circle"></i> Add New User</button>
     </a>
+</div>
+<div class="modal fade" id="edit_project_form" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
 </div>
 <div class="mini-space"></div>
 <div class="row">
@@ -20,9 +26,9 @@
                             @foreach($teams as $team)                            
                             @if($team->project_id === $project->project_id)
                             @foreach($team->team_member as $team_members)
-                            <li class="bg-gray list-group-item">
+                            <li class="list-group-item">
                                 <div class="row ">
-                                    <div class="col-md-11">
+                                    <div class="col-md-10">
                                         <a class="team-member name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">
                                             <i class="fa fa-chevron-down" aria-hidden="true"></i>
                                             @if($team_members->user->photo === '')
@@ -101,6 +107,15 @@
                             @endforeach
                         </ul>
                         <!--li class="list-group-item">No Employees assigned to this project.</li-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right">
+                                    <a href="{{ route('project.edit',$project->project_id) }}" class="btn-edit btn-shadow btn show_edit_form" data-toggle='modal' data-target='#edit_project_form'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                    <a href="{{ route('project.destroy',$project->project_id) }}" class="btn-delete btn-shadow btn alert_delete"><i class='fa fa-times'></i> Delete</a>
+                                    <input type="hidden" class="project_id" value="{{$project->project_id}}" />
+                                </div>
+                            </div>
+                        </div>
                         <input type="hidden" class="project_id" value="{{$project->project_id}}"/>
                     </div>
                 </div>
@@ -134,7 +149,7 @@
                     <div class="box-content">
                         <ul class="taskgroup-list list-group">
                             @foreach($profiles as $profile)
-                            <li id="profile-{{$profile->user->user_id}}" class="bg-gray list-group-item">
+                            <li id="profile-{{$profile->user->user_id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
                                         <a class="profile-toggle" data-toggle="collapse" href="#profile-collapse-{{$profile->user->user_id}}">

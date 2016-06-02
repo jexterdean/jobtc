@@ -18,6 +18,10 @@
     color: #B7B5D8;/*#8d8d8d;*/
     font-size: 25px;
 }
+.drag-handle,.unassign-member,.edit-profile{
+    font-size: 25px;
+    margin-left: 8px;
+}
 .tc-icons:hover, .list-group .alert_delete:hover , .delete-tasklist:hover, .edit-tasklist:hover,.toggle-tasklist:hover,.move-tasklist:hover,
 .edit-task-list-item:hover{
     color: #000 !important;
@@ -65,8 +69,12 @@ a:active,a:focus{
     padding-top: 5px;
 }
 
-.task-list-item {
+.task-list-item{
     border: none;
+}
+.task-list-item.is-task-item-selected > .row{
+    width: 100%;
+    overflow-x: auto;
 }
 .task-list-item:not(.is-task-item-selected):hover{
     padding: 0!important;

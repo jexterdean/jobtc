@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="col-md-3 question-points-area hidden" data-type="3">
-        <div class="form-inline">
+        <div class="form-inline" style="padding: 5px;">
             <label>Maximum Score:</label>
             <input type="number" name="max_point" style="width: 70px;" class="q-form points-form form-control" />
         </div>
@@ -35,7 +35,7 @@
     <div class="row">
         <label class="col-sm-2 text-right">Question:</label>
         <div class="col-md-10">
-            <textarea name="question" class="q-form form-control"></textarea>
+            <textarea name="question" class="q-form form-control summernote-editor"></textarea>
         </div>
     </div>
 </div>
@@ -43,7 +43,7 @@
     <div class="row">
         <label class="col-sm-2 text-right">Explanation:</label>
         <div class="col-md-10">
-            <textarea name="explanation" class="q-form form-control"></textarea>
+            <textarea name="explanation" class="q-form form-control summernote-editor"></textarea>
         </div>
     </div>
 </div>
@@ -81,7 +81,7 @@
                 </div>
                 @endfor
                 <div class="text-right" style="margin-top: 10px;">
-                    <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit" />
+                    <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit btn-shadow" />
                 </div>
             </div>
             <div class="question-type-area hidden" data-type="2">
@@ -100,8 +100,8 @@
 </div>
 <div class="row">
     <div class="col-md-12 text-right">
-        <input type="submit" name="submit" class="btn btn-submit" value="Save" />
-        <input type="button" name="cancel" class="btn btn-delete" value="Cancel" data-dismiss="modal" />
+        <input type="submit" name="submit" class="btn btn-submit btn-shadow" value="Save" />
+        <input type="button" name="cancel" class="btn btn-delete btn-shadow" value="Cancel" data-dismiss="modal" />
     </div>
 </div>
 {!! Form::close() !!}

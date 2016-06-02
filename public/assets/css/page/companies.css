@@ -31,10 +31,19 @@
     
 }
 
-.taskgroup-list .list-group-item {
+.taskgroup-list > .list-group-item {
+    background-color: #ffffff;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #e6e6e6!important;
+    /*padding: 4px 15px;*/
+}
+.task-list-container .taskgroup-list .list-group-item{
     background-color: #ffffef;
-    border: none;
-    padding: 4px 15px;
+}
+.taskgroup-list > .list-group-item:first-child{
+    border-top: 1px solid #e6e6e6!important;
 }
 
 .fa-chevron-down {

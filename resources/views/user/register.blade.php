@@ -4,11 +4,13 @@
         <meta charset="UTF-8">
         <title>Job.tc</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        {{--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>--}}
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"
               type="text/css"/>
         <link href="{{ url('assets/css/AdminLTE.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{url('assets/css/page/register.css')}}" rel="stylesheet" type="text/css"/>
+        <link href="{{url('assets/css/bootstrap.css')}}" rel="stylesheet" type="text/css"/>
+        <link href="{{url('assets/custom.css')}}" rel="stylesheet" type="text/css"/>
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -29,7 +31,7 @@
                     </ul>
                 </div>
                 @endif
-                <div class="login-container row">
+                <div class="login-container">
                     <div class="col-xs-12">
                         <div class="space"></div>
 
@@ -56,7 +58,6 @@
                                 <span class="input-group-addon" id="photo-span"><i class="fa fa-picture-o" aria-hidden="true"></i></span>
                                 <input type="file" class="form-control text" aria-describedby="photo-span" placeholder="Photo" name="photo" tabindex="2" id="login_photo" value="" />
                             </div-->
-                            <br/>
                             <div class="input-group">
                                 <span class="input-group-addon" id="address-1-span"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
                                 <input type="text" class="form-control text" aria-describedby="address-1-span" placeholder="Address 1" name="address_1" tabindex="2" id="login_address_1" value="" />
@@ -112,7 +113,7 @@
                             </div>
                             <br /-->
                             <div class="input-group">
-                                <input type="submit" class="btn btn-primary submit" name="register" tabindex="4" value="Register" />
+                                <input type="submit" class="btn btn-edit btn-shadow submit" name="register" tabindex="4" value="Register" />
                             </div>
                         </form>
 
