@@ -33,12 +33,22 @@
     </div>
     <div class="form-group">
         <div class="col-md-6">
-            {!!  Form::input('text','start_date',isset($project->start_date) ? date("d-m-Y",strtotime
-            ($project->start_date)) : '', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Start', 'tabindex' => '4', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+            <div class='input-group date datetimepicker' id='start_date'>
+                {!!  Form::input('text','start_date',
+                    isset($project->start_date) ? date("d-m-Y",strtotime($project->start_date)) : '', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Start', 'tabindex' => '4'])  !!}
+                <span class="input-group-addon open-date-calendar">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
         </div>
         <div class="col-md-6">
-            {!!  Form::input('text','deadline',isset($project->deadline) ? date("d-m-Y",strtotime($project->deadline))
-            : '', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Deadline', 'tabindex' => '5', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+            <div class='input-group date datetimepicker' id='end_date'>
+                {!!  Form::input('text','deadline',
+                    isset($project->deadline) ? date("d-m-Y",strtotime($project->deadline)) : '', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Deadline', 'tabindex' => '5'])  !!}
+                <span class="input-group-addon open-date-calendar">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
         </div>
     </div>
     <div class="form-group">

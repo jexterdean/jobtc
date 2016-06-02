@@ -56,8 +56,8 @@
 </div>
 <div class="row">
     <div class="col-md-12 text-right">
-        <input type="submit" name="submit" class="btn btn-submit" value="Save" />
-        <input type="button" name="cancel" class="btn btn-delete" value="Cancel" data-dismiss="modal" />
+        <input type="submit" name="submit" class="btn btn-submit btn-shadow" value="Save" />
+        <input type="button" name="cancel" class="btn btn-delete btn-shadow" value="Cancel" data-dismiss="modal" />
     </div>
 </div>
 {!! Form::close() !!}
