@@ -15,19 +15,19 @@
     <div class="col-md-3">
         <div class="form-inline">
             <label>Time Limit:</label>
-            <input type='text' name="length" style="width: 100px;" class="q-form time-form form-control" value="{{ $default_time ? date('i:s', strtotime($default_time)) : '' }}" />
+            <input type='text' name="length" style="width: 80px;" class="q-form time-form form-control" value="{{ $default_time ? date('i:s', strtotime($default_time)) : '' }}" />
         </div>
     </div>
     <div class="col-md-3 question-points-area" data-type="">
         <div class="form-inline">
             <label>Points:</label>
-            <input type="number" name="points" style="width: 100px;" class="q-form points-form form-control" />
+            <input type="text" name="points" style="width: 80px;" class="q-form points-form form-control" />
         </div>
     </div>
     <div class="col-md-3 question-points-area hidden" data-type="3">
-        <div class="form-inline" style="padding: 5px;">
+        <div class="form-inline" style="padding: 5px;white-space: nowrap">
             <label>Maximum Score:</label>
-            <input type="number" name="max_point" style="width: 70px;" class="q-form points-form form-control" />
+            <input type="text" name="max_point" style="width: 70px;" class="q-form points-form form-control" />
         </div>
     </div>
 </div>
@@ -49,9 +49,12 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2 text-right">Question Photo:</label>
+        <label class="col-sm-2 text-right">Question Image:</label>
         <div class="col-md-10">
-            <input type="file" name="question_photo" class="form-control" />
+            <div class="fileUpload btn btn-edit btn-shadow btn-sm">
+                <span>Choose Image</span>
+                <input class="upload form-control" name="question_photo" type="file" value="" />
+            </div>
         </div>
     </div>
 </div>

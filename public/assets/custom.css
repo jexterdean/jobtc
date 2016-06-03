@@ -6,10 +6,13 @@
   margin-right: 0;
   width: 25px;
   height: 25px;
-  background-repeat: no-repeat !important;
-  text-indent: -10000px;
   outline: none;
-  background-image: url("img/remove-icon-small.png") !important;
+  font-size: 37px!important;
+  opacity: 1!important;
+  text-shadow: 0 1px 0 #f2f2f2;
+}
+.close:hover{
+  opacity: 0.7!important;
 }
 .static-info{border-bottom:1px solid #eee;}
 /*Task List Items CSS*/
@@ -261,21 +264,24 @@ input[type=radio].radio,input[type=checkbox].checkbox {
     padding:0;
     border:0;
 }
-input[type=text],textarea{
+input[type=text],textarea,input[type=password],input[type=number]{
     box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4)!important;
+}
+textarea:focus{
+
 }
 input[type=radio].radio + label{
     font-weight: normal;
     margin-top: 5px;
-    padding-left:26px;
-    height:21px;
+    padding-left:35px;
+    height:29px;
     display:inline-block;
     line-height:21px;
     background-repeat:no-repeat;
     background-position: 0 0;
     vertical-align:middle;
     cursor:pointer;
-    background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_5ab92245cf78caac21ff087cfc374219.png);
+    background-image:url(img/css_radio_button.png);
 }
 input[type=checkbox].checkbox + label {
     font-weight: normal;
@@ -288,11 +294,11 @@ input[type=checkbox].checkbox + label {
     background-position: 0 0;
     vertical-align:middle;
     cursor:pointer;
-    background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_3e7c116decab5f0bdc492fba26fa6d26.png);
+    background-image:url(img/css_checkbox_btn.png);
 
 }
 input[type=radio].radio:checked + label{
-    background-position: 0 -21px;
+    background-position: 0 -29px;
 }
 
 input[type=checkbox].checkbox:checked + label {
@@ -322,4 +328,8 @@ input[type=checkbox].checkbox + label,input[type=radio].radio + label{
     cursor: pointer;
     opacity: 0;
     filter: alpha(opacity=0);
+}
+select{
+    background: #4285F4!important;
+    color: #ffffff!important;
 }

@@ -13,7 +13,7 @@
         </div>
         @endif
 
-        <div class="login-container row">
+        <div class="login-container">
             <div class="col-xs-12">
                 <div class="space"></div>
 
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <input type="submit" class="btn btn-primary submit" name="login" tabindex="4" value="Login" />
+                        <input type="submit" class="btn btn-edit btn-shadow submit" name="login" tabindex="4" value="Login" />
                         <a href="{{ url('forgotPassword') }}" class="lostpass space" href="" title="Password Lost and Found">Lost your password?</a>
                     </div>
                 </form>

@@ -30,15 +30,16 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab5",
                     "tab38",
+                    "tab5",
                     "tab3",
                     "tab7",
                     "tab10",
                     "tab21",
                     "tab22",
                     "tab32",
-                    "tab37"
+                    "tab37",
+                    "tab4"
                 ]
             },
             "name": "pane1",
@@ -48,18 +49,30 @@
                     "name": "tab5",
                     "path": "",
                     "className": [
-                        "tab5",
-                        "connecting"
+                        "tab5"
                     ],
                     "document": {
+<<<<<<< HEAD
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1464599806313
+                        },
                         "filter": true,
-                        "title": "public/assets/css/page/companies.css - Stopped",
-                        "tooltip": "public/assets/css/page/companies.css - Stopped",
+                        "title": "public/assets/css/page/companies.css - Idle",
+                        "tooltip": "public/assets/css/page/companies.css - Idle",
                         "output": {
                             "id": "output491820",
-                            "width": 1462,
+                            "width": 1581,
                             "height": 193,
-                            "scrollTop": 302,
+=======
+                        "filter": true,
+                        "title": "public/assets/css/page/companies.css - Idle",
+                        "tooltip": "public/assets/css/page/companies.css - Idle",
+                        "output": {
+                            "id": "output491820",
+                            "width": 1027,
+                            "height": 193,
+                            "scrollTop": 210,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/css/page/companies.css",
@@ -164,9 +177,7 @@
                             }
                         },
                         "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1464643916512
-                        },
+                        "meta": {},
                         "changed": false
                     },
                     "editorType": "output",
@@ -177,18 +188,17 @@
                     "name": "tab21",
                     "path": "",
                     "className": [
-                        "tab21",
-                        "connecting"
+                        "tab21"
                     ],
                     "document": {
                         "filter": true,
-                        "title": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png - Stopped",
-                        "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png - Stopped",
+                        "title": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png - Idle",
+                        "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png - Idle",
                         "output": {
                             "id": "output2938913",
-                            "width": 1462,
+                            "width": 1027,
                             "height": 193,
-                            "scrollTop": 283,
+                            "scrollTop": -1,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png",
@@ -197,9 +207,7 @@
                             }
                         },
                         "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1464650789655
-                        },
+                        "meta": {},
                         "changed": false
                     },
                     "editorType": "output",
@@ -210,18 +218,17 @@
                     "name": "tab22",
                     "path": "",
                     "className": [
-                        "tab22",
-                        "connecting"
+                        "tab22"
                     ],
                     "document": {
                         "filter": true,
-                        "title": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png - Stopped",
-                        "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png - Stopped",
+                        "title": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png - Idle",
+                        "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png - Idle",
                         "output": {
                             "id": "output2516314",
-                            "width": 1462,
+                            "width": 1027,
                             "height": 193,
-                            "scrollTop": 283,
+                            "scrollTop": 190,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png",
@@ -230,9 +237,7 @@
                             }
                         },
                         "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1464650871291
-                        },
+                        "meta": {},
                         "changed": false
                     },
                     "editorType": "output",
@@ -243,18 +248,17 @@
                     "name": "tab32",
                     "path": "",
                     "className": [
-                        "tab32",
-                        "connecting"
+                        "tab32"
                     ],
                     "document": {
                         "filter": true,
-                        "title": "public/assets/ckeditor/skins/office2013/dialog.css - Stopped",
-                        "tooltip": "public/assets/ckeditor/skins/office2013/dialog.css - Stopped",
+                        "title": "public/assets/ckeditor/skins/office2013/dialog.css - Idle",
+                        "tooltip": "public/assets/ckeditor/skins/office2013/dialog.css - Idle",
                         "output": {
                             "id": "output1434716",
-                            "width": 1462,
+                            "width": 1027,
                             "height": 193,
-                            "scrollTop": 283,
+                            "scrollTop": 190,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/ckeditor/skins/office2013/dialog.css",
@@ -263,9 +267,7 @@
                             }
                         },
                         "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1464651357414
-                        },
+                        "meta": {},
                         "changed": false
                     },
                     "editorType": "output",
@@ -276,29 +278,26 @@
                     "name": "tab37",
                     "path": "",
                     "className": [
-                        "tab37",
-                        "connecting"
+                        "tab37"
                     ],
                     "document": {
                         "filter": true,
-                        "title": "public/assets/css/page/login.css - Stopped",
-                        "tooltip": "public/assets/css/page/login.css - Stopped",
+                        "title": "public/assets/css/page/login.css - Idle",
+                        "tooltip": "public/assets/css/page/login.css - Idle",
                         "output": {
                             "id": "output7375618",
-                            "width": 1462,
+                            "width": 1027,
                             "height": 193,
-                            "scrollTop": 302,
+                            "scrollTop": 205,
                             "config": {
                                 "runner": "Shell command",
-                                "command": "public/assets/css/page/login.css",
+                                "command": "public/assets/css/page/companies.css",
                                 "toolbar": true,
                                 "name": ""
                             }
                         },
                         "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1464651662727
-                        },
+                        "meta": {},
                         "changed": false
                     },
                     "editorType": "output",
@@ -313,25 +312,51 @@
                     ],
                     "document": {
                         "changed": false,
-                        "meta": {
-                            "timestamp": 1464655122223
-                        },
+                        "meta": {},
                         "filter": true,
                         "title": "public/assets/css/page/quizzes.css - Idle",
                         "tooltip": "public/assets/css/page/quizzes.css - Idle",
                         "output": {
                             "id": "output7256120",
-                            "width": 1027,
+                            "width": 1581,
                             "height": 193,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/css/page/quizzes.css",
-                                "toolbar": true
+                                "toolbar": true,
+                                "name": ""
                             }
                         }
                     },
                     "editorType": "output",
                     "active": true
+                },
+                {
+                    "type": "tab",
+                    "name": "tab4",
+                    "path": "",
+                    "className": [
+                        "tab4"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "bash - \"job.tc\"",
+                        "tooltip": "bash - \"job.tc\"",
+                        "terminal": {
+                            "id": "devel_305",
+                            "cwd": "",
+                            "width": 0,
+                            "height": 0,
+                            "scrollTop": 863
+                        },
+                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
+                        "meta": {
+                            "timestamp": 1464936147189
+                        },
+                        "changed": false
+                    },
+                    "editorType": "terminal",
+                    "active": false
                 }
             ],
             "skin": "editor_tab",
@@ -357,7 +382,7 @@
             "@acestatus": 1,
             "@datagrid": 1,
             "@divider": 4,
-            "@document": 13,
+            "@document": 2,
             "@form": 5,
             "@imgeditor": 1,
             "@imgview": 1,
@@ -368,10 +393,10 @@
             "@postmessage": 1,
             "@preferences": 1,
             "@preview": 1,
-            "@session": 13,
-            "@tab": 1,
+            "@session": 12,
+            "@tab": 5,
             "@tree": 2,
-            "@undoManager": 13
+            "@undoManager": 2
         }
     },
     "findinfiles": {
@@ -389,7 +414,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab0",
+            "tab2",
             "tab38"
         ]
     },
@@ -427,7 +452,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 467,
+        "@scrollpos": 1498,
         "@showfs": true,
         "expanded": {
             "json()": [
@@ -435,12 +460,10 @@
                 "/public/assets/css",
                 "/app",
                 "/public/assets",
-                "/storage",
                 "/storage/app",
                 "/storage/app/purifier",
                 "/bootstrap/cache",
                 "/storage/app/purifier/CSS",
-                "/public",
                 "/public/assets/ckeditor/plugins/ckwebspeech",
                 "/public/assets/ckeditor/plugins/smiley/images",
                 "/public/assets/ckeditor/plugins/smiley/dialogs",
@@ -448,8 +471,21 @@
                 "/public/assets/ckeditor/plugins/templates/templates",
                 "/public/assets/ckeditor/plugins/templates/templates/images",
                 "/public/assets/ckeditor/skins/office2013",
+<<<<<<< HEAD
                 "/app/Http",
-                "/app/Http/Controllers"
+                "/app/Http/Controllers",
+=======
+                "/resources/views/session",
+                "/app/Http/Controllers",
+                "/app/Models",
+                "/resources",
+                "/resources/views",
+                "/resources/views/project",
+                "/resources/views/task",
+                "/resources/views/layouts",
+                "/public",
+>>>>>>> 51dc73ef034632e7f77c74f2ca4c89b6f13dda58
+                "/public/assets/css/page"
             ]
         }
     },
@@ -470,143 +506,126 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/app/Http/Controllers/SessionController.php",
+            "focus": "tab38",
             "meta": {
                 "accessList": [
                     "tab0",
-                    "tab12",
-                    "tab9",
-                    "tab11"
+                    "tab2",
+                    "tab1"
                 ]
             },
             "name": "pane0",
             "nodes": [
                 {
                     "type": "tab",
-                    "name": "tab9",
-                    "path": "/public/assets/css/page/jobs.css",
-                    "className": [
-                        "tab9"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "jobs.css",
-                        "tooltip": "/public/assets/css/page/jobs.css",
-                        "ace": {
-                            "folds": [],
-                            "scrolltop": 0,
-                            "scrollleft": 0,
-                            "selection": {
-                                "start": {
-                                    "row": 11,
-                                    "column": 16
-                                },
-                                "end": {
-                                    "row": 11,
-                                    "column": 16
-                                },
-                                "isBackwards": false
-                            },
-                            "options": {
-                                "guessTabSize": true,
-                                "useWrapMode": false,
-                                "wrapToView": true
-                            },
-                            "firstLineState": 0
-                        },
-                        "hash": "decaa916a9392c63c76376da2ce4ecf8a6d123e0",
-                        "meta": {
-                            "timestamp": 1464647049668
-                        },
-                        "changed": false
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab11",
-                    "path": "/public/assets/css/page/companies.css",
-                    "className": [
-                        "tab11"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "companies.css",
-                        "tooltip": "/public/assets/css/page/companies.css",
-                        "ace": {
-                            "folds": [],
-                            "scrolltop": 180,
-                            "scrollleft": 0,
-                            "selection": {
-                                "start": {
-                                    "row": 62,
-                                    "column": 13
-                                },
-                                "end": {
-                                    "row": 62,
-                                    "column": 13
-                                },
-                                "isBackwards": false
-                            },
-                            "options": {
-                                "guessTabSize": true,
-                                "useWrapMode": false,
-                                "wrapToView": true
-                            },
-                            "firstLineState": 0
-                        },
-                        "hash": "663b4fb001cd9f905dc7bb8f23d138e3768e225f",
-                        "meta": {
-                            "timestamp": 1464648992061
-                        },
-                        "changed": false
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab12",
-                    "path": "/public/assets/css/page/quizzes.css",
-                    "className": [
-                        "tab12"
-                    ],
-                    "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1464655444111
-                        },
-                        "filter": true,
-                        "title": "quizzes.css",
-                        "tooltip": "/public/assets/css/page/quizzes.css",
-                        "ace": {}
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
                     "name": "tab0",
-                    "path": "/app/Http/Controllers/SessionController.php",
+                    "path": "/resources/views/project/show.blade.php",
                     "className": [
-                        "tab0",
-                        "focus"
+                        "tab0"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "show.blade.php",
+                        "tooltip": "/resources/views/project/show.blade.php",
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 2208,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 171,
+                                    "column": 44
+                                },
+                                "end": {
+                                    "row": 171,
+                                    "column": 44
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": {
+                                "row": 50,
+                                "state": "start",
+                                "mode": "ace/mode/php"
+                            }
+                        },
+                        "hash": "8854e792ffb9f9c5b591318004ef99733e94a9c1",
+                        "meta": {
+                            "timestamp": 1464779126239
+                        },
+                        "changed": false
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab1",
+                    "path": "/resources/views/task/show.blade.php",
+                    "className": [
+                        "tab1"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "show.blade.php",
+                        "tooltip": "/resources/views/task/show.blade.php",
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 715.5,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 76,
+                                    "column": 60
+                                },
+                                "end": {
+                                    "row": 76,
+                                    "column": 60
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": 0
+                        },
+                        "hash": "5803b4b52556fff9055570e9462894ed5831645c",
+                        "meta": {
+                            "timestamp": 1464882890539
+                        },
+                        "changed": false
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab2",
+                    "path": "/resources/views/layouts/navbar.blade.php",
+                    "className": [
+                        "tab2"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1464694762246
+                            "timestamp": 1464882943451
                         },
                         "filter": true,
-                        "title": "SessionController.php",
-                        "tooltip": "/app/Http/Controllers/SessionController.php",
+                        "title": "navbar.blade.php",
+                        "tooltip": "/resources/views/layouts/navbar.blade.php",
                         "ace": {}
                     },
                     "editorType": "ace",
                     "active": true
                 }
             ],
+>>>>>>> 51dc73ef034632e7f77c74f2ca4c89b6f13dda58
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -614,7 +633,11 @@
     },
     "tree_selection": {
         "json()": [
-            "/app/Http/Controllers/SessionController.php"
+<<<<<<< HEAD
+            "/app/Http/Controllers/Api"
+=======
+            "/resources/views/task/index.blade.php"
+>>>>>>> 51dc73ef034632e7f77c74f2ca4c89b6f13dda58
         ]
     }
 }
