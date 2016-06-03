@@ -163,7 +163,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Company:</strong></td>
-                                            <td>{{ $companies[$project->company_id] }}</td>
+                                            <td>{{-- $companies->name --}}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Project Type:</strong></td>

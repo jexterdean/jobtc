@@ -124,12 +124,12 @@ class ProjectController extends BaseController {
 
         $user_id = Auth::user('user')->user_id;
         
-        $user = User::find($user_id);
+        $user_authority = User::find($user_id);
         
-        if ($user->level() === 1) {
+        if ($user_authority->level() === 1) {
             $project = Project::find($id);
         
-        } elseif ($user->level() > 1) {
+        } elseif ($user_authority->level() > 1) {
             $project = Project::find($id);
         }
 
@@ -148,7 +148,7 @@ class ProjectController extends BaseController {
                 ->pluck('name', 'email');
 
         $client_options = Company::orderBy('name', 'asc')
-                ->pluck('name', 'id');
+                ->get();
 
         $note = Note::where('belongs_to', '=', 'project')
                 ->where('unique_id', '=', $id)
