@@ -15,19 +15,19 @@
     <div class="col-md-3">
         <div class="form-inline">
             <label>Time Limit:</label>
-            <input type='text' name="length" style="width: 100px;" class="q-form time-form form-control" value="{{ $questions_info->length ? date('i:s', strtotime($questions_info->length)) : '' }}" />
+            <input type='text' name="length" style="width: 80px;" class="q-form time-form form-control" value="{{ $questions_info->length ? date('i:s', strtotime($questions_info->length)) : '' }}" />
         </div>
     </div>
     <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>" data-type="">
         <div class="form-inline">
             <label>Points:</label>
-            <input type="number" name="points" style="width: 100px;" class="q-form points-form form-control" value="{{ $questions_info->points }}" />
+            <input type="text" name="points" style="width: 80px;" class="q-form points-form form-control" value="{{ $questions_info->points }}" />
         </div>
     </div>
     <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? '' : ' hidden'; ?>" data-type="3">
-        <div class="form-inline" style="padding: 5px;">
+        <div class="form-inline" style="padding: 5px;white-space: nowrap">
             <label>Maximum Score:</label>
-            <input type="number" name="max_point" style="width: 70px;" class="q-form points-form form-control" value="{{ $questions_info->max_point }}" />
+            <input type="text" name="max_point" style="width: 70px;" class="q-form points-form form-control" value="{{ $questions_info->max_point }}" />
         </div>
     </div>
 </div>
@@ -41,7 +41,7 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2">Explanation:</label>
+        <label class="col-sm-2 text-right">Explanation:</label>
         <div class="col-md-10">
             <textarea name="explanation" class="q-form form-control summernote-editor">{{ $questions_info->explanation }}</textarea>
         </div>
@@ -49,7 +49,7 @@
 </div>
 <div class="form-group">
     <div class="row">
-        <label class="col-sm-2 text-right">Question Photo:</label>
+        <label class="col-sm-2 text-right">Question Image:</label>
         <div class="col-md-10">
             <div class="media">
                 <div class="media-left">
@@ -60,7 +60,10 @@
                 </div>
                 <div class="media-body">
                     <div class="col-md-9">
-                        <input type="file" name="question_photo" class="form-control" />
+                        <div class="fileUpload btn btn-edit btn-shadow btn-sm">
+                            <span>Choose Image</span>
+                            <input class="upload form-control" name="question_photo" type="file" value="" />
+                        </div>
                     </div>
                     <div class="col-md-3">
                         <div class="pull-right">

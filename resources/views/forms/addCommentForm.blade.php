@@ -14,7 +14,13 @@
         <div class="media-body media-right">
             <textarea placeholder="Add a comment for this applicant" class="form-control comment-textarea" name="comment"></textarea>
         </div>
-        <button class="btn btn-shadow btn-edit pull-right submit-comment">Submit</button>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button class="btn btn-shadow btn-edit submit-comment">Submit</button>
+            </div>
+        </div>
     </div>
     <div>
         <input class="email-comment checkbox" type="checkbox" id="email-checkbox" value="email"/>
