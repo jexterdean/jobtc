@@ -30,16 +30,16 @@
         "json()": {
             "meta": {
                 "accessList": [
+                    "tab6",
                     "tab38",
+                    "tab37",
+                    "tab32",
+                    "tab21",
+                    "tab22",
                     "tab5",
                     "tab3",
                     "tab7",
-                    "tab10",
-                    "tab21",
-                    "tab22",
-                    "tab32",
-                    "tab37",
-                    "tab4"
+                    "tab10"
                 ]
             },
             "name": "pane1",
@@ -52,7 +52,6 @@
                         "tab5"
                     ],
                     "document": {
-<<<<<<< HEAD
                         "changed": false,
                         "meta": {
                             "timestamp": 1464599806313
@@ -62,9 +61,6 @@
                         "tooltip": "public/assets/css/page/companies.css - Idle",
                         "output": {
                             "id": "output491820",
-                            "width": 1581,
-                            "height": 193,
-=======
                         "filter": true,
                         "title": "public/assets/css/page/companies.css - Idle",
                         "tooltip": "public/assets/css/page/companies.css - Idle",
@@ -289,6 +285,8 @@
                             "width": 1027,
                             "height": 193,
                             "scrollTop": 205,
+                            "width": 0,
+                            "height": 0,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/css/page/companies.css",
@@ -329,6 +327,266 @@
                         }
                     },
                     "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab3",
+                    "path": "",
+                    "className": [
+                        "tab3",
+                        "connecting"
+                    ],
+                    "document": {
+                        "meta": {},
+                        "filter": true,
+                        "title": "public/assets/ckeditor/contents.css - Stopped",
+                        "tooltip": "public/assets/ckeditor/contents.css - Stopped",
+                        "output": {
+                            "id": "output835570",
+                            "width": 1462,
+                            "height": 193,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/ckeditor/contents.css",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        },
+                        "changed": false
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab7",
+                    "path": "",
+                    "className": [
+                        "tab7",
+                        "connecting"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "public/assets/ckeditor/config.js - Stopped",
+                        "tooltip": "public/assets/ckeditor/config.js - Stopped",
+                        "output": {
+                            "id": "output915323",
+                            "width": 1462,
+                            "height": 193,
+                            "scrollTop": 169,
+                            "config": {
+                                "runner": "Node.js",
+                                "command": "public/assets/ckeditor/config.js",
+                                "toolbar": true,
+                                "debug": true,
+                                "name": ""
+                            }
+                        },
+                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
+                        "meta": {
+                            "timestamp": 1464612293774
+                        },
+                        "changed": false
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab10",
+                    "path": "",
+                    "className": [
+                        "tab10",
+                        "connecting"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "public/assets/css/page/jobs.css - Stopped",
+                        "tooltip": "public/assets/css/page/jobs.css - Stopped",
+                        "output": {
+                            "id": "output79234",
+                            "width": 1462,
+                            "height": 193,
+                            "scrollTop": 302,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/css/page/jobs.css",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        },
+                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
+                        "meta": {},
+                        "changed": false
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab21",
+                    "path": "",
+                    "className": [
+                        "tab21"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {},
+                        "filter": true,
+                        "title": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png - Idle",
+                        "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png - Idle",
+                        "output": {
+                            "id": "output2938913",
+                            "width": 0,
+                            "height": 0,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        }
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab22",
+                    "path": "",
+                    "className": [
+                        "tab22"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {},
+                        "filter": true,
+                        "title": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png - Idle",
+                        "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png - Idle",
+                        "output": {
+                            "id": "output2516314",
+                            "width": 0,
+                            "height": 0,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        }
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab32",
+                    "path": "",
+                    "className": [
+                        "tab32"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {},
+                        "filter": true,
+                        "title": "public/assets/ckeditor/skins/office2013/dialog.css - Idle",
+                        "tooltip": "public/assets/ckeditor/skins/office2013/dialog.css - Idle",
+                        "output": {
+                            "id": "output1434716",
+                            "width": 0,
+                            "height": 0,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/ckeditor/skins/office2013/dialog.css",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        }
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab37",
+                    "path": "",
+                    "className": [
+                        "tab37"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {},
+                        "filter": true,
+                        "title": "public/assets/css/page/login.css - Idle",
+                        "tooltip": "public/assets/css/page/login.css - Idle",
+                        "output": {
+                            "id": "output7375618",
+                            "width": 0,
+                            "height": 0,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/css/page/login.css",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        }
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab38",
+                    "path": "",
+                    "className": [
+                        "tab38"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {},
+                        "filter": true,
+                        "title": "public/assets/css/page/quizzes.css - Stopped",
+                        "tooltip": "public/assets/css/page/quizzes.css - Stopped",
+                        "output": {
+                            "id": "output7256120",
+                            "width": 0,
+                            "height": 0,
+                            "config": {
+                                "runner": "Shell command",
+                                "command": "public/assets/css/page/quizzes.css",
+                                "toolbar": true,
+                                "name": ""
+                            }
+                        }
+                    },
+                    "editorType": "output",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab6",
+                    "path": "",
+                    "className": [
+                        "tab6",
+                        "focus"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1464941303798
+                        },
+                        "filter": true,
+                        "title": "bash - \"job.tc\"",
+                        "tooltip": "bash - \"job.tc\"",
+                        "terminal": {
+                            "id": "devel_523",
+                            "cwd": "",
+                            "width": 1027,
+                            "height": 193
+                        }
+                    },
+                    "editorType": "terminal",
                     "active": true
                 },
                 {
@@ -382,7 +640,7 @@
             "@acestatus": 1,
             "@datagrid": 1,
             "@divider": 4,
-            "@document": 2,
+            "@document": 14,
             "@form": 5,
             "@imgeditor": 1,
             "@imgview": 1,
@@ -393,10 +651,10 @@
             "@postmessage": 1,
             "@preferences": 1,
             "@preview": 1,
-            "@session": 12,
-            "@tab": 5,
+            "@session": 14,
+            "@tab": 7,
             "@tree": 2,
-            "@undoManager": 2
+            "@undoManager": 14
         }
     },
     "findinfiles": {
@@ -414,8 +672,8 @@
     },
     "panecycle": {
         "json()": [
-            "tab2",
-            "tab38"
+            "tab6",
+            "tab2"
         ]
     },
     "panels": {
@@ -471,10 +729,8 @@
                 "/public/assets/ckeditor/plugins/templates/templates",
                 "/public/assets/ckeditor/plugins/templates/templates/images",
                 "/public/assets/ckeditor/skins/office2013",
-<<<<<<< HEAD
-                "/app/Http",
+                "/resources/views/session",
                 "/app/Http/Controllers",
-=======
                 "/resources/views/session",
                 "/app/Http/Controllers",
                 "/app/Models",
@@ -484,7 +740,6 @@
                 "/resources/views/task",
                 "/resources/views/layouts",
                 "/public",
->>>>>>> 51dc73ef034632e7f77c74f2ca4c89b6f13dda58
                 "/public/assets/css/page"
             ]
         }
@@ -506,11 +761,11 @@
     },
     "tabs": {
         "json()": {
-            "focus": "tab38",
+            "focus": "tab6",
             "meta": {
                 "accessList": [
-                    "tab0",
                     "tab2",
+                    "tab0",
                     "tab1"
                 ]
             },
@@ -625,7 +880,6 @@
                     "active": true
                 }
             ],
->>>>>>> 51dc73ef034632e7f77c74f2ca4c89b6f13dda58
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -633,11 +887,7 @@
     },
     "tree_selection": {
         "json()": [
-<<<<<<< HEAD
-            "/app/Http/Controllers/Api"
-=======
             "/resources/views/task/index.blade.php"
->>>>>>> 51dc73ef034632e7f77c74f2ca4c89b6f13dda58
         ]
     }
 }
