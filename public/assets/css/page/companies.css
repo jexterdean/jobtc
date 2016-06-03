@@ -57,15 +57,15 @@
 }
 
 #company_tabs li.active a {
-    background-color: #e5e5e5;
+    background-color: #e5e5e5;;
     text-decoration: none;
-    //color: #f2f2f2;
+    /*color: #f2f2f2;*/
     color: #000;
     font-weight: bold;
 }
 
 #company_tabs a:focus {
-    //color: #fff !important;
+    /*color: #fff !important;*/
 }
 
 #company_tabs li a {
