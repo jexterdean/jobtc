@@ -291,8 +291,8 @@
                         "changed": false,
                         "meta": {},
                         "filter": true,
-                        "title": "public/assets/css/page/quizzes.css - Idle",
-                        "tooltip": "public/assets/css/page/quizzes.css - Idle",
+                        "title": "public/assets/css/page/quizzes.css - Stopped",
+                        "tooltip": "public/assets/css/page/quizzes.css - Stopped",
                         "output": {
                             "id": "output7256120",
                             "width": 0,
@@ -322,8 +322,8 @@
                             "timestamp": 1464941303798
                         },
                         "filter": true,
-                        "title": "export - \"job.tc\"",
-                        "tooltip": "export - \"job.tc\"",
+                        "title": "bash - \"job.tc\"",
+                        "tooltip": "bash - \"job.tc\"",
                         "terminal": {
                             "id": "devel_523",
                             "cwd": "",
