@@ -398,3 +398,76 @@ job_notes.on('change',function(evt) {
             }
         }); //ajax
 });
+
+$('.hire').click(function () {
+
+    var applicant_id = $(this).parent().find('.applicant_id').val();
+    var company_id = $(this).parent().find('.company_id').val();
+
+    /*From Default, Change to ongoing*/
+    if ($(this).hasClass('bg-light-blue-gradient')) {
+        $(this).switchClass('bg-light-blue-gradient', 'bg-green', function () {
+            $(this).html('<i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired');
+            hire_applicant(applicant_id,company_id);
+        });
+    } else if ($(this).hasClass('bg-green')) {
+        $(this).switchClass('bg-green', 'bg-light-blue-gradient', function () {
+            $(this).html('Hire');
+            fire_applicant(applicant_id,company_id);
+        });
+    }
+
+});
+
+
+var hire_applicant = function (applicant_id,company_id) {
+
+    var ajaxurl = public_path + 'hireApplicant';
+    
+    var formData = new FormData();
+    formData.append('applicant_id', applicant_id);
+    formData.append('company_id', company_id);
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+
+};
+
+var fire_applicant = function (applicant_id,company_id) {
+
+    var ajaxurl = public_path + 'fireApplicant';
+
+    var formData = new FormData();
+    formData.append('applicant_id', applicant_id);
+    formData.append('company_id', company_id);
+    
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+
+};

@@ -1,15 +1,28 @@
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *Applicant Page Scripts
  */
+
+//For Click toggle
+
+$.fn.clickToggle = function (func1, func2) {
+    var funcs = [func1, func2];
+    this.data('toggleclicked', 0);
+    this.click(function () {
+        var data = $(this).data();
+        var tc = data.toggleclicked;
+        $.proxy(funcs[tc], this)();
+        data.toggleclicked = (tc + 1) % 2;
+    });
+    return this;
+};
+
 $('.status-container').tagEditor({
     maxTags: 9999,
     placeholder: 'Enter tags ...',
     autocomplete: {
         delay: 0, // show suggestions immediately
-        position: { collision: 'flip' }, // automatic menu position up/down
-        source: public_path +'getAvailableTags'
+        position: {collision: 'flip'}, // automatic menu position up/down
+        source: public_path + 'getAvailableTags'
     },
     onChange: function (field, editor, tags) {
         var ajaxurl = public_path + 'addTag';
@@ -24,7 +37,7 @@ $('.status-container').tagEditor({
             applicant_id = $('input[name=applicant_id]').val();
 
         }
-        
+
         //For Multiple applicants page
         if ($('.applicant-list-table').length > 0) {
 
@@ -66,7 +79,7 @@ $(".submit-comment").click(function (e) {
     var ajaxurl = public_path + '/addComment';
     var form = $(".add-comment-form")[0];
     var formData = new FormData(form);
-    formData.append('module','applicant');
+    formData.append('module', 'applicant');
     formData.append('send_email', $('.email-comment').is(':checked'));
 
     if ($.trim($(".comment-textarea").val())) {
@@ -87,7 +100,7 @@ $(".submit-comment").click(function (e) {
                 $('.comment-textarea').attr('disabled', false);
                 $('.submit-comment').attr('disabled', false);
                 //socket.emit('applicant-comment', data);
-                $('#comment-list-'+applicant_id).prepend(data);
+                $('#comment-list-' + applicant_id).prepend(data);
             },
             error: function (xhr, status, error) {
 
@@ -112,29 +125,103 @@ $(".submit-comment").click(function (e) {
 //For Applicant Notes
 var applicant_notes = CKEDITOR.replace('applicant-notes');
 
-applicant_notes.on('change',function(evt) {
-    
+applicant_notes.on('change', function (evt) {
+
     var ajaxurl = public_path + 'saveApplicantNotes';
     var applicant_id = window.location.href.split("/").pop();
-    
-     var formData = new FormData();
-        formData.append('applicant_id', applicant_id);
-        formData.append('notes', evt.editor.getData());
-      
-        $.ajax({
-            url: ajaxurl,
-            type: "POST",
-            data: formData,
-            // THIS MUST BE DONE FOR FILE UPLOADING
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-            },
-            success: function (data) {
-            },
-            error: function (xhr, status, error) {
 
-            }
-        }); //ajax
-    
+    var formData = new FormData();
+    formData.append('applicant_id', applicant_id);
+    formData.append('notes', evt.editor.getData());
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+
 });
+
+
+$('.hire').click(function () {
+
+    var applicant_id = $(this).parent().find('.applicant_id').val();
+    var company_id = $(this).parent().find('.company_id').val();
+
+    /*From Default, Change to ongoing*/
+    if ($(this).hasClass('bg-light-blue-gradient')) {
+        $(this).switchClass('bg-light-blue-gradient', 'bg-green', function () {
+            $(this).html('<i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired');
+            hire_applicant(applicant_id,company_id);
+        });
+    } else if ($(this).hasClass('bg-green')) {
+        $(this).switchClass('bg-green', 'bg-light-blue-gradient', function () {
+            $(this).html('Hire');
+            fire_applicant(applicant_id,company_id);
+        });
+    }
+
+});
+
+
+var hire_applicant = function (applicant_id,company_id) {
+
+    var ajaxurl = public_path + 'hireApplicant';
+    
+    var formData = new FormData();
+    formData.append('applicant_id', applicant_id);
+    formData.append('company_id', company_id);
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+
+};
+
+var fire_applicant = function (applicant_id,company_id) {
+
+    var ajaxurl = public_path + 'fireApplicant';
+
+    var formData = new FormData();
+    formData.append('applicant_id', applicant_id);
+    formData.append('company_id', company_id);
+    
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+
+};

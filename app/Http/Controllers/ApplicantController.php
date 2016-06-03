@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Profile;
 use App\Models\Job;
 use App\Models\Applicant;
 use App\Models\ApplicantTag;
@@ -17,6 +18,8 @@ use App\Models\Test;
 use App\Models\TestPerApplicant;
 use App\Models\TestPerJob;
 use App\Models\Question;
+use App\Models\Role;
+use App\Models\RoleUser;
 
 class ApplicantController extends Controller {
 
@@ -307,5 +310,84 @@ class ApplicantController extends Controller {
         ]);
         
         return "true";
+    }
+    
+    public function hireApplicant(Request $request){
+        
+        $applicant_id = $request->input('applicant_id');
+        $company_id = $request->input('company_id');
+        
+        $applicant = Applicant::find($applicant_id);
+        $applicant->update([
+            'hired' => 'Yes'
+        ]);
+        
+        //Add the applicant to the user table and set their company to the job posting company_id
+        $user = new User();
+        $user->password = $applicant->password;
+        $user->name= $applicant->name;
+        $user->email= $applicant->email;
+        $user->phone= $applicant->phone;
+        $user->photo= $applicant->photo;
+        $user->resume= $applicant->resume;
+        $user->address_1 = $applicant->address_1;
+        $user->address_2 = $applicant->address_2;
+        $user->zipcode = $applicant->zipcode;
+        $user->country_id = $applicant->country_id;
+        $user->skype = $applicant->skype;
+        $user->facebook = $applicant->facebook;
+        $user->linkedin = $applicant->linkedin;
+        $user->notes = $applicant->notes;
+        $user->user_status = 'Active';
+        $user->save();
+        
+        //Get the level 2 Role in the Role Table
+        $role = Role::where('company_id',$company_id)->where('level',2)->first();
+        
+        //Add the user as a level 2 user in the company
+        $profile = new Profile();
+        $profile->user_id = $user->user_id;
+        $profile->company_id = $company_id;
+        $profile->role_id = $role->id;
+        $profile->save();
+        
+        //Attach the role to the user(gets added to role_user table)
+        //$user->attachRole($role->id);
+        $role_user = new RoleUser();
+        $role_user->role_id = $role->id;
+        $role_user->user_id = $user->user_id;
+        $role_user->save();
+        
+        
+        return "true";
+    }
+    
+    public function fireApplicant(Request $request){
+        
+        $applicant_id = $request->input('applicant_id');
+        $company_id = $request->input('company_id');
+        
+        $applicant = Applicant::find($applicant_id);
+        $applicant->update([
+            'hired' => 'No'
+        ]);
+        
+        //Get their user profile
+        $user = User::where('email',$applicant->email)->first();
+        $profile = Profile::where('user_id',$user->user_id)->where('company_id',$company_id)->first();
+        
+        //Detach the role from the user so they can't login using their user account
+        //$user->detachRole($profile->role_id);
+        $role_user = RoleUser::where('role_id',$profile->role_id)->where('user_id',$user->user_id)->first();
+        $role_user->delete();
+        
+        //Delete them from the company
+        $profile->delete(); 
+                
+        //Finally,delete the applicant's user account
+        $user->delete();
+        
+        return "true";
+        
     }
 }

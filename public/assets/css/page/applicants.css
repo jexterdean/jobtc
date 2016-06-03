@@ -1,11 +1,7 @@
 /*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
+    Applicant CSS
     Created on : May 24, 2016, 4:11:11 PM
-    Author     : acer
+    Author     : Jexter Dean Buenaventura
 */
 
 body {
@@ -284,4 +280,9 @@ body {
 .applicant {
     position: relative;
     top: 15px;
+}
+
+.hire {
+    position:relative;
+    text-decoration: none;
 }
