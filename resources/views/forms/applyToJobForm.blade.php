@@ -6,7 +6,7 @@
             <label class="control-label col-md-2" for="name">Name</label>
             <div class="col-md-10">
                 @if(isset($applicant->name))
-                <input class="form-control last_name" name="name" type="text" value="{{$applicant->last_name}}" />
+                <input class="form-control last_name" name="name" type="text" value="{{$applicant->name}}" />
                 @else
                 <input class="form-control last_name" name="name" type="text" value="" />
                 @endif

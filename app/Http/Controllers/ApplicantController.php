@@ -23,6 +23,7 @@ use App\Models\RoleUser;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
+use App\Models\TaskCheckListPermission;
 
 class ApplicantController extends Controller {
 
@@ -389,6 +390,13 @@ class ApplicantController extends Controller {
         if($team_member_count > 0) {
             $team = TeamMember::where('user_id',$user->user_id);
             $team->delete();
+        }
+        //Remove all task permissions for the user
+        $task_check_list_permission_count = TaskCheckListPermission::where('user_id',$user->user_id)->count();
+        
+        if($task_check_list_permission_count > 0) {
+            $task_check_list_permission = TaskCheckListPermission::where('user_id',$user->user_id);
+            $task_check_list_permission->delete();
         }
         
         //Delete them from the company

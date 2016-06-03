@@ -126,11 +126,9 @@ class Helper
             $query->where('user_id',$user_id)->get();
         }])->get();*/
         
-        $user_id = Auth::user('user')->user_id;
+        $user_id = Auth::user('user_id')->user_id;
         
-        $companies = Profile::with(['company' => function($query){
-            $query->orderBy('name', 'asc')->lists('name', 'id');
-        }])->where('user_id',$user_id)->get();
+        $companies = Profile::with('company')->where('user_id',$user_id)->get();
         
         //$companies = Company::orderBy('name', 'asc')->get();
 

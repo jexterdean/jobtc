@@ -210,7 +210,7 @@
                 var task_list_item_id = ui.item.attr('id').split('_').pop();
 
                 var data = $(this).sortable('serialize');
-                data.push({'name': '_token', 'value': _body.find('input[name="_token"]').val()})
+                //data.push({'name': '_token', 'value': _body.find('input[name="_token"]').val()})
 
                 url = public_path + '/changeCheckList/' + list_group_id + '/' + task_list_item_id;
 

@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 $('.edit-job').click(function (e) {
     //e.preventDefault();
     //e.stopImmediatePropagation();
     var job_id = $(this).siblings('.job_id').val();
-    var edit_job_form = public_path +'/job/' + job_id + '/edit';
+    var edit_job_form = public_path + '/job/' + job_id + '/edit';
 
     BootstrapDialog.show({
         title: 'Edit Job',
@@ -22,12 +23,12 @@ $('.edit-job').click(function (e) {
                 label: 'Save',
                 cssClass: 'btn-edit btn-shadow',
                 action: function (dialog) {
-                    var ajaxurl = public_path +'/updateJob/'+job_id;
+                    var ajaxurl = public_path + '/updateJob/' + job_id;
                     var form = $(".edit-job-form")[0];
-                    
+
                     var formData = new FormData(form);
                     formData.append('job_id', job_id);
-                    
+
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
                     $button.spin();
@@ -106,7 +107,7 @@ $('.edit-job').click(function (e) {
             'pageToLoad': edit_job_form
         },
         onshown: function (ref) {
-            initCkeditor(ref); 
+            initCkeditor(ref);
         },
         closable: false
     });
@@ -119,7 +120,7 @@ $('.delete-job').click(function (e) {
 
     BootstrapDialog.confirm('Are you sure you want to delete this job?', function (result) {
         if (result) {
-            var ajaxurl = public_path +'/job/'+job_id;
+            var ajaxurl = public_path + '/job/' + job_id;
             var formData = new FormData();
             formData.append('job_id', job_id);
             formData.append('_token', $('.applicant-list').find('.token').val());
@@ -209,9 +210,9 @@ $(".apply-to-job").click(function () {
         },
         buttons: [{
                 label: 'Save',
-                cssClass: 'btn-edit btn-shadow',
+                cssClass: 'btn-edit btn-shadow save',
                 action: function (dialog) {
-                    var ajaxurl = public_path +'/applyToJob';
+                    var ajaxurl = public_path + '/applyToJob';
                     var form = $(".apply-to-job-form")[0];
                     var formData = new FormData(form);
                     formData.append('job_id', job_id);
@@ -290,7 +291,7 @@ $(".apply-to-job").click(function () {
             'pageToLoad': apply_to_job_form
         },
         onshown: function () {
-
+            validateApplytoJobForm();
         },
         closable: false
     });
@@ -301,8 +302,8 @@ $('.status-container').tagEditor({
     placeholder: 'Tags ...',
     autocomplete: {
         delay: 0, // show suggestions immediately
-        position: { collision: 'flip' }, // automatic menu position up/down
-        source: public_path +'/getAvailableTags'
+        position: {collision: 'flip'}, // automatic menu position up/down
+        source: public_path + '/getAvailableTags'
     },
     onChange: function (field, editor, tags) {
         var ajaxurl = public_path + '/addTag';
@@ -317,7 +318,7 @@ $('.status-container').tagEditor({
             applicant_id = $('input[name=applicant_id]').val();
 
         }
-        
+
         //For Multiple applicants page
         if ($('.applicant-list-table').length > 0) {
 
@@ -354,49 +355,49 @@ $('.status-container').tagEditor({
 });
 
 function initCkeditor(ref) {
-  var editor = CKEDITOR.replace('edit-description', {
-  	startupFocus : true
-  });
-  
-  editor.on( 'change', function( evt ) {
-    $('#edit-description').text(evt.editor.getData());
-});
+    var editor = CKEDITOR.replace('edit-description', {
+        startupFocus: true
+    });
+
+    editor.on('change', function (evt) {
+        $('#edit-description').text(evt.editor.getData());
+    });
 }
 
 var assessment_editor = CKEDITOR.replace('assessment-instruction', {
-    startupFocus : true
+    startupFocus: true
 });
 
-assessment_editor.on( 'change', function( evt ) {
+assessment_editor.on('change', function (evt) {
     $('#assessment-instruction').text(evt.editor.getData());
 });
 //For Job Notes
 var job_notes = CKEDITOR.replace('job-notes');
 
-job_notes.on('change',function(evt) {
-    
+job_notes.on('change', function (evt) {
+
     var ajaxurl = public_path + 'saveJobNotes';
     var job_id = window.location.href.split("/").pop();
-    
-     var formData = new FormData();
-        formData.append('job_id', job_id);
-        formData.append('notes', evt.editor.getData());
-      
-        $.ajax({
-            url: ajaxurl,
-            type: "POST",
-            data: formData,
-            // THIS MUST BE DONE FOR FILE UPLOADING
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-            },
-            success: function (data) {
-            },
-            error: function (xhr, status, error) {
 
-            }
-        }); //ajax
+    var formData = new FormData();
+    formData.append('job_id', job_id);
+    formData.append('notes', evt.editor.getData());
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
 });
 
 $('.hire').click(function () {
@@ -408,22 +409,22 @@ $('.hire').click(function () {
     if ($(this).hasClass('bg-light-blue-gradient')) {
         $(this).switchClass('bg-light-blue-gradient', 'bg-green', function () {
             $(this).html('<i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired');
-            hire_applicant(applicant_id,company_id);
+            hire_applicant(applicant_id, company_id);
         });
     } else if ($(this).hasClass('bg-green')) {
         $(this).switchClass('bg-green', 'bg-light-blue-gradient', function () {
             $(this).html('Hire');
-            fire_applicant(applicant_id,company_id);
+            fire_applicant(applicant_id, company_id);
         });
     }
 
 });
 
 
-var hire_applicant = function (applicant_id,company_id) {
+var hire_applicant = function (applicant_id, company_id) {
 
     var ajaxurl = public_path + 'hireApplicant';
-    
+
     var formData = new FormData();
     formData.append('applicant_id', applicant_id);
     formData.append('company_id', company_id);
@@ -446,14 +447,14 @@ var hire_applicant = function (applicant_id,company_id) {
 
 };
 
-var fire_applicant = function (applicant_id,company_id) {
+var fire_applicant = function (applicant_id, company_id) {
 
     var ajaxurl = public_path + 'fireApplicant';
 
     var formData = new FormData();
     formData.append('applicant_id', applicant_id);
     formData.append('company_id', company_id);
-    
+
     $.ajax({
         url: ajaxurl,
         type: "POST",
@@ -471,3 +472,52 @@ var fire_applicant = function (applicant_id,company_id) {
     }); //ajax
 
 };
+
+
+function validateApplytoJobForm() {
+    
+    var ajaxurl = public_path + '/checkApplicantDuplicateEmail';
+    
+    //Initially Disable the save button
+    $('.save').attr('disabled','disabled');
+    
+    $(".apply-to-job-form").validate({
+        rules: {
+            name: {
+              required: true,
+              minlength: 3
+            },
+            email: {
+                required: true,
+                email: true,
+                remote: {
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        email: function() {
+                            console.log($('.email').val());
+                            return $('.email').val();
+                        }
+                    }
+                }
+            }
+        },
+        messages: {
+            email: {
+                required: "We need your email address to contact you",
+                email: "Your email address must be in the format of name@domain.com",
+                remote: "That email is already taken"
+            }
+        }
+    }).form();
+    
+    //Enable save button when email is valid
+    $('.apply-to-job-form').on('keyup blur', function () { // fires on every keyup & blur
+        if ($('.apply-to-job-form').valid()) {                   // checks form for validity
+            $('.save').attr('disabled',false);
+        } else {
+            $('.save').attr('disabled','disabled');
+        }
+    });
+
+}

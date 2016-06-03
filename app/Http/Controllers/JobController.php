@@ -382,7 +382,7 @@ class JobController extends Controller {
         } else {
             $resume_path = 'assets/applicant/';
         }
-
+        
         $applicant = new Applicant([
             'job_id' => $job_id,
             'name' => $name,
@@ -392,9 +392,14 @@ class JobController extends Controller {
             'resume' => $resume_path,
             'password' => bcrypt($password)
         ]);
-
-        $applicant->save();
-
+        
+        if($name !== '' || $email !== '') {
+            $applicant->save();
+            $message = "Application Submitted";
+        } else {
+            $message = "Application Denied";
+        }
+        
         /* Switch to postfix database here */
         //Create a temporary mailbox for applicant
 
@@ -426,7 +431,7 @@ class JobController extends Controller {
 
         $mailboxalias->save();*/
 
-        $message = "Application Submitted";
+        
         return $message;
     }
 
@@ -593,6 +598,20 @@ class JobController extends Controller {
         ]);
         
         return "true";
+    }
+    
+    public function checkApplicantDuplicateEmail(Request $request) {
+        
+        $email = $request->input('email');
+        
+        $applicant = Applicant::where('email',$email)->count();
+        
+        if($applicant > 0) {
+            return "false";
+            
+        } else {
+            return "true";
+        }
     }
     
 }
