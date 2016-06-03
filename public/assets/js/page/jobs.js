@@ -291,7 +291,7 @@ $(".apply-to-job").click(function () {
             'pageToLoad': apply_to_job_form
         },
         onshown: function () {
-            validateApplytoJobForm();
+            setInterval(validateApplytoJobForm(),1000);
         },
         closable: false
     });
