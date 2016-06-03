@@ -8,7 +8,7 @@
                     <h3 class="box-title">{{$project->project_title}}</h3>
                 </div>
                 <div class="box-body">
-                    <div id="project-collapse-{{ $project->project_id }}" class="box-content collapse in">
+                    <div id="project-collapse-{{ $project->project_id }}" class="box-content collapse">
                         @foreach($project->task as $val)
                         @if($task_permissions->contains('task_id',$val->task_id) || $project->user_id === Auth::user('user')->user_id )
                         <div id="collapse-container-{{ $val->task_id }}" class="panel task-list">

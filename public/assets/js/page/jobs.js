@@ -505,7 +505,7 @@ function validateApplytoJobForm() {
         messages: {
             email: {
                 required: "We need your email address to contact you",
-                email: "Your email address must be in the format of name@domain.com",
+                email: "",
                 remote: "That email is already taken"
             }
         }
@@ -513,7 +513,7 @@ function validateApplytoJobForm() {
     
     //Enable save button when email is valid
     $('.apply-to-job-form').on('keyup blur', function () { // fires on every keyup & blur
-        if ($('.apply-to-job-form').valid()) {                   // checks form for validity
+        if ($('.apply-to-job-form').valid()) { // checks form for validity
             $('.save').attr('disabled',false);
         } else {
             $('.save').attr('disabled','disabled');
