@@ -28,7 +28,7 @@
     </ul>
 </li>
 @endif
-<!--li class="dropdown">
+<li class="dropdown">
     <a href="#" class="dropdown-toggle">
         <i class="fa fa-lightbulb-o"></i>
         <span> {{Lang::get('messages.Projects')}} </span>
@@ -50,7 +50,7 @@
         @endforeach
         @endif
     </ul>
-</li-->
+</li>
 @if(Auth::check('user') && Auth::user('user')->level() === 1)
 <?php $jobs = \App\Helpers\Helper::getJobLinks(); ?>
 <li class="dropdown">

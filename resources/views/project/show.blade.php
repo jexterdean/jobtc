@@ -163,7 +163,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Company:</strong></td>
-                                            <td>{{-- $companies->name --}}</td>
+                                            <td>{{ $companies->where('id',$project->company_id)->first()->name}}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Project Type:</strong></td>
