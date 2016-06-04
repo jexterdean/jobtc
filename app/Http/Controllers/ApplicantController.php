@@ -20,6 +20,9 @@ use App\Models\TestPerJob;
 use App\Models\Question;
 use App\Models\Role;
 use App\Models\RoleUser;
+use App\Models\Team;
+use App\Models\TeamMember;
+use App\Models\TeamProject;
 
 class ApplicantController extends Controller {
 
@@ -380,6 +383,13 @@ class ApplicantController extends Controller {
         //$user->detachRole($profile->role_id);
         $role_user = RoleUser::where('role_id',$profile->role_id)->where('user_id',$user->user_id)->first();
         $role_user->delete();
+        
+        //Remove from being assigned from a team
+        $team_member_count = TeamMember::where('user_id',$user->user_id)->count();
+        if($team_member_count > 0) {
+            $team = TeamMember::where('user_id',$user->user_id);
+            $team->delete();
+        }
         
         //Delete them from the company
         $profile->delete(); 

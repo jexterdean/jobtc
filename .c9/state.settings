@@ -90,17 +90,16 @@
                     "name": "tab3",
                     "path": "",
                     "className": [
-                        "tab3",
-                        "connecting"
+                        "tab3"
                     ],
                     "document": {
                         "meta": {},
                         "filter": true,
-                        "title": "public/assets/ckeditor/contents.css - Stopped",
-                        "tooltip": "public/assets/ckeditor/contents.css - Stopped",
+                        "title": "public/assets/ckeditor/contents.css - Idle",
+                        "tooltip": "public/assets/ckeditor/contents.css - Idle",
                         "output": {
                             "id": "output835570",
-                            "width": 1462,
+                            "width": 1581,
                             "height": 193,
                             "config": {
                                 "runner": "Shell command",
@@ -119,18 +118,17 @@
                     "name": "tab7",
                     "path": "",
                     "className": [
-                        "tab7",
-                        "connecting"
+                        "tab7"
                     ],
                     "document": {
+                        "meta": {},
                         "filter": true,
-                        "title": "public/assets/ckeditor/config.js - Stopped",
-                        "tooltip": "public/assets/ckeditor/config.js - Stopped",
+                        "title": "public/assets/ckeditor/config.js - Idle",
+                        "tooltip": "public/assets/ckeditor/config.js - Idle",
                         "output": {
                             "id": "output915323",
-                            "width": 1462,
+                            "width": 1581,
                             "height": 193,
-                            "scrollTop": 169,
                             "config": {
                                 "runner": "Node.js",
                                 "command": "public/assets/ckeditor/config.js",
@@ -138,10 +136,6 @@
                                 "debug": true,
                                 "name": ""
                             }
-                        },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1464612293774
                         },
                         "changed": false
                     },
@@ -153,18 +147,17 @@
                     "name": "tab10",
                     "path": "",
                     "className": [
-                        "tab10",
-                        "connecting"
+                        "tab10"
                     ],
                     "document": {
+                        "meta": {},
                         "filter": true,
-                        "title": "public/assets/css/page/jobs.css - Stopped",
-                        "tooltip": "public/assets/css/page/jobs.css - Stopped",
+                        "title": "public/assets/css/page/jobs.css - Idle",
+                        "tooltip": "public/assets/css/page/jobs.css - Idle",
                         "output": {
                             "id": "output79234",
-                            "width": 1462,
+                            "width": 1581,
                             "height": 193,
-                            "scrollTop": 302,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/css/page/jobs.css",
@@ -172,8 +165,6 @@
                                 "name": ""
                             }
                         },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {},
                         "changed": false
                     },
                     "editorType": "output",
@@ -192,7 +183,7 @@
                         "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeech.png - Idle",
                         "output": {
                             "id": "output2938913",
-                            "width": 1027,
+                            "width": 1581,
                             "height": 193,
                             "scrollTop": -1,
                             "config": {
@@ -222,9 +213,9 @@
                         "tooltip": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png - Idle",
                         "output": {
                             "id": "output2516314",
-                            "width": 1027,
+                            "width": 1581,
                             "height": 193,
-                            "scrollTop": 190,
+                            "scrollTop": 192,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/ckeditor/plugins/ckwebspeech/icons/webspeechrobot.png",
@@ -252,7 +243,7 @@
                         "tooltip": "public/assets/ckeditor/skins/office2013/dialog.css - Idle",
                         "output": {
                             "id": "output1434716",
-                            "width": 1027,
+                            "width": 1581,
                             "height": 193,
                             "scrollTop": 190,
                             "config": {
@@ -274,9 +265,12 @@
                     "name": "tab37",
                     "path": "",
                     "className": [
-                        "tab37"
+                        "tab37",
+                        "connecting"
                     ],
                     "document": {
+                        "changed": false,
+                        "meta": {},
                         "filter": true,
                         "title": "public/assets/css/page/login.css - Idle",
                         "tooltip": "public/assets/css/page/login.css - Idle",
@@ -320,7 +314,7 @@
                             "height": 193,
                             "config": {
                                 "runner": "Shell command",
-                                "command": "public/assets/css/page/quizzes.css",
+                                "command": "public/assets/css/page/login.css",
                                 "toolbar": true,
                                 "name": ""
                             }
@@ -588,33 +582,6 @@
                     },
                     "editorType": "terminal",
                     "active": true
-                },
-                {
-                    "type": "tab",
-                    "name": "tab4",
-                    "path": "",
-                    "className": [
-                        "tab4"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "bash - \"job.tc\"",
-                        "tooltip": "bash - \"job.tc\"",
-                        "terminal": {
-                            "id": "devel_305",
-                            "cwd": "",
-                            "width": 0,
-                            "height": 0,
-                            "scrollTop": 863
-                        },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1464936147189
-                        },
-                        "changed": false
-                    },
-                    "editorType": "terminal",
-                    "active": false
                 }
             ],
             "skin": "editor_tab",
@@ -645,8 +612,8 @@
             "@imgeditor": 1,
             "@imgview": 1,
             "@immediate": 1,
-            "@menu": 5,
-            "@menuitem": 13,
+            "@menu": 3,
+            "@menuitem": 6,
             "@pane": 3,
             "@postmessage": 1,
             "@preferences": 1,
@@ -710,7 +677,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 1498,
+        "@scrollpos": -10,
         "@showfs": true,
         "expanded": {
             "json()": [

@@ -2,10 +2,10 @@
     <div class="form-group">
         <div class="col-md-12">
             {!!  Form::select('project_type', [
-                'Standard' => 'Standard',
-                'Hiring Assessment' => 'Hiring Assessment',
-                'Software Development' => 'Software Development',
-                'Coding' => 'Coding'
+            'Standard' => 'Standard',
+            'Hiring Assessment' => 'Hiring Assessment',
+            'Software Development' => 'Software Development',
+            'Coding' => 'Coding'
             ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Project Type', 'tabindex' => '7'] )  !!}
         </div>
     </div>
@@ -54,16 +54,16 @@
         </div>
         <div class="col-md-3">
             {!!  Form::select('currency', [
-                'USD' => 'USD',
-                'EUR' => 'EUR',
-                'GBP' => 'GBP',
-                'PHP' => 'PHP'
+            'USD' => 'USD',
+            'EUR' => 'EUR',
+            'GBP' => 'GBP',
+            'PHP' => 'PHP'
             ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Currency', 'tabindex' => '7'] )  !!}
         </div>
         <div class="col-md-3">
             {!!  Form::select('rate_type', [
-                'fixed' => 'Fixed',
-                'hourly' => 'Hourly'
+            'fixed' => 'Fixed',
+            'hourly' => 'Hourly'
             ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Rate', 'tabindex' => '7'] )  !!}
         </div>
         <div class="col-md-4">
