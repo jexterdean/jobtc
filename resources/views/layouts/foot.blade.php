@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Project</h4>
             </div>
             <div class="modal-body">
@@ -24,7 +24,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Ticket</h4>
             </div>
             <div class="modal-body"></div>
@@ -37,7 +37,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Company</h4>
             </div>
             <div class="modal-body">
@@ -52,7 +52,7 @@
     <div class="modal-dialog" style="width: 50%">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Job</h4>
             </div>
             <div class="modal-body">
@@ -78,7 +78,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add User</h4>
             </div>
             <div class="modal-body">
@@ -304,6 +304,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             $(document).on('click', '.show_edit_form', function(e){
                 e.preventDefault();
                 var link = e.currentTarget.href;
+                console.log(link);
                 var _modal_target = $(this).data('target');
                 $(_modal_target + ' .modal-content').load(link);
                 $(_modal_target).modal('show');

@@ -4,7 +4,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header modal-header-{{ \App\Helpers\Helper::getRandomColor() }}">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Project</h4>
             </div>
             <div class="modal-body">

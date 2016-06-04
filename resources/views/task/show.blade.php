@@ -43,9 +43,9 @@
                                             <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                             &nbsp;&nbsp;&nbsp;
-                                            <a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                            {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />--}}
 
                                             <a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
                                             <!--a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a-->
@@ -61,8 +61,9 @@
                                             <hr/>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <div class="pull-right">
+                                                    <div class="pull-right" style="margin-right: 5px;">
                                                         <a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
+                                                        <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                                                         <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                                         <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                                     </div>
@@ -167,8 +168,20 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Task</h4>
+            </div>
+        </div>
+        <div class="modal-body">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ajax1" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Edit Subproject</h4>
             </div>
         </div>
         <div class="modal-body">
@@ -179,7 +192,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Link</h4>
             </div>
             <div class="modal-body">
@@ -199,6 +212,7 @@
             dropOnEmpty: true,
             connectWith: ".tasklist-group",
             handle: '.drag-handle',
+            placeholder: "ui-state-highlight",
             receive: function (event, ui) {
                 //For receiving
                 var itemText = ui.item.attr('id');
@@ -453,7 +467,7 @@
                         ele += '</div>';
                         ele += '<div class="pull-right">';
                         ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
-                        ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                        //ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
                         ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
@@ -468,8 +482,9 @@
                         ele += '<hr/>';
                         ele += '<div class="row">';
                         ele += '<div class="col-md-12">';
-                        ele += '<div class="pull-right">';
+                        ele += '<div class="pull-right" style="margin-right: 5px">';
                         ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>';
+                        ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
@@ -499,25 +514,25 @@
             e.preventDefault();
 
             //Get list item index
-            var index = $(this).parent().parent().parent().index();
+            var index = $(this).parent().parent().parent().parent().parent().parent().index();
 
             //Get the list group id
-            var list_group_id = $(this).parent().parent().parent().parent().attr('id');
+            var list_group_id = $(this).parent().parent().parent().parent().parent().parent().parent().attr('id');
 
             var task_list_id = $(this).siblings('.task_list_id').val();
 
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
 
             //Header Element
-            var task_item_header = $(this).parent().parent().parent().find('.checklist-header');
+            var task_item_header = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-header');
             //Content Element
-            var task_item_content = $(this).parent().parent().parent().find('.checklist-item');
+            var task_item_content = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-item');
 
             //Get Header Text
-            var header_text = $(this).parent().parent().parent().find('.checklist-header').html();
+            var header_text = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-header').html();
 
             //Get Text
-            var content_text = $(this).parent().parent().parent().find('.checklist-item').html();
+            var content_text = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-item').html();
 
             //Header Editor
             var header_text_area_ele = '<div class="text-area-content">';
@@ -540,7 +555,7 @@
             task_item_content.css({'display': 'none'}).before(content_text_area_ele);
 
             //var textarea_id = $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').attr('id');
-            var textarea_id = $(this).parent().parent().parent().find('.edit-checklist-item').attr('id');
+            var textarea_id = $(this).parent().parent().parent().parent().parent().parent().find('.edit-checklist-item').attr('id');
 
             CKEDITOR.replace(textarea_id);
 
@@ -916,6 +931,17 @@
                         ele += '<div class="checklist-item">' + val.checklist + '</div>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '<hr/>';
+                        ele += '<div class="row">';
+                        ele += '<div class="col-md-12">';
+                        ele += '<div class="pull-right" style="margin-right: 5px">';
+                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>';
+                        ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
+                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>';
+                        ele += '</div>';
+                        ele += '</div>';
                         ele += '</div>';
                         ele += '</div>';
                         ele += '</li>';
