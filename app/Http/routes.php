@@ -22,6 +22,9 @@ Route::post('updateJob/{id}', 'JobController@update');
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
 Route::post('saveJobNotes','JobController@saveJobNotes');
+/*Check for duplicate emails upon Applying to a Job*/
+Route::post('checkApplicantDuplicateEmail','JobController@checkApplicantDuplicateEmail');
+
 
 /*For Registration*/
 Route::get('register','UserController@getRegisterForm');

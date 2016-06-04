@@ -6,7 +6,7 @@
             <label class="control-label col-md-2" for="name">Name</label>
             <div class="col-md-10">
                 @if(isset($applicant->name))
-                <input class="form-control last_name" name="name" type="text" value="{{$applicant->last_name}}" />
+                <input class="form-control last_name" name="name" type="text" value="{{$applicant->name}}" />
                 @else
                 <input class="form-control last_name" name="name" type="text" value="" />
                 @endif
@@ -57,3 +57,49 @@
         </div>
     </div>
 </form>
+<script>
+
+    var ajaxurl = public_path + '/checkApplicantDuplicateEmail';
+
+    //Initially Disable the save button
+    $('.save').attr('disabled', 'disabled');
+
+    $(".apply-to-job-form").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 3
+            },
+            email: {
+                required: true,
+                email: true,
+                remote: {
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        email: function () {
+                            console.log($('.email').val());
+                            return $('.email').val();
+                        }
+                    }
+                }
+            }
+        },
+        messages: {
+            email: {
+                required: "We need your email address to contact you",
+                email: "Your email address must be in the format of name@domain.com",
+                remote: "That email is already taken"
+            }
+        }
+    }).form();
+
+    //Enable save button when email is valid
+    $('.apply-to-job-form').on('keyup blur', function () { // fires on every keyup & blur
+        if ($('.apply-to-job-form').valid()) {                   // checks form for validity
+            $('.save').attr('disabled', false);
+        } else {
+            $('.save').attr('disabled', 'disabled');
+        }
+    });
+</script>

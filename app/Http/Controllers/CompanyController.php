@@ -182,7 +182,7 @@ class CompanyController extends BaseController {
         $companies->save();
 
         //Check if Company Division Exists
-        $company_division_trim = trim($request->input('company_division'));
+        /*$company_division_trim = trim($request->input('company_division'));
         $company_division_exists = CompanyDivision::where('division_name', $company_division_trim)->count();
 
         if ($company_division_exists > 0) {
@@ -194,7 +194,7 @@ class CompanyController extends BaseController {
             $company_divisions->company_id = $companies->id;
             $company_divisions->division_name = $company_division_trim;
             $company_divisions->save();
-        }
+        }*/
 
         //Check if Role already exists with the same company
         $role_exists = Role::where('name', 'Admin')->where('company_id', $companies->id)->count();
@@ -206,7 +206,7 @@ class CompanyController extends BaseController {
             //Save this user's role as a super user of this company
             $admin = new Role();
             $admin->company_id = $companies->id;
-            $admin->company_division_id = $company_divisions->id;
+            $admin->company_division_id = 0;
             $admin->name = 'Admin';
             $admin->slug = 'admin-' . $companies->id;
             $admin->description = 'Administrator';
@@ -215,7 +215,7 @@ class CompanyController extends BaseController {
             
             $staff = new Role();
             $staff->company_id = $companies->id;
-            $staff->company_division_id = $company_divisions->id;
+            $staff->company_division_id = 0;
             $staff->name = 'Staff';
             $staff->slug = 'staff-' . $companies->id;
             $staff->description = 'Staff';
@@ -224,7 +224,7 @@ class CompanyController extends BaseController {
             
             $client = new Role();
             $client->company_id = $companies->id;
-            $client->company_division_id = $company_divisions->id;
+            $client->company_division_id = 0;
             $client->name = 'Client';
             $client->slug = 'client-' . $companies->id;
             $client->description = 'Client';
@@ -236,7 +236,7 @@ class CompanyController extends BaseController {
         $profile = new Profile();
         $profile->user_id = $user_id;
         $profile->company_id = $companies->id;
-        $profile->role_id = $role->id;
+        $profile->role_id = $admin->id;
         $profile->save();
 
         return Redirect::to('company/' . $companies->id)->withSuccess("Company added successfully!!");

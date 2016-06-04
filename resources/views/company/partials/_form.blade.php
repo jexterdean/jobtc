@@ -7,12 +7,6 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            {!!  Form::input('text','company_division',isset($companies->company_division) ? $companies->company_division : '',['class'
-            => 'form-control', 'placeholder' => 'Company Division', 'tabindex' => '2']) !!}
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-12">
             {!!  Form::input('email','email',isset($companies->email) ? $companies->email : '',['class' => 'form-control',
             'placeholder' => 'Contact Email', 'tabindex' => '3']) !!}
         </div>

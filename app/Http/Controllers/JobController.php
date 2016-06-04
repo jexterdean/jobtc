@@ -363,8 +363,8 @@ class JobController extends Controller {
         $email = $request->input('email');
         $phone = $request->input('phone');
         $date = date('Y-m-d h:i:s', time());
-        $username = strtolower(preg_replace('/\s+/', '', $name). '@' . $_SERVER['SERVER_NAME']);
-        $password = strtolower(preg_replace('/\s+/', '', $email.'123'));
+        $username = strtolower(preg_replace('/\s+/', '', $name) . '@' . $_SERVER['SERVER_NAME']);
+        $password = strtolower(preg_replace('/\s+/', '', $email . '123'));
         $remember_token = $request->input('remember');
 
         if ($request->hasFile('photo')) {
@@ -393,40 +393,44 @@ class JobController extends Controller {
             'password' => bcrypt($password)
         ]);
 
-        $applicant->save();
+        if ($name !== '' || $email !== '') {
+            $applicant->save();
+            $message = "Application Submitted";
+        } else {
+            $message = "Application Denied";
+        }
 
         /* Switch to postfix database here */
         //Create a temporary mailbox for applicant
 
-        /*$mailbox = new MailBox([
-            'username' => $username,
-            'password' => preg_replace('/\s+/', '', shell_exec("doveadm pw -s SHA512-CRYPT -p " . $password)),
-            //'password' => '',
-            'name' => $username,
-            'maildir' => $_SERVER['SERVER_NAME'] . '/' . $username,
-            'quota' => 0,
-            'local_part' => $username,
-            'domain' => $_SERVER['SERVER_NAME'],
-            'created' => $date,
-            'modified' => '',
-            'active' => 1
-        ]);
+        /* $mailbox = new MailBox([
+          'username' => $username,
+          'password' => preg_replace('/\s+/', '', shell_exec("doveadm pw -s SHA512-CRYPT -p " . $password)),
+          //'password' => '',
+          'name' => $username,
+          'maildir' => $_SERVER['SERVER_NAME'] . '/' . $username,
+          'quota' => 0,
+          'local_part' => $username,
+          'domain' => $_SERVER['SERVER_NAME'],
+          'created' => $date,
+          'modified' => '',
+          'active' => 1
+          ]);
 
-        $mailbox->save();
+          $mailbox->save();
 
-        //Create alias to map to itself
-        $mailboxalias = new MailBoxAlias([
-            'address' => $username . '@' . $_SERVER['SERVER_NAME'],
-            'goto' => $username . '@' . $_SERVER['SERVER_NAME'],
-            'domain' => $_SERVER['SERVER_NAME'],
-            'created' => $date,
-            'modified' => '',
-            'active' => 1
-        ]);
+          //Create alias to map to itself
+          $mailboxalias = new MailBoxAlias([
+          'address' => $username . '@' . $_SERVER['SERVER_NAME'],
+          'goto' => $username . '@' . $_SERVER['SERVER_NAME'],
+          'domain' => $_SERVER['SERVER_NAME'],
+          'created' => $date,
+          'modified' => '',
+          'active' => 1
+          ]);
 
-        $mailboxalias->save();*/
+          $mailboxalias->save(); */
 
-        $message = "Application Submitted";
         return $message;
     }
 
@@ -531,9 +535,9 @@ class JobController extends Controller {
             return view('templates.show.applicantList', ['applicants' => $applicants, 'count' => 0]);
         }
     }
-    
+
     /* For Tags */
-    
+
     public function addTag(Request $request) {
         $user_id = $request->user()->user_id;
         $job_id = $request->input('job_id');
@@ -565,7 +569,8 @@ class JobController extends Controller {
         return $tag_item->tags;
     }
 
-     /* Get all tags made by all users */
+    /* Get all tags made by all users */
+
     public function getTags(Request $request) {
 
         $term = $request->input('term');
@@ -582,17 +587,33 @@ class JobController extends Controller {
 
         return $tags;
     }
-    
+
     public function saveJobNotes(Request $request) {
         $job_id = $request->input('job_id');
         $notes = $request->input('notes');
-        
-        $job = Job::where('id',$job_id);
+
+        $job = Job::where('id', $job_id);
         $job->update([
             'notes' => $notes
         ]);
-        
+
         return "true";
     }
-    
+
+    public function checkApplicantDuplicateEmail(Request $request) {
+
+        $email = $request->input('email');
+
+        $applicant = Applicant::where('email', $email)->count();
+
+        if ($applicant > 0) {
+
+            //There is a duplicate, return false to the jquery Validator
+            return "false";
+        } else {
+            //No Duplicates, return true to the jquery Validator
+            return "true";
+        }
+    }
+
 }
