@@ -99,7 +99,7 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->get();
+                    }], 'task_permission')->whereIn('project_id', $project_id_list)->where('company_id',$company_id)->get();
 
         //Get Jobs by company and user
         $jobs = Job::with('applicants')->where('user_id', $user_id)->where('company_id', $company_id)->get();

@@ -14,3 +14,6 @@
     display:none;
 }
 
+label.error {
+    //display:none !important;
+}

@@ -29,27 +29,27 @@ $('.update-profile').click(function (e) {
 
             $('.update-progress').html('<i class="fa fa-check" aria-hidden="true"></i>&nbsp;Profile Updated');
             $('.update-progress').css('display', 'inline');
-            $('.update-progress').fadeOut(2000);
+            $('.update-progress').fadeOut(5000);
         },
         error: function (xhr, status, error) {
             $('.update-progress').html('<i class="fa fa-check" aria-hidden="true"></i>&nbsp;Profile Updated');
             $('.update-progress').addClass('bg-red');
             $('.update-progress').css('display', 'inline');
-            $('.update-progress').fadeOut(2000);
+            $('.update-progress').fadeOut(5000);
         }
     }); //ajax
 
 });
 
 
-$('.change-password').click(function(e){
-     e.preventDefault();
+$('.change-password').click(function (e) {
+    e.preventDefault();
 
     var ajaxurl = public_path + 'changePassword';
     var password = $('#new_password').val();
     var formData = new FormData();
     formData.append('password', password);
-    
+
     $.ajax({
         url: ajaxurl,
         type: "POST",
@@ -98,19 +98,20 @@ function validateChangePassword() {
                 }
             },
             new_password: {
-                required:"#current_password:filled"
+                required: "#current_password:filled"
             },
             new_password_confirmation: {
-                required:"#new_password:filled",
+                required: "#new_password:filled",
                 equalTo: "#new_password"
             }
         },
         messages: {
             password: {
+                required: "",
                 remote: "Wrong password"
             },
             new_password: {
-                required:"Fill in your current password first"
+                required: "Fill in your current password first"
             },
             new_password_confirmation: {
                 required: "",
@@ -122,14 +123,10 @@ function validateChangePassword() {
 
     //Enable save button when email is valid
     $('.change-password-form').on('keyup blur', function () { // fires on every keyup & blur
-        var new_password = $('#new_password');
-        var new_password_confirmation = $('#new_password_confirmation');
-        
-        //if (new_password.attr('disabled',false) && new_password_confirmation.attr('disabled',false)) { // checks form for validity
         if ($('.change-password-form').valid()) { // checks form for validity
-            $('.change-password').attr('disabled',false);
+            $('.change-password').attr('disabled', false);
         } else {
-            $('.change-password').attr('disabled','disabled');
+            $('.change-password').attr('disabled', 'disabled');
         }
     });
 
