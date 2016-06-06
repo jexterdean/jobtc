@@ -355,3 +355,12 @@ select{
     background: #4285F4!important;
     color: #ffffff!important;
 }
+.edit-checklist-header, input[name="checklist_header"], input[name="spreadsheet_header"]{
+    color: #ffa500;
+    font-weight: bold;
+}
+.modal.fade:not(.in) .modal-dialog {
+    -webkit-transform: translate3d(-25%, 0, 0);
+    transform: translate3d(-25%, 0, 0);
+    transition: all 0.4s ease;
+}

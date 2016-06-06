@@ -88,7 +88,7 @@
     </div>
 </div>
 <div class="col-md-12">
-    <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
+    <div class="modal fade edit-modal" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             </div>
@@ -112,7 +112,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <div class="btn-group pull-right">
-                                <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='#ajax1' class="edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='.edit-modal' class="edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>

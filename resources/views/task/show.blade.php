@@ -40,7 +40,7 @@
                                             @elseif($list_item->status === 'Completed')
                                             <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @elseif($list_item->status === 'Urgent')
-                                            <div class="btn bg-red checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                            <div class="btn bg-red btn-shadow checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                             @endif
                                             &nbsp;&nbsp;&nbsp;
                                             {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
