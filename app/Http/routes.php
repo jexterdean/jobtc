@@ -165,7 +165,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('updateBugStatus', 'BugController@updateBugStatus');
     Route::post('updateTicketStatus', 'TicketController@updateTicketStatus');
     Route::post('changePassword', 'ProfileController@changePassword');
+    Route::post('checkPassword', 'ProfileController@checkPassword');
     Route::post('updateProfile', 'ProfileController@updateProfile');
+    Route::post('updateMyProfile', 'ProfileController@updateMyProfile');
     Route::post('deleteTimer', 'ProjectController@deleteTimer');
     
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index','https' => true] );
@@ -176,9 +178,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('project/{project_id}/delete', 'ProjectController@delete');
     Route::get('bug/{bug_id}/delete', 'BugController@delete');
     Route::get('ticket/{ticket_id}/delete', 'TicketController@delete');
-    Route::get('profile', function () {
-        return View::make('user.profile', ['assets' => []]);
-    });
+    /*Route::get('profile', function () {
+        return View::make('user.profile', ['assets' => ['profiles']]);
+    });*/
+    Route::get('profile','ProfileController@index');
     Route::get('docs', function () {
         return View::make('docs.docs', ['assets' => []]);
     });

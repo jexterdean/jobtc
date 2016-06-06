@@ -180,6 +180,10 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/applicants.js')  !!}
 @endif
 
+@if(in_array('profiles',$assets))
+{!!  HTML::script('assets/js/page/profiles.js')  !!}
+@endif
+
 @if(in_array('quizzes',$assets))
 {!!  HTML::script('assets/js/page/quizzes.js')  !!}
 @endif

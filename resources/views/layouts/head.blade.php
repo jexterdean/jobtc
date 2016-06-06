@@ -57,6 +57,10 @@
     {!!  HTML::style('assets/css/page/applicants.css')  !!}
     @endif
     
+    @if(in_array('profiles',$assets))
+    {!!  HTML::style('assets/css/page/profiles.css')  !!}
+    @endif
+    
     @if(in_array('quizzes',$assets))
     {!!  HTML::style('assets/css/page/quizzes.css')  !!}
     @endif
