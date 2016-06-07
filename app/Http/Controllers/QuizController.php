@@ -137,11 +137,8 @@ class QuizController extends BaseController
         $data['test'] = $test;
 
         //get shared files
-        $files = public_path() . '/assets/shared-files/';
-        if (!is_dir($files)) {
-            mkdir($files, 0777, TRUE);
-        }
-        $files = \File::allFiles('assets\shared-files');
+        $file_dir = public_path() . '/assets/shared-files/';
+        $files = is_dir($file_dir) ? \File::allFiles('assets\shared-files') : array();
         $data['files'] = $files;
     }
 
