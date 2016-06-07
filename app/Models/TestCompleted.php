@@ -4,17 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TestResultModel extends Model
+class TestTaken extends Model
 {
     public $timestamps = true;
     protected $fillable = [
         'test_id',
-        'question_id',
-        'belongs_to',
         'unique_id',
-        'answer',
-        'result'
+        'belongs_to'
     ];
     protected $primaryKey = 'id';
-    protected $table = 'test_result';
+    protected $table = 'test_completed';
 }

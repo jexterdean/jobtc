@@ -62,6 +62,7 @@
     @endif
     
     @if(in_array('quizzes',$assets))
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.css">
     {!!  HTML::style('assets/css/page/quizzes.css')  !!}
     @endif
     

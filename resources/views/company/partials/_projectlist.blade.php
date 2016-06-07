@@ -94,7 +94,6 @@
                                                         </div>
                                                     </div>
                                                 </li>
-
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -110,8 +109,10 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="pull-right">
+                                    @if(Auth::user('user')->user_id === $project->user_id)
                                     <a href="{{ route('project.edit',$project->project_id) }}" class="btn-edit btn-shadow btn show_edit_form" data-toggle='modal' data-target='#edit_project_form'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                                     <a href="{{ route('project.destroy',$project->project_id) }}" class="btn-delete btn-shadow btn alert_delete"><i class='fa fa-times'></i> Delete</a>
+                                    @endif
                                     <input type="hidden" class="project_id" value="{{$project->project_id}}" />
                                 </div>
                             </div>

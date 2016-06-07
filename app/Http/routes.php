@@ -1,8 +1,8 @@
 <?php
 
 /* Authentication routes */
-Route::get('/',['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants','https' => true]);
-Route::get('/home', ['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants','https' => true]);
+Route::get('/', ['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants', 'https' => true]);
+Route::get('/home', ['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants', 'https' => true]);
 
 Route::get('login', function() {
     return view('session.create');
@@ -13,7 +13,7 @@ Route::get('login', function() {
 Route::post('/login', 'SessionController@login');
 Route::get('logout', 'SessionController@destroy');
 
-/*Job Routes*/
+/* Job Routes */
 //Should not be in any middleware so that 
 //job posting can be accessed by would be applicants(they need to view the job posting without logging in)
 Route::resource('job', 'JobController');
@@ -21,39 +21,49 @@ Route::post('updateJob/{id}', 'JobController@update');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
-Route::post('saveJobNotes','JobController@saveJobNotes');
-/*Check for duplicate emails upon Applying to a Job*/
-Route::post('checkApplicantDuplicateEmail','JobController@checkApplicantDuplicateEmail');
+Route::post('saveJobNotes', 'JobController@saveJobNotes');
+/* Check for duplicate emails upon Applying to a Job */
+Route::post('checkApplicantDuplicateEmail', 'JobController@checkApplicantDuplicateEmail');
 
 
-/*For Registration*/
-Route::get('register','UserController@getRegisterForm');
-Route::post('register','UserController@register');
+/* For Registration */
+Route::get('register', 'UserController@getRegisterForm');
+Route::post('register', 'UserController@register');
 
-/*For Applicant*/
+/* For Applicant */
 Route::resource('a', 'ApplicantController');
-Route::get('a/{id}',['as' => 'a', 'uses' => 'ApplicantController@show','https' => true]);
-Route::post('saveApplicantNotes','ApplicantController@saveApplicantNotes');
-/*Add or Remove Applicant from the User Table*/
-Route::post('hireApplicant','ApplicantController@hireApplicant');
-Route::post('fireApplicant','ApplicantController@fireApplicant');
+Route::get('a/{id}', ['as' => 'a', 'uses' => 'ApplicantController@show', 'https' => true]);
+Route::post('saveApplicantNotes', 'ApplicantController@saveApplicantNotes');
+Route::post('getApplicantQuizResults','ApplicantController@getApplicantQuizResults');
+
+
+/* Add or Remove Applicant from the User Table */
+Route::post('hireApplicant', 'ApplicantController@hireApplicant');
+Route::post('fireApplicant', 'ApplicantController@fireApplicant');
 
 /* For Applicant Tags */
 Route::post('addTag', 'JobController@addTag');
 Route::get('getAvailableTags', 'JobController@getTags');
 
-/*For Comments*/
-Route::post('addComment','CommentController@addComment');
+/* For Comments */
+Route::post('addComment', 'CommentController@addComment');
 
-/*For Organizational Chart*/
-Route::get('getChartData/{id}','CompanyController@getChartData');
+/* For Organizational Chart */
+Route::get('getChartData/{id}', 'CompanyController@getChartData');
 
-/*For Assigning User Roles*/
-Route::post('updateRole','CompanyController@updateRole');
+/* For Assigning User Roles */
+Route::post('updateRole', 'CompanyController@updateRole');
 
-/* For Video Status*/
+/* For Video Status */
 //Route::post('/add-video-status', 'ShowController@addVideoStatus');
 //Route::get('/get-available-video-tags', 'ShowController@getVideoTags');
+
+/*
+ * Quiz
+ */
+Route::resource('quiz', 'QuizController');
+Route::post('testSort', 'QuizController@testSort');
+Route::post('questionSort', 'QuizController@questionSort');
 
 Route::group(['middleware' => 'guest'], function () {
 
@@ -69,26 +79,24 @@ Route::group(['middleware' => 'auth'], function () {
     /**
      * Links
      */
-    Route::resource('links','LinkController');
-    Route::resource('linkCategory','LinkCategoryController');
+    Route::resource('links', 'LinkController');
+    Route::resource('linkCategory', 'LinkCategoryController');
 
     /**
      *  Client
      */
-    
-
     /**
      * Admin only(Level 1 access)
      */
-    Route::group(['middleware'=> 'level:1'], function(){
+    Route::group(['middleware' => 'level:1'], function() {
         Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
-            ->where('billing_type', 'invoice|estimate');
+                ->where('billing_type', 'invoice|estimate');
         Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
-            ->where('billing_type', 'invoice|estimate');
+                ->where('billing_type', 'invoice|estimate');
         Route::get('/billing/{billing_type}/{billing_id}/edit', ['uses' => 'BillingController@edit'])
-            ->where('billing_type', 'invoice|estimate');
+                ->where('billing_type', 'invoice|estimate');
         Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
-            ->where('billing_type', 'invoice|estimate');
+                ->where('billing_type', 'invoice|estimate');
         Route::resource('task', 'TaskController');
         Route::resource('billing', 'BillingController');
         Route::resource('setting', 'SettingController');
@@ -99,37 +107,36 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('company', 'CompanyController');
         Route::resource('applicant', 'ApplicantController');
         Route::resource('assigneduser', 'AssignedController');
-        
-        /*For Assigning teams for each project with a team(Auto generated team)*/
-        Route::any('createTeam','CompanyController@createTeam');
-        /*Unassigning Team members from a project*/
-        Route::any('unassignTeamMember','CompanyController@unassignTeamMember');
-        
-        /*For assigning employees with tasks from the tasklist of a given project*/
-        Route::any('assignTaskList','CompanyController@assignTaskList');
-        Route::any('unassignTaskList','CompanyController@unassignTaskList');
-        
-        /*For assigning tests to applicants*/
-        Route::any('assignTestToJob','CompanyController@assignTestToJob');
-        Route::any('unassignTestFromJob','CompanyController@unassignTestFromJob');
-        
-        /*For assigning tests to jobs*/
-        Route::any('assignTestToApplicant','CompanyController@assignTestToApplicant');
-        Route::any('unassignTestFromApplicant','CompanyController@unassignTestFromApplicant');
-        
-        /*For Getting the tasklist when you're dropping an employee to a project*/
-        Route::any('getTaskList','CompanyController@getTaskList');
-        
+
+        /* For Assigning teams for each project with a team(Auto generated team) */
+        Route::any('createTeam', 'CompanyController@createTeam');
+        /* Unassigning Team members from a project */
+        Route::any('unassignTeamMember', 'CompanyController@unassignTeamMember');
+
+        /* For assigning employees with tasks from the tasklist of a given project */
+        Route::any('assignTaskList', 'CompanyController@assignTaskList');
+        Route::any('unassignTaskList', 'CompanyController@unassignTaskList');
+
+        /* For assigning tests to applicants */
+        Route::any('assignTestToJob', 'CompanyController@assignTestToJob');
+        Route::any('unassignTestFromJob', 'CompanyController@unassignTestFromJob');
+
+        /* For assigning tests to jobs */
+        Route::any('assignTestToApplicant', 'CompanyController@assignTestToApplicant');
+        Route::any('unassignTestFromApplicant', 'CompanyController@unassignTestFromApplicant');
+
+        /* For Getting the tasklist when you're dropping an employee to a project */
+        Route::any('getTaskList', 'CompanyController@getTaskList');
+
         //For CkEditor Image file upload
-        Route::any('saveImage&responseType=json','TaskController@saveImage');
-        
-        Route::get('company/{id}',['as' => 'company', 'uses' => 'CompanyController@show','https' => true]);
+        Route::any('saveImage&responseType=json', 'TaskController@saveImage');
+
+        Route::get('company/{id}', ['as' => 'company', 'uses' => 'CompanyController@show', 'https' => true]);
     });
 
     /**
      * Staff
      */
-
     /**
      * CSS Reference
      */
@@ -146,10 +153,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('checkList', 'TaskController@checkList');
     Route::post('updateCheckList/{id}', 'TaskController@updateCheckList');
     Route::any('deleteCheckList/{id}', 'TaskController@deleteCheckList');
-    Route::post('sortCheckList/{id}','TaskController@sortCheckList');
-    Route::post('changeCheckList/{task_id}/{task_list_item_id}','TaskController@changeCheckList');
-    
-    Route::get('/data/{cacheKey}','CacheDataController@getCache');
+    Route::post('sortCheckList/{id}', 'TaskController@sortCheckList');
+    Route::post('changeCheckList/{task_id}/{task_list_item_id}', 'TaskController@changeCheckList');
+
+    Route::get('/data/{cacheKey}', 'CacheDataController@getCache');
     Route::resource('event', 'EventsController');
     Route::resource('project', 'ProjectController');
     Route::resource('bug', 'BugController');
@@ -169,8 +176,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('updateProfile', 'ProfileController@updateProfile');
     Route::post('updateMyProfile', 'ProfileController@updateMyProfile');
     Route::post('deleteTimer', 'ProjectController@deleteTimer');
-    
-    Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index','https' => true] );
+
+    Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index', 'https' => true]);
     Route::get('user/{user_id}/delete', 'UserController@delete');
     Route::get('event/{event_id}/delete', 'EventsController@delete');
     Route::get('company/{company_id}/delete', 'CompanyController@delete');
@@ -178,10 +185,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('project/{project_id}/delete', 'ProjectController@delete');
     Route::get('bug/{bug_id}/delete', 'BugController@delete');
     Route::get('ticket/{ticket_id}/delete', 'TicketController@delete');
-    /*Route::get('profile', function () {
-        return View::make('user.profile', ['assets' => ['profiles']]);
-    });*/
-    Route::get('profile','ProfileController@index');
+    /* Route::get('profile', function () {
+      return View::make('user.profile', ['assets' => ['profiles']]);
+      }); */
+    Route::get('profile', 'ProfileController@index');
     Route::get('docs', function () {
         return View::make('docs.docs', ['assets' => []]);
     });
@@ -191,14 +198,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     /*
      * Add Meeting
-    */
+     */
     Route::resource('meeting', 'MeetingController');
     Route::get('meetingJson', 'MeetingController@meetingJson');
     Route::get('meetingTimezone', 'MeetingController@meetingTimezone');
 
     /*
      * Team Builder
-    */
+     */
     Route::resource('teamBuilder', 'TeamBuilderController');
     Route::get('teamBuilderJson', 'TeamBuilderController@teamBuilderJson');
     Route::get('teamBuilderUserJson', 'TeamBuilderController@teamBuilderUserJson');
@@ -206,24 +213,18 @@ Route::group(['middleware' => 'auth'], function () {
 
     /*
      * Payroll
-    */
+     */
     Route::resource('payroll', 'PayrollController');
     Route::get('payrollJson', 'PayrollController@payrollJson');
-
-    /*
-     * Quiz
-    */
-    Route::resource('quiz', 'QuizController');
-    Route::post('testSort','QuizController@testSort');
-    Route::post('questionSort','QuizController@questionSort');
 });
 
 Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'v1'], function () {
+        
     });
 });
 /*
-* New Note
-*/
+ * New Note
+ */
 Route::resource('newnote', 'NewNoteController');
 

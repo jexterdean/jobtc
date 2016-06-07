@@ -24,6 +24,8 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
 use App\Models\TaskCheckListPermission;
+use App\Models\TestResultModel;
+use App\Models\TestTaken;
 
 class ApplicantController extends Controller {
 
@@ -111,6 +113,7 @@ class ApplicantController extends Controller {
             }
 
             $tests = Test::whereIn('id', array_unique($test_ids))->get();
+          
             $questions = Question::whereIn('test_id', array_unique($test_ids))
                     ->orderBy('order', 'ASC')
                     ->get();
@@ -407,5 +410,17 @@ class ApplicantController extends Controller {
         
         return "true";
         
+    }
+    
+    public function getApplicantQuizResults(Request $request) {
+            $applicant_id = $request->input('applicant_id');
+            $test_id = $request->input('test_id');
+            
+            $score = TestResultModel::where('unique_id',$applicant_id)
+                    ->where('belongs_to','applicant')
+                    ->where('test_id',$test_id)
+                    ->where('result',1)->count();
+            
+            return $score;
     }
 }

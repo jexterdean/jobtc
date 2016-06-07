@@ -185,6 +185,9 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @endif
 
 @if(in_array('quizzes',$assets))
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.min.js"></script>
 {!!  HTML::script('assets/js/page/quizzes.js')  !!}
 @endif
 

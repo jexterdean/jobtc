@@ -59,9 +59,7 @@
                         {!!  Form::label('country','Country') !!}
                         <select name="country_id" class='form-control input-xlarge select2me' placeholder="Select Country">
                             @foreach($countries as $country)
-                            @if(Auth::user()->country_id == '' || Auth::user()->country_id == NULL)
-                            <option selected="selected" value=''>Select Country</option>
-                            @elseif($country->country_id == Auth::user()->country_id)
+                            @if($country->country_id == Auth::user()->country_id)
                             <option selected="selected" value='{{$country->country_id}}'>{{$country->country_name}}</option>
                             @else
                             <option value='{{$country->country_id}}'>{{$country->country_name}}</option>
@@ -77,12 +75,12 @@
                     <div class="form-group">
                         {!!  Form::label('facebook','Facebook') !!}
                         {!!  Form::input('text','facebook',Auth::user()->facebook,['class' => 'form-control', 'placeholder'
-                        => 'Skype']) !!}
+                        => 'Facebook']) !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::label('linkedin','Linkedin') !!}
                         {!!  Form::input('text','linkedin',Auth::user()->linkedin,['class' => 'form-control', 'placeholder'
-                        => 'Skype']) !!}
+                        => 'Linkedin']) !!}
                     </div>
                 </div>
             </div>
