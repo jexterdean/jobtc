@@ -165,9 +165,9 @@ class QuizController extends BaseController
         $this->setData($data);
 
         //get shared files
-        $image_files = \File::allFiles('assets\shared-files\image');
+        $image_files = \File::allFiles(public_path() . '\assets\shared-files\image');
         $data['image_files'] = $image_files;
-        $sound_files = \File::allFiles('assets\shared-files\sound');
+        $sound_files = \File::allFiles(public_path() . '\assets\shared-files\sound');
         $data['sound_files'] = $sound_files;
 
         return View::make('quiz.' . $page . '.add', $data);
@@ -448,9 +448,9 @@ class QuizController extends BaseController
         $this->setData($data);
 
         //get shared files
-        $image_files = \File::allFiles('assets\shared-files\image');
+        $image_files = \File::allFiles(public_path() . '\assets\shared-files\image');
         $data['image_files'] = $image_files;
-        $sound_files = \File::allFiles('assets\shared-files\sound');
+        $sound_files = \File::allFiles(public_path() . '\assets\shared-files\sound');
         $data['sound_files'] = $sound_files;
 
         if($page == "test") {
