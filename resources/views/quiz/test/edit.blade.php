@@ -32,6 +32,42 @@
     </div>
 </div>
 <div class="form-group">
+    <div class="row">
+        <label class="col-sm-3 text-right">Completion Image</label>
+        <div class="col-md-3">
+            <input type="file" name="completion_image_upload" class="form-control" accept="image/*" />
+        </div>
+        <div class="col-md-6">
+            <select name="completion_image" class="select-picker form-control" data-live-search="true" title="Choose from Image Files">
+                <option></option>
+                @if(count($image_files) > 0)
+                @foreach($image_files as $v)
+                    <option{{ $tests_info->completion_image == basename($v) ? ' selected' : '' }}>{{ basename($v) }}</option>
+                @endforeach
+                @endif
+            </select>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <label class="col-sm-3 text-right">Completion Sound</label>
+        <div class="col-md-3">
+            <input type="file" name="completion_sound_upload" class="form-control" accept="audio/*" />
+        </div>
+        <div class="col-md-6">
+            <select name="completion_sound" class="select-picker form-control" data-live-search="true" title="Choose from Sound Files">
+                <option></option>
+                @if(count($sound_files) > 0)
+                @foreach($sound_files as $v)
+                    <option{{ $tests_info->completion_sound == basename($v) ? ' selected' : '' }}>{{ basename($v) }}</option>
+                @endforeach
+                @endif
+            </select>
+        </div>
+    </div>
+</div>
+<div class="form-group">
     <div class="row hidden">
         <label class="col-sm-3 text-right">Test Photo</label>
         <div class="col-md-9">
@@ -54,6 +90,14 @@
         </div>
     </div>
 </div>
+<div class="form-group">
+    <div class="row">
+        <label class="col-sm-3 text-right">Default Score Tag</label>
+        <div class="col-md-9">
+            <input type="text" name="default_tags" class="tag-input form-control" value="{{ $tests_info->default_tags }}" data-role="tagsinput" style="width: 100%;" />
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12 text-right">
         <input type="submit" name="submit" class="btn btn-submit btn-shadow" value="Save" />
@@ -73,5 +117,19 @@
                 }
             }
         });
+
+        //region Bootstrap Select
+        $('.select-picker').selectpicker();
+        //endregion
+
+        //region Tags
+        var tag_input = $('.tag-input');
+        tag_input.tagsinput({
+            cancelConfirmKeysOnEmpty: false, //prevent enter to submit form
+            tagClass: function(item) {
+                return 'label label-success'
+            }
+        });
+        //endregion
     });
 </script>

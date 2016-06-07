@@ -191,6 +191,10 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/quizzes.js')  !!}
 @endif
 
+@if(in_array('tags',$assets))
+{!!  HTML::script('assets/js/bootstrap-tagsinput.js')  !!}
+@endif
+
 <script>
     $(function () {
         //to fix the ajax PATCH/POST method type of form not working

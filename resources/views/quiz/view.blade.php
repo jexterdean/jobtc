@@ -6,6 +6,11 @@
                     <div class="box-container">
                         <div class="box-header">
                             <h3 class="box-title">{{ $tests_info->title }}</h3>
+                            <div class="pull-right" style="margin-right: 10px;">
+                                <a href="{{ url('quiz') }}" class="tc-icons">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </a>
+                            </div>
                         </div>
                         <div class="box-body">
                             <div class="box-content">
@@ -14,14 +19,14 @@
                                         <div class="slider-body">
                                             <span style="font-size: 23px;">{{ $tests_info->start_message }}</span>
                                             <br />
-                                            <button type="button" class="btn btn-submit btn-next">Start</button>
+                                            <button type="button" class="btn btn-shadow btn-submit btn-next">Start</button>
                                         </div>
                                     </div>
                                     @foreach($questions_info as $ref=>$v)
                                     <div class="slider-div">
                                         <div class="slider-body">
                                             <div class="form-group">
-                                                <span style="font-size: 23px;">{{ $v->question }}</span>
+                                                <span style="font-size: 23px;">{!! $v->question !!}</span>
                                             </div>
                                             {!! $v->question_photo ?
                                                 '<div class="form-group">' .
@@ -46,8 +51,8 @@
                                                 </div>
                                             @endif
                                             <div class="text-center">
-                                                <button type="button" data-type="{{ $v->question_type_id }}" class="btn btn-submit btn-next" id="{{ $v->id }}">Next</button>
-                                                <button type="button" class="btn btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
+                                                <button type="button" data-type="{{ $v->question_type_id }}" class="btn btn-shadow btn-submit btn-next" id="{{ $v->id }}">Next</button>
+                                                <button type="button" class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
                                                     <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
                                                     <span class="glyphicon glyphicon-time"></span>
                                                 </button>
@@ -58,8 +63,16 @@
                                     <div class="slider-div text-center">
                                         <div class="slider-body">
                                             <span style="font-size: 23px;">{{ $tests_info->completion_message }}</span>
+                                            @if($tests_info->completion_image)
+                                                {!! HTML::image('/assets/shared-files/image/' . $tests_info->completion_image, '', array('style' => 'width: 100%;')) !!}
+                                            @endif
+                                            @if($tests_info->completion_sound)
+                                                @if(\App\Helpers\Helper::checkFileIsAudio($tests_info->completion_sound))
+                                                    <audio class="player" src="{{ url() . '/assets/shared-files/sound/' . $tests_info->completion_sound }}"></audio>
+                                                @endif
+                                            @endif
                                             <br />
-                                            <a class="btn btn-finish" href="{{ url('quiz/' . $v->test_id . '?p=review') }}">Complete</a>
+                                            <a class="btn btn-shadow btn-finish" href="{{ url('quiz/' . $v->test_id . '?p=review') }}">Complete</a>
                                         </div>
                                     </div>
                                 </div>
@@ -165,6 +178,15 @@
                     time_limit.removeClass('hidden');
                     time_limit.timerStart();
                 }
+            }
+
+            var player = $(this)
+                .closest('.slider-div')
+                .next('.slider-div')
+                .find('.player');
+            if(player.length != 0){
+                var audio = player.get(0);
+                audio.play();
             }
         });
 

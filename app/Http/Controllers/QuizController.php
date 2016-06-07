@@ -25,7 +25,7 @@ class QuizController extends BaseController {
      */
     public function index() {
         $data = [
-            'assets' => ['input-mask', 'waiting'],
+            'assets' => ['input-mask', 'waiting', 'select', 'tags'],
             'page' => 'quiz'
         ];
         $this->setData($data);
@@ -131,9 +131,12 @@ class QuizController extends BaseController {
                 $t->average .= '%';
             }
         }
-        //exit;
-
         $data['test'] = $test;
+
+        //get shared files
+        $file_dir = public_path() . '/assets/shared-files';
+        $files = is_dir($file_dir) ? \File::allFiles($file_dir) : array();
+        $data['files'] = $files;
     }
 
     /**
@@ -145,17 +148,24 @@ class QuizController extends BaseController {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
         $id = isset($_GET['id']) ? $_GET['id'] : '';
 
-        $default_time = DB::table('test')
-                ->where('id', '=', $id)
-                ->pluck('default_time');
+        $test_info = DB::table('test')
+            ->where('id', '=', $id)
+            ->first();
 
         $data = [
             'assets' => ['input-mask', 'waiting'],
             'page' => 'edit',
             'test_id' => $id,
-            'default_time' => $default_time
+            'test_info' => $test_info
         ];
         $this->setData($data);
+
+        //get shared files
+        $file_dir = public_path() . '/assets/shared-files';
+        $image_files = \File::allFiles($file_dir . '/image');
+        $data['image_files'] = $image_files;
+        $sound_files = \File::allFiles($file_dir . '/sound');
+        $data['sound_files'] = $sound_files;
 
         return View::make('quiz.' . $page . '.add', $data);
     }
@@ -214,8 +224,39 @@ class QuizController extends BaseController {
                 $test->start_message = Input::get('start_message');
                 $test->completion_message = Input::get('completion_message');
                 $test->default_time = Input::get('default_time') ? '00:' . Input::get('default_time') : '';
+                $test->completion_image = Input::get('completion_image');
+                $test->completion_sound = Input::get('completion_sound');
+                $test->default_tags = Input::get('default_tags');
                 $test->save();
 
+                if (Input::file('completion_image_upload')) {
+                    $shared_dir = public_path() . '/assets/shared-files/image/';
+                    if(!is_dir($shared_dir)){
+                        mkdir($shared_dir, 0777, TRUE);
+                    }
+
+                    $fileName = Input::file('completion_image_upload')->getClientOriginalName();
+
+                    Input::file('completion_image_upload')->move($shared_dir, $fileName);
+
+                    DB::table('test')
+                        ->where('id', '=', $test->id)
+                        ->update(['completion_image' => $fileName]);
+                }
+                if (Input::file('completion_sound_upload')) {
+                    $shared_dir = public_path() . '/assets/shared-files/sound/';
+                    if(!is_dir($shared_dir)){
+                        mkdir($shared_dir, 0777, TRUE);
+                    }
+
+                    $fileName = Input::file('completion_sound_upload')->getClientOriginalName();
+
+                    Input::file('completion_sound_upload')->move($shared_dir, $fileName);
+
+                    DB::table('test')
+                        ->where('id', '=', $test->id)
+                        ->update(['completion_sound' => $fileName]);
+                }
                 if (Input::file('test_photo')) {
                     $photo_dir = public_path() . '/assets/img/test/';
                     if (!is_dir($photo_dir)) {
@@ -226,7 +267,6 @@ class QuizController extends BaseController {
                     $fileName = $test->id . "." . $extension;
 
                     Input::file('test_photo')->move($photo_dir, $fileName);
-                    Input::file('test_photo')->move('/assets/img/test/', $fileName);
 
                     DB::table('test')
                             ->where('id', '=', $test->id)
@@ -240,10 +280,16 @@ class QuizController extends BaseController {
                 $question->question_choices = Input::has('question_choices') ? json_encode(Input::get('question_choices')) : '[]';
                 $question->question_answer = Input::get('question_answer');
                 $question->length = Input::get('length') ? '00:' . Input::get('length') : '';
-                $question->points = Input::get('points');
+                if(Input::get('points')) {
+                    $question->points = Input::get('points');
+                }
                 $question->explanation = Input::get('explanation');
-                $question->marking_criteria = Input::get('marking_criteria');
-                $question->max_point = Input::get('max_point');
+                if(Input::get('marking_criteria')) {
+                    $question->marking_criteria = Input::get('marking_criteria');
+                }
+                if(Input::get('max_point')) {
+                    $question->max_point = Input::get('max_point');
+                }
                 $question->save();
 
                 $file_key = 'question_photo';
@@ -412,7 +458,14 @@ class QuizController extends BaseController {
         ];
         $this->setData($data);
 
-        if ($page == "test") {
+        //get shared files
+        $file_dir = public_path() . '/assets/shared-files';
+        $image_files = \File::allFiles($file_dir . '/image');
+        $data['image_files'] = $image_files;
+        $sound_files = \File::allFiles($file_dir . '/sound');
+        $data['sound_files'] = $sound_files;
+
+        if($page == "test") {
             $tests_info = DB::table('test')
                     ->where('id', '=', $id)
                     ->first();
@@ -447,10 +500,12 @@ class QuizController extends BaseController {
             ]);
         } else {
             $validation = Validator::make($request->all(), [
-                        'question_type_id' => 'required',
-                        'question' => 'required',
-                        'points' => 'required'
+                'question_type_id' => 'required',
+                'question' => 'required'
             ]);
+            if(Input::get('question_type_id') != 3){
+                $required['points'] = 'required';
+            }
         }
         if ($validation->fails()) {
             return Redirect::to('quiz')
@@ -469,8 +524,39 @@ class QuizController extends BaseController {
                 $test->start_message = Input::get('start_message');
                 $test->completion_message = Input::get('completion_message');
                 $test->default_time = Input::get('default_time') ? '00:' . Input::get('default_time') : '';
+                $test->completion_image = Input::get('completion_image');
+                $test->completion_sound = Input::get('completion_sound');
+                $test->default_tags = Input::get('default_tags');
                 $test->save();
 
+                if (Input::file('completion_image_upload')) {
+                    $shared_dir = public_path() . '/assets/shared-files/image/';
+                    if(!is_dir($shared_dir)){
+                        mkdir($shared_dir, 0777, TRUE);
+                    }
+
+                    $fileName = Input::file('completion_image_upload')->getClientOriginalName();
+
+                    Input::file('completion_image_upload')->move($shared_dir, $fileName);
+
+                    DB::table('test')
+                        ->where('id', '=', $test->id)
+                        ->update(['completion_image' => $fileName]);
+                }
+                if (Input::file('completion_sound_upload')) {
+                    $shared_dir = public_path() . '/assets/shared-files/sound/';
+                    if(!is_dir($shared_dir)){
+                        mkdir($shared_dir, 0777, TRUE);
+                    }
+
+                    $fileName = Input::file('completion_sound_upload')->getClientOriginalName();
+
+                    Input::file('completion_sound_upload')->move($shared_dir, $fileName);
+
+                    DB::table('test')
+                        ->where('id', '=', $test->id)
+                        ->update(['completion_sound' => $fileName]);
+                }
                 if (Input::file('test_photo')) {
                     $photo_dir = public_path() . '/assets/img/test/';
                     if (!is_dir($photo_dir)) {
@@ -492,10 +578,17 @@ class QuizController extends BaseController {
                 $question->question_choices = Input::has('question_choices') ? json_encode(Input::get('question_choices')) : '[]';
                 $question->question_answer = Input::get('question_answer');
                 $question->length = Input::get('length') ? '00:' . Input::get('length') : '';
-                $question->points = Input::get('points');
+                if(Input::get('points')) {
+                    $question->points = Input::get('points');
+                }
                 $question->explanation = Input::get('explanation');
-                $question->marking_criteria = Input::get('marking_criteria');
-                $question->max_point = Input::get('max_point');
+                if(Input::get('marking_criteria')) {
+                    $question->marking_criteria = Input::get('marking_criteria');
+                }
+                if(Input::get('max_point')) {
+                    $question->max_point = Input::get('max_point');
+                }
+                $question->question_tags = Input::get('question_tags');
                 if (Input::get('clear_photo')) {
                     $photo_dir = public_path() . '/assets/img/question/';
                     $photo_dir .= $question->question_photo;

@@ -65,7 +65,10 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.css">
     {!!  HTML::style('assets/css/page/quizzes.css')  !!}
     @endif
-    
+
+    @if(in_array('tags',$assets))
+    {!!  HTML::style('assets/css/bootstrap-tagsinput.css')  !!}
+    @endif
 
     <script> var public_path = "{{ URL::to('/') }}/"; </script>
 </head>
