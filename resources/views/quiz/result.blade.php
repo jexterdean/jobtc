@@ -84,10 +84,10 @@
                                                 $mime = \App\Helpers\Helper::getMimeType($v);
                                                 $mime = array_shift($mime);
                                                 ?>
-                                                <audio class="player" src="{{ url() . '/' . $v }}"></audio>
+                                                <audio class="player" src="{{ url() . '/assets/shared-files/' . $v->getRelativePathname() }}"></audio>
                                                 <i class="fa fa-play audio-btn" style="font-size: 2em;"></i>
                                             @else
-                                                <a href="{{ url() . '/' . $v }}" target="_blank">
+                                                <a href="{{ url() . '/assets/shared-files/' . $v->getRelativePathname() }}" target="_blank">
                                                     <i class="fa fa-external-link" style="font-size: 2em;"></i>
                                                 </a>
                                             @endif
