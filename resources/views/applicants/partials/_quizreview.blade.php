@@ -21,7 +21,7 @@
     <div class="slider-div">
         <div class="slider-body">
             <div class="form-group text-center">
-                <span style="font-size: 23px;">{!! $question->question !!}</span>
+                <span style="font-size: 23px;">{{ $question->question }}</span>
             </div>
             {!! $question->question_photo ?
             '<div class="form-group text-center">' .

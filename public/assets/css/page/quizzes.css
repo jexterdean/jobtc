@@ -33,3 +33,7 @@
     .answer-area{
         margin-left: 20px;
     }
+    
+    .btn {
+        padding: 3px 12px !important;
+    }

@@ -49,7 +49,6 @@
                                                 </div>
                                             </div>
                                             @endif
-
                                             <div class="form-group">
                                                 <label>Your Answer</label>
                                                 <div>

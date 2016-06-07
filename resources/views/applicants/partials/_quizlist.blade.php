@@ -4,14 +4,16 @@
 <div class="tests-container">
     <div class="box box-default">
         <div class="box-container">
-            <div class="box-header">
-                <h3 class="box-title">{{ $test->title }}</h3>
+            <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
+                <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
+                @foreach($tests_completed->where('test_id',$test->id) as $completed)
+                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>    
+                @endforeach
             </div>
             <div class="box-body">
-                <div class="box-content">
+                <div id="test-collapse-{{$test->id}}" class="box-content collapse">
                     <div class="slider-container">
                         <div class="slider-div text-center active">
-
                             <div class="slider-body">
                                 @include('applicants.partials._quizreview')
                             </div>
@@ -26,11 +28,14 @@
 <div class="tests-container">
     <div class="box box-default">
         <div class="box-container">
-            <div class="box-header">
-                <h3 class="box-title">{{ $test->title }}</h3>
+            <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
+                <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
+                @foreach($tests_completed->where('test_id',$test->id) as $completed)
+                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>    
+                @endforeach
             </div>
             <div class="box-body">
-                <div class="box-content">
+                <div id="test-collapse-{{$test->id}}" class="box-content collapse">
                     <div class="slider-container">
                         <div class="slider-div text-center active">
                             <div class="slider-body">
@@ -97,14 +102,16 @@
 <div class="tests-container">
     <div class="box box-default">
         <div class="box-container">
-            <div class="box-header">
-                <h3 class="box-title">{{ $test->title }}</h3>
+            <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
+                <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
+                @foreach($tests_completed->where('test_id',$test->id) as $completed)
+                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>        
+                @endforeach
             </div>
             <div class="box-body">
-                <div class="box-content">
+                <div id="test-collapse-{{$test->id}}" class="box-content collapse">
                     <div class="slider-container">
                         <div class="slider-div text-center active">
-
                             <div class="slider-body">
                                 @include('applicants.partials._quizreview')
                             </div>
@@ -119,11 +126,14 @@
 <div class="tests-container">
     <div class="box box-default">
         <div class="box-container">
-            <div class="box-header">
-                <h3 class="box-title">{{ $test->title }}</h3>
+            <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
+                <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
+                 @foreach($tests_completed->where('test_id',$test->id) as $completed)
+                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>    
+                @endforeach
             </div>
             <div class="box-body">
-                <div class="box-content">
+                <div id="test-collapse-{{$test->id}}" class="box-content collapse">
                     Applicant has not taken this test yet.
                 </div>
             </div>
