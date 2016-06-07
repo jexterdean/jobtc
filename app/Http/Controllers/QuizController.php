@@ -519,6 +519,7 @@ class QuizController extends BaseController
                 $test->default_time = Input::get('default_time') ? '00:' . Input::get('default_time') : '';
                 $test->completion_image = Input::get('completion_image');
                 $test->completion_sound = Input::get('completion_sound');
+                $test->default_tags = Input::get('default_tags');
                 $test->save();
 
                 if (Input::file('completion_image_upload')) {
