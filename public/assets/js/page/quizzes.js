@@ -3,7 +3,8 @@ var slider_div = $('.slider-div');
 var btn_next = $('.btn-next');
 var btn_prev = $('.btn-prev');
 var btn_finish = $('.btn-finish');
-btn_next.click(function (e) {
+
+slider_div.on('click','.btn-next',function (e) {
     var thisId = this.id;
     var type = $(this).data('type');
     var slider_div = $(this).closest('.slider-div');
@@ -53,16 +54,11 @@ btn_next.click(function (e) {
         }
     }
 });
-btn_finish.click(function (e) {
+slider_div.on('click','.btn-finish',function (e) {
     var ajaxurl = public_path + 'getApplicantQuizResults';
     var slider_body = $(this).parent();
     var applicant_id = slider_body.find('.applicant_id').val();
     var quiz_id = slider_body.find('.quiz_id').val();
-    
-    
-    
-    console.log('applicant_id : '+applicant_id);
-    console.log('quiz_id : '+quiz_id);
     
     var data = {
       'applicant_id' :  applicant_id,
@@ -74,12 +70,9 @@ btn_finish.click(function (e) {
         data: data,
         method: "POST",
         success: function (data) {
-            //$(this).parent().html('Your score is: ' + score);
-            //slider_body.html('Your score is: ' + data);
-            //console.log('Getting applicant result');
-            
-            //var result_url = public_path + 'quiz/'+quiz_id+'?p=review';
-            slider_body.html(data);
+           
+            slider_body.parent().parent().html(data);
+            $.getScript(public_path+ "assets/js/page/quizsliderpagination.js"); 
         },
         error: function (a, b, c) {
 

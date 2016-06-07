@@ -124,7 +124,7 @@
             </div>
             <div class="box-body">
                 <div class="box-content">
-                    Applicant has not yet taken this test yet.
+                    Applicant has not taken this test yet.
                 </div>
             </div>
         </div>

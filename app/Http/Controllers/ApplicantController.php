@@ -456,31 +456,40 @@ class ApplicantController extends Controller {
         $test_completed->save();
 
         //get Test
-        $tests = Test::whereIn('id', $quiz_id)->first();
+        $tests = Test::where('id', $quiz_id)->get();
 
         //Get Questions
-        $questions = Question::whereIn('test_id', $quiz_id)
+        $questions = Question::where('test_id', $quiz_id)
                 ->orderBy('order', 'ASC')
                 ->get();
+        
+         if (count($questions) > 0) {
+                foreach ($questions as $v) {
+                    $v->question_choices = json_decode($v->question_choices);
+                }
+            }
 
         //Get Review details
-        $r = TestResultModel::where('test_id', $quiz_id)->get();
+        $results = TestResultModel::where('test_id', $quiz_id)->get();
         $review_result = array();
-        if (count($r) > 0) {
-            foreach ($r as $v) {
+        if (count($results) > 0) {
+            foreach ($results as $v) {
                 $review_result[$v->question_id] = (Object) array(
                             'answer' => $v->answer,
-                            'result' => $v->result,
+                            'result' => $v->result
                 );
             }
         }
 
-        return view('applicants.partials._quizreview', [
+        $get_completed_test = TestCompleted::where('id', $test_completed->id)
+                    ->get();
+        
+        return view('applicants.partials._quizresults', [
             'tests' => $tests,
             'questions' => $questions,
             'review_result' => $review_result,
-            'tests_completed' => $test_completed
+            'tests_completed' => $get_completed_test
         ]);
     }
-
+    
 }
