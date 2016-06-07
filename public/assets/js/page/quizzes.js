@@ -55,23 +55,31 @@ btn_next.click(function (e) {
 });
 btn_finish.click(function (e) {
     var ajaxurl = public_path + 'getApplicantQuizResults';
-    var applicant_id = $(this).parent().find('.applicant_id').val();
-    var test_id = $(this).parent().find('.test_id').val();
+    var slider_body = $(this).parent();
+    var applicant_id = slider_body.find('.applicant_id').val();
+    var quiz_id = slider_body.find('.quiz_id').val();
+    
+    
+    
     console.log('applicant_id : '+applicant_id);
-    console.log('test_id : '+test_id);
+    console.log('quiz_id : '+quiz_id);
     
     var data = {
       'applicant_id' :  applicant_id,
-      'test_id' : test_id
+      'quiz_id' : quiz_id
     };
       
     $.ajax({
         url: ajaxurl,
         data: data,
         method: "POST",
-        success: function (score) {
+        success: function (data) {
             //$(this).parent().html('Your score is: ' + score);
-            console.log('Getting applicant result');
+            //slider_body.html('Your score is: ' + data);
+            //console.log('Getting applicant result');
+            
+            //var result_url = public_path + 'quiz/'+quiz_id+'?p=review';
+            slider_body.html(data);
         },
         error: function (a, b, c) {
 

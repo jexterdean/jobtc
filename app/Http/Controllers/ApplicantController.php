@@ -25,7 +25,7 @@ use App\Models\TeamMember;
 use App\Models\TeamProject;
 use App\Models\TaskCheckListPermission;
 use App\Models\TestResultModel;
-use App\Models\TestTaken;
+use App\Models\TestCompleted;
 
 class ApplicantController extends Controller {
 
@@ -83,7 +83,7 @@ class ApplicantController extends Controller {
 
                 //$comments = Comment::with('applicant')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
                 //$comments = Applicant::with('comment')->where('id',$id)->orderBy('id', 'desc')->get();
-                $comments = Comment::with('user','applicant')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
+                $comments = Comment::with('user', 'applicant')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
             }
 
 
@@ -103,6 +103,10 @@ class ApplicantController extends Controller {
             $test_ids = [];
             $test_jobs = TestPerJob::where('job_id', $applicant->job_id)->get();
             $test_applicants = TestPerApplicant::where('applicant_id', $applicant->id)->get();
+            $tests_completed = TestCompleted::where('unique_id', $applicant->id)
+                    ->where('belongs_to', 'applicant')
+                    ->get();
+
 
             foreach ($test_jobs as $test_job) {
                 array_push($test_ids, $test_job->test_id);
@@ -113,7 +117,7 @@ class ApplicantController extends Controller {
             }
 
             $tests = Test::whereIn('id', array_unique($test_ids))->get();
-          
+
             $questions = Question::whereIn('test_id', array_unique($test_ids))
                     ->orderBy('order', 'ASC')
                     ->get();
@@ -124,7 +128,22 @@ class ApplicantController extends Controller {
                 }
             }
 
-            $assets = ['applicants','quizzes'];
+            /* $r = DB::table('test_result')
+              ->where('test_result.test_id', '=', $id)
+              ->get(); */
+
+            $r = TestResultModel::where('unique_id', $id)->where('belongs_to', 'applicant')->get();
+            $review_result = array();
+            if (count($r) > 0) {
+                foreach ($r as $v) {
+                    $review_result[$v->question_id] = (Object) array(
+                                'answer' => $v->answer,
+                                'result' => $v->result,
+                    );
+                }
+            }
+
+            $assets = ['applicants', 'quizzes'];
 
             return view('applicants.show', [
                 'applicant' => $applicant,
@@ -133,6 +152,8 @@ class ApplicantController extends Controller {
                 'statuses' => $statuses,
                 'job' => $job,
                 'tests' => $tests,
+                'tests_completed' => $tests_completed,
+                'review_result' => $review_result,
                 'questions' => $questions,
                 'previous_applicant' => $prevApplicant,
                 'next_applicant' => $nextApplicant,
@@ -310,33 +331,33 @@ class ApplicantController extends Controller {
     public function saveApplicantNotes(Request $request) {
         $applicant_id = $request->input('applicant_id');
         $notes = $request->input('notes');
-        
-        $applicant = Applicant::where('id',$applicant_id);
+
+        $applicant = Applicant::where('id', $applicant_id);
         $applicant->update([
             'notes' => $notes
         ]);
-        
+
         return "true";
     }
-    
-    public function hireApplicant(Request $request){
-        
+
+    public function hireApplicant(Request $request) {
+
         $applicant_id = $request->input('applicant_id');
         $company_id = $request->input('company_id');
-        
+
         $applicant = Applicant::find($applicant_id);
         $applicant->update([
             'hired' => 'Yes'
         ]);
-        
+
         //Add the applicant to the user table and set their company to the job posting company_id
         $user = new User();
         $user->password = $applicant->password;
-        $user->name= $applicant->name;
-        $user->email= $applicant->email;
-        $user->phone= $applicant->phone;
-        $user->photo= $applicant->photo;
-        $user->resume= $applicant->resume;
+        $user->name = $applicant->name;
+        $user->email = $applicant->email;
+        $user->phone = $applicant->phone;
+        $user->photo = $applicant->photo;
+        $user->resume = $applicant->resume;
         $user->address_1 = $applicant->address_1;
         $user->address_2 = $applicant->address_2;
         $user->zipcode = $applicant->zipcode;
@@ -347,80 +368,119 @@ class ApplicantController extends Controller {
         $user->notes = $applicant->notes;
         $user->user_status = 'Active';
         $user->save();
-        
+
         //Get the level 2 Role in the Role Table
-        $role = Role::where('company_id',$company_id)->where('level',2)->first();
-        
+        $role = Role::where('company_id', $company_id)->where('level', 2)->first();
+
         //Add the user as a level 2 user in the company
         $profile = new Profile();
         $profile->user_id = $user->user_id;
         $profile->company_id = $company_id;
         $profile->role_id = $role->id;
         $profile->save();
-        
+
         //Attach the role to the user(gets added to role_user table)
         //$user->attachRole($role->id);
         $role_user = new RoleUser();
         $role_user->role_id = $role->id;
         $role_user->user_id = $user->user_id;
         $role_user->save();
-        
-        
+
+
         return "true";
     }
-    
-    public function fireApplicant(Request $request){
-        
+
+    public function fireApplicant(Request $request) {
+
         $applicant_id = $request->input('applicant_id');
         $company_id = $request->input('company_id');
-        
+
         $applicant = Applicant::find($applicant_id);
         $applicant->update([
             'hired' => 'No'
         ]);
-        
+
         //Get their user profile
-        $user = User::where('email',$applicant->email)->first();
-        $profile = Profile::where('user_id',$user->user_id)->where('company_id',$company_id)->first();
-        
+        $user = User::where('email', $applicant->email)->first();
+        $profile = Profile::where('user_id', $user->user_id)->where('company_id', $company_id)->first();
+
         //Detach the role from the user so they can't login using their user account
         //$user->detachRole($profile->role_id);
-        $role_user = RoleUser::where('role_id',$profile->role_id)->where('user_id',$user->user_id)->first();
+        $role_user = RoleUser::where('role_id', $profile->role_id)->where('user_id', $user->user_id)->first();
         $role_user->delete();
-        
+
         //Remove from being assigned from a team
-        $team_member_count = TeamMember::where('user_id',$user->user_id)->count();
-        if($team_member_count > 0) {
-            $team = TeamMember::where('user_id',$user->user_id);
+        $team_member_count = TeamMember::where('user_id', $user->user_id)->count();
+        if ($team_member_count > 0) {
+            $team = TeamMember::where('user_id', $user->user_id);
             $team->delete();
         }
         //Remove all task permissions for the user
-        $task_check_list_permission_count = TaskCheckListPermission::where('user_id',$user->user_id)->count();
-        
-        if($task_check_list_permission_count > 0) {
-            $task_check_list_permission = TaskCheckListPermission::where('user_id',$user->user_id);
+        $task_check_list_permission_count = TaskCheckListPermission::where('user_id', $user->user_id)->count();
+
+        if ($task_check_list_permission_count > 0) {
+            $task_check_list_permission = TaskCheckListPermission::where('user_id', $user->user_id);
             $task_check_list_permission->delete();
         }
-        
+
         //Delete them from the company
-        $profile->delete(); 
-                
+        $profile->delete();
+
         //Finally,delete the applicant's user account
         $user->delete();
-        
+
         return "true";
-        
     }
-    
+
     public function getApplicantQuizResults(Request $request) {
-            $applicant_id = $request->input('applicant_id');
-            $test_id = $request->input('test_id');
-            
-            $score = TestResultModel::where('unique_id',$applicant_id)
-                    ->where('belongs_to','applicant')
-                    ->where('test_id',$test_id)
-                    ->where('result',1)->count();
-            
-            return $score;
+        $applicant_id = $request->input('applicant_id');
+        $quiz_id = $request->input('quiz_id');
+
+        $questions_total = Question::where('test_id', $quiz_id)->count();
+
+        //Get the total score
+        $score = TestResultModel::where('unique_id', $applicant_id)
+                        ->where('belongs_to', 'applicant')
+                        ->where('test_id', $quiz_id)
+                        ->where('result', '1')->count();
+
+        $final_score = $score . '/' . $questions_total;
+
+        //Set test as completed by this applicant
+        $test_completed = new TestCompleted();
+        $test_completed->test_id = $quiz_id;
+        $test_completed->unique_id = $applicant_id;
+        $test_completed->belongs_to = 'applicant';
+        $test_completed->score = $score;
+        $test_completed->total_score = $questions_total;
+        $test_completed->save();
+
+        //get Test
+        $tests = Test::whereIn('id', $quiz_id)->first();
+
+        //Get Questions
+        $questions = Question::whereIn('test_id', $quiz_id)
+                ->orderBy('order', 'ASC')
+                ->get();
+
+        //Get Review details
+        $r = TestResultModel::where('test_id', $quiz_id)->get();
+        $review_result = array();
+        if (count($r) > 0) {
+            foreach ($r as $v) {
+                $review_result[$v->question_id] = (Object) array(
+                            'answer' => $v->answer,
+                            'result' => $v->result,
+                );
+            }
+        }
+
+        return view('applicants.partials._quizreview', [
+            'tests' => $tests,
+            'questions' => $questions,
+            'review_result' => $review_result,
+            'tests_completed' => $test_completed
+        ]);
     }
+
 }

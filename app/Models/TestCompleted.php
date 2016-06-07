@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TestTaken extends Model
+class TestCompleted extends Model
 {
     public $timestamps = true;
     protected $fillable = [

@@ -17,6 +17,8 @@ class CreateTestsTakenTable extends Migration
             $table->integer('test_id');
             $table->integer('unique_id');
             $table->string('belongs_to');
+            $table->string('score');
+            $table->string('total_score');
             $table->timestamps();
         });
     }

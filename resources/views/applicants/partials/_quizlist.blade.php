@@ -1,4 +1,28 @@
+@if(Auth::check('applicant'))
 @foreach($tests as $test)
+@if($tests_completed->contains('test_id',$test->id))
+<div class="tests-container">
+    <div class="box box-default">
+        <div class="box-container">
+            <div class="box-header">
+                <h3 class="box-title">{{ $test->title }}</h3>
+            </div>
+            <div class="box-body">
+                <div class="box-content">
+                    <div class="slider-container">
+                        <div class="slider-div text-center active">
+
+                            <div class="slider-body">
+                                @include('applicants.partials._quizreview')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@else
 <div class="tests-container">
     <div class="box box-default">
         <div class="box-container">
@@ -63,4 +87,50 @@
         </div>
     </div>
 </div>
+@endif <!--Check if test completed condition-->
 @endforeach
+@endif <!--Check if user is applicant-->
+
+@if(Auth::check('user'))
+@foreach($tests as $test)
+@if($tests_completed->contains('test_id',$test->id))
+<div class="tests-container">
+    <div class="box box-default">
+        <div class="box-container">
+            <div class="box-header">
+                <h3 class="box-title">{{ $test->title }}</h3>
+            </div>
+            <div class="box-body">
+                <div class="box-content">
+                    <div class="slider-container">
+                        <div class="slider-div text-center active">
+
+                            <div class="slider-body">
+                                @include('applicants.partials._quizreview')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@else
+<div class="tests-container">
+    <div class="box box-default">
+        <div class="box-container">
+            <div class="box-header">
+                <h3 class="box-title">{{ $test->title }}</h3>
+            </div>
+            <div class="box-body">
+                <div class="box-content">
+                    Applicant has not yet taken this test yet.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif <!--Check if test is already completed by this applicant-->
+@endforeach
+@endif
+

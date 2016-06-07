@@ -10,6 +10,7 @@ use \Input;
 use \Redirect;
 use \Auth;
 use App\Models\Test;
+use App\Models\TestCompleted;
 use App\Models\Question;
 use App\Models\TestResultModel;
 use Illuminate\Http\Request;
@@ -68,6 +69,7 @@ class QuizController extends BaseController {
                 ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
                 ->orderBy('test_result.created_at', 'asc')
                 ->get();
+        
         if (count($result) > 0) {
             foreach ($result as $r) {
                 $average = $r->score > 0 ? $r->score / $r->total_question : $r->score;

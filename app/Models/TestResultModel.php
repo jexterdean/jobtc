@@ -17,4 +17,12 @@ class TestResultModel extends Model
     ];
     protected $primaryKey = 'id';
     protected $table = 'test_result';
+    
+    public function applicant() {
+        return $this->hasOne('App\Models\Applicant','unique_id');
+    }
+    
+    public function user() {
+        return $this->hasOne('App\Models\User','unique_id');
+    }
 }
