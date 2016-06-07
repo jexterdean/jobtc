@@ -18,14 +18,12 @@
             <input type='text' name="length" style="width: 80px;" class="q-form time-form form-control" value="{{ $questions_info->length ? date('i:s', strtotime($questions_info->length)) : '' }}" />
         </div>
     </div>
-    <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>" data-type="">
-        <div class="form-inline">
+    <div class="col-md-3">
+        <div class="form-inline question-points-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>" data-type="">
             <label>Points:</label>
             <input type="text" name="points" style="width: 80px;" class="q-form points-form form-control" value="{{ $questions_info->points }}" />
         </div>
-    </div>
-    <div class="col-md-3 question-points-area<?php echo $questions_info->question_type_id == 3 ? '' : ' hidden'; ?>" data-type="3">
-        <div class="form-inline" style="padding: 5px;white-space: nowrap">
+        <div class="form-inline question-points-area<?php echo $questions_info->question_type_id == 3 ? '' : ' hidden'; ?>" data-type="3" style="white-space: nowrap">
             <label>Maximum Score:</label>
             <input type="text" name="max_point" style="width: 70px;" class="q-form points-form form-control" value="{{ $questions_info->max_point }}" />
         </div>
@@ -76,66 +74,70 @@
         </div>
     </div>
 </div>
-<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>" data-type="">
+
+<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 1 ? '' : ' hidden'; ?>" data-type="1">
     <div class="row">
         <label class="col-sm-2 text-right">Question Answers:</label>
         <div class="col-md-10">
-            <div class="question-type-area<?php echo $questions_info->question_type_id == 1 ? '' : ' hidden'; ?>" data-type="1">
-                <?php
-                $choices = $questions_info->question_type_id == 1 ? json_decode($questions_info->question_choices) : array();
-                ?>
-                @if(count($choices) > 0)
-                    @foreach($choices as $k=>$c)
-                    <div class="row question-answer">
-                        <div class="col-md-9">
-                            <div class="form-group">
-                                <input type="text" name="question_choices[]" class="question_choices q-form form-control" placeholder="Choices" value="{{ $c }}" />
-                            </div>
-                        </div>
-                        <div class="col-md-1 text-center">
-                            <input type="radio" class="q-form radio" id="radio-{{ $questions_info->id . $k }}" name="question_answer" value="{{ $k }}" {{ $k == $questions_info->question_answer ? 'checked' : '' }} />
-                            <label for="radio-{{ $questions_info->id . $k }}"></label>
-                        </div>
-                        <div class="col-md-1 text-center">
-                            <div class="form-group">
-                                <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
-                                    <i class="fa fa fa-times" aria-hidden="true"></i>
-                                </a>
-                            </div>
+            <?php
+            $choices = $questions_info->question_type_id == 1 ? json_decode($questions_info->question_choices) : array();
+            ?>
+            @if(count($choices) > 0)
+                @foreach($choices as $k=>$c)
+                <div class="row question-answer">
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <input type="text" name="question_choices[]" class="question_choices q-form form-control" placeholder="Choices" value="{{ $c }}" />
                         </div>
                     </div>
-                    @endforeach
-                @else
-                    @for($i = 0; $i < 4; $i ++)
-                    <div class="row question-answer">
-                        <div class="col-md-9">
-                            <div class="form-group">
-                                <input type="text" name="question_choices[]" class="question_choices q-form form-control" placeholder="Choices" />
-                            </div>
-                        </div>
-                        <div class="col-md-1 text-center">
-                            <input type="radio" class="q-form radio" id="radio-{{ $i }}" name="question_answer" value="{{ $i }}" {{ $i == 0 ? 'checked' : '' }} />
-                            <label for="radio-{{ $i }}"></label>
-                        </div>
-                        <div class="col-md-1 text-center">
-                            <div class="form-group">
-                                <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
-                                    <i class="fa fa fa-times" aria-hidden="true"></i>
-                                </a>
-                            </div>
+                    <div class="col-md-1 text-center">
+                        <input type="radio" class="q-form radio" id="radio-{{ $questions_info->id . $k }}" name="question_answer" value="{{ $k }}" {{ $k == $questions_info->question_answer ? 'checked' : '' }} />
+                        <label for="radio-{{ $questions_info->id . $k }}"></label>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <div class="form-group">
+                            <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
+                                <i class="fa fa fa-times" aria-hidden="true"></i>
+                            </a>
                         </div>
                     </div>
-                    @endfor
-                @endif
-                <div class="text-right" style="margin-top: 10px;">
-                    <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit btn-shadow" />
                 </div>
+                @endforeach
+            @else
+                @for($i = 0; $i < 4; $i ++)
+                <div class="row question-answer">
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <input type="text" name="question_choices[]" class="question_choices q-form form-control" placeholder="Choices" />
+                        </div>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <input type="radio" class="q-form radio" id="radio-{{ $i }}" name="question_answer" value="{{ $i }}" {{ $i == 0 ? 'checked' : '' }} />
+                        <label for="radio-{{ $i }}"></label>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <div class="form-group">
+                            <a href="#" class="alert_delete remove-choice-btn" style="font-size: 25px">
+                                <i class="fa fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endfor
+            @endif
+            <div class="text-right" style="margin-top: 10px;">
+                <input type="button" value="Add Choice" class="add-choice-btn btn btn-submit btn-shadow" />
             </div>
-            <div class="question-type-area<?php echo $questions_info->question_type_id == 2 ? '' : ' hidden'; ?>" data-type="2">
-                <input type="text" name="question_answer" class="q-form form-control" <?php
-                    echo $questions_info->question_type_id == 1 ? 'disabled' : 'value="' . $questions_info->question_answer . '"';
-                    ?> />
-            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 2 ? '' : ' hidden'; ?>" data-type="2">
+    <div class="row">
+        <label class="col-sm-2 text-right">Question Answers:</label>
+        <div class="col-md-10">
+            <input type="text" name="question_answer" class="q-form form-control" <?php
+                echo $questions_info->question_type_id == 1 ? 'disabled' : 'value="' . $questions_info->question_answer . '"';
+                ?> />
         </div>
     </div>
 </div>
@@ -144,6 +146,15 @@
         <label class="col-sm-2 text-right">Marking Criteria:</label>
         <div class="col-md-10">
             <textarea name="marking_criteria" class="q-form form-control summernote-editor" rows="3">{{ $questions_info->marking_criteria }}</textarea>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="row">
+        <label class="col-sm-2 text-right">Score Tag</label>
+        <div class="col-md-10">
+            <input type="text" name="question_tags" value="{{ $questions_info->question_tags }}" class="tag-input form-control" data-role="tagsinput" style="width: 100%;" />
         </div>
     </div>
 </div>
@@ -191,6 +202,16 @@
             }
         );
         $("textarea.summernote-editor").summernote(options);
+        //endregion
+
+        //region Tags
+        var tag_input = $('.tag-input');
+        tag_input.tagsinput({
+            cancelConfirmKeysOnEmpty: false, //prevent enter to submit form
+            tagClass: function(item) {
+                return 'label label-success'
+            }
+        });
         //endregion
     });
 </script>

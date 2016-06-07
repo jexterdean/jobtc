@@ -20,7 +20,8 @@ class Question extends Model
         'points',
         'explanation',
         'marking_criteria',
-        'max_point'
+        'max_point',
+        'question_tags'
     ];
     protected $primaryKey = 'id';
     protected $table = 'question';

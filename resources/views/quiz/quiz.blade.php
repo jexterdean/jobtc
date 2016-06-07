@@ -42,6 +42,9 @@
                                             <div class="row task-list-details">
                                                 <div class="col-md-8">
                                                     <a data-toggle="collapse" href="#question-collapse-{{ $q->id }}" class="checklist-header" style="font-size: 22px;">
+                                                        <?php
+                                                        $q->question = preg_replace("/<\/*[a-z]*>/", "", $q->question);
+                                                        ?>
                                                         {{ substr($q->question, 0, 50) . (strlen($q->question) > 50 ? '...' : '') }}
                                                     </a>
                                                 </div>
@@ -49,13 +52,13 @@
                                                     <strong>Time:</strong> {{ date('i:s', strtotime($q->length)) }}
                                                 </div>
                                                 <div class="pull-right">
-                                                    <a href="{{ url('quiz/' . $q->id .'/edit?p=question') }}" data-method="GET" data-title="Edit Question" class="icon icon-btn edit-task-list-item trigger-links">
+                                                    <a href="{{ url('quiz/' . $q->id .'/edit?p=question') }}" data-method="GET" data-title="Edit Question" class="icon icon-btn tc-icons trigger-links">
                                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                                     </a>&nbsp;&nbsp;&nbsp;
-                                                    <a href="#" class="drag-question icon icon-btn move-tasklist">
+                                                    <a href="#" class="drag-question icon icon-btn move-tasklist tc-icons">
                                                         <i class="fa fa-arrows"></i>
                                                     </a>
-                                                    <a href="#" id="{{ $q->id }}" class="icon icon-btn delete-question-btn hidden">
+                                                    <a href="#" id="{{ $q->id }}" class="icon icon-btn delete-question-btn tc-icons hidden">
                                                         <i class="fa fa-times" aria-hidden="true"></i>
                                                     </a>
                                                 </div>

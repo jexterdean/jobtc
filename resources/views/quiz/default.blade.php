@@ -31,6 +31,19 @@
     .note-editable{
         height: 100px;
     }
+
+    .bootstrap-tagsinput{
+        width: 100%;
+        height: 39px;
+        font-size: 18px;
+        box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4)!important;
+        border-radius: 0!important;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+    }
+    .bootstrap-tagsinput input{
+        box-shadow: none!important;
+    }
 </style>
 @stop
 
@@ -129,26 +142,22 @@
             var qArea = $(this).closest('.modal-body');
             if($.inArray(showThisQArea, ["1", "2"]) == -1){
                 qArea
-                    .find('.question-answer-area[data-type=""], .question-points-area[data-type=""]')
-                    .addClass('hidden');
-                qArea
-                    .find('')
+                    .find('.question-answer-area[data-type!="3"], .question-points-area[data-type=""]')
                     .addClass('hidden');
                 qArea
                     .find('.question-answer-area[data-type="' + showThisQArea + '"], .question-points-area[data-type="' + showThisQArea + '"]')
-                    .removeClass('hidden');
+                    .removeClass('hidden')
+                    .find('.q-form')
+                    .removeAttr('disabled');
             }
             else{
                 qArea
                     .find('.question-answer-area, .question-points-area')
-                    .removeClass('hidden');
-                qArea
-                    .find('.question-type-area')
                     .addClass('hidden')
                     .find('.q-form')
                     .attr('disabled', 'disabled');
                 qArea
-                    .find('.question-type-area[data-type="' + showThisQArea + '"]')
+                    .find('.question-answer-area[data-type="' + showThisQArea + '"], .question-points-area[data-type=""]')
                     .removeClass('hidden')
                     .find('.q-form')
                     .removeAttr('disabled');
@@ -193,6 +202,32 @@
             t.removeClass('active');
             if($(this).is('textarea')){
                 $(this).addClass('active');
+            }
+        });
+        //endregion
+
+        //region Play Pause Audio
+        $('.audio-btn').click(function() {
+            var thisBtn = $(this);
+            var audio = $(this).prev('.player');
+            audio.on('ended', function() {
+                thisBtn
+                    .removeClass('fa-pause')
+                    .addClass('fa-play');
+            });
+
+            audio = audio.get(0);
+            if (audio.paused == false) {
+                audio.pause();
+                thisBtn
+                    .removeClass('fa-pause')
+                    .addClass('fa-play');
+            }
+            else {
+                audio.play();
+                thisBtn
+                    .removeClass('fa-play')
+                    .addClass('fa-pause');
             }
         });
         //endregion

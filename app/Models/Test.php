@@ -18,7 +18,10 @@ class Test extends Model
         'test_photo',
         'start_message',
         'completion_message',
-        'order'
+        'order',
+        'completion_image',
+        'completion_sound',
+        'default_tags'
     ];
     protected $primaryKey = 'id';
     protected $table = 'test';

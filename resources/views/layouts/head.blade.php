@@ -64,7 +64,10 @@
     @if(in_array('quizzes',$assets))
     {!!  HTML::style('assets/css/page/quizzes.css')  !!}
     @endif
-    
+
+    @if(in_array('tags',$assets))
+    {!!  HTML::style('assets/css/bootstrap-tagsinput.css')  !!}
+    @endif
 
     <script> var public_path = "{{ URL::to('/') }}/"; </script>
 </head>
