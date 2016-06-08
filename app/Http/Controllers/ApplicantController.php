@@ -26,6 +26,8 @@ use App\Models\TeamProject;
 use App\Models\TaskCheckListPermission;
 use App\Models\TestResultModel;
 use App\Models\TestCompleted;
+use Auth;
+use Mail;
 
 class ApplicantController extends Controller {
 
@@ -69,15 +71,15 @@ class ApplicantController extends Controller {
         if ($applicant !== NULL) {
 
             //Get logged in User
-            if ($request->user() !== NULL) {
-                $user_id = $request->user()->user_id;
+            if (Auth::check('user')) {
+                $user_id = $request->user('user')->user_id;
 
                 $user_info = User::where('user_id', $user_id)->with('profile')->first();
 
                 //$comments = Comment::with('user', 'profile')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
 
                 $comments = Comment::with('user')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
-            } else {
+            } elseif(Auth::check('applicant')) {
 
                 $user_info = Applicant::where('id', $id)->first();
 

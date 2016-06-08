@@ -76,11 +76,14 @@ $('.status-container').tagEditor({
 $(".submit-comment").click(function (e) {
     e.preventDefault();
     var applicant_id = $('input[name=applicant_id]').val();
+    var job_id = $('input[name=job_id]').val();
     var ajaxurl = public_path + '/addComment';
     var form = $(".add-comment-form")[0];
     var formData = new FormData(form);
+    console.log(job_id);
     formData.append('module', 'applicant');
     formData.append('send_email', $('.email-comment').is(':checked'));
+    formData.append('job_id',job_id);
 
     if ($.trim($(".comment-textarea").val())) {
         $.ajax({
@@ -104,18 +107,6 @@ $(".submit-comment").click(function (e) {
             },
             error: function (xhr, status, error) {
 
-                var errorDialog = new BootstrapDialog({
-                    title: 'Fields Required',
-                    message: xhr,
-                    buttons: [{
-                            label: 'Ok',
-                            action: function (dialog) {
-                                dialog.close();
-                            }
-                        }]
-                }).setType(BootstrapDialog.TYPE_DANGER);
-
-                errorDialog.open();
             }
         }); //ajax
     }

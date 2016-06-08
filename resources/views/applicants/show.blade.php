@@ -274,8 +274,8 @@
                         <input class="comment_id" type="hidden" value="{{$comment->comment_id}}">
                         <input class="applicant_id" type="hidden" value="{{$comment->applicant->applicant_id}}">
                     </div>
-                    @if($user_info->user_id === $comment->user_id && Auth::check("user") 
-                    || $comment->user_id === 0 && Auth::check("applicant"))
+                    @if($user_info->commenter_id === $comment->user_id && Auth::check("user") 
+                    || $comment->commenter_id === 0 && Auth::check("applicant"))
                     <table class="comment-utilities">
                         <tr>
                             <td><a href="#" class="edit-comment"><i class="fa fa-pencil"></i></a></td>
