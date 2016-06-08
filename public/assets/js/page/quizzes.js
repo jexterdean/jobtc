@@ -57,8 +57,12 @@ slider_div.on('click','.btn-next',function (e) {
 slider_div.on('click','.btn-finish',function (e) {
     var ajaxurl = public_path + 'getApplicantQuizResults';
     var slider_body = $(this).parent();
+    
     var applicant_id = slider_body.find('.applicant_id').val();
     var quiz_id = slider_body.find('.quiz_id').val();
+    
+    var collapse_header = $('#test-'+quiz_id);
+    var collapse_body = $('#test-collapse-'+quiz_id);
     
     var data = {
       'applicant_id' :  applicant_id,
@@ -70,9 +74,11 @@ slider_div.on('click','.btn-finish',function (e) {
         data: data,
         method: "POST",
         success: function (data) {
-           
-            slider_body.parent().parent().html(data);
-            $.getScript(public_path+ "assets/js/page/quizsliderpagination.js"); 
+           collapse_header.append('<div class="btn pull-right">Score: '+data+'</div>');
+           collapse_body.collapse('hide');
+           collapse_body.removeAttr('id');
+            //slider_body.parent().parent().html(data);
+            //$.getScript(public_path+ "assets/js/page/quizsliderpagination.js"); 
         },
         error: function (a, b, c) {
 

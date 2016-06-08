@@ -11,7 +11,7 @@
                 @endforeach
             </div>
             <div class="box-body">
-                <div id="test-collapse-{{$test->id}}" class="box-content collapse">
+                <div class="box-content collapse">
                     <div class="slider-container">
                         <div class="slider-div text-center active">
                             <div class="slider-body">
@@ -109,7 +109,7 @@
                 @endforeach
             </div>
             <div class="box-body">
-                <div id="test-collapse-{{$test->id}}" class="box-content collapse">
+                <div class="box-content collapse">
                     <div class="slider-container">
                         <div class="slider-div text-center active">
                             <div class="slider-body">
@@ -128,7 +128,7 @@
         <div class="box-container">
             <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
                 <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
-                 @foreach($tests_completed->where('test_id',$test->id) as $completed)
+                @foreach($tests_completed->where('test_id',$test->id) as $completed)
                 <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>    
                 @endforeach
             </div>

@@ -1,19 +1,6 @@
-@foreach($tests_completed->where('test_id',$test->id) as $completed)
-<div class='row'>
-    <div class='col-md-12'>
-        @if(Auth::check('applicant'))
-        Your score is: {{$completed->score}} / {{$completed->total_score}}
-        @endif
-        @if(Auth::check('user'))
-        Applicant's score: {{$completed->score}} / {{$completed->total_score}}
-        @endif
-    </div>
-</div>
-@endforeach
 <div class="slider-container">
     <div class="slider-div text-center active">
         <div class="slider-body">
-
             <button type="button" class="btn btn-submit btn-shadow btn-next">Start Review</button>
         </div>
     </div>

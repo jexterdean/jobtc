@@ -14,4 +14,14 @@ class TestCompleted extends Model
     ];
     protected $primaryKey = 'id';
     protected $table = 'test_completed';
+    
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'score' => 'integer',
+        'total_score' => 'integer'
+    ];
 }

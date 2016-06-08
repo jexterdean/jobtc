@@ -444,7 +444,7 @@ class ApplicantController extends Controller {
                         ->where('test_id', $quiz_id)
                         ->where('result', '1')->count();
 
-        $final_score = $score . '/' . $questions_total;
+        $final_score = $score . ' / ' . $questions_total;
 
         //Set test as completed by this applicant
         $test_completed = new TestCompleted();
@@ -484,12 +484,13 @@ class ApplicantController extends Controller {
         $get_completed_test = TestCompleted::where('id', $test_completed->id)
                     ->get();
         
-        return view('applicants.partials._quizresults', [
+        /*return view('applicants.partials._quizresults', [
             'tests' => $tests,
             'questions' => $questions,
             'review_result' => $review_result,
             'tests_completed' => $get_completed_test
-        ]);
+        ]);*/
+        return $final_score;
     }
     
 }
