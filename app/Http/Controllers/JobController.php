@@ -396,6 +396,8 @@ class JobController extends Controller {
         if ($name !== '' || $email !== '') {
             $applicant->save();
             $message = "Application Submitted";
+            
+            Auth::loginUsingId("applicant", $applicant->id);
         } else {
             $message = "Application Denied";
         }
@@ -431,7 +433,9 @@ class JobController extends Controller {
 
           $mailboxalias->save(); */
 
-        return $message;
+        //return $message; 
+        
+        return $applicant->id;
     }
 
     public function addApplicantCrawler(Request $request) {

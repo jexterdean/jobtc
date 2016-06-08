@@ -254,13 +254,15 @@ $(".apply-to-job").click(function () {
                             }).setType(BootstrapDialog.TYPE_SUCCESS);
 
                             $('.save').attr('disabled','disabled');
-
-                            if (data.toString() === "Application Submitted") {
+                            
+                            window.location.href = public_path+'a/'+data;
+                            
+                            /*if (data.toString() === "Application Submitted") {
                                 successDialog.open();
                                 dialog.close();
                             } else {
                                 errorDialog.open();
-                            }
+                            }*/
 
                         },
                         error: function (xhr, status, error) {
