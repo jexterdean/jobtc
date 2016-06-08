@@ -27,6 +27,26 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
+            <label class="control-label col-md-2" for="description">Password</label>
+            <div class="col-md-10">
+                <input id="applicant-password" class="form-control password" name="password" type="password" value="" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+            <label class="control-label col-md-2" for="description">Confirm Password</label>
+            <div class="col-md-10">
+                @if(isset($applicant->password))
+                <input class="form-control confirm_password" name="confirm_password" type="password" value="{{$applicant->password or ''}}" />
+                @else
+                <input class="form-control confirm_password" name="confirm_password" type="password" value="" />
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
             <label class="control-label col-md-2" for="phone">Phone</label>
             <div class="col-md-10">
                 @if(isset($applicant->email))
@@ -68,7 +88,7 @@
         rules: {
             name: {
                 required: true,
-                minlength: 3
+                minlength: 2
             },
             email: {
                 required: true,
@@ -83,6 +103,11 @@
                         }
                     }
                 }
+            },
+            password: "required",
+            confirm_password : {
+                required: true,
+                equalTo: "#applicant-password"
             }
         },
         messages: {

@@ -364,7 +364,7 @@ class JobController extends Controller {
         $phone = $request->input('phone');
         $date = date('Y-m-d h:i:s', time());
         $username = strtolower(preg_replace('/\s+/', '', $name) . '@' . $_SERVER['SERVER_NAME']);
-        $password = strtolower(preg_replace('/\s+/', '', $email . '123'));
+        $password = $request->input('password');
         $remember_token = $request->input('remember');
 
         if ($request->hasFile('photo')) {

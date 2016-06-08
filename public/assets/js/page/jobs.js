@@ -253,6 +253,8 @@ $(".apply-to-job").click(function () {
                                     }]
                             }).setType(BootstrapDialog.TYPE_SUCCESS);
 
+                            $('.save').attr('disabled','disabled');
+
                             if (data.toString() === "Application Submitted") {
                                 successDialog.open();
                                 dialog.close();
