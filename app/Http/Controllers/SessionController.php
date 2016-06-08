@@ -125,11 +125,8 @@ class SessionController extends Controller {
                 $user = User::where('user_id', Auth::user('user')->user_id)->first();
                 $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
 
-                if ($user->level() === 1) {
-                    return redirect()->route('dashboard');
-                } else {
-                    return redirect()->route('company', [$profile->company_id]);
-                }
+                return redirect()->route('company', [$profile->company_id]);
+                
             } else if (Auth::attempt("applicant", ['email' => $email, 'password' => $pass], $remember)) {
 
                 $applicant = Applicant::where('email', $email)->first();
