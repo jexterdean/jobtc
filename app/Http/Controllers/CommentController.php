@@ -107,7 +107,7 @@ Class CommentController extends BaseController {
         }
 
         if ($send_email === 'true') {
-            Mail::send('emails.commentEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'job_owner' => $job_owner, 'comment' => $comment], function ($message) use ($from_email, $to_email, $job_owner) {
+            Mail::queue('emails.commentEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'job_owner' => $job_owner, 'comment' => $comment], function ($message) use ($from_email, $to_email, $job_owner) {
                 $message->from($from_email->email, $from_email->name);
                 $message->to($to_email->email,$to_email->name);
                 //$message->to(['jobtcmailer@gmail.com'],$to_email->name);
