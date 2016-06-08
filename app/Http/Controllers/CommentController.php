@@ -70,7 +70,7 @@ Class CommentController extends BaseController {
             $commenter_id = $request->user('user')->user_id;
             $commenter_type = 'employee';
         } elseif (Auth::check('applicant')) {
-            $commenter_id = $request->user('applicant')->id;
+            $commenter_id = Auth::user('applicant')->id;
             $commenter_type = 'applicant';
         }
 
@@ -109,8 +109,8 @@ Class CommentController extends BaseController {
         if ($send_email === 'true') {
             Mail::queue('emails.commentEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'job_owner' => $job_owner, 'comment' => $comment], function ($message) use ($from_email, $to_email, $job_owner) {
                 $message->from($from_email->email, $from_email->name);
-                $message->to($to_email->email,$to_email->name);
-                //$message->to(['jobtcmailer@gmail.com'],$to_email->name);
+                //$message->to($to_email->email,$to_email->name);
+                $message->to(['jobtcmailer@gmail.com'],$to_email->name);
                 $message->subject($job_owner->title);
             });
         }
