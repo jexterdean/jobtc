@@ -1,5 +1,5 @@
 /*Initialize socket transactions(for real time update)*/
-//var socket = io('https://job.tc:3000');
+var socket = io('https://job.tc:3000');
 var socket_port = '3000';
 var base_url = 'https://' + window.location.host;
 var site_name = base_url.split(':');
@@ -10,7 +10,7 @@ var page_url = window.location.pathname;
 var absolute_path = page_url.split('/')[1];
 
 
-var socket = io.connect(socket_url);
+//var socket = io.connect(socket_url);
 console.log(socket);
 //Create room and join room for socket.io
 //Create Room for that page only
@@ -62,8 +62,10 @@ socket.on('add-task-list-item', function (msg) {
     var subproject = $('#list_group_' + msg.list_group_id);
 
     var data = [];
-    data.push({'name': 'task_check_list_id', 'value': msg.task_check_list_id});
-
+    data.push({'name': 'task_check_list_id', 'value': parseInt(msg.task_check_list_id) + 1 });
+    
+    console.log(parseInt(msg.task_check_list_id) + 1);
+    
     $.post(public_path + 'getTaskChecklistItem', data, function (d) {
         var _return_data = jQuery.parseJSON(d);
 
