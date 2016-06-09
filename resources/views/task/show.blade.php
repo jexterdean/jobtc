@@ -71,7 +71,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <input class="project_id" type="hidden" value="{{$task->project_id}}"/>
                                 </li>
                                 @endforeach
                                 @else
@@ -80,6 +79,7 @@
                                 </li>
                                 @endif
                             </ul>
+                            <input class="project_id" type="hidden" value="{{$task->project_id}}"/>
                         </div>
                     </div>
                 </div>
@@ -92,12 +92,12 @@
 
                 <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                 @if(Auth::user('user')->user_id === $task->user_id)
-                    <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
+                <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
                 @if($current_time)
-                    <a class="btn btn-shadow btn-sm btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
+                <a class="btn btn-shadow btn-sm btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
                 @else
-                    <a class="btn btn-shadow btn-sm btn-timer timer-btn start_time">Start Time</a>
+                <a class="btn btn-shadow btn-sm btn-timer timer-btn start_time">Start Time</a>
                 @endif
                 <div class="col-sm-4">
                     @foreach($links as $link)
@@ -394,7 +394,34 @@
             _this.addClass('disabled');
             check_list_container.append(text_area_ele);
 
-            CKEDITOR.replace('add-new-task-textarea');
+            //Immediately add an entry into the database
+            var task_check_list_id;
+            var new_task_url = public_path + 'addNewTask';
+            var blank_task = new FormData();
+            blank_task.append('_token', _body.find('input[name="_token"]').val());
+            blank_task.append('task_id', _body.find('input[name="task_id"]').val());
+            blank_task.append('user_id', _body.find('input[name="user_id"]').val());
+
+            $.ajax({
+                url: new_task_url,
+                type: "POST",
+                data: blank_task,
+                // THIS MUST BE DONE FOR FILE UPLOADING
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    task_check_list_id = data;
+                },
+                error: function (xhr, status, error) {
+
+                }
+            }); //ajax
+
+
+            var add_new_task_textarea = CKEDITOR.replace('add-new-task-textarea');
 
             CKEDITOR.on('fileUploadRequest', function (evt) {
                 var fileLoader = evt.data.fileLoader,
@@ -409,17 +436,67 @@
                 evt.stop();
             }, null, null, 4); // Listener with priority 4 will be executed before priority 5.
 
-            if (check_list_container.length > 10) {
+            
+            _body.find('input[name="checklist_header"]').on('change',function(){
+                 var ajaxurl = public_path + 'saveTaskCheckListHeader';
+                
+                var formData = new FormData();
+                formData.append('task_check_list_id', task_check_list_id);
+                formData.append('checklist_header', $(this).val());
 
-                $('body').animate({
-                    scrollTop: _body.get(0).scrollHeight / 2
-                }, 500);
+                $.ajax({
+                    url: ajaxurl,
+                    type: "POST",
+                    data: formData,
+                    // THIS MUST BE DONE FOR FILE UPLOADING
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                    },
+                    error: function (xhr, status, error) {
 
-            } else {
-                $('body').animate({
-                    scrollTop: 0
-                }, 500);
-            }
+                    }
+                }); //ajax
+            });
+            
+            add_new_task_textarea.on('change', function (evt) {
+                var ajaxurl = public_path + 'saveTaskCheckList';
+                
+                var formData = new FormData();
+                formData.append('task_check_list_id', task_check_list_id);
+                formData.append('checklist_content', evt.editor.getData());
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: "POST",
+                    data: formData,
+                    // THIS MUST BE DONE FOR FILE UPLOADING
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                }); //ajax
+
+            });
+
+            /*if (check_list_container.length > 10) {
+             
+             $('body').animate({
+             scrollTop: _body.get(0).scrollHeight / 2
+             }, 500);
+             
+             } else {
+             $('body').animate({
+             scrollTop: 0
+             }, 500);
+             }*/
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
@@ -429,6 +506,7 @@
                 var data = [];
                 data.push(
                         {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+                {'name': 'task_check_list_id', 'value': task_check_list_id},
                 {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
                 {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
                 {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
@@ -495,7 +573,18 @@
                         ele += '</li>';
 
                     });
-                    
+
+                    //Check if we are in the single project page or in companies
+                    var check_url = window.location.pathname.split('/')[1];
+                    if (check_url === 'project') {
+                        socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'html': ele, 'list_group_id': _body.find('input[name="task_id"]').val()});
+                    }
+                    if (check_url === 'company') {
+                        console.log(_body.find('input[class="project_id"]').val());
+                        socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'html': ele, 'list_group_id': _body.find('input[name="task_id"]').val()});
+                    }
+
+
                     //Remove Text area
                     $('#add-new-task').remove();
                     check_list_container.children('li:contains("No data was found.")').remove();
@@ -505,6 +594,27 @@
             }).on('click', '.cancel-checklist', function () {
                 _this.removeClass('disabled');
                 $('#add-new-task').remove();
+                
+                var delete_new_task = public_path + 'cancelAddNewTask';
+                var delete_task = new FormData();
+                delete_task.append('task_check_list_id',task_check_list_id);
+                
+                $.ajax({
+                    url: delete_new_task,
+                    type: "POST",
+                    data: delete_task,
+                    // THIS MUST BE DONE FOR FILE UPLOADING
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                }); //ajax
+                
                 //$('.text-area-content').remove();
             });
         });
@@ -566,7 +676,7 @@
             $('#task-item-collapse-' + task_list_item_id).collapse('show');
             $(this)
                     .css({'display': 'none'});
-            $(this).siblings('.alert_delete').css({'display':'none'});
+            $(this).siblings('.alert_delete').css({'display': 'none'});
         });
 
         _body.on('click', '.update-checklist', function (e) {
@@ -607,7 +717,7 @@
 
             $('.edit-task-list-item')
                     .removeAttr('style');
-            $('.alert_delete').css({'display':'inline'});
+            $('.alert_delete').css({'display': 'inline'});
         });
 
 
@@ -653,10 +763,10 @@
             task_list.removeClass('is-task-item-selected');
         });
         /*$('.task-list-item').bind('dblclick', function () {
-            var edit_btn = $(this).find('.icon-btn.edit-task-list-item');
-            edit_btn.bind().trigger('click');
-            console.log('trigger');
-        });*/
+         var edit_btn = $(this).find('.icon-btn.edit-task-list-item');
+         edit_btn.bind().trigger('click');
+         console.log('trigger');
+         });*/
         //region For Tasklist Delete
         $('#accordion').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
@@ -771,71 +881,6 @@
 
                 });
         /*endregion*/
-        /*region Firepad*/
-        /*var firepad_task = 'firepad-{{ $task->task_id }}';*/
-        function init() {
-            //// Initialize Firebase.
-            var firepadRef = getExampleRef();
-            // TODO: Replace above line with:
-            // var firepadRef = new Firebase('<YOUR FIREBASE URL>');
-            //// Create CodeMirror (with lineWrapping on).
-            var codeMirror = CodeMirror(document.getElementById(firepad_task), {lineWrapping: true});
-            //// Create Firepad (with rich text toolbar and shortcuts enabled).
-            var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror,
-                    {richTextToolbar: true, richTextShortcuts: true});
-
-            firepad.on('ready', function () {
-                var _note_text_area = _body.find('.note-text');
-                var _this = $(this);
-                var ele = '<strong>Note: <span class="bg-red" style="font-weight: normal!important;padding: 0 5px;">Double click to edit.</span></strong>';
-                ele += firepad.getHtml();
-                if (firepad.isHistoryEmpty()) {
-                    firepad.setText('');
-                    _body.find('.add-notes-btn').css({display: 'inline'});
-                }
-                else {
-                    _note_text_area.html(ele);
-                    _body.find('.add-notes-btn').css({display: 'none'});
-                }
-
-                _this.focusout(function () {
-                    _note_text_area
-                            .html(ele)
-                            .css({display: 'inline'});
-                    _body.find('.firepad-column').css({display: 'none'})
-                });
-            });
-
-        }
-        // Helper to get hash from end of URL or generate a random one.
-        function getExampleRef() {
-            var ref = new Firebase('https://jobprojectmanager.firebaseio.com/');
-            var firepad = $('#' + firepad_task);
-            var hash = firepad.data('hash');
-
-            if (hash) {
-                ref = ref.child(hash);
-            } else {
-                ref = ref.push(); // generate unique location.
-            }
-            if (typeof console !== 'undefined')
-                //console.log('Firebase data: ', ref.toString());
-
-                return ref;
-        }
-        //init();
-        _body
-                .on('click', '.add-notes-btn', function () {
-                    $(this).css({display: 'none'});
-                    _body.find('.firepad-column').css({display: 'inline'});
-                })
-                .on('dblclick', '.note-text', function () {
-                    $(this).css({display: 'none'});
-                    _body.find('.firepad-column').css({display: 'inline'});
-                });
-
-        /*endregion*/
-
 
         //Add Spreadsheet
         _body.on('click', '.add-spreadsheet', function () {

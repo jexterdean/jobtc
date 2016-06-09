@@ -12,7 +12,6 @@
             </ul>
         </div>
         @endif
-
         <div class="login-container">
             <div class="col-xs-12">
                 <div class="space"></div>

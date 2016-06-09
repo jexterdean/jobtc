@@ -79,7 +79,7 @@ class ApplicantController extends Controller {
                 //$comments = Comment::with('user', 'profile')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
 
                 $comments = Comment::with('user')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
-            } elseif(Auth::check('applicant')) {
+            } elseif(Auth::check('applicant') || !Auth::check()) {
 
                 $user_info = Applicant::where('id', $id)->first();
 
@@ -129,11 +129,8 @@ class ApplicantController extends Controller {
                     $v->question_choices = json_decode($v->question_choices);
                 }
             }
-
-            /* $r = DB::table('test_result')
-              ->where('test_result.test_id', '=', $id)
-              ->get(); */
-
+            
+            //This is for the Test Review(Will be put in place at a later date) --06/09/2016
             $r = TestResultModel::where('unique_id', $id)->where('belongs_to', 'applicant')->get();
             $review_result = array();
             if (count($r) > 0) {
@@ -145,7 +142,7 @@ class ApplicantController extends Controller {
                 }
             }
 
-            $assets = ['applicants', 'quizzes'];
+            $assets = ['applicants', 'quizzes','real-time'];
 
             return view('applicants.show', [
                 'applicant' => $applicant,

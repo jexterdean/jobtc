@@ -284,9 +284,11 @@ class TaskController extends BaseController {
 
     public function checkList(Request $request) {
         //Save the task list item immediately
-        $taskCheckList = new TaskChecklist($request->all());
-        $taskCheckList->save();
-
+        //$taskCheckList = new TaskChecklist($request->all());
+        //$taskCheckList->save();
+        $task_check_list_id = $request->input('task_check_list_id');
+        $taskCheckList = TaskChecklist::where('id',$task_check_list_id)->first();
+                
         $has_order_list = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->count();
 
         if ($has_order_list > 0) {
@@ -425,6 +427,71 @@ class TaskController extends BaseController {
         return json_encode($data);
     }
 
+    //For initial save of task item in Task Checklist table
+    public function addNewTask(Request $request) {
+     
+        $user_id = $request->input('user_id');
+        $task_id = $request->input('task_id');
+        
+        $task_check_list = new TaskChecklist();
+        $task_check_list->user_id = $user_id;
+        $task_check_list->task_id = $task_id;
+        $task_check_list->checklist_header = '';
+        $task_check_list->checklist = '';
+        $task_check_list->save();
+        
+        
+        $has_order_list = TaskChecklistOrder::where('task_id', '=', $task_check_list->task_id)->count();
+
+        if ($has_order_list > 0) {
+            //then get the new task list item id and append it as the last item on the order
+            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $task_check_list->task_id)->pluck('task_id_order');
+            $task_list_id_array = $taskCheckListOrderString . ',' . $task_check_list->id;
+            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $task_check_list->task_id)->update([
+                'task_id_order' => $task_list_id_array
+            ]);
+
+            //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+            $data = TaskChecklist::where('task_id', '=', $task_check_list->task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+        } else {
+            $data = TaskChecklist::where('task_id', '=', $task_check_list->task_id)->get();
+        }
+        
+        return $task_check_list->id;
+    }
+    
+    public function saveTaskCheckListHeader(Request $request) {
+        $task_checklist_id = $request->input('task_check_list_id');
+        $checklist_header = $request->input('checklist_header');
+        
+        $task_check_list = TaskChecklist::where('id',$task_checklist_id);
+        $task_check_list->update([
+           'checklist_header' => $checklist_header 
+        ]);
+        
+        return "true";
+    }
+    
+    
+    public function saveTaskCheckList(Request $request) {
+        $task_checklist_id = $request->input('task_check_list_id');
+        $checklist_content = $request->input('checklist_content');
+        
+        $task_check_list = TaskChecklist::where('id',$task_checklist_id);
+        $task_check_list->update([
+           'checklist' => $checklist_content 
+        ]);
+        
+        return "true";
+    }
+    
+    public function cancelAddNewTask(Request $request) {
+        $task_checklist_id = $request->input('task_check_list_id');
+        $task_check_list = TaskChecklist::where('id',$task_checklist_id);
+        $task_check_list->delete();
+        
+        return "true";
+    }
 }
 
 ?>

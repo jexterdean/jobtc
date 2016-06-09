@@ -132,6 +132,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::any('saveImage&responseType=json', 'TaskController@saveImage');
 
         Route::get('company/{id}', ['as' => 'company', 'uses' => 'CompanyController@show', 'https' => true]);
+        
+        Route::get('getCompanyProjects/{id}','CompanyController@getCompanyProjects');
     });
 
     /**
@@ -155,7 +157,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::any('deleteCheckList/{id}', 'TaskController@deleteCheckList');
     Route::post('sortCheckList/{id}', 'TaskController@sortCheckList');
     Route::post('changeCheckList/{task_id}/{task_list_item_id}', 'TaskController@changeCheckList');
-
+    Route::post('addNewTask', 'TaskController@addNewTask');
+    Route::post('saveTaskCheckListHeader', 'TaskController@saveTaskCheckListHeader');
+    Route::post('saveTaskCheckList', 'TaskController@saveTaskCheckList');
+    Route::post('cancelAddNewTask', 'TaskController@cancelAddNewTask');
+    
+    
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');
     Route::resource('event', 'EventsController');
     Route::resource('project', 'ProjectController');

@@ -195,6 +195,11 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/bootstrap-tagsinput.js')  !!}
 @endif
 
+@if(in_array('real-time',$assets))
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+{!!  HTML::script('assets/js/page/real-time-scripts.js')  !!}
+@endif
+
 <script>
     $(function () {
         //to fix the ajax PATCH/POST method type of form not working

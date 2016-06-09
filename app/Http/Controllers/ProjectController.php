@@ -171,14 +171,14 @@ class ProjectController extends BaseController {
 
         $task_permissions = TaskCheckListPermission::where('project_id', $id)->where('user_id', $user_id)->get();
 
-        $assets = ['datepicker'];
-
         $teams = Team::with(['team_member' => function($query) {
                         $query->with('user')->get();
                     }])->get();
 
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)->get();
+        
+        $assets = ['datepicker','real-time'];
 
         return view('project.show', [
             'project' => $project,

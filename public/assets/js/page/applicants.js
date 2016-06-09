@@ -102,7 +102,7 @@ $(".submit-comment").click(function (e) {
                 $('.comment-textarea').val("");
                 $('.comment-textarea').attr('disabled', false);
                 $('.submit-comment').attr('disabled', false);
-                //socket.emit('applicant-comment', data);
+                socket.emit('applicant-comment', data);
                 $('#comment-list-' + applicant_id).prepend(data);
             },
             error: function (xhr, status, error) {

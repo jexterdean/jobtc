@@ -116,7 +116,7 @@ class CompanyController extends BaseController {
         
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
 
-        $assets = ['companies'];
+        $assets = ['companies','real-time'];
 
         return View::make('company.show', [
                     'projects' => $projects,
@@ -502,6 +502,20 @@ class CompanyController extends BaseController {
 
 
         return $chart_data;
+    }
+    
+    public function getCompanyProjects(Request $request,$id) {
+        
+        $projects = Project::where('company_id',$id)->get();
+        
+        $project_array = [];
+        
+        foreach($projects as $project) {
+            array_push($project_array,$project->project_id);
+        }
+        
+        return $project_array;
+        
     }
 
 }
