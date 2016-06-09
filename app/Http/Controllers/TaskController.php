@@ -464,6 +464,10 @@ class TaskController extends BaseController {
         $task_checklist_id = $request->input('task_check_list_id');
         $checklist_header = $request->input('checklist_header');
 
+        if($checklist_header === '') {
+            $checklist_header = 'No Title';
+        }
+        
         $task_check_list = TaskChecklist::where('id', $task_checklist_id);
         $task_check_list->update([
             'checklist_header' => $checklist_header
