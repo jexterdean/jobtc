@@ -62,9 +62,7 @@ socket.on('add-task-list-item', function (msg) {
     var subproject = $('#list_group_' + msg.list_group_id);
 
     var data = [];
-    data.push({'name': 'task_check_list_id', 'value': parseInt(msg.task_check_list_id) + 1 });
-    
-    console.log(parseInt(msg.task_check_list_id) + 1);
+    data.push({'name': 'task_check_list_id', 'value': msg.task_check_list_id});
     
     $.post(public_path + 'getTaskChecklistItem', data, function (d) {
         var _return_data = jQuery.parseJSON(d);
