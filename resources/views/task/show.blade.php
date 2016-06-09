@@ -574,15 +574,9 @@
 
                     });
 
-                    //Check if we are in the single project page or in companies
-                    var check_url = window.location.pathname.split('/')[1];
-                    if (check_url === 'project') {
-                        socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'html': ele, 'list_group_id': _body.find('input[name="task_id"]').val()});
-                    }
-                    if (check_url === 'company') {
                         console.log(_body.find('input[class="project_id"]').val());
-                        socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'html': ele, 'list_group_id': _body.find('input[name="task_id"]').val()});
-                    }
+                        socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(),'task_check_list_id':task_check_list_id});
+                   
 
 
                     //Remove Text area

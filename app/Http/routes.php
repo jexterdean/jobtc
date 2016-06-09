@@ -161,6 +161,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('saveTaskCheckListHeader', 'TaskController@saveTaskCheckListHeader');
     Route::post('saveTaskCheckList', 'TaskController@saveTaskCheckList');
     Route::post('cancelAddNewTask', 'TaskController@cancelAddNewTask');
+    Route::post('getTaskChecklistItem','TaskController@getTaskChecklistItem');
     
     
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');

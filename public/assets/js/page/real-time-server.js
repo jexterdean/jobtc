@@ -72,9 +72,11 @@ io.on('connection', function (socket) {
     socket.on('add-task-list-item', function (msg) {
         console.log('Sent Task list');
         console.log(msg.room_name);
-        io.to(msg.room_name).emit('add-task-list-item', msg);
+        console.log(msg.task_check_list_id);
+        //Emit except to sender
+        socket.broadcast.to(msg.room_name).emit('add-task-list-item', msg);
     });
-    
+
     /*
      * This is for task comments
      **/
@@ -97,12 +99,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on('add-video', function (video) {
-        console.log('Adding video to Room: ' +room_name);
+        console.log('Adding video to Room: ' + room_name);
         io.to(room_name).emit('add-video', video);
     });
-    
+
     socket.on('delete-video', function (video) {
-        console.log('Deleting video to Room: ' +room_name);
+        console.log('Deleting video to Room: ' + room_name);
         io.to(room_name).emit('delete-video', video);
     });
 });
