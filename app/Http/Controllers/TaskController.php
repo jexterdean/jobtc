@@ -436,7 +436,7 @@ class TaskController extends BaseController {
         $task_check_list = new TaskChecklist();
         $task_check_list->user_id = $user_id;
         $task_check_list->task_id = $task_id;
-        $task_check_list->checklist_header = '';
+        $task_check_list->checklist_header = '<div style=\"color:red\">No Title</div>';
         $task_check_list->checklist = '';
         $task_check_list->save();
 

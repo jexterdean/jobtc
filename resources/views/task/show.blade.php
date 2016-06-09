@@ -633,7 +633,7 @@
             var task_item_content = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-item');
 
             //Get Header Text
-            var header_text = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-header').html();
+            var header_text = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-header').text();
 
             //Get Text
             var content_text = $(this).parent().parent().parent().parent().parent().parent().find('.checklist-item').html();
