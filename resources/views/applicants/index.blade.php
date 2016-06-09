@@ -106,8 +106,8 @@
             </div>
             <div class="mini-space"></div>
             <div class="job-header pull-right">
-                <a class="btn btn-warning btn-lg edit-job"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
-                <a class="btn btn-danger btn-lg delete-job"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                <a class="btn btn-edit btn-shadow btn-lg edit-job"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
+                <a class="btn btn-delete btn-shadow btn-lg delete-job"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
                 <input name="job_id" class="job_id" type="hidden" value="{{$list_item->id}}"/>
             </div>
             {{--*/ $count++ /*--}}

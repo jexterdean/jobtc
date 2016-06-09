@@ -10,7 +10,7 @@ a{
   padding: 15px;
 }
 .login-body {
-  background-color: #144371!important;
+  background-color: #f2f2f2!important;/*#144371!important;*/
   padding-top: 150px;
   width: 100%;
 }
@@ -18,7 +18,7 @@ a{
 .login-container {
   margin: 0 auto;
   height: 250px;
-  width: 25%;
+  width: 335px;
   padding: 10px;
   background-color: #ffffff;
   border-color: #fffdfb;
@@ -52,6 +52,13 @@ a{
 input{
     color: #000000!important;
     font-weight: 400!important;
+}
+.input-group-addon{
+    background: #062D56!important;
+    color: #ffffff!important;
+}
+input[type=submit]{
+    background: #062D56!important;
 }
 @media only screen and (max-width: 767px) {
   body {

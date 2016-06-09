@@ -75,7 +75,7 @@ a:active,a:focus{
 .task-list-item{
     border: none;
 }
-.task-list-item.is-task-item-selected > .row{
+.panel-group:not(.test-group) .task-list-item.is-task-item-selected > .row{
     width: 100%;
     overflow-x: auto;
 }
@@ -157,6 +157,9 @@ a:active,a:focus{
     box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;
 
 }
+.is-selected .panel-heading{
+    height: 35px;
+}
 .task-list .panel-body .panel-content{
     -moz-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
     -webkit-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
@@ -216,6 +219,9 @@ a:active,a:focus{
 }
 .is-task-item-selected a.checklist-header{
     font-size: 24px!important;
+}
+.question-list.is-task-item-selected a.checklist-header{
+    font-size: 25px!important;
 }
 .is-task-item-selected .pull-right{
     margin-right: -7px;
@@ -358,6 +364,10 @@ select{
 .edit-checklist-header, input[name="checklist_header"], input[name="spreadsheet_header"]{
     color: #ffa500;
     font-weight: bold;
+    border: 1px solid #ffa500;
+}
+.edit-checklist-header:focus, input[name="checklist_header"]:focus, input[name="spreadsheet_header"]:focus{
+    border: 1px solid #ffc84d !important;
 }
 .modal.fade:not(.in) .modal-dialog {
     -webkit-transform: translate3d(-25%, 0, 0);

@@ -46,7 +46,7 @@ body {
     -moz-border-radius-bottomleft: 2px;
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;
-    box-shadow: 4px 6px 15px #bbbbbb;
+    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
 }
 .applicant-posting-info .container-icon {
     font-size: 40px;
@@ -103,7 +103,7 @@ body {
     -moz-border-radius-bottomleft: 2px;
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;
-    box-shadow: 4px 6px 15px #bbbbbb;
+    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
 }
 .add-comment-form .container-icon {
     font-size: 40px;
@@ -241,7 +241,7 @@ body {
   /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#9bc9d8, endColorstr=#90c3d4, GradientType=0);
   /* IE6-9 */
-  box-shadow: 4px 6px 15px #bbbbbb;
+  box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
   padding: 10px;
   font-weight: bold;
   color: #ffffff;
@@ -262,7 +262,7 @@ body {
 }
 .comment-item {
   background-color: #ffffff;
-  box-shadow: 3px 3px 5px #AFAFAF;
+  box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
   padding: 5px;
   margin-bottom: 10px;
   border-radius: 10px;
@@ -285,4 +285,10 @@ body {
 .hire {
     position:relative;
     text-decoration: none;
+}
+.media{
+    margin-top: 0!important;
+}
+.media-heading{
+    white-space: nowrap;
 }

@@ -12,19 +12,23 @@
             <text class="media-heading">{{$user_info->name}}</text>
         </div>
         <div class="media-body media-right">
-            <textarea placeholder="Add a comment for this applicant" class="form-control comment-textarea" name="comment"></textarea>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="pull-right">
-                <button class="btn btn-shadow btn-edit submit-comment">Submit</button>
+            <div class="row">
+                <div class="col-md-12">
+                    <textarea placeholder="Add a comment for this applicant" class="form-control comment-textarea" name="comment"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="margin-top: 15px;">
+                        <input class="email-comment checkbox" type="checkbox" id="email-checkbox" value="email"/>
+                        <label for="email-checkbox">Email Comment</label>
+                        <div class="pull-right">
+                            <button class="btn btn-shadow btn-edit submit-comment">Submit</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div>
-        <input class="email-comment checkbox" type="checkbox" id="email-checkbox" value="email"/>
-        <label for="email-checkbox">Email Comment</label>
     </div>
     <input name="applicant_id" type="hidden" value="{{$applicant->id}}"/>
     <input name="job_id" type="hidden" value="{{$applicant->job_id}}"/>

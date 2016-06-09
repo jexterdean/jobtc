@@ -180,7 +180,7 @@ $(function (e) {
 
     _body.on('click', '.check-list-btn', function () {
         var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content area-content">';
-        text_area_ele += '<input class="form-control" name="checklist_header" placeholder="New Task Header" value="" />';
+        text_area_ele += '<input class="form-control" name="checklist_header" placeholder="Title" value="" />';
         text_area_ele += '<textarea id="add-new-task-textarea" class=" form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
         text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
         text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
@@ -336,8 +336,7 @@ $(function (e) {
         //Toggle the content area to show
         $('#task-item-collapse-' + task_list_item_id).collapse('show');
         $(this)
-                .addClass('disabled')
-                .css({'pointer-events': 'none'});
+                .css({'display': 'none'});
     });
 
     _body.on('click', '.update-checklist', function (e) {
@@ -377,7 +376,6 @@ $(function (e) {
         $('#task-item-collapse-' + task_list_item_id).collapse('hide');
 
         $('.edit-task-list-item')
-                .removeClass('disabled')
                 .removeAttr('style');
     });
 

@@ -62,7 +62,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="pull-right" style="margin-right: 5px;">
-                                                        <a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
+                                                        <a href="#" class="btn-delete btn-shadow btn alert_delete view-btn-delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;
                                                         <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
                                                         <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                                         <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
@@ -383,7 +383,7 @@
 
         _body.on('click', '.check-list-btn', function () {
             var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content area-content">';
-            text_area_ele += '<input class="form-control" name="checklist_header" placeholder="New Task Header" value="" />';
+            text_area_ele += '<input class="form-control" name="checklist_header" placeholder="Title" value="" />';
             text_area_ele += '<textarea id="add-new-task-textarea" class=" form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
             text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
@@ -483,7 +483,7 @@
                         ele += '<div class="row">';
                         ele += '<div class="col-md-12">';
                         ele += '<div class="pull-right" style="margin-right: 5px">';
-                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>';
+                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;';
                         ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
@@ -547,6 +547,9 @@
             content_text_area_ele += '<textarea id="editChecklistItem' + task_list_item_id + '" class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + content_text + '</textarea><br/>';
             content_text_area_ele += '</div>'; //form-group
             content_text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save & Close</button>&nbsp;&nbsp;&nbsp;';
+            content_text_area_ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete pull-right" style="margin-right:0;font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>';
+            content_text_area_ele += '<input type="hidden" class="task_list_item_id" value="' + task_list_item_id + '" />';
+            content_text_area_ele += '<input type="hidden" class="task_list_id" value="' + task_list_id + '" />';
             content_text_area_ele += '</div>';
 
 
@@ -562,8 +565,8 @@
             //Toggle the content area to show
             $('#task-item-collapse-' + task_list_item_id).collapse('show');
             $(this)
-                    .addClass('disabled')
-                    .css({'pointer-events': 'none'});
+                    .css({'display': 'none'});
+            $(this).siblings('.alert_delete').css({'display':'none'});
         });
 
         _body.on('click', '.update-checklist', function (e) {
@@ -603,8 +606,8 @@
             $('#task-item-collapse-' + task_list_item_id).collapse('hide');
 
             $('.edit-task-list-item')
-                    .removeClass('disabled')
                     .removeAttr('style');
+            $('.alert_delete').css({'display':'inline'});
         });
 
 
@@ -856,7 +859,7 @@
             request.send(JSON.stringify(body));
 
             var text_area_ele = '<li id="add-new-spreadsheet" class="list-group-item text-area-content area-content">';
-            text_area_ele += '<input class="form-control" name="spreadsheet_header" placeholder="New Spreadsheet Header" value="" />';
+            text_area_ele += '<input class="form-control" name="spreadsheet_header" placeholder="Title" value="" />';
             text_area_ele += '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
             text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
             text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
@@ -935,7 +938,7 @@
                         ele += '<div class="row">';
                         ele += '<div class="col-md-12">';
                         ele += '<div class="pull-right" style="margin-right: 5px">';
-                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>';
+                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;';
                         ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';

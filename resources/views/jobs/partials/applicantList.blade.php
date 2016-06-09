@@ -38,11 +38,11 @@
                     {{$applicant->name}}
                     @if(Auth::user('user')->user_id === $job->user_id)
                     @if($applicant->hired === 'No')
-                    <a href="#" class='pull-right btn bg-light-blue-gradient hire'>Hire</a>
+                    <a href="#" class='pull-right btn btn-shadow bg-light-blue-gradient hire'>Hire</a>
                     <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                     @elseif($applicant->hired === 'Yes')
-                    <a href="#" class='pull-right btn bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
+                    <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
                     <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                     @endif
@@ -74,11 +74,11 @@
                     {{$applicant->name}}
                     @if(Auth::user('user')->user_id === $job->user_id)
                     @if($applicant->hired === 'No')
-                    <a href="#" class='pull-right btn bg-light-blue-gradient hire'>Hire</a>
+                    <a href="#" class='pull-right btn btn-shadow bg-light-blue-gradient hire'>Hire</a>
                     <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                     @elseif($applicant->hired === 'Yes')
-                    <a href="#" class='pull-right btn bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
+                    <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
                     <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                     @endif

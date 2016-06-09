@@ -16,12 +16,6 @@
                                     <div class="btn-group pull-right">
                                         <strong>Questions:</strong> {{ count($val->question) }}&nbsp;&nbsp;&nbsp;
                                         <strong>Time:</strong> {{ date('i:s', $val->total_time) }}&nbsp;&nbsp;&nbsp;
-                                        <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="tc-icons">
-                                            <i class="fa fa-eye"></i>
-                                        </a>&nbsp;&nbsp;&nbsp;
-                                        <a href="{{ url('quiz/' . $val->id .'/edit?p=test') }}" data-method="GET" data-title="Edit Test" class="trigger-links tc-icons">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>&nbsp;&nbsp;&nbsp;
                                         <a href="#" class="drag-test move-test tc-icons">
                                             <i class="fa fa-arrows" aria-hidden="true"></i>
                                         </a>
@@ -48,13 +42,12 @@
                                                         {{ substr($q->question, 0, 50) . (strlen($q->question) > 50 ? '...' : '') }}
                                                     </a>
                                                 </div>
-                                                <div class="col-md-2" style="white-space: nowrap;font-size: 22px;">
-                                                    <strong>Time:</strong> {{ date('i:s', strtotime($q->length)) }}
+                                                <div class="col-md-3" style="white-space: nowrap;font-size: 22px;">
+                                                    <div class="pull-right">
+                                                        <strong>Time:</strong> {{ date('i:s', strtotime($q->length)) }}
+                                                    </div>
                                                 </div>
                                                 <div class="pull-right">
-                                                    <a href="{{ url('quiz/' . $q->id .'/edit?p=question') }}" data-method="GET" data-title="Edit Question" class="icon icon-btn tc-icons trigger-links">
-                                                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                                                    </a>&nbsp;&nbsp;&nbsp;
                                                     <a href="#" class="drag-question icon icon-btn move-tasklist tc-icons">
                                                         <i class="fa fa-arrows"></i>
                                                     </a>
@@ -99,7 +92,10 @@
                                                     </div>
                                                     <div class="pull-right" style="padding-right: 10px;">
                                                         <a href="#" id="{{ $q->id }}" class="delete-question-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
-                                                            <i class="fa fa-times" aria-hidden="true"></i> Delete
+                                                            <i class="fa fa-times" aria-hidden="true"></i> Question
+                                                        </a>&nbsp;&nbsp;&nbsp;
+                                                        <a href="{{ url('quiz/' . $q->id .'/edit?p=question') }}" data-method="GET" data-title="Edit Question" class="btn btn-edit btn-shadow trigger-links">
+                                                            <i class="fa fa-pencil" aria-hidden="true"></i> Edit
                                                         </a>
                                                     </div>
                                                 </div>
@@ -114,9 +110,15 @@
                                     </ul>
                                     <a class="btn btn-submit btn-shadow btn-sm check-list-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id) }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
                                         <i class="glyphicon glyphicon-plus"></i> Question
-                                    </a>
+                                    </a>&nbsp;&nbsp;&nbsp;
+                                    <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="btn btn-assign btn-shadow">
+                                        <i class="fa fa-eye"></i> Preview
+                                    </a>&nbsp;&nbsp;&nbsp;
                                     <a href="#" id="{{ $val->id }}" class="test-delete-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
-                                        <i class="fa fa-times" aria-hidden="true"></i> Delete
+                                        <i class="fa fa-times" aria-hidden="true"></i> Test
+                                    </a>&nbsp;&nbsp;&nbsp;
+                                    <a href="{{ url('quiz/' . $val->id .'/edit?p=test') }}" data-method="GET" data-title="Edit Test" class="trigger-links btn btn-edit btn-shadow">
+                                        <i class="fa fa-pencil"></i> Edit
                                     </a>
                                 </div>
                             </div>
