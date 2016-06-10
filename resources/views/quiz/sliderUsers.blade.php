@@ -4,7 +4,7 @@
         <li class="list-group-item" data-total="{{ $v->total_score }}">
             <div class="media">
                 <div class="media-left">
-                    {!! HTML::image('assets/user/' . ($v->photo ? $v->photo : 'default-avatar.jpg'), '', array('style' => 'width: 64px;')) !!}
+                    {!! HTML::image(($v->photo ? $v->photo : 'assets/user/default-avatar.jpg'), '', array('style' => 'width: 64px;')) !!}
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading">{{ $v->name }}</h4>
