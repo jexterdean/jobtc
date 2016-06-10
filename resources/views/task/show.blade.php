@@ -436,10 +436,10 @@
                 evt.stop();
             }, null, null, 4); // Listener with priority 4 will be executed before priority 5.
 
-            
-            _body.find('input[name="checklist_header"]').on('change',function(){
-                 var ajaxurl = public_path + 'saveTaskCheckListHeader';
-                
+
+            _body.find('input[name="checklist_header"]').on('change', function () {
+                var ajaxurl = public_path + 'saveTaskCheckListHeader';
+
                 var formData = new FormData();
                 formData.append('task_check_list_id', task_check_list_id);
                 formData.append('checklist_header', $(this).val());
@@ -460,10 +460,10 @@
                     }
                 }); //ajax
             });
-            
+
             add_new_task_textarea.on('change', function (evt) {
                 var ajaxurl = public_path + 'saveTaskCheckList';
-                
+
                 var formData = new FormData();
                 formData.append('task_check_list_id', task_check_list_id);
                 formData.append('checklist_content', evt.editor.getData());
@@ -574,9 +574,9 @@
 
                     });
 
-                        console.log(_body.find('input[class="project_id"]').val());
-                        socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(),'task_check_list_id':task_check_list_id});
-                   
+                    console.log(_body.find('input[class="project_id"]').val());
+                    socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_check_list_id': task_check_list_id});
+
 
 
                     //Remove Text area
@@ -588,11 +588,11 @@
             }).on('click', '.cancel-checklist', function () {
                 _this.removeClass('disabled');
                 $('#add-new-task').remove();
-                
+
                 var delete_new_task = public_path + 'cancelAddNewTask';
                 var delete_task = new FormData();
-                delete_task.append('task_check_list_id',task_check_list_id);
-                
+                delete_task.append('task_check_list_id', task_check_list_id);
+
                 $.ajax({
                     url: delete_new_task,
                     type: "POST",
@@ -608,7 +608,7 @@
 
                     }
                 }); //ajax
-                
+
                 //$('.text-area-content').remove();
             });
         });
@@ -909,6 +909,32 @@
             _this.addClass('disabled');
             check_list_container.append(text_area_ele);
 
+            //Immediately add an entry into the database
+            var task_check_list_id;
+            var new_task_url = public_path + 'addNewTask';
+            var blank_task = new FormData();
+            blank_task.append('_token', _body.find('input[name="_token"]').val());
+            blank_task.append('task_id', _body.find('input[name="task_id"]').val());
+            blank_task.append('user_id', _body.find('input[name="user_id"]').val());
+
+            $.ajax({
+                url: new_task_url,
+                type: "POST",
+                data: blank_task,
+                // THIS MUST BE DONE FOR FILE UPLOADING
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    task_check_list_id = data;
+                },
+                error: function (xhr, status, error) {
+
+                }
+            }); //ajax
+
 
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
@@ -921,6 +947,7 @@
                 var data = [];
                 data.push(
                         {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+                {'name': 'task_check_list_id', 'value': task_check_list_id},
                 {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
                 {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
                 {'name': 'checklist_header', 'value': _body.find('input[name="spreadsheet_header"]').val()},
@@ -937,16 +964,16 @@
 
                         switch (status) {
                             case 'Default':
-                                statusClass = 'bg-gray'
+                                statusClass = 'bg-gray';
                                 break;
                             case 'Ongoing':
-                                statusClass = 'bg-orange'
+                                statusClass = 'bg-orange';
                                 break;
                             case 'Completed':
-                                statusClass = 'bg-green'
+                                statusClass = 'bg-green';
                                 break;
                             case 'Urgent':
-                                statusClass = 'bg-red'
+                                statusClass = 'bg-red';
                                 break;
                         }
 
