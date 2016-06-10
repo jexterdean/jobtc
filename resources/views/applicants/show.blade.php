@@ -278,8 +278,6 @@
                     || $comment->commenter_id === 0 && Auth::check("applicant"))
                     <table class="comment-utilities">
                         <tr>
-                            <td><a href="#" class="edit-comment"><i class="fa fa-pencil"></i></a></td>
-                            <td>&nbsp;</td>
                             <td><a href="#" class="delete-comment"><i class="fa fa-times"></i></a></td>
                         </tr>
                     </table>

@@ -85,19 +85,20 @@
                                 @foreach($files as $v)
                                     <tr>
                                         <td>{{ basename($v) }}</td>
-                                        <td class="col-sm-1">
+                                        <td class="col-sm-3" style="text-align: right">
                                             @if(\App\Helpers\Helper::checkFileIsAudio($v))
                                                 <?php
                                                 $mime = \App\Helpers\Helper::getMimeType($v);
                                                 $mime = array_shift($mime);
                                                 ?>
                                                 <audio class="player" src="{{ url() . '/assets/shared-files/' . $v->getRelativePathname() }}"></audio>
-                                                <i class="fa fa-play audio-btn" style="font-size: 2em;"></i>
+                                                <i class="fa fa-play audio-btn" style="font-size: 2em;"></i>&nbsp;&nbsp;&nbsp;
                                             @else
                                                 <a href="{{ url() . '/assets/shared-files/' . $v->getRelativePathname() }}" target="_blank">
                                                     <i class="fa fa-external-link" style="font-size: 2em;"></i>
-                                                </a>
+                                                </a>&nbsp;&nbsp;&nbsp;
                                             @endif
+                                            <a href="#" class="delete-file" id="{{$v}}"><i class="fa fa-2x fa-times"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
