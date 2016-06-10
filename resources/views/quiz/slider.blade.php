@@ -86,6 +86,7 @@
 
                 var userList = user_test_area.find('.user-list-slider .list-group-item');
                 if(userList.length != 0){
+                    console.clear();
                     userList.each(function(e){
                         var progressBar = $(this).find('.progress-bar[data-tag="' + tag + '"]');
                         var origPoints = progressBar.data('points');
@@ -99,11 +100,14 @@
                         var newPercentage = newPoints/origMax;
                         newPercentage = newPercentage.toFixed(2) * 100;
 
+                        if(newPoints > origMax){
+                            newPercentage = 100;
+                            //progressBar.attr('aria-valuemax', newMax);
+                        }
                         progressBar
                             .attr('aria-valuenow', newPoints)
                             .css('width', newPercentage + '%')
                             .html(newPoints);
-                        //progressBar.attr('aria-valuemax', newMax);
 
                         var thisUserList = progressBar.closest('.list-group-item');
                         var thisProgress = $(this).find('.progress-bar');
