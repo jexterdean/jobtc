@@ -93,12 +93,13 @@
                                                 ?>
                                                 <audio class="player" src="{{ url() . '/assets/shared-files/' . $v->getRelativePathname() }}"></audio>
                                                 <i class="fa fa-play audio-btn" style="font-size: 2em;"></i>&nbsp;&nbsp;&nbsp;
+                                                <a href="#" data-type="4" class="delete-file-btn" id="{{ basename($v) }}"><i class="fa fa-2x fa-times"></i></a>
                                             @else
                                                 <a href="{{ url() . '/assets/shared-files/' . $v->getRelativePathname() }}" target="_blank">
                                                     <i class="fa fa-external-link" style="font-size: 2em;"></i>
                                                 </a>&nbsp;&nbsp;&nbsp;
+                                                <a href="#" data-type="3" class="delete-file-btn" id="{{ basename($v) }}"><i class="fa fa-2x fa-times"></i></a>
                                             @endif
-                                            <a href="#" class="delete-file" id="{{$v}}"><i class="fa fa-2x fa-times"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
