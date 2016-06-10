@@ -6279,7 +6279,7 @@ button.list-group-item-danger.active:focus {
 }
 .box-default .box-header {
   color: #000000 !important;
-  background: #e5e5e5 !important;
+  background: #e5e5e5;
 }
 .box-default .box-header a {
   color: #444;
@@ -6311,7 +6311,7 @@ button.list-group-item-danger.active:focus {
 }
 .box-success .box-header {
   color: #ffffff !important;
-  background: #55a555 !important;
+  background: #55a555;
 }
 .box-success .box-header a {
   color: #444;
@@ -6343,7 +6343,7 @@ button.list-group-item-danger.active:focus {
 }
 .box-warning .box-header {
   color: #ffffff !important;
-  background: #e4a44a !important;
+  background: #e4a44a;
 }
 .box-warning .box-header a {
   color: #444;
@@ -6375,7 +6375,7 @@ button.list-group-item-danger.active:focus {
 }
 .box-info .box-header {
   color: #ffffff !important;
-  background: #56b6d3 !important;
+  background: #56b6d3;
 }
 .box-info .box-header a {
   color: #444;
@@ -6407,7 +6407,7 @@ button.list-group-item-danger.active:focus {
 }
 .box-danger .box-header {
   color: #ffffff !important;
-  background: #ce4f4b !important;
+  background: #ce4f4b;
 }
 .box-danger .box-header a {
   color: #444;
@@ -6439,7 +6439,7 @@ button.list-group-item-danger.active:focus {
 }
 .box-primary .box-header {
   color: #ffffff !important;
-  background: #3174ae !important;
+  background: #3174ae;
 }
 .box-primary .box-header a {
   color: #444;

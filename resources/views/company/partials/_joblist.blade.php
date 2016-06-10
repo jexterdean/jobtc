@@ -18,7 +18,7 @@
                                     ->count() > 0)
                                     @foreach($tests as $test)
                                     @foreach($test_jobs as $test_job)
-                                    @if($test->id === $test_job->test_id 
+                                    @if($test->id === $test_job->test_id
                                     && $job->id === $test_job->job_id)
                                     <li class="bg-gray list-group-item">
                                         <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{$test->title}}
@@ -46,7 +46,7 @@
 
                         <ul class="list-group">
                             @foreach($job->applicants as $applicant)
-                            <li class="bg-gray list-group-item">
+                            <li class="list-group-item">
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{$applicant->name}}</div>
                                     <div class="panel-body">

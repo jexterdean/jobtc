@@ -14,45 +14,44 @@
                         </div>
                         <div class="box-body">
                             <div class="box-content">
-                                @if($tests_info->tags_array)
-                                    <div class="list-group">
-                                        @foreach($tests_info->tags_array as $v)
-                                        <div class="list-group-item">
-                                            <div class="row">
-                                                <div class="col-md-2 text-center">
-                                                    <strong>{{ $v }}</strong>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <div class="nstSlider" id="{{ $v }}" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="0">
-                                                        <div class="bar"></div>
-                                                        <div class="leftGrip"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-1 text-center">
-                                                    <div class="badge leftLabel"></div>
+                                <div class="list-group">
+                                    @if($tests_info->tags_array)
+                                    @foreach($tests_info->tags_array as $v)
+                                    <div class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-md-2 text-center">
+                                                <strong>{{ $v }}</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="nstSlider" id="{{ $v }}" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="0">
+                                                    <div class="bar"></div>
+                                                    <div class="leftGrip"></div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        @endforeach
-                                        <div class="list-group-item">
-                                            <div class="row">
-                                                <div class="col-md-2 text-center">
-                                                    <strong>General</strong>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <div class="nstSlider" id="" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="0">
-                                                        <div class="bar"></div>
-                                                        <div class="leftGrip"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-1 text-center">
-                                                    <div class="badge leftLabel"></div>
-                                                </div>
+                                            <div class="col-md-1 text-center">
+                                                <div class="badge leftLabel"></div>
                                             </div>
                                         </div>
                                     </div>
-                                @endif
-
+                                    @endforeach
+                                    @endif
+                                    <div class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-md-2 text-center">
+                                                <strong>General</strong>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="nstSlider" id="" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="0">
+                                                    <div class="bar"></div>
+                                                    <div class="leftGrip"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <div class="badge leftLabel"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="user_test_area"></div>
                             </div>
                         </div>

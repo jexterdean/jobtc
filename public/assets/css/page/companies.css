@@ -89,3 +89,31 @@
     max-height: none !important;
     overflow-y: inherit !important;
 }
+#assign_tests .box-content .panel-body{
+    -moz-box-shadow: inset 0 0 15px rgba(0,0,0,.4);
+    -webkit-box-shadow: inset 0 0 15px rgba(0,0,0,.4);
+    box-shadow: inset 0 0 15px rgba(0,0,0,.4);
+    padding: 10px;
+}
+#assign_tests .box-content > .list-group:not(.job-applicant-list) > .list-group-item{
+    border: none;
+    background: none!important;
+    padding: 5px;
+}
+#assign_tests .box-content > .list-group:not(.job-applicant-list){
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+#assign_tests .unassign-test{
+    font-size: 25px;
+}
+#assign_tests .box .box-header, #assign_tests .panel-default .panel-heading{
+    background: #ffffff!important;
+}
+#assign_tests .panel-default{
+    box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+}
+#assign_tests .box-default .box-body .box-content{
+    border-color: #ffffff!important;
+}
