@@ -946,7 +946,7 @@
 
                 var data = [];
                 data.push(
-                        {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+                {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
                 {'name': 'task_check_list_id', 'value': task_check_list_id},
                 {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
                 {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
@@ -954,7 +954,7 @@
                 {'name': 'checklist', 'value': spreadsheet_html}
                 );
 
-                $.post(public_path + 'checkList', data, function (d) {
+                $.post(public_path + 'saveSpreadsheet', data, function (d) {
                     var _return_data = jQuery.parseJSON(d);
 
                     var ele = '';
