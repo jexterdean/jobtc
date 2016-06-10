@@ -1,11 +1,11 @@
 @extends('layouts.default')
 @section('content')
 <ul id="company_tabs" class="nav nav-tabs">
-    <li class="active"><a data-toggle="pill" href="#my_tasks">Projects</a></li>
+    <li class="projects_tab active"><a data-toggle="pill" href="#my_tasks">Projects</a></li>
     @if(Auth::user('user')->level() === 1)
-    <li><a data-toggle="pill" href="#assign_projects">Assign Projects</a></li>
-    <li><a data-toggle="pill" href="#assign_tests">Assign Tests</a></li>
-    <li><a data-toggle="pill" href="#assign_authority_levels">Assign Authority Levels</a></li>
+    <li><a class="assign_projects_tab" data-toggle="pill" href="#assign_projects">Assign Projects</a></li>
+    <li><a class="assign_tests_tab" data-toggle="pill" href="#assign_tests">Assign Tests</a></li>
+    <li><a class="assign_authority_levels_tab" data-toggle="pill" href="#assign_authority_levels">Assign Authority Levels</a></li>
     @endif
 </ul>
 <div class="tab-content">
@@ -14,15 +14,15 @@
     </div>
     @if(Auth::user('user')->level() === 1)
     <div id="assign_projects" class="tab-pane fade in">
-        @include('company.partials._projectlist')
-    </div><!--assign projects tab content-->
+        <!--Load the content with AJAX when the user clicks on tab-->
+    </div>
 
     <div id="assign_tests" class="tab-pane fade in">
-        @include('company.partials._joblist')
+        <!--Load the content with AJAX when the user clicks on tab-->
     </div>
     
     <div id="assign_authority_levels" class="tab-pane fade in">
-        @include('company.partials._rolelist')
+        <!--Load the content with AJAX when the user clicks on tab-->
     </div>
     @endif
 </div>
