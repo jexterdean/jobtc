@@ -423,19 +423,6 @@
 
             var add_new_task_textarea = CKEDITOR.replace('add-new-task-textarea');
 
-            CKEDITOR.on('fileUploadRequest', function (evt) {
-                var fileLoader = evt.data.fileLoader,
-                        formData = new FormData(),
-                        xhr = fileLoader.xhr;
-
-                xhr.open('PUT', fileLoader.uploadUrl, true);
-                formData.append('upload', fileLoader.file, fileLoader.fileName);
-                fileLoader.xhr.send(formData);
-
-                // Prevented default behavior.
-                evt.stop();
-            }, null, null, 4); // Listener with priority 4 will be executed before priority 5.
-
 
             _body.find('input[name="checklist_header"]').on('change', function () {
                 var ajaxurl = public_path + 'saveTaskCheckListHeader';
@@ -485,6 +472,49 @@
                 }); //ajax
 
             });
+
+            add_new_task_textarea.on('fileUploadRequest', function (evt) {
+                var fileLoader = evt.data.fileLoader,
+                        xhr = fileLoader.xhr;
+
+                //xhr.open('PUT', fileLoader.uploadUrl, true);
+
+                //fileLoader.xhr.send(formData);
+
+                // Prevented default behavior.
+                //evt.stop();
+
+                //saveChecklistContent(task_check_list_id,CKEDITOR.instances['add-new-task-textarea'].getData());
+                var ajaxurl = fileLoader.uploadUrl;
+                formData = new FormData();
+                formData.append('upload', fileLoader.file, fileLoader.fileName);
+                $.ajax({
+                    url: ajaxurl,
+                    type: "POST",
+                    data: formData,
+                    // THIS MUST BE DONE FOR FILE UPLOADING
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+
+                        console.log('file upload finished');
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                }); //ajax
+
+            }); // Listener with priority 4 will be executed before priority 5.
+
+            add_new_task_textarea.on('fileUploadResponse', function (evt) {
+                console.log('task_check_list_id', task_check_list_id);
+                console.log('editor data', CKEDITOR.instances['add-new-task-textarea'].getData());
+                //saveChecklistContent(task_check_list_id, evt.editor.getData());
+            });
+
+
 
             /*if (check_list_container.length > 10) {
              
