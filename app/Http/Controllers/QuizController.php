@@ -69,6 +69,8 @@ class QuizController extends BaseController {
             ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
             ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
             ->orderBy('test_result.created_at', 'asc')
+            ->whereNotNull('user.user_id')
+            ->whereNotNull('test.id')
             ->get();
         $data['result'] = $result;
 
@@ -729,6 +731,7 @@ class QuizController extends BaseController {
             ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
             ->leftJoin('question', 'question.id', '=', 'test_result.question_id')
             ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
+            ->whereNotNull('user.user_id')
             ->where('test_result.test_id', '=', $id)
             ->orderBy('test_result.created_at', 'DESC')
             ->get();
