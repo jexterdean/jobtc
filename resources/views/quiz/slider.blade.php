@@ -103,7 +103,9 @@
                             .attr('aria-valuenow', newPoints)
                             .css('width', newPercentage + '%')
                             .html(newPoints);
-                        //progressBar.attr('aria-valuemax', newMax);
+                        if(newPoints > origMax){
+                            progressBar.attr('aria-valuemax', newMax);
+                        }
 
                         var thisUserList = progressBar.closest('.list-group-item');
                         var thisProgress = $(this).find('.progress-bar');
