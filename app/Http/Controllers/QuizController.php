@@ -699,10 +699,29 @@ class QuizController extends BaseController {
             DB::table('question')
                 ->where('test_id', '=', $id)
                 ->delete();
-        } else {
+        }
+        else if ($t == 2) {
             DB::table('question')
                 ->where('id', '=', $id)
                 ->delete();
+        }
+        else if ($t == 3) {
+            $file = isset($_GET['f']) ? $_GET['f'] : '';
+            if($file) {
+                DB::table('test')
+                    ->where('completion_image', '=', $file)
+                    ->update(['completion_image' => '']);
+                unlink(public_path() . '/assets/shared-files/image/' . $file);
+            }
+        }
+        else if ($t == 4) {
+            $file = isset($_GET['f']) ? $_GET['f'] : '';
+            if($file) {
+                DB::table('test')
+                    ->where('completion_sound', '=', $file)
+                    ->update(['completion_sound' => '']);
+                unlink(public_path() . '/assets/shared-files/sound/' . $file);
+            }
         }
     }
 
@@ -714,6 +733,7 @@ class QuizController extends BaseController {
                 fp_user.name,
                 fp_user.photo,
                 fp_test.default_tags,
+                MIN(fp_test_result.id) as min_id,
                 SUM(
                     iF(
                         fp_test_result.result = 1,
@@ -733,7 +753,7 @@ class QuizController extends BaseController {
             ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
             ->whereNotNull('user.user_id')
             ->where('test_result.test_id', '=', $id)
-            ->orderBy('test_result.created_at', 'DESC')
+            ->orderBy('min_id', 'DESC')
             ->get();
 
         if(count($user) > 0){

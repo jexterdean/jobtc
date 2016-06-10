@@ -1,7 +1,7 @@
 @if(count($user) > 0)
     <ul class="list-group user-list-slider">
     @foreach($user as $v)
-        <li class="list-group-item" data-total="{{ $v->total_score }}">
+        <li class="list-group-item" data-id="min_id" data-total="{{ $v->total_score }}">
             <div class="media">
                 <div class="media-left">
                     {!! HTML::image(($v->photo ? $v->photo : 'assets/user/default-avatar.jpg'), '', array('style' => 'width: 64px;')) !!}
@@ -19,8 +19,8 @@
                                 </div>
                                 <div class="col-md-10">
                                     <div class="progress">
-                                        <div data-tag="{{ $tags }}" data-points="{{ $points }}" data-maxpoints="{{ $v->total_points }}" class="progress-bar progress-bar-{{ $progressColor[$ref % 4] }}" role="progressbar" aria-valuenow="{{ $points }}" aria-valuemin="0" aria-valuemax="{{ $v->total_points }}" style="{{ 'width: ' . number_format(($points/$v->total_points) * 100, 2) . '%;' }}">
-                                            {{ $points }}
+                                        <div data-tag="{{ $tags ? $tags : 'General' }}" data-points="{{ $points }}" data-maxpoints="{{ $v->total_points }}" class="progress-bar progress-bar-{{ $progressColor[$ref % 4] }}" role="progressbar" aria-valuenow="{{ $points }}" aria-valuemin="0" aria-valuemax="{{ $v->total_points }}" style="{{ 'width: ' . number_format(($points/$v->total_points) * 100, 2) . '%;' }}">
+                                            {{ number_format($points, 2) }}
                                         </div>
                                     </div>
                                 </div>

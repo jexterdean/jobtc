@@ -41,7 +41,7 @@
                                                 <strong>General</strong>
                                             </div>
                                             <div class="col-md-9">
-                                                <div class="nstSlider" id="" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="0">
+                                                <div class="nstSlider" id="General" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="0">
                                                     <div class="bar"></div>
                                                     <div class="leftGrip"></div>
                                                 </div>
@@ -93,7 +93,7 @@
                         var newPoints = origPoints + (origPoints * (leftValue/100));
                         var newMax = origMax + (origMax * (leftValue/100));
 
-                        newPoints = newPoints.toFixed(0);
+                        newPoints = newPoints.toFixed(2);
                         newMax = newMax.toFixed(0);
 
                         var newPercentage = newPoints/origMax;
