@@ -99,34 +99,16 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->where('company_id',$company_id)->get();
+                    }], 'task_permission')->whereIn('project_id', $project_id_list)->where('company_id', $company_id)->get();
 
-        //Get Jobs by company and user
-        $jobs = Job::with('applicants')->where('user_id', $user_id)->where('company_id', $company_id)->get();
 
-        $tests = Test::where('user_id', $user_id)->get();
-
-        $test_applicants = TestPerApplicant::all();
-
-        $test_jobs = TestPerJob::all();
-
-        $company_users = Profile::with('user')->where('company_id', $company_id)->get();
-
-        $authority_levels = Role::where('company_id', $company_id)->orderBy('level', 'asc')->get();
-        
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
 
-        $assets = ['companies','real-time'];
+        $assets = ['companies', 'real-time'];
 
         return View::make('company.show', [
                     'projects' => $projects,
-                    'jobs' => $jobs,
-                    'company_users' => $company_users,
-                    'authority_levels' => $authority_levels,
                     'task_permissions' => $task_permissions,
-                    'tests' => $tests,
-                    'test_applicants' => $test_applicants,
-                    'test_jobs' => $test_jobs,
                     'profiles' => $profiles,
                     'companies' => $companies,
                     'teams' => $teams,
@@ -182,19 +164,19 @@ class CompanyController extends BaseController {
         $companies->save();
 
         //Check if Company Division Exists
-        /*$company_division_trim = trim($request->input('company_division'));
-        $company_division_exists = CompanyDivision::where('division_name', $company_division_trim)->count();
+        /* $company_division_trim = trim($request->input('company_division'));
+          $company_division_exists = CompanyDivision::where('division_name', $company_division_trim)->count();
 
-        if ($company_division_exists > 0) {
-            //Get Existing Company Division
-            $company_divisions = CompanyDivision::where('division_name', $company_division_trim)->first();
-        } else {
-            //Save Company Division
-            $company_divisions = new CompanyDivision();
-            $company_divisions->company_id = $companies->id;
-            $company_divisions->division_name = $company_division_trim;
-            $company_divisions->save();
-        }*/
+          if ($company_division_exists > 0) {
+          //Get Existing Company Division
+          $company_divisions = CompanyDivision::where('division_name', $company_division_trim)->first();
+          } else {
+          //Save Company Division
+          $company_divisions = new CompanyDivision();
+          $company_divisions->company_id = $companies->id;
+          $company_divisions->division_name = $company_division_trim;
+          $company_divisions->save();
+          } */
 
         //Check if Role already exists with the same company
         $role_exists = Role::where('name', 'Admin')->where('company_id', $companies->id)->count();
@@ -212,7 +194,7 @@ class CompanyController extends BaseController {
             $admin->description = 'Administrator';
             $admin->level = '1';
             $admin->save();
-            
+
             $staff = new Role();
             $staff->company_id = $companies->id;
             $staff->company_division_id = 0;
@@ -221,7 +203,7 @@ class CompanyController extends BaseController {
             $staff->description = 'Staff';
             $staff->level = '2';
             $staff->save();
-            
+
             $client = new Role();
             $client->company_id = $companies->id;
             $client->company_division_id = 0;
@@ -231,7 +213,7 @@ class CompanyController extends BaseController {
             $client->level = '3';
             $client->save();
         }
-        
+
         //Map the company to the user's profile
         $profile = new Profile();
         $profile->user_id = $user_id;
@@ -461,12 +443,12 @@ class CompanyController extends BaseController {
         $update_profile->update([
             'role_id' => $role_id
         ]);
-        
-        $update_role = RoleUser::where('user_id',$user_id);
+
+        $update_role = RoleUser::where('user_id', $user_id);
         $update_role->update([
             'role_id' => $role_id
         ]);
-        
+
         return "true";
     }
 
@@ -503,18 +485,135 @@ class CompanyController extends BaseController {
 
         return $chart_data;
     }
-    
-    public function getCompanyProjects(Request $request,$id) {
-        
-        $projects = Project::where('company_id',$id)->get();
-        
+
+    public function getCompanyProjects(Request $request, $id) {
+
+        $projects = Project::where('company_id', $id)->get();
+
         $project_array = [];
-        
-        foreach($projects as $project) {
-            array_push($project_array,$project->project_id);
+
+        foreach ($projects as $project) {
+            array_push($project_array, $project->project_id);
         }
-        
+
         return $project_array;
+    }
+
+    public function getAssignProjectsTab(Request $request, $id) {
+
+        //Getting Assign Project Data
+        $user_id = Auth::user('user')->user_id;
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $team_grouping = Project::with('team_project')->where('company_id', $id)->get();
+
+        $profiles = Profile::where('company_id', $id)->get();
+
+        $project_id_list = [];
+
+        //Get owned projects
+        $owned_projects = Project::where('user_id', $user_id)->where('company_id', $id)->get();
+
+        $teams = Team::with(['team_member' => function($query) {
+                        $query->with('user')->get();
+                    }])->get();
+
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id', $user_id)->get();
+
+        $team_projects = TeamProject::all();
+
+        foreach ($owned_projects as $owned_project) {
+            array_push($project_id_list, $owned_project->project_id);
+        }
+
+        //Use the team id to get the projects the users are involved with
+        foreach ($team_members as $member) {
+            foreach ($team_projects as $project) {
+                if ($member->team_id === $project->team_id) {
+                    array_push($project_id_list, $project->project_id);
+                }
+            }
+        }
+
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission')->whereIn('project_id', $project_id_list)->where('company_id', $id)->get();
+
+
+        return view('company.partials._projectlist', [
+            'projects' => $projects,
+            'profiles' => $profiles,
+            'team_members' => $team_members,
+            'team_grouping' => $team_grouping,
+            'teams' => $teams,
+            'countries' => $countries_option
+        ]);
+    }
+
+    public function getAssignTestsTab(Request $request, $id) {
+
+        //Getting Assign Project Data
+        $user_id = Auth::user('user')->user_id;
+
+        //Get Jobs by company and user
+        $jobs = Job::with('applicants')->where('user_id', $user_id)->where('company_id', $id)->get();
+
+        $tests = Test::where('user_id', $user_id)->get();
+
+        $test_applicants = TestPerApplicant::all();
+
+        $test_jobs = TestPerJob::all();
+
+        $company_users = Profile::with('user')->where('company_id', $id)->get();
+
+        $authority_levels = Role::where('company_id', $id)->orderBy('level', 'asc')->get();
+
+        $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
+
+        return view('company.partials._joblist', [
+            'jobs' => $jobs,
+            'tests' => $tests,
+            'test_applicants' => $test_applicants,
+            'test_jobs' => $test_jobs
+        ]);
+    }
+
+    public function getAssignAuthorityLevelsTab(Request $request, $id) {
+        $profiles = Profile::where('company_id', $id)->get();
+
+        $company_users = Profile::with('user')->where('company_id', $id)->get();
+
+        $authority_levels = Role::where('company_id', $id)->orderBy('level', 'asc')->get();
+
+        return view('company.partials._rolelist', [
+            'profiles' => $profiles,
+            'company_users' => $company_users,
+            'authority_levels' => $authority_levels
+        ]);
+    }
+
+    public function getSubprojects(Request $request, $company_id,$project_id) {
+        
+        //Getting Assign Project Data
+        $user_id = Auth::user('user')->user_id;
+        
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission')->where('project_id', $project_id)->where('company_id', $company_id)->first();
+
+        $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
+        
+        return view('company.partials._mytasklistitems',[
+            'projects' => $projects,
+            'task_permissions' => $task_permissions
+        ]);
+    }
+    
+    public function getTas(Request $request, $company_id,$project_id) {
         
     }
 

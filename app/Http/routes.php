@@ -134,6 +134,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('company/{id}', ['as' => 'company', 'uses' => 'CompanyController@show', 'https' => true]);
         
         Route::get('getCompanyProjects/{id}','CompanyController@getCompanyProjects');
+        
+        /*For Company Load on Demand*/
+        Route::get('getAssignProjectsTab/{id}','CompanyController@getAssignProjectsTab');
+        Route::get('getAssignTestsTab/{id}','CompanyController@getAssignTestsTab');
+        Route::get('getAssignAuthorityLevelsTab/{id}','CompanyController@getAssignAuthorityLevelsTab');
+        /*For Project Load on Demand*/
+        Route::get('getSubprojects/{company_id}/{project_id}','CompanyController@getSubprojects');
+        
     });
 
     /**
