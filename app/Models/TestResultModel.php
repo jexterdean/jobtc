@@ -13,7 +13,8 @@ class TestResultModel extends Model
         'belongs_to',
         'unique_id',
         'answer',
-        'result'
+        'result',
+        'points'
     ];
     protected $primaryKey = 'id';
     protected $table = 'test_result';

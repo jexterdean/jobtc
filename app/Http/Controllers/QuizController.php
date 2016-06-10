@@ -40,55 +40,41 @@ class QuizController extends BaseController {
                 ->get();
         $question_type = array_pluck($t, 'type', 'id');
         $data['question_type'] = $question_type;
-
         $result = DB::table('test_result')
-                ->select(DB::raw(
-                                'fp_test.id as test_id,
+            ->select(DB::raw(
+                'fp_test.id as test_id,
                 fp_test.title,
                 fp_user.name,
-                (
-                    select count(a.id)
-                    from fp_test_result as a
-                    where
-                        a.test_id = fp_test_result.test_id AND
-                        a.unique_id = fp_test_result.unique_id AND
-                        a.result = 1 AND
-                        fp_test_result.belongs_to = "employee"
+                SUM(
+                    IF(
+                        fp_test_result.result = 1,
+                        IF(
+                            fp_question.question_type_id = 3,
+                            fp_test_result.points,
+                            fp_question.points
+                        ),
+                        0
+                    )
                 ) as score,
-                (
-                    select count(b.id)
-                    from fp_test_result as b
-                    where
-                        b.test_id = fp_test_result.test_id AND
-                        b.unique_id = fp_test_result.unique_id
-                        AND fp_test_result.belongs_to = "employee"
+                SUM(
+                    IF(
+                        fp_question.question_type_id = 3,
+                        fp_question.max_point,
+                        fp_question.points
+                    )
                 ) as total_question'
-                ))
-                ->groupBy('test_result.unique_id', 'test_result.test_id')
-                ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
-                ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
-                ->orderBy('test_result.created_at', 'asc')
-                ->get();
-        
-        if (count($result) > 0) {
-            foreach ($result as $r) {
-                $average = $r->score > 0 ? $r->score / $r->total_question : $r->score;
-                $average *= 100;
-                $r->average = number_format($average) . '%';
-            }
-        }
-
+            ))
+            ->groupBy('test_result.unique_id', 'test_result.test_id')
+            ->leftJoin('question', 'question.id', '=', 'test_result.question_id')
+            ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
+            ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
+            ->orderBy('test_result.created_at', 'asc')
+            ->get();
         $data['result'] = $result;
 
         $test = DB::table('test')
-                ->select(DB::raw('
+            ->select(DB::raw('
                 fp_test.*,
-                (
-                    SELECT count(fp_question.id)
-                    FROM fp_question
-                    WHERE
-                        fp_question.test_id = fp_test.id
-                ) as num_question,
                 (
                     SELECT count(fp_test_result.id) > 0
                     FROM fp_test_result
@@ -97,15 +83,15 @@ class QuizController extends BaseController {
                         fp_test_result.unique_id = ' . Auth::user('user')->user_id . '
                 ) as review_only
             '))
-                ->orderBy('order', 'asc')
-                ->get();
+            ->orderBy('order', 'asc')
+            ->get();
         if (count($test) > 0) {
             foreach ($test as $t) {
                 $t->total_time = 0;
                 $questions = DB::table('question')
-                        ->where('test_id', '=', $t->id)
-                        ->orderBy('order', 'ASC')
-                        ->get();
+                    ->where('test_id', '=', $t->id)
+                    ->orderBy('order', 'ASC')
+                    ->get();
                 if (count($questions) > 0) {
                     foreach ($questions as $q) {
                         sscanf($q->length, "%d:%d:%d", $hours, $minutes, $seconds);
@@ -121,7 +107,7 @@ class QuizController extends BaseController {
                 if (count($result) > 0) {
                     foreach ($result as $r) {
                         if ($r->test_id == $t->id) {
-                            $average = $r->score > 0 ? $r->score / count($questions) : $r->score;
+                            $average = $r->score > 0 ? $r->score / $r->total_question : $r->score;
                             $average *= 100;
                             $average = (float) number_format($average);
                             $score += $average;
@@ -211,8 +197,8 @@ class QuizController extends BaseController {
 
         if ($validation->fails()) {
             return Redirect::to('quiz')
-                            ->withInput()
-                            ->withErrors($validation->messages());
+                ->withInput()
+                ->withErrors($validation->messages());
         }
 
         DB::beginTransaction();
@@ -274,7 +260,8 @@ class QuizController extends BaseController {
                             ->where('id', '=', $test->id)
                             ->update(['test_photo' => $fileName]);
                 }
-            } else if ($page == "question") {
+            }
+            else if ($page == "question") {
                 $question = new Question();
                 $question->test_id = $id;
                 $question->question_type_id = Input::get('question_type_id');
@@ -309,7 +296,8 @@ class QuizController extends BaseController {
                             ->where('id', '=', $id)
                             ->update(['question_photo' => $fileName]);
                 }
-            } else if ($page == "exam") {
+            }
+            else if ($page == "exam") {
                 $q = Question::where('id', Input::get('question_id'))
                         ->first();
 
@@ -365,23 +353,23 @@ class QuizController extends BaseController {
         //region if already taken the exam redirect to review page
         if (Auth::check('user')) {
             $taken_question = DB::table('test_result')
-                    ->where('test_id', '=', $id)
-                    ->where('unique_id', '=', Auth::user('user')->user_id)
-                    ->where('belongs_to','employee')
-                    ->count();
+                ->where('test_id', '=', $id)
+                ->where('unique_id', '=', Auth::user('user')->user_id)
+                ->where('belongs_to','employee')
+                ->count();
         }
         
         if (Auth::check('applicant')) {
             $taken_question = DB::table('test_result')
-                    ->where('test_id', '=', $id)
-                    ->where('unique_id', '=', Auth::user('applicant')->id)
-                    ->where('belongs_to','applicant')
-                    ->count();
+                ->where('test_id', '=', $id)
+                ->where('unique_id', '=', Auth::user('applicant')->id)
+                ->where('belongs_to','applicant')
+                ->count();
         }
 
         $total_question = DB::table('question')
-                ->where('test_id', '=', $id)
-                ->count();
+            ->where('test_id', '=', $id)
+            ->count();
         $hasTaken = $taken_question == $total_question;
         if ($hasTaken && $page != 'review') {
             return Redirect::to('quiz/' . $id . '?p=review');
@@ -389,57 +377,52 @@ class QuizController extends BaseController {
         //endregion
 
         $data = [
-            'assets' => [],
+            'assets' => ['slider', 'waiting'],
             'page' => $page
         ];
         $this->setData($data);
 
         $tests_info = DB::table('test')
-                ->where('id', '=', $id)
-                ->first();
+            ->where('id', '=', $id)
+            ->first();
         $questions_info = array();
         if ($page == 'review') {
             $questions_info = DB::table('question')
-                    ->where('test_id', '=', $id)
-                    ->orderBy('order', 'ASC')
-                    ->get();
-        } else {
-            $questions_info = DB::table('question')
-                    ->where('test_id', '=', $id)
-                    ->whereRaw('
-                    (
-                        SELECT count(fp_test_result.id)
-                        FROM fp_test_result
-                        WHERE
-                            fp_test_result.question_id = fp_question.id AND
-                            fp_test_result.unique_id = ' . Auth::user()->user_id . '
-                    ) = 0
-                ')
-                    ->orderBy('order', 'ASC')
-                    ->get();
+                ->select(DB::raw(
+                    'fp_question.*,
+                    fp_test_result.id as result_id,
+                    fp_test_result.answer as result_answer,
+                    fp_test_result.result,
+                    fp_test_result.points as result_points'
+                ))
+                ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
+                ->where('question.test_id', '=', $id)
+                ->orderBy('question.order', 'ASC')
+                ->get();
         }
+        else {
+            $questions_info = DB::table('question')
+                ->where('test_id', '=', $id)
+                ->whereRaw('
+                (
+                    SELECT count(fp_test_result.id)
+                    FROM fp_test_result
+                    WHERE
+                        fp_test_result.question_id = fp_question.id AND
+                        fp_test_result.unique_id = ' . Auth::user()->user_id . '
+                ) = 0
+            ')
+                ->orderBy('order', 'ASC')
+                ->get();
+        }
+
+        $tests_info->tags_array = $tests_info->default_tags ?
+            explode(',', $tests_info->default_tags) : array();
         if (count($questions_info) > 0) {
             foreach ($questions_info as $v) {
                 $v->question_choices = json_decode($v->question_choices);
             }
         }
-
-        if ($page == 'review') {
-            $r = DB::table('test_result')
-                    ->where('test_result.test_id', '=', $id)
-                    ->get();
-            $review_result = array();
-            if (count($r) > 0) {
-                foreach ($r as $v) {
-                    $review_result[$v->question_id] = (Object) array(
-                                'answer' => $v->answer,
-                                'result' => $v->result,
-                    );
-                }
-            }
-            $data['review_result'] = $review_result;
-        }
-
         $data['tests_info'] = $tests_info;
         $data['questions_info'] = $questions_info;
 
@@ -500,7 +483,8 @@ class QuizController extends BaseController {
                         'start_message' => 'required',
                         'completion_message' => 'required'
             ]);
-        } else {
+        }
+        else if($page == "question"){
             $validation = Validator::make($request->all(), [
                 'question_type_id' => 'required',
                 'question' => 'required'
@@ -509,10 +493,14 @@ class QuizController extends BaseController {
                 $required['points'] = 'required';
             }
         }
+        else if($page == "exam") {
+            $validation = Validator::make($request->all(), [
+            ]);
+        }
         if ($validation->fails()) {
             return Redirect::to('quiz')
-                            ->withInput()
-                            ->withErrors($validation->messages());
+                ->withInput()
+                ->withErrors($validation->messages());
         }
 
         DB::beginTransaction();
@@ -573,7 +561,8 @@ class QuizController extends BaseController {
                             ->where('id', '=', $test->id)
                             ->update(['test_photo' => $fileName]);
                 }
-            } else {
+            }
+            else if($page == "question"){
                 $question = Question::find($id);
                 $question->question_type_id = Input::get('question_type_id');
                 $question->question = Input::get('question');
@@ -617,16 +606,29 @@ class QuizController extends BaseController {
                             ->update(['question_photo' => $fileName]);
                 }
             }
+            else if($page == "exam") {
+                $result = TestResultModel::find($id);
+                $result->result = 1;
+                $result->points = Input::get('points');
+                $result->save();
+            }
 
             DB::commit();
 
+            if($page == "exam"){
+                return 1;
+            }
             return Redirect::to('quiz')
-                            ->withSuccess(($page == "test" ? "Test" : "Question") . " updated successfully!");
-        } catch (\Exception $e) {
+                ->withSuccess(($page == "test" ? "Test" : "Question") . " updated successfully!");
+        }
+        catch (\Exception $e) {
             DB::rollback();
 
+            if($page == "exam"){
+                return 1;
+            }
             return Redirect::to('quiz')
-                            ->withErrors(($page == "test" ? "Test" : "Question") . " failure when adding!");
+                ->withErrors(($page == "test" ? "Test" : "Question") . " failure when adding!");
         }
     }
 
@@ -637,7 +639,7 @@ class QuizController extends BaseController {
      */
     public function testSort(Request $request) {
         $validation = Validator::make($request->all(), [
-                    'id' => 'required'
+            'id' => 'required'
         ]);
         if ($validation->fails()) {
             echo 0;
@@ -662,7 +664,7 @@ class QuizController extends BaseController {
      */
     public function questionSort(Request $request) {
         $validation = Validator::make($request->all(), [
-                    'id' => 'required'
+            'id' => 'required'
         ]);
         if ($validation->fails()) {
             echo 0;
@@ -690,16 +692,120 @@ class QuizController extends BaseController {
         $t = isset($_GET['t']) ? $_GET['t'] : 1;
         if ($t == 1) {
             DB::table('test')
-                    ->where('id', '=', $id)
-                    ->delete();
+                ->where('id', '=', $id)
+                ->delete();
             DB::table('question')
-                    ->where('test_id', '=', $id)
-                    ->delete();
+                ->where('test_id', '=', $id)
+                ->delete();
         } else {
             DB::table('question')
-                    ->where('id', '=', $id)
-                    ->delete();
+                ->where('id', '=', $id)
+                ->delete();
         }
     }
 
+    //User Slider Area
+    public function userSlider(Request $request, $id){
+        $user = DB::table('test_result')
+            ->select(DB::raw('
+                fp_user.user_id,
+                fp_user.name,
+                fp_user.photo,
+                fp_test.default_tags,
+                SUM(
+                    iF(
+                        fp_test_result.result = 1,
+                        IF(
+                            fp_question.question_type_id = 3,
+                            fp_test_result.points,
+                            fp_question.points
+                        ),
+                        0
+                    )
+                ) as total_score,
+                SUM(IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)) as total_points
+            '))
+            ->groupBy('test_result.unique_id')
+            ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
+            ->leftJoin('question', 'question.id', '=', 'test_result.question_id')
+            ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
+            ->where('test_result.test_id', '=', $id)
+            ->orderBy('test_result.created_at', 'DESC')
+            ->get();
+
+        if(count($user) > 0){
+            foreach($user as $v){
+                $v->points_tags_total = 0;
+
+                $tags_array = $v->default_tags ? explode(',', $v->default_tags) : array();
+                if(count($tags_array) > 0){
+                    foreach($tags_array as $t){
+                        $v->tags[$t] = 0;
+                    }
+                }
+                $v->tags[''] = 0; //general tag
+
+                $result = DB::table('test_result')
+                    ->select(DB::raw('
+                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
+                        fp_question.question_tags
+                    '))
+                    ->leftJoin('question', 'question.id', '=', 'test_result.question_id')
+                    ->where('unique_id', '=', $v->user_id)
+                    ->where('result', '=', 1)
+                    ->get();
+                if(count($result) > 0){
+                    foreach($result as $r){
+                        $question_tags = $r->question_tags ? explode(',', $r->question_tags) : array();
+                        if(count($question_tags) > 0){
+                            foreach($question_tags as $t){
+                                $v->tags[$t] += $r->points;
+                                $v->points_tags_total += $r->points;
+                            }
+                        }
+                        else{
+                            $v->tags[''] += 1; //general tag if not tag
+                            $v->points_tags_total += $r->points;
+                        }
+                    }
+                }
+            }
+        }
+
+        //sort according to total tag points
+        $this->arraySort($user, 'points_tags_total', false);
+
+        $data['user'] = $user;
+
+        $data['progressColor'] = array('success', 'info', 'warning', 'danger');
+
+        return View::make('quiz.sliderUsers', $data);
+    }
+    private function arraySort(&$array, $key, $isAsc = true){
+        $sorter = array();
+        $ret = array();
+        reset($array);
+        foreach ($array as $ii=>$va) {
+            $sorter[$ii] = $va->$key;
+        }
+
+        if($isAsc){
+            uasort($sorter, array($this, 'arraySortCompareAsc'));
+        }
+        else{
+            uasort($sorter, array($this, 'arraySortCompareDesc'));
+        }
+
+        foreach ($sorter as $ii=>$va) {
+            $ret[] = $array[$ii];
+        }
+
+        $array = $ret;
+    }
+    private function arraySortCompareAsc($a, $b){
+        return $a == $b ? 0 : ($a < $b ? -1 : 1);
+    }
+    private function arraySortCompareDesc($a, $b){
+        return $a == $b ? 0 : ($a > $b ? -1 : 1);
+    }
 }

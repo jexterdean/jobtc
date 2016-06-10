@@ -231,6 +231,17 @@
             }
         });
         //endregion
+
+        $(document).on('propertychange keyup input paste', 'input[type="number"]', function(e) {
+            if($(this).has('max')){
+                if($(this).val() > $(this).attr('max')){
+                    $(this).val($(this).attr('max'));
+                }
+            }
+            if($(this).val() < 0){
+                $(this).val(0);
+            }
+        });
     });
 </script>
 @stop

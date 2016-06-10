@@ -70,5 +70,9 @@
     {!!  HTML::style('assets/css/bootstrap-tagsinput.css')  !!}
     @endif
 
+    @if(in_array('slider',$assets))
+    {!!  HTML::style('assets/css/jquery.nstSlider.css')  !!}
+    @endif
+
     <script> var public_path = "{{ URL::to('/') }}/"; </script>
 </head>

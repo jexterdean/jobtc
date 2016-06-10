@@ -52,33 +52,26 @@
                                             <div class="form-group">
                                                 <label>Your Answer</label>
                                                 <div>
-                                                    <?php
-                                                    if(array_key_exists($v->id, $review_result)){
-                                                        $this_result = $review_result[$v->id];
-                                                        echo $this_result->answer ?
+                                                    {!!
+                                                        $v->result_answer ?
                                                             (
                                                                 $v->question_type_id == 1 ?
                                                                 (
-                                                                    array_key_exists($this_result->answer, $v->question_choices) ?
-                                                                    $v->question_choices[$this_result->answer] :
+                                                                    array_key_exists($v->result_answer, $v->question_choices) ?
+                                                                    $v->question_choices[$v->result_answer] :
                                                                     '<span style="color: #f00;">Answer not found on choices!</span>'
                                                                 ) :
-                                                                $this_result->answer
+                                                                $v->result_answer
                                                             ) :
-                                                            '<span style="color: #f00;">No Answer!</span>';
-                                                        if($v->question_type_id != 3){
-                                                            echo
-                                                                '<span style="color: #' .
-                                                                ($this_result->result ? '59ae59' : 'f00') .
-                                                                ';"> <em>(' .
-                                                                ($this_result->result ? 'Correct' : 'Wrong') .
-                                                                ')</em></span>';
-                                                        }
-                                                    }
-                                                    else{
-                                                        echo '<span style="color: #f00;">Answer not found on choices!</span>';
-                                                    }
-                                                    ?>
+                                                            '<span style="color: #f00;">No Answer!</span>'
+                                                    !!}
+                                                    @if($v->question_type_id != 3)
+                                                        {!! '<span style="color: #' .
+                                                            ($v->result ? '59ae59' : 'f00') .
+                                                            ';"> <em>(' .
+                                                            ($v->result ? 'Correct' : 'Wrong') .
+                                                            ')</em></span>' !!}
+                                                    @endif
                                                 </div>
                                             </div>
 
@@ -100,20 +93,20 @@
 
                                             <div class="text-center">
                                                 <div>
-                                                <button type="button" class="btn btn-shadow btn-delete btn-prev">Previous</button>
-                                                <button type="button" class="btn btn-shadow btn-submit btn-next">Next</button>
-                                                <button type="button" class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
-                                                    <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
-                                                    <span class="glyphicon glyphicon-time"></span>
-                                                </button>
-                                                @if($v->question_type_id == 3)
-                                                <div class="pull-right" style="padding-left: 5px;">
-                                                    <div class="input-group">
-                                                        <input type="number" max="{{ $v->max_point }}" class="form-control" style="width: 70px;">
-                                                        <div class="input-group-addon">/{{ $v->max_point }}</div>
+                                                    <button type="button" class="btn btn-shadow btn-delete btn-prev" id="{{ $v->result_id }}">Previous</button>
+                                                    <button type="button" class="btn btn-shadow btn-submit btn-next" id="{{ $v->result_id }}">Next</button>
+                                                    <button type="button" class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
+                                                        <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
+                                                        <span class="glyphicon glyphicon-time"></span>
+                                                    </button>
+                                                    @if($v->question_type_id == 3)
+                                                    <div class="pull-right" style="padding-left: 5px;">
+                                                        <div class="input-group">
+                                                            <input type="number" name="points[{{ $v->result_id }}]" value="{{ $v->result_points }}" max="{{ $v->max_point }}" class="form-control" style="width: 70px;">
+                                                            <div class="input-group-addon">/{{ $v->max_point }}</div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                @endif
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -201,6 +194,29 @@
                 .removeClass('active')
                 .prev('.slider-div')
                 .addClass('active');
+        });
+        $('.btn-next, .btn-prev').click(function(e){
+            var thisId = this.id;
+            if(thisId){
+                var thisElement = $('input[name="points[' + thisId + ']"]');
+                if(thisElement.length != 0){
+                    var data = {
+                        points: thisElement.val()
+                    };
+
+                    $.ajax({
+                        url: '{{ URL::to('quiz') }}/' + thisId + '?p=exam',
+                        data: data,
+                        method: "PATCH",
+                        success: function(doc) {
+                            console.log(doc);
+                        },
+                        error: function(a, b, c){
+
+                        }
+                    });
+                }
+            }
         });
     });
 </script>
