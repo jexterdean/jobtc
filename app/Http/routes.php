@@ -64,6 +64,7 @@ Route::post('updateRole', 'CompanyController@updateRole');
 Route::resource('quiz', 'QuizController');
 Route::post('testSort', 'QuizController@testSort');
 Route::post('questionSort', 'QuizController@questionSort');
+Route::get('userSlider/{id}', 'QuizController@userSlider');
 
 Route::group(['middleware' => 'guest'], function () {
 

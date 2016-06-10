@@ -14,7 +14,12 @@
                                 @foreach($test as $v)
                                     <tr>
                                         <td>{{ $v->title }}</td>
-                                        <td>{{ 'Ave. '. $v->average }}</td>
+                                        <td class="col-sm-3">{{ 'Ave. '. $v->average }}</td>
+                                        <td class="col-sm-1">
+                                            <a href="{{ url('quiz/' . $v->id . '?p=slider') }}">
+                                                <i class="fa fa-sliders" style="font-size: 2em;"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else
@@ -42,10 +47,12 @@
                             @if(count($result) > 0)
                                 @foreach($result as $v)
                                     <tr>
-                                        <td><strong>{{ $v->title }}</strong></td>
-                                        <td><em> - {{ $v->name }}</em></td>
-                                        <td>{{ $v->score . '/' . $v->total_question }}</td>
                                         <td>
+                                            <strong>{{ $v->title }}</strong>
+                                        </td>
+                                        <td class="col-sm-3"><em> - {{ $v->name }}</em></td>
+                                        <td class="col-sm-1">{{ $v->score . '/' . $v->total_question }}</td>
+                                        <td class="col-sm-1">
                                             <a href="{{ url('quiz/' . $v->test_id . '?p=review') }}">
                                                 <i class="fa fa-eye" style="font-size: 2em;"></i>
                                             </a>
@@ -78,7 +85,7 @@
                                 @foreach($files as $v)
                                     <tr>
                                         <td>{{ basename($v) }}</td>
-                                        <td>
+                                        <td class="col-sm-1">
                                             @if(\App\Helpers\Helper::checkFileIsAudio($v))
                                                 <?php
                                                 $mime = \App\Helpers\Helper::getMimeType($v);
