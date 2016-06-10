@@ -232,6 +232,25 @@
         });
         //endregion
 
+        //region Question Delete
+        var delete_file_btn = $('.delete-file-btn');
+        delete_file_btn.click(function(e){
+            e.preventDefault();
+
+            var thisId = this.id;
+            var thisFile = $(this).closest('tr');
+            var type = $(this).data('type');
+            $.ajax({
+                url: '{{ URL::to('quiz') }}/1?t=' + type + '&f=' + thisId,
+                method: "DELETE",
+                success: function(doc) {
+                    console.log(doc);
+                    thisFile.remove();
+                }
+            });
+        });
+        //endregion
+
         $(document).on('propertychange keyup input paste', 'input[type="number"]', function(e) {
             if($(this).has('max')){
                 if($(this).val() > $(this).attr('max')){
