@@ -6,18 +6,18 @@
             'Hiring Assessment' => 'Hiring Assessment',
             'Software Development' => 'Software Development',
             'Coding' => 'Coding'
-            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Project Type', 'tabindex' => '7'] )  !!}
+            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Type', 'tabindex' => '7'] )  !!}
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-12">
             {!!  Form::input('text','project_title','',
-            ['class' => 'form-control', 'placeholder' => 'Project Title', 'tabindex' => '1']) !!}
+            ['class' => 'form-control', 'placeholder' => 'Title', 'tabindex' => '1']) !!}
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            {!!  Form::textarea('project_description','',['rows' => '3','class' => 'form-control', 'placeholder' => 'Project Description', 'tabindex' => '6']) !!}
+            {!!  Form::textarea('project_description','',['rows' => '3','class' => 'form-control', 'placeholder' => 'Description', 'tabindex' => '6']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -26,7 +26,7 @@
             //change code because causes error on other pages
             $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             ?>
-            {!! Form::select('company_id', $clients, '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company Name', 'tabindex' =>'2'] )  !!}
+            {!! Form::select('company_id', $clients, '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Company', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
     <div class="form-group">
@@ -58,13 +58,13 @@
             'EUR' => 'EUR',
             'GBP' => 'GBP',
             'PHP' => 'PHP'
-            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Currency', 'tabindex' => '7'] )  !!}
+            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Currency', 'tabindex' => '7'] )  !!}
         </div>
         <div class="col-md-3">
             {!!  Form::select('rate_type', [
             'fixed' => 'Fixed',
             'hourly' => 'Hourly'
-            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Rate', 'tabindex' => '7'] )  !!}
+            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Type', 'tabindex' => '7'] )  !!}
         </div>
         <div class="col-md-4">
             {!!  Form::input('text','account','', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Account', 'tabindex' => '4'])  !!}

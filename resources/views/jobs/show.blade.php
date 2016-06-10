@@ -55,17 +55,59 @@
                                 <p class="job-description">{!! $job->description !!}</p>
                                 <input class="token" name="_token" type="hidden" value="{{csrf_token()}}">
                             </div>
+                            @if(Auth::check())
+                            <div class="row" style="margin: 15px 0 45px;">
+                                <div class="col-md-12">
+                                    <div class="job-header pull-right">
+                                        <a class="btn btn-edit btn-lg btn-shadow edit-job" data-toggle="modal" style="font-size: 18px;"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
+                                        <a class="btn btn-delete btn-lg btn-shadow delete-job" style="font-size: 18px;"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                        <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                             @if(Auth::check() && Auth::user()->level() === 1 || Auth::check() && Auth::user()->user_id === $job->user_id)
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div  class="box box-default">
-                                        <div class="box-container">
-                                            <div class="box-header" id="notes-{{$job->id}}" data-toggle="collapse" data-target="#notes-collapse-{{ $job->id }}">
-                                                <h3 class="box-title">Notes</h3>
+                                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                        <div id="collapse-container-1" class="panel task-list">
+                                            <div class="panel-heading task-header" id="notes-{{$job->id}}" data-toggle="collapse" data-target="#notes-collapse-{{ $job->id }}">
+                                                <div class="row">
+                                                    <h4 class="panel-title task-list-header">Notes</h4>
+                                                </div>
                                             </div>
-                                            <div class="box-body">
-                                                <div id="notes-collapse-{{ $job->id }}" class="box-content collapse">
-                                                    <textarea id="job-notes">{{$job->notes}}</textarea>
+                                            <div id="notes-collapse-{{ $job->id }}" class="box-content collapse">
+                                                <div class="panel-body">
+                                                    <div class="panel-content">
+                                                        <textarea id="job-notes">{{$job->notes}}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-container-2" class="panel task-list">
+                                            <div class="panel-heading task-header" data-target="#collapse-1" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                                <div class="row">
+                                                    <h4 class="panel-title task-list-header">Applicant Assessment Instuctions</h4>
+                                                </div>
+                                            </div>
+                                            <div id="collapse-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                <div class="panel-body">
+                                                    <div class="panel-content">
+                                                        <textarea class="form-control assessment-instruction" id="assessment-instruction"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapse-container-3" class="panel task-list">
+                                            <div class="panel-heading task-header" data-target="#collapse-2" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                                <div class="row">
+                                                    <h4 class="panel-title task-list-header">Assessment Scores</h4>
+                                                </div>
+                                            </div>
+                                            <div id="collapse-2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                <div class="panel-body">
+                                                    <div class="panel-content">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -75,52 +117,6 @@
                             @endif
                         </div>
                     </div>
-                    @if(Auth::check())
-                    <div class="row" style="margin: 15px 0 45px;">
-                        <div class="col-md-12">
-                            <div class="job-header pull-right">
-                                <a class="btn btn-edit btn-lg btn-shadow edit-job" data-toggle="modal"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
-                                <a class="btn btn-delete btn-lg btn-shadow delete-job"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
-                                <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                    @if(Auth::check() && Auth::user()->level() === 1 || Auth::check() && Auth::user()->user_id === $job->user_id)
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                <div id="collapse-container-1" class="panel task-list">
-                                    <div class="panel-heading task-header" data-target="#collapse-1" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
-                                        <div class="row">
-                                            <h4 class="panel-title task-list-header">Applicant Assessment Instuctions</h4>
-                                        </div>
-                                    </div>
-                                    <div id="collapse-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                        <div class="panel-body">
-                                            <div class="panel-content">
-                                                <textarea class="form-control assessment-instruction" id="assessment-instruction"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="collapse-container-2" class="panel task-list">
-                                    <div class="panel-heading task-header" data-target="#collapse-2" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
-                                        <div class="row">
-                                            <h4 class="panel-title task-list-header">Assessment Scores</h4>
-                                        </div>
-                                    </div>
-                                    <div id="collapse-2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                        <div class="panel-body">
-                                            <div class="panel-content">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
                 </div>
                 @if(Auth::check() && Auth::user()->level() === 1 || Auth::check() && Auth::user()->user_id === $job->user_id)
                  @if($applicants->total() > 1)
