@@ -244,7 +244,6 @@
                 url: '{{ URL::to('quiz') }}/1?t=' + type + '&f=' + thisId,
                 method: "DELETE",
                 success: function(doc) {
-                    console.log(doc);
                     thisFile.remove();
                 }
             });
