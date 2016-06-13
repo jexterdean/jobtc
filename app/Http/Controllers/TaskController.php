@@ -287,22 +287,23 @@ class TaskController extends BaseController {
         //$taskCheckList = new TaskChecklist($request->all());
         //$taskCheckList->save();
         $task_check_list_id = $request->input('task_check_list_id');
+        $task_id = $request->input('task_id');
         $taskCheckList = TaskChecklist::where('id', $task_check_list_id)->first();
 
-        $has_order_list = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->count();
+        $has_order_list = TaskChecklistOrder::where('task_id', '=', $task_id)->count();
 
         if ($has_order_list > 0) {
             //then get the new task list item id and append it as the last item on the order
-            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $taskCheckList->task_id)->pluck('task_id_order');
+            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $task_id)->pluck('task_id_order');
             $task_list_id_array = $taskCheckListOrderString . ',' . $taskCheckList->id;
-            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $request->task_id)->update([
+            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $task_id)->update([
                 'task_id_order' => $task_list_id_array
             ]);
 
             //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
-            $data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+            $data = TaskChecklist::where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
         } else {
-            $data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+            $data = TaskChecklist::where('task_id', '=', $task_id)->get();
         }
 
         return json_encode($data);
@@ -421,8 +422,8 @@ class TaskController extends BaseController {
         $data = array(
             "uploaded" => 1,
             "fileName" => $file_name->getClientOriginalName(),
-            "url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
-            //"url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
+            //"url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
+            "url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
         );
 
         return json_encode($data);
@@ -507,7 +508,6 @@ class TaskController extends BaseController {
     }
     
     public function saveSpreadsheet(Request $request) {
-        
         //$taskCheckList = new TaskChecklist($request->all());
         //$taskCheckList->save();
         $task_id = $request->input('task_id');

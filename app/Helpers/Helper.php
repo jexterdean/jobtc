@@ -7,6 +7,7 @@ use Auth;
 use App\Models\Company;
 use App\Models\Profile;
 use App\Models\Project;
+use App\Models\ShareJob;
 use App\Models\Job;
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -137,10 +138,24 @@ class Helper
     
     public static function getJobLinks() {
         
-        $user_id = Auth::user()->user_id;
+        $user_id = Auth::user('user')->user_id;
         
-        $jobs = Job::where('user_id',$user_id)->get();
+        $job_list_ids = [];
+        
+        $owned_jobs = Job::where('user_id',$user_id)->get();
+        
+        $shared_jobs = ShareJob::where('user_id',$user_id)->get();
 
+        foreach($owned_jobs as $owned_job) {
+            array_push($job_list_ids,$owned_job->id);
+        }
+        
+        foreach($shared_jobs as $shared_job) {
+            array_push($job_list_ids,$shared_job->job_id);
+        }
+        
+        $jobs = Job::whereIn('id',$job_list_ids)->get();
+        
         return $jobs;
         
     }

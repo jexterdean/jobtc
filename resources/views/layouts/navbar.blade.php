@@ -51,7 +51,7 @@
         @endif
     </ul>
 </li>
-@if(Auth::check('user') && Auth::user('user')->level() === 1)
+@if(Auth::check('user'))
 <?php $jobs = \App\Helpers\Helper::getJobLinks(); ?>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle">
