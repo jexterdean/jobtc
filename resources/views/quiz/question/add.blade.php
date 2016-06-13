@@ -1,4 +1,4 @@
-{!! Form::open(array('files' => true, 'url' => 'quiz?p=question&id=' . $test_id, 'method' => 'POST')) !!}
+{!! Form::open(array('files' => true, 'url' => 'quiz?p=question&id=' . $test_id . ($trigger ? '&trigger=1' : ''), 'method' => 'POST')) !!}
 <div class="row">
     <div class="col-md-6 form-group">
         <label class="col-sm-4 text-right">Question Type:</label>

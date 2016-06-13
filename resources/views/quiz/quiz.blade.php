@@ -37,7 +37,7 @@
                                                 <div class="col-md-8">
                                                     <a data-toggle="collapse" href="#question-collapse-{{ $q->id }}" class="checklist-header" style="font-size: 22px;">
                                                         <?php
-                                                        $q->question = preg_replace("/<\/*[a-z0-9\s\"=;:-]*>/i", "", $q->question);
+                                                        $q->question = preg_replace("/<\/*[a-z0-9\s\"'.=;:-]*>/i", "", $q->question);
                                                         ?>
                                                         {{ substr($q->question, 0, 50) . (strlen($q->question) > 50 ? '...' : '') }}
                                                     </a>

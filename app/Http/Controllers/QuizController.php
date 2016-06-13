@@ -137,6 +137,7 @@ class QuizController extends BaseController {
     public function create() {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
         $id = isset($_GET['id']) ? $_GET['id'] : '';
+        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : 0;
 
         $test_info = DB::table('test')
             ->where('id', '=', $id)
@@ -146,7 +147,8 @@ class QuizController extends BaseController {
             'assets' => ['input-mask', 'waiting'],
             'page' => 'edit',
             'test_id' => $id,
-            'test_info' => $test_info
+            'test_info' => $test_info,
+            'trigger' => $trigger
         ];
         $this->setData($data);
 
@@ -169,6 +171,7 @@ class QuizController extends BaseController {
     public function store(Request $request) {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
         $id = isset($_GET['id']) ? $_GET['id'] : '';
+        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : 0;
         $label = '';
 
         $validation = '';
@@ -298,10 +301,10 @@ class QuizController extends BaseController {
                     DB::table('question')
                         ->where('id', '=', $id)
                         ->update(['question_photo' => $fileName]);
+                }
 
-                    if(isset($_GET['trigger'])) {
-                        \Session::flash('triggerTest', $id);
-                    }
+                if($trigger) {
+                    \Session::flash('triggerTest', $id);
                 }
             }
             else if ($page == "exam") {
