@@ -31,10 +31,13 @@ CKEDITOR.editorConfig = function (config) {
     config.extraPlugins = 'ckwebspeech,uploadimage';
     
     config.saveUrl = '/saveImage';
+    //config.saveUrl = 'http://localhost:8000/saveImage';
     //config.pollUrl = 'https://localhost:3000/socket.io';
+    //config.pollUrl = '/autoSave';
     
     //For file uploads, specifically image uploads
-    config.filebrowserImageUploadUrl = 'http://job.tc/pm/saveImage';
+    config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
+    //config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
     
     //For ckwebspeechs
     config.ckwebspeech = {'culture': 'en',

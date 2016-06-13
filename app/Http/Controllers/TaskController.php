@@ -413,7 +413,7 @@ class TaskController extends BaseController {
     public function saveImage(Request $request) {
 
         $file_name = $request->file('upload');
-
+        
         $file_name->move(
                 'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
         );
@@ -421,7 +421,8 @@ class TaskController extends BaseController {
         $data = array(
             "uploaded" => 1,
             "fileName" => $file_name->getClientOriginalName(),
-            "url" => 'http://job.tc/pm/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
+            "url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
+            //"url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
         );
 
         return json_encode($data);
