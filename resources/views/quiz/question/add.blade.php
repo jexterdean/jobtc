@@ -21,11 +21,11 @@
     <div class="col-md-3">
         <div class="form-inline question-points-area" data-type="">
             <label>Points:</label>
-            <input type="text" name="points" style="width: 80px;" class="q-form points-form form-control" />
+            <input type="text" name="points" value="{{ $test_info->default_points }}" style="width: 80px;" class="q-form points-form form-control" />
         </div>
         <div class="form-inline question-points-area hidden" data-type="3" style="white-space: nowrap">
             <label>Maximum Score:</label>
-            <input type="text" name="max_point" style="width: 70px;" class="q-form points-form form-control" />
+            <input type="text" name="max_point" value="{{ $test_info->default_points }}" style="width: 70px;" class="q-form points-form form-control" />
         </div>
     </div>
 </div>

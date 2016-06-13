@@ -75,6 +75,12 @@
             });
         });
 
+        @if(Session::get('triggerTest'))
+        var $thisTest = $('.test-list[data-id="{!! Session::get('triggerTest') !!}"]');
+        $thisTest.find('.panel-heading').trigger('click');
+        $thisTest.find('.trigger-add-btn').trigger('click');
+        @endif
+
         //region Test Sort
         var t = $('.test-group');
         t.sortable({

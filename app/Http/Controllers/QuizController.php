@@ -25,6 +25,7 @@ class QuizController extends BaseController {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        \Session::flash('triggerTest', 10);
         $data = [
             'assets' => ['input-mask', 'waiting', 'select', 'tags'],
             'page' => 'quiz'
@@ -217,6 +218,7 @@ class QuizController extends BaseController {
                 $test->completion_image = Input::get('completion_image');
                 $test->completion_sound = Input::get('completion_sound');
                 $test->default_tags = Input::get('default_tags');
+                $test->default_points = Input::get('default_points');
                 $test->save();
 
                 if (Input::file('completion_image_upload')) {
@@ -295,8 +297,12 @@ class QuizController extends BaseController {
                     Input::file('question_photo')->move($photo_dir, $fileName);
 
                     DB::table('question')
-                            ->where('id', '=', $id)
-                            ->update(['question_photo' => $fileName]);
+                        ->where('id', '=', $id)
+                        ->update(['question_photo' => $fileName]);
+
+                    if(isset($_GET['trigger'])) {
+                        \Session::flash('triggerTest', $id);
+                    }
                 }
             }
             else if ($page == "exam") {
@@ -334,7 +340,7 @@ class QuizController extends BaseController {
             DB::commit();
 
             return Redirect::to('quiz')
-                            ->withSuccess($label . " added successfully!");
+                ->withSuccess($label . " added successfully!");
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -519,6 +525,7 @@ class QuizController extends BaseController {
                 $test->completion_image = Input::get('completion_image');
                 $test->completion_sound = Input::get('completion_sound');
                 $test->default_tags = Input::get('default_tags');
+                $test->default_points = Input::get('default_points');
                 $test->save();
 
                 if (Input::file('completion_image_upload')) {

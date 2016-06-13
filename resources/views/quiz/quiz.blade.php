@@ -37,7 +37,7 @@
                                                 <div class="col-md-8">
                                                     <a data-toggle="collapse" href="#question-collapse-{{ $q->id }}" class="checklist-header" style="font-size: 22px;">
                                                         <?php
-                                                        $q->question = preg_replace("/<\/*[a-z]*>/", "", $q->question);
+                                                        $q->question = preg_replace("/<\/*[a-z0-9\s\"=;:-]*>/i", "", $q->question);
                                                         ?>
                                                         {{ substr($q->question, 0, 50) . (strlen($q->question) > 50 ? '...' : '') }}
                                                     </a>
@@ -110,6 +110,9 @@
                                     </ul>
                                     <a class="btn btn-submit btn-shadow btn-sm check-list-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id) }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
                                         <i class="glyphicon glyphicon-plus"></i> Question
+                                    </a>&nbsp;&nbsp;&nbsp;
+                                    <a class="btn btn-submit btn-shadow btn-sm trigger-add-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id . '&trigger=1') }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
+                                        <i class="glyphicon glyphicon-plus"></i> New Question
                                     </a>&nbsp;&nbsp;&nbsp;
                                     <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="btn btn-assign btn-shadow">
                                         <i class="fa fa-eye"></i> Preview
