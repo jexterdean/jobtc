@@ -127,6 +127,9 @@ class QuizController extends BaseController {
         $file_dir = public_path() . '/assets/shared-files';
         $files = is_dir($file_dir) ? \File::allFiles($file_dir) : array();
         $data['files'] = $files;
+
+        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
+        $data['triggerTest'] = $trigger;
     }
 
     /**
@@ -302,10 +305,6 @@ class QuizController extends BaseController {
                         ->where('id', '=', $id)
                         ->update(['question_photo' => $fileName]);
                 }
-
-                if($trigger) {
-                    \Session::flash('triggerTest', $id);
-                }
             }
             else if ($page == "exam") {
                 $q = Question::where('id', Input::get('question_id'))
@@ -341,13 +340,14 @@ class QuizController extends BaseController {
 
             DB::commit();
 
-            return Redirect::to('quiz')
+            $url = 'quiz' . ($trigger ? '?trigger=' . $id : '');
+            return Redirect::to($url)
                 ->withSuccess($label . " added successfully!");
         } catch (\Exception $e) {
             DB::rollback();
 
             return Redirect::to('quiz')
-                            ->withErrors($label . " failure when adding!");
+                ->withErrors($label . " failure when adding!");
         }
     }
 
