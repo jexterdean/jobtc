@@ -25,12 +25,9 @@ class QuizController extends BaseController {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
-
         $data = [
             'assets' => ['input-mask', 'waiting', 'select', 'tags'],
-            'page' => 'quiz',
-            'triggerTest' => $trigger
+            'page' => 'quiz'
         ];
         $this->setData($data);
 
@@ -130,6 +127,9 @@ class QuizController extends BaseController {
         $file_dir = public_path() . '/assets/shared-files';
         $files = is_dir($file_dir) ? \File::allFiles($file_dir) : array();
         $data['files'] = $files;
+
+        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
+        $data['triggerTest'] = $trigger;
     }
 
     /**
