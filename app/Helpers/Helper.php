@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Profile;
 use App\Models\Project;
 use App\Models\ShareJob;
+use App\Models\ShareJobCompanyPermission;
 use App\Models\Job;
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -138,20 +139,34 @@ class Helper
     
     public static function getJobLinks() {
         
+        $job_list_ids = [];
+        $company_list_ids = [];
+        
         $user_id = Auth::user('user')->user_id;
         
-        $job_list_ids = [];
+        $profiles = Profile::where('user_id',$user_id)->get();
+        
+        //Get all the company ids mapped to the user
+        foreach($profiles as $profile) {
+            array_push($company_list_ids,$profile->company_id);
+        }
         
         $owned_jobs = Job::where('user_id',$user_id)->get();
         
         $shared_jobs = ShareJob::where('user_id',$user_id)->get();
-
+        
+        $shared_jobs_companies = ShareJobCompanyPermission::whereIn('company_id',$company_list_ids)->where('user_id',$user_id)->get();
+        
         foreach($owned_jobs as $owned_job) {
             array_push($job_list_ids,$owned_job->id);
         }
         
         foreach($shared_jobs as $shared_job) {
             array_push($job_list_ids,$shared_job->job_id);
+        }
+        
+        foreach($shared_jobs_companies as $shared_jobs_company) {
+            array_push($job_list_ids,$shared_jobs_company->job_id);
         }
         
         $jobs = Job::whereIn('id',$job_list_ids)->get();

@@ -122,6 +122,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('shareJobToUser','CompanyController@shareJobToUser');
         Route::post('unshareJobFromUser','CompanyController@unshareJobFromUser');
         
+        /*Sharing Jobs to a Company*/
+        Route::post('shareJobToCompany','CompanyController@shareJobToCompany');
+        Route::post('unshareJobFromCompany','CompanyController@unshareJobFromCompany');
+        
         /* For assigning employees with tasks from the tasklist of a given project */
         Route::any('assignTaskList', 'CompanyController@assignTaskList');
         Route::any('unassignTaskList', 'CompanyController@unassignTaskList');
@@ -133,7 +137,11 @@ Route::group(['middleware' => 'auth'], function () {
         /* For assigning tests to jobs */
         Route::any('assignTestToApplicant', 'CompanyController@assignTestToApplicant');
         Route::any('unassignTestFromApplicant', 'CompanyController@unassignTestFromApplicant');
-
+        
+        /*For sharing jobs with employees per company*/
+        Route::any('shareToCompanyEmployee', 'CompanyController@shareToCompanyEmployee');
+        Route::any('unshareFromCompanyEmployee', 'CompanyController@unshareFromCompanyEmployee');
+        
         /* For Getting the tasklist when you're dropping an employee to a project */
         Route::any('getTaskList', 'CompanyController@getTaskList');
 
@@ -154,6 +162,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('getShareJobsTab/{id}','CompanyController@getShareJobsTab');
         /*For Projects Load on Demand*/
         Route::get('getSubprojects/{company_id}/{project_id}','CompanyController@getSubprojects');
+        /*For Share Companies Load on Demand*/
+        Route::get('getEmployees/{company_id}/{job_id}','CompanyController@getEmployees');
         
     });
 

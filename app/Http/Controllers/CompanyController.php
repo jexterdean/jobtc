@@ -25,6 +25,8 @@ use App\Models\TestPerApplicant;
 use App\Models\TestPerJob;
 use App\Models\Job;
 use App\Models\ShareJob;
+use App\Models\ShareJobCompany;
+use App\Models\ShareJobCompanyPermission;
 use App\Models\Test;
 use Auth;
 use View;
@@ -651,17 +653,25 @@ class CompanyController extends BaseController {
     public function getShareJobsTab(Request $request, $id) {
 
         $user_id = Auth::user('user')->user_id;
-        
-        $profiles = Profile::with('user')->where('company_id', $id)->where('user_id','<>',$user_id)->get();
 
-        $jobs = Job::where('user_id',$user_id)->where('company_id', $id)->get();
+        $profiles = Profile::with('user')->where('company_id', $id)->where('user_id', '<>', $user_id)->get();
+
+         $user_companies = Company::with(['profile' => function($query) use($user_id) {
+                        $query->where('user_id', $user_id)->get();
+                    }])->where('id','<>',$id)->get();
+        
+        $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->get();
 
         $shared_jobs = ShareJob::all();
+        
+        $shared_jobs_companies = ShareJobCompany::all();
         
         return view('company.partials._sharejobslist', [
             'profiles' => $profiles,
             'jobs' => $jobs,
-            'shared_jobs' => $shared_jobs
+            'user_companies' => $user_companies,
+            'shared_jobs' => $shared_jobs,
+            'shared_jobs_companies' => $shared_jobs_companies
         ]);
     }
 
@@ -677,10 +687,10 @@ class CompanyController extends BaseController {
 
         return "true";
     }
-    
+
     public function unshareJobFromUser(Request $request) {
-        
-         $job_id = $request->input('job_id');
+
+        $job_id = $request->input('job_id');
         $user_id = $request->input('user_id');
 
         $share_jobs = ShareJob::where('job_id', $job_id)->where('user_id', $user_id);
@@ -688,7 +698,29 @@ class CompanyController extends BaseController {
 
         return "true";
     }
-    
+
+    public function shareJobToCompany(Request $request) {
+        $job_id = $request->input('job_id');
+        $company_id = $request->input('company_id');
+
+        $shared_jobs_companies = new ShareJobCompany();
+        $shared_jobs_companies->job_id = $job_id;
+        $shared_jobs_companies->company_id = $company_id;
+        $shared_jobs_companies->save();
+
+        return "true";
+    }
+
+    public function unshareJobFromCompany(Request $request) {
+
+        $job_id = $request->input('job_id');
+        $company_id = $request->input('company_id');
+
+        $share_jobs_company = ShareJobCompany::where('job_id', $job_id)->where('company_id', $company_id);
+        $share_jobs_company->delete();
+
+        return "true";
+    }
 
     public function getSubprojects(Request $request, $company_id, $project_id) {
 
@@ -706,6 +738,48 @@ class CompanyController extends BaseController {
             'projects' => $projects,
             'task_permissions' => $task_permissions
         ]);
+    }
+    
+    public function getEmployees(Request $request, $company_id, $job_id) {
+        
+        $employees = Profile::with('user')->where('company_id',$company_id)->get();
+        
+        $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id',$company_id)->get();
+        
+        return view('company.partials._employeelist',[
+            'employees' => $employees,
+            'shared_company_jobs_permissions' => $shared_company_jobs_permissions,
+            'job_id' => $job_id
+        ]);
+    }
+    
+    public function shareToCompanyEmployee(Request $request) {
+        
+        $user_id = $request->input('user_id');
+        $company_id = $request->input('company_id');
+        $job_id = $request->input('job_id');
+     
+        
+        $company_permission = new ShareJobCompanyPermission();
+        $company_permission->user_id = $user_id;
+        $company_permission->company_id = $company_id;
+        $company_permission->job_id = $job_id;
+        $company_permission->save();
+        
+        return "true";
+    }
+    
+     public function unshareFromCompanyEmployee(Request $request) {
+        
+        $user_id = $request->input('user_id');
+        $company_id = $request->input('company_id');
+        $job_id = $request->input('job_id');
+     
+        
+        $company_permission = ShareJobCompanyPermission::where('user_id',$user_id)->where('company_id',$company_id)->where('job_id',$job_id);
+        $company_permission->delete();
+        
+        return "true";
     }
 
 }
