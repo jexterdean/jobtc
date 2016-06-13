@@ -21,7 +21,8 @@ class Test extends Model
         'order',
         'completion_image',
         'completion_sound',
-        'default_tags'
+        'default_tags',
+        'default_points'
     ];
     protected $primaryKey = 'id';
     protected $table = 'test';

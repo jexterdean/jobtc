@@ -78,8 +78,12 @@
 <div class="form-group">
     <div class="row">
         <label class="col-sm-3 text-right">Default Question Time</label>
-        <div class="col-md-9">
+        <div class="col-md-3">
             <input type="text" name="default_time" class="time-form form-control" style="width: 100px;" />
+        </div>
+        <label class="col-sm-3 text-right">Default Points:</label>
+        <div class="col-md-3">
+            <input type="number" name="default_points" value="1" class="form-control" style="width: 100px;" />
         </div>
     </div>
 </div>

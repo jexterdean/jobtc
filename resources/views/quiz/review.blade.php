@@ -17,7 +17,7 @@
                                 <div class="slider-container">
                                     <div class="slider-div text-center active">
                                         <div class="slider-body">
-                                            <span style="font-size: 23px;">{{ $tests_info->start_message }}</span>
+                                            <span style="font-size: 23px;">{!! $tests_info->start_message !!}</span>
                                             <br />
                                             <button type="button" class="btn btn-submit btn-shadow btn-next">Start Review</button>
                                         </div>
@@ -114,7 +114,7 @@
                                     @endforeach
                                     <div class="slider-div text-center">
                                         <div class="slider-body">
-                                            <span style="font-size: 23px;">{{ $tests_info->completion_message }}</span>
+                                            <span style="font-size: 23px;">{!! $tests_info->completion_message !!}</span>
                                             @if($tests_info->completion_image)
                                                 {!! HTML::image('/assets/shared-files/image/' . $tests_info->completion_image, '', array('style' => 'width: 100%;')) !!}
                                             @endif
