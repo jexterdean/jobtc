@@ -25,9 +25,12 @@ class QuizController extends BaseController {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
+
         $data = [
             'assets' => ['input-mask', 'waiting', 'select', 'tags'],
-            'page' => 'quiz'
+            'page' => 'quiz',
+            'triggerTest' => $trigger
         ];
         $this->setData($data);
 
@@ -302,10 +305,6 @@ class QuizController extends BaseController {
                         ->where('id', '=', $id)
                         ->update(['question_photo' => $fileName]);
                 }
-
-                if($trigger) {
-                    \Session::flash('triggerTest', $id);
-                }
             }
             else if ($page == "exam") {
                 $q = Question::where('id', Input::get('question_id'))
@@ -341,13 +340,14 @@ class QuizController extends BaseController {
 
             DB::commit();
 
-            return Redirect::to('quiz')
+            $url = 'quiz' . ($trigger ? '?trigger=' . $id : '');
+            return Redirect::to($url)
                 ->withSuccess($label . " added successfully!");
         } catch (\Exception $e) {
             DB::rollback();
 
             return Redirect::to('quiz')
-                            ->withErrors($label . " failure when adding!");
+                ->withErrors($label . " failure when adding!");
         }
     }
 
