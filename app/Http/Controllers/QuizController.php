@@ -25,7 +25,6 @@ class QuizController extends BaseController {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        \Session::flash('triggerTest', 10);
         $data = [
             'assets' => ['input-mask', 'waiting', 'select', 'tags'],
             'page' => 'quiz'
