@@ -504,6 +504,42 @@ class TaskController extends BaseController {
 
         return json_encode($data);
     }
+    
+    public function saveSpreadsheet(Request $request) {
+        
+        //$taskCheckList = new TaskChecklist($request->all());
+        //$taskCheckList->save();
+        $task_id = $request->input('task_id');
+        $task_check_list_id = $request->input('task_check_list_id');
+        $checklist_header = $request->input('checklist_header');
+        $checklist = $request->input('checklist');
+        
+        $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
+        
+        $taskCheckList->update([
+            'checklist_header' => $checklist_header,
+            'checklist' => $checklist,
+        ]);
+
+        $has_order_list = TaskChecklistOrder::where('task_id', '=', $task_id)->count();
+
+        if ($has_order_list > 0) {
+            //then get the new task list item id and append it as the last item on the order
+            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $task_id)->pluck('task_id_order');
+            $task_list_id_array = $taskCheckListOrderString . ',' . $task_id;
+            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $task_id)->update([
+                'task_id_order' => $task_list_id_array
+            ]);
+
+            //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+            $data = TaskChecklist::where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+        } else {
+            $data = TaskChecklist::where('task_id', '=', $task_id)->get();
+        }
+
+        return json_encode($data);
+        
+    }
 
 }
 

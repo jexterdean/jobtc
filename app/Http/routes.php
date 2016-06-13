@@ -129,6 +129,9 @@ Route::group(['middleware' => 'auth'], function () {
         /* For Getting the tasklist when you're dropping an employee to a project */
         Route::any('getTaskList', 'CompanyController@getTaskList');
 
+        /*Saving a Spreadsheet type task*/
+        Route::any('saveSpreadsheet','TaskController@saveSpreadsheet');
+        
         //For CkEditor Image file upload
         Route::any('saveImage&responseType=json', 'TaskController@saveImage');
 

@@ -642,39 +642,48 @@ function assignAuthorityLevels() {
 
 /*For load on demand tabs*/
 var company_id = window.location.pathname.split('/').pop();
-$('#company_tabs').on('click', '.assign_projects_tab', function () {
+$('#company_tabs').one('click', '.assign_projects_tab', function () {
     var url = public_path + 'getAssignProjectsTab/' + company_id;
-    $('#assign_projects').load(url, function () {
-        assignProjectsScripts();
-    });
+    if ($.trim($('#assign_projects').is(':empty'))) {
+        $('#assign_projects').load(url, function () {
+            assignProjectsScripts();
+        });
+    }
 });
 
-$('#company_tabs').on('click', '.assign_tests_tab', function () {
+$('#company_tabs').one('click', '.assign_tests_tab', function () {
     var url = public_path + 'getAssignTestsTab/' + company_id;
-    $('#assign_tests').load(url, function () {
-        assignTestsScripts();
-    });
+    if ($.trim($('#assign_tests').is(':empty'))) {
+        $('#assign_tests').load(url, function () {
+            assignTestsScripts();
+        });
+    }
 });
 
-$('#company_tabs').on('click', '.assign_authority_levels_tab', function () {
+$('#company_tabs').one('click', '.assign_authority_levels_tab', function () {
     var url = public_path + 'getAssignAuthorityLevelsTab/' + company_id;
-    $('#assign_authority_levels').load(url, function () {
-        assignAuthorityLevels();
-    });
+    if ($.trim($('#assign_authority_levels').is(':empty'))) {
+        $('#assign_authority_levels').load(url, function () {
+            assignAuthorityLevels();
+        });
+    }
 });
 
-$('.toggle-subprojects').on('click', function () {
+$('.toggle-subprojects').one('click', function () {
     var project_id = $(this).attr('id').split('-').pop();
     var url = public_path + 'getSubprojects/' + company_id + '/' + project_id;
-    console.log($('#project-collapse-' + project_id).is(':visible'));
 
-    $('#project-collapse-' + project_id).load(url, function () {
-        $(this).find('.task-header').each(function () {
-            var task_id = $(this).parent().attr('id').split('-').pop();
-            var task_url = public_path + '/task/' + task_id;
-            $('#load-task-assign-' + task_id).load(task_url);
+    if ($.trim($('#project-collapse-' + project_id).is(':empty'))) {
+        $('#project-collapse-' + project_id).load(url, function () {
+            $(this).find('.task-header').each(function () {
+                var task_id = $(this).parent().attr('id').split('-').pop();
+                var task_url = public_path + '/task/' + task_id;
+                if($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
+                $('#load-task-assign-' + task_id).load(task_url);
+            }
+            });
         });
-    });
+    }
 });
 
 /*$('.task-header').on('click')(function () {
