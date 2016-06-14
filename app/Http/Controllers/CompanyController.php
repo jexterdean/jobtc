@@ -654,7 +654,7 @@ class CompanyController extends BaseController {
         
         $profiles = Profile::with('user')->where('company_id', $id)->where('user_id','<>',$user_id)->get();
 
-        $jobs = Job::where('company_id', $id)->get();
+        $jobs = Job::where('user_id',$user_id)->where('company_id', $id)->get();
 
         $shared_jobs = ShareJob::all();
         
