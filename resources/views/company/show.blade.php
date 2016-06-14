@@ -29,6 +29,7 @@
     <div id="share_jobs" class="tab-pane fade in">
         <!--Load the content with AJAX when the user clicks on tab-->
     </div>
+    
     @endif
 </div>
 @stop
