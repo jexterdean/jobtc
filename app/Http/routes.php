@@ -66,6 +66,14 @@ Route::post('testSort', 'QuizController@testSort');
 Route::post('questionSort', 'QuizController@questionSort');
 Route::get('userSlider/{id}', 'QuizController@userSlider');
 
+/*
+ * Indeed Applicant Importer (Don't put this in any middleware, 
+ * the script should not login to insert the data from Indeed
+ **/
+
+Route::get('addJobFromCrawler','CrawlerController@addJobFromCrawler');
+Route::get('addApplicantFromCrawler','CrawlerController@addApplicantFromCrawler');
+
 Route::group(['middleware' => 'guest'], function () {
 
     Route::get('forgotPassword', function () {

@@ -55,9 +55,9 @@ function unassignTask(user_id, task_id, project_id) {
     $.post(url, data);
 }
 
-function shareToCompanyEmployee(user_id,company_id,job_id) {
-    
-     var url = public_path + 'shareToCompanyEmployee';
+function shareToCompanyEmployee(user_id, company_id, job_id) {
+
+    var url = public_path + 'shareToCompanyEmployee';
 
     var data = {
         'user_id': user_id,
@@ -66,12 +66,12 @@ function shareToCompanyEmployee(user_id,company_id,job_id) {
     };
 
     $.post(url, data);
-    
+
 }
 
-function unshareFromCompanyEmployee(user_id,company_id,job_id) {
-    
-     var url = public_path + 'unshareFromCompanyEmployee';
+function unshareFromCompanyEmployee(user_id, company_id, job_id) {
+
+    var url = public_path + 'unshareFromCompanyEmployee';
 
     var data = {
         'user_id': user_id,
@@ -80,7 +80,7 @@ function unshareFromCompanyEmployee(user_id,company_id,job_id) {
     };
 
     $.post(url, data);
-    
+
 }
 
 function assignProjectsScripts() {
@@ -781,6 +781,11 @@ function shareJobsScripts() {
                     'job_id': job_id
                 };
 
+                $.post(share_url, share_data, function (data) {
+                    //Assign the applicant id to the this list group item's input
+                    //$(ui.item).find('.job_id').val(data);
+                    //$(ui.item).find('.employee-list').html(data);
+                });
 
             } else {
                 company_id = list_group_id.split('-').pop();
@@ -801,13 +806,19 @@ function shareJobsScripts() {
                     'company_id': company_id,
                     'job_id': job_id
                 };
+
+                $.post(share_url, share_data, function (data) {
+                    //Assign the applicant id to the this list group item's input
+                    //$(ui.item).find('.job_id').val(data);
+                    //$(ui.item).find('.employee-list').html(data);
+                    //$(ui.item).find('.employee-list').html(data);
+                    $(ui.item).find('.toggle-employees').attr('id','shared-company-item-'+data);
+                    $(ui.item).find('.toggle-employees').attr('href','#employee-collapse-'+data);
+                    $(ui.item).find('.employee-list').attr('id','employee-collapse-'+data);
+                });
             }
 
-            $.post(share_url, share_data, function (data) {
-                //Assign the applicant id to the this list group item's input
-                //$(ui.item).find('.job_id').val(data);
-                //$(ui.item).find('.profile-container').html(data);
-            });
+
 
             //Remove warning that no employee is assigned.
             $(this).find('li:contains("Drag a test here to make it available for all applicants in this job posting.")').remove();
@@ -855,7 +866,7 @@ function shareJobsScripts() {
     });
 
     /*Employees per Company Load on Demand*/
-    $('.toggle-employees').one('click', function () {
+    $('.job-list-group').on('click','.toggle-employees', function () {
         var shared_company_job_id = $(this).attr('id').split('-').pop();
         var job_id = $(this).parent().parent().parent().attr('id').split('-').pop();
         var company_id = $(this).parent().parent().parent().parent().attr('id').split('-').pop();
@@ -863,7 +874,7 @@ function shareJobsScripts() {
         console.log('shared_company_job_id: ' + shared_company_job_id);
         console.log('company_id: ' + company_id);
 
-        var url = public_path + 'getEmployees/' + company_id + '/' +job_id;
+        var url = public_path + 'getEmployees/' + company_id + '/' + job_id;
 
         if ($.trim($('#employee-collapse-' + shared_company_job_id).is(':empty'))) {
             $('#employee-collapse-' + shared_company_job_id).load(url, function () {
@@ -879,7 +890,7 @@ function shareJobsScripts() {
         var user_id = $(this).children('.user_id').val();
         var job_id = $(this).children('.job_id').val();
         var company_id = $(this).children('.company_id').val();
-        
+
 
         var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
         assign_html += '<input class="user_id" type="hidden" value="' + user_id + '"/>';
@@ -895,14 +906,14 @@ function shareJobsScripts() {
         if ($(this).hasClass('bg-gray')) {
             $(this).switchClass('bg-gray', 'bg-green', function () {
                 $(this).html(assign_html);
-                shareToCompanyEmployee(user_id,company_id,job_id);
+                shareToCompanyEmployee(user_id, company_id, job_id);
             });
         }
         /*Unassign the Task List from this user*/
         if ($(this).hasClass('bg-green')) {
             $(this).switchClass('bg-green', 'bg-gray', function () {
                 $(this).html(unassign_html);
-                unshareFromCompanyEmployee(user_id,company_id,job_id);
+                unshareFromCompanyEmployee(user_id, company_id, job_id);
             });
         }
     });

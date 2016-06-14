@@ -616,14 +616,21 @@ class CompanyController extends BaseController {
         //Get Jobs by company and user
         $jobs = Job::with('applicants')->where('user_id', $user_id)->where('company_id', $id)->get();
 
-        $tests = Test::where('user_id', $user_id)->get();
-
         $test_applicants = TestPerApplicant::all();
 
         $test_jobs = TestPerJob::all();
 
         $company_users = Profile::with('user')->where('company_id', $id)->get();
-
+        
+        $company_user_ids = [];
+        
+        //Get all tests by users within the company
+        foreach($company_users as $company_user) {
+            array_push($company_user_ids,$company_user->user_id);
+        }
+        
+        $tests = Test::whereIn('user_id', $company_user_ids)->get();
+        
         $authority_levels = Role::where('company_id', $id)->orderBy('level', 'asc')->get();
 
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
@@ -707,8 +714,9 @@ class CompanyController extends BaseController {
         $shared_jobs_companies->job_id = $job_id;
         $shared_jobs_companies->company_id = $company_id;
         $shared_jobs_companies->save();
-
-        return "true";
+        
+        return $shared_jobs_companies->id;
+            
     }
 
     public function unshareJobFromCompany(Request $request) {
