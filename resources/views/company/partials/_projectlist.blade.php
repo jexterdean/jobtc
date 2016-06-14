@@ -12,7 +12,7 @@
 </div>
 <div class="mini-space"></div>
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-6">
         @if (count($projects) > 0)
         @foreach($projects as $project)
         <div id="project-{{$project->project_id}}" class="box box-default">
@@ -22,6 +22,30 @@
                 </div>
                 <div class="box-body">
                     <div class="box-content">
+                        <ul class="company-list-group list-group">
+                            @foreach($team_companies as $team_company)
+                            @if($team_company->project_id === $project->project_id)
+                            <li id="company-{{$team_company->company_id}}" class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                        {{$team_company->company->name}}
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="#" class="drag-handle">
+                                            <i class="fa fa-arrows"></i>
+                                        </a>
+                                        <a href="#" class="unassign-company">
+                                            <i class="fa fa-times"></i>
+                                            <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
+                                            <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            @endif
+                            @endforeach
+                        </ul>
                         <ul class="taskgroup-list list-group">
                             @foreach($teams as $team)                            
                             @if($team->project_id === $project->project_id)
@@ -57,7 +81,7 @@
                                 <div class="row">
                                     <div id="team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}" class="collapse">
                                         <div class="task-list-container">
-                                            <label class='center-block taskgroup-title'>Available Task Groups</label>
+                                            <label class='center-block taskgroup-title'>Available Sub Projects</label>
                                             <ul class="taskgroup-list list-group">
                                                 @foreach($project->task as $task)
                                                 <li class="list-group-item">
@@ -140,7 +164,7 @@
         </div>
         @endif
     </div>
-    <div class="col-md-5">
+    <div class="col-md-3">
         <div class="box box-default">
             <div class="box-container">
                 <div class="box-header">
@@ -229,22 +253,35 @@
                                                             </div>
                                                             </div>
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <div class="col-md-3">
                                                                 <div class="box box-default">
                                                                     <div class="box-container">
                                                                         <div class="box-header">
-                                                                            <h3 class="box-title">Teams</h3>
+                                                                            <h3 class="box-title">Companies</h3>
                                                                         </div>
                                                                         <div class="box-body">
                                                                             <div class="box-content">
-                                                                                <ul class="list-group">
-                                                                                    @if(count($team_grouping) > 0)
-                                                                                    @foreach($team_grouping[0]->team_project as $team_projects)
-                                                                                    <li class="list-group-item">{{$team_projects->team_id}}</li>
+                                                                                <ul class="company-list-group list-group">
+                                                                                    @foreach($user_companies as $user_company)
+                                                                                    <li id="company-{{$user_company->id}}" class="list-group-item">
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-9">
+                                                                                                <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                                                                                {{$user_company->name}}
+                                                                                            </div>
+                                                                                            <div class="pull-right">
+                                                                                                <a href="#" class="drag-handle">
+                                                                                                    <i class="fa fa-arrows"></i>
+                                                                                                </a>
+                                                                                                <a href="#" class="unassign-company hidden">
+                                                                                                    <i class="fa fa-times"></i>
+                                                                                                    <input class="company_id" type="hidden" value="{{$user_company->id}}"/>
+                                                                                                    <input class="project_id" type="hidden" value=""/>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </li>
                                                                                     @endforeach
-                                                                                    @else
-                                                                                    <li class="list-group-item">No Teams Available.</li>
-                                                                                    @endif
                                                                                 </ul>
                                                                             </div>
                                                                         </div>

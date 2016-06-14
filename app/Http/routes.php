@@ -9,7 +9,7 @@ Route::get('login', function() {
 });
 
 //Don't put this into middleware as well since it will not let the applicant logout
-//(applicant table doesn't use the role manager for the User)
+//(applicant table doesn't use the role manager for the User Model)
 Route::post('/login', 'SessionController@login');
 Route::get('logout', 'SessionController@destroy');
 
@@ -114,6 +114,14 @@ Route::group(['middleware' => 'auth'], function () {
         /* Unassigning Team members from a project */
         Route::any('unassignTeamMember', 'CompanyController@unassignTeamMember');
 
+        /*For Assigning Companies to a team*/
+        Route::post('assignCompanyToTeam','CompanyController@assignCompanyToTeam');
+        Route::post('unassignCompanyFromTeam','CompanyController@unassignCompanyFromTeam');
+        
+        /*Sharing Jobs to a User*/
+        Route::post('shareJobToUser','CompanyController@shareJobToUser');
+        Route::post('unshareJobFromUser','CompanyController@unshareJobFromUser');
+        
         /* For assigning employees with tasks from the tasklist of a given project */
         Route::any('assignTaskList', 'CompanyController@assignTaskList');
         Route::any('unassignTaskList', 'CompanyController@unassignTaskList');
@@ -143,7 +151,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('getAssignProjectsTab/{id}','CompanyController@getAssignProjectsTab');
         Route::get('getAssignTestsTab/{id}','CompanyController@getAssignTestsTab');
         Route::get('getAssignAuthorityLevelsTab/{id}','CompanyController@getAssignAuthorityLevelsTab');
-        /*For Project Load on Demand*/
+        Route::get('getShareJobsTab/{id}','CompanyController@getShareJobsTab');
+        /*For Projects Load on Demand*/
         Route::get('getSubprojects/{company_id}/{project_id}','CompanyController@getSubprojects');
         
     });
