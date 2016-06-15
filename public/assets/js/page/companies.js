@@ -789,7 +789,7 @@ function shareJobsScripts() {
 
             } else {
                 company_id = list_group_id.split('-').pop();
-
+                
                 var identicalItemCount = $("#company-" + company_id + ' .list-group').children('li:contains(' + ui.item.find('.job_id').val() + ')').length;
 
                 //If a duplicate, remove it
@@ -799,7 +799,9 @@ function shareJobsScripts() {
 
                 //Show unassign button
                 $(ui.item).find('.unshare-job').removeClass('hidden');
-
+                
+                $(ui.item).find('.company_id').val(company_id);
+                
                 //Share Job to a Company
                 share_url = public_path + 'shareJobToCompany';
                 share_data = {
@@ -854,7 +856,7 @@ function shareJobsScripts() {
 
         } else {
             company_id = $(this).find('.company_id').val();
-
+            console.log(company_id);
             data = {
                 'company_id': company_id,
                 'job_id': job_id
