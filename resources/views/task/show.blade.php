@@ -90,7 +90,8 @@
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
 
-                <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
+                <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
+                <a href="{{ url('task/' . $task->task_id .'/edit') }}" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target=".edit-modal" id="{{ $task->task_id }}"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                 @if(Auth::user('user')->user_id === $task->user_id)
                 <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
@@ -181,14 +182,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                <h4 class="modal-title">Edit Subproject</h4>
+                <h4 class="modal-title">Edit Briefcase</h4>
             </div>
         </div>
         <div class="modal-body">
         </div>
     </div>
 </div>
-<div class="modal fade" id="add_link" tabindex="-1" role="basic" aria-hidden="true">
+<div class="modal fade add_link_modal" id="add_link_{{ $task->task_id }}" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
