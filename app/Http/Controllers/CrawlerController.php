@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
+use App\Models\Applicant;
 
 class CrawlerController extends Controller {
 
@@ -87,15 +88,11 @@ class CrawlerController extends Controller {
         $title = $request->input('title');
         $description = $request->input('description');
 
-        $job_exists = Job::where('title', 'like', $title)->where('description', 'like', $description)->count();
-
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photo_save = $photo->move('uploads/job/', $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
-        } else {
-            $photo_path = 'assets/user/default-avatar.jpg';
-        }
+        $job_exists = Job::where('title', 'like', $title)
+                ->where('description', 'like', $description)
+                ->where('user_id',$user_id)
+                ->where('company_id',$company_id)
+                ->count();
 
         $job = new Job([
             'title' => $title,
@@ -103,7 +100,7 @@ class CrawlerController extends Controller {
             'company_id' => $company_id,
             'title' => $title,
             'description' => $description,
-            'photo' => $photo_path
+            'photo' => ''
         ]);
 
         if ($job_exists === 0) {
@@ -117,46 +114,31 @@ class CrawlerController extends Controller {
     public function addApplicantFromCrawler(Request $request) {
 
         $job = $request->input('job');
-        $first_name = $request->input('first_name');
-        $last_name = $request->input('last_name');
+        $name = $request->input('name');
         $email = $request->input('email');
         $phone = $request->input('phone');
         $date = date('Y-m-d h:i:s', time());
-        $username = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '', $first_name)) . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '', $last_name)) . '@' . $_SERVER['SERVER_NAME']);
-        $password = strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '', $first_name)) . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '', $last_name)));
+        
 
         $job_id = Job::where('title', 'like', '%' . preg_replace('/\s+/', '', $job) . '%')->first();
 
-        $applicant_exists = Applicant::where('first_name', 'like', $first_name)->where('last_name', 'like', $last_name)->count();
+        $applicant_exists = Applicant::where('name', 'like', $name)->count();
 
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photo_save = $photo->move('assets/applicant/photos/', $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
-        } else {
-            $photo_path = 'assets/user/avatar.png';
-        }
-
-        if ($request->hasFile('resume')) {
-            $resume = $request->file('resume');
-            $resume_save = $resume->move('assets/applicant/resumes/', $resume->getClientOriginalName());
-            $resume_path = $resume_save->getPathname();
-        } else {
-            $resume_path = 'assets/applicant/';
-        }
-
+        $photo_path = 'assets/user/default-avatar.jpg';
+        
+        $resume_path = 'assets/applicant/resumes/Resume'.$name.'.pdf';
+        
         $applicant = new Applicant([
             'job_id' => $job_id->id,
-            'first_name' => $first_name,
-            'last_name' => $last_name,
+            'name' => $name,
             'email' => $email,
             'phone' => $phone,
             'photo' => $photo_path,
             'resume' => $resume_path,
-            'password' => bcrypt($password)
+            'password' => bcrypt($email)
         ]);
 
-        if ($applicant_exists === 0) {
+        if ($applicant_exists ===  0 || $name !== '') {
             $applicant->save();
         }
 

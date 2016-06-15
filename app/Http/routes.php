@@ -71,8 +71,8 @@ Route::get('userSlider/{id}', 'QuizController@userSlider');
  * the script should not login to insert the data from Indeed
  **/
 
-Route::get('addJobFromCrawler','CrawlerController@addJobFromCrawler');
-Route::get('addApplicantFromCrawler','CrawlerController@addApplicantFromCrawler');
+Route::post('addJobFromCrawler','CrawlerController@addJobFromCrawler');
+Route::post('addApplicantFromCrawler','CrawlerController@addApplicantFromCrawler');
 
 Route::group(['middleware' => 'guest'], function () {
 
