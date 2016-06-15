@@ -39,13 +39,13 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            {!!  Form::textarea('address_1',isset($companies->address_1) ? $companies->address_1 : '',['size' => '30x3', 'class' =>
+            {!!  Form::textarea('address_1',isset($companies->address_1) ? $companies->address_1 : '',['size' => '30x2', 'class' =>
             'form-control', 'placeholder' => 'Address 1', 'tabindex' => '6']) !!}
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            {!!  Form::textarea('address_2',isset($companies->address_2) ? $companies->address_2 : '',['size' => '30x3', 'class' =>
+            {!!  Form::textarea('address_2',isset($companies->address_2) ? $companies->address_2 : '',['size' => '30x2', 'class' =>
             'form-control', 'placeholder' => 'Address 2', 'tabindex' => '7']) !!}
         </div>
     </div>
@@ -53,14 +53,14 @@
     <div class="form-group">
         <div class="col-md-12">
             {!! Form::input('text','province',isset($companies->province) ? $companies->province: '',['class' => 'form-control',
-            'placeholder' => 'Province', 'tabindex' => '8']) !!}
+            'placeholder' => 'State/Province', 'tabindex' => '8']) !!}
         </div>
     </div>
     
     <div class="form-group">
         <div class="col-md-12">
             {!! Form::input('text','zipcode',isset($companies->zipcode) ? $companies->zipcode: '',['class' => 'form-control',
-            'placeholder' => 'Zipcode', 'tabindex' => '9']) !!}
+            'placeholder' => 'Zip/Postal', 'tabindex' => '9']) !!}
         </div>
     </div>
 

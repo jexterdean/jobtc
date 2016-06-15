@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use App\Models\Applicant;
 use Session;
 use DB;
 use Auth;
@@ -170,7 +171,11 @@ class Helper
         }
         
         $jobs = Job::whereIn('id',$job_list_ids)->get();
-        
+
+        foreach($jobs as $job){
+            $job->applicants = Applicant::where('job_id',$job->id)->get();
+        }
+
         return $jobs;
         
     }

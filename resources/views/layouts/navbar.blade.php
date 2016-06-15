@@ -59,19 +59,28 @@
         <span>Jobs</span>
         <span class="caret"></span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu multi-level">
         <li>
             <a href="#add_job" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Job</span></a>
         </li>
         <li class="divider"></li>
         @if(count($jobs) > 0)
-        @foreach($jobs as $job)
-        <li>
-            <a href="{{ url('job/' . $job->id) }}">
-                <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $job->title }}</span>
-            </a>
-        </li>
-        @endforeach
+            @foreach($jobs as $job)
+            <li class="{{ count($job->applicants) > 0 ? 'dropdown-submenu' : '' }}">
+                <a href="{{ url('job/' . $job->id) }}">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i> <span>{{ $job->title }}</span>
+                </a>
+                @if(count($job->applicants) > 0)
+                    <ul class="dropdown-menu">
+                    @foreach($job->applicants as $applicants)
+                        <li>
+                            <a href="{{ url('a/' . $applicants->id) }}"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> {{ $applicants->name }}</a>
+                        </li>
+                    @endforeach
+                    </ul>
+                @endif
+            </li>
+            @endforeach
         @endif
     </ul>
 </li>

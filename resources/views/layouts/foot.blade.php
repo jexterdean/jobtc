@@ -33,9 +33,9 @@
 </div>
 
 <?php $countries = \App\Models\Country::orderBy('country_name', 'asc')->lists('country_name', 'country_id')->toArray(); ?>
-<div class="modal fade" id="add_company" tabindex="-1" role="basic" aria-hidden="true">
+<div class="modal fade bs-example-modal-sm" id="add_company" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 70%;margin: 0 auto;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Company</h4>
