@@ -28,7 +28,7 @@ CKEDITOR.editorConfig = function (config) {
     ];
     
     
-    config.extraPlugins = 'ckwebspeech,uploadimage';
+    config.extraPlugins = 'ckwebspeech,uploadimage,maxheight';
     
     config.saveUrl = '/saveImage';
     //config.saveUrl = 'http://localhost:8000/saveImage';
@@ -36,8 +36,8 @@ CKEDITOR.editorConfig = function (config) {
     //config.pollUrl = '/autoSave';
     
     //For file uploads, specifically image uploads
-    //config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
-    config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
+    config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
+    //config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
     
     //For ckwebspeechs
     config.ckwebspeech = {'culture': 'en',
