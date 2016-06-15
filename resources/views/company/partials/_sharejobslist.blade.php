@@ -80,8 +80,8 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div id="employee-collapse-{{$shared_job_company->id}}" class="collapse">
-                                                
+                                            <div id="employee-collapse-{{$shared_job_company->id}}" class="employee-list collapse">
+
                                             </div>
                                         </div>
                                     </li>
@@ -111,7 +111,7 @@
                             <li id="job-{{$job->id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <a class="job-toggle" data-toggle="collapse" href="#job-collapse-{{$job->id}}">
+                                        <a class="toggle-employees" data-toggle="collapse">
                                             <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                             {{$job->title}}
                                         </a>
@@ -126,6 +126,11 @@
                                             <input class="user_id" type="hidden" value=""/>
                                             <input class="company_id" type="hidden" value=""/>
                                         </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="employee-list collapse">
+
                                     </div>
                                 </div>
                             </li>
