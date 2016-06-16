@@ -117,8 +117,6 @@ class CompanyController extends BaseController {
             }
         }
 
-
-
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
@@ -663,9 +661,11 @@ class CompanyController extends BaseController {
 
         $profiles = Profile::with('user')->where('company_id', $id)->where('user_id', '<>', $user_id)->get();
 
-         $user_companies = Company::with(['profile' => function($query) use($user_id) {
+         /*$user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->where('id','<>',$id)->get();
+                    }])->where('id','<>',$id)->get();*/
+        
+        $user_companies = Company::with('profile')->where('id','<>',$id)->get();
         
         $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->get();
 
@@ -750,8 +750,15 @@ class CompanyController extends BaseController {
     
     public function getEmployees(Request $request, $company_id, $job_id) {
         
-        $employees = Profile::with('user')->where('company_id',$company_id)->get();
+        $user_id = Auth::user('user')->user_id;
         
+        //Get employees of the company except for the logged in user
+        $employees = Profile::with('user')
+                ->where('user_id','<>',$user_id)
+                ->where('company_id',$company_id)
+                ->get();
+        
+        //Get company permissions
         $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id',$company_id)->get();
         
         return view('company.partials._employeelist',[

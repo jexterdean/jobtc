@@ -17,6 +17,8 @@ var casper = require('casper').create({
 //remoteScripts: ['https://code.jquery.com/jquery-2.1.4.min.js']
 });
 
+phantom.casperTest = true;
+
 /*Script options*/
 //Job.tc Url
 casper.echo(casper.cli.get('url'));
@@ -227,10 +229,6 @@ casper.then(function () {
     this.exit();
 });
 
-casper.on('step.error', function (err) {
-    this.die("Step has failed: " + err);
-});
-
 casper.on('resource.received', function (resource) {
     "use strict";
 
@@ -252,6 +250,9 @@ casper.on('resource.received', function (resource) {
 
 });
 
+casper.on('step.error', function (err) {
+    this.die("Step has failed: " + err);
+});
 
 casper.run();
 

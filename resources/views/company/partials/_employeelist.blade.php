@@ -1,5 +1,6 @@
 <label class='center-block taskgroup-title'>Employees</label>
 <ul class="employee-list-group list-group">
+    @if($employees->count() > 0)
     @foreach($employees as $employee)
     <li class="list-group-item">
         <div class="row">
@@ -26,4 +27,9 @@
         </div>
     </li>
     @endforeach
+    @else
+    <li class="list-group-item">
+        No Employees Available for Sharing.
+    </li>
+    @endif
 </ul>

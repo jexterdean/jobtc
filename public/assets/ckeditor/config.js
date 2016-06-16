@@ -35,6 +35,7 @@ CKEDITOR.editorConfig = function (config) {
     //config.pollUrl = 'https://localhost:3000/socket.io';
     //config.pollUrl = '/autoSave';
     
+    /*Todo: make url dynamic to where the project is deployed in*/
     //For file uploads, specifically image uploads
     config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
     //config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
