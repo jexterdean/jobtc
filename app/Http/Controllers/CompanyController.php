@@ -759,7 +759,7 @@ class CompanyController extends BaseController {
                 ->get();
         
         //Get company permissions
-        $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id',$company_id)->get();
+        $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id',$company_id)->where('job_id',$job_id)->get();
         
         return view('company.partials._employeelist',[
             'employees' => $employees,
