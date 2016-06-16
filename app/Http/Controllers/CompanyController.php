@@ -665,7 +665,7 @@ class CompanyController extends BaseController {
                         $query->where('user_id', $user_id)->get();
                     }])->where('id','<>',$id)->get();*/
         
-        $user_companies = Company::with('profile')->where('id','<>',$id)->get();
+        $user_companies = Company::with('profile')->get();
         
         $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->get();
 
