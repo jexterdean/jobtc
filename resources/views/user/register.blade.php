@@ -75,7 +75,7 @@
                             <br/>
                             <div class="form-group">
                                 <select name="country_id" class="form-control" id="country">
-                                    <option for="country">Select Country:</option>
+                                    <option for="country">Country:</option>
                                     @foreach($countries as $country)
                                     
                                     <option value="{{$country->country_id}}">{{$country->country_name}}</option>
@@ -85,22 +85,22 @@
                             <br/>
                             <div class="input-group">
                                 <span class="input-group-addon" id="phone-span"><i class="fa fa-phone-square" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="phone-span" placeholder="Enter Phone Number" name="phone" tabindex="2" id="login_phone" value="" />
+                                <input type="text" class="form-control text" aria-describedby="phone-span" placeholder="Phone Number" name="phone" tabindex="2" id="login_phone" value="" />
                             </div>
                             <br/>
                             <!--div class="input-group">
                                 <span class="input-group-addon" id="skype-span"><i class="fa fa-skype" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="skype-span" placeholder="Enter Skype" name="skype" tabindex="2" id="login_skype" value="" />
+                                <input type="text" class="form-control text" aria-describedby="skype-span" placeholder="Skype" name="skype" tabindex="2" id="login_skype" value="" />
                             </div>
                             <br />
                             <div class="input-group">
                                 <span class="input-group-addon" id="facebook-span"><i class="fa fa-facebook-square" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="facebook-span" placeholder="Enter Facebook" name="facebook" tabindex="2" id="login_facebook" value="" />
+                                <input type="text" class="form-control text" aria-describedby="facebook-span" placeholder="Facebook" name="facebook" tabindex="2" id="login_facebook" value="" />
                             </div>
                             <br />
                             <div class="input-group">
                                 <span class="input-group-addon" id="linkedin-span"><i class="fa fa-linkedin-square" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="linkedin-span" placeholder="Enter Linkedin" name="linkedin" tabindex="2" id="login_linkedin" value="" />
+                                <input type="text" class="form-control text" aria-describedby="linkedin-span" placeholder="Linkedin" name="linkedin" tabindex="2" id="login_linkedin" value="" />
                             </div>
                             <br />
                             <div class="form-group">

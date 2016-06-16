@@ -133,3 +133,16 @@ a > img {
 	border: none;
 	outline: 1px solid #0782C1;
 }
+
+
+/*Increase ckeditor icon size*/
+.cke_top,
+.cke_panel_frame
+{
+    zoom:2.4 !important;
+}
+
+.cke_combopanel
+{
+    zoom:2.45 !important;
+}
