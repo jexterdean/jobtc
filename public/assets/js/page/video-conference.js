@@ -12,7 +12,8 @@ var room_id;
 var room;
 var recordingId;
 
-var room_name_tmp = $('title').text();
+//var room_name_tmp = $('title').text();
+var room_name_tmp = window.location.pathname;
 var room_name = room_name_tmp.replace(/\s/g, '');
 
 var streams = [];
