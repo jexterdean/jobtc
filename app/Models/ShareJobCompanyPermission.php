@@ -14,5 +14,9 @@ class ShareJobCompanyPermission extends Model {
     ];
     protected $primaryKey = 'id';
     protected $table = 'share_jobs_companies_permissions';
+    
+    public function jobs() {
+        return $this->belongsTo('App\Models\Job');
+    }
 
 }
