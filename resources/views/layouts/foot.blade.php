@@ -173,6 +173,11 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/tasklist.js')  !!}
 @endif
 
+@if(in_array('real-time',$assets))
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+{!!  HTML::script('assets/js/page/real-time-scripts.js')  !!}
+@endif
+
 @if(in_array('applicants',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/jquery-tagEditor/jquery.caret.min.js')  !!}
@@ -197,10 +202,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/bootstrap-tagsinput.js')  !!}
 @endif
 
-@if(in_array('real-time',$assets))
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-{!!  HTML::script('assets/js/page/real-time-scripts.js')  !!}
-@endif
+
 
 @if(in_array('slider',$assets))
 {!!  HTML::script('assets/js/jquery.nstSlider.js')  !!}
