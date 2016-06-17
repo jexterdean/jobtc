@@ -114,7 +114,9 @@ $(".submit-comment").click(function (e) {
 
 
 //For Applicant Notes
-var applicant_notes = CKEDITOR.replace('applicant-notes');
+var applicant_notes = CKEDITOR.replace('applicant-notes',{
+height: '200px'
+});
 
 applicant_notes.on('change', function (evt) {
 

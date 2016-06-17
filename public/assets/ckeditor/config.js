@@ -59,7 +59,7 @@ CKEDITOR.editorConfig = function (config) {
     //Css changes
     config.height = '200px';
 
-    //config.autoParagraph = false;
+    config.autoParagraph = false;
     config.removePlugins = 'autosave';
 
 };
