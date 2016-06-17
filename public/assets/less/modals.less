@@ -31,9 +31,18 @@
   // When fading in the modal, animate it to slide down
   &.fade .modal-dialog {
     .translate(0, -25%);
-    .transition-transform(~"0.3s ease-out");
+    .transition-transform(~"0.8s ease-out");
+    -moz-transform: scale(0.2);
+    -webkit-transform: scale(0.2);
+    transform: scale(0.2);
   }
-  &.in .modal-dialog { .translate(0, 0) }
+  &.in .modal-dialog {
+    //.translate(0, 0)
+    -moz-transform: scale(1);
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    transition: all 1s ease-in-out;
+  }
   &-success{
     .modal(@brand-success);
   }

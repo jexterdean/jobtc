@@ -12,17 +12,14 @@
         </div>
     </div>
     <div class="form-group">
-        {!!  Form::label('name','Name',['class' => 'col-md-3 control-label']) !!}
         <div class="col-md-12">
             {!!  Form::input('text','name',isset($user->name) ? $user->name : '',['class' => 'form-control',
             'placeholder' => 'Name', 'tabindex' => '3']) !!}
         </div>
     </div>
     <div class="form-group">
-        {!!   Form::label('password','Password',['class' => 'col-md-3 control-label'])!!}
         <div class="col-md-12">
-            {!!  Form::input('password','password','',['class' => 'form-control', 'placeholder' => 'Enter
-            Password', 'tabindex' => '4']) !!}
+            {!!  Form::input('password','password','',['class' => 'form-control', 'placeholder' => 'Password', 'tabindex' => '4']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -92,19 +89,21 @@
     
     <div class="form-group">
         <div class="col-md-12">
-            <input class="form-control" name="ticketit_admin" type='checkbox' value='1' placeholder="Ticketit Admin" tabindex="15"/>
+            <input class="checkbox" id="ticketit_admin" name="ticketit_admin" type="checkbox" value='1' tabindex="15"/>
+            <label for="ticketit_admin">Ticketit Admin</label>
         </div>
     </div>
     
     <div class="form-group">
         <div class="col-md-12">
-            <input class="form-control" name="ticketit_agent" type='checkbox' placeholder="Ticketit Agent" value='1' tabindex="16"/>
+            <input class="checkbox" id="ticketit_agent" name="ticketit_agent" type="checkbox" value='1' tabindex="16"/>
+            <label for="ticketit_agent">Ticketit Agent</label>
         </div>
     </div>
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
-            {!!  Form::submit(isset($buttonText) ? $buttonText : 'Add User',['class' => 'btn btn-edit btn-shadow', 'tabindex' =>
-            '16'])  !!}
+            {!!  Form::submit(isset($buttonText) ? $buttonText : 'Add User',['class' => 'btn btn-edit btn-shadow pull-right', 'tabindex' =>
+            '17'])  !!}
         </div>
     </div>
 </div>

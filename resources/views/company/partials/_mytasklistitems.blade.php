@@ -1,12 +1,13 @@
-<div class="modal fade edit-modal" id="ajax" role="basic" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
 @if($projects->task->count() > 0)
 @foreach($projects->task as $val)
 @if($task_permissions->contains('task_id',$val->task_id) || $projects->user_id === Auth::user('user')->user_id )
+<div class="modal fade" id="edit_task_{{ $val->task_id }}" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        @include('task/edit', ['task'=> $val] )
+        </div>
+    </div>
+</div>
 <div id="collapse-container-{{ $val->task_id }}" class="panel task-list">
     <div class="panel-heading task-header" data-target="#collapse-{{ $val->task_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
         <div class="row">
@@ -15,7 +16,7 @@
             </div>
             <div class="col-xs-6">
                 <div class="btn-group pull-right">
-                    <a href="{{ url('task/' . $val->task_id .'/edit') }}" data-toggle='modal' data-target='.edit-modal' class="edit-tasklist show_edit_form"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" data-toggle='modal' data-target='#edit_task_{{ $val->task_id }}' class="edit-tasklist"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
             </div>

@@ -7,12 +7,13 @@
   width: 25px;
   height: 25px;
   outline: none;
-  font-size: 37px!important;
-  opacity: 1!important;
+  font-size: 30px!important;
+  opacity: 0.8!important;
   text-shadow: 0 1px 0 #f2f2f2;
+  color: #383737 ;
 }
 .close:hover{
-  opacity: 0.7!important;
+  opacity: 1!important;
 }
 .static-info{border-bottom:1px solid #eee;}
 /*Task List Items CSS*/
@@ -292,7 +293,7 @@ input[type=radio].radio,input[type=checkbox].checkbox {
     padding:0;
     border:0;
 }
-input[type=text],textarea,input[type=password],input[type=number]{
+input[type=text],input[type=email],input[type=tel],textarea,input[type=password],input[type=number]{
     box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4)!important;
 }
 textarea:focus{
@@ -370,9 +371,9 @@ select{
     border: 1px solid #ffc84d !important;
 }
 .modal.fade:not(.in) .modal-dialog {
-    -webkit-transform: translate3d(-25%, 0, 0);
+    /*-webkit-transform: translate3d(-25%, 0, 0);
     transform: translate3d(-25%, 0, 0);
-    transition: all 0.4s ease;
+    transition: all 0.4s ease;*/
 }
 .dropdown-submenu {
     position: relative;
