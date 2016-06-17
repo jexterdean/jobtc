@@ -295,6 +295,6 @@
 </div>
 <div class="mini-space"></div>
 <input class="applicant_score" type="hidden" value="{{$rating->score or ''}}"/>
-<input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+<input class="page_applicant_id" type="hidden" value="{{$applicant->id}}"/>
 <input class="job_id" type="hidden" value="{{$applicant->job_id}}"/>
 @stop

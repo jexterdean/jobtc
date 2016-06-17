@@ -19,11 +19,11 @@ var io = require('socket.io');
 
 var options = {
     //Production
-    //key: fs.readFileSync("/var/www/html/hirefitnet/public/certs/apache.job.tc.key"),
-    //cert: fs.readFileSync("/var/www/html/hirefitnet/public/certs/apache.job.tc.crt")
+    key: fs.readFileSync("/var/www/html/hirefitnet/public/certs/apache.job.tc.key"),
+    cert: fs.readFileSync("/var/www/html/hirefitnet/public/certs/apache.job.tc.crt")
     //Local
-    key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
-    cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")
+    //key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
+    //cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")
 };
 
 var server = require(isUseHTTPs ? 'https' : 'http');

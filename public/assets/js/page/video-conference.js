@@ -140,7 +140,10 @@ var subscribeToStreams = function (streams) {
 
 var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_type) {
 
-    var applicant_id = $('.applicant_id').val();
+    var applicant_id = $('.page_applicant_id').val();
+    
+    console.log('applicant_id: ' +applicant_id);
+    
     var job_id = $('.job_id').val();
     var stream_id = localStreamId;
     //var file_extension = '.mkv';
