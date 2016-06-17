@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class VideoStatus extends Model
+class VideoTag extends Model
 {
      /**
      * The database table used by the model.
@@ -18,7 +18,7 @@ class VideoStatus extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id','applicant_id','job_id','video_id','tag'];
+    protected $fillable = ['user_id','applicant_id','job_id','video_id','tags'];
     
     public function video() {
         return $this->belongsTo('App\Models\Video','id','video_id');

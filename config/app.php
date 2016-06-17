@@ -148,11 +148,9 @@ return [
 
         Bican\Roles\RolesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-
         Kordy\Ticketit\TicketitServiceProvider::class,
-
         Zizaco\Entrust\EntrustServiceProvider::class,
+        PhanAn\Remote\RemoteServiceProvider::class,
     ],
 
     /*

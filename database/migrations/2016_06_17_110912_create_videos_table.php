@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVideosTable2 extends Migration
+class CreateVideosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateVideosTable2 extends Migration
     public function up()
     {
         Schema::create('videos',function(Blueprint $table) {
-           $table->increments('id'); 
-           $table->integer('applicant_id');
-           $table->integer('job_id');
-           $table->integer('stream_id');
+           $table->increments('id');
+           $table->integer('unique_id');
+           $table->string('user_type');
+           $table->integer('owner_id');
+           $table->string('owner_type');
+           $table->string('stream_id');
            $table->string('video_type');
            $table->string('video_url');
+           $table->timestamps();
         });
     }
 

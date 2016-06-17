@@ -158,8 +158,10 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
     formData.append('video_type', video_type);
     formData.append('video_url', video_url);
 
+    var ajaxurl = public_path + 'saveVideo';
+
     $.ajax({
-        url: '/save-merged-video',
+        url: ajaxurl,
         type: "POST",
         data: formData,
         // THIS MUST BE DONE FOR FILE UPLOADING
@@ -170,7 +172,7 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
         },
         success: function (data) {
             //$('.save-progress').text(data);
-            //socket.emit('add-video', data);
+            socket.emit('add-video', data);
             $('.download-complete-sound').get(0).play();
 
         },
@@ -398,7 +400,7 @@ $('.record-button').clickToggle(function () {
         room.stopRecording(remoteRecordingId);
         //console.log('remote recording id: ' + remoteRecordingId);
         //console.log('Saving remote video to database');
-        saveRecordingsToDatabase(localRecordingId, remoteRecordingId, 'merged');
+        saveRecordingsToDatabase(localRecordingId, remoteRecordingId, 'remote');
     } else {
         saveRecordingsToDatabase(localRecordingId, remoteRecordingId, 'local');
     }
@@ -412,7 +414,7 @@ $('.delete-video').click(function () {
     var video_element = $(this).parent().parent().parent();
     var video_id = $(this).siblings('.video_id').val();
 
-    var ajaxurl = '/delete-video';
+    var ajaxurl = public_path + 'deleteVideo';
     var formData = new FormData();
 
     formData.append('video_id', video_id);
@@ -494,10 +496,10 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
         autocomplete: {
             delay: 0, // show suggestions immediately
             position: {collision: 'flip'}, // automatic menu position up/down
-            source: '/get-available-video-tags'
+            source: public_path + 'getAvailableVideoTags'
         },
         onChange: function (field, editor, tags) {
-            var ajaxurl = '/add-video-status';
+            var ajaxurl = public_path + 'addVideoTag';
 
             var job_id;
             var applicant_id;
@@ -541,7 +543,7 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
         var video_element = $(this).parent().parent().parent();
         var video_id = $(this).siblings('.video_id').val();
 
-        var ajaxurl = '/delete-video';
+        var ajaxurl = public_path + 'deleteVideo';
         var formData = new FormData();
 
         formData.append('video_id', video_id);
@@ -557,7 +559,7 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
 
             },
             success: function (data) {
-                //socket.emit('delete-video', data);
+                socket.emit('delete-video', data);
                 video_element.remove();
             },
             complete: function () {

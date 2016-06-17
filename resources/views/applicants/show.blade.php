@@ -148,7 +148,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <textarea class="video-status-container">
-                                                {{$video->video_statuses['video_status']}}
+                                                {{$video->video_tags['tags']}}
                                         </textarea>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>

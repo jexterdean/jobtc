@@ -98,7 +98,7 @@ class ApplicantController extends Controller {
 
             $rating = ApplicantRating::where('applicant_id', $id)->first();
 
-            $videos = Video::with('video_tags')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
+            $videos = Video::with('video_tags')->where('unique_id', $id)->where('user_type','applicant')->orderBy('id', 'desc')->get();
 
             //Get the test permissions
 
