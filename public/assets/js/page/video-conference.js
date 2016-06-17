@@ -447,7 +447,7 @@ window.onbeforeunload = function () {
 }
 
 /*When video is successfully recorded, place it on the video archive*/
-/*socket.on('add-video', function (data) {
+socket.on('add-video', function (data) {
     console.log(data);
     var json_data = JSON.parse(data);
 
@@ -476,13 +476,13 @@ window.onbeforeunload = function () {
 
     $('.save-progress').text("Video Recorded");
 
-});*/
+});
 
 /*When video is deleted, delete it for all open browsers that are connected to the room*/
-/*socket.on('delete-video', function (video_id) {
+socket.on('delete-video', function (video_id) {
     var video_element = $('#video-archive-item-' + video_id).parent().parent().parent();
     video_element.remove();
-});*/
+});
 
 
 $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
