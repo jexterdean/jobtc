@@ -28,7 +28,7 @@ CKEDITOR.editorConfig = function (config) {
     ];
     
     
-    config.extraPlugins = 'ckwebspeech,uploadimage';
+    config.extraPlugins = 'autocorrect,ckwebspeech,uploadimage';
     
     config.saveUrl = '/saveImage';
     //config.saveUrl = 'http://localhost:8000/saveImage';
