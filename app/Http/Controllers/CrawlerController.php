@@ -103,7 +103,7 @@ class CrawlerController extends Controller {
             'photo' => ''
         ]);
 
-        if ($job_exists === 0) {
+        if ($job_exists === 0 || $title !== 'undefined') {
             $job->save();
         }
 
@@ -126,7 +126,7 @@ class CrawlerController extends Controller {
 
         $photo_path = 'assets/user/default-avatar.jpg';
         
-        $resume_path = 'assets/applicant/resumes/Resume'.$name.'.pdf';
+        $resume_path = 'assets/applicant/resumes/Resume'.str_replace(' ','',$name).'.pdf';
         
         $applicant = new Applicant([
             'job_id' => $job_id->id,
