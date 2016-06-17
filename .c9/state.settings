@@ -30,12 +30,7 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab1",
-                    "tab10",
-                    "tab3",
-                    "tab5",
-                    "tab7",
-                    "tab8"
+                    "tab1"
                 ]
             },
             "name": "pane1",
@@ -48,6 +43,8 @@
                         "tab1"
                     ],
                     "document": {
+                        "changed": false,
+                        "meta": {},
                         "filter": true,
                         "title": "public/assets/css/page/login.css - Idle",
                         "tooltip": "public/assets/css/page/login.css - Idle",
@@ -55,170 +52,11 @@
                             "id": "output884610",
                             "width": 1581,
                             "height": 193,
-                            "scrollTop": 205,
                             "config": {
                                 "runner": "Shell command",
                                 "command": "public/assets/css/page/login.css",
                                 "toolbar": true,
                                 "name": ""
-                            }
-                        },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {},
-                        "changed": false
-                    },
-                    "editorType": "output",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab3",
-                    "path": "",
-                    "className": [
-                        "tab3"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "public/assets/ckeditor/skins/office2013/editor.css - Stopped",
-                        "tooltip": "public/assets/ckeditor/skins/office2013/editor.css - Stopped",
-                        "output": {
-                            "id": "output442060",
-                            "width": 1581,
-                            "height": 193,
-                            "scrollTop": 301,
-                            "config": {
-                                "runner": "Shell command",
-                                "command": "public/assets/ckeditor/skins/office2013/editor.css",
-                                "toolbar": true,
-                                "name": ""
-                            }
-                        },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {},
-                        "changed": false
-                    },
-                    "editorType": "output",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab5",
-                    "path": "",
-                    "className": [
-                        "tab5"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "public/assets/css/page/register.css - Stopped",
-                        "tooltip": "public/assets/css/page/register.css - Stopped",
-                        "output": {
-                            "id": "output8713313",
-                            "width": 1581,
-                            "height": 193,
-                            "scrollTop": 301,
-                            "config": {
-                                "runner": "Shell command",
-                                "command": "public/assets/css/page/register.css",
-                                "toolbar": true,
-                                "name": ""
-                            }
-                        },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {},
-                        "changed": false
-                    },
-                    "editorType": "output",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab7",
-                    "path": "",
-                    "className": [
-                        "tab7"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "resources/views/user/register.blade.php - Idle",
-                        "tooltip": "resources/views/user/register.blade.php - Idle",
-                        "output": {
-                            "id": "output9872314",
-                            "width": 1581,
-                            "height": 193,
-                            "scrollTop": 30,
-                            "config": {
-                                "runner": "PHP (built-in web server)",
-                                "command": "resources/views/user/register.blade.php",
-                                "toolbar": true,
-                                "debug": true,
-                                "name": ""
-                            }
-                        },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1465678777036
-                        },
-                        "changed": false
-                    },
-                    "editorType": "output",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab8",
-                    "path": "",
-                    "className": [
-                        "tab8"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "public/assets/ckeditor/contents.css - Stopped",
-                        "tooltip": "public/assets/ckeditor/contents.css - Stopped",
-                        "output": {
-                            "id": "output337870",
-                            "width": 1581,
-                            "height": 193,
-                            "scrollTop": 301,
-                            "config": {
-                                "runner": "Shell command",
-                                "command": "public/assets/ckeditor/contents.css",
-                                "toolbar": true,
-                                "name": ""
-                            }
-                        },
-                        "hash": "67452301efcdab8998badcfe10325476c3d2e1f0",
-                        "meta": {
-                            "timestamp": 1466109047533
-                        },
-                        "changed": false
-                    },
-                    "editorType": "output",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab10",
-                    "path": "",
-                    "className": [
-                        "tab10"
-                    ],
-                    "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1466109271039
-                        },
-                        "filter": true,
-                        "title": "public/assets/ckeditor/config.js - Idle",
-                        "tooltip": "public/assets/ckeditor/config.js - Idle",
-                        "output": {
-                            "id": "output866101",
-                            "width": 1581,
-                            "height": 193,
-                            "config": {
-                                "runner": "Node.js",
-                                "command": "public/assets/ckeditor/config.js",
-                                "toolbar": true,
-                                "debug": true
                             }
                         }
                     },
@@ -249,7 +87,7 @@
             "@acestatus": 1,
             "@datagrid": 1,
             "@divider": 4,
-            "@document": 11,
+            "@document": 7,
             "@form": 5,
             "@imgeditor": 1,
             "@imgview": 1,
@@ -260,10 +98,10 @@
             "@postmessage": 1,
             "@preferences": 1,
             "@preview": 1,
-            "@session": 11,
-            "@tab": 11,
+            "@session": 7,
+            "@tab": 4,
             "@tree": 2,
-            "@undoManager": 11
+            "@undoManager": 7
         }
     },
     "findinfiles": {
@@ -281,8 +119,8 @@
     },
     "panecycle": {
         "json()": [
-            "tab2",
-            "tab10"
+            "tab3",
+            "tab1"
         ]
     },
     "panels": {
@@ -335,6 +173,7 @@
                 "/resources",
                 "/resources/views/project",
                 "/resources/views/task",
+                "/public/assets/css",
                 "/resources/views/template",
                 "/app/Http",
                 "/public/assets/js",
@@ -343,14 +182,7 @@
                 "/public/assets/ckeditor/plugins/btgrid",
                 "/public/assets/ckeditor/plugins/btgrid/styles",
                 "/public",
-                "/vendor",
-                "/resources/assets",
-                "/resources/assets/sass",
-                "/tests",
-                "/public/assets",
-                "/public/assets/applicant",
-                "/public/assets/css",
-                "/public/assets/ckeditor"
+                "/vendor"
             ]
         }
     },
@@ -389,14 +221,15 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/public/assets/ckeditor/plugins/btgrid/styles/editor.css",
+            "focus": "/public/assets/css/page/applicants.css",
             "meta": {
                 "accessList": [
-                    "tab2",
-                    "tab9",
+                    "tab3",
                     "tab0",
+                    "tab2",
                     "tab4",
-                    "tab6"
+                    "tab6",
+                    "tab9"
                 ]
             },
             "name": "pane0",
@@ -448,21 +281,42 @@
                     "name": "tab2",
                     "path": "/public/assets/ckeditor/plugins/btgrid/styles/editor.css",
                     "className": [
-                        "tab2",
-                        "focus"
+                        "tab2"
                     ],
                     "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1464430776300
-                        },
                         "filter": true,
                         "title": "editor.css",
                         "tooltip": "/public/assets/ckeditor/plugins/btgrid/styles/editor.css",
-                        "ace": {}
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 600,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 0,
+                                    "column": 0
+                                },
+                                "end": {
+                                    "row": 0,
+                                    "column": 0
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": 0
+                        },
+                        "hash": "cf803891684992b8c3d528a9a1d44654366ad1d1",
+                        "meta": {
+                            "timestamp": 1464430776300
+                        },
+                        "changed": false
                     },
                     "editorType": "ace",
-                    "active": true
+                    "active": false
                 },
                 {
                     "type": "tab",
@@ -523,16 +377,16 @@
                         "tooltip": "/public/assets/ckeditor/contents.css",
                         "ace": {
                             "folds": [],
-                            "scrolltop": 2341,
+                            "scrolltop": 919,
                             "scrollleft": 0,
                             "selection": {
                                 "start": {
                                     "row": 148,
-                                    "column": 2
+                                    "column": 58
                                 },
                                 "end": {
                                     "row": 148,
-                                    "column": 2
+                                    "column": 58
                                 },
                                 "isBackwards": false
                             },
@@ -542,14 +396,14 @@
                                 "wrapToView": true
                             },
                             "firstLineState": {
-                                "row": 5,
-                                "state": "start",
+                                "row": 47,
+                                "state": "ruleset",
                                 "mode": "ace/mode/css"
                             }
                         },
                         "hash": "6d4a274ba262adff2b9bb9a0494408e66844ea40",
                         "meta": {
-                            "timestamp": 1466109047512
+                            "timestamp": 1466152814358
                         },
                         "changed": false
                     },
@@ -566,7 +420,7 @@
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1466110355348
+                            "timestamp": 1466110355321
                         },
                         "filter": true,
                         "title": "config.js",
@@ -575,6 +429,27 @@
                     },
                     "editorType": "ace",
                     "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab3",
+                    "path": "/public/assets/css/page/applicants.css",
+                    "className": [
+                        "tab3",
+                        "focus"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1466154398035
+                        },
+                        "filter": true,
+                        "title": "applicants.css",
+                        "tooltip": "/public/assets/css/page/applicants.css",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": true
                 }
             ],
             "skin": "editor_tab",
@@ -584,7 +459,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/public/assets/ckeditor/plugins/btgrid/styles/editor.css"
+            "/"
         ]
     }
 }
