@@ -71,6 +71,7 @@
                     <li role="presentation" class="active">
                         <a href="#resume-tab" aria-controls="home" role="tab" data-toggle="tab">Resume</a>
                     </li>
+                    @if(Auth::check('user') || Auth::check('applicant'))
                     <li role="presentation">
                         <a href="#video-tab" aria-controls="profile" role="tab" data-toggle="tab">Video Conference</a>
                     </li>
@@ -80,6 +81,7 @@
                     <li role="presentation">
                         <a href="#tests-tab" aria-controls="profile" role="tab" data-toggle="tab">Tests</a>
                     </li>
+                    @endif
                     @if(Auth::check() && Auth::user()->level() === 1)
                     <li role="presentation">
                         <a href="#notes-tab" aria-controls="profile" role="tab" data-toggle="tab">Notes</a>
