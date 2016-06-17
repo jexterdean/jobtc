@@ -298,3 +298,7 @@ body {
 .media-heading{
     white-space: nowrap;
 }
+
+#cke_applicant-notes {
+    overflow-y: auto !important;
+}
