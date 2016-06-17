@@ -147,17 +147,17 @@ body {
   width: 100%;
 }
 .video-conference-container #remoteVideo{
-  height: 780px;
+  height: 600px;
   width: 100%;
 }
 
 .video-conference-container #remoteVideo video {
-  height: 780px;
+  height: 600px;
   width: 100%;
 }
 
 .video-conference-container .localVideoContainer {
-  height: 780px;
+  height: 600px;
   width: 100%;
 }
 .video-conference-container .localVideoContainer #localVideo {
