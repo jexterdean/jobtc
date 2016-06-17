@@ -103,7 +103,7 @@ class CrawlerController extends Controller {
             'photo' => ''
         ]);
 
-        if ($job_exists === 0 || $title !== 'undefined') {
+        if ($job_exists === 0) {
             $job->save();
         }
 
@@ -138,7 +138,7 @@ class CrawlerController extends Controller {
             'password' => bcrypt($email)
         ]);
 
-        if ($applicant_exists ===  0 || $name !== '') {
+        if ($applicant_exists ===  0) {
             $applicant->save();
         }
 

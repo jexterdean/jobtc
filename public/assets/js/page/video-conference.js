@@ -12,8 +12,9 @@ var room_id;
 var room;
 var recordingId;
 
-var room_name_tmp = $('title').text();
-var room_name = room_name_tmp.replace(/\s/g, '');
+//var room_name_tmp = $('title').text();
+var room_name_tmp = window.location.pathname;
+var room_name = room_name_tmp.replace(/[^\w\s]/gi, '');
 
 var streams = [];
 var stream;
@@ -169,7 +170,7 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
         },
         success: function (data) {
             //$('.save-progress').text(data);
-            socket.emit('add-video', data);
+            //socket.emit('add-video', data);
             $('.download-complete-sound').get(0).play();
 
         },
@@ -186,8 +187,9 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
 
 //Toggle the button to start the video conference
 $('.interview-applicant').clickToggle(function () {
-    var room_name_tmp = $('title').text();
-    var room_name = room_name_tmp.replace(/\s/g, '');
+    //var room_name_tmp = $('title').text();
+    var room_name_tmp = window.location.pathname;
+    var room_name = room_name_tmp.replace(/[^\w\s]/gi, '');
 
     // Select tab by name
     $('.nav-tabs a[href="#video-tab"]').tab('show');
@@ -445,7 +447,7 @@ window.onbeforeunload = function () {
 }
 
 /*When video is successfully recorded, place it on the video archive*/
-socket.on('add-video', function (data) {
+/*socket.on('add-video', function (data) {
     console.log(data);
     var json_data = JSON.parse(data);
 
@@ -474,13 +476,13 @@ socket.on('add-video', function (data) {
 
     $('.save-progress').text("Video Recorded");
 
-});
+});*/
 
 /*When video is deleted, delete it for all open browsers that are connected to the room*/
-socket.on('delete-video', function (video_id) {
+/*socket.on('delete-video', function (video_id) {
     var video_element = $('#video-archive-item-' + video_id).parent().parent().parent();
     video_element.remove();
-});
+});*/
 
 
 $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
@@ -555,7 +557,7 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
 
             },
             success: function (data) {
-                socket.emit('delete-video', data);
+                //socket.emit('delete-video', data);
                 video_element.remove();
             },
             complete: function () {

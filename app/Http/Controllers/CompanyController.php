@@ -668,17 +668,22 @@ class CompanyController extends BaseController {
         $user_companies = Company::with('profile')->where('id','<>',$id)->get();
         
         $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->get();
-
+        
         $shared_jobs = ShareJob::all();
         
         $shared_jobs_companies = ShareJobCompany::all();
+        
+        //Get company permissions
+        //$shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id',$id)->get();
+        $shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id',$id)->get();
         
         return view('company.partials._sharejobslist', [
             'profiles' => $profiles,
             'jobs' => $jobs,
             'user_companies' => $user_companies,
             'shared_jobs' => $shared_jobs,
-            'shared_jobs_companies' => $shared_jobs_companies
+            'shared_jobs_companies' => $shared_jobs_companies,
+            'shared_company_jobs_permissions' => $shared_company_jobs_permissions
         ]);
     }
 
@@ -759,7 +764,7 @@ class CompanyController extends BaseController {
                 ->get();
         
         //Get company permissions
-        $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id',$company_id)->get();
+        $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id',$company_id)->where('job_id',$job_id)->get();
         
         return view('company.partials._employeelist',[
             'employees' => $employees,
