@@ -18,9 +18,9 @@ class Video extends Model
      *
      * @var array
      */
-    protected $fillable = ['applicant_id','job_id','stream_id','video_type', 'video_url'];
+    protected $fillable = ['unique_id','user_type','owner_id','owner_type','stream_id','video_type', 'video_url'];
     
     public function video_tags() {
-        return $this->hasOne('App\Models\VideoStatus');
+        return $this->hasOne('App\Models\VideoTag');
     }
 }

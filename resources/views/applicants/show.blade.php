@@ -71,6 +71,7 @@
                     <li role="presentation" class="active">
                         <a href="#resume-tab" aria-controls="home" role="tab" data-toggle="tab">Resume</a>
                     </li>
+                    @if(Auth::check('user') || Auth::check('applicant'))
                     <li role="presentation">
                         <a href="#video-tab" aria-controls="profile" role="tab" data-toggle="tab">Video Conference</a>
                     </li>
@@ -80,6 +81,7 @@
                     <li role="presentation">
                         <a href="#tests-tab" aria-controls="profile" role="tab" data-toggle="tab">Tests</a>
                     </li>
+                    @endif
                     @if(Auth::check() && Auth::user()->level() === 1)
                     <li role="presentation">
                         <a href="#notes-tab" aria-controls="profile" role="tab" data-toggle="tab">Notes</a>
@@ -148,7 +150,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <textarea class="video-status-container">
-                                                {{$video->video_statuses['video_status']}}
+                                                {{$video->video_tags['tags']}}
                                         </textarea>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>
@@ -295,6 +297,6 @@
 </div>
 <div class="mini-space"></div>
 <input class="applicant_score" type="hidden" value="{{$rating->score or ''}}"/>
-<input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+<input class="page_applicant_id" type="hidden" value="{{$applicant->id}}"/>
 <input class="job_id" type="hidden" value="{{$applicant->job_id}}"/>
 @stop
