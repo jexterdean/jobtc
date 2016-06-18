@@ -26,101 +26,13 @@
     "console": {
         "@expanded": true,
         "@height": 219,
-        "@maximized": false,
+        "@maximized": "false",
         "json()": {
             "meta": {
-                "accessList": [
-                    "tab11",
-                    "searchResults"
-                ]
+                "accessList": []
             },
             "name": "pane1",
-            "nodes": [
-                {
-                    "type": "tab",
-                    "name": "searchResults",
-                    "path": "/.c9/searchresults",
-                    "className": [
-                        "searchResults",
-                        "changed"
-                    ],
-                    "document": {
-                        "changed": true,
-                        "filter": true,
-                        "title": "Search Results",
-                        "tooltip": "/.c9/searchresults",
-                        "ace": {
-                            "folds": [],
-                            "customSyntax": "c9search",
-                            "scrolltop": 120,
-                            "scrollleft": 0,
-                            "selection": {
-                                "start": {
-                                    "row": 11,
-                                    "column": 26
-                                },
-                                "end": {
-                                    "row": 11,
-                                    "column": 26
-                                },
-                                "isBackwards": false
-                            },
-                            "options": {
-                                "tabSize": 4,
-                                "useSoftTabs": true,
-                                "useWrapMode": false,
-                                "wrapToView": true
-                            },
-                            "firstLineState": {
-                                "row": 5,
-                                "state": [
-                                    "start",
-                                    {}
-                                ],
-                                "mode": "ace/mode/c9search"
-                            }
-                        },
-                        "meta": {
-                            "searchResults": true,
-                            "ignoreSave": true,
-                            "newfile": true,
-                            "timestamp": 1465973884538
-                        }
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab11",
-                    "path": "",
-                    "className": [
-                        "tab11"
-                    ],
-                    "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1465975406516
-                        },
-                        "filter": true,
-                        "title": ".c9/searchresults - Idle",
-                        "tooltip": ".c9/searchresults - Idle",
-                        "output": {
-                            "id": "output3400916",
-                            "width": 1581,
-                            "height": 193,
-                            "config": {
-                                "runner": "Shell command",
-                                "command": ".c9/searchresults",
-                                "toolbar": true,
-                                "name": ""
-                            }
-                        }
-                    },
-                    "editorType": "output",
-                    "active": true
-                }
-            ],
+            "nodes": [],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -143,22 +55,22 @@
             "@ace": 1,
             "@acestatus": 1,
             "@datagrid": 1,
-            "@divider": 4,
-            "@document": 11,
+            "@divider": 6,
+            "@document": 14,
             "@form": 5,
             "@imgeditor": 1,
             "@imgview": 1,
             "@immediate": 1,
-            "@menu": 5,
-            "@menuitem": 13,
+            "@menu": 9,
+            "@menuitem": 25,
             "@pane": 3,
             "@postmessage": 1,
             "@preferences": 1,
             "@preview": 1,
-            "@session": 10,
-            "@tab": 7,
+            "@session": 14,
+            "@tab": 5,
             "@tree": 2,
-            "@undoManager": 11
+            "@undoManager": 14
         }
     },
     "findinfiles": {
@@ -176,8 +88,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab5",
-            "tab11"
+            "tab4"
         ]
     },
     "panels": {
@@ -214,35 +125,41 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 426,
+        "@scrollpos": 1576,
         "@showfs": true,
         "expanded": {
             "json()": [
                 "/",
-                "/app",
                 "/storage/app",
                 "/storage/app/purifier",
                 "/bootstrap/cache",
                 "/storage/app/purifier/CSS",
-                "/public/assets/ckeditor/plugins/smiley/images",
-                "/public/assets/ckeditor/plugins/smiley/dialogs",
                 "/public/assets/ckeditor/plugins/templates",
                 "/public/assets/ckeditor/plugins/templates/templates",
-                "/public/assets/ckeditor/plugins/templates/templates/images",
                 "/resources/views/session",
-                "/app/Http/Controllers",
                 "/resources",
-                "/resources/views",
                 "/resources/views/project",
                 "/resources/views/task",
-                "/resources/views/layouts",
-                "/public",
+                "/resources/views/template",
+                "/app/Http",
                 "/public/assets/ckeditor/plugins",
-                "/public/ckeditor",
-                "/config",
+                "/public/assets/ckeditor/plugins/btgrid/styles",
+                "/public",
+                "/vendor",
+                "/resources/assets",
+                "/resources/assets/sass",
+                "/tests",
                 "/public/assets",
-                "/public/assets/js",
-                "/public/assets/js/page"
+                "/public/assets/applicant",
+                "/public/assets/css",
+                "/public/assets/ckeditor",
+                "/public/assets/ckeditor/plugins/smiley",
+                "/public/assets/ckeditor/plugins/smiley/dialogs",
+                "/public/assets/ckeditor/plugins/pastefromword",
+                "/public/assets/ckeditor/plugins/pastefromword/filter",
+                "/public/assets/ckeditor/plugins/magicline",
+                "/public/assets/ckeditor/plugins/magicline/images",
+                "/public/assets/ckeditor/plugins/liststyle"
             ]
         }
     },
@@ -260,6 +177,7 @@
         },
         "search": {
             "json()": [
+                "pastefromword",
                 "select",
                 "enter",
                 "bold_icon",
@@ -277,68 +195,16 @@
                 "width",
                 "border"
             ]
-        },
-        "searchfiles": {
-            "json()": [
-                "#ffff00!important",
-                "visited",
-                "subproject"
-            ]
         }
     },
     "tabs": {
         "json()": {
-            "focus": "/public/assets/js/page/video-conference.js",
+            "focus": null,
             "meta": {
-                "accessList": [
-                    "tab5",
-                    "tab6"
-                ]
+                "accessList": []
             },
             "name": "pane0",
-            "nodes": [
-                {
-                    "type": "tab",
-                    "name": "tab5",
-                    "path": "/public/assets/js/page/video-conference.js",
-                    "className": [
-                        "tab5",
-                        "focus"
-                    ],
-                    "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1466172396919
-                        },
-                        "filter": true,
-                        "title": "video-conference.js",
-                        "tooltip": "/public/assets/js/page/video-conference.js",
-                        "ace": {}
-                    },
-                    "editorType": "ace",
-                    "active": true
-                },
-                {
-                    "type": "tab",
-                    "name": "tab6",
-                    "path": "/resources/views/applicants/show.blade.php",
-                    "className": [
-                        "tab6"
-                    ],
-                    "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1466172504498
-                        },
-                        "filter": true,
-                        "title": "show.blade.php",
-                        "tooltip": "/resources/views/applicants/show.blade.php",
-                        "ace": {}
-                    },
-                    "editorType": "ace",
-                    "active": false
-                }
-            ],
+            "nodes": [],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -346,7 +212,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/public/assets/js/page/real-time-server.js"
+            "/public/assets/ckeditor/contents.css"
         ]
     }
 }
