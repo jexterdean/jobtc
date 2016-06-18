@@ -32,7 +32,7 @@
                 <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume"><img class="applicant-photo" src="{{url($applicant->photo)}}"/></a>
 
             </div>
-            <div class="col-xs-9">
+            <div class="col-xs-8 pull-right">
                 <!--a target="_blank" href="https://docs.google.com/viewer?url={{url($applicant->resume)}}" class="applicant-resume">{{$applicant->first_name}}&nbsp{{$applicant->last_name}}</a-->
                 <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume">
                     {{$applicant->name}}
@@ -68,7 +68,7 @@
                 <!--a target="_blank" href="http://view.officeapps.live.com/op/view.aspx?src={{url($applicant->resume)}}" class="applicant-resume"><img class="applicant-photo" src="{{url($applicant->photo)}}"/></a-->
                 <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume"><img class="applicant-photo" src="{{url($applicant->photo)}}"/></a>
             </div>
-            <div class="col-xs-9">
+            <div class="col-xs-8 pull-right">
                 <!--a target="_blank" href="http://view.officeapps.live.com/op/view.aspx?src={{url($applicant->resume)}}" class="applicant-resume">{{$applicant->first_name}}&nbsp{{$applicant->last_name}}</a-->
                 <a target="_blank" href="{{url('/a/'.$applicant->id)}}" class="applicant-resume">
                     {{$applicant->name}}

@@ -102,6 +102,10 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/bootbox.js')  !!}
 {!!  HTML::script('assets/js/moment.min.js')  !!}
 
+<!--DLMenu js-->
+{!! HTML::script('assets/js/modernizr.custom.js') !!}
+{!! HTML::script('assets/js/jquery.dlmenu.js') !!}
+
 @if(in_array('table',$assets))
 {!!   HTML::script('assets/js/plugins/datatables/jquery.dataTables.js') !!}
 {!!  HTML::script('assets/js/plugins/datatables/dataTables.bootstrap.js')  !!}
@@ -233,6 +237,10 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
                 useCurrent: false,
                 pickTime: false
             });
+        });
+
+        $( '#dl-menu' ).dlmenu({
+            animationClasses : { in : 'dl-animate-in-2', out : 'dl-animate-out-2' }
         });
     });
             $(document).ajaxComplete(function () {

@@ -73,6 +73,7 @@
     @if(in_array('slider',$assets))
     {!!  HTML::style('assets/css/jquery.nstSlider.css')  !!}
     @endif
-
+    <!--Multi-navigation css-->
+    {!!  HTML::style('assets/css/menu.css')  !!}
     <script> var public_path = "{{ URL::to('/') }}/"; </script>
 </head>
