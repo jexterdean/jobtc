@@ -1,38 +1,66 @@
 {
-    "ace": {
-        "search": {
-            "@backwards": "false",
-            "@highlightmatches": "true",
-            "@matchcase": "false",
-            "@preservecase": "false",
-            "@regex": "false",
-            "@wholeword": "false",
-            "@wraparound": "true"
-        }
-    },
-    "breakpoints": {
-        "json()": [
-            {
-                "path": "/app/Http/Controllers/SessionController.php",
-                "line": 9,
-                "column": 0,
-                "text": "SessionController.php",
-                "content": "use \\Auth;",
-                "time": 1464694765871,
-                "enabled": true
-            }
-        ]
-    },
     "console": {
         "@expanded": true,
-        "@height": 219,
+        "@height": "153",
         "@maximized": "false",
         "json()": {
             "meta": {
-                "accessList": []
+                "accessList": [
+                    "tab0",
+                    "tab1"
+                ]
             },
             "name": "pane1",
-            "nodes": [],
+            "nodes": [
+                {
+                    "type": "tab",
+                    "name": "tab0",
+                    "path": "",
+                    "className": [
+                        "tab0",
+                        "focus"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1466237951033
+                        },
+                        "filter": true,
+                        "title": "bash - \"job.tc\"",
+                        "tooltip": "bash - \"job.tc\"",
+                        "terminal": {
+                            "id": "devel_880",
+                            "cwd": "",
+                            "width": 1094,
+                            "height": 127
+                        }
+                    },
+                    "editorType": "terminal",
+                    "active": true
+                },
+                {
+                    "type": "tab",
+                    "name": "tab1",
+                    "path": "",
+                    "className": [
+                        "tab1"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {},
+                        "filter": true,
+                        "title": "Immediate (Javascript (browser))",
+                        "tooltip": "Immediate (Javascript (browser))",
+                        "immediate": {
+                            "type": "jsbrowser",
+                            "history": [],
+                            "pos": 0
+                        }
+                    },
+                    "editorType": "immediate",
+                    "active": false
+                }
+            ],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -52,25 +80,18 @@
     },
     "ext": {
         "counters": {
-            "@ace": 1,
+            "@ace": 2,
             "@acestatus": 1,
-            "@datagrid": 1,
-            "@divider": 6,
-            "@document": 14,
+            "@divider": 4,
+            "@document": 3,
             "@form": 5,
-            "@imgeditor": 1,
-            "@imgview": 1,
             "@immediate": 1,
-            "@menu": 9,
-            "@menuitem": 25,
-            "@pane": 3,
-            "@postmessage": 1,
-            "@preferences": 1,
-            "@preview": 1,
-            "@session": 14,
-            "@tab": 5,
-            "@tree": 2,
-            "@undoManager": 14
+            "@menu": 5,
+            "@menuitem": 13,
+            "@pane": 2,
+            "@session": 3,
+            "@tab": 3,
+            "@undoManager": 3
         }
     },
     "findinfiles": {
@@ -81,20 +102,18 @@
         "@wholeword": "false"
     },
     "menus": {
-        "@minimized": false
+        "@minimized": "false"
     },
     "nak": {
         "@installed": true
     },
     "panecycle": {
         "json()": [
-            "tab4"
+            "tab0"
         ]
     },
     "panels": {
         "@active-left": "tree",
-        "@active-right": "none",
-        "@width-left": 267,
         "collab": {
             "@enabled": "true",
             "@name": "collab"
@@ -125,81 +144,19 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 1576,
         "@showfs": true,
         "expanded": {
             "json()": [
-                "/",
-                "/storage/app",
-                "/storage/app/purifier",
-                "/bootstrap/cache",
-                "/storage/app/purifier/CSS",
-                "/public/assets/ckeditor/plugins/templates",
-                "/public/assets/ckeditor/plugins/templates/templates",
-                "/resources/views/session",
-                "/resources",
-                "/resources/views/project",
-                "/resources/views/task",
-                "/resources/views/template",
-                "/app/Http",
-                "/public/assets/ckeditor/plugins",
-                "/public/assets/ckeditor/plugins/btgrid/styles",
-                "/public",
-                "/vendor",
-                "/resources/assets",
-                "/resources/assets/sass",
-                "/tests",
-                "/public/assets",
-                "/public/assets/applicant",
-                "/public/assets/css",
-                "/public/assets/ckeditor",
-                "/public/assets/ckeditor/plugins/smiley",
-                "/public/assets/ckeditor/plugins/smiley/dialogs",
-                "/public/assets/ckeditor/plugins/pastefromword",
-                "/public/assets/ckeditor/plugins/pastefromword/filter",
-                "/public/assets/ckeditor/plugins/magicline",
-                "/public/assets/ckeditor/plugins/magicline/images",
-                "/public/assets/ckeditor/plugins/liststyle"
+                "/"
             ]
         }
     },
     "recentfiles": {
         "json()": []
     },
-    "search-history": {
-        "replace": {
-            "json()": [
-                "1px 12px 1px;",
-                "F3F3F3",
-                "FFFFFF",
-                "a9b7c4"
-            ]
-        },
-        "search": {
-            "json()": [
-                "pastefromword",
-                "select",
-                "enter",
-                "bold_icon",
-                "ICON",
-                "line-height",
-                "padding",
-                "6px 8px 2px;",
-                "resizer",
-                "10x10",
-                "resizer",
-                " Author",
-                "#fa",
-                "fa",
-                "font",
-                "width",
-                "border"
-            ]
-        }
-    },
     "tabs": {
         "json()": {
-            "focus": null,
+            "focus": "tab0",
             "meta": {
                 "accessList": []
             },
@@ -212,7 +169,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/public/assets/ckeditor/contents.css"
+            "/readme.md"
         ]
     }
 }
