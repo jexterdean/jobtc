@@ -16,6 +16,9 @@
 </div>
 @include('quiz.' . $page)
 <style>
+    .test-group{
+        min-height: 50px;
+    }
     .test-modal textarea:not(.active){
         height: 39px!important;
         transition: height 0.25s ease-in;
@@ -85,16 +88,54 @@
         var t = $('.test-group');
         t.sortable({
             revert: "invalid",
-            connectWith: ".test-group",
+            connectWith: ".test-group, .community-test-area",
             handle: '.drag-test',
             stop: function (event, ui) {
-                var sortId = [];
-                t.find('.test-list').each(function(e){
-                    sortId.push($(this).data('id'));
-                });
+                var sourceEle = $(event.target);
+                var destinationEle = $(ui.item).parent();
+                if(destinationEle.data('type') != sourceEle.data('type')){
+                    var thisItem = $(ui.item)
+                        .clone(true)
+                        .appendTo(destinationEle);
+                    t.sortable('cancel');
 
-                var url = public_path + '/testSort';
-                $.post(url, { id: sortId });
+                    var url = public_path + 'quizAddPersonalCommunity';
+                    $.post(
+                        url,
+                        {
+                            id: $(ui.item).data('id'),
+                            type: destinationEle.data('type')
+                        },
+                        function(v){
+                            var newTarget = 'collapse-' + destinationEle.data('type') + '-' + v.version_id;
+                            thisItem
+                                .find('.panel-heading')
+                                .attr('data-target', '#' + newTarget);
+                            thisItem
+                                .find('.panel-collapse')
+                                .attr('id', newTarget);
+                            thisItem
+                                .find('.test-version')
+                                .html('v' + v.version);
+                        }
+                    );
+                }
+                else{
+                    var sortId = [];
+                    t.find('.test-list-' + sourceEle.data('type')).each(function(e){
+                        sortId.push($(this).data('version'));
+                    });
+
+                    var url = public_path + 'testSort';
+                    $.ajax({
+                        url: url,
+                        method: "POST",
+                        data: { id: sortId, type: sourceEle.data('type') },
+                        success: function(doc) {
+
+                        }
+                    });
+                }
             }
         });
         //endregion

@@ -106,7 +106,7 @@
                                             </div>
                                             <div id="collapse-2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                                 <div class="panel-body">
-                                                    <div class="panel-content">
+                                                    <div class="panel-content" data-content="{{ url('quiz/10?p=slider&mini=1') }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -168,5 +168,24 @@
         </div>
     </div>
 </div>
+@stop
+
+@section('js_footer')
+@parent
+
+<script>
+    $(function(e){
+        $('#collapse-2').on('show.bs.collapse', function () {
+            var thisContent = $(this).find('.panel-content');
+            $.ajax({
+                method: 'get',
+                url: thisContent.data('content'),
+                success: function(data) {
+                    thisContent.html(data);
+                }
+            });
+        })
+    });
+</script>
 @stop
 
