@@ -94,6 +94,7 @@
                                                             </ul>
                                                         </div>
                                                     </div>
+                                                    @if($val->user_id == Auth::user('user')->user_id)
                                                     <div class="pull-right" style="padding-right: 10px;">
                                                         <a href="#" id="{{ $q->id }}" class="delete-question-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
                                                             <i class="fa fa-times" aria-hidden="true"></i> Question
@@ -102,6 +103,7 @@
                                                             <i class="fa fa-pencil" aria-hidden="true"></i> Edit
                                                         </a>
                                                     </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </li>
@@ -239,6 +241,7 @@
                                                             </ul>
                                                         </div>
                                                     </div>
+                                                    @if($val->user_id == Auth::user('user')->user_id)
                                                     <div class="pull-right" style="padding-right: 10px;">
                                                         <a href="#" id="{{ $q->id }}" class="delete-question-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
                                                             <i class="fa fa-times" aria-hidden="true"></i> Question
@@ -247,6 +250,7 @@
                                                             <i class="fa fa-pencil" aria-hidden="true"></i> Edit
                                                         </a>
                                                     </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </li>
