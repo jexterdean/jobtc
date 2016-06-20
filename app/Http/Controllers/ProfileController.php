@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\BaseController;
-
+use Illuminate\Http\Request;
 use App\Models\User;
-
+use App\Models\Country;
 use Hash;
 use \DB;
 use \Auth;
@@ -13,12 +14,19 @@ use \Validator;
 use \Input;
 use \Redirect;
 
-class ProfileController extends BaseController
-{
+class ProfileController extends BaseController {
 
-    public function changePassword()
-    {
-        $user = Auth::user();
+    public function index() {
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $assets = ['profiles'];
+
+        return view('user.profile', ['assets' => $assets, 'countries' => $countries_option]);
+    }
+
+    public function changePassword(Request $request) {
+        /*$user = Auth::user();
         $rules = array(
             'password' => 'required|alphaNum|between:5,16',
             'new_password' => 'required|alphaNum|between:5,16|confirmed'
@@ -36,47 +44,117 @@ class ProfileController extends BaseController
                 $user->save();
                 return Redirect::back()->withSuccess("Password have been changed!!");
             }
+        }*/
+        $user_id = Auth::user('user')->user_id;
+        
+        $user = User::where('user_id', $user_id);
+        
+        $user->update([
+                'password' => bcrypt($request->input('password'))
+            ]);
+        
+        return "Profile Updated";
+        
+    }
+    
+    public function checkPassword(Request $request) {
+        
+        $user_id = Auth::user('user')->user_id;
+        $current_password = $request->input('password');
+        
+        $user_password = User::where('user_id', $user_id)->first();
+        
+        if (Hash::check($current_password, $user_password->password)) {
+            return "true";
+        } else {
+            return "false";
         }
     }
 
-    public function updateProfile()
-    {
-        $setting = Setting::find(1);
-        $user = Auth::user();
-        $rules = array(
-            'name' => 'required',
-            'email' => 'required|email',
-            'user_avatar' => 'image|image_size:<=200|max:10000|mimes:' . $setting->allowed_upload_file
-        );
+    public function updateProfile(Request $request) {
 
+        $user_id = $request->input('user_id');
 
-        $validator = Validator::make(Input::all(), $rules);
+        $user = User::where('user_id', $user_id);
 
-        if ($validator->fails())
-            return Redirect::back()->withErrors($validator);
+        $password = $request->input('password');
 
-        if (Input::hasFile('user_avatar') && Input::get('remove_image') != 'Yes') {
-            $filename = Input::file('user_avatar')->getClientOriginalName();
-            $extension = Input::file('user_avatar')->getClientOriginalExtension();
-            $file = Input::file('user_avatar')->move('assets/user/', $user->username . "." . $extension);
-            $user->user_avatar = $user->username . "." . $extension;
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+            $photo_path = $photo_save->getPathname();
+        } else {
+            $photo_path = User::where('user_id', $user_id)->pluck('photo');
         }
 
-        if (Input::get('remove_image') == 'Yes') {
-            File::delete('assets/user/' . $user->user_avatar);
-            $user->user_avatar = null;
+        if ($password !== '') {
+
+            $user->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password')),
+                'phone' => $request->input('phone'),
+                'photo' => $photo_path,
+                'address_1' => $request->input('address_1'),
+                'address_2' => $request->input('address_2'),
+                'zipcode' => $request->input('zipcode'),
+                'country_id' => $request->input('country_id'),
+                'skype' => $request->input('skype'),
+                'facebook' => $request->input('facebook'),
+                'linkedin' => $request->input('linkedin'),
+            ]);
+        } else {
+
+            $user->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'photo' => $photo_path,
+                'address_1' => $request->input('address_1'),
+                'address_2' => $request->input('address_2'),
+                'zipcode' => $request->input('zipcode'),
+                'country_id' => $request->input('country_id'),
+                'skype' => $request->input('skype'),
+                'facebook' => $request->input('facebook'),
+                'linkedin' => $request->input('linkedin'),
+            ]);
         }
 
-        $user->name = Input::get('name');
-        $user->email = Input::get('email');
-        $user->phone = Input::get('phone');
-        $user->save();
-        return Redirect::back()->withSuccess("Profile saved!!");
+        return $photo_path;
 
     }
 
-    public function forgotPassword()
-    {
+    public function updateMyProfile(Request $request) {
+        $user_id = Auth::user()->user_id;
+
+        $user = User::where('user_id', $user_id);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+            $photo_path = $photo_save->getPathname();
+        } else {
+            $photo_path = User::where('user_id', $user_id)->pluck('photo');
+        }
+
+        $user->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'photo' => $photo_path,
+            'address_1' => $request->input('address_1'),
+            'address_2' => $request->input('address_2'),
+            'zipcode' => $request->input('zipcode'),
+            'country_id' => $request->input('country_id'),
+            'skype' => $request->input('skype'),
+            'facebook' => $request->input('facebook'),
+            'linkedin' => $request->input('linkedin'),
+        ]);
+        
+        return $photo_path;
+    }
+
+    public function forgotPassword() {
         $user = User::where('email', '=', Input::get('email'))->where('username', '=', Input::get('username'))->first();
 
         $rules = array(
@@ -100,6 +178,7 @@ class ProfileController extends BaseController
             return Redirect::back()->withSuccess('Password sent to your mail!!');
         }
     }
+
 }
 
 ?>

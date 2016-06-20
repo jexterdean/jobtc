@@ -20,10 +20,10 @@ class PayrollController extends Controller
     {
         $assets = [];
 
-        $c = DB::table('client')
-            ->select('client_id', 'company_name')
+        $c = DB::table('companies')
+            ->select('id', 'name')
             ->get();
-        $company = array_pluck($c, 'company_name', 'client_id');
+        $company = array_pluck($c, 'name', 'id');
 
         return View::make('payroll.default', [
             'assets' => $assets,

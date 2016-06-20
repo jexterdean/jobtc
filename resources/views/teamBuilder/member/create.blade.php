@@ -77,11 +77,23 @@
     <br />
 
     <div class="form-group pull-right">
-        <button type="button" name="submitMemberBtn" class="btn btn-success submitMemberBtn">Add</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" name="submitMemberBtn" class="btn btn-submit submitMemberBtn">Add</button>
+        <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
     </div>
     <br style="clear: both;" />
 </div>
+<style>
+    .nav li a{
+        color: #000000;
+        text-shadow: none!important;
+    }
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus{
+        background: #aeaeae;
+        color: #000000;
+    }
+</style>
 
 <script>
     $(function(e){
@@ -89,13 +101,13 @@
         var us = $('#userSearch').magicSuggest({
             allowFreeEntries: false,
             method: 'get',
-            data: '{!! URL::to('teamBuilderExistingUserJson?t=' . $project_id) !!}',
+            data: '{!! URL::to('teamBuilderExistingUserJson?t=' . $team_id) !!}',
             renderer: function(data){
                 return '<div style="padding: 5px; overflow:hidden;">' +
                     '<div style="float: left;">{!! HTML::image("assets/user/avatar.png") !!}</div>' +
                     '<div style="float: left; margin-left: 5px">' +
-                        '<div style="font-weight: bold; color: #333; font-size: 10px; line-height: 11px">' + data.name + '</div>' +
-                        '<div style="color: #999; font-size: 9px">' + data.email + '</div>' +
+                        '<div style="font-weight: bold; color: #000; font-size: 20px; line-height: 11px">' + data.name + '</div>' +
+                        '<div style="color: #000; font-size: 18px">' + data.email + '</div>' +
                     '</div>' +
                 '</div><div style="clear:both;"></div>'; // make sure we have closed our dom stuff
             }
@@ -108,7 +120,7 @@
         submitMemberBtn.click(function(e){
             var activeTab = $('.tab-pane.active').attr('id').replace('_tab', '');
             var d = {
-                project_id: '{!! $project_id !!}'
+                team_id: '{!! $team_id !!}'
             };
             if(activeTab == "existing"){
                 d.user = userIds;

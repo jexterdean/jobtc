@@ -11,7 +11,11 @@
         "Cviebrock/image-validator": "^2.0",
         "intervention/image": "^2.3",
         "bican/roles": "2.1.*",
-        "tymon/jwt-auth": "^0.5.9"
+        "doctrine/dbal": "v2.5.4",
+        "kordy/ticketit": "0.*",
+        "zizaco/entrust": "5.2.x-dev",
+        "sarav/laravel-multiauth": "^0.0.5",
+        "phanan/remote": "2.0.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

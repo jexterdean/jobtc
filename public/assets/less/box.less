@@ -1,12 +1,12 @@
 .box{
   position: relative;
   background: #ffffff;
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
   width: 100%;
   .box-shadow(2px 2px 5px -1px rgba(0, 0, 0, 0.50));
   //.box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
   &-default{
-    .box-variant(@brand-default);
+    .box-variant(@brand-default,#000000);
   }
   &-success{
     .box-variant(@brand-success);
@@ -22,6 +22,9 @@
   }
   &-primary{
     .box-variant(@brand-primary);
+  }
+  .box-container{
+    border: 1px solid #ffffff;
   }
   .box-header{
     position: relative;
@@ -55,7 +58,7 @@
     }
   }
   .box-body{
-    padding: 10px;
+    //padding: 10px;
     > table, > .table{
       margin-bottom: 0;
     }

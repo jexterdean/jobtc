@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Task</h4>
             </div>
             {!!  Form::open(['method' => 'POST','route' => ['task.store'],'class' => 'task-form'])  !!}
@@ -35,7 +35,7 @@
             </div>
             <div class="modal-footer">
                 <div class="form-group">
-                    {!!  Form::submit('Add',['class' => 'btn btn-primary', 'tabindex' => '5'])  !!}
+                    {!!  Form::submit('Add',['class' => 'btn btn-edit', 'tabindex' => '5'])  !!}
                 </div>
             </div>
             {!!  Form::close() !!}
@@ -43,32 +43,36 @@
     </div>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion_" data-target="#task-details" aria-expanded="true">
-        <h4 class="panel-title">Task List
-            <a data-toggle="modal" class="pull-right" href="#add_task"><i class="fa fa-plus"></i></a>
-        </h4>
-    </div>
-    <div id="task-details" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
-        <div class="panel-body">
-            <table class="table table-hover table-striped">
-                @if(count($tasks) > 0)
-                    @foreach($tasks as $task)
-                        @if((Auth::user()->is('client') && $task->is_visible == 'yes') ||
-                             !Auth::user()->is('client'))
+    <div class="panel-container">
+        <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#task-details" data-parent="#accordion_" aria-expanded="true">
+            <h4 class="panel-title">Task List
+                <a data-toggle="modal" class="pull-right" href="#add_task"><i class="fa fa-plus"></i></a>
+            </h4>
+        </div>
+        <div id="task-details" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                <div class="panel-content">
+                    <table class="table table-hover table-striped">
+                        @if(count($tasks) > 0)
+                            @foreach($tasks as $task)
+                                @if((Auth::user()->is('client') && $task->is_visible == 'yes') ||
+                                     !Auth::user()->is('client'))
 
-                            <tr>
-                                <td>{{ $task->task_title }}</td>
-                                <td>{{ $task->name }}</td>
+                                    <tr>
+                                        <td>{{ $task->task_title }}</td>
+                                        <td>{{ $task->name }}</td>
+                                    </tr>
+
+                                @endif
+                            @endforeach
+                        @else
+                             <tr>
+                                <td colspan="2">No data was found.</td>
                             </tr>
-
                         @endif
-                    @endforeach
-                @else
-                     <tr>
-                        <td colspan="2">No data was found.</td>
-                    </tr>
-                @endif
-            </table>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

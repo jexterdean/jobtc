@@ -10,23 +10,27 @@
     );
     ?>
 </div>
-<div class="form-inline">
-    <div class="form-group">
-        <label>Date Start:</label>
-        <div class='input-group time start_date'>
-            <input type='text' name="start_date" class="form-control" value="{!! date('d/m/Y h:i a', strtotime($date)) !!}" readonly/>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-time"></span>
-            </span>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Date Start:</label>
+            <div class='input-group time start_date'>
+                <input type='text' name="start_date" class="form-control" value="{!! date('d/m/Y h:i a', strtotime($date)) !!}" readonly/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label>Date End:</label>
-        <div class='input-group time end_date'>
-            <input type='text' name="end_date" class="form-control" value="{!! date('d/m/Y', strtotime($date)) . ' 12:59 pm' !!}" readonly/>
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-time"></span>
-            </span>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Date End:</label>
+            <div class='input-group time end_date'>
+                <input type='text' name="end_date" class="form-control" value="{!! date('d/m/Y', strtotime($date)) . ' 12:59 pm' !!}" readonly/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
         </div>
     </div>
 </div>
@@ -46,25 +50,29 @@
     <label>Description:</label>
     <textarea name="description" class="form-control" rows="5" style="resize: none;"></textarea>
 </div>
-<div class="form-inline">
-    <div class="form-group">
-        <label>Estimated Length:</label>
-        <div class="input-group">
-            <input type="number" name="estimated_length" class="form-control">
-            <span class="input-group-addon">minutes</span>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Estimated Length:</label>
+            <div class="input-group">
+                <input type="number" name="estimated_length" class="form-control">
+                <span class="input-group-addon">minutes</span>
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label>Priority:</label>
-        <?php
-        echo Form::select(
-            'priority_id',
-            $meeting_priority, '',
-            array(
-              'class' => 'form-control'
-            )
-        );
-        ?>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Priority:</label>
+            <?php
+            echo Form::select(
+                'priority_id',
+                $meeting_priority, '',
+                array(
+                  'class' => 'form-control'
+                )
+            );
+            ?>
+        </div>
     </div>
 </div>
 <div class="form-group">

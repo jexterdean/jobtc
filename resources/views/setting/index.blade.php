@@ -16,9 +16,8 @@
                 @endif
                 <div class="box-body">
                     <div class="form-group">
-                        {!!  Form::label('company_name','Company Name') !!}
                         {!!  Form::input('text','company_name',isset($setting->company_name) ? $setting->company_name :
-                        '',['class' => 'form-control', 'placeholder' => 'Enter Company Name', 'tabindex' => '1']) !!}
+                        '',['class' => 'form-control', 'placeholder' => 'Company Name', 'tabindex' => '1']) !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::label('contact_person','Contact Person') !!}
@@ -73,7 +72,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    {!!   Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '13']) !!}
+                    {!!   Form::submit('Save',['class' => 'btn btn-edit', 'tabindex' => '13']) !!}
                 </div>
                 {!!  Form::close()  !!}
             </div>
@@ -87,13 +86,11 @@
                 ''],'class' => 'system-setting-form'])  !!}
                 <div class="box-body">
                     <div class="form-group">
-                        {!!  Form::label('allowed_upload_file','Allowed upload file') !!}
                         {!!  Form::input('text','allowed_upload_file',isset($setting->allowed_upload_file) ?
-                        $setting->allowed_upload_file : '',['class' => 'form-control', 'placeholder' => 'Enter File Extensions']) !!}
+                        $setting->allowed_upload_file : '',['class' => 'form-control', 'placeholder' => 'File Extensions']) !!}
                         <span class="help-block">Separated by comma operator (,) </span>
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('default_language','Default Language') !!}
                         {!! Form::select('default_language',[
                                 'en'=>'English',
                                 'fr'=>'French',
@@ -102,36 +99,31 @@
                                 'it'=>'Italian',
                                 'rs'=>'Russian',
                                 'sp'=>'Spanish'
-                                ],$setting->default_language,['class' => 'form-control', 'placeholder' => 'Select One', 'tabindex' => '14']) !!}
+                                ],$setting->default_language,['class' => 'form-control', 'placeholder' => 'Select Language', 'tabindex' => '14']) !!}
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('timezone_id','Timezone') !!}
                         {!!  Form::select('timezone_id', [null=>'Please Select'] + $timezone, isset
-                        ($setting->timezone_id) ? $setting->timezone_id : '', ['class' => 'form-control input-large select2me', 'placeholder' => 'Select One', 'tabindex' => '15'] )  !!}
+                        ($setting->timezone_id) ? $setting->timezone_id : '', ['class' => 'form-control input-large select2me', 'placeholder' => 'Select Timezone', 'tabindex' => '15'] )  !!}
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('allowed_upload_max_size','Allowed file max size') !!}
                         {!!  Form::input('text','allowed_upload_max_size',isset($setting->allowed_upload_max_size) ?
-                        $setting->allowed_upload_max_size : '',['class' => 'form-control', 'placeholder' => 'Enter File Max Size', 'tabindex' => '16']) !!}
+                        $setting->allowed_upload_max_size : '',['class' => 'form-control', 'placeholder' => 'File Max Size', 'tabindex' => '16']) !!}
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('default_currency','Default Currency') !!}
                         {!!  Form::input('text','default_currency',isset($setting->default_currency) ?
-                        $setting->default_currency : '',['class' => 'form-control', 'placeholder' => 'Enter Default Currency', 'tabindex' => '17']) !!}
+                        $setting->default_currency : '',['class' => 'form-control', 'placeholder' => 'Default Currency', 'tabindex' => '17']) !!}
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('default_tax','Default Tax') !!}
                         {!!  Form::input('number','default_tax',isset($setting->default_tax) ? round
-                        ($setting->default_tax,2) : '',['class' => 'form-control', 'placeholder' => 'Enter Default Tax', 'tabindex' => '18']) !!}
+                        ($setting->default_tax,2) : '',['class' => 'form-control', 'placeholder' => 'Default Tax', 'tabindex' => '18']) !!}
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('default_discount','Default Discount') !!}
                         {!!  Form::input('number','default_discount',isset($setting->default_discount) ? round
-                        ($setting->default_discount,2) : '',['class' => 'form-control', 'placeholder' => 'Enter Default Discount', 'tabindex' => '19']) !!}
+                        ($setting->default_discount,2) : '',['class' => 'form-control', 'placeholder' => 'Default Discount', 'tabindex' => '19']) !!}
                     </div>
                 </div>
                 <div class="box-footer">
-                    {!!  Form::submit('Save',['class' => 'btn btn-primary', 'tabindex' => '20'])  !!}
+                    {!!  Form::submit('Save',['class' => 'btn btn-edit btn-shadow', 'tabindex' => '20'])  !!}
                 </div>
                 {!!  Form::close()  !!}
             </div>

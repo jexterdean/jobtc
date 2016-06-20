@@ -14,13 +14,13 @@
 
 // Panel contents
 .panel-body {
-  padding: @panel-body-padding;
+  //padding: @panel-body-padding;
   &:extend(.clearfix all);
 }
 
 // Optional heading
 .panel-heading {
-  padding: @panel-heading-padding;
+  padding: 5px!important;//@panel-heading-padding;
   border-bottom: 1px solid transparent;
   //.border-top-radius((@panel-border-radius - 1));
 
@@ -33,7 +33,9 @@
 .panel-title {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: ceil((@font-size-base * 1.125));
+  //font-size: ceil((@font-size-base * 1.125));
+  font-size: 20px; //ceil((20px * 1.125));
+  font-weight: 600;
   color: inherit;
 
   > a,
@@ -60,34 +62,36 @@
 // any kind of custom content between the two.
 
 .panel {
-  > .list-group,
-  > .panel-collapse > .list-group {
-    margin-bottom: 0;
+  .panel-container{
+    > .list-group,
+    > .panel-collapse > .list-group {
+      margin-bottom: 0;
 
-    .list-group-item {
-      border-width: 1px 0;
-      border-radius: 0;
+      .list-group-item {
+        border-width: 1px 0;
+        border-radius: 0;
+      }
+
+      // Add border top radius for first one
+      &:first-child {
+        .list-group-item:first-child {
+          border-top: 0;
+          //.border-top-radius((@panel-border-radius - 1));
+        }
+      }
+
+      // Add border bottom radius for last one
+      &:last-child {
+        .list-group-item:last-child {
+          border-bottom: 0;
+          //.border-bottom-radius((@panel-border-radius - 1));
+        }
+      }
     }
-
-    // Add border top radius for first one
-    &:first-child {
+    > .panel-heading + .panel-collapse > .list-group {
       .list-group-item:first-child {
-        border-top: 0;
-        //.border-top-radius((@panel-border-radius - 1));
+        .border-top-radius(0);
       }
-    }
-
-    // Add border bottom radius for last one
-    &:last-child {
-      .list-group-item:last-child {
-        border-bottom: 0;
-        //.border-bottom-radius((@panel-border-radius - 1));
-      }
-    }
-  }
-  > .panel-heading + .panel-collapse > .list-group {
-    .list-group-item:first-child {
-      .border-top-radius(0);
     }
   }
 }
@@ -107,109 +111,111 @@
 // watch it go full width.
 
 .panel {
-  > .table,
-  > .table-responsive > .table,
-  > .panel-collapse > .table {
-    margin-bottom: 0;
+  .panel-container{
+    > .table,
+    > .table-responsive > .table,
+    > .panel-collapse > .table {
+      margin-bottom: 0;
 
-    caption {
-      padding-left: @panel-body-padding;
-      padding-right: @panel-body-padding;
+      caption {
+        padding-left: @panel-body-padding;
+        padding-right: @panel-body-padding;
+      }
     }
-  }
-  // Add border top radius for first one
-  > .table:first-child,
-  > .table-responsive:first-child > .table:first-child {
-    .border-top-radius((@panel-border-radius - 1));
+    // Add border top radius for first one
+    > .table:first-child,
+    > .table-responsive:first-child > .table:first-child {
+      .border-top-radius((@panel-border-radius - 1));
 
-    > thead:first-child,
-    > tbody:first-child {
-      > tr:first-child {
-        border-top-left-radius: (@panel-border-radius - 1);
-        border-top-right-radius: (@panel-border-radius - 1);
-
-        td:first-child,
-        th:first-child {
+      > thead:first-child,
+      > tbody:first-child {
+        > tr:first-child {
           border-top-left-radius: (@panel-border-radius - 1);
-        }
-        td:last-child,
-        th:last-child {
           border-top-right-radius: (@panel-border-radius - 1);
+
+          td:first-child,
+          th:first-child {
+            border-top-left-radius: (@panel-border-radius - 1);
+          }
+          td:last-child,
+          th:last-child {
+            border-top-right-radius: (@panel-border-radius - 1);
+          }
         }
       }
     }
-  }
-  // Add border bottom radius for last one
-  > .table:last-child,
-  > .table-responsive:last-child > .table:last-child {
-    .border-bottom-radius((@panel-border-radius - 1));
+    // Add border bottom radius for last one
+    > .table:last-child,
+    > .table-responsive:last-child > .table:last-child {
+      .border-bottom-radius((@panel-border-radius - 1));
 
-    > tbody:last-child,
-    > tfoot:last-child {
-      > tr:last-child {
-        border-bottom-left-radius: (@panel-border-radius - 1);
-        border-bottom-right-radius: (@panel-border-radius - 1);
-
-        td:first-child,
-        th:first-child {
+      > tbody:last-child,
+      > tfoot:last-child {
+        > tr:last-child {
           border-bottom-left-radius: (@panel-border-radius - 1);
-        }
-        td:last-child,
-        th:last-child {
           border-bottom-right-radius: (@panel-border-radius - 1);
+
+          td:first-child,
+          th:first-child {
+            border-bottom-left-radius: (@panel-border-radius - 1);
+          }
+          td:last-child,
+          th:last-child {
+            border-bottom-right-radius: (@panel-border-radius - 1);
+          }
         }
       }
     }
-  }
-  > .panel-body + .table,
-  > .panel-body + .table-responsive,
-  > .table + .panel-body,
-  > .table-responsive + .panel-body {
-    border-top: 1px solid @table-border-color;
-  }
-  > .table > tbody:first-child > tr:first-child th,
-  > .table > tbody:first-child > tr:first-child td {
-    border-top: 0;
-  }
-  > .table-bordered,
-  > .table-responsive > .table-bordered {
-    border: 0;
-    > thead,
-    > tbody,
-    > tfoot {
-      > tr {
-        > th:first-child,
-        > td:first-child {
-          border-left: 0;
+    > .panel-body + .table,
+    > .panel-body + .table-responsive,
+    > .table + .panel-body,
+    > .table-responsive + .panel-body {
+      border-top: 1px solid @table-border-color;
+    }
+    > .table > tbody:first-child > tr:first-child th,
+    > .table > tbody:first-child > tr:first-child td {
+      border-top: 0;
+    }
+    > .table-bordered,
+    > .table-responsive > .table-bordered {
+      border: 0;
+      > thead,
+      > tbody,
+      > tfoot {
+        > tr {
+          > th:first-child,
+          > td:first-child {
+            border-left: 0;
+          }
+          > th:last-child,
+          > td:last-child {
+            border-right: 0;
+          }
         }
-        > th:last-child,
-        > td:last-child {
-          border-right: 0;
+      }
+      > thead,
+      > tbody {
+        > tr:first-child {
+          > td,
+          > th {
+            border-bottom: 0;
+          }
+        }
+      }
+      > tbody,
+      > tfoot {
+        > tr:last-child {
+          > td,
+          > th {
+            border-bottom: 0;
+          }
         }
       }
     }
-    > thead,
-    > tbody {
-      > tr:first-child {
-        > td,
-        > th {
-          border-bottom: 0;
-        }
-      }
+    > .table-responsive {
+      border: 0;
+      margin-bottom: 0;
     }
-    > tbody,
-    > tfoot {
-      > tr:last-child {
-        > td,
-        > th {
-          border-bottom: 0;
-        }
-      }
-    }
-  }
-  > .table-responsive {
-    border: 0;
-    margin-bottom: 0;
   }
 }
 
@@ -220,37 +226,42 @@
 // the help of our collapse JavaScript plugin.
 
 .panel-group {
-  margin-bottom: @line-height-computed;
+  margin-bottom: 5px;//@line-height-computed;
 
   // Tighten up margin so it's only between panels
   .panel {
     margin-bottom: 0;
     //border-radius: @panel-border-radius;
-
-    + .panel {
-      margin-top: 5px;
+    .panel-container{
+      + .panel {
+        margin-top: 5px;
+      }
     }
   }
+  .panel-container{
+    .panel-heading {
+      border-bottom: 0;
 
-  .panel-heading {
-    border-bottom: 0;
-
-    + .panel-collapse > .panel-body,
-    + .panel-collapse > .list-group {
-      border-top: 1px solid @panel-inner-border;
+      + .panel-collapse > .panel-body > .panel-content,
+      + .panel-collapse > .list-group {
+        border-top: 1px solid @panel-inner-border;
+      }
     }
-  }
 
-  .panel-footer {
-    border-top: 0;
-    + .panel-collapse .panel-body {
-      border-bottom: 1px solid @panel-inner-border;
+    .panel-footer {
+      border-top: 0;
+      + .panel-collapse .panel-body .panel-content {
+        border-bottom: 1px solid @panel-inner-border;
+      }
     }
   }
 }
 
 
 // Contextual variations
+.task-list {
+  .panel-variant(@task-list-border; @task-list-text; @task-list-heading-bg; @task-list-border; true);
+}
 .panel-default {
   .panel-variant(@panel-default-border; @panel-default-text; @panel-default-heading-bg; @panel-default-border);
 }

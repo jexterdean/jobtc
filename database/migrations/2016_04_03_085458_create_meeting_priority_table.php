@@ -12,12 +12,14 @@ class CreateMeetingPriorityTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('meeting_priority')) {
         Schema::create('meeting_priority',function(Blueprint $table){
             $table->increments('id')->unsigned();
             $table->string('priority', 50);
 
             $table->timestamps();
         });
+        }
     }
 
     /**

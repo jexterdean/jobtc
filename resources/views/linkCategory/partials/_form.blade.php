@@ -9,7 +9,7 @@
 
     <div class="row">
         <div class="col-md-offset-3 col-md-9">
-            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Category'),['class' => 'btn btn-success', 'tabindex' =>
+            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Category'),['class' => 'btn btn-submit', 'tabindex' =>
             '9'])  !!}
         </div>
     </div>

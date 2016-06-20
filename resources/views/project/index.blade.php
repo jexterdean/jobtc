@@ -4,11 +4,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header modal-header-{{ \App\Helpers\Helper::getRandomColor() }}">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Project</h4>
             </div>
             <div class="modal-body">
-                @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+                @role('admin')
                 {!!  Form::open(['route' => 'project.store','class' => 'form-horizontal project-form'])  !!}
                 @include('project/partials/_form')
                 {!! Form::close()  !!}
@@ -34,7 +34,7 @@
                 <h3 class="box-title">Project List</h3>
                 <div class="box-tools pull-right">
                     <a data-toggle="modal" href="#add_project">
-                        <button class="btn btn-sm btn-primary"><i class="fa fa-plus-circle"></i> Add Project</button>
+                        <button class="btn btn-sm btn-edit"><i class="fa fa-plus-circle"></i> Add Project</button>
                     </a>
                     <button class="btn btn-sm btn-danger btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
             </div>
@@ -54,7 +54,7 @@
                 $Option = "$linkToView <span class='hspacer'></span> $linkToEdit <span class='hspacer'></span> $linkToDelete";
                 $QA[] = array(
                     $project->project_title,
-                    isset($clients[$project->client_id]) ? $clients[$project->client_id] : '',
+                    isset($companies[$project->company_id]) ? $companies[$project->company_id] : '',
                     $project->ref_no, date("d M Y", strtotime($project->start_date)),
                     date("d M Y", strtotime($project->deadline)),
                     $project->rate_type,

@@ -14,8 +14,8 @@
             {!! Form::open(array('url' => 'meeting')) !!}
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="submit" name="addEventBtn" class="btn btn-success addEventBtn">Add</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" name="addEventBtn" class="btn btn-submit addEventBtn">Add</button>
+                    <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
                 </div>
             {!! Form::close() !!}
         </div>
@@ -31,8 +31,8 @@
             {!! Form::open(array('url' => 'meeting', 'method' => 'PATCH', 'class' => 'editMeetingForm')) !!}
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="submit" name="editEventBtn" class="btn btn-success editEventBtn">Edit</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" name="editEventBtn" class="btn btn-submit editEventBtn">Edit</button>
+                    <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
                 </div>
             {!! Form::close() !!}
         </div>
@@ -42,7 +42,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                 <h4 class="modal-title">Add Member</h4>
             </div>
             <div class="modal-body"></div>
@@ -112,9 +112,9 @@
                     day: 'day'
                 },
                 titleFormat: {
-                    month:  "[<strong style='font-size: 20px;'>]MMMM YYYY[</strong>]",
-                    week:  "[<strong style='font-size: 20px;'>]MMM D YYYY[</strong>]",
-                    day:  "[<strong style='font-size: 20px;'>]MMMM D YYYY[</strong>]"
+                    month:  "[<strong style='font-size: 30px;'>]MMMM YYYY[</strong>]",
+                    week:  "[<strong style='font-size: 30px;'>]MMM D YYYY[</strong>]",
+                    day:  "[<strong style='font-size: 30px;'>]MMMM D YYYY[</strong>]"
                 },
                 columnFormat: {
                     week: 'ddd MMMM D' //to customize the weekly title from Sun 4/4 to Sun April 4
@@ -152,7 +152,7 @@
                     if(fc_header.find('.timezoneArea').length == 0){ //only append if drop down timezone doesn't exist yet
                         var tStr =
                             '<span class="form-inline timezoneArea" style="margin-left: 10px;">' +
-                                '<select class="timezone-selector form-control" style="width: 130px;font-size: 12px;"></select>' +
+                                '<select class="timezone-selector form-control" title="Select Timezone" style="font-size: 18px;"></select>' +
                              '</span>';
                         header_left.append(tStr);
 
@@ -162,6 +162,7 @@
                                 .find('.timezone-selector')
                                 .append($("<option/>").text(t).attr('value', t));
                         });
+                        fc_header.find('.timezone-selector').selectpicker({ width: '150px' });
 
                         //set the default value and add event when the timezone dp is change
                         fc_header
@@ -176,8 +177,8 @@
                     if(fc_header.find('.teamArea').length == 0){
                         var teamStr =
                             '<span class="form-inline teamArea" style="margin-left: 10px;">' +
-                                '<select class="team-selector form-control" style="width: 130px;font-size: 12px;"></select>&nbsp;' +
-                                '<select class="user-selector form-control hidden" style="width: 130px;font-size: 12px;"></select>&nbsp;' +
+                                '<select class="team-selector form-control" title="Group Meeting" style="font-size: 18px;"></select>&nbsp;' +
+                                '<select class="user-selector form-control hidden" title="Add User" style="width: 130px;font-size: 12px;"></select>&nbsp;' +
                                 '<button class="btn btn-sm addMemberBtn hidden"><i class="fa fa-plus-circle"></i> Add</button>' +
                              '</span>';
                         header_left.append(teamStr);
@@ -185,8 +186,9 @@
                         $.each(teams, function(i, t){
                             fc_header
                                 .find('.team-selector')
-                                .append($("<option/>").text(t.project_title).attr('value', t.project_id));
+                                .append($("<option/>").text(t.title).attr('value', t.id));
                         });
+                        fc_header.find('.team-selector').selectpicker({ width: '160px' });
 
                         teamChange();
                         fc_header
@@ -296,6 +298,7 @@
                                 .find('.user-selector')
                                 .append($("<option/>").text(t.name).attr('value', t.id));
                         });
+                        fc_header.find('.user-selector').selectpicker({ width: '150px' });
 
                         if(user.length > 0){
                             fc_header.find('.user-selector').removeClass('hidden');

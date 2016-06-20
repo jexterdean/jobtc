@@ -16,12 +16,13 @@
 
 @brand-primary:         darken(#428bca, 6.5%); // #337ab7
 @brand-success:         #59ae59;
-@brand-default:         #919ca5;
+@brand-default:         #F1F1F1;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
 @brand-priority:        #7639d9;
 @brand-stop:            #d9c518;
+@navbar-color:          #4285F4;
 
 
 //== Scaffolding
@@ -29,9 +30,9 @@
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-@body-bg:               #A9B7C4;
+@body-bg:               #f2f2f2;//#1933c4;
 //** Global text color on `<body>`.
-@text-color:            @gray-dark;
+@text-color:            @gray-base;
 
 //** Global textual link color.
 @link-color:            @brand-primary;
@@ -51,7 +52,7 @@
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
-@font-size-base:          14px;
+@font-size-base:          18px;
 @font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
 @font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
 
@@ -307,7 +308,7 @@
 
 // Small screen / tablet
 //** Deprecated `@screen-sm` as of v3.0.1
-@screen-sm:                  768px;
+@screen-sm:                  1213px;//944px;//768px;
 @screen-sm-min:              @screen-sm;
 //** Deprecated `@screen-tablet` as of v3.0.1
 @screen-tablet:              @screen-sm-min;
@@ -339,7 +340,7 @@
 //** Number of columns in the grid.
 @grid-columns:              12;
 //** Padding between columns. Gets divided in half for the left and right.
-@grid-gutter-width:         30px;
+@grid-gutter-width:         8px;//30px;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
 @grid-float-breakpoint:     @screen-sm-min;
@@ -727,7 +728,11 @@
 @panel-inner-border:          #ddd;
 @panel-footer-bg:             #f5f5f5;
 
-@panel-default-text:          #fff;
+@task-list-text:          #000000;
+@task-list-border:        #ffffff;
+@task-list-heading-bg:    #ffffff;
+
+@panel-default-text:          #000000;
 @panel-default-border:        @brand-default;
 @panel-default-heading-bg:    @brand-default;
 

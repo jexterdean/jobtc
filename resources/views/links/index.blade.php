@@ -4,7 +4,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-{{ \App\Helpers\Helper::getRandomColor() }}">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                     <h4 class="modal-title">Add Link</h4>
                 </div>
                 <div class="modal-body">
@@ -26,11 +26,11 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header modal-header-{{ \App\Helpers\Helper::getRandomColor() }}">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                         <h4 class="modal-title">Add Category</h4>
                     </div>
                     <div class="modal-body">
-                        @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
+                        @role('admin')
                         {!!  Form::open(['route' => 'linkCategory.store','class' => 'form-horizontal category-form'])  !!}
                         @include('linkCategory/partials/_form')
                         {!! Form::close()  !!}
@@ -39,7 +39,7 @@
                             <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
                             <strong>You dont have to perform this action!!</strong>
                         </div>
-                        @endif
+                        @endrole
                 </div>
             </div>
         </div>

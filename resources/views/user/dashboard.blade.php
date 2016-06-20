@@ -2,136 +2,8 @@
 @section('content')
     <div class="row">
         <div class="col-md-6 col-sm-12">
-            @role('admin')
-                <div class="col-lg-6">
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3>
-                                {{ count($clients) }}
-                            </h3>
-                            <p>
-                                Clients
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-users"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3>
-                                {{ count($users) }}
-                            </h3>
-                            <p>
-                                Users
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-user"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="small-box bg-yellow">
-                        <div class="inner">
-                            <h3>
-                                {{ count($estimates) }}
-                            </h3>
-                            <p>
-                                Estimates
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-file-o"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="small-box bg-red">
-                        <div class="inner">
-                            <h3>
-                                {{ count($invoices) }}
-                            </h3>
-                            <p>
-                                Invoices
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-file-text-o"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-6 text-center">
-                        @if($payable->totalSales>0)
-                            <input type="text" class="knob" data-readonly="true"
-                                   value="{{ round(100-(($paid->totalPaid/$payable->totalSales)*100),2) }}"
-                                   data-width="120" data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor
-                                   () }}"/>
-                        @else
-                            <input type="text" class="knob" data-readonly="true" value="0" data-width="120"
-                                   data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor() }}"/>
-                        @endif
-                        <div class="knob-label">Percentage Amount Due</div>
-                    </div>
-                    <div class="col-xs-6 text-center">
-                        <input type="text" class="knob" data-readonly="true" value="{{ $inCompletProjects }}"
-                               data-width="120" data-height="120" data-fgColor="{{ \App\Helpers\Helper::getRandomHexColor() }}"/>
-                        <div class="knob-label">Pending Projects</div>
-                    </div>
-                </div>
-            @else
-                <div class="col-lg-6">
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3>
-                                {{ count($total_projects) }}
-                            </h3>
-                            <p>
-                                Projects Completed
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-lightbulb-o"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3>
-                                {{ count($total_bugs) }}
-                            </h3>
-                            <p>
-                                Bugs Resolved
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-bug"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3>
-                                {{ count($total_tickets) }}
-                            </h3>
-                            <p>
-                                Tickets Resolved
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-ticket"></i>
-                        </div>
-                    </div>
-                </div>
-            @endrole
-            <div style="clear:both;"></div>
-            <br/>
+            {{--<div style="clear:both;"></div>
+            <br/>--}}
             <div class="box box-default">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-lightbulb-o"></i> Pending Projects</h3>
@@ -190,7 +62,10 @@
                     @endif
                 </div>
             </div>
-            @if(!Auth::user()->is('client'))
+            
+        </div>
+        <div class='col-md-6 col-sm-12'>
+            @if(Auth::user('user'))
                 <div class="box box-default">
                     <div class="box-header">
                         <h3 class="box-title"><i class="fa fa-tasks"></i> Pending Tasks</h3>
@@ -229,104 +104,13 @@
                     </div>
                 </div>
             @endif
-        </div>
-        <div class="col-md-6">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-bug"></i> Pending Bugs</h3>
-                </div>
-                <div class="box-body">
-                    @if(count($bugs))
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>
-                                    Ref No
-                                </th>
-                                <th>
-                                    Reported On
-                                </th>
-                                <th>
-                                    Priority
-                                </th>
-                                <th>
-                                    View
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($bugs as $bug)
-                                <tr>
-                                    <td>{{ $bug->ref_no }}</td>
-                                    <td>{{ date("d M Y",strtotime($bug->reported_on)) }}
-                                    <td>{{ $bug->bug_priority }}</td>
-                                    <td>
-                                        <a href="{{ url('bug/'.$bug->bug_id) }}"><i class="fa fa-external-link"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <div class='alert alert-danger'>
-                            <i class='fa fa-ban'></i>
-                            <strong>No bugs found!!</strong>
-                        </div>
-                    @endif
-                </div>
             </div>
-            <div class="box box-default">
-                <div class="box-header">
-                    <h3 class="box-title"><i class="fa fa-ticket"></i> Opened Tickets</h3>
-                </div>
-                <div class="box-body">
-                    @if(count($tickets))
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>
-                                    Subject
-                                </th>
-                                <th>
-                                    Date Requested
-                                </th>
-                                <th>
-                                    Priority
-                                </th>
-                                <th>
-                                    View
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($tickets as $ticket)
-                                <tr>
-                                    <td>{{ $ticket->ticket_subject }}</td>
-                                    <td>{{ date("d M Y",strtotime($ticket->created_at)) }}
-                                    <td>{{ $ticket->ticket_priority }}</td>
-                                    <td>
-                                        <a href="{{ url('ticket/'.$ticket->ticket_id) }}"><i
-                                                    class="fa fa-external-link"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <div class='alert alert-danger'>
-                            <i class='fa fa-ban'></i>
-                            <strong>No tickets found!!</strong>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
     </div>
     <div class="row">
         <div class="col-md-12 col-sm-12">
             {{-- include the meeting calendar --}}
             {{-- replace the event calendar --}}
-            @include('meeting.calendar')
+            {{--@include('meeting.calendar')--}}
         </div>
     </div>
 
@@ -350,7 +134,6 @@
     }
     ?>
 @stop
-
 @section('js_footer')
 @parent
 <script>

@@ -142,7 +142,8 @@ class MeetingController extends BaseController
             ->get();
         $data['user'] = array_pluck($user, 'username', 'user_id');
 
-        $team_member = DB::table('team_member')
+        $team_member = DB::table('team_project')
+            ->leftJoin('team_member', 'team_member.team_id', '=', 'team_project.team_id')
             ->select('project_id', 'user_id')
             ->get();
         $user_per_project = array();

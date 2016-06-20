@@ -41,7 +41,7 @@
     </div>
     <div class="row">
         <div class="col-md-offset-9 col-md-3">
-            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Link'),['class' => 'btn btn-success', 'tabindex' =>
+            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Link'),['class' => 'btn btn-submit btn-shadow', 'tabindex' =>
             '9'])  !!}
         </div>
     </div>

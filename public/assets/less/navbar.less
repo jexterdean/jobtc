@@ -9,11 +9,10 @@
 // other navbar variations.
 
 .navbar {
-  .box-shadow();
+  .box-shadow(10px 8px 12px -6px rgba(15,15,15,0.34));
   position: relative;
-  min-height: @navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
-  margin-bottom: @navbar-margin-bottom;
-  border: 1px solid transparent;
+  //min-height: @navbar-height; // Ensure a navbar always shows (e.g., without a .navbar-brand in collapsed mode)
+  //border: 1px solid transparent;
 
   // Prevent floats from breaking the navbar
   &:extend(.clearfix all);
@@ -271,8 +270,8 @@
     > li {
       float: left;
       > a {
-        padding-top:    @navbar-padding-vertical;
-        padding-bottom: @navbar-padding-vertical;
+        padding-top:    10px;
+        padding-bottom: 10px;
       }
     }
   }
@@ -325,10 +324,43 @@
 // Dropdown menus
 
 // Menu position and menu carets
-.navbar-nav > li > .dropdown-menu {
-  margin-top: 0;
-  .border-top-radius(0);
+.navbar-nav > li {
+  @media (max-width: @screen-sm-min) {
+    &.dropdown{
+      &:hover > .dropdown-menu{
+        position: inherit;
+        min-width: 100%!important;
+        background-color: inherit!important;
+        box-shadow: none!important;
+        li > a {
+          color: #FFFFFF!important;
+          text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000!important;
+          &:hover,
+          &:focus {
+            color: #ffff00!important;
+            background: none!important;
+          }
+        }
+      }
+    }
+  }
+  > a {
+    color: #FFFFFF!important;
+    text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000!important;
+    &:hover{
+      color: #ffff00!important;
+    }
+  }
+  > .dropdown-menu{
+    margin-top: 0;
+    background: @navbar-color;
+    .border-top-radius(0);
+    > li > a {
+      color: #FFFFFF!important;
+    }
+  }
 }
+
 // Menu position and menu caret support for dropups via extra dropup class
 .navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {
   margin-bottom: 0;
@@ -528,15 +560,13 @@
 // Inverse navbar
 
 .navbar-inverse {
-  background-color: @navbar-inverse-bg;
+  background-color: @navbar-color;//@brand-default * 0.9;
   //border-color: @navbar-inverse-border;
-  border-bottom: 2px solid #c2d0dd;
   .navbar-brand {
     color: @navbar-inverse-brand-color;
     &:hover,
     &:focus {
-      color: @navbar-inverse-brand-hover-color;
-      background-color: @navbar-inverse-brand-hover-bg;
+      color: #ffff00;
     }
   }
 
@@ -546,12 +576,12 @@
 
   .navbar-nav {
     > li > a {
-      color: @navbar-inverse-link-color;
-
+      color: #ffffff;
       &:hover,
       &:focus {
-        color: @navbar-inverse-link-hover-color;
-        background-color: @navbar-inverse-link-hover-bg;
+        //text-shadow: 1px 1px rgba(0, 0, 0, 0.9)!important;
+        //color: @navbar-inverse-link-hover-color;
+        color: #ffff00;
       }
     }
     > .active > a {
@@ -599,7 +629,6 @@
         color: @navbar-inverse-link-active-color;
       }
     }
-
     @media (max-width: @grid-float-breakpoint-max) {
       // Dropdowns get custom display
       .open .dropdown-menu {
