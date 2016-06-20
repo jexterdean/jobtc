@@ -4,12 +4,12 @@
         <meta charset="utf-8">
         <title>CKEditor</title>
 
-        <link rel="stylesheet" type="text/css" href="<?php echo url('assets/ckeditor/contents.css'); ?>">
+        <link rel="stylesheet" type="text/css" href="http://localhost:8888/ckeditor/contents.css">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <!-- Make sure the path to CKEditor is correct. -->
-        <script type="text/javascript" src="<?php echo url('assets/ckeditor/ckeditor.js'); ?>"></script>
-        <script type="text/javascript" src="<?php echo url('assets/ckeditor/config.js'); ?>"></script>
+        <script type="text/javascript" src="http://localhost:8888/ckeditor/ckeditor.js"></script>
+        <script type="text/javascript" src="http://localhost:8888/ckeditor/config.js"></script>
 
     </head>
     <body>

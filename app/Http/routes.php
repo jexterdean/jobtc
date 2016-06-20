@@ -1,4 +1,6 @@
 <?php
+//Ckeditor fix temp route
+Route::get('/ckeditor', 'CKEditorController@index');
 
 /* Authentication routes */
 Route::get('/', ['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants', 'https' => true]);
