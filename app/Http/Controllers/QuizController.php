@@ -286,10 +286,12 @@ class QuizController extends BaseController {
                 $test->default_points = Input::get('default_points');
                 $test->save();
 
-                $test = new TestPersonal();
-                $test->user_id = Auth::user()->user_id;
-                $test->test_id = $test->id;
-                $test->save();
+                if($test->id) {
+                    $personal = new TestPersonal();
+                    $personal->user_id = Auth::user()->user_id;
+                    $personal->test_id = $test->id;
+                    $personal->save();
+                }
 
                 if (Input::file('completion_image_upload')) {
                     $shared_dir = public_path() . '/assets/shared-files/image/';
