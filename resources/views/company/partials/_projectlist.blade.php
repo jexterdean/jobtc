@@ -28,8 +28,11 @@
                             <li id="company-{{$team_company->company_id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
-                                        {{$team_company->company->name}}
+                                        <a id="employee-toggle-{{$team_company->company_id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$team_company->company_id}}">    
+                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                            {{$team_company->company->name}}
+                                            <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                        </a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="#" class="drag-handle">
@@ -40,6 +43,10 @@
                                             <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
                                             <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
                                         </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="employee-toggle-collapse-{{$team_company->company_id}}" class="employee-list collapse">
                                     </div>
                                 </div>
                             </li>
@@ -266,8 +273,10 @@
                                                                                     <li id="company-{{$user_company->id}}" class="list-group-item">
                                                                                         <div class="row">
                                                                                             <div class="col-md-9">
-                                                                                                <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
-                                                                                                {{$user_company->name}}
+                                                                                                <a id="employee-toggle-{{$user_company->id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$user_company->id}}">
+                                                                                                    <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                                                                                    {{$user_company->name}}
+                                                                                                </a>
                                                                                             </div>
                                                                                             <div class="pull-right">
                                                                                                 <a href="#" class="drag-handle">
@@ -278,6 +287,11 @@
                                                                                                     <input class="company_id" type="hidden" value="{{$user_company->id}}"/>
                                                                                                     <input class="project_id" type="hidden" value=""/>
                                                                                                 </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div id="employee-toggle-collapse-{{$user_company->id}}" class="employee-list collapse">
+
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>

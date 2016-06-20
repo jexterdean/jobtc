@@ -175,8 +175,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('getShareJobsTab/{id}','CompanyController@getShareJobsTab');
         /*For Projects Load on Demand*/
         Route::get('getSubprojects/{company_id}/{project_id}','CompanyController@getSubprojects');
+        Route::get('getSubprojectsForCompanyEmployee/{user_id}/{project_id}','CompanyController@getSubprojectsForCompanyEmployee');
         /*For Share Companies Load on Demand*/
         Route::get('getEmployees/{company_id}/{job_id}','CompanyController@getEmployees');
+        /*For Assign Projects Load on Demand*/
+        Route::get('getCompanyEmployeesForProject/{company_id}/{project_id}','CompanyController@getCompanyEmployeesForProject');
         
     });
 
