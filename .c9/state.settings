@@ -61,6 +61,10 @@
                     "active": false
                 }
             ],
+                "accessList": []
+            },
+            "name": "pane1",
+            "nodes": [],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
