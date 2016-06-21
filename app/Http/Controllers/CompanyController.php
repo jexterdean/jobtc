@@ -438,10 +438,10 @@ class CompanyController extends BaseController {
         $task_list_permission->save();
 
         //Get Project Team
-        //$team_project = TeamProject::where('project_id', $project_id)->first();
+        $team_project = TeamProject::where('project_id', $project_id)->first();
 
         //Check if the user is already a team member for that project
-        /*$is_team_member = TeamMember::where('user_id', $user_id)
+        $is_team_member = TeamMember::where('user_id', $user_id)
                 ->where('company_id', $company_id)
                 ->where('team_id', $team_project->team_id)
                 ->count();
@@ -453,7 +453,7 @@ class CompanyController extends BaseController {
             $team_member->team_id = $team_project->team_id;
             $team_member->company_id = $company_id;
             $team_member->save();
-        }*/
+        }
 
         return $user_id;
     }
@@ -471,11 +471,11 @@ class CompanyController extends BaseController {
         $task_list_permission->delete();
 
         //Check if user still has tasks in this project
-        /*$has_tasks = TaskCheckListPermission::where('user_id', $user_id)->where('project_id', $project_id)->count();
+        $has_tasks = TaskCheckListPermission::where('user_id', $user_id)->where('project_id', $project_id)->count();
         if ($has_tasks === 0) {
             $team_member = TeamMember::where('user_id', $user_id)->where('company_id', $company_id);
             $team_member->delete();
-        }*/
+        }
 
         return $user_id;
     }
@@ -831,7 +831,7 @@ class CompanyController extends BaseController {
             'task_permissions' => $task_permissions,
             'user_id' => $user_id,
             'project_id' => $project_id,
-            'company_id' => $project->company_id
+            'company_id' => $company_id
         ]);
     }
 
