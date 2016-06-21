@@ -11,6 +11,8 @@ use \Redirect;
 use \Auth;
 use App\Models\Test;
 use App\Models\TestCompleted;
+use App\Models\TestPersonal;
+use App\Models\TestCommunity;
 use App\Models\Question;
 use App\Models\TestResultModel;
 use Illuminate\Http\Request;
@@ -74,7 +76,7 @@ class QuizController extends BaseController {
             ->get();
         $data['result'] = $result;
 
-        $test = DB::table('test')
+        $test = DB::table('test_personal')
             ->select(DB::raw('
                 fp_test.*,
                 (
@@ -83,9 +85,14 @@ class QuizController extends BaseController {
                     WHERE
                         fp_test_result.test_id = fp_test.id AND
                         fp_test_result.unique_id = ' . Auth::user('user')->user_id . '
-                ) as review_only
+                ) as review_only,
+                fp_test_personal.id as version_id,
+                fp_test_personal.version
             '))
-            ->orderBy('order', 'asc')
+            ->leftJoin('test', 'test.id', '=', 'test_personal.test_id')
+            ->orderBy('test_personal.order', 'asc')
+            ->whereNotNull('test_personal.test_id')
+            ->where('test_personal.user_id', '=', Auth::user('user')->user_id)
             ->get();
         if (count($test) > 0) {
             foreach ($test as $t) {
@@ -122,6 +129,59 @@ class QuizController extends BaseController {
             }
         }
         $data['test'] = $test;
+
+        $test_community = DB::table('test_community')
+            ->select(DB::raw('
+                fp_test.*,
+                (
+                    SELECT count(fp_test_result.id) > 0
+                    FROM fp_test_result
+                    WHERE
+                        fp_test_result.test_id = fp_test.id AND
+                        fp_test_result.unique_id = ' . Auth::user('user')->user_id . '
+                ) as review_only,
+                fp_test_community.id as version_id,
+                fp_test_community.version
+            '))
+            ->leftJoin('test', 'test.id', '=', 'test_community.test_id')
+            ->orderBy('test_community.order', 'asc')
+            ->whereNotNull('test_community.test_id')
+            ->get();
+        if (count($test_community) > 0) {
+            foreach ($test_community as $t) {
+                $t->total_time = 0;
+                $questions = DB::table('question')
+                    ->where('test_id', '=', $t->id)
+                    ->orderBy('order', 'ASC')
+                    ->get();
+                if (count($questions) > 0) {
+                    foreach ($questions as $q) {
+                        sscanf($q->length, "%d:%d:%d", $hours, $minutes, $seconds);
+                        $time_seconds = $hours * 3600 + $minutes * 60 + $seconds;
+                        $t->total_time += $time_seconds;
+                        $q->question_choices = json_decode($q->question_choices);
+                    }
+                }
+                $t->question = $questions;
+
+                $score = 0;
+                $taker_count = 0;
+                if (count($result) > 0) {
+                    foreach ($result as $r) {
+                        if ($r->test_id == $t->id) {
+                            $average = $r->score > 0 ? $r->score / $r->total_question : $r->score;
+                            $average *= 100;
+                            $average = (float) number_format($average);
+                            $score += $average;
+                            $taker_count ++;
+                        }
+                    }
+                }
+                $t->average = $score > 0 ? number_format($score / $taker_count) : $score;
+                $t->average .= '%';
+            }
+        }
+        $data['test_community'] = $test_community;
 
         //get shared files
         $file_dir = public_path() . '/assets/shared-files';
@@ -225,6 +285,13 @@ class QuizController extends BaseController {
                 $test->default_tags = Input::get('default_tags');
                 $test->default_points = Input::get('default_points');
                 $test->save();
+
+                if($test->id) {
+                    $personal = new TestPersonal();
+                    $personal->user_id = Auth::user()->user_id;
+                    $personal->test_id = $test->id;
+                    $personal->save();
+                }
 
                 if (Input::file('completion_image_upload')) {
                     $shared_dir = public_path() . '/assets/shared-files/image/';
@@ -436,7 +503,8 @@ class QuizController extends BaseController {
         $data['tests_info'] = $tests_info;
         $data['questions_info'] = $questions_info;
 
-        return View::make('quiz.default', $data);
+        $view = isset($_GET['mini']) ? 'quiz.mini' : 'quiz.default';
+        return View::make($view, $data);
     }
 
     /**
@@ -650,7 +718,8 @@ class QuizController extends BaseController {
      */
     public function testSort(Request $request) {
         $validation = Validator::make($request->all(), [
-            'id' => 'required'
+            'id' => 'required',
+            'type' => 'required'
         ]);
         if ($validation->fails()) {
             echo 0;
@@ -659,9 +728,16 @@ class QuizController extends BaseController {
         if (count(Input::get('id')) > 0) {
             $order = 1;
             foreach (Input::get('id') as $id) {
-                $test = Test::find($id);
-                $test->order = $order;
-                $test->save();
+                if(Input::get('type') == 1) {
+                    $test = TestPersonal::find($id);
+                    $test->order = $order;
+                    $test->save();
+                }
+                else if(Input::get('type') == 2) {
+                    $test = TestCommunity::find($id);
+                    $test->order = $order;
+                    $test->save();
+                }
 
                 $order ++;
             }
@@ -839,5 +915,71 @@ class QuizController extends BaseController {
     }
     private function arraySortCompareDesc($a, $b){
         return $a == $b ? 0 : ($a > $b ? -1 : 1);
+    }
+
+    public function quizRanking($id){
+        $total_score = DB::table('question')
+            ->select(DB::raw('SUM(
+                IF(
+                    fp_question.question_type_id = 3,
+                    fp_question.max_point,
+                    fp_question.points
+                )
+            ) as total_points'))
+            ->where('question.test_id', '=', $id)
+            ->pluck('total_points');
+        $result = DB::table('question')
+            ->select(DB::raw('
+                fp_user.name,
+                SUM(
+                    IF(
+                        fp_question.question_type_id = 3,
+                        fp_question.max_point,
+                        fp_question.points
+                    )
+                ) as score
+            '))
+            ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
+            ->leftJoin('user', 'user.user_id', '=', 'test_result.unique_id')
+            ->where('question.test_id', '=', $id)
+            ->whereNotNull('user.user_id')
+            ->groupBy('test_result.unique_id')
+            ->orderBy('score', 'desc')
+            ->get();
+
+        $data['total_score'] = $total_score;
+        $data['result'] = $result;
+
+        return View::make('quiz.ranking', $data);
+    }
+
+    public function quizAddPersonalCommunity(Request $request){
+        $validation = Validator::make($request->all(), [
+            'id' => 'required',
+            'type' => 'required'
+        ]);
+        if ($validation->fails()) {
+            echo 0;
+        }
+
+        $table = Input::get('type') == 1 ? 'test_personal' : 'test_community';
+        $thisTest = DB::table($table)
+            ->where('user_id', '=', Auth::user()->user_id)
+            ->where('test_id', '=', Input::get('id'))
+            ->orderBy('version', 'DESC')
+            ->first();
+
+        $test = Input::get('type') == 1 ? new TestPersonal() : new TestCommunity();
+        $test->user_id = Auth::user()->user_id;
+        $test->test_id = Input::get('id');
+        $test->version = $thisTest ? $thisTest->version + 1 : 1;
+        $test->save();
+
+        $info = (object)array(
+            'version_id' => $test->id,
+            'version' => $test->version
+        );
+        header("Content-type: application/json");
+        return response()->json($info);
     }
 }

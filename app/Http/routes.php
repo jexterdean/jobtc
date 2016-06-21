@@ -66,10 +66,11 @@ Route::get('/getAvailableVideoTags', 'VideoController@getVideoTags');
  * Quiz
  */
 Route::resource('quiz', 'QuizController');
-Route::post('testSort', 'QuizController@testSort');
+Route::any('testSort', 'QuizController@testSort');
 Route::post('questionSort', 'QuizController@questionSort');
 Route::get('userSlider/{id}', 'QuizController@userSlider');
-
+Route::get('quizRanking/{id}', 'QuizController@quizRanking');
+Route::post('quizAddPersonalCommunity', 'QuizController@quizAddPersonalCommunity');
 /*
  * Indeed Applicant Importer (Don't put this in any middleware, 
  * the script should not login to insert the data from Indeed
