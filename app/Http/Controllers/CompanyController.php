@@ -368,7 +368,13 @@ class CompanyController extends BaseController {
                 ->get();
         $task_permissions = TaskCheckListPermission::where('project_id', $project_id)->where('user_id', $user_id)->get();
 
-        return view('company.partials._tasklist', ['tasks' => $tasks, 'task_permissions' => $task_permissions, 'project_id' => $project_id, 'user_id' => $user_id]);
+        return view('company.partials._tasklist', [
+            'tasks' => $tasks, 
+            'task_permissions' => $task_permissions, 
+            'project_id' => $project_id, 
+            'user_id' => $user_id,
+            'company_id' => $company_id
+                ]);
     }
 
     public function unassignTeamMember(Request $request) {

@@ -98,7 +98,9 @@ function assignProjectsScripts() {
         receive: function (event, ui) {
 
             project_id = $(this).siblings().find('.project_id').val();
-            company_id = $(this).siblings().find('.company_id').val();
+            //company_id = $(this).siblings().find('.company_id').val();
+            company_id = window.location.pathname.split('/').pop();
+            console.log('company_id' +company_id);
             list_group_user_id = $(ui.item).attr('id');
             user_id = list_group_user_id.split('-').pop();
 
