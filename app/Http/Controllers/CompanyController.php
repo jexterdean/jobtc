@@ -796,7 +796,7 @@ class CompanyController extends BaseController {
         //Check if the user is the owner of the project and that user owns it in this company
         if ($is_project_owner > 0) {
 
-            $tasks = Task::where('project_id', $project_id)->get();
+            $tasks = Task::where('project_id', $project_id)->orderBy('task_title','asc')->get();
         } else {
 
             //Get task permissions first for logged in user and current company selected
@@ -810,7 +810,7 @@ class CompanyController extends BaseController {
                 array_push($task_ids, $permission->task_id);
             }
 
-            $tasks = Task::whereIn('task_id', $task_ids)->get();
+            $tasks = Task::whereIn('task_id', $task_ids)->->orderBy('task_title','asc')->get();
         }
 
 
