@@ -28,10 +28,11 @@
                             <li id="company-{{$team_company->company_id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <a id="employee-toggle-{{$team_company->company_id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$team_company->company_id}}">    
+                                        <a id="employee-toggle-{{$project->project_id}}-{{$team_company->company_id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$project->project_id}}-{{$team_company->company_id}}">    
                                             <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                             {{$team_company->company->name}}
                                             <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                            <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
                                         </a>
                                     </div>
                                     <div class="pull-right">
@@ -40,13 +41,13 @@
                                         </a>
                                         <a href="#" class="unassign-company">
                                             <i class="fa fa-times"></i>
-                                            <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
                                             <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                            <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div id="employee-toggle-collapse-{{$team_company->company_id}}" class="employee-list collapse">
+                                    <div id="employee-toggle-collapse-{{$project->project_id}}-{{$team_company->company_id}}" class="employee-list collapse">
                                     </div>
                                 </div>
                             </li>

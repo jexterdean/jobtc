@@ -11,7 +11,8 @@ class TaskCheckListPermission extends Model
     protected $fillable = [
         'task_id',
         'user_id',
-        'project_id'
+        'project_id',
+        'company_id'
     ];
 
     protected $primaryKey = 'id';
