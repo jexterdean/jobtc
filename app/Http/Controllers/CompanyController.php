@@ -395,7 +395,14 @@ class CompanyController extends BaseController {
         $team_company->company_id = $company_id;
         $team_company->save();
 
-        return "true";
+         //Get employees of the company except for the logged in user
+        $employees = Profile::with('user')
+                ->where('company_id',$company_id)
+                ->get();
+        
+        return view('company.partials._employeelist',[
+            'employees' => $employees
+        ]);
     }
 
     public function unassignCompanyFromTeam(Request $request) {
@@ -593,7 +600,6 @@ class CompanyController extends BaseController {
                         $query->where('user_id', $user_id)->get();
                     }])->get();
 
-
         return view('company.partials._projectlist', [
             'projects' => $projects,
             'profiles' => $profiles,
@@ -753,6 +759,20 @@ class CompanyController extends BaseController {
         ]);
     }
     
+    public function getSubprojectsForCompanyEmployee(Request $request,$user_id,$project_id) {
+
+        //Get projects with their tasks and task permissions
+        $tasks = Task::where('project_id',$project_id)->get();
+        $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
+
+        return view('company.partials._tasklist', [
+            'tasks' => $tasks,
+            'task_permissions' => $task_permissions,
+            'user_id' => $user_id,
+            'project_id' => $project_id
+        ]);
+    }
+    
     public function getEmployees(Request $request, $company_id, $job_id) {
         
         $user_id = Auth::user('user')->user_id;
@@ -770,6 +790,19 @@ class CompanyController extends BaseController {
             'employees' => $employees,
             'shared_company_jobs_permissions' => $shared_company_jobs_permissions,
             'job_id' => $job_id
+        ]);
+    }
+    
+    public function getCompanyEmployeesForProject(Request $request, $company_id, $project_id) {
+        
+        //Get employees of the company except for the logged in user
+        $employees = Profile::with('user')
+                ->where('company_id',$company_id)
+                ->get();
+        
+        return view('company.partials._projectemployeelist',[
+            'employees' => $employees,
+            'project_id' => $project_id
         ]);
     }
     

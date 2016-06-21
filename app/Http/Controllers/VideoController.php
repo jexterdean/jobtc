@@ -112,7 +112,7 @@ class VideoController extends Controller
 
             //$clean_mkv_command = '/usr/bin/ffmpeg -y -threads 4 -i /var/www/recordings/' . $stream_id . '.mkv -vcodec copy -acodec copy /var/www/recordings/' . $stream_id . '.webm';
             //Convert the mkv to webm format(tried converting to vp9 webm but only gets the first 2 seconds if run using the exec command)
-            $convert_to_webm_command = 'ffmpeg -y  -threads 3 -i /var/www/recordings/'.$stream_id. '.mkv -c:v copy -crf 10 -b:v 0 -c:a libvorbis /var/www/recordings/'.$stream_id.'.webm';
+            $convert_to_webm_command = 'ffmpeg -y -i /var/www/recordings/'.$stream_id. '.mkv -c:v copy -crf 10 -b:v 0 -c:a libvorbis /var/www/recordings/'.$stream_id.'.webm';
             
             //Run the mkv file in ffmpeg to repair it(Since erizo makes an invalid mkv file for the html5 video tag)
             $run_command = $remote_connection->exec($convert_to_webm_command);

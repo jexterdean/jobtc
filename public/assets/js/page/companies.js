@@ -178,11 +178,8 @@ function assignProjectsScripts() {
             $.post(team_url, team_data, function (data) {
                 //Assign the team id to the this list group item's input
                 //$(ui.item).find('.team_id').val(team_id);
-                //$(ui.item).find('.profile-container').html(data);
+                $(ui.item).find('.employee-list').html(data);
             });
-
-            //Remove warning that no employee is assigned.
-            $(this).find('li:contains("No Employees assigned to this project.")').remove();
 
 
         },
@@ -560,6 +557,34 @@ function assignProjectsScripts() {
 
         $.post(url, data);
     });
+    
+    /*Employees per Company Load on Demand*/
+    $('.company-list-group').one('click','.toggle-employees', function () {
+        
+        var company_id = $(this).attr('id').split('-').pop();
+        var project_id = $(this).find('.project_id').val();
+
+        var url = public_path + 'getCompanyEmployeesForProject/' + company_id + '/' +project_id;
+
+        if ($.trim($('#employee-toggle-collapse-' + company_id).is(':empty'))) {
+            $('#employee-toggle-collapse-' + company_id).load(url, function () {
+
+            });
+        }
+    });
+    $('.company-list-group').on('click','.toggle-subprojects',function(){
+        var employee_id = $(this).attr('id').split('-').pop();
+        var project_id = $(this).find('.project_id').val();
+        
+        var url = public_path + 'getSubprojectsForCompanyEmployee/' +employee_id+'/'+ project_id;
+        if ($.trim($('#employee-collapse-' + employee_id).is(':empty'))) {
+            $('#employee-collapse-' + employee_id).load(url, function () {
+
+            });
+        }
+    });
+    
+    
 } //end assign project scripts
 
 function assignTestsScripts() {

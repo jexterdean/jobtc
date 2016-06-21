@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2016 at 12:51 PM
+-- Generation Time: Jun 20, 2016 at 11:16 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -50,22 +50,129 @@ CREATE TABLE IF NOT EXISTS `fp_applicants` (
   `resume` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `photo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `remember_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `remember_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `notes` text COLLATE utf8_unicode_ci,
+  `hired` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'No'
+) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_applicants`
 --
 
-INSERT INTO `fp_applicants` (`id`, `job_id`, `name`, `email`, `phone`, `resume`, `photo`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(4, 10, 'Jane Doe', 'janedoe@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\resume_sample_photo.jpg', '$2y$10$rlXQGFPbq58NxUWLUPEDyeNDSqXihFAqE5Aj44Wp3l7.veZmd98m2', 'CQd0RsVzmas4kHuYXbygGnnsd8hChmCzcV7wQ8M2JvOgnfCrPzwFkJ0eMrQ2', '2016-05-23 10:56:55', '2016-05-27 03:47:14'),
-(5, 10, 'John Doe', 'johndoe@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$eN9t.cCJ4RyDfzi42YSdmu..ca4aR1jML7k6URNFd1MmAq/rsPnKq', '', '2016-05-23 22:09:16', '2016-05-23 22:09:16'),
-(6, 10, 'Keith Murner', 'keithmurner@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\sample_company_photo_2.jpg', '$2y$10$2GpkmgEEHE8ZB8fhmOvQQeqJmjO2OAwlDGeCIJeCYWoLijoA.eGEG', '', '2016-05-23 22:11:40', '2016-05-23 22:11:40'),
-(7, 10, 'Michelle Mackey', 'michellemackey@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\sample_company_photo_5.jpg', '$2y$10$nRQMNqd/1IHQK6uMKYJZjO7UVe5gf7J/y9xfeASLRd6/EJ7eMf25i', '', '2016-05-23 22:12:22', '2016-05-23 22:12:22'),
-(8, 10, 'John Wick', 'johnwick@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$7voXqcMtvs4/szsJkZyOg.qYkiNEJaIvMtFiN0m6zJ.EROAAaa16C', '', '2016-05-23 22:22:48', '2016-05-23 22:22:48'),
-(9, 10, 'Philip Fox', 'philipfox@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$qcy.ZGtzdQVJxkgW7xSvzuISg8wZKk06IihXFPw23dl3IaqRiZQzu', 'fivSv6mMEwNDzrYucmmcmsQA8EB0Ia0P7vKgbTLXpspBfkOKbX51A4GAEUFZ', '2016-05-23 22:23:59', '2016-05-27 04:48:16');
+INSERT INTO `fp_applicants` (`id`, `job_id`, `name`, `email`, `phone`, `resume`, `photo`, `password`, `remember_token`, `created_at`, `updated_at`, `notes`, `hired`) VALUES
+(4, 10, 'Jane Doe', 'janedoe@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\resume_sample_photo.jpg', '$2y$10$rlXQGFPbq58NxUWLUPEDyeNDSqXihFAqE5Aj44Wp3l7.veZmd98m2', 'VjRhUrqI5kv3esoBtMn5FzQNbDGHV851l8VY8ayLcuuel5olBz3USTfAyMdB', '2016-05-23 10:56:55', '2016-06-09 06:46:25', '', 'No'),
+(5, 10, 'John Doe', 'johndoe@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$eN9t.cCJ4RyDfzi42YSdmu..ca4aR1jML7k6URNFd1MmAq/rsPnKq', '', '2016-05-23 22:09:16', '2016-05-23 22:09:16', '', 'No'),
+(6, 10, 'Keith Murner', 'keithmurner@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\sample_company_photo_2.jpg', '$2y$10$2GpkmgEEHE8ZB8fhmOvQQeqJmjO2OAwlDGeCIJeCYWoLijoA.eGEG', '', '2016-05-23 22:11:40', '2016-05-23 22:11:40', '', 'No'),
+(7, 10, 'Michelle Mackey', 'michellemackey@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\sample_company_photo_5.jpg', '$2y$10$nRQMNqd/1IHQK6uMKYJZjO7UVe5gf7J/y9xfeASLRd6/EJ7eMf25i', 'OrYNNDxxn1IEm68KpSq0MYf7Sxr5N3zRB6SEC2gXVrBJTKyNYb4iQVvU602V', '2016-05-23 22:12:22', '2016-06-08 01:06:30', '', 'No'),
+(8, 10, 'John Wick', 'johnwick@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$7voXqcMtvs4/szsJkZyOg.qYkiNEJaIvMtFiN0m6zJ.EROAAaa16C', 'M3em6eHCDYINL61xfsI2qvaYDOBEy7eojuW2EjNGH8nuGmdosJOW0ITWv5y0', '2016-05-23 22:22:48', '2016-06-07 06:22:20', '', 'No'),
+(9, 10, 'Philip Fox', 'philipfox@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$qcy.ZGtzdQVJxkgW7xSvzuISg8wZKk06IihXFPw23dl3IaqRiZQzu', 'lonwGPm2uZD7SsiS73bIS4BXj4B4UwJlweTZiqv9W2mxALmq9dA4679q0Ecb', '2016-05-23 22:23:59', '2016-06-07 05:12:46', '<p>Test</p>\r\n', 'No'),
+(19, 10, 'Robert Williams', 'robertwilliams@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\^BB4810BF879B81C661CFF083B2BF9F1D4958FF5D738137C2AC^pimgpsh_fullsize_distr.jpg', '$2y$10$DL/CZm6NrX2YTxjpp7pjyeSOMuBlNagg4AIPgSzCM/p1PEjGllA4G', 'ZpPxG5XTVkgJlWKEhzUUMUpuJFtm83DDHFYctu0LqkFVEVvuhH2CuyIJTBqQ', '2016-06-03 07:17:00', '2016-06-06 00:08:41', '', 'No'),
+(20, 10, 'Robert Castro', 'robertcastro@gmail.com', '', 'assets/applicant/', 'assets/user/avatar.png', '$2y$10$qD24UmZyyPiMcV09FGYPyu.B5lJzyP/xWjEvugyGZGzZzm5y9VgWC', '', '2016-06-03 07:30:53', '2016-06-03 07:30:53', '', 'No'),
+(21, 10, 'Jexter Dean Buenaventura', 'jexterdeanbuenaventura@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\Snapshot_20160526_2.JPG', '$2y$10$Mt3OWBmoahNqkxypTjQb1OFhzBBnZytldBAQcssipfAOwJLuKu90y', 'HzEhUSEOmJNqR7NwXi2ZYRmvNavhjEzVydd9RuTeARxqgFyJp3pG6wnj7YjR', '2016-06-08 06:30:11', '2016-06-08 07:13:02', '', 'No'),
+(25, 10, 'Robert Will', 'robertwill@gmail.com', '1234567890', 'assets/applicant/resumes\\Sample-Resume-Computer-Programmer-Entry-Level1.doc', 'assets/applicant/photos\\testjobseeker.jpg', '$2y$10$uLh7EMucdjI8VrFEYEpqQ.YEEG3fsvbL/FP24UsovJQEBFLK66SZu', '5lyd93pJWkdEgne9nXSewRgksZDQBbT8bCpkr0Vd3KNmW1yozEiT1MW1cGcZ', '2016-06-08 08:52:13', '2016-06-17 05:00:33', '', 'No'),
+(37, 29, 'Sheena Hann ', 'sheenahann2+7dt@indeedemail.com ', ' +1 587-586-6572', 'assets/applicant/resumes/ResumeSheena Hann .pdf', 'assets/user/default-avatar.jpg', '$2y$10$iOMms5n3OzzhTReyY..zEuwGTHp6hTG0VQ.fweEZ6wyRog0ZY7nEC', NULL, '2016-06-15 02:51:51', '2016-06-15 02:51:51', NULL, 'No'),
+(38, 28, 'Foster Pariseau ', 'fosterpariseau8+s3q@indeedemail.com ', ' +1 587-896-3243', 'assets/applicant/resumes/ResumeFoster Pariseau .pdf', 'assets/user/default-avatar.jpg', '$2y$10$2rL1mCeafiph2D3xFeArLOWinmASzHkF6YKigKJXI8cD1oRPRy1S.', NULL, '2016-06-15 02:52:10', '2016-06-15 02:52:10', NULL, 'No'),
+(39, 33, 'Tom Markiewicz ', 'tommarkiewicz7+tab@indeedemail.com ', ' +1 403-589-5798', 'assets/applicant/resumes/ResumeTom Markiewicz .pdf', 'assets/user/default-avatar.jpg', '$2y$10$WcCT9Gc3gMxDwg5iiHDh9ub9J6CVPJjqvOtgh02tSChMu7w/H0Rqq', NULL, '2016-06-15 02:52:37', '2016-06-15 02:52:37', NULL, 'No'),
+(40, 28, 'Abdi Hafid ', 'hafid44+s6d@indeedemail.com ', ' +1 587-350-9525', 'assets/applicant/resumes/ResumeAbdi Hafid .pdf', 'assets/user/default-avatar.jpg', '$2y$10$r8tOiq3OX1kghlyBtttYlOABVhv/FQna7cShGPP1h9.BRwQndQ55a', NULL, '2016-06-15 02:52:46', '2016-06-15 02:52:46', NULL, 'No'),
+(41, 33, 'Brent Cardiff ', 'brentcardiff5+qt2@indeedemail.com ', ' +1 403-554-3767', 'assets/applicant/resumes/ResumeBrent Cardiff .pdf', 'assets/user/default-avatar.jpg', '$2y$10$BztBhIMeWnFWXDml87s9y.pJubcP/2NXq2umP3OH39PG7zt6dg1zq', NULL, '2016-06-15 02:53:04', '2016-06-15 02:53:04', NULL, 'No'),
+(42, 29, 'Kezia. Haynes ', 'keziahaynes5+j4i@indeedemail.com ', ' +1 587-990-6219', 'assets/applicant/resumes/ResumeKezia. Haynes .pdf', 'assets/user/default-avatar.jpg', '$2y$10$0W5zeedLQ0cQzm7HN30wr.nP.JVlEoHo3dqxXWu8ktQyA/zGjVSLW', NULL, '2016-06-15 02:53:41', '2016-06-15 02:53:41', NULL, 'No'),
+(43, 29, 'Jeremy kierstead ', 'jeremykiersted2+mwf@indeedemail.com ', ' +1 403-651-2001', 'assets/applicant/resumes/ResumeJeremy kierstead .pdf', 'assets/user/default-avatar.jpg', '$2y$10$nQ4B0JjmIHdvCB0VFKfsle3H0BIZ1GuhgnMHObjeLAalibSeRGNVa', NULL, '2016-06-15 02:54:00', '2016-06-15 02:54:00', NULL, 'No'),
+(44, 29, 'Veron Gebhardt ', 'verongebhardt9+9yy@indeedemail.com ', ' 587-893-5731', 'assets/applicant/resumes/ResumeVeron Gebhardt .pdf', 'assets/user/default-avatar.jpg', '$2y$10$d6.ndQtooyUhZoJijTl/jOozunMyfTpN7hspSHt/XJr8MqfDVhFlC', NULL, '2016-06-15 02:54:21', '2016-06-15 02:54:21', NULL, 'No'),
+(45, 30, 'Milanka Radovanovic ', 'milankaradovanovic4+xg9@indeedemail.com ', ' +1 403-991-4130', 'assets/applicant/resumes/ResumeMilanka Radovanovic .pdf', 'assets/user/default-avatar.jpg', '$2y$10$4NHhlDqLh1w33yB9Hf44zeo3JcN.OgG7PwwTXcvidKFHDgGukEYL.', NULL, '2016-06-15 02:54:41', '2016-06-15 02:54:41', NULL, 'No'),
+(46, 30, 'Jacqueline Sabourin ', 'jacquelinesabourin2+3sh@indeedemail.com ', ' +1 403-606-0734', 'assets/applicant/resumes/ResumeJacqueline Sabourin .pdf', 'assets/user/default-avatar.jpg', '$2y$10$/5dwPrxnjyfCR8HqLXI5g.6bjsebXj2MbmUwiKVaNsbkLXgT8EQkO', NULL, '2016-06-15 02:55:20', '2016-06-15 02:55:20', NULL, 'No'),
+(47, 30, 'Marium Rumpa ', 'mariumrumpa3+8kh@indeedemail.com ', ' +880 1552-363687', 'assets/applicant/resumes/ResumeMarium Rumpa .pdf', 'assets/user/default-avatar.jpg', '$2y$10$n/n4IP7t8rE9UvvoyVh1xejwpDDZc5YuztZpnoaD1vQ1315h5Jlpu', NULL, '2016-06-15 02:55:40', '2016-06-15 02:55:40', NULL, 'No'),
+(48, 30, 'April Good ', 'aprilgood9+suo@indeedemail.com ', ' +1 403-561-6203', 'assets/applicant/resumes/ResumeApril Good .pdf', 'assets/user/default-avatar.jpg', '$2y$10$xrxqbxrSx8Zjnl5Ro2Skye3WHMXh1EUIErPYgEvw3ijT/0VMkiLdG', NULL, '2016-06-15 02:55:59', '2016-06-15 02:55:59', NULL, 'No'),
+(49, 30, 'Kayla Cleator ', 'kaylacleator5+3k6@indeedemail.com ', ' +1 587-968-3304', 'assets/applicant/resumes/ResumeKayla Cleator .pdf', 'assets/user/default-avatar.jpg', '$2y$10$vNoi6ytGN7PBqsXz12td7OosX0EPRpeQnbsSHGJr4oyp6esPMJHxy', NULL, '2016-06-15 02:56:19', '2016-06-15 02:56:19', NULL, 'No'),
+(50, 30, 'Andrea Robinson ', 'andrearobinson69+xqm@indeedemail.com ', ' 4034025930', 'assets/applicant/resumes/ResumeAndrea Robinson .pdf', 'assets/user/default-avatar.jpg', '$2y$10$5iO.iVnTXlEMplZ0xAwaUuLIAG9Km.QDj/C1OOzm07bI5Vv55nMHm', NULL, '2016-06-15 02:56:38', '2016-06-15 02:56:38', NULL, 'No'),
+(51, 30, 'Mackenzie Hames ', 'mackenziehames8+pyg@indeedemail.com ', ' +1 403-688-2076', 'assets/applicant/resumes/ResumeMackenzie Hames .pdf', 'assets/user/default-avatar.jpg', '$2y$10$lP4tyWBEC1y7NIZ1Sx3j0eSXNs9Y/tINckdLWqJ/ha1FPT1gNSm32', NULL, '2016-06-15 02:57:01', '2016-06-15 02:57:01', NULL, 'No'),
+(52, 30, 'Travis Fehr ', 'travisfehr8+a76@indeedemail.com ', ' +1 403-475-9452', 'assets/applicant/resumes/ResumeTravis Fehr .pdf', 'assets/user/default-avatar.jpg', '$2y$10$YZ7FeWJaCAwDa.56a67/geFOLu3Byel5A5I.yWJupUzbY.4.gRBza', NULL, '2016-06-15 02:57:21', '2016-06-15 02:57:21', NULL, 'No'),
+(53, 30, 'Brittany Anderson ', 'brittanyannderson8+bty@indeedemail.com ', ' +1 403-797-7913', 'assets/applicant/resumes/ResumeBrittany Anderson .pdf', 'assets/user/default-avatar.jpg', '$2y$10$WIOxm8DxL.w.yGuwPDyCr.HWogjdNxq3rm/Q62Wt0WpJL5ErgKnVe', NULL, '2016-06-15 02:57:40', '2016-06-15 02:57:40', NULL, 'No'),
+(54, 30, 'Bestman Eleanya ', 'bestmanplutarcheleanya3+ko9@indeedemail.com ', ' +1 519-897-3213', 'assets/applicant/resumes/ResumeBestman Eleanya .pdf', 'assets/user/default-avatar.jpg', '$2y$10$Zcr0tAowS8JXsqkG.v7ZSuguQrcsQO5t3TA9khb5/gsfBoYgS/ZQq', NULL, '2016-06-15 02:57:59', '2016-06-15 02:57:59', NULL, 'No'),
+(55, 30, 'Danijel Juricic ', 'danijeljuricic6+pd3@indeedemail.com ', ' +1 587-433-9961', 'assets/applicant/resumes/ResumeDanijel Juricic .pdf', 'assets/user/default-avatar.jpg', '$2y$10$04k3y/HDGPPpNtv2O4OsOO3xW91Z8haFxW0hl1SG.EqZJU5h8eX6y', NULL, '2016-06-15 02:58:19', '2016-06-15 02:58:19', NULL, 'No'),
+(56, 30, 'Rina Desimone ', 'rinadesimone6+755@indeedemail.com ', ' +1 403-217-7941', 'assets/applicant/resumes/ResumeRina Desimone .pdf', 'assets/user/default-avatar.jpg', '$2y$10$PtRf24hxcVv6/Ez3KWU4P.q2jBLqvVoFJ0nxwamgFaCCGVaf.obYm', NULL, '2016-06-15 02:58:40', '2016-06-15 02:58:40', NULL, 'No'),
+(57, 30, 'Jaedis Smith ', 'jaedissmith9+4t6@indeedemail.com ', ' +1 587-229-1395', 'assets/applicant/resumes/ResumeJaedis Smith .pdf', 'assets/user/default-avatar.jpg', '$2y$10$ULQicELyt.qS9ovV6.bo3uRTr38aHxN9EMI0KZzd6TxuC/.Z9iGuO', NULL, '2016-06-15 02:59:01', '2016-06-15 02:59:01', NULL, 'No'),
+(58, 30, 'Nicole Lee Pack ', 'nicoleleepack4+5rv@indeedemail.com ', ' +1 403-629-8209', 'assets/applicant/resumes/ResumeNicole Lee Pack .pdf', 'assets/user/default-avatar.jpg', '$2y$10$PEmpZ.G50Itl8rlyvrG/p.ygcsQ79my8ayRMLBwXvCGibDE8IYJu6', NULL, '2016-06-15 02:59:20', '2016-06-15 02:59:20', NULL, 'No'),
+(59, 30, 'Jorge Bermudez ', 'jorgebermudez5+ntg@indeedemail.com ', ' 587.225.5058/204.647.5899', 'assets/applicant/resumes/ResumeJorge Bermudez .pdf', 'assets/user/default-avatar.jpg', '$2y$10$TLkgvCLq2vTGdzlY6jHjpuHnffVpI3bkPOPM/Vb6HtjWahP0DvIBW', NULL, '2016-06-15 02:59:39', '2016-06-15 02:59:39', NULL, 'No'),
+(60, 30, 'Dianne Rutledge ', 'diannerutledge7+72z@indeedemail.com ', ' +1 403-479-3503', 'assets/applicant/resumes/ResumeDianne Rutledge .pdf', 'assets/user/default-avatar.jpg', '$2y$10$nWQYxa72Rg8PLw.e1UAfauErIsbH8oRv8XhoLK1OH8OOuOALWqxX.', NULL, '2016-06-15 02:59:58', '2016-06-15 02:59:58', NULL, 'No'),
+(61, 30, 'Jagroop Chhina ', 'jagroopchhina4+rxy@indeedemail.com ', ' +1 403-467-3706', 'assets/applicant/resumes/ResumeJagroop Chhina .pdf', 'assets/user/default-avatar.jpg', '$2y$10$MWdHFCVsOYBAZw.6pvMqJOUHykg/nvnQk8KpxjV/8zaJyuEsj4w9u', NULL, '2016-06-15 03:00:17', '2016-06-15 03:00:17', NULL, 'No'),
+(62, 30, 'Sonia Brovko ', 'sofiabrovko9+ktu@indeedemail.com ', ' +1 403-547-8103', 'assets/applicant/resumes/ResumeSonia Brovko .pdf', 'assets/user/default-avatar.jpg', '$2y$10$GbY39vo431mV8amWq.8oXuIMjQHuJh7aYXUfZ4tS5eWEoa7/0QTNG', NULL, '2016-06-15 03:00:38', '2016-06-15 03:00:38', NULL, 'No'),
+(63, 30, 'Sarah MacPherson ', 'sarahmacpherson34+eq8@indeedemail.com ', ' +1 403-512-7878', 'assets/applicant/resumes/ResumeSarah MacPherson .pdf', 'assets/user/default-avatar.jpg', '$2y$10$Ox3iWpE37cgpwdcqDxf9kuQ0w.Ynr9.fYy36Uxn1HgfP5rhH44i5C', NULL, '2016-06-15 03:00:59', '2016-06-15 03:00:59', NULL, 'No'),
+(64, 30, 'Alaina Lorriman ', 'alainalorriman2+w4v@indeedemail.com ', ' 587.896.8683', 'assets/applicant/resumes/ResumeAlaina Lorriman .pdf', 'assets/user/default-avatar.jpg', '$2y$10$bKUdsTzjbhQUZ4CTZMbgr.TiHM81u3.Mf1Rn/WU6YExMa1nBNkjza', NULL, '2016-06-15 03:01:22', '2016-06-15 03:01:22', NULL, 'No'),
+(65, 30, 'Suzanne Leslie ', 'suzanneleslie2+42e@indeedemail.com ', ' +1 403-952-8167', 'assets/applicant/resumes/ResumeSuzanne Leslie .pdf', 'assets/user/default-avatar.jpg', '$2y$10$4jC9agANeqwWUlMT4rEtl.4t9LMhoUgWHJcupAALe7rbA4m1zMA9y', NULL, '2016-06-15 03:01:41', '2016-06-15 03:01:41', NULL, 'No'),
+(66, 30, 'Gabriela R. Hernandez ', 'gabrielahernandez43+jqc@indeedemail.com ', ' +1 403-256-9796', 'assets/applicant/resumes/ResumeGabriela R. Hernandez .pdf', 'assets/user/default-avatar.jpg', '$2y$10$sfvj/PqsGeeOHLoSJxNVe.U6gUIvT08GpY50.X3NDcWnDi6j/9Ayu', NULL, '2016-06-15 03:02:03', '2016-06-15 03:02:03', NULL, 'No'),
+(67, 30, 'Edwin Fominyam ', 'edwinfominyam5+erp@indeedemail.com ', ' +1 403-617-9398', 'assets/applicant/resumes/ResumeEdwin Fominyam .pdf', 'assets/user/default-avatar.jpg', '$2y$10$KpMqp/7j7yQPcQhxzeez1OTJRThtPAs25x4hTFkllNSQkHuwTwZze', NULL, '2016-06-15 03:02:24', '2016-06-15 03:02:24', NULL, 'No'),
+(68, 30, 'Hailey Coles ', 'haileycoleshotmailcacoles8+hv8@indeedemail.com ', ' +1 587-968-4097', 'assets/applicant/resumes/ResumeHailey Coles .pdf', 'assets/user/default-avatar.jpg', '$2y$10$uqkr/FC/FfbsygKcuJHzBus4LTQdOquwbM2Tp6NJ1WGStkAHRimIa', NULL, '2016-06-15 03:02:46', '2016-06-15 03:02:46', NULL, 'No'),
+(69, 30, 'Ahmed alhuwaymil ', 'ahmedalhuwaymil7+dxx@indeedemail.com ', ' +1 587-707-4324', 'assets/applicant/resumes/ResumeAhmed alhuwaymil .pdf', 'assets/user/default-avatar.jpg', '$2y$10$5.Ye/V8Ez0201BxTvqFlWuKOUQ6pbvSpcz4h1/fEXHRtcBU.bU3ry', NULL, '2016-06-15 03:03:11', '2016-06-15 03:03:11', NULL, 'No'),
+(70, 30, 'Reymundo Adriano ', 'reymundoadrianoii9+rzs@indeedemail.com ', ' +1 403-400-6204', 'assets/applicant/resumes/ResumeReymundo Adriano .pdf', 'assets/user/default-avatar.jpg', '$2y$10$k48hbviLMtFPW5x4nbk26.SPv1.5dx1OHHClpF7cNGueypi83B/y6', NULL, '2016-06-15 03:03:31', '2016-06-15 03:03:31', NULL, 'No'),
+(71, 30, 'Sandra Campbell ', 'sandracampbell82+dr5@indeedemail.com ', ' +1 403-259-6250', 'assets/applicant/resumes/ResumeSandra Campbell .pdf', 'assets/user/default-avatar.jpg', '$2y$10$ToXVSDOCWZZRfSfa/S4uHeCm/Tt/J//epnAWmOHcAFqdTKli1G6Fu', NULL, '2016-06-15 03:03:51', '2016-06-15 03:03:51', NULL, 'No'),
+(72, 30, 'Lori Folkerson ', 'lorifolkerson2+7kq@indeedemail.com ', ' +1 905-699-6141', 'assets/applicant/resumes/ResumeLori Folkerson .pdf', 'assets/user/default-avatar.jpg', '$2y$10$L2dYqUrwJDBFLk52WmomfuHHJEZC050TfCpPT5CwHT2.g.RMq4Bka', NULL, '2016-06-15 03:04:47', '2016-06-15 03:04:47', NULL, 'No'),
+(73, 30, 'Jacqueline Sambu ', 'jackiesambu2+8sd@indeedemail.com ', ' +1 403-613-1667', 'assets/applicant/resumes/ResumeJacqueline Sambu .pdf', 'assets/user/default-avatar.jpg', '$2y$10$rHegbKbMsmpl4016uhIU2uhqjgtNRV/c17JHWlk3VOCCUxyfWkoxi', NULL, '2016-06-15 03:05:09', '2016-06-15 03:05:09', NULL, 'No'),
+(74, 30, 'Caity Bell ', 'caitlinbell74+9e3@indeedemail.com ', ' +1 403-852-1274', 'assets/applicant/resumes/ResumeCaity Bell .pdf', 'assets/user/default-avatar.jpg', '$2y$10$Q9hviZRKeQnTkHK0Vkyzc.Vzza8bnOT7r9mHiSmFpY6p4EZmMddbq', NULL, '2016-06-15 03:05:29', '2016-06-15 03:05:29', NULL, 'No'),
+(75, 30, 'John Kuryk ', 'johnkuryk4+hd8@indeedemail.com ', ' +1 403-993-5322', 'assets/applicant/resumes/ResumeJohn Kuryk .pdf', 'assets/user/default-avatar.jpg', '$2y$10$ZgwNzyd0yrguGY/NZJeRhuV.oZRIep5E0vbIoCVAG2Nueom4vonR.', NULL, '2016-06-15 03:05:48', '2016-06-15 03:05:48', NULL, 'No'),
+(76, 30, 'Nnamdi C Okoye ', 'nnamdiokoye3+pzb@indeedemail.com ', ' +1 403-404-2443', 'assets/applicant/resumes/ResumeNnamdi C Okoye .pdf', 'assets/user/default-avatar.jpg', '$2y$10$49UN6nKBM2EAWfqqLHgOcO2486T5odg37I7MMyrGoWsdcoRBzkzQ.', NULL, '2016-06-15 03:06:10', '2016-06-15 03:06:10', NULL, 'No'),
+(77, 30, 'adriana soto ', 'adrianasoto83+fni@indeedemail.com ', ' 4034372155  or 587 9696995', 'assets/applicant/resumes/Resumeadriana soto .pdf', 'assets/user/default-avatar.jpg', '$2y$10$mXhkgnfaRyGJhtUpFOPCk.Jo94kNta118XSxudH/WraE90ecacjfa', NULL, '2016-06-15 03:06:30', '2016-06-15 03:06:30', NULL, 'No'),
+(78, 30, 'Patrick Elliott ', 'patrickelliott9+f5a@indeedemail.com ', ' +1 403-620-5076', 'assets/applicant/resumes/ResumePatrick Elliott .pdf', 'assets/user/default-avatar.jpg', '$2y$10$ADBZlAzRRoflMrd9D4/91ONt8w8jrMcrQgtfNbv/OWZ80Z0pMoCz2', NULL, '2016-06-15 03:06:49', '2016-06-15 03:06:49', NULL, 'No'),
+(79, 30, 'Habib Faizulaev ', 'habib7+dz4@indeedemail.com ', ' +1 403-615-6462', 'assets/applicant/resumes/ResumeHabib Faizulaev .pdf', 'assets/user/default-avatar.jpg', '$2y$10$z6RnP1o96YzHIAToT/CRAOrtDL5e8BoiMc.UT4rNtTbrgwliEmXEK', NULL, '2016-06-15 03:07:09', '2016-06-15 03:07:09', NULL, 'No'),
+(80, 30, 'Simone Fisher ', 'simonefisher8+5wf@indeedemail.com ', ' +1 587-998-4061', 'assets/applicant/resumes/ResumeSimone Fisher .pdf', 'assets/user/default-avatar.jpg', '$2y$10$dZ9qMy3eGMtvrspNVpboLug0o3YctPKs34CwZeuMPH.QvVJMxlY0a', NULL, '2016-06-15 03:07:32', '2016-06-15 03:07:32', NULL, 'No'),
+(81, 30, 'bruno perrier ', 'perrier79+fy4@indeedemail.com ', ' +1 403-651-3896', 'assets/applicant/resumes/Resumebruno perrier .pdf', 'assets/user/default-avatar.jpg', '$2y$10$5I4DUtP9D.vhskPwl9Xm1.a2RkNcbYoMRSkXqZr4BvrY0Nvodcd2a', NULL, '2016-06-15 03:07:51', '2016-06-15 03:07:51', NULL, 'No'),
+(82, 30, 'Luis Zavala ', 'luiszavala34+2ij@indeedemail.com ', ' +1 403-909-3622', 'assets/applicant/resumes/ResumeLuis Zavala .pdf', 'assets/user/default-avatar.jpg', '$2y$10$AMJMbLgDpeq7SmzQLdEZy.zmv8FeuOCZXkaH84VDIo2Bq38oUJBqe', NULL, '2016-06-15 03:08:10', '2016-06-15 03:08:10', NULL, 'No'),
+(83, 30, 'Mandeep Gosal ', 'mandeepgosal4+wfw@indeedemail.com ', ' +1 780-318-3430', 'assets/applicant/resumes/ResumeMandeep Gosal .pdf', 'assets/user/default-avatar.jpg', '$2y$10$nrOBEmIgCtzdh/8wUofYpeTQH3fxEArMcKrg4q2yrxbjRVedRO0nC', NULL, '2016-06-15 03:08:31', '2016-06-15 03:08:31', NULL, 'No'),
+(84, 30, 'Aimee-Marie Hennessey ', 'aimeemariehennessey5+esf@indeedemail.com ', ' +1 403-870-3171', 'assets/applicant/resumes/ResumeAimee-Marie Hennessey .pdf', 'assets/user/default-avatar.jpg', '$2y$10$/rlzQGP4KxtfXQC7LKf77.I.3JVuLF7WzkJiwMS8GdHnU7qoR4eG6', NULL, '2016-06-15 03:08:51', '2016-06-15 03:08:51', NULL, 'No'),
+(85, 30, 'Jordon Langevin ', 'jordonlangevin8+tj9@indeedemail.com ', ' +1 587-433-1475', 'assets/applicant/resumes/ResumeJordon Langevin .pdf', 'assets/user/default-avatar.jpg', '$2y$10$4qumsuOS0pMAjlF4FATh4eIa1aI7tTx07BgJ8jQsS/n6Hc0O8YXay', NULL, '2016-06-15 03:09:14', '2016-06-15 03:09:14', NULL, 'No'),
+(86, 30, 'Jacquiline Whiteway ', 'jacquilinewhiteway2+6g2@indeedemail.com ', ' +1 403-585-9158', 'assets/applicant/resumes/ResumeJacquiline Whiteway .pdf', 'assets/user/default-avatar.jpg', '$2y$10$OBJt3ZQtqVQoWxZE9pw2E.B2vbh28ZDDldhTmaQlcXnfNc0b//3L.', NULL, '2016-06-15 03:09:35', '2016-06-15 03:09:35', NULL, 'No'),
+(87, 30, 'Forbes Goredema ', 'forbesgoredema2+88s@indeedemail.com ', ' +1 403-402-5987', 'assets/applicant/resumes/ResumeForbes Goredema .pdf', 'assets/user/default-avatar.jpg', '$2y$10$AY.IiajOK7VvLz4tvFMc5OP6IrMZVJXoV5HozrVYdg5YS.DloBSRW', NULL, '2016-06-15 03:10:04', '2016-06-15 03:10:04', NULL, 'No'),
+(88, 30, 'Kiara Mcquaker ', 'kiaramcquaker9+nri@indeedemail.com ', ' +1 403-828-6808', 'assets/applicant/resumes/ResumeKiara Mcquaker .pdf', 'assets/user/default-avatar.jpg', '$2y$10$/kUx3bamk0PlEq5.QaAFe.qvSjnRTmg4rNQfIC2tZgnOfDy8XXCou', NULL, '2016-06-15 03:10:23', '2016-06-15 03:10:23', NULL, 'No'),
+(89, 30, 'Maria Cadiente ', 'mariacadiente2+6y4@indeedemail.com ', ' +1 403-714-2896', 'assets/applicant/resumes/ResumeMaria Cadiente .pdf', 'assets/user/default-avatar.jpg', '$2y$10$4WLiSLusbVoaYkinrcI1peg0mO3mu.BIsDffNKN1LCUxwLNbxukF.', NULL, '2016-06-15 03:10:43', '2016-06-15 03:10:43', NULL, 'No'),
+(90, 30, 'Ronald Rey ', 'ronaldreydcnocon5+v37@indeedemail.com ', ' +1 403-200-7623', 'assets/applicant/resumes/ResumeRonald Rey .pdf', 'assets/user/default-avatar.jpg', '$2y$10$.X3t9CSQYuv5u8UXG/1uvO95fjXDgfn78Di1ucq8gPJsnOZZtQg3O', NULL, '2016-06-15 03:11:03', '2016-06-15 03:11:03', NULL, 'No'),
+(91, 30, 'Twila D. Genoway ', 'twiladgenoway6+kj3@indeedemail.com ', ' +1 403-397-2035', 'assets/applicant/resumes/ResumeTwila D. Genoway .pdf', 'assets/user/default-avatar.jpg', '$2y$10$CrbN4nK2totqEwHEp9PtO.mhLMZkI1WSBoutT.HxyVD7i/X9o6U9m', NULL, '2016-06-15 03:11:30', '2016-06-15 03:11:30', NULL, 'No'),
+(92, 30, 'Michele Wienecke ', 'michelewienecke4+qot@indeedemail.com ', ' +1 519-301-0931', 'assets/applicant/resumes/ResumeMichele Wienecke .pdf', 'assets/user/default-avatar.jpg', '$2y$10$jRcfTzj/TXyJsjvreUdaw.0c60MT.1m.HB4QVYi2cixvpH9Cnc3fO', NULL, '2016-06-15 03:11:52', '2016-06-15 03:11:52', NULL, 'No'),
+(93, 30, 'Darey Riches IGBINOSA ', 'dareyrichesigbinosa2+f9j@indeedemail.com ', ' +1 403-402-2135', 'assets/applicant/resumes/ResumeDarey Riches IGBINOSA .pdf', 'assets/user/default-avatar.jpg', '$2y$10$IOsg9DmSjDB8bDoYm83WxeJHWR0pxLF869xEmZ3jCf4sofjC/WoYu', NULL, '2016-06-15 03:12:13', '2016-06-15 03:12:13', NULL, 'No'),
+(94, 30, 'Silvana furtado ', 'silvanafurtado3+dfw@indeedemail.com ', ' +1 587-579-9560', 'assets/applicant/resumes/ResumeSilvana furtado .pdf', 'assets/user/default-avatar.jpg', '$2y$10$PwKXljOwPJ1SmDpx8jRkb.pYxFF67HLM0FwkyHdgBwOxNvpvkS7bO', NULL, '2016-06-15 03:12:37', '2016-06-15 03:12:37', NULL, 'No'),
+(95, 30, 'Sierrah Coates ', 'sierrah9+pfp@indeedemail.com ', ' +1 519-991-5048', 'assets/applicant/resumes/ResumeSierrah Coates .pdf', 'assets/user/default-avatar.jpg', '$2y$10$3ThatWXBtEEAasJdhptfp.jM5nwINZxNokftNJN9.Cjes2fieHyuW', NULL, '2016-06-15 03:12:59', '2016-06-15 03:12:59', NULL, 'No'),
+(96, 30, 'Cheryl Brown ', 'cherylbrown33+pov@indeedemail.com ', ' 403-460-0092', 'assets/applicant/resumes/ResumeCheryl Brown .pdf', 'assets/user/default-avatar.jpg', '$2y$10$t5H4Wk0Ys71ikoV.6iyRuORLO8jhstblZqvPm49WK.GYmjV5zeF.W', NULL, '2016-06-15 03:13:20', '2016-06-15 03:13:20', NULL, 'No'),
+(97, 30, 'Felipe Aguilar ', 'felipealvarado3+dwr@indeedemail.com ', ' +1 306-480-9560', 'assets/applicant/resumes/ResumeFelipe Aguilar .pdf', 'assets/user/default-avatar.jpg', '$2y$10$EmbPaPnZC64T7NOEAmjhxOf78WIHawckKit70joT6yx3D6ZNanu.G', NULL, '2016-06-15 03:13:41', '2016-06-15 03:13:41', NULL, 'No'),
+(98, 30, 'Laura Macculloch ', 'lauramacculloch5+wsr@indeedemail.com ', ' +1 403-275-3245', 'assets/applicant/resumes/ResumeLaura Macculloch .pdf', 'assets/user/default-avatar.jpg', '$2y$10$CfEYV5RGsCi1oNDzW9Lzz.vvUmkCFW6/Jp5oWPWlzOepecWow2xRS', NULL, '2016-06-15 03:14:03', '2016-06-15 03:14:03', NULL, 'No'),
+(99, 30, 'Patrick Land ', 'patrickland2+6yd@indeedemail.com ', ' +1 403-919-9343', 'assets/applicant/resumes/ResumePatrick Land .pdf', 'assets/user/default-avatar.jpg', '$2y$10$HMhw6tOxXjltVWO.t9a2oOCrkcGZVcqBfj1dZgT6CRDfwV9luq06K', NULL, '2016-06-15 03:14:24', '2016-06-15 03:14:24', NULL, 'No'),
+(100, 30, 'Eveline Gaudet ', 'kerryminer2+chi@indeedemail.com ', ' +1 403-243-4714', 'assets/applicant/resumes/ResumeEveline Gaudet .pdf', 'assets/user/default-avatar.jpg', '$2y$10$aueNDXYYbOd7oM2.Ps8vYOoNdOWm1JYmhOSW8E0JX3.Buk1omJWvO', NULL, '2016-06-15 03:14:44', '2016-06-15 03:14:44', NULL, 'No'),
+(101, 30, 'Tatiana Todica ', 'tatianatodica2+nha@indeedemail.com ', ' +1 587-577-8797', 'assets/applicant/resumes/ResumeTatiana Todica .pdf', 'assets/user/default-avatar.jpg', '$2y$10$s6wHp2SuAsQ27WQm73y9nOfH/3HJT6TdXNMITn0MHkNRKsOq7tVoC', NULL, '2016-06-15 03:15:03', '2016-06-15 03:15:03', NULL, 'No'),
+(102, 30, 'yogan jeremy ponnampalam ', 'jeremyponnampalam8+ae3@indeedemail.com ', ' +1 403-305-3900', 'assets/applicant/resumes/Resumeyogan jeremy ponnampalam .pdf', 'assets/user/default-avatar.jpg', '$2y$10$C09PxOg/gfrst9/qN7QxfOmWsUcbu8cnk8n.SlFyrokXHU4u4smvi', NULL, '2016-06-15 03:15:22', '2016-06-15 03:15:22', NULL, 'No'),
+(103, 30, 'Tracy Becker ', 'tracybecker35+vua@indeedemail.com ', ' +1 403-850-2524', 'assets/applicant/resumes/ResumeTracy Becker .pdf', 'assets/user/default-avatar.jpg', '$2y$10$iCOCalhtV2XgZ6B8apuaLulmCz0HmW7778Id.oqdaVjfApM.4mctC', NULL, '2016-06-15 03:15:41', '2016-06-15 03:15:41', NULL, 'No'),
+(104, 30, 'MICHELLE JAMES ', 'michellejames43+mcb@indeedemail.com ', ' +1 403-828-5162', 'assets/applicant/resumes/ResumeMICHELLE JAMES .pdf', 'assets/user/default-avatar.jpg', '$2y$10$gMxHpo5vqqprWWPmszq.MeZs/OMqRZoY8tZM.wugRlXWakOWwKqge', NULL, '2016-06-15 03:16:00', '2016-06-15 03:16:00', NULL, 'No'),
+(105, 30, 'Deborah Sedinger ', 'deborahsedinger6+d6h@indeedemail.com ', ' 587-436-8666', 'assets/applicant/resumes/ResumeDeborah Sedinger .pdf', 'assets/user/default-avatar.jpg', '$2y$10$.U09PLozbLdcIF/ISnWVFOTPwcn.X0gVcRBf1LmKyfUQLhLuJnnN.', NULL, '2016-06-15 03:16:19', '2016-06-15 03:16:19', NULL, 'No'),
+(106, 30, 'Natasha Jennings ', 'natashajennings6+9x9@indeedemail.com ', ' 403-828-8147', 'assets/applicant/resumes/ResumeNatasha Jennings .pdf', 'assets/user/default-avatar.jpg', '$2y$10$uK2UjzJYY0Tz3PV8hT82q.we/e0th/DUPtS8npfrKK/mV5wgY5IUO', NULL, '2016-06-15 03:16:41', '2016-06-15 03:16:41', NULL, 'No'),
+(107, 30, 'Kevin Lodoen ', 'kevinlodoen2+swd@indeedemail.com ', ' +1 587-224-1474', 'assets/applicant/resumes/ResumeKevin Lodoen .pdf', 'assets/user/default-avatar.jpg', '$2y$10$zNjukFTCLMqVuzMm.JhzPOZbDRBgI9SAvHLFK3/XFrrf94ZGSJn0W', NULL, '2016-06-15 03:17:01', '2016-06-15 03:17:01', NULL, 'No'),
+(108, 30, 'Jenna Ogonoski ', 'jennaogonoski2+svu@indeedemail.com ', ' +1 587-581-0503', 'assets/applicant/resumes/ResumeJenna Ogonoski .pdf', 'assets/user/default-avatar.jpg', '$2y$10$9b4m6IIUmcpStX2Ss81mSOs5Y9.Ze0Hgk48k1FBR2VI9IdxFvGfvi', NULL, '2016-06-15 03:17:20', '2016-06-15 03:17:20', NULL, 'No'),
+(109, 30, 'LaRae Krebs ', 'laraekrebs8+r22@indeedemail.com ', ' +1 403-830-2340', 'assets/applicant/resumes/ResumeLaRae Krebs .pdf', 'assets/user/default-avatar.jpg', '$2y$10$PILkVeNBGPw.MYuu2R1LAufHzW/odKAbi5GrvHaJFf4A0xqfeUidW', NULL, '2016-06-15 03:17:40', '2016-06-15 03:17:40', NULL, 'No'),
+(110, 30, 'Anamaria Pinilla ', 'anamariapinilla4+o6e@indeedemail.com ', ' +1 403-397-3803', 'assets/applicant/resumes/ResumeAnamaria Pinilla .pdf', 'assets/user/default-avatar.jpg', '$2y$10$QGan/v/VeOGLKAex1xYOaOkboeO/LFn0pWOdPc.cE8SqlBkv9LlFu', NULL, '2016-06-15 03:50:20', '2016-06-15 03:50:20', NULL, 'No'),
+(164, 30, 'Alexis Crowley ', 'alexiscrowley6+zoi@indeedemail.com ', ' +1 403-862-7988', 'assets/applicant/resumes/ResumeAlexis Crowley .pdf', 'assets/user/default-avatar.jpg', '$2y$10$14SjOJ/EO.CxK4yvtnl97ONJc0oZHQekMxiptjR3pe3Cbnt.V0BEa', NULL, '2016-06-15 04:19:46', '2016-06-15 04:19:46', NULL, 'No'),
+(166, 30, 'Ronald Rey DC Nocon ', 'ronaldreydcnocon5+j5c@indeedemail.com ', ' +1 403-200-7623', 'assets/applicant/resumes/ResumeRonald Rey DC Nocon .pdf', 'assets/user/default-avatar.jpg', '$2y$10$SWtrckSo4BRPO5Sy6SBcSuiYD8a92wLpS9Xjoupl3NH7BWTmSiRMy', NULL, '2016-06-15 04:20:08', '2016-06-15 04:20:08', NULL, 'No'),
+(168, 30, 'Michael Biteng ', 'michaelbiteng9+p45@indeedemail.com ', ' +1 403-399-0722', 'assets/applicant/resumes/ResumeMichael Biteng .pdf', 'assets/user/default-avatar.jpg', '$2y$10$LpAuMMyzorDn0a7DAn8s6.efOfxmh6KUDMiBGc4eE4x/VweHFwkke', NULL, '2016-06-15 04:20:31', '2016-06-15 04:20:31', NULL, 'No'),
+(170, 30, 'Jeff Slack ', 'jeffslack8+ptu@indeedemail.com ', ' +1 403-589-3291', 'assets/applicant/resumes/ResumeJeff Slack .pdf', 'assets/user/default-avatar.jpg', '$2y$10$n1umyi6JEB0OYoz1EYVOG.pFG0gXjqlnSzKl5aUygy/l0Vy363Xuu', NULL, '2016-06-15 04:20:54', '2016-06-15 04:20:54', NULL, 'No'),
+(172, 30, 'Joel wico ', 'joelwico6+niy@indeedemail.com ', ' +1 403-608-3661', 'assets/applicant/resumes/ResumeJoel wico .pdf', 'assets/user/default-avatar.jpg', '$2y$10$v1xZo5bbs4HuOe4znZcHYedR9t6CBXF4E.nT/K/vFhfJ3/G8DZU4K', NULL, '2016-06-15 04:21:26', '2016-06-15 04:21:26', NULL, 'No'),
+(173, 32, 'Osayomwanbor Ogbebor ', 'osayomwanborogbebor7+wiq@indeedemail.com ', ' +1 403-402-2886', 'assets/applicant/resumes/ResumeOsayomwanbor Ogbebor .pdf', 'assets/user/default-avatar.jpg', '$2y$10$3wC0ya0pYMgMTkKLoT5DCe8sZWrr7Q6Ntqh/ogsu787QnThg7U59.', NULL, '2016-06-15 04:21:37', '2016-06-15 04:21:37', NULL, 'No'),
+(175, 32, 'Silas Li ', 'silasli7+vxc@indeedemail.com ', ' 4039660148', 'assets/applicant/resumes/ResumeSilas Li .pdf', 'assets/user/default-avatar.jpg', '$2y$10$vMYpjWyxLIwt/T3zAWfVhO/bPYqBQ04/pxELfVMI0daonfthGMOi6', NULL, '2016-06-15 04:22:03', '2016-06-15 04:22:03', NULL, 'No'),
+(177, 32, 'Jean-Jacques Tapsoba ', 'tapsoba6+aqb@indeedemail.com ', ' (514) 561 3784', 'assets/applicant/resumes/ResumeJean-Jacques Tapsoba .pdf', 'assets/user/default-avatar.jpg', '$2y$10$iPSNCquP.z0q6sN1HAuYz.0KOCtZS/jUsVRWon1cXHIi5rDqHzaEK', NULL, '2016-06-15 04:22:26', '2016-06-15 04:22:26', NULL, 'No'),
+(179, 32, 'Tanner Cassidy ', 'tannercassidy3+stv@indeedemail.com ', ' +1 403-612-7338', 'assets/applicant/resumes/ResumeTanner Cassidy .pdf', 'assets/user/default-avatar.jpg', '$2y$10$/fw2YqOeMB6jn16/4.Lc0ey8RUb9TH5J9a3FonmhfeRIOrKqwtU3.', NULL, '2016-06-15 04:22:47', '2016-06-15 04:22:47', NULL, 'No'),
+(181, 32, 'Shailesh Dholakia, P.Eng.,GSI ', 'shaileshdholakiapenggsi2+dwu@indeedemail.com ', ' +1 403-891-5040', 'assets/applicant/resumes/ResumeShailesh Dholakia, P.Eng.,GSI .pdf', 'assets/user/default-avatar.jpg', '$2y$10$vevEqFaK9MuEMaR/sVopRupiUI9nwoH49TuukIc4UVMcAzHycVf1W', NULL, '2016-06-15 04:23:09', '2016-06-15 04:23:09', NULL, 'No'),
+(183, 32, 'Shabeela Majeed ', 'shabeelamajeedkhan6+hfr@indeedemail.com ', ' +1 587-438-7816', 'assets/applicant/resumes/ResumeShabeela Majeed .pdf', 'assets/user/default-avatar.jpg', '$2y$10$Eeg3jXscmiDuoD19HeQinOqrEhxTBbiEtYVVf7LVdvWMUnUfR/u.i', NULL, '2016-06-15 04:23:42', '2016-06-15 04:23:42', NULL, 'No'),
+(185, 32, 'Melver Tan ', 'melvertan4+rjm@indeedemail.com ', ' +1 514-578-0166', 'assets/applicant/resumes/ResumeMelver Tan .pdf', 'assets/user/default-avatar.jpg', '$2y$10$sHVJqsQgQPcTLkMAo7pNEesPw9JxiJcODAQ7MBNvliJOtG02VKTgO', NULL, '2016-06-15 04:24:02', '2016-06-15 04:24:02', NULL, 'No'),
+(187, 32, 'Olivier ', 'uwamahoroolivier9+56t@indeedemail.com ', ' +1 780-668-2572', 'assets/applicant/resumes/ResumeOlivier .pdf', 'assets/user/default-avatar.jpg', '$2y$10$q47YmyBLrNUvs9Dd4J7oAulHO1luRLHWFPbytdZpYwFSqXd57daMi', NULL, '2016-06-15 04:25:43', '2016-06-15 04:25:43', NULL, 'No'),
+(189, 32, 'Maricar Nuňez ', 'maricarsnunez7+wz9@indeedemail.com ', ' +1 403-968-0111', 'assets/applicant/resumes/ResumeMaricar Nuňez .pdf', 'assets/user/default-avatar.jpg', '$2y$10$eSSy7rtFb67Dw7YnZvRVpeIfvcx6gdNpX6w.TlK.cQxJzggFU2zDe', NULL, '2016-06-15 04:26:07', '2016-06-15 04:26:07', NULL, 'No'),
+(191, 32, 'Jerome Desroches ', 'jeromedesroches6+api@indeedemail.com ', ' 403 619-6666', 'assets/applicant/resumes/ResumeJerome Desroches .pdf', 'assets/user/default-avatar.jpg', '$2y$10$8vNl71EHQ.iXeJ/Bw/pgZOmHL3bmVvhlICT0RBuVieeQJ9f8FGVwy', NULL, '2016-06-15 04:26:36', '2016-06-15 04:26:36', NULL, 'No'),
+(193, 32, 'Robert Chang ', 'robertshichang4+o2i@indeedemail.com ', ' +1 780-966-9609', 'assets/applicant/resumes/ResumeRobert Chang .pdf', 'assets/user/default-avatar.jpg', '$2y$10$rnalFM9bGblCi5MvV/zl/OMlzl3CNHNbh2JL9zUt4o9UsT4w27c/a', NULL, '2016-06-15 04:26:56', '2016-06-15 04:26:56', NULL, 'No'),
+(195, 32, 'Bassem Abdrabou ', 'bassemabdrabou2+5cd@indeedemail.com ', ' +1 403-401-6986', 'assets/applicant/resumes/ResumeBassem Abdrabou .pdf', 'assets/user/default-avatar.jpg', '$2y$10$kxRiv4S6atPrFsXPwxWh8.YSrdlnth/Y0/cldDppK2iQ5tBuVPAWe', NULL, '2016-06-15 04:27:16', '2016-06-15 04:27:16', NULL, 'No'),
+(197, 32, 'Anthony Culloo ', 'anthonyculloo3+3cd@indeedemail.com ', ' +1 647-986-6706', 'assets/applicant/resumes/ResumeAnthony Culloo .pdf', 'assets/user/default-avatar.jpg', '$2y$10$dPNHxpM12V1QtTk4yek9Y.hjHZ8omcQMVt1w9y7W2Ag5uKABQX1vS', NULL, '2016-06-15 04:27:35', '2016-06-15 04:27:35', NULL, 'No'),
+(199, 32, 'Jeff Meidl ', 'jeffmeidl7+aqr@indeedemail.com ', ' +1 403-604-7633', 'assets/applicant/resumes/ResumeJeff Meidl .pdf', 'assets/user/default-avatar.jpg', '$2y$10$1yacEWXoq1y5iIDOhzbDeuKsa0raFvQ7dRXtdFzZwiIagmb3KjVPy', NULL, '2016-06-15 04:27:54', '2016-06-15 04:27:54', NULL, 'No'),
+(201, 32, 'James Oborne ', 'jamesoborne9+7rb@indeedemail.com ', ' +1 250-361-6183', 'assets/applicant/resumes/ResumeJames Oborne .pdf', 'assets/user/default-avatar.jpg', '$2y$10$7x.lTchBWFSMgdEVoL8Pzuj9qbe6dzoaB4taIM7R4.9XYlJgYDGJW', NULL, '2016-06-15 04:28:13', '2016-06-15 04:28:13', NULL, 'No'),
+(203, 32, 'Ali Hosseini ', 'seyedalihosseini8+wxx@indeedemail.com ', ' +1 780-802-8939', 'assets/applicant/resumes/ResumeAli Hosseini .pdf', 'assets/user/default-avatar.jpg', '$2y$10$oHnwOSkZyGyzG9oGKeugDeqsrmVKsKLvoF6m.ZjHyA.HEMa9l3lYK', NULL, '2016-06-15 04:28:31', '2016-06-15 04:28:31', NULL, 'No'),
+(213, 28, 'Brent Cardiff ', 'brentcardiff5+p9v@indeedemail.com ', ' +1 403-554-3767', 'assets/applicant/resumes/ResumeBrent Cardiff .pdf', 'assets/user/default-avatar.jpg', '$2y$10$Dh3.Lt8NrnEkMfCOtmdCm.2fcEuknntzzw9vVb8vJ3wln3KUPnmCi', NULL, '2016-06-15 04:51:16', '2016-06-15 04:51:16', NULL, 'No'),
+(223, 30, 'Sheena Hann ', 'sheenahann2+6cx@indeedemail.com ', ' +1 587-586-6572', 'assets/applicant/resumes/ResumeSheena Hann .pdf', 'assets/user/default-avatar.jpg', '$2y$10$Bp/wHfvLQw9yfoE5KMAytO535AWQlRl0kud7rYhPp5u9s3nQ/0SWa', NULL, '2016-06-15 04:52:50', '2016-06-15 04:52:50', NULL, 'No'),
+(224, 31, 'Colby Sweet ', 'colbysweet9+dbb@indeedemail.com ', ' +1 403-999-1283', 'assets/applicant/resumes/ResumeColby Sweet .pdf', 'assets/user/default-avatar.jpg', '$2y$10$rshQCO9SNORjS6VjE5pWz.mxHnEd90MAGy/OaoY/Ywk7PIiSrLoPq', NULL, '2016-06-16 00:27:35', '2016-06-16 00:27:35', NULL, 'No'),
+(226, 31, 'Matthew Thomas ', 'matthewthomas726+quc@indeedemail.com ', ' +1 403-700-5909', 'assets/applicant/resumes/ResumeMatthew Thomas .pdf', 'assets/user/default-avatar.jpg', '$2y$10$DNndJ0i.j6PdujEdblLxXOxgLnjzysGg0/AlteewHTU7F7PCrQiU2', NULL, '2016-06-16 00:27:57', '2016-06-16 00:27:57', NULL, 'No'),
+(228, 28, 'Shawn Gilhen ', 'shawngilhen5+vo9@indeedemail.com ', ' +1 403-305-2618', 'assets/applicant/resumes/ResumeShawn Gilhen .pdf', 'assets/user/default-avatar.jpg', '$2y$10$fF6qMA3zuFPHb0DLpokN6uxsRw34CH.gRFNzY.1SFDcgcUrZJzrR.', NULL, '2016-06-16 00:28:21', '2016-06-16 00:28:21', NULL, 'No'),
+(230, 31, 'Victoria Chukwuanu ', 'victoriachukwuanu8+far@indeedemail.com ', ' +1 780-940-6472', 'assets/applicant/resumes/ResumeVictoria Chukwuanu .pdf', 'assets/user/default-avatar.jpg', '$2y$10$nqtGqdn34U06OZAJeTLB3Ovj38bGtl7awzrSGdr6O3h6iY2DYO6Za', NULL, '2016-06-16 00:28:43', '2016-06-16 00:28:43', NULL, 'No');
 
 -- --------------------------------------------------------
 
@@ -95,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `fp_applicant_tags` (
   `tags` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_applicant_tags`
@@ -104,9 +211,10 @@ CREATE TABLE IF NOT EXISTS `fp_applicant_tags` (
 INSERT INTO `fp_applicant_tags` (`id`, `user_id`, `applicant_id`, `job_id`, `tags`, `created_at`, `updated_at`) VALUES
 (1, 18, 4, 10, 'test,tester,testing', '2016-05-23 21:36:56', '2016-05-23 21:58:52'),
 (2, 18, 5, 10, 'testing', '2016-05-23 22:10:10', '2016-05-23 22:10:10'),
-(3, 18, 9, 10, 'test,test2,test3', '2016-05-23 22:48:21', '2016-05-25 03:39:59'),
+(3, 18, 9, 10, 'test,test2,test3,test4,test5', '2016-05-23 22:48:21', '2016-06-07 06:59:09'),
 (4, 18, 8, 10, 'testing,tester', '2016-05-23 23:39:34', '2016-05-24 02:55:07'),
-(5, 18, 7, 10, 'tester', '2016-05-23 23:39:38', '2016-05-23 23:40:58');
+(5, 18, 7, 10, 'tester', '2016-05-23 23:39:38', '2016-05-23 23:40:58'),
+(6, 18, 228, 28, 'test', '2016-06-17 01:57:35', '2016-06-17 01:57:35');
 
 -- --------------------------------------------------------
 
@@ -254,53 +362,91 @@ INSERT INTO `fp_client` (`client_id`, `company_name`, `contact_person`, `email`,
 
 CREATE TABLE IF NOT EXISTS `fp_comment` (
 `comment_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `commenter_id` int(11) NOT NULL,
+  `commenter_type` varchar(255) NOT NULL,
   `belongs_to` varchar(10) NOT NULL,
   `unique_id` int(11) NOT NULL,
   `comment` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fp_comment`
 --
 
-INSERT INTO `fp_comment` (`comment_id`, `user_id`, `belongs_to`, `unique_id`, `comment`, `created_at`, `updated_at`) VALUES
-(2, 0, 'bug', 1, 'How it is going, ab ?', '2016-03-15 06:13:14', '2016-03-15 06:13:14'),
-(3, 18, 'applicant', 9, 'Test', '2016-05-24 04:11:36', '2016-05-24 04:11:36'),
-(4, 18, 'applicant', 9, 'Test', '2016-05-24 04:12:03', '2016-05-24 04:12:03'),
-(5, 18, 'applicant', 9, 'Test', '2016-05-24 04:12:57', '2016-05-24 04:12:57'),
-(6, 18, 'applicant', 9, 'Test', '2016-05-24 04:13:27', '2016-05-24 04:13:27'),
-(7, 18, 'applicant', 9, 'Test', '2016-05-24 04:14:04', '2016-05-24 04:14:04'),
-(8, 18, 'applicant', 9, 'Test', '2016-05-24 04:14:56', '2016-05-24 04:14:56'),
-(9, 18, 'applicant', 9, 'Test', '2016-05-24 04:17:09', '2016-05-24 04:17:09'),
-(10, 18, 'applicant', 9, 'Test', '2016-05-24 04:19:49', '2016-05-24 04:19:49'),
-(11, 18, 'applicant', 9, 'Test', '2016-05-24 04:23:59', '2016-05-24 04:23:59'),
-(12, 18, 'applicant', 9, 'Test', '2016-05-24 04:24:54', '2016-05-24 04:24:54'),
-(13, 18, 'applicant', 9, 'Test', '2016-05-24 04:25:59', '2016-05-24 04:25:59'),
-(14, 18, 'applicant', 9, 'Test', '2016-05-24 04:28:16', '2016-05-24 04:28:16'),
-(15, 18, 'applicant', 9, 'Test', '2016-05-24 04:43:10', '2016-05-24 04:43:10'),
-(16, 18, 'applicant', 8, 'Test', '2016-05-24 04:55:31', '2016-05-24 04:55:31'),
-(17, 18, 'applicant', 4, 'Test', '2016-05-24 04:58:18', '2016-05-24 04:58:18'),
-(18, 18, 'applicant', 4, 'Test', '2016-05-24 05:11:43', '2016-05-24 05:11:43'),
-(19, 18, 'applicant', 4, 'Testing comment', '2016-05-24 05:11:57', '2016-05-24 05:11:57'),
-(20, 18, 'applicant', 5, 'Test', '2016-05-24 05:18:36', '2016-05-24 05:18:36'),
-(21, 18, 'applicant', 5, 'Test', '2016-05-24 05:21:20', '2016-05-24 05:21:20'),
-(22, 18, 'applicant', 4, 'Testing Again\r\n', '2016-05-24 05:23:59', '2016-05-24 05:23:59'),
-(23, 18, 'applicant', 4, 'Testing Test\r\n', '2016-05-24 05:24:50', '2016-05-24 05:24:50'),
-(24, 18, 'applicant', 4, 'Testing Again\r\n', '2016-05-24 05:25:22', '2016-05-24 05:25:22'),
-(25, 18, 'applicant', 4, 'Testing\r\n', '2016-05-24 05:26:56', '2016-05-24 05:26:56'),
-(26, 18, 'applicant', 4, 'Test', '2016-05-24 05:27:05', '2016-05-24 05:27:05'),
-(27, 18, 'applicant', 4, 'Tester\r\n', '2016-05-24 05:27:31', '2016-05-24 05:27:31'),
-(28, 18, 'applicant', 4, 'Test', '2016-05-24 05:34:43', '2016-05-24 05:34:43'),
-(29, 18, 'applicant', 4, 'Testing this comment\r\n', '2016-05-24 05:36:11', '2016-05-24 05:36:11'),
-(30, 18, 'applicant', 4, 'Test', '2016-05-24 05:36:46', '2016-05-24 05:36:46'),
-(31, 18, 'applicant', 9, 'Test 2', '2016-05-24 06:41:18', '2016-05-24 06:41:18'),
-(32, 0, 'applicant', 4, 'Test', '2016-05-27 04:02:27', '2016-05-27 04:02:27'),
-(33, 0, 'applicant', 4, 'Test 1\r\n', '2016-05-27 04:15:41', '2016-05-27 04:15:41'),
-(34, 0, 'applicant', 4, 'Test 2', '2016-05-27 04:15:45', '2016-05-27 04:15:45'),
-(35, 18, 'applicant', 4, 'Test 3', '2016-05-27 04:18:57', '2016-05-27 04:18:57');
+INSERT INTO `fp_comment` (`comment_id`, `commenter_id`, `commenter_type`, `belongs_to`, `unique_id`, `comment`, `created_at`, `updated_at`) VALUES
+(3, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:11:36'),
+(4, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:12:03'),
+(5, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:12:57'),
+(6, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:13:27'),
+(7, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:14:04'),
+(8, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:14:56'),
+(9, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:17:09'),
+(10, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:19:49'),
+(11, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:23:59'),
+(12, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:24:54'),
+(13, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:25:59'),
+(14, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:28:16'),
+(15, 18, 'employee', 'applicant', 9, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:43:10'),
+(16, 18, 'employee', 'applicant', 8, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:55:31'),
+(17, 18, 'employee', 'applicant', 4, 'Test', '2016-06-08 13:09:53', '2016-05-24 04:58:18'),
+(18, 18, 'employee', 'applicant', 4, 'Test', '2016-06-08 13:09:53', '2016-05-24 05:11:43'),
+(19, 18, 'employee', 'applicant', 4, 'Testing comment', '2016-06-08 13:09:53', '2016-05-24 05:11:57'),
+(20, 18, 'employee', 'applicant', 5, 'Test', '2016-06-08 13:09:53', '2016-05-24 05:18:36'),
+(21, 18, 'employee', 'applicant', 5, 'Test', '2016-06-08 13:09:53', '2016-05-24 05:21:20'),
+(22, 18, 'employee', 'applicant', 4, 'Testing Again\r\n', '2016-06-08 13:09:53', '2016-05-24 05:23:59'),
+(23, 18, 'employee', 'applicant', 4, 'Testing Test\r\n', '2016-06-08 13:09:53', '2016-05-24 05:24:50'),
+(24, 18, 'employee', 'applicant', 4, 'Testing Again\r\n', '2016-06-08 13:09:53', '2016-05-24 05:25:22'),
+(25, 18, 'employee', 'applicant', 4, 'Testing\r\n', '2016-06-08 13:09:53', '2016-05-24 05:26:56'),
+(26, 18, 'employee', 'applicant', 4, 'Test', '2016-06-08 13:09:53', '2016-05-24 05:27:05'),
+(27, 18, 'employee', 'applicant', 4, 'Tester\r\n', '2016-06-08 13:09:53', '2016-05-24 05:27:31'),
+(28, 18, 'employee', 'applicant', 4, 'Test', '2016-06-08 13:09:53', '2016-05-24 05:34:43'),
+(29, 18, 'employee', 'applicant', 4, 'Testing this comment\r\n', '2016-06-08 13:09:53', '2016-05-24 05:36:11'),
+(30, 18, 'employee', 'applicant', 4, 'Test', '2016-06-08 13:09:53', '2016-05-24 05:36:46'),
+(31, 18, 'employee', 'applicant', 9, 'Test 2', '2016-06-08 13:09:53', '2016-05-24 06:41:18'),
+(32, 0, 'employee', 'applicant', 4, 'Test', '2016-06-08 13:09:53', '2016-05-27 04:02:27'),
+(33, 0, 'employee', 'applicant', 4, 'Test 1\r\n', '2016-06-08 13:09:53', '2016-05-27 04:15:41'),
+(34, 0, 'employee', 'applicant', 4, 'Test 2', '2016-06-08 13:09:53', '2016-05-27 04:15:45'),
+(35, 18, 'employee', 'applicant', 4, 'Test 3', '2016-06-08 13:09:53', '2016-05-27 04:18:57'),
+(36, 18, 'employee', 'applicant', 9, 'Test 3', '2016-06-08 13:09:53', '2016-06-07 00:10:04'),
+(37, 18, 'employee', 'applicant', 20, 'Test', '2016-06-08 13:09:53', '2016-06-08 04:18:57'),
+(38, 18, 'employee', 'applicant', 20, 'Test', '2016-06-08 13:09:53', '2016-06-08 04:20:47'),
+(39, 18, 'employee', 'applicant', 20, 'Test', '2016-06-08 13:09:53', '2016-06-08 04:22:04'),
+(40, 18, 'employee', 'applicant', 20, 'Test 1', '2016-06-08 13:09:53', '2016-06-08 04:24:15'),
+(41, 18, 'employee', 'applicant', 20, 'Test 2', '2016-06-08 13:09:53', '2016-06-08 04:25:20'),
+(42, 18, 'employee', 'applicant', 20, 'Test 3', '2016-06-08 13:09:53', '2016-06-08 04:29:12'),
+(43, 18, 'employee', 'applicant', 20, 'Test 4', '2016-06-08 13:09:53', '2016-06-08 04:32:44'),
+(44, 18, 'employee', 'applicant', 20, 'Test 5', '2016-06-08 13:09:53', '2016-06-08 04:34:17'),
+(45, 18, 'employee', 'applicant', 20, 'Test 6', '2016-06-08 13:09:53', '2016-06-08 04:34:59'),
+(46, 18, 'employee', 'applicant', 20, 'Test 7', '2016-06-08 13:09:53', '2016-06-08 04:37:08'),
+(47, 18, 'employee', 'applicant', 20, 'Test 8', '2016-06-08 13:09:53', '2016-06-08 04:50:52'),
+(48, 18, 'employee', 'applicant', 20, 'Test 9', '2016-06-08 13:09:53', '2016-06-08 04:53:10'),
+(49, 18, 'employee', 'applicant', 20, 'Test 10', '2016-06-08 05:35:25', '2016-06-08 05:35:25'),
+(50, 18, 'employee', 'applicant', 20, 'Test 11', '2016-06-08 05:45:21', '2016-06-08 05:45:21'),
+(51, 18, 'employee', 'applicant', 20, 'Test 12', '2016-06-08 05:49:57', '2016-06-08 05:49:57'),
+(52, 18, 'employee', 'applicant', 20, 'Test 13', '2016-06-08 05:52:10', '2016-06-08 05:52:10'),
+(53, 18, 'employee', 'applicant', 20, 'Test 14', '2016-06-08 05:52:50', '2016-06-08 05:52:50'),
+(54, 18, 'employee', 'applicant', 20, 'Test 15', '2016-06-08 05:54:22', '2016-06-08 05:54:22'),
+(55, 18, 'employee', 'applicant', 20, 'Test 16', '2016-06-08 05:56:51', '2016-06-08 05:56:51'),
+(56, 18, 'employee', 'applicant', 20, 'Test 17', '2016-06-08 05:59:22', '2016-06-08 05:59:22'),
+(57, 18, 'employee', 'applicant', 20, 'Test 18', '2016-06-08 06:00:18', '2016-06-08 06:00:18'),
+(58, 18, 'employee', 'applicant', 20, 'Test 19', '2016-06-08 06:13:42', '2016-06-08 06:13:42'),
+(59, 18, 'employee', 'applicant', 20, 'Test 20', '2016-06-08 06:16:27', '2016-06-08 06:16:27'),
+(60, 18, 'employee', 'applicant', 20, 'Test 21', '2016-06-08 06:17:21', '2016-06-08 06:17:21'),
+(61, 18, 'employee', 'applicant', 20, 'Test 22', '2016-06-08 06:18:36', '2016-06-08 06:18:36'),
+(62, 18, 'employee', 'applicant', 20, 'Test 23', '2016-06-08 06:20:21', '2016-06-08 06:20:21'),
+(63, 18, 'employee', 'applicant', 20, 'Test 24', '2016-06-08 06:22:14', '2016-06-08 06:22:14'),
+(64, 18, 'employee', 'applicant', 20, 'Test 25', '2016-06-08 06:25:24', '2016-06-08 06:25:24'),
+(65, 18, 'employee', 'applicant', 20, 'Test 26', '2016-06-08 06:27:06', '2016-06-08 06:27:06'),
+(66, 18, 'employee', 'applicant', 21, 'Testing', '2016-06-08 06:30:40', '2016-06-08 06:30:40'),
+(67, 18, 'employee', 'applicant', 21, 'Testing Again', '2016-06-08 06:31:26', '2016-06-08 06:31:26'),
+(68, 18, 'employee', 'applicant', 21, 'Test', '2016-06-08 06:42:38', '2016-06-08 06:42:38'),
+(69, 21, 'applicant', 'applicant', 21, 'Test 1', '2016-06-08 06:56:55', '2016-06-08 06:56:55'),
+(70, 18, 'employee', 'applicant', 25, 'Test', '2016-06-09 00:56:30', '2016-06-09 00:56:30'),
+(71, 25, 'applicant', 'applicant', 25, 'Testing', '2016-06-09 00:58:22', '2016-06-09 00:58:22'),
+(72, 18, 'employee', 'applicant', 25, 'Testing From Chrome', '2016-06-09 01:06:46', '2016-06-09 01:06:46'),
+(73, 18, 'employee', 'applicant', 4, 'Test 4', '2016-06-17 03:00:16', '2016-06-17 03:00:16');
 
 -- --------------------------------------------------------
 
@@ -322,7 +468,7 @@ CREATE TABLE IF NOT EXISTS `fp_companies` (
   `country_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_companies`
@@ -330,11 +476,8 @@ CREATE TABLE IF NOT EXISTS `fp_companies` (
 
 INSERT INTO `fp_companies` (`id`, `name`, `email`, `phone`, `number_of_employees`, `address_1`, `address_2`, `province`, `zipcode`, `website`, `country_id`, `created_at`, `updated_at`) VALUES
 (1, 'HD Energy', 'sales@hdenergy.ca', '1234567890', '1', 'Ontario', NULL, NULL, NULL, NULL, 15, '2016-05-11 06:34:13', '0000-00-00 00:00:00'),
-(2, 'Test', 'test@gmail.com', '123456789', '1', 'Test', NULL, NULL, NULL, NULL, 15, '2016-05-12 05:29:02', '2016-05-12 05:29:02'),
-(3, 'Test2', 'test2@gmail.com', 'test2@gmail.com', '1', '1234567890', NULL, NULL, NULL, NULL, 15, '2016-05-12 05:31:14', '2016-05-12 05:31:14'),
-(4, 'Test 3', 'test3@gmail.com', '1234567890', '1', '', NULL, NULL, NULL, NULL, 15, '2016-05-15 20:26:32', '2016-05-15 20:26:32'),
-(5, 'Test 4', 'test4@gmail.com', '12345656890', '1', 'Test', NULL, NULL, NULL, NULL, 15, '2016-05-15 20:29:53', '2016-05-15 20:29:53'),
-(15, 'Test Company', 'testcompany@gmail.com', '1234567890', 'more than 200', 'Test', 'Test', 'Benguet', '2600', '', 185, '2016-05-18 23:59:10', '2016-05-18 23:59:10');
+(18, 'Test Company', 'testcompany@gmail.com', '1234567890', 'more than 5', 'Test', 'Test', 'Benguet', '2600', 'test.com', 185, '2016-06-03 03:36:14', '2016-06-03 03:36:14'),
+(19, 'Test Company 2', 'testcompany2@gmail.com', '1234567890', '1 employee', 'Test', 'Test', 'Test', '2600', 'testcompany2.com', 185, '2016-06-06 00:23:31', '2016-06-06 00:23:31');
 
 -- --------------------------------------------------------
 
@@ -348,15 +491,14 @@ CREATE TABLE IF NOT EXISTS `fp_company_divisions` (
   `division_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_company_divisions`
 --
 
 INSERT INTO `fp_company_divisions` (`id`, `company_id`, `division_name`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Oshawa', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(8, 15, 'Test Division', '2016-05-18 23:59:10', '2016-05-18 23:59:10');
+(1, 1, 'Oshawa', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -696,19 +838,31 @@ CREATE TABLE IF NOT EXISTS `fp_jobs` (
   `description` longtext COLLATE utf8_unicode_ci NOT NULL,
   `photo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `notes` text COLLATE utf8_unicode_ci
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_jobs`
 --
 
-INSERT INTO `fp_jobs` (`id`, `user_id`, `company_id`, `title`, `description`, `photo`, `created_at`, `updated_at`) VALUES
-(10, 18, 1, 'Testing 1', 'Testing 1', 'assets/job\\company_logo_2.jpg', '2016-05-23 06:02:59', '2016-05-30 02:02:58'),
-(11, 18, 1, 'Test 5', '<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n', 'assets/job\\company_logo_3.png', '2016-05-23 06:10:17', '2016-05-27 10:22:05'),
-(12, 18, 1, 'Test 1', 'Test  1', 'assets/job\\company_logo_2.jpg', '2016-05-23 09:39:42', '2016-05-23 09:40:10'),
-(13, 18, 1, 'Test', '<p>Test</p>\r\n', 'assets/user/avatar.png', '2016-05-27 05:46:42', '2016-05-27 05:46:42'),
-(14, 18, 1, 'Test 4', '<p>Test 4</p>\r\n', '', '2016-05-27 07:48:48', '2016-05-27 07:48:48');
+INSERT INTO `fp_jobs` (`id`, `user_id`, `company_id`, `title`, `description`, `photo`, `created_at`, `updated_at`, `notes`) VALUES
+(10, 18, 1, 'Testing 1', 'Testing 1', 'assets/job\\company_logo_2.jpg', '2016-05-23 06:02:59', '2016-06-14 08:36:16', '<p>TestingTestingTestingTesting</p>\r\n\r\n<p>TestingTestingTestingTesting</p>\r\n\r\n<p>TestingTestingTestingTesting</p>\r\n\r\n<p>TestingTestingTestingTesting</p>\r\n'),
+(11, 18, 1, 'Test 5', '<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Test 5</p>\r\n', 'assets/job\\company_logo_3.png', '2016-05-23 06:10:17', '2016-06-01 03:02:58', '<p>Testing</p>\r\n'),
+(12, 18, 1, 'Test 1', 'Test  1', 'assets/job\\company_logo_2.jpg', '2016-05-23 09:39:42', '2016-05-23 09:40:10', ''),
+(13, 18, 1, 'Test', '<p>Test</p>\r\n', 'assets/user/avatar.png', '2016-05-27 05:46:42', '2016-05-27 05:46:42', ''),
+(14, 18, 1, 'Test 4', '<p>Test 4</p>\r\n', '', '2016-05-27 07:48:48', '2016-05-27 07:48:48', ''),
+(15, 18, 15, 'Test ', '<p>Test</p>\r\n', '', '2016-06-01 01:55:02', '2016-06-01 01:55:02', ''),
+(16, 18, 1, 'Test 6', '<p>Test</p>\r\n', '', '2016-06-03 00:29:30', '2016-06-03 00:29:30', ''),
+(17, 18, 15, 'Test Job', '<p>Test</p>\r\n', '', '2016-06-03 02:23:10', '2016-06-03 02:23:10', ''),
+(18, 18, 1, 'Test Job 2', '<p>Test</p>\r\n', '', '2016-06-03 02:23:52', '2016-06-03 02:23:52', ''),
+(19, 18, 18, 'Test Job 3', '<p>Test</p>\r\n', '', '2016-06-03 03:44:15', '2016-06-03 03:44:22', '<p>Test</p>\r\n'),
+(28, 18, 1, 'Construction Worker, Calgary, AB - Job Details | Indeed.com', 'Looking for a person with the ability to maintain concentration for long periods in guiding a concrete cutting machine across floors. The floor cut must be straight and even a short period of losing focus will sent the cut off the guide line. If you like to party at night and come to work spaced out, then this is not the job for you.\n\n Must have steel toed work boots.\n Must be able to lift 80 lbs\n\nThis opening is urgent. Monday Sept 14, we are working at The South Centre Mall, at the South end of Macleod Trail at 10:00 am till 2 pm on the North side by Shoppers Drug Mart. We will be testing applicants ability to control the machine. Look for the truck and trailer marked "Destiny Cutting and Coring".\nPics of the Job http://www.destinycuttingandcoring.com/home.html\nCall Tom Coghill 403-805-9364I will be at the site in blue coveralls.\nIMPORTANT INSTRUCTIONS: Open the link http://hirefit.net/j/4 and add your resume and a pic if you have one as it helps us remember who your talking to and will be photo ID if your hired. We do not look at indeed for resumes. If you do not upload to hirefit then you will be interviewed. This is custom coded for our companies for resume processing.\nJob Type: Full-time', '', '2016-06-15 02:50:47', '2016-06-15 02:50:47', NULL),
+(29, 18, 1, 'Cutting and Coring Apprentice - URGENT, Calgary, AB - Job Details | Indeed.com', 'Looking for a person with the ability to maintain concentration for long periods in guiding a concrete cutting machine across floors. The floor cut must be straight and even a short period of losing focus will sent the cut off the guide line. If you like to party at night and come to work spaced out, then this is not the job for you.\n\n Must have steel toed work boots.\n Must be able to lift 80 lbs\n\nThis opening is urgent. Monday Sept 14, we are working at The South Centre Mall, at the South end of Macleod Trail at 10:00 am till 2 pm on the North side by Shoppers Drug Mart. We will be testing applicants ability to control the machine. Look for the truck and trailer marked "Destiny Cutting and Coring".\nPics of the Job http://www.destinycuttingandcoring.com/home.html\nCall Tom Coghill 403-805-9364I will be at the site in blue coveralls.\nIMPORTANT INSTRUCTIONS: Open the link http://hirefit.net/j/4 and add your resume and a pic if you have one as it helps us remember who your talking to and will be photo ID if your hired. We do not look at indeed for resumes. If you do not upload to hirefit then you will be interviewed. This is custom coded for our companies for resume processing.\nJob Type: Full-time', '', '2016-06-15 02:50:53', '2016-06-15 02:50:53', NULL),
+(30, 18, 1, 'Domestic Helper (Erlton St SW), Calgary, AB - Job Details | Indeed.com', 'Busy executive seeks domestic help three times per week, 2 hours per day. House is located on the river.Location: 25 Ave SW & Erlton St SW\nDuties: Light house work. Feed and walk the dog. Occasional errands.This is a fun work environment for someone in the area that is looking to supplement their income.\nQuestions: Call Tom 403-805 9364\nInstructions: Please hit apply and upload your resume: http://hirefit.net/j/3This is a platform we use for processing and hiring staff for the companies owned by Henry the home owner. It is better to call me after you upload as I can keep the notes easier.\nJob Type: Part-time\nSalary: $25.00 /hour\nJob Location:\n\n Calgary, AB\n', '', '2016-06-15 02:50:58', '2016-06-15 02:50:58', NULL),
+(31, 18, 1, 'General Helper- With a Clear Mind, Calgary, AB - Job Details | Indeed.com', 'Looking for a person with the ability to maintain concentration for long periods in guiding a concrete cutting machine across floors. The floor cut must be straight and even a short period of losing focus will sent the cut off the guide line. If you like to party at night and come to work spaced out, then this is not the job for you.\n\n Must have steel toed work boots.\n Must be able to lift 80 lbs\n\nThis opening is urgent. Monday Sept 14, we are working at The South Centre Mall, at the South end of Macleod Trail at 10:00 am till 2 pm on the North side by Shoppers Drug Mart. We will be testing applicants ability to control the machine. Look for the truck and trailer marked "Destiny Cutting and Coring".\nPics of the Job http://www.destinycuttingandcoring.com/home.html\nCall Tom Coghill 403-805-9364I will be at the site in blue coveralls.\nIMPORTANT INSTRUCTIONS: Open the link http://hirefit.net/j/4 and add your resume and a pic if you have one as it helps us remember who your talking to and will be photo ID if your hired. We do not look at indeed for resumes. If you do not upload to hirefit then you will be interviewed. This is custom coded for our companies for resume processing.', '', '2016-06-15 02:51:03', '2016-06-15 02:51:03', NULL),
+(32, 18, 1, 'Project Manager/Estimator, Calgary, AB - Job Details | Indeed.com', 'Grade Pros Inc. is a commercial excavation and grading company located in Calgary, Alberta. By specializing on the pre-construction stage of commercial, industrial and new residential developments the company occupies a niche in the industry. Whether your development is large or small Grade Pros Inc.’s expertise includes:\n– Roadway preparation– Site grading– Berm construction– Catch basin installation– Utility pipe installation prior to construction/paving– Heavy equipment earthmoving– Demolition, concrete breaking, cutting and removal– New building excavation and backfill– Large and small scale slab on grade– Finished grading and loam installation.\nGrade Pros Inc. has an experienced team committed to delivering these services in an accurate, safe and timely manner which is critical to laying the foundation for a successful project that is “On Schedule, On Budget and On Grade.”\nJob Description\n\n Work with management to complete tenders and negotiate construction contracts including scheduling, procuring subcontractors and materials, and creating the project budget.\n Take full accountability as the main point of contact for clients.\n To manage bid responses and content quality\n To develop ongoing opportunities driving cost efficiencies through a proactive approach, best practice and continuous improvement.\n To develop and maintain successful working relationships with the client, key stakeholders and customers including monthly and quarterly performance reviews.\n To be responsible for ensuring that all bids are monitored to the point of final deposit.\n Source quotes and contracts from subcontractors and material suppliers.\n Analyse completed construction projects to measure the accuracy of estimates and to manage compliance with the project budget.\n Provide project management of selected projects, including planning, scheduling, coordinating all aspects of work\n Manage contracts, change orders, submittal, subcontracts and material orders.\n Communicate directly with engineers, consultants and clients.\n Track and measure production rates and profitability of various projects.\n Seek new tendering/negotiating opportunities and maintain relationships with clients.\n\nQualifications/skills:\n\n Construction field experience and knowledge of technology, equipment, materials, methodology, and standard specifications.\n Experience with large construction projects in Calgary.\n Excellent organizational, planning, and communication skills.\n Ability to work as part of a team with senior staff, project managers, field and office staff, and be self-motivated.\n Willingness to work under pressure, set goals, and meet deadlines.\n\nPlease add your name, phone and email to the body of the email.\nRequired experience:\n\n Estimating construction projects: 3 years\n', '', '2016-06-15 02:51:09', '2016-06-15 02:51:09', NULL),
+(33, 18, 1, 'Smart Person with Excellent Concentration, Calgary, AB - Job Details | Indeed.com', 'Looking for a person with the ability to maintain concentration for long periods in guiding a concrete cutting machine across floors. The floor cut must be straight and even a short period of losing focus will sent the cut off the guide line. If you like to party at night and come to work spaced out, then this is not the job for you.\n\n Must have steel toed work boots.\n Must be able to lift 80 lbs\n\nThis opening is urgent. Monday Sept 14, we are working at The South Centre Mall, at the South end of Macleod Trail at 10:00 am till 2 pm on the North side by Shoppers Drug Mart. We will be testing applicants ability to control the machine. Look for the truck and trailer marked "Destiny Cutting and Coring".\nPics of the Job http://www.destinycuttingandcoring.com/home.html\nCall Tom Coghill 403-805-9364I will be at the site in blue coveralls.\nIMPORTANT INSTRUCTIONS: Open the link http://hirefit.net/j/4 and add your resume and a pic if you have one as it helps us remember who your talking to and will be photo ID if your hired. We do not look at indeed for resumes. If you do not upload to hirefit then you will be interviewed. This is custom coded for our companies for resume processing.\nJob Location:\n\n Calgary, AB\n', '', '2016-06-15 02:51:14', '2016-06-15 02:51:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -764,6 +918,23 @@ CREATE TABLE IF NOT EXISTS `fp_link_tags` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_mail_queue`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_mail_queue` (
+`id` bigint(20) unsigned NOT NULL,
+  `queue` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `attempts` tinyint(3) unsigned NOT NULL,
+  `reserved` tinyint(3) unsigned NOT NULL,
+  `reserved_at` int(10) unsigned DEFAULT NULL,
+  `available_at` int(10) unsigned NOT NULL,
+  `created_at` int(10) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -917,7 +1088,32 @@ INSERT INTO `fp_migrations` (`migration`, `batch`) VALUES
 ('2016_05_12_100510_update_test_table', 16),
 ('2016_05_26_095856_update_question_table', 16),
 ('2016_05_27_093838_create_applicant_roles', 16),
-('2016_05_28_071227_create_test_result_table', 17);
+('2016_05_28_071227_create_test_result_table', 17),
+('2016_05_31_070651_update_test_table', 18),
+('2016_06_01_073253_update_question_table', 18),
+('2016_06_01_101714_update_job_table_add_notes', 19),
+('2016_06_01_101725_update_applicant_table_add_notes', 19),
+('2016_06_02_072358_update_user_table_add_resume_and_notes', 20),
+('2016_06_02_073259_update_applicant_table_add_hired_column', 20),
+('2016_06_02_091438_update_user_nullable_fields', 21),
+('2016_06_03_103000_update_applicant_table_make_email_unique', 22),
+('2016_06_06_150752_update_test_results_table_turn_user_id_to_unique_id_add_id_type', 23),
+('2016_06_02_103625_update_test_table_add_completion_files', 24),
+('2016_06_04_074633_update_test_table_add_tags', 24),
+('2016_06_04_084245_update_question_table_add_tags', 24),
+('2016_06_07_091020_create_tests_taken_table', 24),
+('2016_06_08_125621_update_comment_table_turn_user_id_to_commenter_id_and_user_type', 25),
+('2016_06_08_140439_create_jobs_table', 26),
+('2016_06_09_124723_update_task_check_list_table_update_checklist_header_and_checklist_content_to_nullable', 27),
+('2016_06_09_165350_update_task_checklist_table_default_checklist_header', 28),
+('2016_06_08_094416_update_text_result_add_points', 29),
+('2016_06_13_072925_update_test_table_add_default_points', 30),
+('2016_06_13_093019_create_team_companies_table', 31),
+('2016_06_13_115103_create_share_jobs_table', 31),
+('2016_06_13_145155_create_share_jobs_to_companies_table', 32),
+('2016_06_13_170535_create_share_jobs_to_companies_permissions_table', 33),
+('2016_06_17_110912_create_videos_table', 34),
+('2016_06_17_132324_create_video_tags_table_2', 35);
 
 -- --------------------------------------------------------
 
@@ -1073,7 +1269,7 @@ CREATE TABLE IF NOT EXISTS `fp_profiles` (
   `role_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_profiles`
@@ -1081,14 +1277,10 @@ CREATE TABLE IF NOT EXISTS `fp_profiles` (
 
 INSERT INTO `fp_profiles` (`id`, `user_id`, `company_id`, `role_id`, `created_at`, `updated_at`) VALUES
 (1, 18, 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(21, 41, 2, 1, '2016-05-17 00:03:22', '2016-05-17 00:03:22'),
-(22, 42, 1, 1, '2016-05-17 00:06:31', '2016-05-17 00:06:31'),
-(23, 18, 15, 7, '2016-05-18 23:59:10', '2016-05-18 23:59:10'),
-(24, 43, 1, 1, '2016-05-20 08:35:54', '2016-05-20 08:35:54'),
-(35, 54, 1, 2, '2016-05-24 07:52:30', '2016-05-24 07:52:30'),
-(36, 55, 1, 2, '2016-05-24 07:53:49', '2016-05-24 07:53:49'),
-(37, 56, 1, 1, '2016-05-24 07:57:01', '2016-05-24 07:57:01'),
-(38, 57, 1, 1, '2016-05-24 07:58:02', '2016-05-24 07:58:02');
+(58, 18, 18, 11, '2016-06-03 03:36:15', '2016-06-03 03:36:15'),
+(61, 18, 19, 14, '2016-06-06 00:23:32', '2016-06-06 00:23:32'),
+(62, 19, 1, 3, '2016-06-09 01:34:01', '2016-06-10 00:18:23'),
+(63, 20, 19, 1, '2016-06-13 03:56:01', '2016-06-13 03:56:01');
 
 -- --------------------------------------------------------
 
@@ -1114,7 +1306,7 @@ CREATE TABLE IF NOT EXISTS `fp_project` (
   `reverence` text NOT NULL,
   `currency` text NOT NULL,
   `project_type` text NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fp_project`
@@ -1123,8 +1315,13 @@ CREATE TABLE IF NOT EXISTS `fp_project` (
 INSERT INTO `fp_project` (`project_id`, `company_id`, `user_id`, `ref_no`, `project_title`, `start_date`, `deadline`, `project_description`, `rate_type`, `rate_value`, `project_progress`, `created_at`, `updated_at`, `account`, `reverence`, `currency`, `project_type`) VALUES
 (2, 1, 18, '2', 'Test', '2016-05-13 14:01:53', '2016-10-05 16:00:00', 'Test', 'fixed', 12, 0, '2016-04-26 05:53:01', '2016-04-26 05:53:01', '123456', 'Test', 'USD', 'Standard'),
 (5, 1, 18, '5', 'Jex Project Test 1', '2016-05-17 04:08:53', '2016-10-05 16:00:00', 'Test', 'fixed', 20, 0, '2016-05-16 20:08:53', '2016-05-16 20:08:53', '123456', '', 'USD', 'Hiring Assessment'),
-(6, 2, 18, '6', 'Test 1', '2016-05-17 07:45:08', '0000-00-00 00:00:00', 'Test 1', '', 0, 0, '2016-05-16 23:45:08', '2016-05-16 23:45:08', '', '', '', 'Software Development'),
-(7, 1, 42, '7', 'Jane Doe Project', '2016-05-17 09:11:10', '2020-10-07 16:00:00', 'Jane Doe Project', 'hourly', 12, 0, '2016-05-17 01:11:10', '2016-05-17 01:11:10', '', '', '', 'Standard');
+(6, 15, 18, '6', 'Test 1', '2016-06-01 09:47:58', '0000-00-00 00:00:00', 'Test 1', '', 0, 0, '2016-05-16 23:45:08', '2016-05-16 23:45:08', '', '', '', 'Software Development'),
+(8, 1, 18, '8', 'Test Project Jex 2', '2016-06-03 10:22:24', '2016-06-29 16:00:00', 'Test Project Jex 2', 'hourly', 12, 0, '2016-06-03 02:22:24', '2016-06-03 02:22:24', '1234', '', 'USD', ''),
+(9, 1, 18, '9', 'Test Project Jex 3', '2016-06-03 10:24:29', '0000-00-00 00:00:00', 'Test Project Jex 3', 'fixed', 15, 0, '2016-06-03 02:24:29', '2016-06-03 02:24:29', '123', '', 'USD', 'Standard'),
+(10, 1, 18, '10', 'Test Jex Project 4', '2016-06-03 10:25:22', '0000-00-00 00:00:00', 'Test Jex Project 4', 'hourly', 2, 0, '2016-06-03 02:25:22', '2016-06-03 02:25:22', '123', '', 'USD', 'Coding'),
+(11, 1, 18, '11', 'Test Job Jex 5', '2016-06-03 10:43:38', '0000-00-00 00:00:00', 'Test Job Jex 5', '', 0, 0, '2016-06-03 02:43:38', '2016-06-03 02:43:38', '', '', '', 'Standard'),
+(12, 18, 18, '12', 'Test Jex Project 6', '2016-06-03 11:38:07', '0000-00-00 00:00:00', 'Test Jex Project 6', '', 0, 0, '2016-06-03 03:38:07', '2016-06-03 03:38:07', '', '', '', 'Coding'),
+(13, 1, 18, '13', 'Test Project 7', '2016-06-06 08:22:23', '0000-00-00 00:00:00', 'Test Project 7', '', 0, 0, '2016-06-06 00:22:23', '2016-06-06 00:22:23', '', '', '', 'Standard');
 
 -- --------------------------------------------------------
 
@@ -1146,21 +1343,24 @@ CREATE TABLE IF NOT EXISTS `fp_question` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `points` double(8,2) NOT NULL,
-  `explanation` text COLLATE utf8_unicode_ci NOT NULL
+  `explanation` text COLLATE utf8_unicode_ci NOT NULL,
+  `marking_criteria` text COLLATE utf8_unicode_ci NOT NULL,
+  `max_point` double(8,2) NOT NULL,
+  `question_tags` text COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_question`
 --
 
-INSERT INTO `fp_question` (`id`, `test_id`, `question_type_id`, `question`, `question_choices`, `question_answer`, `length`, `question_photo`, `score`, `order`, `created_at`, `updated_at`, `points`, `explanation`) VALUES
-(1, 1, 1, 'Test 2', '["a","b","c","d"]', '0', '00:10:00', '1.png', 0, 1.00, '2016-04-27 02:30:33', '2016-05-02 01:17:00', 0.00, ''),
-(2, 2, 1, 'Test', '["a","b","c","d"]', '2', '00:00:10', '', 0, 1.00, '2016-04-27 02:32:35', '2016-05-02 01:18:14', 0.00, ''),
-(3, 3, 1, 'Test', '["a","b","c","d"]', '2', '00:00:00', '', 0, 1.00, '2016-04-27 02:41:32', '2016-04-27 02:41:32', 0.00, ''),
-(4, 4, 1, 'Test', '["a","b","c","d"]', '2', '00:01:20', '', 0, 1.00, '2016-04-27 02:58:27', '2016-04-27 02:58:27', 0.00, ''),
-(5, 5, 1, 'Test', '["a","b","c","d"]', '3', '00:00:15', '', 0, 1.00, '2016-04-27 03:06:05', '2016-04-27 03:06:05', 0.00, ''),
-(6, 6, 1, 'Test 1', '["Test 1","Test 2","Test 3","Test 4","Test 5","Test 6"]', '0', '00:10:00', '', 0, 1.00, '2016-05-25 06:37:33', '2016-05-25 06:37:33', 1.00, ''),
-(7, 6, 1, 'Test 2', '["Test 1","Test 2","Test 3","Test 4"]', '2', '00:00:00', '', 0, 2.00, '2016-05-25 06:37:33', '2016-05-25 06:37:33', 1.00, '');
+INSERT INTO `fp_question` (`id`, `test_id`, `question_type_id`, `question`, `question_choices`, `question_answer`, `length`, `question_photo`, `score`, `order`, `created_at`, `updated_at`, `points`, `explanation`, `marking_criteria`, `max_point`, `question_tags`) VALUES
+(1, 1, 1, 'Test 2', '["a","b","c","d"]', '0', '00:10:00', '1.png', 0, 1.00, '2016-04-27 02:30:33', '2016-05-02 01:17:00', 0.00, '', '', 0.00, ''),
+(2, 2, 1, 'Test', '["a","b","c","d"]', '2', '00:00:10', '', 0, 1.00, '2016-04-27 02:32:35', '2016-05-02 01:18:14', 0.00, '', '', 0.00, ''),
+(3, 3, 1, 'Test', '["a","b","c","d"]', '2', '00:00:00', '', 0, 1.00, '2016-04-27 02:41:32', '2016-04-27 02:41:32', 0.00, '', '', 0.00, ''),
+(4, 4, 1, 'Test', '["a","b","c","d"]', '2', '00:01:20', '', 0, 1.00, '2016-04-27 02:58:27', '2016-04-27 02:58:27', 0.00, '', '', 0.00, ''),
+(5, 5, 1, 'Test', '["a","b","c","d"]', '3', '00:00:15', '', 0, 1.00, '2016-04-27 03:06:05', '2016-04-27 03:06:05', 0.00, '', '', 0.00, ''),
+(6, 6, 1, 'Test 1', '["Test 1","Test 2","Test 3","Test 4","Test 5","Test 6"]', '0', '00:10:00', '', 0, 1.00, '2016-05-25 06:37:33', '2016-05-25 06:37:33', 1.00, '', '', 0.00, ''),
+(7, 6, 1, 'Test 2', '["Test 1","Test 2","Test 3","Test 4"]', '2', '00:00:00', '', 0, 2.00, '2016-05-25 06:37:33', '2016-05-25 06:37:33', 1.00, '', '', 0.00, '');
 
 -- --------------------------------------------------------
 
@@ -1226,7 +1426,7 @@ CREATE TABLE IF NOT EXISTS `fp_roles` (
   `level` int(11) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_roles`
@@ -1236,7 +1436,16 @@ INSERT INTO `fp_roles` (`id`, `company_id`, `company_division_id`, `name`, `slug
 (1, 1, 1, 'Admin', 'admin', 'Administrator', 1, '2016-04-26 02:35:11', '2016-04-26 02:35:11'),
 (2, 1, 1, 'Client', 'client', 'Clients', 3, '2016-04-26 02:35:11', '2016-04-26 02:35:11'),
 (3, 1, 1, 'Staff', 'staff', 'The staff', 2, '2016-04-26 02:35:11', '2016-04-26 02:35:11'),
-(7, 15, 8, 'Admin', 'admin-15', 'Administrator', 1, '2016-05-18 23:59:10', '2016-05-18 23:59:10');
+(7, 15, 8, 'Admin', 'admin-15', 'Administrator', 1, '2016-05-18 23:59:10', '2016-05-18 23:59:10'),
+(8, 17, 0, 'Admin', 'admin-17', 'Administrator', 1, '2016-06-03 03:33:59', '2016-06-03 03:33:59'),
+(9, 17, 0, 'Staff', 'staff-17', 'Staff', 2, '2016-06-03 03:33:59', '2016-06-03 03:33:59'),
+(10, 17, 0, 'Client', 'client-17', 'Client', 3, '2016-06-03 03:33:59', '2016-06-03 03:33:59'),
+(11, 18, 0, 'Admin', 'admin-18', 'Administrator', 1, '2016-06-03 03:36:14', '2016-06-03 03:36:14'),
+(12, 18, 0, 'Staff', 'staff-18', 'Staff', 2, '2016-06-03 03:36:14', '2016-06-03 03:36:14'),
+(13, 18, 0, 'Client', 'client-18', 'Client', 3, '2016-06-03 03:36:14', '2016-06-03 03:36:14'),
+(14, 19, 0, 'Admin', 'admin-19', 'Administrator', 1, '2016-06-06 00:23:31', '2016-06-06 00:23:31'),
+(15, 19, 0, 'Staff', 'staff-19', 'Staff', 2, '2016-06-06 00:23:32', '2016-06-06 00:23:32'),
+(16, 19, 0, 'Client', 'client-19', 'Client', 3, '2016-06-06 00:23:32', '2016-06-06 00:23:32');
 
 -- --------------------------------------------------------
 
@@ -1250,7 +1459,7 @@ CREATE TABLE IF NOT EXISTS `fp_role_user` (
   `user_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_role_user`
@@ -1258,13 +1467,8 @@ CREATE TABLE IF NOT EXISTS `fp_role_user` (
 
 INSERT INTO `fp_role_user` (`id`, `role_id`, `user_id`, `created_at`, `updated_at`) VALUES
 (8, 1, 18, '2016-05-09 05:44:24', '2016-05-09 05:44:24'),
-(30, 1, 41, '2016-05-17 00:03:22', '2016-05-17 00:03:22'),
-(31, 1, 42, '2016-05-17 00:06:31', '2016-05-17 00:06:31'),
-(32, 1, 43, '2016-05-20 08:35:54', '2016-05-20 08:35:54'),
-(43, 1, 54, '2016-05-24 07:52:30', '2016-05-24 07:52:30'),
-(44, 1, 55, '2016-05-24 07:53:49', '2016-05-24 07:53:49'),
-(45, 1, 56, '2016-05-24 07:57:01', '2016-05-24 07:57:01'),
-(46, 1, 57, '2016-05-24 07:58:02', '2016-05-24 07:58:02');
+(9, 3, 19, '2016-06-09 01:34:01', '2016-06-10 00:18:23'),
+(10, 1, 20, '2016-06-13 03:56:01', '2016-06-13 03:56:01');
 
 -- --------------------------------------------------------
 
@@ -1305,6 +1509,64 @@ INSERT INTO `fp_setting` (`id`, `company_name`, `contact_person`, `address`, `ci
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fp_share_jobs`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_share_jobs` (
+`id` int(10) unsigned NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_share_jobs_companies`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_share_jobs_companies` (
+`id` int(10) unsigned NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_share_jobs_companies`
+--
+
+INSERT INTO `fp_share_jobs_companies` (`id`, `company_id`, `job_id`, `created_at`, `updated_at`) VALUES
+(7, 19, 10, '2016-06-16 03:55:08', '2016-06-16 03:55:08'),
+(8, 19, 11, '2016-06-16 03:55:10', '2016-06-16 03:55:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_share_jobs_companies_permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_share_jobs_companies_permissions` (
+`id` int(10) unsigned NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_share_jobs_companies_permissions`
+--
+
+INSERT INTO `fp_share_jobs_companies_permissions` (`id`, `company_id`, `user_id`, `job_id`, `created_at`, `updated_at`) VALUES
+(3, 19, 20, 10, '2016-06-16 03:55:16', '2016-06-16 03:55:16');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fp_task`
 --
 
@@ -1321,7 +1583,7 @@ CREATE TABLE IF NOT EXISTS `fp_task` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `user_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fp_task`
@@ -1340,7 +1602,12 @@ INSERT INTO `fp_task` (`task_id`, `belongs_to`, `unique_id`, `task_title`, `task
 (29, 'project', 6, 'Test', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 05:20:10', '2016-05-18 05:20:10', 18, 6),
 (30, 'project', 6, 'Test 2', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 06:07:43', '2016-05-18 06:07:43', 18, 6),
 (31, 'project', 6, 'Test 3', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 06:19:16', '2016-05-18 06:19:16', 18, 6),
-(32, 'project', 6, 'Test 4', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 06:19:33', '2016-05-18 06:19:33', 18, 6);
+(32, 'project', 6, 'Test 4', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-05-18 06:19:33', '2016-05-18 06:19:33', 18, 6),
+(33, 'project', 7, 'Test', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-06-01 01:16:20', '2016-06-01 01:16:20', 42, 7),
+(34, 'project', 6, 'Test 5', 'Test 5', '0000-00-00 00:00:00', 'yes', 'pending', '2016-06-03 00:29:04', '2016-06-03 00:29:04', 18, 6),
+(35, 'project', 11, 'Test', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-06-03 02:44:11', '2016-06-03 02:44:11', 18, 11),
+(36, 'project', 12, 'Test', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-06-03 03:43:24', '2016-06-03 03:43:24', 18, 12),
+(37, 'project', 9, 'Test', 'Test', '0000-00-00 00:00:00', 'yes', 'pending', '2016-06-10 00:20:19', '2016-06-10 00:20:19', 18, 9);
 
 -- --------------------------------------------------------
 
@@ -1352,12 +1619,12 @@ CREATE TABLE IF NOT EXISTS `fp_task_check_list` (
 `id` int(10) unsigned NOT NULL,
   `user_id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL,
-  `checklist_header` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `checklist` text COLLATE utf8_unicode_ci NOT NULL,
+  `checklist_header` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'No Title',
+  `checklist` text COLLATE utf8_unicode_ci,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Default'
-) ENGINE=InnoDB AUTO_INCREMENT=352 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=539 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_task_check_list`
@@ -1376,23 +1643,21 @@ INSERT INTO `fp_task_check_list` (`id`, `user_id`, `task_id`, `checklist_header`
 (190, 0, 3, 'Test', 'Test 7', '2016-05-04 01:50:16', '2016-05-04 01:50:16', 'Default'),
 (193, 0, 19, 'Test 7', '<p><strong>Intro</strong><br />\nMake changes to Best Practices or ask for clarification by asking a question in the task items. Success is when a person can commit to the server and restore the previous version without assistance using Putty.<br />\nProject management is on pm/project/1</p>\n', '2016-05-04 03:31:52', '2016-05-06 03:00:57', 'Ongoing'),
 (194, 0, 14, 'Test', '<div><div><div>                                                    <div>                                                    <div>                                                    Test 4                                                </div>                                                </div>                                                </div></div></div>', '2016-05-04 03:49:06', '2016-05-04 06:03:24', 'Default'),
-(222, 0, 15, 'Test 2', '<div class="checklist-item"><p>Testing</p><p>Testing</p></div>', '2016-05-04 05:18:57', '2016-05-04 08:21:45', 'Completed'),
+(222, 0, 15, 'Test 2', '<p>Testing</p><p>Testing</p>', '2016-05-04 05:18:57', '2016-05-04 08:21:45', 'Completed'),
 (224, 0, 19, 'Test 12', 'Test', '2016-05-04 05:29:47', '2016-05-06 03:01:01', 'Ongoing'),
 (225, 0, 18, 'Test 8', 'Test 9', '2016-05-05 00:51:05', '2016-05-08 22:16:50', 'Ongoing'),
 (226, 0, 19, 'Test 9', 'Test 9', '2016-05-05 01:04:07', '2016-05-06 01:32:49', 'Ongoing'),
 (241, 0, 18, 'Test 10', '<p>Test 10</p>\n', '2016-05-05 04:02:49', '2016-05-06 01:33:18', 'Ongoing'),
-(243, 0, 6, 'Test 12', '<p>Test 12</p>\n', '2016-05-05 06:06:25', '2016-05-13 07:35:56', 'Ongoing'),
+(243, 0, 28, 'Test 12', '<p>Test 12</p>\n', '2016-05-05 06:06:25', '2016-06-03 07:28:13', 'Ongoing'),
 (244, 0, 19, 'Test 13', '<p>Test 13</p>\n', '2016-05-05 06:35:36', '2016-05-06 01:32:47', 'Ongoing'),
-(247, 0, 18, 'Testing 3', '<p><input name="test" type="checkbox" />Testing 3</p>\n', '2016-05-06 01:25:45', '2016-05-10 03:22:15', 'Ongoing'),
+(247, 0, 18, 'Testing 3', 'Testing 3', '2016-05-06 01:25:45', '2016-05-10 03:22:15', 'Ongoing'),
 (258, 0, 18, 'Testing 4', '<p>Testing 4</p>\n', '2016-05-10 03:21:39', '2016-05-10 03:22:18', 'Default'),
-(259, 0, 6, 'Testing 5', '<p>Testing 5</p>\n', '2016-05-10 03:21:48', '2016-05-13 07:35:50', 'Default'),
+(259, 34, 19, 'Testing 5', '<p>Testing 5</p>\n', '2016-05-10 03:21:48', '2016-06-06 03:20:23', 'Ongoing'),
 (260, 18, 6, 'Testing 6', '<p>Testing 6</p>\n', '2016-05-10 03:22:00', '2016-05-30 04:39:21', 'Default'),
-(261, 0, 6, 'Testing 7', '<p>Testing 7</p>\n', '2016-05-10 04:22:25', '2016-05-12 06:26:52', 'Default'),
-(262, 0, 6, 'Testing 8', '<p>Testing 8</p>\n', '2016-05-10 06:01:49', '2016-05-13 07:36:06', 'Default'),
-(263, 0, 6, 'Testing 9', '<p>Testing 9</p>\n', '2016-05-10 09:38:14', '2016-05-10 09:38:14', 'Default'),
-(264, 0, 6, 'Testing 10', '<p>Testing 10</p>\n', '2016-05-10 09:42:40', '2016-05-10 09:42:40', 'Default'),
-(265, 0, 19, 'Testing 6', '<p>Testing 6</p>\n', '2016-05-12 22:48:35', '2016-05-12 22:48:35', 'Default'),
-(266, 0, 6, 'Test', '<p>Test</p>\n', '2016-05-15 17:42:15', '2016-05-15 17:42:15', 'Default'),
+(261, 34, 19, 'Testing 7', '<p>Testing 7</p>\n', '2016-05-10 04:22:25', '2016-06-06 08:20:12', 'Ongoing'),
+(262, 34, 28, 'Testing 8', '<p>Testing 8</p>\n', '2016-05-10 06:01:49', '2016-06-08 09:04:40', 'Ongoing'),
+(263, 34, 19, 'Testing 9', '<p>Testing 9</p>\n', '2016-05-10 09:38:14', '2016-06-06 00:14:00', 'Ongoing'),
+(264, 34, 28, 'Testing 10', '<p>Testing 10</p>\n', '2016-05-10 09:42:40', '2016-06-08 09:04:34', 'Ongoing'),
 (267, 0, 20, 'Test', '<p>Test</p>\n', '2016-05-16 03:30:35', '2016-05-16 03:30:35', 'Default'),
 (269, 0, 20, 'Test 2', '<p>Test 2</p>\n', '2016-05-16 03:31:07', '2016-05-16 03:31:07', 'Default'),
 (270, 0, 20, 'Test 3', '<p>Test 3</p>\n', '2016-05-16 03:31:24', '2016-05-16 03:31:41', 'Default'),
@@ -1401,9 +1666,9 @@ INSERT INTO `fp_task_check_list` (`id`, `user_id`, `task_id`, `checklist_header`
 (273, 0, 20, 'Test 6', '<p>Test 6</p>\n', '2016-05-16 04:32:36', '2016-05-16 04:32:36', 'Default'),
 (275, 0, 21, 'Test', '<p>Test</p>\n', '2016-05-16 04:50:45', '2016-05-16 04:50:45', 'Default'),
 (277, 0, 21, 'Test', '<p>Test</p>\n', '2016-05-16 04:53:27', '2016-05-16 04:53:27', 'Default'),
-(278, 18, 25, 'Test', '<p>Test</p>\n', '2016-05-17 02:57:39', '2016-05-17 02:57:39', 'Default'),
-(279, 18, 24, 'Test', '<p>Test</p>\n', '2016-05-18 04:09:56', '2016-05-18 04:09:56', 'Default'),
-(280, 18, 24, 'Test 1', '<p>Test 1</p>\n', '2016-05-18 04:19:36', '2016-05-18 04:19:36', 'Default'),
+(278, 18, 22, 'Test', '<p>Test</p>\n', '2016-05-17 02:57:39', '2016-06-06 05:35:53', 'Default'),
+(279, 18, 23, 'Test', '<p>Test</p>\n', '2016-05-18 04:09:56', '2016-06-03 02:19:39', 'Default'),
+(280, 18, 23, 'Test 1', '<p>Test 1</p>\n', '2016-05-18 04:19:36', '2016-06-03 02:20:06', 'Default'),
 (281, 18, 6, 'Testing 11', '<p>Testing 11</p>\n', '2016-05-18 04:27:46', '2016-05-18 04:27:46', 'Default'),
 (284, 18, 6, 'Testing 12', '<p>Testing 12</p>\n', '2016-05-18 04:54:11', '2016-05-18 04:54:11', 'Default'),
 (285, 18, 6, 'Testing 14', '<p>Testing 14</p>\n', '2016-05-18 04:55:26', '2016-05-18 04:55:55', 'Default'),
@@ -1435,12 +1700,29 @@ INSERT INTO `fp_task_check_list` (`id`, `user_id`, `task_id`, `checklist_header`
 (331, 18, 32, 'Test 24', '<p>Test 24</p>\n', '2016-05-18 06:28:16', '2016-05-18 06:28:16', 'Default'),
 (332, 18, 32, 'Test 25', '<p>Test 25</p>\n', '2016-05-18 06:28:28', '2016-05-18 06:28:28', 'Default'),
 (345, 18, 29, 'Test 3', '<p>Test 3</p>\n', '2016-05-18 06:46:21', '2016-05-18 06:46:21', 'Default'),
-(346, 18, 24, 'Test', '<p><img height="224" src="/assets/ckeditor_uploaded_images/company_logo_sample.png" width="225" /></p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n', '2016-05-20 06:02:31', '2016-05-20 07:15:03', 'Default'),
-(347, 18, 24, 'Testing', '<p>Test</p>\n', '2016-05-20 08:14:50', '2016-05-20 08:14:50', 'Default'),
-(348, 18, 24, 'Test 1', '<p>Test 1</p>\n', '2016-05-26 03:36:26', '2016-05-26 03:36:52', 'Default'),
-(349, 18, 28, 'Testing', '<p>Testing</p>\n', '2016-05-30 03:40:11', '2016-05-30 03:40:11', 'Default'),
-(350, 18, 28, 'Test', '<p>Test</p>\n', '2016-05-30 04:30:21', '2016-05-30 04:30:21', 'Default'),
-(351, 18, 6, 'Testing 12', '<p>Testing 12</p>\n', '2016-05-30 05:25:36', '2016-05-30 05:25:36', 'Default');
+(347, 18, 23, 'Testing', '<p>Test</p>\n', '2016-05-20 08:14:50', '2016-06-03 03:41:24', 'Default'),
+(348, 18, 23, 'Test 1', '<p>Test 1</p>\n', '2016-05-26 03:36:26', '2016-06-03 03:41:15', 'Default'),
+(349, 18, 22, 'Testing', '<p>Testing</p>\n', '2016-05-30 03:40:11', '2016-06-03 07:27:59', 'Default'),
+(350, 18, 22, 'Test 1', '<p>Test 1</p>\n', '2016-05-30 04:30:21', '2016-06-10 07:15:27', 'Default'),
+(351, 18, 6, 'Testing 12', '<p>Testing 12</p>\n', '2016-05-30 05:25:36', '2016-05-30 05:25:36', 'Default'),
+(352, 18, 36, 'Testing', '<p>Testing</p>\n', '2016-06-06 02:21:46', '2016-06-06 02:22:00', 'Default'),
+(377, 18, 22, 'Test 2', '<p>Test 2</p>\n', '2016-06-09 03:52:38', '2016-06-10 07:15:17', 'Default'),
+(386, 18, 22, 'Test 3', '<p>Test 3</p>\n', '2016-06-09 04:07:37', '2016-06-10 07:15:13', 'Default'),
+(436, 18, 28, 'Testing 9', '<p>Testing 9</p>\r\n', '2016-06-10 01:34:05', '2016-06-10 01:34:14', 'Default'),
+(444, 18, 28, 'Test', '<p>Test</p>\r\n', '2016-06-10 01:51:50', '2016-06-10 01:51:55', 'Default'),
+(445, 34, 19, 'Testing 9', '<p>Testing 9</p>\r\n', '2016-06-10 01:51:59', '2016-06-10 01:52:04', 'Default'),
+(512, 18, 24, 'Test 1', '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/task-spreadsheet-FASLy"></iframe>', '2016-06-10 07:16:33', '2016-06-10 07:16:46', 'Default'),
+(520, 18, 24, 'Test 2', '<p><img height="181" src="http://localhost:8000/assets/ckeditor_uploaded_images/company_logo_2.jpg" width="278" /></p>\r\n', '2016-06-10 07:29:50', '2016-06-10 07:30:10', 'Default'),
+(521, 18, 24, 'Test 3', '<p>Test 3<img height="110" src="http://localhost:8000/assets/ckeditor_uploaded_images/company_logo_3.png" width="459" /></p>\n', '2016-06-10 07:30:50', '2016-06-10 07:31:27', 'Default'),
+(522, 18, 25, '', '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/task-spreadsheet-k6MX8"></iframe>', '2016-06-10 07:44:45', '2016-06-10 07:45:28', 'Default'),
+(523, 18, 25, 'Test 2', '<p>Test 2</p>\r\n', '2016-06-10 07:45:20', '2016-06-10 07:45:27', 'Default'),
+(524, 18, 25, 'Test 3', '<p>Test 3</p>\r\n', '2016-06-10 07:45:43', '2016-06-10 07:45:49', 'Default'),
+(525, 18, 25, 'Test 4', '<p>Test 4</p>\r\n', '2016-06-10 07:45:51', '2016-06-10 07:45:58', 'Default'),
+(526, 18, 24, 'Test 4', '<p>Test 4</p>\r\n', '2016-06-14 04:22:58', '2016-06-14 04:23:03', 'Default'),
+(529, 18, 6, 'Testing 13', '<p>Testing 13</p>\r\n', '2016-06-14 04:24:46', '2016-06-14 04:24:53', 'Default'),
+(530, 18, 6, 'Testing 14', '<p>Testing 14</p>\r\n', '2016-06-14 04:25:08', '2016-06-14 04:25:24', 'Default'),
+(535, 18, 24, 'Test 5', '<p>Test 5</p>\r\n', '2016-06-17 02:05:09', '2016-06-17 02:05:15', 'Default'),
+(538, 18, 6, 'Testing 15', '<p>Testing 15</p>\r\n', '2016-06-17 02:42:36', '2016-06-17 02:42:45', 'Default');
 
 -- --------------------------------------------------------
 
@@ -1454,19 +1736,19 @@ CREATE TABLE IF NOT EXISTS `fp_task_check_list_order` (
   `task_id_order` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=385 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_task_check_list_order`
 --
 
 INSERT INTO `fp_task_check_list_order` (`id`, `task_id`, `task_id_order`, `created_at`, `updated_at`) VALUES
-(60, 14, '194,221', '2016-05-04 05:46:29', '2016-05-04 05:46:29'),
-(259, 18, '225,241,258,247', '2016-05-10 03:22:18', '2016-05-10 03:22:18'),
-(296, 20, '269,267,270,271,272,273', '2016-05-16 19:41:48', '2016-05-16 19:41:48'),
-(307, 19, '265,244,224,193', '2016-05-30 04:41:12', '2016-05-30 04:41:12'),
-(308, 24, '348,279,280,347', '2016-05-30 04:41:36', '2016-05-30 04:41:36'),
-(311, 6, '243,264,285,262,284,260,259,261,263,266,351,281', '2016-05-30 07:12:48', '2016-05-30 07:12:48');
+(365, 6, '260,284,281,285,351,448,527,528,529,530,530,530,531,531,532,538,531,532,533,534,536,537,538,538', '2016-06-08 03:04:44', '2016-06-17 02:42:46'),
+(371, 19, '193,224,226,244,263,259,261,445,445', '2016-06-08 09:04:40', '2016-06-10 01:52:05'),
+(377, 28, '286,287,243,264,262,436,444,446,447', '2016-06-10 01:52:22', '2016-06-10 02:34:28'),
+(381, 23, '347,279,348,280', '2016-06-10 07:15:16', '2016-06-10 07:15:16'),
+(383, 22, '278,350,377,386,349', '2016-06-10 07:15:17', '2016-06-10 07:15:17'),
+(384, 24, '512,520,521,521,526,526,533,533,534,533,535,535,535', '2016-06-10 07:24:54', '2016-06-17 02:05:16');
 
 -- --------------------------------------------------------
 
@@ -1481,7 +1763,7 @@ CREATE TABLE IF NOT EXISTS `fp_task_check_list_permissions` (
   `project_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_task_check_list_permissions`
@@ -1490,7 +1772,17 @@ CREATE TABLE IF NOT EXISTS `fp_task_check_list_permissions` (
 INSERT INTO `fp_task_check_list_permissions` (`id`, `task_id`, `user_id`, `project_id`, `created_at`, `updated_at`) VALUES
 (1, 22, 42, 5, '2016-05-27 00:22:27', '2016-05-27 00:22:27'),
 (3, 24, 54, 5, '2016-05-27 06:04:19', '2016-05-27 06:04:19'),
-(4, 19, 42, 2, '2016-05-27 06:04:26', '2016-05-27 06:04:26');
+(6, 25, 59, 5, '2016-06-01 07:46:36', '2016-06-01 07:46:36'),
+(7, 22, 59, 5, '2016-06-01 07:46:37', '2016-06-01 07:46:37'),
+(8, 23, 60, 5, '2016-06-01 07:49:19', '2016-06-01 07:49:19'),
+(9, 25, 61, 5, '2016-06-01 07:58:16', '2016-06-01 07:58:16'),
+(10, 22, 61, 5, '2016-06-01 07:58:16', '2016-06-01 07:58:16'),
+(11, 23, 61, 5, '2016-06-01 07:58:17', '2016-06-01 07:58:17'),
+(12, 24, 61, 5, '2016-06-01 07:58:17', '2016-06-01 07:58:17'),
+(13, 23, 42, 5, '2016-06-01 23:07:40', '2016-06-01 23:07:40'),
+(14, 24, 42, 5, '2016-06-01 23:08:15', '2016-06-01 23:08:15'),
+(19, 25, 87, 5, '2016-06-03 02:09:57', '2016-06-03 02:09:57'),
+(20, 22, 87, 5, '2016-06-03 02:09:57', '2016-06-03 02:09:57');
 
 -- --------------------------------------------------------
 
@@ -1521,7 +1813,7 @@ CREATE TABLE IF NOT EXISTS `fp_task_timer` (
   `end_time` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_task_timer`
@@ -1539,7 +1831,10 @@ INSERT INTO `fp_task_timer` (`id`, `user_id`, `task_id`, `start_time`, `end_time
 (28, 0, 6, '0000-00-00 00:00:00', '2016-05-05 00:15:04', '2016-05-02 04:46:05', '2016-05-04 08:15:04'),
 (29, 0, 6, '2016-05-05 00:15:05', '2016-05-05 00:15:07', '2016-05-04 08:15:05', '2016-05-04 08:15:07'),
 (30, 0, 6, '0000-00-00 00:00:00', '2016-05-05 21:46:19', '2016-05-05 01:33:15', '2016-05-05 05:46:19'),
-(31, 18, 24, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2016-05-20 00:58:51', '2016-05-20 00:58:51');
+(31, 18, 24, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2016-05-20 00:58:51', '2016-05-20 00:58:51'),
+(32, 34, 19, '2016-06-01 17:41:51', '2016-06-01 17:41:53', '2016-06-01 01:41:52', '2016-06-01 01:41:53'),
+(33, 34, 19, '2016-06-01 17:41:55', '2016-06-01 17:41:59', '2016-06-01 01:41:55', '2016-06-01 01:41:59'),
+(34, 18, 24, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2016-06-10 04:39:05', '2016-06-10 04:39:05');
 
 -- --------------------------------------------------------
 
@@ -1552,17 +1847,32 @@ CREATE TABLE IF NOT EXISTS `fp_team` (
   `project_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_team`
 --
 
 INSERT INTO `fp_team` (`id`, `project_id`, `created_at`, `updated_at`) VALUES
-(10, 6, '2016-05-17 00:04:19', '2016-05-17 00:04:19'),
-(11, 2, '2016-05-17 00:07:41', '2016-05-17 00:07:41'),
-(12, 5, '2016-05-17 01:03:50', '2016-05-17 01:03:50'),
-(13, 7, '2016-05-17 01:15:41', '2016-05-17 01:15:41');
+(14, 12, '2016-06-03 06:59:47', '2016-06-03 06:59:47'),
+(15, 5, '2016-06-06 06:13:23', '2016-06-06 06:13:23'),
+(16, 2, '2016-06-06 06:19:05', '2016-06-06 06:19:05'),
+(17, 8, '2016-06-09 23:49:07', '2016-06-09 23:49:07'),
+(18, 9, '2016-06-10 00:20:04', '2016-06-10 00:20:04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_team_companies`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_team_companies` (
+`id` int(10) unsigned NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1576,16 +1886,7 @@ CREATE TABLE IF NOT EXISTS `fp_team_member` (
   `user_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `fp_team_member`
---
-
-INSERT INTO `fp_team_member` (`id`, `team_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(27, 12, 42, '2016-05-19 22:25:21', '2016-05-19 22:25:21'),
-(31, 11, 42, '2016-05-25 00:02:33', '2016-05-25 00:02:33'),
-(71, 12, 54, '2016-05-25 04:59:05', '2016-05-25 04:59:05');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1599,16 +1900,18 @@ CREATE TABLE IF NOT EXISTS `fp_team_project` (
   `project_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_team_project`
 --
 
 INSERT INTO `fp_team_project` (`id`, `team_id`, `project_id`, `created_at`, `updated_at`) VALUES
-(8, 11, 2, '2016-05-17 00:08:16', '2016-05-17 00:08:16'),
-(9, 12, 5, '2016-05-17 01:04:41', '2016-05-17 01:04:41'),
-(10, 13, 7, '2016-05-17 01:16:10', '2016-05-17 01:16:10');
+(13, 14, 12, '2016-06-03 06:59:47', '2016-06-03 06:59:47'),
+(14, 15, 5, '2016-06-06 06:13:23', '2016-06-06 06:13:23'),
+(15, 16, 2, '2016-06-06 06:19:05', '2016-06-06 06:19:05'),
+(16, 17, 8, '2016-06-09 23:49:07', '2016-06-09 23:49:07'),
+(17, 18, 9, '2016-06-10 00:20:05', '2016-06-10 00:20:05');
 
 -- --------------------------------------------------------
 
@@ -1644,20 +1947,54 @@ CREATE TABLE IF NOT EXISTS `fp_test` (
   `completion_message` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `order` double(8,2) NOT NULL
+  `order` double(8,2) NOT NULL,
+  `default_time` time NOT NULL,
+  `completion_image` text COLLATE utf8_unicode_ci NOT NULL,
+  `completion_sound` text COLLATE utf8_unicode_ci NOT NULL,
+  `default_tags` text COLLATE utf8_unicode_ci NOT NULL,
+  `default_points` double(8,2) NOT NULL DEFAULT '1.00'
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_test`
 --
 
-INSERT INTO `fp_test` (`id`, `user_id`, `title`, `description`, `length`, `version`, `average_score`, `test_photo`, `start_message`, `completion_message`, `created_at`, `updated_at`, `order`) VALUES
-(1, 18, 'Test', 'Test', '00:00:00', 0.00, 0.00, '', 'Test', 'Test', '2016-04-27 02:30:33', '2016-05-17 05:13:41', 0.00),
-(2, 6, 'Test 2', 'Test 2', '00:00:00', 0.00, 0.00, '', 'Test 2', 'Test 2', '2016-04-27 02:32:35', '2016-04-27 02:32:35', 0.00),
-(3, 6, 'Test 3', 'Test 3', '00:00:00', 0.00, 0.00, '', 'Test 3', 'Test 3', '2016-04-27 02:41:32', '2016-04-27 02:41:32', 0.00),
-(4, 6, 'Test 4', 'Test 4', '00:00:00', 0.00, 0.00, '4.png', 'Test 4', 'Test 4', '2016-04-27 02:58:27', '2016-04-27 02:58:27', 0.00),
-(5, 6, 'Test 5', 'Test 5', '00:00:00', 0.00, 0.00, '5.jpg', 'Test 5', 'Test 5', '2016-04-27 03:06:05', '2016-04-27 03:06:05', 0.00),
-(6, 18, 'Test 6', 'Testing the Quiz', '00:00:00', 0.00, 0.00, '', 'Test Intro', 'Congratulations!', '2016-05-25 06:37:33', '2016-05-25 06:37:33', 0.00);
+INSERT INTO `fp_test` (`id`, `user_id`, `title`, `description`, `length`, `version`, `average_score`, `test_photo`, `start_message`, `completion_message`, `created_at`, `updated_at`, `order`, `default_time`, `completion_image`, `completion_sound`, `default_tags`, `default_points`) VALUES
+(1, 18, 'Test', 'Test', '00:00:00', 0.00, 0.00, '', 'Test', 'Test', '2016-04-27 02:30:33', '2016-05-17 05:13:41', 0.00, '00:00:00', '', '', '', 1.00),
+(2, 18, 'Test 2', 'Test 2', '00:00:00', 0.00, 0.00, '', 'Test 2', 'Test 2', '2016-04-27 02:32:35', '2016-04-27 02:32:35', 0.00, '00:00:00', '', '', '', 1.00),
+(3, 18, 'Test 3', 'Test 3', '00:00:00', 0.00, 0.00, '', 'Test 3', 'Test 3', '2016-04-27 02:41:32', '2016-04-27 02:41:32', 0.00, '00:00:00', '', '', '', 1.00),
+(4, 18, 'Test 4', 'Test 4', '00:00:00', 0.00, 0.00, '4.png', 'Test 4', 'Test 4', '2016-04-27 02:58:27', '2016-04-27 02:58:27', 0.00, '00:00:00', '', '', '', 1.00),
+(5, 18, 'Test 5', 'Test 5', '00:00:00', 0.00, 0.00, '5.jpg', 'Test 5', 'Test 5', '2016-04-27 03:06:05', '2016-04-27 03:06:05', 0.00, '00:00:00', '', '', '', 1.00),
+(6, 18, 'Test 6', 'Testing the Quiz', '00:00:00', 0.00, 0.00, '', 'Test Intro', 'Congratulations!', '2016-05-25 06:37:33', '2016-05-25 06:37:33', 0.00, '00:00:00', '', '', '', 1.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fp_test_completed`
+--
+
+CREATE TABLE IF NOT EXISTS `fp_test_completed` (
+`id` int(10) unsigned NOT NULL,
+  `test_id` int(11) NOT NULL,
+  `unique_id` int(11) NOT NULL,
+  `belongs_to` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `score` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `total_score` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_test_completed`
+--
+
+INSERT INTO `fp_test_completed` (`id`, `test_id`, `unique_id`, `belongs_to`, `score`, `total_score`, `created_at`, `updated_at`) VALUES
+(1, 5, 9, 'applicant', '1', '1', '2016-06-07 02:55:58', '2016-06-07 02:55:58'),
+(2, 6, 9, 'applicant', '1', '2', '2016-06-07 03:14:24', '2016-06-07 03:14:24'),
+(28, 5, 8, 'applicant', '1', '1', '2016-06-07 06:18:17', '2016-06-07 06:18:17'),
+(29, 6, 8, 'applicant', '1', '2', '2016-06-07 06:19:09', '2016-06-07 06:19:09'),
+(30, 5, 7, 'applicant', '1', '1', '2016-06-08 01:06:45', '2016-06-08 01:06:45'),
+(38, 6, 7, 'applicant', '2', '2', '2016-06-08 02:07:49', '2016-06-08 02:07:49');
 
 -- --------------------------------------------------------
 
@@ -1693,7 +2030,7 @@ CREATE TABLE IF NOT EXISTS `fp_test_per_applicant` (
 --
 
 INSERT INTO `fp_test_per_applicant` (`id`, `test_id`, `applicant_id`, `created_at`, `updated_at`) VALUES
-(1, 6, 4, '2016-05-27 00:24:53', '2016-05-27 00:24:53');
+(1, 6, 4, '2016-06-03 02:12:28', '2016-06-03 02:12:28');
 
 -- --------------------------------------------------------
 
@@ -1707,7 +2044,15 @@ CREATE TABLE IF NOT EXISTS `fp_test_per_job` (
   `job_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_test_per_job`
+--
+
+INSERT INTO `fp_test_per_job` (`id`, `test_id`, `job_id`, `created_at`, `updated_at`) VALUES
+(1, 6, 10, '2016-06-06 06:41:43', '2016-06-06 06:41:43'),
+(2, 5, 10, '2016-06-07 00:10:37', '2016-06-07 00:10:37');
 
 -- --------------------------------------------------------
 
@@ -1732,20 +2077,31 @@ CREATE TABLE IF NOT EXISTS `fp_test_result` (
 `id` int(10) unsigned NOT NULL,
   `test_id` int(11) NOT NULL,
   `question_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `unique_id` int(11) NOT NULL,
+  `belongs_to` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `answer` text COLLATE utf8_unicode_ci NOT NULL,
   `result` tinyint(1) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `points` double(8,2) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fp_test_result`
 --
 
-INSERT INTO `fp_test_result` (`id`, `test_id`, `question_id`, `user_id`, `answer`, `result`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 42, '2', 0, '2016-05-30 06:55:05', '2016-05-30 06:55:05'),
-(2, 4, 4, 18, '3', 0, '2016-05-31 01:20:26', '2016-05-31 01:20:26');
+INSERT INTO `fp_test_result` (`id`, `test_id`, `question_id`, `unique_id`, `belongs_to`, `answer`, `result`, `created_at`, `updated_at`, `points`) VALUES
+(44, 5, 5, 9, 'applicant', '3', 1, '2016-06-07 02:55:57', '2016-06-07 02:55:57', 0.00),
+(45, 6, 6, 9, 'applicant', '4', 0, '2016-06-07 03:14:20', '2016-06-07 03:14:20', 0.00),
+(46, 6, 7, 9, 'applicant', '2', 1, '2016-06-07 03:14:22', '2016-06-07 03:14:22', 0.00),
+(52, 6, 6, 18, 'employee', '5', 0, '2016-06-07 04:53:45', '2016-06-07 04:53:45', 0.00),
+(53, 6, 7, 18, 'employee', '3', 0, '2016-06-07 04:53:46', '2016-06-07 04:53:46', 0.00),
+(77, 5, 5, 8, 'applicant', '3', 1, '2016-06-07 06:18:16', '2016-06-07 06:18:16', 0.00),
+(78, 6, 6, 8, 'applicant', '4', 0, '2016-06-07 06:19:07', '2016-06-07 06:19:07', 0.00),
+(79, 6, 7, 8, 'applicant', '2', 1, '2016-06-07 06:19:08', '2016-06-07 06:19:08', 0.00),
+(80, 5, 5, 7, 'applicant', '3', 1, '2016-06-08 01:06:44', '2016-06-08 01:06:44', 0.00),
+(95, 6, 6, 7, 'applicant', '0', 1, '2016-06-08 02:07:46', '2016-06-08 02:07:46', 0.00),
+(96, 6, 7, 7, 'applicant', '2', 1, '2016-06-08 02:07:48', '2016-06-08 02:07:48', 0.00);
 
 -- --------------------------------------------------------
 
@@ -2411,36 +2767,33 @@ CREATE TABLE IF NOT EXISTS `fp_user` (
   `password` varchar(100) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
-  `phone` varchar(50) NOT NULL,
-  `photo` varchar(255) NOT NULL,
-  `address_1` varchar(255) NOT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `resume` varchar(255) DEFAULT NULL,
+  `address_1` varchar(255) DEFAULT NULL,
   `address_2` varchar(255) DEFAULT NULL,
-  `zipcode` varchar(255) NOT NULL,
-  `country_id` int(10) unsigned NOT NULL,
+  `zipcode` varchar(255) DEFAULT NULL,
+  `country_id` varchar(255) DEFAULT NULL,
   `skype` varchar(255) DEFAULT NULL,
   `facebook` varchar(255) DEFAULT NULL,
   `linkedin` varchar(255) DEFAULT NULL,
   `user_status` varchar(255) NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
   `remember_token` varchar(100) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ticketit_admin` tinyint(1) NOT NULL DEFAULT '0',
   `ticketit_agent` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `fp_user`
 --
 
-INSERT INTO `fp_user` (`user_id`, `password`, `name`, `email`, `phone`, `photo`, `address_1`, `address_2`, `zipcode`, `country_id`, `skype`, `facebook`, `linkedin`, `user_status`, `remember_token`, `created_at`, `updated_at`, `ticketit_admin`, `ticketit_agent`) VALUES
-(18, '$2y$10$UEexUYG9axwYUWw9U/tsf.w7XnGSSx1qjMuwyVon8zhNfj3ghltaC', 'Jexter Dean Buenaventura', 'projectmanager@hdenergy.ca', '1234567890', 'assets/user\\Snapshot_20160526_2.JPG', '#14 A Wakat Suello Road', '', '2600', 185, 'arcblades', 'jexterdean', 'jexterdean', 'Active', 'xQLFez8OevOQ5PaEtVgD53jtsEf42UnalKhISp3K4mO9VmPl1xiGxL5NLeaJ', '2016-05-30 15:10:50', '2016-05-30 07:10:50', 1, 0),
-(41, '$2y$10$SyDLRHDaFq1ytX4wxitHp.KuD26I9oud4Ef0V6cK9G973Q6Qq.Ocm', 'John Doe', 'johndoe@gmail.com', '1234567890', '', 'Test', 'Test', '2600', 15, 'johndoe', 'johndoe', 'johndoe', 'Active', 'kvidrHq2eEGsuJLZfdKpuiauNs6hTc1AyKPJ6cDBZrXIoJtssCgyCUcamZHl', '2016-05-17 10:25:32', '2016-05-17 02:25:32', 0, 0),
-(42, '$2y$10$IoeVSftbTouX41gyvAMeZeZpuRsl5K0legTnYRH0HsLqkPmkErQeC', 'Jane Doe', 'janedoe@gmail.com', '1234567890', 'assets/user\\resume_sample_photo.jpg', 'Test 1', 'Test 1', '2600', 43, 'janedoe', 'janedoe', 'janedoe', 'Active', 'R2nlacHdAt57Yo9McpgfIbIAdcHM3I8dONXeZlWsx71h9mqxLoFe8ktPoMmJ', '2016-05-30 15:08:18', '2016-05-30 07:08:18', 0, 0),
-(43, '$2y$10$D9arxdmJu6GNxCoOCBUINuQlvd57RVan55qHt4hzB2AssNb/XThOG', 'Test', 'test@gmail.com', '1234567890', 'assets/user\\sample_company_photo_2.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '7UGVewN3pvGerD5IzQ0t7btO1ErFSuwEqaDTcaRWLojIUVp5xVZiG9jRydGS', '2016-05-26 14:30:00', '2016-05-26 06:30:00', 0, 0),
-(54, '$2y$10$z7BC6nIpFVgH/NsJnbgguu8c7u2tn4t0EWHo1HxPBCdkyrGI8Xv.u', 'Kanji Tatsumi', 'kanji@gmail.com', '1234567890', '/assets/user\\sample_company_photo_2.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-26 14:33:10', '2016-05-26 06:33:10', 0, 0),
-(55, '$2y$10$x7pqd7aN8mcYAH9dkm1NW.3iYFLoGj6x.505Fhh8sK8htQkQg7HTm', 'Test 2', 'test2@gmail.com', '1234567890', 'assets/user\\sample_company_photo_3.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-26 14:34:38', '2016-05-26 06:34:38', 1, 1),
-(56, '$2y$10$P/SWFr0qh9o.ZElGbD/VpOYKy5qJqJCWPckfRQfQSd0541TAMEEzy', 'Test 3', 'test3@gmail.com', '1234567890', 'assets/user\\resume_sample_photo.jpg', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-26 14:34:56', '2016-05-26 06:34:56', 0, 0),
-(57, '$2y$10$ZXP7b3sXMqJGsQpgKV.nkereUnp34CS2vsQ/ZdNA042f.KxYHVT1m', 'Test 4', 'test4@gmail.com', '1234567890', '', 'Test', 'Test', '2600', 185, '', '', '', 'Active', '', '2016-05-24 07:58:02', '2016-05-24 07:58:02', 1, 0);
+INSERT INTO `fp_user` (`user_id`, `password`, `name`, `email`, `phone`, `photo`, `resume`, `address_1`, `address_2`, `zipcode`, `country_id`, `skype`, `facebook`, `linkedin`, `user_status`, `notes`, `remember_token`, `created_at`, `updated_at`, `ticketit_admin`, `ticketit_agent`) VALUES
+(18, '$2y$10$GSbuei4mSe8CxJIEAFvs9eiurlkYklef4Jw5Uma10ptjZX2o9joEe', 'Jexter Dean Buenaventura', 'projectmanager@hdenergy.ca', '1234567890', 'assets/user\\Snapshot_20160526_2.JPG', '', '#14 A Wakat Suello Road', 'Test', '2600', '185', 'arcblades', 'jexterdean', 'jexterdean', 'Active', '', 'dReoILezN7AXiuFOzffsjN9yjPefM0A52UjiC5K0ZLL1Bmkf8frNd4YqOTcg', '2016-06-17 14:16:40', '2016-06-17 06:16:40', 1, 0),
+(19, '$2y$10$fwiJSpCfIwXrIWr8NJjNfeMcSP//2KyjevUbWIrCUVCe4hKdL3Q3y', 'Jane Doe', 'janedoe@gmail.com', '1234567890', 'assets/user/avatar.png', NULL, '', '', '', '185', '', '', '', 'Active', NULL, 'WWnmYFKFr8pAf1Lc4GTEEUC13ANQqRP0WLwSF2i0ZLaCjMYHFrEEfMMTb8yS', '2016-06-16 13:04:33', '2016-06-16 05:04:33', 1, 1),
+(20, '$2y$10$DdQx07EpbSBdKtojQENLXOIxRgoUMWCVNYy9fJKeu/cfZEJKHoty2', 'Jane Buenaventura', 'janebuenaventura@gmail.com', '123456789', 'assets/user\\resume_sample_photo.jpg', NULL, 'test', 'test', '2600', '185', '', '', '', 'Active', NULL, 'uJlk1bQMN3Fr2qZ4aUIjLSieNjjagW2SuCAWgW33Fmsoi77rwGvt9Yq3nwma', '2016-06-16 13:12:53', '2016-06-16 05:12:53', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -2467,12 +2820,24 @@ CREATE TABLE IF NOT EXISTS `fp_user_payroll_setting` (
 
 CREATE TABLE IF NOT EXISTS `fp_videos` (
 `id` int(10) unsigned NOT NULL,
-  `applicant_id` int(11) NOT NULL,
-  `job_id` int(11) NOT NULL,
-  `stream_id` int(11) NOT NULL,
+  `unique_id` int(11) NOT NULL,
+  `user_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `owner_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `stream_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `video_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `video_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `video_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_videos`
+--
+
+INSERT INTO `fp_videos` (`id`, `unique_id`, `user_type`, `owner_id`, `owner_type`, `stream_id`, `video_type`, `video_url`, `created_at`, `updated_at`) VALUES
+(17, 4, 'applicant', 10, 'job', '305179886519908900', 'local', 'https://laravel.software/recordings/305179886519908900.webm', '2016-06-17 06:50:14', '2016-06-17 06:50:14'),
+(18, 4, 'applicant', 10, 'job', '208624051650986080', 'local', 'https://laravel.software/recordings/208624051650986080.webm', '2016-06-17 07:12:56', '2016-06-17 07:12:56');
 
 -- --------------------------------------------------------
 
@@ -2482,12 +2847,21 @@ CREATE TABLE IF NOT EXISTS `fp_videos` (
 
 CREATE TABLE IF NOT EXISTS `fp_video_tags` (
 `id` int(10) unsigned NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `applicant_id` int(11) NOT NULL,
-  `job_id` int(11) NOT NULL,
-  `video_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `tags` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `user_id` bigint(20) DEFAULT NULL,
+  `applicant_id` bigint(20) NOT NULL,
+  `job_id` bigint(20) NOT NULL,
+  `video_id` bigint(20) NOT NULL,
+  `tags` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_video_tags`
+--
+
+INSERT INTO `fp_video_tags` (`id`, `user_id`, `applicant_id`, `job_id`, `video_id`, `tags`, `created_at`, `updated_at`) VALUES
+(1, NULL, 4, 10, 14, 'test,test2,test3,test4,test5,test6,test7,test8', '2016-06-17 05:26:43', '2016-06-17 05:32:18');
 
 --
 -- Indexes for dumped tables
@@ -2503,7 +2877,7 @@ ALTER TABLE `fp_accounts`
 -- Indexes for table `fp_applicants`
 --
 ALTER TABLE `fp_applicants`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `applicants_email_unique` (`email`);
 
 --
 -- Indexes for table `fp_applicant_ratings`
@@ -2612,6 +2986,12 @@ ALTER TABLE `fp_link_categories`
 --
 ALTER TABLE `fp_link_tags`
  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `link_tags_name_unique` (`name`);
+
+--
+-- Indexes for table `fp_mail_queue`
+--
+ALTER TABLE `fp_mail_queue`
+ ADD PRIMARY KEY (`id`), ADD KEY `mail_queue_queue_reserved_reserved_at_index` (`queue`,`reserved`,`reserved_at`);
 
 --
 -- Indexes for table `fp_meeting`
@@ -2746,6 +3126,24 @@ ALTER TABLE `fp_setting`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `fp_share_jobs`
+--
+ALTER TABLE `fp_share_jobs`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_share_jobs_companies`
+--
+ALTER TABLE `fp_share_jobs_companies`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_share_jobs_companies_permissions`
+--
+ALTER TABLE `fp_share_jobs_companies_permissions`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `fp_task`
 --
 ALTER TABLE `fp_task`
@@ -2788,6 +3186,12 @@ ALTER TABLE `fp_team`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `fp_team_companies`
+--
+ALTER TABLE `fp_team_companies`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `fp_team_member`
 --
 ALTER TABLE `fp_team_member`
@@ -2809,6 +3213,12 @@ ALTER TABLE `fp_template`
 -- Indexes for table `fp_test`
 --
 ALTER TABLE `fp_test`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `fp_test_completed`
+--
+ALTER TABLE `fp_test_completed`
  ADD PRIMARY KEY (`id`);
 
 --
@@ -2944,7 +3354,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_applicants`
 --
 ALTER TABLE `fp_applicants`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=231;
 --
 -- AUTO_INCREMENT for table `fp_applicant_ratings`
 --
@@ -2954,7 +3364,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_applicant_tags`
 --
 ALTER TABLE `fp_applicant_tags`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `fp_assigned_roles`
 --
@@ -2989,17 +3399,17 @@ MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 -- AUTO_INCREMENT for table `fp_comment`
 --
 ALTER TABLE `fp_comment`
-MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
+MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=74;
 --
 -- AUTO_INCREMENT for table `fp_companies`
 --
 ALTER TABLE `fp_companies`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `fp_company_divisions`
 --
 ALTER TABLE `fp_company_divisions`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `fp_country`
 --
@@ -3019,7 +3429,7 @@ MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `fp_jobs`
 --
 ALTER TABLE `fp_jobs`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT for table `fp_links`
 --
@@ -3035,6 +3445,11 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `fp_link_tags`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fp_mail_queue`
+--
+ALTER TABLE `fp_mail_queue`
+MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `fp_meeting`
 --
@@ -3099,12 +3514,12 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_profiles`
 --
 ALTER TABLE `fp_profiles`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=64;
 --
 -- AUTO_INCREMENT for table `fp_project`
 --
 ALTER TABLE `fp_project`
-MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `fp_question`
 --
@@ -3129,37 +3544,52 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 -- AUTO_INCREMENT for table `fp_roles`
 --
 ALTER TABLE `fp_roles`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `fp_role_user`
 --
 ALTER TABLE `fp_role_user`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=47;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `fp_setting`
 --
 ALTER TABLE `fp_setting`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `fp_share_jobs`
+--
+ALTER TABLE `fp_share_jobs`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `fp_share_jobs_companies`
+--
+ALTER TABLE `fp_share_jobs_companies`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+--
+-- AUTO_INCREMENT for table `fp_share_jobs_companies_permissions`
+--
+ALTER TABLE `fp_share_jobs_companies_permissions`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT for table `fp_task`
 --
 ALTER TABLE `fp_task`
-MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=33;
+MODIFY `task_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `fp_task_check_list`
 --
 ALTER TABLE `fp_task_check_list`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=352;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=539;
 --
 -- AUTO_INCREMENT for table `fp_task_check_list_order`
 --
 ALTER TABLE `fp_task_check_list_order`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=312;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=385;
 --
 -- AUTO_INCREMENT for table `fp_task_check_list_permissions`
 --
 ALTER TABLE `fp_task_check_list_permissions`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `fp_task_comment`
 --
@@ -3169,22 +3599,27 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_task_timer`
 --
 ALTER TABLE `fp_task_timer`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `fp_team`
 --
 ALTER TABLE `fp_team`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+--
+-- AUTO_INCREMENT for table `fp_team_companies`
+--
+ALTER TABLE `fp_team_companies`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `fp_team_member`
 --
 ALTER TABLE `fp_team_member`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=72;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `fp_team_project`
 --
 ALTER TABLE `fp_team_project`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `fp_template`
 --
@@ -3195,6 +3630,11 @@ MODIFY `template_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `fp_test`
 MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `fp_test_completed`
+--
+ALTER TABLE `fp_test_completed`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
 --
 -- AUTO_INCREMENT for table `fp_test_feedback`
 --
@@ -3209,7 +3649,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 -- AUTO_INCREMENT for table `fp_test_per_job`
 --
 ALTER TABLE `fp_test_per_job`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `fp_test_question_tag`
 --
@@ -3219,7 +3659,7 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_test_result`
 --
 ALTER TABLE `fp_test_result`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=97;
 --
 -- AUTO_INCREMENT for table `fp_test_tag`
 --
@@ -3279,7 +3719,7 @@ MODIFY `timezone_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=420;
 -- AUTO_INCREMENT for table `fp_user`
 --
 ALTER TABLE `fp_user`
-MODIFY `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=58;
+MODIFY `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `fp_user_payroll_setting`
 --
@@ -3289,12 +3729,12 @@ MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `fp_videos`
 --
 ALTER TABLE `fp_videos`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `fp_video_tags`
 --
 ALTER TABLE `fp_video_tags`
-MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- Constraints for dumped tables
 --

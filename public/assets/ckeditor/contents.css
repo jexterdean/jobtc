@@ -139,10 +139,14 @@ a > img {
 .cke_top,
 .cke_panel_frame
 {
-    zoom:2.4 !important;
+    zoom:1.4 !important;
+
+    -moz-transform: scale(1.4);  /* Firefox */
+    -moz-transform-origin: left center;
+
 }
 
 .cke_combopanel
 {
-    zoom:2.45 !important;
+    zoom:1.45 !important;
 }

@@ -8,6 +8,7 @@
                 {{$employee->user->name}}
             </div>
             <div class="pull-right">
+                @if(isset($shared_company_jobs_permissions))
                 @if($shared_company_jobs_permissions->where('user_id',$employee->user_id)->count() > 0)
                 <div class="btn btn-default btn-shadow bg-green job-permission">
                     <i class="fa fa-check" aria-hidden="true"></i>                                                                
@@ -22,6 +23,7 @@
                     <input class="job_id" type="hidden" value="{{$job_id}}"/>
                     <input class="company_id" type="hidden" value="{{$employee->company_id}}"/>
                 </div>
+                @endif
                 @endif
             </div>
         </div>

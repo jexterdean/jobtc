@@ -1,3 +1,4 @@
+<label class='center-block taskgroup-title'>Available Sub Projects</label>
 <ul class="tasklist-group list-group">
     @foreach($tasks as $task)
     <li class="tasklist-group list-group-item">
