@@ -36,8 +36,8 @@ CKEDITOR.editorConfig = function (config) {
     //config.pollUrl = '/autoSave';
     
     //For file uploads, specifically image uploads
-    //config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
-    config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
+    config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
+    //config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
     
     //For ckwebspeechs
     config.ckwebspeech = {'culture': 'en',
