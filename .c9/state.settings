@@ -17,21 +17,20 @@
                     "name": "tab0",
                     "path": "",
                     "className": [
-                        "tab0",
-                        "focus"
+                        "tab0"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1466237951033
+                            "timestamp": 1466437887097
                         },
                         "filter": true,
                         "title": "bash - \"job.tc\"",
                         "tooltip": "bash - \"job.tc\"",
                         "terminal": {
-                            "id": "devel_880",
+                            "id": "devel_970",
                             "cwd": "",
-                            "width": 1094,
+                            "width": 1648,
                             "height": 127
                         }
                     },
@@ -42,29 +41,19 @@
                     "type": "tab",
                     "name": "tab1",
                     "path": "",
-                    "className": [
-                        "tab1"
-                    ],
+                    "className": [],
                     "document": {
+                        "title": "Immediate",
                         "changed": false,
-                        "meta": {},
-                        "filter": true,
-                        "title": "Immediate (Javascript (browser))",
-                        "tooltip": "Immediate (Javascript (browser))",
-                        "immediate": {
-                            "type": "jsbrowser",
-                            "history": [],
-                            "pos": 0
-                        }
+                        "meta": {
+                            "timestamp": 1466437887099
+                        },
+                        "filter": true
                     },
                     "editorType": "immediate",
                     "active": false
                 }
             ],
-                "accessList": []
-            },
-            "name": "pane1",
-            "nodes": [],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -84,18 +73,17 @@
     },
     "ext": {
         "counters": {
-            "@ace": 2,
+            "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 3,
+            "@document": 4,
             "@form": 5,
-            "@immediate": 1,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
             "@session": 3,
-            "@tab": 3,
-            "@undoManager": 3
+            "@tab": 4,
+            "@undoManager": 4
         }
     },
     "findinfiles": {
@@ -113,6 +101,7 @@
     },
     "panecycle": {
         "json()": [
+            "tab3",
             "tab0"
         ]
     },
@@ -151,21 +140,65 @@
         "@showfs": true,
         "expanded": {
             "json()": [
-                "/"
+                "/",
+                "/public",
+                "/public/ckeditor"
             ]
         }
     },
-    "recentfiles": {
-        "json()": []
-    },
     "tabs": {
         "json()": {
-            "focus": "tab0",
+            "focus": "/public/ckeditor/config.js",
             "meta": {
-                "accessList": []
+                "accessList": [
+                    "tab3",
+                    "tab2"
+                ]
             },
             "name": "pane0",
-            "nodes": [],
+            "nodes": [
+                {
+                    "type": "tab",
+                    "name": "tab2",
+                    "path": "/app/Http/routes.php",
+                    "className": [
+                        "tab2"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1466437974483
+                        },
+                        "filter": true,
+                        "title": "routes.php",
+                        "tooltip": "/app/Http/routes.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab3",
+                    "path": "/public/ckeditor/config.js",
+                    "className": [
+                        "tab3",
+                        "focus"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1466438332545
+                        },
+                        "filter": true,
+                        "title": "config.js",
+                        "tooltip": "/public/ckeditor/config.js",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": true
+                }
+            ],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -173,7 +206,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/readme.md"
+            "/public/ckeditor/config.js"
         ]
     }
 }
