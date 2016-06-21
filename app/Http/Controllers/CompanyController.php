@@ -810,7 +810,7 @@ class CompanyController extends BaseController {
                 array_push($task_ids, $permission->task_id);
             }
 
-            $tasks = Task::whereIn('task_id', $task_ids)->->orderBy('task_title','asc')->get();
+            $tasks = Task::whereIn('task_id', $task_ids)->orderBy('task_title','asc')->get();
         }
 
 
