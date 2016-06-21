@@ -9,6 +9,7 @@
                     <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                     {{$employee->user->name}}
                     <input class="project_id" type="hidden" value="{{$project_id}}"/>
+                    <input class="company_id" type="hidden" value="{{$company_id}}"/>
                 </a>
             </div>
         </div>

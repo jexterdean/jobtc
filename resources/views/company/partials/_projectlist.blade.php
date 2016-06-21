@@ -112,6 +112,7 @@
                                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
                                                                 <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
                                                                 <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                                                <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
                                                             </div>
                                                             @endforeach
                                                             @else
@@ -120,6 +121,7 @@
                                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
                                                                 <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
                                                                 <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                                                <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
                                                             </div>
                                                             @endif
                                                         </div>
@@ -145,10 +147,12 @@
                                     <a href="{{ route('project.destroy',$project->project_id) }}" class="btn-delete btn-shadow btn alert_delete"><i class='fa fa-times'></i> Delete</a>
                                     @endif
                                     <input type="hidden" class="project_id" value="{{$project->project_id}}" />
+                                    <input type="hidden" class="company_id" value="{{$project->company_id}}"/>
                                 </div>
                             </div>
                         </div>
                         <input type="hidden" class="project_id" value="{{$project->project_id}}"/>
+                        <input type="hidden" class="company_id" value="{{$project->company_id}}"/>
                     </div>
                 </div>
             </div>
