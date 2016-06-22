@@ -108,7 +108,7 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->get();
+                    }], 'task_permission','company','user')->whereIn('project_id', $project_id_list)->get();
 
 
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
@@ -116,6 +116,7 @@ class CompanyController extends BaseController {
         $assets = ['companies', 'real-time'];
 
         return View::make('company.show', [
+                    'company_id' => $company_id,
                     'projects' => $projects,
                     'task_permissions' => $task_permissions,
                     'profiles' => $profiles,
@@ -610,11 +611,11 @@ class CompanyController extends BaseController {
                     }])->get();
 
         //Get Team Member projects
-        $team_members = TeamMember::where('user_id', $user_id)->get();
+        $team_members = TeamMember::where('user_id', $user_id)->where('company_id',$id)->get();
 
         $team_projects = TeamProject::all();
 
-        $team_companies = TeamCompany::all();
+        $team_companies = TeamCompany::where('company_id','<>',$id)->get();
 
         foreach ($owned_projects as $owned_project) {
             array_push($project_id_list, $owned_project->project_id);
@@ -632,14 +633,15 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->where('company_id', $id)->get();
+                    }], 'task_permission','company','user')->whereIn('project_id', $project_id_list)->get();
 
 
         $user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->get();
+                    }])->where('id','<>',$id)->get();
 
         return view('company.partials._projectlist', [
+            'company_id' => $id,
             'projects' => $projects,
             'profiles' => $profiles,
             'user_companies' => $user_companies,

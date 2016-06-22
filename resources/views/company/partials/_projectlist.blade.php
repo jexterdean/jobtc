@@ -19,6 +19,14 @@
             <div class="box-container">
                 <div class="box-header">
                     <h3 class="box-title">{{$project->project_title}}</h3>
+                    <div class="pull-right">
+                        @if(intval($project->company_id) !== intval($company_id))
+                        <label>Shared by {{$project->company->name}}</label>
+                        @endif
+                        @if(Auth::user('user')->user_id !== $project->user_id)
+                        <label>Shared by {{$project->user->name}}</label>
+                        @endif
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="box-content">
