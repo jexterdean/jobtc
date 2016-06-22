@@ -44,6 +44,7 @@
         @foreach($shared_projects->chunk(2) as $chunk)
         <div class="row">
             @foreach($chunk as $project)
+            @if($project->user_id !== Auth::user('user')->user_id || intval($project->company_id) !== intval($company_id))
             <div class="col-md-6">
                 <div  class="box box-default">
                     <div class="box-container">
@@ -72,6 +73,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             @endforeach
         </div>
         @endforeach

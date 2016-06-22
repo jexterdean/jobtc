@@ -118,8 +118,6 @@ class CompanyController extends BaseController {
                         $query->orderBy('task_title', 'asc')->get();
                     }], 'task_permission','company','user')
                             ->whereIn('project_id', $project_id_list)
-                            ->where('company_id','<>',$company_id)
-                            ->orWhere('user_id','<>',$user_id)
                             ->get();            
 
 
@@ -656,8 +654,6 @@ class CompanyController extends BaseController {
                         $query->orderBy('task_title', 'asc')->get();
                     }], 'task_permission','company','user')
                             ->whereIn('project_id', $project_id_list)
-                            ->where('company_id','<>',$id)
-                            ->orWhere('user_id','<>',$user_id)
                             ->get();            
 
 
