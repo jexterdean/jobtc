@@ -410,6 +410,12 @@ class CompanyController extends BaseController {
         $team_company = TeamCompany::where('project_id', $project_id)->where('company_id', $company_id);
         $team_company->delete();
         
+        $team_project = TeamProject::where('project_id', $project_id)->first();
+        
+        //Remove company users from team
+        $team_member = TeamMember::where('team_id',$team_project->team_id)->where('company_id',$company_id);
+        $team_member->delete();
+        
         //Remove the task check list permissions for for users on the unassigned companies
         $task_check_list_permissions = TaskCheckListPermission::where('company_id',$company_id)->where('project_id',$project_id);
         $task_check_list_permissions->delete();
