@@ -21,7 +21,6 @@
             <div id="assign_my_projects" class="tab-pane fade in active">
                 @if (count($projects) > 0)
                 @foreach($projects as $project)
-                @if($project->user_id === Auth::user('user')->user_id && intval($project->company_id) === intval($company_id))
                 <div id="project-{{$project->project_id}}" class="box box-default">
                     <div class="box-container">
                         <div class="box-header">
@@ -180,7 +179,6 @@
                         </div>
                     </div>
                 </div>
-                @endif
                 @endforeach
                 @else
                 <div class="box box-default">
@@ -201,8 +199,7 @@
             </div>
             <div id="assign_shared_projects" class="tab-pane fade">
                 @if (count($projects) > 0)
-                @foreach($projects as $project)
-                @if($project->user_id !== Auth::user('user')->user_id || intval($project->company_id) !== intval($company_id))
+                @foreach($shared_projects as $project)
                 <div id="project-{{$project->project_id}}" class="box box-default">
                     <div class="box-container">
                         <div class="box-header">
@@ -361,7 +358,6 @@
                         </div>
                     </div>
                 </div>
-                @endif
                 @endforeach
                 @else
                 <div class="box box-default">

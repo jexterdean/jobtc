@@ -108,7 +108,19 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission','company','user')->whereIn('project_id', $project_id_list)->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->where('company_id',$company_id)
+                            ->where('user_id',$user_id)
+                            ->get();
+                    
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->where('company_id','<>',$company_id)
+                            ->orWhere('user_id','<>',$user_id)
+                            ->get();            
 
 
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
@@ -118,6 +130,7 @@ class CompanyController extends BaseController {
         return View::make('company.show', [
                     'company_id' => $company_id,
                     'projects' => $projects,
+                    'shared_projects' => $shared_projects,
                     'task_permissions' => $task_permissions,
                     'profiles' => $profiles,
                     'companies' => $companies,
@@ -633,7 +646,19 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission','company','user')->whereIn('project_id', $project_id_list)->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->where('company_id',$id)
+                            ->where('user_id',$user_id)
+                            ->get();
+                    
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->where('company_id','<>',$id)
+                            ->orWhere('user_id','<>',$user_id)
+                            ->get();            
 
 
         $user_companies = Company::with(['profile' => function($query) use($user_id) {
@@ -643,6 +668,7 @@ class CompanyController extends BaseController {
         return view('company.partials._projectlist', [
             'company_id' => $id,
             'projects' => $projects,
+            'shared_projects' => $shared_projects,
             'profiles' => $profiles,
             'user_companies' => $user_companies,
             'teams' => $teams,
