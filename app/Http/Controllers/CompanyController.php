@@ -92,21 +92,9 @@ class CompanyController extends BaseController {
 
         $team_projects = TeamProject::all();
 
-        $team_companies = TeamCompany::all();
-
         foreach ($owned_projects as $owned_project) {
             array_push($project_id_list, $owned_project->project_id);
         }
-
-        //Get companies involved with projects(It should show on the other companies projects tab)
-        /* foreach ($team_companies as $company) {
-          foreach ($team_projects as $project) {
-          if ($company->project_id === $project->project_id) {
-          array_push($project_id_list, $project->project_id);
-          array_push($company_id_list, $company->company_id);
-          }
-          }
-          } */
 
         //Use the team id to get the projects the users are involved with
         foreach ($team_members as $member) {
@@ -408,8 +396,10 @@ class CompanyController extends BaseController {
                 ->where('company_id', $company_id)
                 ->get();
 
-        return view('company.partials._employeelist', [
-            'employees' => $employees
+        return view('company.partials._projectemployeelist', [
+            'employees' => $employees,
+            'project_id' => $project_id,
+            'company_id' => $company_id
         ]);
     }
 
@@ -419,7 +409,11 @@ class CompanyController extends BaseController {
 
         $team_company = TeamCompany::where('project_id', $project_id)->where('company_id', $company_id);
         $team_company->delete();
-
+        
+        //Remove the task check list permissions for for users on the unassigned companies
+        $task_check_list_permissions = TaskCheckListPermission::where('company_id',$company_id)->where('project_id',$project_id);
+        $task_check_list_permissions->delete();
+        
         return "true";
     }
 
