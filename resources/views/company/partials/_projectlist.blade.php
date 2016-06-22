@@ -28,10 +28,11 @@
                             <li id="company-{{$team_company->company_id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <a id="employee-toggle-{{$team_company->company_id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$team_company->company_id}}">    
+                                        <a id="employee-toggle-{{$project->project_id}}-{{$team_company->company_id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$project->project_id}}-{{$team_company->company_id}}">    
                                             <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                             {{$team_company->company->name}}
                                             <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                            <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
                                         </a>
                                     </div>
                                     <div class="pull-right">
@@ -40,13 +41,13 @@
                                         </a>
                                         <a href="#" class="unassign-company">
                                             <i class="fa fa-times"></i>
-                                            <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
                                             <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                            <input class="company_id" type="hidden" value="{{$team_company->company_id}}"/>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div id="employee-toggle-collapse-{{$team_company->company_id}}" class="employee-list collapse">
+                                    <div id="employee-toggle-collapse-{{$project->project_id}}-{{$team_company->company_id}}" class="employee-list collapse">
                                     </div>
                                 </div>
                             </li>
@@ -112,6 +113,7 @@
                                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
                                                                 <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
                                                                 <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                                                <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
                                                             </div>
                                                             @endforeach
                                                             @else
@@ -120,6 +122,7 @@
                                                                 <input class="user_id" type="hidden" value="{{$team_members->user->user_id}}"/>
                                                                 <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
                                                                 <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                                                                <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
                                                             </div>
                                                             @endif
                                                         </div>
@@ -145,10 +148,12 @@
                                     <a href="{{ route('project.destroy',$project->project_id) }}" class="btn-delete btn-shadow btn alert_delete"><i class='fa fa-times'></i> Delete</a>
                                     @endif
                                     <input type="hidden" class="project_id" value="{{$project->project_id}}" />
+                                    <input type="hidden" class="company_id" value="{{$project->company_id}}"/>
                                 </div>
                             </div>
                         </div>
                         <input type="hidden" class="project_id" value="{{$project->project_id}}"/>
+                        <input type="hidden" class="company_id" value="{{$project->company_id}}"/>
                     </div>
                 </div>
             </div>

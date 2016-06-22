@@ -1,6 +1,5 @@
-@if($projects->task->count() > 0)
-@foreach($projects->task as $val)
-@if($task_permissions->contains('task_id',$val->task_id) || $projects->user_id === Auth::user('user')->user_id )
+@if($tasks->count() > 0)
+@foreach($tasks as $val)
 <div class="modal fade" id="edit_task_{{ $val->task_id }}" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -30,7 +29,6 @@
         </div>
     </div>
 </div>
-@endif
 @endforeach
 @else
 <div>No Subprojects available.</div>
