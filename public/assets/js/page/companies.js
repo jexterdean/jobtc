@@ -568,7 +568,7 @@ function assignProjectsScripts() {
     });
     
     /*Employees per Company Load on Demand*/
-    $('.company-list-group').one('click','.toggle-employees', function () {
+    $('.company-list-group').on('click','.toggle-employees', function () {
         
         var project_id = $(this).find('.project_id').val();
         var company_id = $(this).find('.company_id').val();
