@@ -802,6 +802,7 @@ class CompanyController extends BaseController {
             //Get task permissions first for logged in user and current company selected
             $task_permissions = TaskCheckListPermission::where('user_id', $user_id)
                     ->where('project_id', $project_id)
+                    ->where('company_id', $company_id)
                     ->get();
 
             $task_ids = [];
@@ -822,7 +823,9 @@ class CompanyController extends BaseController {
     public function getSubprojectsForCompanyEmployee(Request $request, $user_id, $project_id, $company_id) {
 
         //Get projects with their tasks and task permissions
-        $tasks = Task::where('project_id', $project_id)->get();
+        $tasks = Task::where('project_id', $project_id)
+                ->orderBy('task_title','asc')
+                ->get();
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->where('company_id',$company_id)->get();
 
         return view('company.partials._companytasklist', [
