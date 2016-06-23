@@ -840,7 +840,9 @@ class CompanyController extends BaseController {
 
 
         return view('company.partials._mytasklistitems', [
-            'tasks' => $tasks
+            'tasks' => $tasks,
+            'project_id' => $project_id,
+            'project_owner' => $project_owner
         ]);
     }
 

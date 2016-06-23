@@ -4,8 +4,7 @@
 </div>
 <div class="modal-body">
     @role('admin')
-        {!! Form::model([$project,$clients,$users],['method' => 'PATCH','route' => ['project.update',$project->project_id] ,'class' =>
-        'form-horizontal project-form'])  !!}
+        {!! Form::model([$project,$clients,$users],['method' => 'PATCH','route' => ['project.update',$project->project_id],'id' => 'project-form','class' =>'form-horizontal project-form'])  !!}
 
         @include('project/partials/_form', ['buttonText' => 'Update Project'] )
         {!!  Form::close()  !!}

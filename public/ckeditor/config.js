@@ -55,11 +55,11 @@ CKEDITOR.editorConfig = function (config) {
     //config.uiColor = '#F3F4F5';
     
     
-     var wh = window.innerHeight;
+     //var wh = window.innerHeight;
     //Css changes
-    config.height = wh - 200 +'px';
+    //config.height = '200px';
 
-    //Disbale resize
+    //Disable resize
     config.resize_enabled = false;
 
     //config.autoParagraph = false;

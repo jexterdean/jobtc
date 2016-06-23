@@ -1002,8 +1002,6 @@ $('.toggle-subprojects').one('click', function () {
     //var company_id = $(this).find('.company_id').val();
     var company_id = window.location.pathname.split('/').pop();
     
-    console.log('company_id: '+company_id);
-    
     var url = public_path + 'getSubprojects/' + project_id + '/' + company_id;
 
     if ($.trim($('#project-collapse-' + project_id).is(':empty'))) {
@@ -1018,12 +1016,3 @@ $('.toggle-subprojects').one('click', function () {
         });
     }
 });
-
-
-/*$('.task-header').on('click')(function () {
- var task_id = $(this).parent().attr('id').split('-').pop();
- var task_url = public_path + '/task/' + task_id;
- console.log($('.load-task-assign').attr('id'));
- var task_container = '#' + $('.load-task-assign').attr('id');
- $(task_container).load(task_url);
- });*/

@@ -28,7 +28,7 @@
             $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             ?>
             {!! Form::select('company_id', $clients, isset($project->company_id) ?
-            $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Company', 'tabindex' =>'2'] )  !!}
+            $project->company_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Company', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
     <div class="form-group">
@@ -72,12 +72,35 @@
         </div>
         <div class="col-md-4">
             {!!  Form::input('text','account',isset($project->account) ? $project->account : '', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Account', 'tabindex' => '4'])  !!}
+            {!!  Form::input('hidden','project_id',isset($project->project_id) ? $project->project_id: '', ['class' => 'form-control form-control-inline input-medium project_id'])  !!}
         </div>
     </div>
     <div class="row">
         <div class="pull-right">
-            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Project'),['class' => 'btn btn-edit btn-shadow', 'tabindex' =>
+            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Project'),['class' => 'btn btn-edit btn-shadow update-project', 'tabindex' =>
             '9'])  !!}
         </div>
     </div>
 </div>
+<script>
+    $('.update-project').click(function(e){
+        e.preventDefault();
+        
+        var project_id = $('.project-form').find('.project_id').val();
+        
+        console.log(project_id)
+        
+        var url = public_path + 'project/' + project_id;
+        
+        $.ajax( 
+        { 
+            url: url,
+            type: 'POST', 
+            data: $('#project-form').serialize(),
+            success: function(data){
+                $('#edit_project_form').modal('toggle');
+                $('#project-'+project_id).find('.box-title').text(data);
+            }
+        });
+    });
+</script>

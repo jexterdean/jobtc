@@ -1,17 +1,5 @@
 @extends('layouts.default')
 @section('content')
-<style>
-    .firepad{
-        height: 400px!important;
-        background-color: #f62; /* dark orange background */
-    }
-    .powered-by-firepad{
-        display: none!important;
-    }
-    .CodeMirror{
-        border: 1px solid #afafaf;
-    }
-</style>
 <div class="modal fade" id="add_attachment" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -66,17 +54,6 @@
                     {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
                     input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
                 </div>
-                @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
-                    <div class="form-group">
-                            {!!  Form::select('username', $assign_username, isset
-                            ($task->user_id) ? $task->user_id : '',
-                             ['class' => 'form-control input-xlarge select2me',
-                            'placeholder' => 'Assign User',] )  !!}
-                    </div>
-                @endif
-                @if(Auth::user('user')->user_type === 4)
-                    {!!  Form::hidden('assign_username',Auth::user('user')->email,['readonly' => true])  !!}
-                @endif
             </div>
             <div class="modal-footer">
                 <div class="form-group">
@@ -214,7 +191,6 @@
         </div>
     </div>
 </div>
-<div id="firepad"></div>
 @stop
 
 

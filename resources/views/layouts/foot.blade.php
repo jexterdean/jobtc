@@ -162,6 +162,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 <!--Page Specific scripts-->
 
 @if (in_array('companies',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/OrgChart/dist/js/jquery.orgchart.js')  !!}
 {!!  HTML::script('assets/js/page/companies.js')  !!}
 @endif

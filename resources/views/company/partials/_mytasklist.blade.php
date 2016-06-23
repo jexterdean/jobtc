@@ -66,7 +66,7 @@
                             <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
                         </div>
                         <div class="box-body">
-                            <div id="project-collapse-{{ $project->project_id }}" class="box-content collapse">
+                            <div id="project-collapse-{{ $project->project_id }}" class="project box-content collapse">
 
                             </div><!--Box Container-->
                         </div>
@@ -77,6 +77,12 @@
             @endforeach
         </div>
         @endforeach
+    </div>
+</div>
+<div class="modal fade edit-modal" id="edit_project_form" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
     </div>
 </div>
 
