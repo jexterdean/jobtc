@@ -65,22 +65,22 @@
 
     /*Project Options*/
     $('.project-options').on('click', '.delete-project', function (e) {
-        e.stopImmediatePropagation();
-        BootstrapDialog.confirm('Are you sure you want to delete this project?', function (result) {
-            if (result) {
-                var url = public_path + 'deleteProject';
-                var project_id = $(this).siblings('.project_id').val();
+        //e.stopImmediatePropagation();
+        var r = confirm("Are you sure you want to delete this project?");
+        if (r == true) {
+            console.log('Deleted');
+            var url = public_path + 'deleteProject';
+            var project_id = $(this).siblings('.project_id').val();
 
-                var data = {
-                    'project_id': project_id
-                };
+            var data = {
+                'project_id': project_id
+            };
 
-                $.post(url, data, function () {
-                    $('#project-' + project_id).remove();
-                    $('#project-collapse-' + project_id).remove();
-                });
-            } 
-        });
+            $.post(url, data, function () {
+                $('#project-' + project_id).remove();
+                $('#project-collapse-' + project_id).remove();
+            });
+        }
     });
 
     $('.project-options').on('click', '.add-briefcase', function (e) {
