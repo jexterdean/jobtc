@@ -92,21 +92,9 @@ class CompanyController extends BaseController {
 
         $team_projects = TeamProject::all();
 
-        $team_companies = TeamCompany::all();
-
         foreach ($owned_projects as $owned_project) {
             array_push($project_id_list, $owned_project->project_id);
         }
-
-        //Get companies involved with projects(It should show on the other companies projects tab)
-        /* foreach ($team_companies as $company) {
-          foreach ($team_projects as $project) {
-          if ($company->project_id === $project->project_id) {
-          array_push($project_id_list, $project->project_id);
-          array_push($company_id_list, $company->company_id);
-          }
-          }
-          } */
 
         //Use the team id to get the projects the users are involved with
         foreach ($team_members as $member) {
@@ -120,7 +108,17 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->where('company_id',$company_id)
+                            ->where('user_id',$user_id)
+                            ->get();
+                    
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->get();            
 
 
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
@@ -128,7 +126,9 @@ class CompanyController extends BaseController {
         $assets = ['companies', 'real-time'];
 
         return View::make('company.show', [
+                    'company_id' => $company_id,
                     'projects' => $projects,
+                    'shared_projects' => $shared_projects,
                     'task_permissions' => $task_permissions,
                     'profiles' => $profiles,
                     'companies' => $companies,
@@ -408,8 +408,10 @@ class CompanyController extends BaseController {
                 ->where('company_id', $company_id)
                 ->get();
 
-        return view('company.partials._employeelist', [
-            'employees' => $employees
+        return view('company.partials._projectemployeelist', [
+            'employees' => $employees,
+            'project_id' => $project_id,
+            'company_id' => $company_id
         ]);
     }
 
@@ -419,7 +421,17 @@ class CompanyController extends BaseController {
 
         $team_company = TeamCompany::where('project_id', $project_id)->where('company_id', $company_id);
         $team_company->delete();
-
+        
+        $team_project = TeamProject::where('project_id', $project_id)->first();
+        
+        //Remove company users from team
+        $team_member = TeamMember::where('team_id',$team_project->team_id)->where('company_id',$company_id);
+        $team_member->delete();
+        
+        //Remove the task check list permissions for for users on the unassigned companies
+        $task_check_list_permissions = TaskCheckListPermission::where('company_id',$company_id)->where('project_id',$project_id);
+        $task_check_list_permissions->delete();
+        
         return "true";
     }
 
@@ -610,11 +622,11 @@ class CompanyController extends BaseController {
                     }])->get();
 
         //Get Team Member projects
-        $team_members = TeamMember::where('user_id', $user_id)->get();
+        $team_members = TeamMember::where('user_id', $user_id)->where('company_id',$id)->get();
 
         $team_projects = TeamProject::all();
 
-        $team_companies = TeamCompany::all();
+        $team_companies = TeamCompany::where('company_id','<>',$id)->get();
 
         foreach ($owned_projects as $owned_project) {
             array_push($project_id_list, $owned_project->project_id);
@@ -632,15 +644,27 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->where('company_id', $id)->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->where('company_id',$id)
+                            ->where('user_id',$user_id)
+                            ->get();
+                    
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->get();            
 
 
         $user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->get();
+                    }])->where('id','<>',$id)->get();
 
         return view('company.partials._projectlist', [
+            'company_id' => $id,
             'projects' => $projects,
+            'shared_projects' => $shared_projects,
             'profiles' => $profiles,
             'user_companies' => $user_companies,
             'teams' => $teams,

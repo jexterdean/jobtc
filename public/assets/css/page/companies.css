@@ -138,3 +138,35 @@
     font-weight: bold;
     text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;
 }
+
+#projects_tabs li.active a {
+    background-color: #e5e5e5;
+    text-decoration: none;
+    color: #4285f4;
+    font-weight: bold;
+    text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;
+}
+
+#projects_tabs li a {
+    background-color: #4285f4;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px #000000, 0 0 0 #000000, 1px 1px 1px #000000!important;
+}
+
+#assign_projects_tabs li.active a {
+    background-color: #e5e5e5;
+    text-decoration: none;
+    color: #4285f4;
+    font-weight: bold;
+    text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;
+}
+
+#assign_projects_tabs li a {
+    background-color: #4285f4;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px #000000, 0 0 0 #000000, 1px 1px 1px #000000!important;
+}
