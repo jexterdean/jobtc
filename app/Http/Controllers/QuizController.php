@@ -1097,6 +1097,51 @@ class QuizController extends BaseController {
             'test_limit' => 6
         ]);
     }
+    public function quizElasticSearchView(){
+        $client = ES::create()
+            ->setHosts(["159.203.91.188:9200"])
+            ->build();
+
+        $body = [
+            "sort" => [
+                ["order" => ["order" => "asc"]],
+                ["id" => ["order" => "asc"]]
+            ]
+        ];
+
+        $search = '';
+        $body= [];
+        if($search) {
+            $matches = [
+                ['match' => ['title' => $search]]
+            ];
+            preg_match('!\d+!', $search, $m);
+            $version = array_key_exists(0, $m) ? $m[0] : '';
+            if ($version) {
+                $matches[] = ['match' => ['version' => $version]];
+            }
+
+            $body['query'] = [
+                'bool' => [
+                    'must' => $matches
+                ]
+            ];
+        }
+
+        //get data
+        $params = [
+            'index' => 'default',
+            'type' => 'test',
+            'client' => [
+                'ignore' => 404
+            ],
+            "fields" => "",
+            'body' => $body
+        ];
+        $s = $client->search($params);
+        echo '<pre>';
+        print_r($s);
+    }
     private function quizElasticSearch($id, $type = 1, $body = []){
         //1 = insert
         //2 = update
