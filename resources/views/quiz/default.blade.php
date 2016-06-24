@@ -128,7 +128,6 @@
         $(document).on('propertychange keyup input paste', '.community-search', function(e){
             var search = $(this).val();
             if(e.keyCode == 13){
-                console.log(search + 'aw');
                 $.ajax({
                     url: '{{ URL::to('quizSearch') }}',
                     method: "POST",
@@ -136,7 +135,6 @@
                         search: search
                     },
                     success: function(content) {
-                        console.log(content);
                         $('.test-list-2').remove();
 
                         $('.test-group[data-type=2]').html(content);
