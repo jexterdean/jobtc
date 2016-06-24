@@ -542,6 +542,32 @@ class TaskController extends BaseController {
         
     }
 
+    
+    public function addBriefcaseForm() {
+        return view('forms.addBriefcaseForm');
+    }
+    
+    public function addBriefcase(Request $request) {
+        
+        $user_id = Auth::user('user')->user_id;
+        $project_id = $request->input('project_id');
+        $title = $request->input('title');
+        
+        $task = new Task;
+        $task->belongs_to = 'project';
+        $task->unique_id = $project_id;
+        $task->task_title = $title;
+        $task->task_description = '';
+        $task->is_visible = 'yes';
+        $task->task_status = 'pending';
+        $task->user_id = $user_id;
+        $task->project_id = $project_id;
+        $task->save();
+
+        return view('task.partials._briefcase',[
+            'task' => $task
+        ]);
+    }
 }
 
 ?>

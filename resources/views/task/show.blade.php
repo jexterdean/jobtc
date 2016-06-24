@@ -515,20 +515,6 @@
                 //saveChecklistContent(task_check_list_id, evt.editor.getData());
             });
 
-
-
-            /*if (check_list_container.length > 10) {
-             
-             $('body').animate({
-             scrollTop: _body.get(0).scrollHeight / 2
-             }, 500);
-             
-             } else {
-             $('body').animate({
-             scrollTop: 0
-             }, 500);
-             }*/
-
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
                 e.preventDefault();
@@ -793,7 +779,7 @@
          console.log('trigger');
          });*/
         //region For Tasklist Delete
-        $('#accordion').on('click', '.delete-tasklist', function (e) {
+        $('.task-list').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             var task_id = url.split('/').pop();
@@ -1080,7 +1066,8 @@
                 //$('.text-area-content').remove();
             });
         });
-
+        
+        
 
         function makeid()
         {

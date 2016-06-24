@@ -197,6 +197,11 @@ Route::group(['middleware' => 'auth'], function () {
      * Task List
      */
     Route::resource('task', 'TaskController');
+    
+    /*Add Briefcase(a briefcase is a Subproject)*/
+    Route::get('addBriefcaseForm','TaskController@addBriefcaseForm');
+    Route::post('addBriefcase','TaskController@addBriefcase');
+    
     Route::any('task/delete/{id}', 'TaskController@delete');
     Route::post('taskTimer/{id}', 'TaskController@taskTimer');
     Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
@@ -239,7 +244,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('event/{event_id}/delete', 'EventsController@delete');
     Route::get('company/{company_id}/delete', 'CompanyController@delete');
     Route::get('billing/{billing_id}/delete', 'BillingController@delete');
-    Route::get('project/{project_id}/delete', 'ProjectController@delete');
+    Route::post('deleteProject', 'ProjectController@delete');
     Route::get('bug/{bug_id}/delete', 'BugController@delete');
     Route::get('ticket/{ticket_id}/delete', 'TicketController@delete');
     /* Route::get('profile', function () {

@@ -112,7 +112,6 @@
                                 <div class="row">
                                     <div class="col-md-9">
                                         <a class="toggle-employees" data-toggle="collapse">
-                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                             {{$job->title}}
                                         </a>
                                     </div>
