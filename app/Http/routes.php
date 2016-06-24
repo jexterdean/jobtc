@@ -1,4 +1,6 @@
 <?php
+//Ckeditor fix temp route
+Route::get('/editor', 'CKEditorController@index');
 
 /* Authentication routes */
 Route::get('/', ['as' => 'home', 'uses' => 'SessionController@authorizeUsersAndApplicants', 'https' => true]);
@@ -66,13 +68,11 @@ Route::get('/getAvailableVideoTags', 'VideoController@getVideoTags');
  * Quiz
  */
 Route::resource('quiz', 'QuizController');
-Route::post('testSort', 'QuizController@testSort');
+Route::any('testSort', 'QuizController@testSort');
 Route::post('questionSort', 'QuizController@questionSort');
 Route::get('userSlider/{id}', 'QuizController@userSlider');
 Route::get('quizRanking/{id}', 'QuizController@quizRanking');
 Route::post('quizAddPersonalCommunity', 'QuizController@quizAddPersonalCommunity');
-Route::post('quizSearch', 'QuizController@quizSearch');
-Route::any('quizElasticSearchView', 'QuizController@quizElasticSearchView');
 /*
  * Indeed Applicant Importer (Don't put this in any middleware, 
  * the script should not login to insert the data from Indeed
@@ -176,9 +176,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('getAssignAuthorityLevelsTab/{id}','CompanyController@getAssignAuthorityLevelsTab');
         Route::get('getShareJobsTab/{id}','CompanyController@getShareJobsTab');
         /*For Projects Load on Demand*/
-        Route::get('getSubprojects/{company_id}/{project_id}','CompanyController@getSubprojects');
+        Route::get('getSubprojects/{project_id}/{company_id}','CompanyController@getSubprojects');
+        Route::get('getSubprojectsForCompanyEmployee/{user_id}/{project_id}/{company_id}','CompanyController@getSubprojectsForCompanyEmployee');
         /*For Share Companies Load on Demand*/
         Route::get('getEmployees/{company_id}/{job_id}','CompanyController@getEmployees');
+        /*For Assign Projects Load on Demand*/
+        Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}','CompanyController@getCompanyEmployeesForProject');
         
     });
 
@@ -201,6 +204,11 @@ Route::group(['middleware' => 'auth'], function () {
      * Task List
      */
     Route::resource('task', 'TaskController');
+    
+    /*Add Briefcase(a briefcase is a Subproject)*/
+    Route::get('addBriefcaseForm','TaskController@addBriefcaseForm');
+    Route::post('addBriefcase','TaskController@addBriefcase');
+    
     Route::any('task/delete/{id}', 'TaskController@delete');
     Route::post('taskTimer/{id}', 'TaskController@taskTimer');
     Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
@@ -247,7 +255,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('event/{event_id}/delete', 'EventsController@delete');
     Route::get('company/{company_id}/delete', 'CompanyController@delete');
     Route::get('billing/{billing_id}/delete', 'BillingController@delete');
-    Route::get('project/{project_id}/delete', 'ProjectController@delete');
+    Route::post('deleteProject', 'ProjectController@delete');
     Route::get('bug/{bug_id}/delete', 'BugController@delete');
     Route::get('ticket/{ticket_id}/delete', 'TicketController@delete');
     /* Route::get('profile', function () {

@@ -76,8 +76,41 @@
                 };
 
                 $.post(url, data, function () {
-                    $('#project-' + project_id).remove();
-                    $('#project-collapse-' + project_id).remove();
+                    var row = $('#project-' + project_id).parent().parent().parent().parent();
+                    var col = $('#project-' + project_id).parent().parent().parent();
+                    
+                    if(row.children().length === 2) {
+                        //Check if this is the last row
+                        if(row.is(':last-child')) {
+                            console.log('This is the last row');
+                            col.remove();
+                        } else {
+                            col.remove();
+                                
+                            var row_count_after = row.nextAll.length;
+                            console.log('row_count_after: '+row_count_after);
+                            
+                            row_index = row.index();
+                            count = row_index;
+                            previous_count = row_index + 1;
+                            row_count_after_total = row_count_after + count;
+                            console.log('row_index: '+row_index);
+                            
+                            while(count <= row_count_after_total) {
+                                next_col = $('.project_container .row').eq(count).children(':first-child');
+                                $('.project_container .row').eq(previous_count).append($(next_col));
+                                count++;
+                                previous_count++;
+                            }
+                        }
+                        
+                    } else {
+                        row.remove();
+                    }
+                    
+                    
+                    //$('#project-' + project_id).remove();
+                    //$('#project-collapse-' + project_id).remove();
                 });
             }
         });

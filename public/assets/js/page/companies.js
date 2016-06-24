@@ -1019,6 +1019,29 @@ $('#my_projects').on('click','.toggle-subprojects', function () {
     }
 });
 
+$('#shared_projects').on('click','.toggle-subprojects', function () {
+    //var project_id = $(this).attr('id').split('-').pop();
+    var project_id = $(this).find('.project_id').val();
+    //var company_id = $(this).find('.company_id').val();
+    var company_id = window.location.pathname.split('/').pop();
+
+    var url = public_path + 'getSubprojects/' + project_id + '/' + company_id;
+
+    if ($.trim($('#project-collapse-' + project_id).is(':empty'))) {
+        $('#project-collapse-' + project_id).load(url, function () {
+            $(this).find('.task-header').each(function () {
+                var task_id = $(this).parent().attr('id').split('-').pop();
+                var task_url = public_path + '/task/' + task_id;
+                if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
+                    $('#load-task-assign-' + task_id).load(task_url,function(){
+                        $('#project-'+project_id).removeClass('toggle-subprojects');
+                    });
+                }
+            });
+        });
+    }
+});
+
 /*Add Projects*/
 $('#my_projects').on('click', '#add-project', function (e) {
     e.stopImmediatePropagation();
@@ -1033,7 +1056,6 @@ $('#my_projects').on('click', '#add-project', function (e) {
 });
 
 $('#my_projects').on('click', '.save-project', function (e) {
-
     e.stopImmediatePropagation();
     var url = public_path + 'addProject';
     var project_container = $('.project_container');
@@ -1047,11 +1069,14 @@ $('#my_projects').on('click', '.save-project', function (e) {
     $.post(url, data, function (data) {
         $('#add-project-form').remove();
         $('#add-project').removeClass('disabled');
-        var project_count = project_container.find('.row').length;
+        var project_count = project_container.find('.row').last().children().length;
         
-        console.log(project_count);
+        if(project_count === 1) {
+            project_container.find('.row').last().append(data)
+        } else {
+            project_container.append('<div class="row">'+data+'</div>');
+        }
         
-        project_container.append(data);
 
     });
 });
