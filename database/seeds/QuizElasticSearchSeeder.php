@@ -14,7 +14,7 @@ class QuizElasticSearchSeeder extends Seeder
     public function run()
     {
         $client = ES::create()
-            ->setHosts(["localhost:9200"])
+            ->setHosts(["159.203.91.188:9200"])
             ->build();
 
         $test = TestCommunity::all();

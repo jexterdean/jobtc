@@ -1046,7 +1046,7 @@ class QuizController extends BaseController {
             $ids = [];
             $search = Input::get('search');
             $client = ES::create()
-                ->setHosts(["localhost:9200"])
+                ->setHosts(["159.203.91.188:9200"])
                 ->build();
 
             $body = [
@@ -1103,7 +1103,7 @@ class QuizController extends BaseController {
         //3 = delete
         if($id) {
             $client = ES::create()
-                ->setHosts(["localhost:9200"])
+                ->setHosts(["159.203.91.188:9200"])
                 ->build();
             $params = [
                 'index' => 'default',
