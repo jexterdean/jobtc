@@ -20,7 +20,7 @@
         <div class="mini-space"></div>
         <div class="project_container">
             @foreach($projects->chunk(2) as $chunk)
-            <div class="row">
+            <div class="project-row row">
                 @foreach($chunk as $index => $project)
                 <div class="col-md-6">
                     <div  class="box box-default">

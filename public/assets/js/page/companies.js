@@ -1069,12 +1069,12 @@ $('#my_projects').on('click', '.save-project', function (e) {
     $.post(url, data, function (data) {
         $('#add-project-form').remove();
         $('#add-project').removeClass('disabled');
-        var project_count = project_container.find('.row').last().children().length;
+        var project_count = project_container.find('.project-row').last().children().length;
         
         if(project_count === 1) {
-            project_container.find('.row').last().append(data)
+            project_container.find('.project-row').last().append(data);
         } else {
-            project_container.append('<div class="row">'+data+'</div>');
+            project_container.append('<div class="project-row row">'+data+'</div>');
         }
         
 
