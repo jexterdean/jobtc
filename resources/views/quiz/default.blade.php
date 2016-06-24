@@ -16,6 +16,9 @@
 </div>
 @include('quiz.' . $page)
 <style>
+    .pagination{
+        margin: 0;
+    }
     .test-group{
         min-height: 50px;
     }
@@ -59,6 +62,92 @@
 
 <script>
     $(function(e){
+        //region Test Community Pagination
+        var testPaginationInit, testPaginationExec;
+        testPaginationInit = function(){
+            var test_community = $('.test-group[data-type=2] .task-list');
+            var test_pagination = $('.community-pagination');
+            var test_limit = {{ $test_limit }};
+            var test_pages = test_community.length > 0 ? Math.ceil(test_community.length/test_limit) : 1;
+
+            //start on page load
+            testPaginationExec({
+                element: test_community,
+                test_limit: test_limit
+            });
+
+            test_pagination.html('');
+            if(test_pages > 1){
+                test_pagination.removeClass('hidden');
+                for(var i = 0;i < test_pages; i ++){
+                    var page_txt =
+                        '<li' + (i == 0 ? ' class="active"' : '') + '>' +
+                            '<a href="#" class="test-page-link" data-page="' + i + '">' + (i+1) + '</a>' +
+                        '</li>';
+                    test_pagination.append(page_txt);
+                }
+            }
+            else{
+                test_pagination.addClass('hidden');
+            }
+        };
+        testPaginationExec = function(option){
+            var defaults = {
+                element: $('.test-group[data-type=2] .task-list'),
+                page: 0,
+                test_limit: 6
+            };
+            var options = $.extend({}, defaults, option);
+
+            var pageStart = (options.page * options.test_limit)  + 1;
+            var pageEnd = (options.page + 1) * 6;
+            var counter = 1;
+            var el = options.element;
+            el.each(function(e){
+                if(counter >= pageStart && counter <= pageEnd){
+                    $(this).removeClass('hidden');
+                }
+                else{
+                    $(this).addClass('hidden');
+                }
+                counter ++;
+            });
+        };
+
+        testPaginationInit();
+        $(document).on('click', '.test-page-link', function(e){
+            e.preventDefault();
+
+            testPaginationExec({
+                page: $(this).data('page')
+            });
+
+            $('.test-page-link').parent('li').removeClass('active');
+            $(this).parent('li').addClass('active');
+        });
+        $(document).on('propertychange keyup input paste', '.community-search', function(e){
+            var search = $(this).val();
+            if(e.keyCode == 13){
+                console.log(search + 'aw');
+                $.ajax({
+                    url: '{{ URL::to('quizSearch') }}',
+                    method: "POST",
+                    data: {
+                        search: search
+                    },
+                    success: function(content) {
+                        console.log(content);
+                        $('.test-list-2').remove();
+
+                        $('.test-group[data-type=2]').html(content);
+
+                        testPaginationInit();
+                    }
+                });
+            }
+        });
+        //endregion
+
         var testModal = $('.test-modal');
 
         $(document).on('click', '.trigger-links', function(e){
@@ -84,7 +173,7 @@
         $thisTest.find('.trigger-add-btn').trigger('click');
         @endif
 
-        //region Test Sort
+        //region Test Sort and Drag and Clone
         var t = $('.test-group');
         t.sortable({
             revert: "invalid",
@@ -117,12 +206,22 @@
                             thisItem
                                 .find('.test-version')
                                 .html('v' + v.version);
+                            thisItem
+                                .find('.test-delete-btn')
+                                .data('type', 2);
+                            thisItem
+                                .find('.test-delete-btn')
+                                .attr('id', v.version_id);
+
+                            if(destinationEle.data('type') == "2"){
+                                testPaginationInit();
+                            }
                         }
                     );
                 }
                 else{
                     var sortId = [];
-                    t.find('.test-list-' + sourceEle.data('type')).each(function(e){
+                    t.parent().find('.test-group[data-type='+ sourceEle.data('type') + '] .task-list').each(function(e){
                         sortId.push($(this).data('version'));
                     });
 
@@ -144,9 +243,10 @@
         var test_delete_btn = $('.test-delete-btn');
         test_delete_btn.click(function(e){
             var thisId = this.id;
-            var thisTest = $(this).closest('.test-list');
+            var testType = $(this).data('type');
+            var thisTest = $(this).closest('.task-list');
             $.ajax({
-                url: '{{ URL::to('quiz') }}/' + thisId + '?t=1',
+                url: '{{ URL::to('quiz') }}/' + thisId + '?t=1&type=' + testType,
                 method: "DELETE",
                 success: function(doc) {
                     thisTest.remove();
