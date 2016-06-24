@@ -140,13 +140,13 @@
             $.post(save_url, briefcase_data, function (data) {
                 $('#project-collapse-' + project_id + ' #add-briefcase-form').remove();
                 $('#project-collapse-' + project_id + ' #add-briefcase').removeClass('disabled');
-                $(data).insertAfter(project_container);
+                $(data).insertAfter($('#project-collapse-' + project_id + ' .task-list').last());
 
                 var task_id = $(data).attr('id').split('_').pop();
                 var task_url = public_path + 'task/' + task_id;
 
                 $('#load-task-assign-' + task_id).load(task_url);
-                $('#project-collapse-' + project_id + ' .empty-notifier').last().remove();
+                $('#project-collapse-' + project_id + ' .empty-notifier').hide();
             });
         });
 
