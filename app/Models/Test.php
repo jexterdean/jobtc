@@ -13,7 +13,6 @@ class Test extends Model
         'title',
         'description',
         'length',
-        'version',
         'average_score',
         'test_photo',
         'start_message',
@@ -22,7 +21,8 @@ class Test extends Model
         'completion_image',
         'completion_sound',
         'default_tags',
-        'default_points'
+        'default_points',
+        'default_time'
     ];
     protected $primaryKey = 'id';
     protected $table = 'test';
