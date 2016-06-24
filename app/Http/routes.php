@@ -194,6 +194,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('css', 'CssController');
 
     /**
+     * Project
+     */
+    Route::resource('project', 'ProjectController');
+    Route::get('addProjectForm','ProjectController@addProjectForm');
+    Route::post('addProject','ProjectController@addProject');
+    
+    /**
      * Task List
      */
     Route::resource('task', 'TaskController');
@@ -220,7 +227,11 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');
     Route::resource('event', 'EventsController');
-    Route::resource('project', 'ProjectController');
+    
+    
+    
+    
+    
     Route::resource('bug', 'BugController');
     Route::resource('note', 'NoteController');
     Route::resource('comment', 'CommentController');
