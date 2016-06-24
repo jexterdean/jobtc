@@ -96,7 +96,7 @@
                             row_count_after_total = row_count_after + count;
                             console.log('row_index: '+row_index);
                             
-                            while(count <= row_count_after_total) {
+                            while(count < row_count_after_total) {
                                 next_col = $('.project_container .row').eq(count).children(':first-child');
                                 $('.project_container .row').eq(previous_count).append($(next_col));
                                 count++;
