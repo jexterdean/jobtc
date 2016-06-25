@@ -18,6 +18,7 @@ use App\Models\TestResultModel;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Elasticsearch\ClientBuilder as ES;
 
 class QuizController extends BaseController {
 
@@ -32,6 +33,7 @@ class QuizController extends BaseController {
             'page' => 'quiz'
         ];
         $this->setData($data);
+        $data['test_limit'] = 6;
 
         return View::make('quiz.default', $data);
     }
@@ -92,6 +94,7 @@ class QuizController extends BaseController {
             ->leftJoin('test', 'test.id', '=', 'test_personal.test_id')
             ->orderBy('test_personal.order', 'asc')
             ->whereNotNull('test_personal.test_id')
+            ->whereNotNull('test.id')
             ->where('test_personal.user_id', '=', Auth::user('user')->user_id)
             ->get();
         if (count($test) > 0) {
@@ -130,7 +133,19 @@ class QuizController extends BaseController {
         }
         $data['test'] = $test;
 
-        $test_community = DB::table('test_community')
+        $data['test_community'] = $this->getTestCommunity([], $result);
+
+        //get shared files
+        $file_dir = public_path() . '/assets/shared-files';
+        $files = is_dir($file_dir) ? \File::allFiles($file_dir) : array();
+        $data['files'] = $files;
+
+        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
+        $data['triggerTest'] = $trigger;
+    }
+
+    private function getTestCommunity($id = [], $result = []){
+        $query = DB::table('test_community')
             ->select(DB::raw('
                 fp_test.*,
                 (
@@ -144,9 +159,14 @@ class QuizController extends BaseController {
                 fp_test_community.version
             '))
             ->leftJoin('test', 'test.id', '=', 'test_community.test_id')
+            ->orderByRaw('fp_test_community.order = 0')
             ->orderBy('test_community.order', 'asc')
             ->whereNotNull('test_community.test_id')
-            ->get();
+            ->whereNotNull('test.id');
+        if(count($id) > 0){
+            $query->whereIn('test_community.id', $id);
+        }
+        $test_community = $query->get();
         if (count($test_community) > 0) {
             foreach ($test_community as $t) {
                 $t->total_time = 0;
@@ -164,7 +184,8 @@ class QuizController extends BaseController {
                 }
                 $t->question = $questions;
 
-                $score = 0;
+                //comment not used for now
+                /*$score = 0;
                 $taker_count = 0;
                 if (count($result) > 0) {
                     foreach ($result as $r) {
@@ -178,18 +199,10 @@ class QuizController extends BaseController {
                     }
                 }
                 $t->average = $score > 0 ? number_format($score / $taker_count) : $score;
-                $t->average .= '%';
+                $t->average .= '%';*/
             }
         }
-        $data['test_community'] = $test_community;
-
-        //get shared files
-        $file_dir = public_path() . '/assets/shared-files';
-        $files = is_dir($file_dir) ? \File::allFiles($file_dir) : array();
-        $data['files'] = $files;
-
-        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
-        $data['triggerTest'] = $trigger;
+        return $test_community;
     }
 
     /**
@@ -598,6 +611,22 @@ class QuizController extends BaseController {
                 $test->default_points = Input::get('default_points');
                 $test->save();
 
+                //update to elastic search
+                $community = TestCommunity::where('test_id', '=', $test->id)->get();
+                if(count($community) > 0){
+                    foreach($community as $v){
+                        $community = (Object)$test->getOriginal();
+                        $community->author_id = $community->user_id;
+                        unset($community->id);
+                        unset($community->user_id);
+                        unset($community->version);
+                        unset($community->created_at);
+                        unset($community->updated_at);
+                        unset($community->order);
+                        $this->quizElasticSearch($v->id, 2, (array)$community);
+                    }
+                }
+
                 if (Input::file('completion_image_upload')) {
                     $shared_dir = public_path() . '/assets/shared-files/image/';
                     if(!is_dir($shared_dir)){
@@ -701,6 +730,9 @@ class QuizController extends BaseController {
                 ->withSuccess(($page == "test" ? "Test" : "Question") . " updated successfully!");
         }
         catch (\Exception $e) {
+            echo '<pre>';
+            print_r($e);
+            exit;
             DB::rollback();
 
             if($page == "exam"){
@@ -737,6 +769,11 @@ class QuizController extends BaseController {
                     $test = TestCommunity::find($id);
                     $test->order = $order;
                     $test->save();
+
+                    //update to elastic search
+                    $this->quizElasticSearch($id, 2, [
+                        'order' => $order
+                    ]);
                 }
 
                 $order ++;
@@ -778,12 +815,16 @@ class QuizController extends BaseController {
     public function destroy($id) {
         $t = isset($_GET['t']) ? $_GET['t'] : 1;
         if ($t == 1) {
-            DB::table('test')
+            $type = isset($_GET['type']) ? $_GET['type'] : '';
+            $table = $type == 2 ? 'test_community' : 'test_personal';
+            DB::table($table)
                 ->where('id', '=', $id)
                 ->delete();
-            DB::table('question')
-                ->where('test_id', '=', $id)
-                ->delete();
+
+            if($type == 2) {
+                //delete to elastic search
+                $this->quizElasticSearch($id, 3);
+            }
         }
         else if ($t == 2) {
             DB::table('question')
@@ -973,7 +1014,16 @@ class QuizController extends BaseController {
         $test->user_id = Auth::user()->user_id;
         $test->test_id = Input::get('id');
         $test->version = $thisTest ? $thisTest->version + 1 : 1;
+        $test->order = 0;
         $test->save();
+
+        if(Input::get('type') == 2){
+            //index to elastic search
+            $community = $test->getOriginal();
+            $community += $test->test->getOriginal();
+            $community =(Object)$community;
+            $this->quizElasticSearch($test->id, 1, $community);
+        }
 
         $info = (object)array(
             'version_id' => $test->id,
@@ -981,5 +1031,142 @@ class QuizController extends BaseController {
         );
         header("Content-type: application/json");
         return response()->json($info);
+    }
+
+    public function quizSearch(Request $request){
+        $validation = Validator::make($request->all(), [
+            'search' => 'required'
+        ]);
+
+        $r = array();
+        if ($validation->fails()) {
+            $r = $this->getTestCommunity();
+        }
+        else {
+            $ids = [];
+            $search = Input::get('search');
+            $client = ES::create()
+                ->setHosts(["159.203.91.188:9200"])
+                ->build();
+
+            $body = [
+                "sort" => [
+                    ["order" => ["order" => "asc"]],
+                    ["id" => ["order" => "asc"]]
+                ]
+            ];
+
+            $matches = [
+                ['match' => ['title' => $search]]
+            ];
+            preg_match('!\d+!', $search, $m);
+            $version = array_key_exists(0, $m) ? $m[0] : '';
+            if ($version) {
+                $matches[] = ['match' => ['version' => $version]];
+            }
+
+            $body['query'] = [
+                'bool' => [
+                    'must' => $matches
+                ]
+            ];
+
+            //get data
+            $params = [
+                'index' => 'default',
+                'type' => 'test',
+                'client' => [
+                    'ignore' => 404
+                ],
+                "fields" => "",
+                'body' => $body
+            ];
+            $s = $client->search($params);
+            $m = $s['hits']['hits'];
+
+            if (count($m) > 0) {
+                foreach ($m as $t) {
+                    $ids[] = $t['_id'];
+                }
+                $r = $this->getTestCommunity($ids);
+            }
+        }
+
+        return View::make('quiz.community', [
+            'test_community' => $r,
+            'test_limit' => 6
+        ]);
+    }
+    public function quizElasticSearchView(){
+        $client = ES::create()
+            ->setHosts(["159.203.91.188:9200"])
+            ->build();
+
+        $body = [
+            "sort" => [
+                ["order" => ["order" => "asc"]],
+                ["id" => ["order" => "asc"]]
+            ]
+        ];
+
+        $search = '';
+        $body= [];
+        if($search) {
+            $matches = [
+                ['match' => ['title' => $search]]
+            ];
+            preg_match('!\d+!', $search, $m);
+            $version = array_key_exists(0, $m) ? $m[0] : '';
+            if ($version) {
+                $matches[] = ['match' => ['version' => $version]];
+            }
+
+            $body['query'] = [
+                'bool' => [
+                    'must' => $matches
+                ]
+            ];
+        }
+
+        //get data
+        $params = [
+            'index' => 'default',
+            'type' => 'test',
+            'client' => [
+                'ignore' => 404
+            ],
+            "fields" => "",
+            'body' => $body
+        ];
+        $s = $client->search($params);
+        echo '<pre>';
+        print_r($s);
+    }
+    private function quizElasticSearch($id, $type = 1, $body = []){
+        //1 = insert
+        //2 = update
+        //3 = delete
+        if($id) {
+            $client = ES::create()
+                ->setHosts(["159.203.91.188:9200"])
+                ->build();
+            $params = [
+                'index' => 'default',
+                'type' => 'test',
+                'id' => $id
+            ];
+            if($type == 1){
+                $params['body'] = $body;
+                $client->index($params);
+            }
+            else if($type == 2){
+                $params['body']['doc'] = $body;
+                $client->update($params);
+            }
+            else if($type == 3){
+                $client->delete($params);
+            }
+
+        }
     }
 }
