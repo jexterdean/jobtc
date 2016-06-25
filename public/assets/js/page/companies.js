@@ -29,7 +29,7 @@ function removeDuplicates(listName, newItem) {
     return !dupl;
 }
 
-function assignTask(user_id, task_id, project_id,company_id) {
+function assignTask(user_id, task_id, project_id, company_id) {
 
     var url = public_path + 'assignTaskList';
 
@@ -37,13 +37,13 @@ function assignTask(user_id, task_id, project_id,company_id) {
         'user_id': user_id,
         'task_id': task_id,
         'project_id': project_id,
-        'company_id' : company_id
+        'company_id': company_id
     };
 
     $.post(url, data);
 }
 
-function unassignTask(user_id, task_id, project_id,company_id) {
+function unassignTask(user_id, task_id, project_id, company_id) {
 
     var url = public_path + 'unassignTaskList';
 
@@ -100,7 +100,7 @@ function assignProjectsScripts() {
             project_id = $(this).siblings().find('.project_id').val();
             //company_id = $(this).siblings().find('.company_id').val();
             company_id = window.location.pathname.split('/').pop();
-            console.log('company_id' +company_id);
+            console.log('company_id' + company_id);
             list_group_user_id = $(ui.item).attr('id');
             user_id = list_group_user_id.split('-').pop();
 
@@ -491,14 +491,14 @@ function assignProjectsScripts() {
         if ($(this).hasClass('bg-gray')) {
             $(this).switchClass('bg-gray', 'bg-green', function () {
                 $(this).html(assign_html);
-                assignTask(user_id, task_id, project_id,company_id);
+                assignTask(user_id, task_id, project_id, company_id);
             });
         }
         /*Unassign the Task List from this user*/
         if ($(this).hasClass('bg-green')) {
             $(this).switchClass('bg-green', 'bg-gray', function () {
                 $(this).html(unassign_html);
-                unassignTask(user_id, task_id, project_id,company_id);
+                unassignTask(user_id, task_id, project_id, company_id);
             });
         }
 
@@ -566,35 +566,35 @@ function assignProjectsScripts() {
 
         $.post(url, data);
     });
-    
+
     /*Employees per Company Load on Demand*/
-    $('.company-list-group').on('click','.toggle-employees', function () {
-        
+    $('.company-list-group').on('click', '.toggle-employees', function () {
+
         var project_id = $(this).find('.project_id').val();
         var company_id = $(this).find('.company_id').val();
 
         var url = public_path + 'getCompanyEmployeesForProject/' + project_id + '/' + company_id;
 
-        if ($.trim($('#employee-toggle-collapse-'+ project_id + '-' + company_id).is(':empty'))) {
+        if ($.trim($('#employee-toggle-collapse-' + project_id + '-' + company_id).is(':empty'))) {
             $('#employee-toggle-collapse-' + project_id + '-' + company_id).load(url, function () {
 
             });
         }
     });
-    $('.company-list-group').on('click','.toggle-subprojects',function(){
+    $('.company-list-group').on('click', '.toggle-subprojects', function () {
         var employee_id = $(this).find('.user_id').val();
         var project_id = $(this).find('.project_id').val();
         var company_id = $(this).find('.company_id').val();
-        
-        var url = public_path + 'getSubprojectsForCompanyEmployee/' + employee_id +'/'+ project_id + '/' + company_id;
+
+        var url = public_path + 'getSubprojectsForCompanyEmployee/' + employee_id + '/' + project_id + '/' + company_id;
         if ($.trim($('#employee-collapse-' + employee_id + '-' + project_id + '-' + company_id).is(':empty'))) {
             $('#employee-collapse-' + employee_id + '-' + project_id + '-' + company_id).load(url, function () {
 
             });
         }
     });
-    
-    
+
+
 } //end assign project scripts
 
 function assignTestsScripts() {
@@ -824,7 +824,7 @@ function shareJobsScripts() {
 
             } else {
                 company_id = list_group_id.split('-').pop();
-                
+
                 var identicalItemCount = $("#company-" + company_id + ' .list-group').children('li:contains(' + ui.item.find('.job_id').val() + ')').length;
 
                 //If a duplicate, remove it
@@ -834,9 +834,9 @@ function shareJobsScripts() {
 
                 //Show unassign button
                 $(ui.item).find('.unshare-job').removeClass('hidden');
-                
+
                 $(ui.item).find('.company_id').val(company_id);
-                
+
                 //Share Job to a Company
                 share_url = public_path + 'shareJobToCompany';
                 share_data = {
@@ -849,9 +849,9 @@ function shareJobsScripts() {
                     //$(ui.item).find('.job_id').val(data);
                     //$(ui.item).find('.employee-list').html(data);
                     //$(ui.item).find('.employee-list').html(data);
-                    $(ui.item).find('.toggle-employees').attr('id','shared-company-item-'+data);
-                    $(ui.item).find('.toggle-employees').attr('href','#employee-collapse-'+data);
-                    $(ui.item).find('.employee-list').attr('id','employee-collapse-'+data);
+                    $(ui.item).find('.toggle-employees').attr('id', 'shared-company-item-' + data);
+                    $(ui.item).find('.toggle-employees').attr('href', '#employee-collapse-' + data);
+                    $(ui.item).find('.employee-list').attr('id', 'employee-collapse-' + data);
                 });
             }
 
@@ -903,7 +903,7 @@ function shareJobsScripts() {
     });
 
     /*Employees per Company Load on Demand*/
-    $('.job-list-group').on('click','.toggle-employees', function () {
+    $('.job-list-group').on('click', '.toggle-employees', function () {
         var shared_company_job_id = $(this).attr('id').split('-').pop();
         var job_id = $(this).parent().parent().parent().attr('id').split('-').pop();
         var company_id = $(this).parent().parent().parent().parent().attr('id').split('-').pop();
@@ -996,12 +996,12 @@ $('#company_tabs').one('click', '.share_jobs_tab', function () {
 });
 
 /*Subprojects Load on Demand*/
-$('.toggle-subprojects').one('click', function () {
+$('#my_projects').on('click','.toggle-subprojects', function () {
     //var project_id = $(this).attr('id').split('-').pop();
     var project_id = $(this).find('.project_id').val();
     //var company_id = $(this).find('.company_id').val();
     var company_id = window.location.pathname.split('/').pop();
-    
+
     var url = public_path + 'getSubprojects/' + project_id + '/' + company_id;
 
     if ($.trim($('#project-collapse-' + project_id).is(':empty'))) {
@@ -1010,9 +1010,79 @@ $('.toggle-subprojects').one('click', function () {
                 var task_id = $(this).parent().attr('id').split('-').pop();
                 var task_url = public_path + '/task/' + task_id;
                 if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
-                    $('#load-task-assign-' + task_id).load(task_url);
+                    $('#load-task-assign-' + task_id).load(task_url,function(){
+                        $('#project-'+project_id).removeClass('toggle-subprojects');
+                    });
                 }
             });
         });
     }
+});
+
+$('#shared_projects').on('click','.toggle-subprojects', function () {
+    //var project_id = $(this).attr('id').split('-').pop();
+    var project_id = $(this).find('.project_id').val();
+    //var company_id = $(this).find('.company_id').val();
+    var company_id = window.location.pathname.split('/').pop();
+
+    var url = public_path + 'getSubprojects/' + project_id + '/' + company_id;
+
+    if ($.trim($('#project-collapse-' + project_id).is(':empty'))) {
+        $('#project-collapse-' + project_id).load(url, function () {
+            $(this).find('.task-header').each(function () {
+                var task_id = $(this).parent().attr('id').split('-').pop();
+                var task_url = public_path + '/task/' + task_id;
+                if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
+                    $('#load-task-assign-' + task_id).load(task_url,function(){
+                        $('#project-'+project_id).removeClass('toggle-subprojects');
+                    });
+                }
+            });
+        });
+    }
+});
+
+/*Add Projects*/
+$('#my_projects').on('click', '#add-project', function (e) {
+    e.stopImmediatePropagation();
+    $(this).addClass('disabled');
+
+    var url = public_path + 'addProjectForm';
+    var project_container = $('.project_container');
+
+    $.get(url, function (data) {
+        project_container.append(data);
+    });
+});
+
+$('#my_projects').on('click', '.save-project', function (e) {
+    e.stopImmediatePropagation();
+    var url = public_path + 'addProject';
+    var project_container = $('.project_container');
+    var company_id = $('.project_tab_options').find('.company_id').val();
+
+    var data = {
+        'project_title': $('input[name="project-title"]').val(),
+        'company_id': company_id
+    };
+
+    $.post(url, data, function (data) {
+        $('#add-project-form').remove();
+        $('#add-project').removeClass('disabled');
+        var project_count = project_container.find('.project-row').last().children().length;
+        
+        if(project_count === 1) {
+            project_container.find('.project-row').last().append(data);
+        } else {
+            project_container.append('<div class="project-row row">'+data+'</div>');
+        }
+        
+
+    });
+});
+
+$('#my_projects').on('click', '.cancel-project', function (e) {
+    e.stopImmediatePropagation();
+    $('#add-project').removeClass('disabled');
+    $('#add-project-form').remove();
 });

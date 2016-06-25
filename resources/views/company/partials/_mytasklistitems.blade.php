@@ -65,22 +65,56 @@
 
     /*Project Options*/
     $('.project-options').on('click', '.delete-project', function (e) {
-        //e.stopImmediatePropagation();
-        var r = confirm("Are you sure you want to delete this project?");
-        if (r == true) {
-            console.log('Deleted');
-            var url = public_path + 'deleteProject';
-            var project_id = $(this).siblings('.project_id').val();
+        e.stopImmediatePropagation();
+        var url = public_path + 'deleteProject';
+        var project_id = $(this).siblings('.project_id').val();
 
-            var data = {
-                'project_id': project_id
-            };
+        BootstrapDialog.confirm('Are you sure you want to delete this project?', function (result) {
+            if (result) {
+                var data = {
+                    'project_id': project_id
+                };
 
-            $.post(url, data, function () {
-                $('#project-' + project_id).remove();
-                $('#project-collapse-' + project_id).remove();
-            });
-        }
+                $.post(url, data, function () {
+                    var row = $('#project-' + project_id).parent().parent().parent().parent();
+                    var col = $('#project-' + project_id).parent().parent().parent();
+                    
+                    if(row.children().length === 2) {
+                        //Check if this is the last row
+                        if(row.is(':last-child')) {
+                            console.log('This is the last row');
+                            col.remove();
+                        } else {
+                            col.remove();
+                                
+                            var row_count_after = row.nextAll.length;
+                            console.log('row_count_after: '+row_count_after);
+                            
+                            row_index = row.index();
+                            count = row_index;
+                            previous_count = row_index + 1;
+                            row_count_after_total = row_count_after + count;
+                            console.log('row_index: '+row_index);
+                            
+                            while(count < row_count_after_total) {
+                                next_col = $('.project_container .row').eq(count).children(':first-child');
+                                $('.project_container .row').eq(previous_count).append($(next_col));
+                                count++;
+                                previous_count++;
+                            }
+                        }
+                        
+                    } else {
+                        row.remove();
+                    }
+                    
+                    
+                    //$('#project-' + project_id).remove();
+                    //$('#project-collapse-' + project_id).remove();
+                });
+            }
+        });
+
     });
 
     $('.project-options').on('click', '.add-briefcase', function (e) {
@@ -106,13 +140,13 @@
             $.post(save_url, briefcase_data, function (data) {
                 $('#project-collapse-' + project_id + ' #add-briefcase-form').remove();
                 $('#project-collapse-' + project_id + ' #add-briefcase').removeClass('disabled');
-                $(data).insertAfter(project_container);
+                $(data).insertAfter($('#project-collapse-' + project_id + ' .task-list').last());
 
                 var task_id = $(data).attr('id').split('_').pop();
                 var task_url = public_path + 'task/' + task_id;
 
                 $('#load-task-assign-' + task_id).load(task_url);
-                $('#project-collapse-' + project_id + ' .empty-notifier').last().remove();
+                $('#project-collapse-' + project_id + ' .empty-notifier').hide();
             });
         });
 

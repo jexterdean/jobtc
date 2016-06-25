@@ -438,5 +438,36 @@ class ProjectController extends BaseController {
 
         return redirect()->back();
     }
+    
+    public function addProjectForm(){
+        return view('forms.addProjectForm');
+    }
+    
+    public function addProject(Request $request){
+        
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $project_title = $request->input('project_title');
+        
+        $project = new Project();
+        $project->project_title = $project_title;
+        $project->account = '';
+        $project->currency = '';
+        $project->project_type = 'Standard';
+        $project->user_id = $user_id;
+        $project->company_id = $company_id;
+        $project->project_description = '';
+        $project->rate_type = '';
+        $project->rate_value = 0;
+        $project->save();
 
+        $update_project_ref = Project::find($project->project_id);
+        $update_project_ref->ref_no = $project->project_id;
+        $update_project_ref->save();
+        
+        return view('project.partials._newproject',[
+            'project' => $project,
+            'company_id' => $company_id
+        ]);
+    }
 }
