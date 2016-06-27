@@ -614,8 +614,36 @@ class CompanyController extends BaseController {
 
     /*For Load on Demand Tabs*/
     
-    public function getJobsTab(Request $request) {
+    public function getJobsTab(Request $request,$id) {
         
+        $user_id = Auth::user('user')->user_id;
+        
+        $my_jobs = Job::where('company_id',$id)->where('user_id',$user_id)->get();
+        
+        $shared_jobs_user = ShareJob::where('user_id',$user_id)->get();
+        $shared_jobs_company = ShareJobCompany::where('company_id',$id)->get();
+        
+        
+        $shared_jobs_list = [];
+        
+        foreach($shared_jobs_user as $user_job){
+            array_push($shared_jobs_list,$user_job->job_id);
+        }
+        
+        foreach($shared_jobs_company as $company_job) {
+            array_push($shared_jobs_list,$company_job->job_id);
+        }
+        
+        $shared_jobs = Job::with('user')->whereIn('id',$shared_jobs_list)
+                //->where('company_id','<>',$id)
+                //->where('user_id','<>',$user_id)
+                ->get();
+        
+        
+        return view('company.partials._myjobslist',[
+            'my_jobs' => $my_jobs,
+            'shared_jobs' => $shared_jobs
+        ]);
     }
     
     public function getAssignProjectsTab(Request $request, $id) {

@@ -85,6 +85,10 @@ function unshareFromCompanyEmployee(user_id, company_id, job_id) {
 
 }
 
+function myJobsScripts() {
+    
+}
+
 function assignProjectsScripts() {
     //For Dragging employees to projects
     $('.taskgroup-list').sortable({
@@ -959,6 +963,16 @@ function shareJobsScripts() {
 
 /*For load on demand tabs*/
 var company_id = window.location.pathname.split('/').pop();
+
+$('#company_tabs').one('click', '.jobs_tab', function () {
+    var url = public_path + 'getJobsTab/' + company_id;
+    if ($.trim($('#my_jobs').is(':empty'))) {
+        $('#my_jobs').load(url, function () {
+            myJobsScripts();
+        });
+    }
+});
+
 $('#company_tabs').one('click', '.assign_projects_tab', function () {
     var url = public_path + 'getAssignProjectsTab/' + company_id;
     if ($.trim($('#assign_projects').is(':empty'))) {
