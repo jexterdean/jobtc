@@ -18,6 +18,7 @@ use Input;
 use Redirect;
 use View;
 use Hash;
+use Auth;
 
 class UserController extends BaseController
 {
@@ -253,7 +254,7 @@ class UserController extends BaseController
         
         //Get the Client Role for the company
         //$client_role = Role::where('company_id',1)->where('level',2)->first();
-        $client_role = Role::where('company_id',6)->where('level',2)->first();
+        //$client_role = Role::where('company_id',6)->where('level',2)->first();
         
         
         $user = new User;
@@ -271,21 +272,26 @@ class UserController extends BaseController
         $user->linkedin = '';
         $user->ticketit_admin = 0;
         $user->ticketit_agent = 0;
-        $user->user_status = 'Active';
-        
+        $user->user_status = 'Active';        
         $user->save();
 
         
+        $new_user_role = Role::where('company_id',0)
+                ->where('level',2)
+                ->first();
+        
+        //Set the newly registered user to company id 0(No Company)
         $profile = new Profile;
         $profile->user_id = $user->user_id;
-        $profile->company_id = 6;
-        //$profile->company_id = 1;
-        $profile->role_id = $client_role->id;
+        $profile->company_id = 0;
+        $profile->role_id = $new_user_role->id;
         $profile->save();
         
-        $user->attachRole($client_role->id);
+        $user->attachRole($new_user_role->id);
 
-        return Redirect::to('user')->withSuccess("User added successfully!!");
+        Auth::loginUsingId("user", $user->user_id);
+        
+        return redirect()->route('company', [$profile->company_id]);
         
     }
 }

@@ -64,7 +64,7 @@ class CompanyController extends BaseController {
 
         //Getting Assign Project Data
         $user_id = Auth::user('user')->user_id;
-
+        
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
         $companies = Company::where('id', $company_id)->get();
@@ -158,7 +158,7 @@ class CompanyController extends BaseController {
 
     public function store(Request $request) {
 
-        $user_id = Auth::user()->user_id;
+        $user_id = Auth::user('user')->user_id;
 
         $validation = Validator::make(Input::all(), [
                     'name' => 'required|unique:companies',
@@ -242,6 +242,17 @@ class CompanyController extends BaseController {
         $profile->role_id = $admin->id;
         $profile->save();
 
+        $user = User::where('user_id',$user_id)->first();
+        
+        
+        $new_user_role = Role::where('company_id',0)->first();
+        
+        $user->detachRole($new_user_role->id);
+        $user->attachRole($admin->id);
+        
+        $no_company_profile = Profile::where('company_id',0)->where('user_id',$user_id);
+        $no_company_profile->delete();
+        
         return Redirect::to('company/' . $companies->id)->withSuccess("Company added successfully!!");
     }
 
@@ -601,6 +612,12 @@ class CompanyController extends BaseController {
         return $project_array;
     }
 
+    /*For Load on Demand Tabs*/
+    
+    public function getJobsTab(Request $request) {
+        
+    }
+    
     public function getAssignProjectsTab(Request $request, $id) {
 
         //Getting Assign Project Data
@@ -659,7 +676,7 @@ class CompanyController extends BaseController {
 
         $user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->where('id','<>',$id)->get();
+                    }])->where('id','<>',$id)->where('id','<>',0)->get();
 
         return view('company.partials._projectlist', [
             'company_id' => $id,
@@ -734,7 +751,7 @@ class CompanyController extends BaseController {
           $query->where('user_id', $user_id)->get();
           }])->where('id','<>',$id)->get(); */
 
-        $user_companies = Company::with('profile')->where('id', '<>', $id)->get();
+        $user_companies = Company::with('profile')->where('id', '<>', $id)->where('id', '<>', 0)->get();
 
         $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->get();
 

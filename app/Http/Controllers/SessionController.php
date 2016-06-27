@@ -71,8 +71,6 @@ class SessionController extends Controller {
     public function create(Request $request) {
 
         //Get the authority level for the user
-
-
         if (Auth::check('user') || Auth::viaRemember('user')) {
 
             $user = User::where('user_id', Auth::user('user')->user_id)->first();
@@ -124,7 +122,7 @@ class SessionController extends Controller {
 
                 $user = User::where('user_id', Auth::user('user')->user_id)->first();
                 $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
-
+        
                 return redirect()->route('company', [$profile->company_id]);
                 
             } else if (Auth::attempt("applicant", ['email' => $email, 'password' => $pass], $remember)) {

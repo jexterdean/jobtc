@@ -172,6 +172,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('getCompanyProjects/{id}','CompanyController@getCompanyProjects');
         
         /*For Company Load on Demand*/
+        Route::get('getJobsTab/{id}','CompanyController@getJobsTab');
         Route::get('getAssignProjectsTab/{id}','CompanyController@getAssignProjectsTab');
         Route::get('getAssignTestsTab/{id}','CompanyController@getAssignTestsTab');
         Route::get('getAssignAuthorityLevelsTab/{id}','CompanyController@getAssignAuthorityLevelsTab');
