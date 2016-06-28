@@ -28,7 +28,7 @@ CKEDITOR.editorConfig = function (config) {
     ];
     
     
-    config.extraPlugins = 'autocorrect,ckwebspeech,uploadimage,contextmenu';
+    config.extraPlugins = 'ckwebspeech,uploadimage,contextmenu';
     
     config.saveUrl = '/saveImage';
     //config.saveUrl = 'http://localhost:8000/saveImage';
@@ -57,7 +57,7 @@ CKEDITOR.editorConfig = function (config) {
     
      //var wh = window.innerHeight;
     //Css changes
-    //config.height = '200px';
+    config.height = '200px';
 
     //Disable resize
     config.resize_enabled = false;
