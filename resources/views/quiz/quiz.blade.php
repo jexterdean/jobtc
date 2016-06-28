@@ -15,7 +15,7 @@
                                     <div class="panel-group test-group" data-type="1" id="accordion" role="tablist" aria-multiselectable="true">
                                         @if(count($test) > 0)
                                             @foreach($test as $val)
-                                            <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" data-version="{{ $val->version_id }}" class="panel test-list-1 task-list">
+                                            <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" data-version="{{ $val->version_id }}" data-order="{{ $val->order }}" class="panel test-list-1 task-list">
                                                 <div class="panel-heading task-header" data-target="#collapse-1-{{ $val->version_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                                                     <div class="row">
                                                         <div class="col-xs-5">
