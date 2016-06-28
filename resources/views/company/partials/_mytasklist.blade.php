@@ -9,15 +9,6 @@
 </ul>
 <div class="tab-content">
     <div id="my_projects" class="tab-pane fade in active">
-        <div class="mini-space"></div>
-        <div class="project_tab_options">
-            <a href="#" id="add-project" class="btn btn-shadow btn-default add-project">
-                <i class="fa fa-plus"></i> 
-                <strong>New Project</strong>
-            </a>
-            <input class="company_id" type="hidden" value="{{$company_id}}"/>
-        </div>
-        <div class="mini-space"></div>
         <div class="project_container">
             @foreach($projects->chunk(2) as $chunk)
             <div class="project-row row">
@@ -54,6 +45,15 @@
             </div>
             @endforeach
         </div>
+        <div class="mini-space"></div>
+        <div class="project_tab_options">
+            <a href="#" id="add-project" class="btn btn-shadow btn-default add-project">
+                <i class="fa fa-plus"></i> 
+                <strong>New Project</strong>
+            </a>
+            <input class="company_id" type="hidden" value="{{$company_id}}"/>
+        </div>
+        <div class="mini-space"></div>
     </div>
     <div id="shared_projects" class="tab-pane fade">
         @foreach($shared_projects->chunk(2) as $chunk)

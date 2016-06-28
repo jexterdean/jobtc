@@ -363,7 +363,7 @@ class JobController extends Controller {
         if ($name !== '' || $email !== '') {
             $applicant->save();
             $message = "Application Submitted";
-            
+
             Auth::loginUsingId("applicant", $applicant->id);
         } else {
             $message = "Application Denied";
@@ -401,7 +401,7 @@ class JobController extends Controller {
           $mailboxalias->save(); */
 
         //return $message; 
-        
+
         return $applicant->id;
     }
 
@@ -506,4 +506,26 @@ class JobController extends Controller {
         }
     }
 
+    public function addJobFormCompany() {
+        return view('forms.addJobForm');
+    }
+
+    public function addJobCompany(Request $request) {
+
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $job_title = $request->input('job_title');
+
+        $job = new Job();
+        $job->user_id = $user_id;
+        $job->company_id = $company_id;
+        $job->title = $job_title;
+        $job->save();
+
+        
+        return view('jobs.partials._newjob', [
+            'job' => $job,
+            'company_id' => $company_id
+        ]);
+    }
 }

@@ -642,7 +642,8 @@ class CompanyController extends BaseController {
         
         return view('company.partials._myjobslist',[
             'my_jobs' => $my_jobs,
-            'shared_jobs' => $shared_jobs
+            'shared_jobs' => $shared_jobs,
+            'company_id' => $id
         ]);
     }
     
