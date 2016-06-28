@@ -180,21 +180,50 @@
             stop: function (event, ui) {
                 var sourceEle = $(event.target);
                 var destinationEle = $(ui.item).parent();
+                var destinationAppend = $(ui.item).prev().length != 0 ?
+                    $(ui.item).prev() :
+                    ($(ui.item).next().length != 0 ?
+                        $(ui.item).next() :
+                        destinationEle
+                    );
                 if(destinationEle.data('type') != sourceEle.data('type')){
-                    var thisItem = $(ui.item)
-                        .clone(true)
-                        .appendTo(destinationEle);
-                    t.sortable('cancel');
+                    var thisItem;
+                    var order = 1;
 
+                    if($(ui.item).prev().length != 0){
+                        thisItem = $(ui.item)
+                            .clone(true)
+                            .insertAfter(destinationAppend);
+                        order = destinationAppend.data('order') + 1;
+                    }
+                    else{
+                        if($(ui.item).next().length != 0){
+                            thisItem = $(ui.item)
+                                .clone(true)
+                                .insertBefore(destinationAppend);
+                            order = destinationAppend.data('order') + 1;
+                        }
+                        else{
+                            thisItem = $(ui.item)
+                                .clone(true)
+                                .appendTo(destinationAppend);
+                        }
+                    }
+                    t.sortable('cancel');
                     var url = public_path + 'quizAddPersonalCommunity';
                     $.post(
                         url,
                         {
                             id: $(ui.item).data('id'),
+                            order: order,
                             type: destinationEle.data('type')
                         },
                         function(v){
                             var newTarget = 'collapse-' + destinationEle.data('type') + '-' + v.version_id;
+                            thisItem
+                                .attr('data-version', v.version_id)
+                                .attr('data-order', v.order);
+
                             thisItem
                                 .find('.panel-heading')
                                 .attr('data-target', '#' + newTarget);
@@ -206,7 +235,7 @@
                                 .html('v' + v.version);
                             thisItem
                                 .find('.test-delete-btn')
-                                .data('type', 2);
+                                .data('type', destinationEle.data('type'));
                             thisItem
                                 .find('.test-delete-btn')
                                 .attr('id', v.version_id);

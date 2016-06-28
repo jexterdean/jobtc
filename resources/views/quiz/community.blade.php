@@ -3,7 +3,7 @@ if(count($test_community) > 0){
     $counter = 1;
     foreach($test_community as $val){
         ?>
-        <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" data-version="{{ $val->version_id }}" class="panel test-list-2 task-list{{ $counter > $test_limit ? ' hidden' : '' }}">
+        <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" data-version="{{ $val->version_id }}" data-order="{{ $val->order }}" class="panel test-list-2 task-list{{ $counter > $test_limit ? ' hidden' : '' }}">
             <div class="panel-heading task-header" data-target="#collapse-2-{{ $val->version_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                 <div class="row">
                     <div class="col-xs-5">
