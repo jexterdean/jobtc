@@ -198,7 +198,6 @@ function assignProjectsScripts() {
         }
     });
 
-
     /*Edit Profile of an employee*/
     $('.taskgroup-list').on('click', '.edit-profile', function () {
 
@@ -261,8 +260,7 @@ function assignProjectsScripts() {
 
         //Password Editor
         var password_ele = '<input type="password" name="password" class="form-control edit-password" placeholder="Edit Password" value=""/>';
-        ;
-
+        
         var password_ele = '<div class="text-area-content">';
         password_ele += '<div class="input-group">';
         password_ele += '<span class="input-group-addon" id="password-addon" ><i class="fa fa-lock" aria-hidden="true"></i></span>';

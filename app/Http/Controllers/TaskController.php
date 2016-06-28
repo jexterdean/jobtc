@@ -591,6 +591,20 @@ class TaskController extends BaseController {
             'task' => $task
         ]);
     }
+    
+    public function autoSaveEditChecklist(Request $request) {
+        $task_check_list_id = $request->input('task_check_list_id');
+        $checklist = $request->input('checklist');
+        
+        $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
+        
+        $taskCheckList->update([
+            'checklist' => $checklist
+        ]);
+        
+        return "true";
+    }
+    
 }
 
 ?>
