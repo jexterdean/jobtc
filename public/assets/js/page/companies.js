@@ -86,7 +86,7 @@ function unshareFromCompanyEmployee(user_id, company_id, job_id) {
 }
 
 function myJobsScripts() {
-    
+
 }
 
 function assignProjectsScripts() {
@@ -780,6 +780,230 @@ function assignAuthorityLevels() {
     });
 }
 
+function shareJobsScripts() {
+
+    $('.job-list-group').sortable({
+        dropOnEmpty: true,
+        connectWith: ".job-list-group",
+        handle: '.drag-handle',
+        remove: function (event, ui) {
+            //Don't remove item when dropped to the project list group
+            $(this).append($(ui.item).clone());
+        },
+        receive: function (event, ui) {
+
+            job_id = $(ui.item).find('.job_id').val();
+            list_group_id = $(ui.item).parent().attr('id');
+            console.log(list_group_id);
+            var user_id;
+            var company_id;
+            var share_url;
+            var share_data;
+
+            if (list_group_id.split('-')[0] === 'user') {
+                user_id = list_group_id.split('-').pop();
+
+                var identicalItemCount = $("#user-" + user_id + ' .list-group').children('li:contains(' + ui.item.find('.job_id').val() + ')').length;
+
+                //If a duplicate, remove it
+                if (identicalItemCount > 1) {
+                    $("#user-" + user_id + ' .list-group').children('li:contains(' + ui.item.find('.job_id').val() + ')').remove();
+                }
+
+                //Show unassign button
+                $(ui.item).find('.unshare-job').removeClass('hidden');
+
+                //Assign Test to Job
+                share_url = public_path + 'shareJobToUser';
+                share_data = {
+                    'user_id': user_id,
+                    'job_id': job_id
+                };
+
+                $.post(share_url, share_data, function (data) {
+                    //Assign the applicant id to the this list group item's input
+                    //$(ui.item).find('.job_id').val(data);
+                    //$(ui.item).find('.employee-list').html(data);
+                });
+
+            } else {
+                company_id = list_group_id.split('-').pop();
+
+                var identicalItemCount = $("#company-" + company_id + ' .list-group').children('li:contains(' + ui.item.find('.job_id').val() + ')').length;
+
+                //If a duplicate, remove it
+                if (identicalItemCount > 1) {
+                    $("#company-" + company_id + ' .list-group').children('li:contains(' + ui.item.find('.job_id').val() + ')').remove();
+                }
+
+                //Show unassign button
+                $(ui.item).find('.unshare-job').removeClass('hidden');
+
+                $(ui.item).find('.company_id').val(company_id);
+
+                //Share Job to a Company
+                share_url = public_path + 'shareJobToCompany';
+                share_data = {
+                    'company_id': company_id,
+                    'job_id': job_id
+                };
+
+                $.post(share_url, share_data, function (data) {
+                    //Assign the applicant id to the this list group item's input
+                    //$(ui.item).find('.job_id').val(data);
+                    //$(ui.item).find('.employee-list').html(data);
+                    //$(ui.item).find('.employee-list').html(data);
+                    $(ui.item).find('.toggle-employees').attr('id', 'shared-company-item-' + data);
+                    $(ui.item).find('.toggle-employees').attr('href', '#employee-collapse-' + data);
+                    $(ui.item).find('.employee-list').attr('id', 'employee-collapse-' + data);
+                });
+            }
+
+
+
+            //Remove warning that no employee is assigned.
+            $(this).find('li:contains("Drag a test here to make it available for all applicants in this job posting.")').remove();
+
+        },
+        update: function (event, ui) {
+
+        }
+    });
+
+    /*Unshare Job from User*/
+    $('.job-list-group').on('click', '.unshare-job', function () {
+        var list_item = $(this).parent().parent().parent();
+        var list_group = list_item.parent().attr('id').split('-')[0];
+
+        var job_id = $(this).find('.job_id').val();
+        var user_id;
+        var company_id;
+
+        //Remove the element immediately 
+        list_item.remove();
+
+        if (list_group === 'user') {
+            user_id = $(this).find('.user_id').val();
+
+            data = {
+                'user_id': user_id,
+                'job_id': job_id
+            };
+
+            url = public_path + 'unshareJobFromUser';
+            $.post(url, data);
+
+        } else {
+            company_id = $(this).find('.company_id').val();
+            console.log(company_id);
+            data = {
+                'company_id': company_id,
+                'job_id': job_id
+            };
+
+            url = public_path + 'unshareJobFromCompany';
+            $.post(url, data);
+        }
+    });
+
+    /*Employees per Company Load on Demand*/
+    $('.job-list-group').on('click', '.toggle-employees', function () {
+        var shared_company_job_id = $(this).attr('id').split('-').pop();
+        var job_id = $(this).parent().parent().parent().attr('id').split('-').pop();
+        var company_id = $(this).parent().parent().parent().parent().attr('id').split('-').pop();
+
+        console.log('shared_company_job_id: ' + shared_company_job_id);
+        console.log('company_id: ' + company_id);
+
+        var url = public_path + 'getEmployees/' + company_id + '/' + job_id;
+
+        if ($.trim($('#employee-collapse-' + shared_company_job_id).is(':empty'))) {
+            $('#employee-collapse-' + shared_company_job_id).load(url, function () {
+
+            });
+        }
+    });
+
+    $('.job-list-group').on('click', '.job-permission', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var user_id = $(this).children('.user_id').val();
+        var job_id = $(this).children('.job_id').val();
+        var company_id = $(this).children('.company_id').val();
+
+
+        var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
+        assign_html += '<input class="user_id" type="hidden" value="' + user_id + '"/>';
+        assign_html += '<input class="job_id" type="hidden" value="' + job_id + '"/>';
+        assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+        var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
+        unassign_html += '<input class="user_id" type="hidden" value="' + user_id + '"/>';
+        unassign_html += '<input class="job_id" type="hidden" value="' + job_id + '"/>';
+        unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+        /*Assign the Task List to this user*/
+        if ($(this).hasClass('bg-gray')) {
+            $(this).switchClass('bg-gray', 'bg-green', function () {
+                $(this).html(assign_html);
+                shareToCompanyEmployee(user_id, company_id, job_id);
+            });
+        }
+        /*Unassign the Task List from this user*/
+        if ($(this).hasClass('bg-green')) {
+            $(this).switchClass('bg-green', 'bg-gray', function () {
+                $(this).html(unassign_html);
+                unshareFromCompanyEmployee(user_id, company_id, job_id);
+            });
+        }
+    });
+
+}
+
+function assignScripts() {
+
+    $('#assign_tabs').one('click', '.assign_projects_tab', function () {
+        var url = public_path + 'getAssignProjectsTab/' + company_id;
+        if ($.trim($('#assign_projects').is(':empty'))) {
+            $('#assign_projects').load(url, function () {
+                assignProjectsScripts();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.assign_tests_tab', function () {
+        var url = public_path + 'getAssignTestsTab/' + company_id;
+        if ($.trim($('#assign_tests').is(':empty'))) {
+            $('#assign_tests').load(url, function () {
+                assignTestsScripts();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.assign_authority_levels_tab', function () {
+        var url = public_path + 'getAssignAuthorityLevelsTab/' + company_id;
+        if ($.trim($('#assign_authority_levels').is(':empty'))) {
+            $('#assign_authority_levels').load(url, function () {
+                assignAuthorityLevels();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.share_jobs_tab', function () {
+        var url = public_path + 'getShareJobsTab/' + company_id;
+        if ($.trim($('#share_jobs').is(':empty'))) {
+            $('#share_jobs').load(url, function () {
+                shareJobsScripts();
+            });
+        }
+    });
+}
+
+function employeesScripts() {
+    
+}
+
 /*For load on demand tabs*/
 var company_id = window.location.pathname.split('/').pop();
 
@@ -792,35 +1016,27 @@ $('#company_tabs').one('click', '.jobs_tab', function () {
     }
 });
 
-$('#projects_tabs').one('click', '.assign_projects_tab', function () {
-    var url = public_path + 'getAssignProjectsTab/' + company_id;
-    if ($.trim($('#assign_projects').is(':empty'))) {
-        $('#assign_projects').load(url, function () {
-            assignProjectsScripts();
+$('#company_tabs').one('click', '.employees_tab', function () {
+    var url = public_path + 'getEmployeesTab/' + company_id;
+    if ($.trim($('#employees').is(':empty'))) {
+        $('#employees').load(url, function () {
+            employeesScripts();
         });
     }
 });
 
-$('#company_tabs').one('click', '.assign_tests_tab', function () {
-    var url = public_path + 'getAssignTestsTab/' + company_id;
-    if ($.trim($('#assign_tests').is(':empty'))) {
-        $('#assign_tests').load(url, function () {
-            assignTestsScripts();
-        });
-    }
-});
-
-$('#company_tabs').one('click', '.assign_authority_levels_tab', function () {
-    var url = public_path + 'getAssignAuthorityLevelsTab/' + company_id;
-    if ($.trim($('#assign_authority_levels').is(':empty'))) {
-        $('#assign_authority_levels').load(url, function () {
-            assignAuthorityLevels();
+$('#company_tabs').one('click', '.assign_tab', function () {
+    var url = public_path + 'getAssignTab/' + company_id;
+    if ($.trim($('#assign').is(':empty'))) {
+        $('#assign').load(url, function () {
+            assignScripts();
+            $('.assign_projects_tab').click();
         });
     }
 });
 
 /*Subprojects Load on Demand*/
-$('#my_projects').on('click','.toggle-subprojects', function () {
+$('#my_projects').on('click', '.toggle-subprojects', function () {
     //var project_id = $(this).attr('id').split('-').pop();
     var project_id = $(this).find('.project_id').val();
     //var company_id = $(this).find('.company_id').val();
@@ -834,8 +1050,8 @@ $('#my_projects').on('click','.toggle-subprojects', function () {
                 var task_id = $(this).parent().attr('id').split('-').pop();
                 var task_url = public_path + '/task/' + task_id;
                 if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
-                    $('#load-task-assign-' + task_id).load(task_url,function(){
-                        $('#project-'+project_id).removeClass('toggle-subprojects');
+                    $('#load-task-assign-' + task_id).load(task_url, function () {
+                        $('#project-' + project_id).removeClass('toggle-subprojects');
                     });
                 }
             });
@@ -843,7 +1059,7 @@ $('#my_projects').on('click','.toggle-subprojects', function () {
     }
 });
 
-$('#shared_projects').on('click','.toggle-subprojects', function () {
+$('#shared_projects').on('click', '.toggle-subprojects', function () {
     //var project_id = $(this).attr('id').split('-').pop();
     var project_id = $(this).find('.project_id').val();
     //var company_id = $(this).find('.company_id').val();
@@ -857,8 +1073,8 @@ $('#shared_projects').on('click','.toggle-subprojects', function () {
                 var task_id = $(this).parent().attr('id').split('-').pop();
                 var task_url = public_path + '/task/' + task_id;
                 if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
-                    $('#load-task-assign-' + task_id).load(task_url,function(){
-                        $('#project-'+project_id).removeClass('toggle-subprojects');
+                    $('#load-task-assign-' + task_id).load(task_url, function () {
+                        $('#project-' + project_id).removeClass('toggle-subprojects');
                     });
                 }
             });
@@ -894,13 +1110,13 @@ $('#my_projects').on('click', '.save-project', function (e) {
         $('#add-project-form').remove();
         $('#add-project').removeClass('disabled');
         var project_count = project_container.find('.project-row').last().children().length;
-        
-        if(project_count === 1) {
+
+        if (project_count === 1) {
             project_container.find('.project-row').last().append(data);
         } else {
-            project_container.append('<div class="project-row row">'+data+'</div>');
+            project_container.append('<div class="project-row row">' + data + '</div>');
         }
-        
+
 
     });
 });

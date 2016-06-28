@@ -6,7 +6,6 @@
         </a>
     </li>
     <li class="shared_projects_tab"><a data-toggle="pill" href="#shared_projects">Shared Projects</a></li>
-    <li><a class="assign_projects_tab" data-toggle="pill" href="#assign_projects">Assign Projects</a></li>
 </ul>
 <div class="tab-content">
     <div id="my_projects" class="tab-pane fade in active">
@@ -93,9 +92,6 @@
             @endforeach
         </div>
         @endforeach
-    </div>
-    <div id="assign_projects" class="tab-pane fade in">
-        <!--Load the content with AJAX when the user clicks on tab-->
     </div>
 </div>
 <div class="modal fade edit-modal" id="edit_project_form" role="basic" aria-hidden="true">

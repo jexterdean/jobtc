@@ -1,9 +1,3 @@
-<div class="mini-space"></div>
-<div class="row">
-    <a data-toggle="modal" href="#add_user">
-        <button class="btn btn-sm btn-default btn-shadow"><i class="fa fa-plus-circle"></i> Add New User</button>
-    </a>
-</div>
 <div class="modal fade" id="edit_project_form" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -81,11 +75,6 @@
                                             <div class="col-md-10">
                                                 <a class="team-member name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">
                                                     <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                                    @if($team_members->user->photo === '')
-                                                    <img class="employee-photo" src="{{url('assets/user/default-avatar.jpg')}}" />
-                                                    @else
-                                                    <img class="employee-photo" src="{{url($team_members->user->photo)}}"/>
-                                                    @endif
                                                     {{$team_members->user->name}}
                                                 </a>
                                             </div>
@@ -261,11 +250,6 @@
                                             <div class="col-md-10">
                                                 <a class="team-member name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">
                                                     <i class="fa fa-chevron-down" aria-hidden="true"></i>
-                                                    @if($team_members->user->photo === '')
-                                                    <img class="employee-photo" src="{{url('assets/user/default-avatar.jpg')}}" />
-                                                    @else
-                                                    <img class="employee-photo" src="{{url($team_members->user->photo)}}"/>
-                                                    @endif
                                                     {{$team_members->user->name}}
                                                 </a>
                                             </div>
@@ -394,20 +378,11 @@
                                 <div class="row">
                                     <div class="col-md-9">
                                         <a class="profile-toggle" data-toggle="collapse" href="#profile-collapse-{{$profile->user->user_id}}">
-                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true">
-                                                @if($profile->user->photo === '')
-                                                <img class="employee-photo" src="{{url('assets/user/default-avatar.jpg')}}" />
-                                                @else
-                                                <img class="employee-photo" src="{{url($profile->user->photo)}}"/>
-                                                @endif
-                                            </i>
+                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                             <div class="name">{{$profile->user->name}}</div>
                                         </a>
                                     </div>
                                     <div class="pull-right">
-                                        <a class="icon icon-btn edit-profile">
-                                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                                        </a>
                                         <a href="#" class="drag-handle">
                                             <i class="fa fa-arrows"></i>
                                         </a>

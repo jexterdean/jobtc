@@ -647,6 +647,95 @@ class CompanyController extends BaseController {
         ]);
     }
     
+    public function getEmployeesTab(Request $request,$id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $profiles = Profile::where('company_id', $id)->get();
+        
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+        
+        return view('company.partials._employees',[
+            'profiles' => $profiles,
+            'countries' => $countries_option,
+            'company_id' => $id     
+        ]);
+    }
+    
+    public function getAssignTab(Request $request,$id) {
+        
+        //Getting Assign Project Data
+        $user_id = Auth::user('user')->user_id;
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $team_grouping = Project::with('team_project')->where('company_id', $id)->get();
+
+        $profiles = Profile::where('company_id', $id)->get();
+
+        $project_id_list = [];
+
+        //Get owned projects
+        $owned_projects = Project::where('user_id', $user_id)->where('company_id', $id)->get();
+
+        $teams = Team::with(['team_member' => function($query) use($id) {
+                        $query->with('user')->where('company_id', $id)->get();
+                    }])->get();
+
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id', $user_id)->where('company_id',$id)->get();
+
+        $team_projects = TeamProject::all();
+
+        $team_companies = TeamCompany::where('company_id','<>',$id)->get();
+
+        foreach ($owned_projects as $owned_project) {
+            array_push($project_id_list, $owned_project->project_id);
+        }
+
+        //Use the team id to get the projects the users are involved with
+        foreach ($team_members as $member) {
+            foreach ($team_projects as $project) {
+                if ($member->team_id === $project->team_id) {
+                    array_push($project_id_list, $project->project_id);
+                }
+            }
+        }
+
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->where('company_id',$id)
+                            ->where('user_id',$user_id)
+                            ->get();
+                    
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission','company','user')
+                            ->whereIn('project_id', $project_id_list)
+                            ->get();            
+
+
+        $user_companies = Company::with(['profile' => function($query) use($user_id) {
+                        $query->where('user_id', $user_id)->get();
+                    }])->where('id','<>',$id)->where('id','<>',0)->get();
+
+        return view('company.partials._assign', [
+            'company_id' => $id,
+            'projects' => $projects,
+            'shared_projects' => $shared_projects,
+            'profiles' => $profiles,
+            'user_companies' => $user_companies,
+            'teams' => $teams,
+            'team_members' => $team_members,
+            'team_grouping' => $team_grouping,
+            'team_companies' => $team_companies,
+            'countries' => $countries_option
+        ]);
+    }
+    
     public function getAssignProjectsTab(Request $request, $id) {
 
         //Getting Assign Project Data

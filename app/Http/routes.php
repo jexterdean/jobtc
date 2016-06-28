@@ -177,6 +177,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         /* For Company Load on Demand */
         Route::get('getJobsTab/{id}', 'CompanyController@getJobsTab');
+        Route::get('getEmployeesTab/{id}','CompanyController@getEmployeesTab');
+        Route::get('getAssignTab/{id}', 'CompanyController@getAssignTab');
         Route::get('getAssignProjectsTab/{id}', 'CompanyController@getAssignProjectsTab');
         Route::get('getAssignTestsTab/{id}', 'CompanyController@getAssignTestsTab');
         Route::get('getAssignAuthorityLevelsTab/{id}', 'CompanyController@getAssignAuthorityLevelsTab');
@@ -204,8 +206,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('project', 'ProjectController');
     Route::get('addProjectForm', 'ProjectController@addProjectForm');
     Route::post('addProject', 'ProjectController@addProject');
-
-
+    
+    /*
+     * Employees
+     **/
+    Route::get('addEmployeeForm','UserController@addEmployeeForm');
+    Route::post('addEmployee','UserController@addEmployee');
+    
     /**
      * Task List
      */

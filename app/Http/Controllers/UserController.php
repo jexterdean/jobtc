@@ -294,6 +294,47 @@ class UserController extends BaseController
         return redirect()->route('company', [$profile->company_id]);
         
     }
+    
+    public function addEmployeeForm(Request $request) {
+        return view('forms.addEmployeeForm');
+    }
+    
+    public function addEmployee(Request $request) {
+        
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $company_id = $request->input('company_id');
+        
+        $user = new User;
+        $user->name = $name;
+        $user->password = bcrypt($password); 
+        $user->email = $email; 
+        $user->ticketit_admin = 0;
+        $user->ticketit_agent = 0;
+        $user->user_status = 'Active';        
+        $user->save();
+
+        //Assign it as a staff user first
+        $user_role = Role::where('company_id',$company_id)
+                ->where('level',2)
+                ->first();
+        
+        
+        //Set the newly registered user to current company
+        $profile = new Profile;
+        $profile->user_id = $user->user_id;
+        $profile->company_id = $company_id;
+        $profile->role_id = $user_role->id;
+        $profile->save();
+        
+        $user->attachRole($user_role->id);
+        
+        return view('user.partials._newemployee',[
+            'profile' => $profile,
+            'company_id' => $company_id
+        ]);
+    }
 }
 
 ?>
