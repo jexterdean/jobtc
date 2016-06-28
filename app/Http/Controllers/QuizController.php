@@ -89,7 +89,8 @@ class QuizController extends BaseController {
                         fp_test_result.unique_id = ' . Auth::user('user')->user_id . '
                 ) as review_only,
                 fp_test_personal.id as version_id,
-                fp_test_personal.version
+                fp_test_personal.version,
+                fp_test_personal.order
             '))
             ->leftJoin('test', 'test.id', '=', 'test_personal.test_id')
             ->orderBy('test_personal.order', 'asc')
@@ -156,7 +157,8 @@ class QuizController extends BaseController {
                         fp_test_result.unique_id = ' . Auth::user('user')->user_id . '
                 ) as review_only,
                 fp_test_community.id as version_id,
-                fp_test_community.version
+                fp_test_community.version,
+                fp_test_community.order
             '))
             ->leftJoin('test', 'test.id', '=', 'test_community.test_id')
             ->orderByRaw('fp_test_community.order = 0')
@@ -1010,24 +1012,30 @@ class QuizController extends BaseController {
             ->orderBy('version', 'DESC')
             ->first();
 
+        //update order of other test before insert
+        DB::table('test_community')
+            ->where('order', '>=', Input::get('order'))
+            ->increment('order');
+
         $test = Input::get('type') == 1 ? new TestPersonal() : new TestCommunity();
         $test->user_id = Auth::user()->user_id;
         $test->test_id = Input::get('id');
         $test->version = $thisTest ? $thisTest->version + 1 : 1;
-        $test->order = 0;
+        $test->order = Input::get('order') ? Input::get('order') : 1;
         $test->save();
 
         if(Input::get('type') == 2){
             //index to elastic search
             $community = $test->getOriginal();
             $community += $test->test->getOriginal();
-            $community =(Object)$community;
+            $community = (Object)$community;
             $this->quizElasticSearch($test->id, 1, $community);
         }
 
         $info = (object)array(
             'version_id' => $test->id,
-            'version' => $test->version
+            'version' => $test->version,
+            'order' => $test->order
         );
         header("Content-type: application/json");
         return response()->json($info);
@@ -1046,7 +1054,7 @@ class QuizController extends BaseController {
             $ids = [];
             $search = Input::get('search');
             $client = ES::create()
-                ->setHosts(["159.203.91.188:9200"])
+                ->setHosts(\Config::get('elasticsearch.host'))
                 ->build();
 
             $body = [
@@ -1099,7 +1107,7 @@ class QuizController extends BaseController {
     }
     public function quizElasticSearchView(){
         $client = ES::create()
-            ->setHosts(["159.203.91.188:9200"])
+            ->setHosts(\Config::get('elasticsearch.host'))
             ->build();
 
         $body = [
@@ -1135,12 +1143,31 @@ class QuizController extends BaseController {
             'client' => [
                 'ignore' => 404
             ],
-            "fields" => "",
             'body' => $body
         ];
         $s = $client->search($params);
-        echo '<pre>';
-        print_r($s);
+
+        //delete
+        if(isset($_GET['d'])) {
+            $hits = $s['hits']['hits'];
+            if (count($hits) > 0) {
+                foreach($hits as $v){
+                    $this->quizElasticSearch($v['_id'], 3);
+                }
+            }
+        }
+        else if(isset($_GET['i'])){
+            $test = TestCommunity::find($_GET['i']);
+            //index to elastic search
+            $community = $test->getOriginal();
+            $community += $test->test->getOriginal();
+            $community = (Object)$community;
+            $this->quizElasticSearch($test->id, 1, $community);
+        }
+        else {
+            echo '<pre>';
+            print_r($s);
+        }
     }
     private function quizElasticSearch($id, $type = 1, $body = []){
         //1 = insert
@@ -1148,7 +1175,7 @@ class QuizController extends BaseController {
         //3 = delete
         if($id) {
             $client = ES::create()
-                ->setHosts(["159.203.91.188:9200"])
+                ->setHosts(\Config::get('elasticsearch.host'))
                 ->build();
             $params = [
                 'index' => 'default',
