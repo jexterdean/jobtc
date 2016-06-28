@@ -1,5 +1,5 @@
 @if (Auth::check('user'))
-<nav class="navbar navbar-static-top navbar-inverse navbar-border" role="navigation">
+<nav class="navbar navbar-static-top navbar-border" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                 data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -10,9 +10,9 @@
         </button>
     </div>
     <div class="collapse navbar-collapse" id="navbar">
-        <ul class="nav navbar-nav">
-            @include('layouts.navbar')
-        </ul>
+        {{--<ul class="nav navbar-nav">--}}
+            @include('layouts.menu')
+        {{--</ul>--}}
         {{--<ul class="nav navbar-nav pull-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle">

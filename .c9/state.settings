@@ -2,7 +2,7 @@
     "console": {
         "@expanded": true,
         "@height": "153",
-        "@maximized": "false",
+        "@maximized": false,
         "json()": {
             "meta": {
                 "accessList": [
@@ -73,17 +73,17 @@
     },
     "ext": {
         "counters": {
-            "@ace": 1,
-            "@acestatus": 1,
+            "@ace": 3,
+            "@acestatus": 2,
             "@divider": 4,
-            "@document": 4,
+            "@document": 7,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 3,
-            "@tab": 4,
-            "@undoManager": 4
+            "@session": 7,
+            "@tab": 6,
+            "@undoManager": 7
         }
     },
     "findinfiles": {
@@ -206,7 +206,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/public/ckeditor/config.js"
+            "/gulpfile.js"
         ]
     }
 }
