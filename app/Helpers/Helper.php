@@ -132,8 +132,66 @@ class Helper
         $user_id = Auth::user('user_id')->user_id;
         
         $companies = Profile::with('company')->where('user_id',$user_id)->get();
-        
-        //$companies = Company::orderBy('name', 'asc')->get();
+
+        if(count($companies) > 0){
+            foreach($companies as $company){
+
+                $job_list_ids = [];
+                $company_list_ids = [];
+                $project_id_list = [];
+
+                $where = ['user_id'=>$user_id,'company_id' => $company->company->id];
+                //Get owned projects
+                $owned_projects = Project::where($where)->get();
+
+                //Get Team Member projects
+                $team_members = TeamMember::where($where)->get();
+
+                $team_projects = TeamProject::all();
+
+                foreach($owned_projects as $owned_project) {
+                    array_push($project_id_list, $owned_project->project_id);
+                }
+
+                //Use the team id to get the projects the users are involved with
+                foreach($team_members as $member) {
+                    foreach($team_projects as $project) {
+                        if ($member->team_id === $project->team_id) {
+                            array_push($project_id_list, $project->project_id);
+                        }
+                    }
+                }
+
+                $company->projects = Project::whereIn('project_id',$project_id_list)->get();
+
+                //Get Jobs under a certain company
+                array_push($company_list_ids,$company->company->id);
+
+                $owned_jobs = Job::where($where)->get();
+
+                $shared_jobs = ShareJob::where('user_id',$user_id)->get();
+
+                $shared_jobs_companies = ShareJobCompanyPermission::whereIn('company_id',$company_list_ids)->where($where)->get();
+
+                foreach($owned_jobs as $owned_job) {
+                    array_push($job_list_ids,$owned_job->id);
+                }
+
+                foreach($shared_jobs as $shared_job) {
+                    array_push($job_list_ids,$shared_job->job_id);
+                }
+
+                foreach($shared_jobs_companies as $shared_jobs_company) {
+                    array_push($job_list_ids,$shared_jobs_company->job_id);
+                }
+
+                $company->jobs = Job::whereIn('id',$job_list_ids)->get();
+
+                foreach($company->jobs as $job){
+                    $job->applicants = Applicant::where('job_id',$job->id)->get();
+                }
+            }
+        }
 
         return $companies;
     }
