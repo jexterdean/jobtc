@@ -106,7 +106,7 @@ $('.edit-job').click(function (e) {
             'pageToLoad': edit_job_form
         },
         onshown: function (ref) {
-            initCkeditor(ref);
+            //initCkeditor(ref);
         },
         closable: false
     });
@@ -358,13 +358,11 @@ $('.status-container').tagEditor({
 });
 
 function initCkeditor(ref) {
-    var editor = CKEDITOR.replace('edit-description', {
-        startupFocus: true
-    });
-
-    editor.on('change', function (evt) {
-        $('#edit-description').text(evt.editor.getData());
-    });
+    //var editor = CKEDITOR.instances['edit-description'];
+        
+    //editor.on('change', function (evt) {
+        //$('#edit-description').text(evt.editor.getData());
+    //});
 }
 
 var assessment_editor = CKEDITOR.replace('assessment-instruction', {

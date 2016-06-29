@@ -681,12 +681,35 @@
             //var textarea_id = $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').attr('id');
             var textarea_id = $(this).parent().parent().parent().parent().parent().parent().find('.edit-checklist-item').attr('id');
 
-            CKEDITOR.replace(textarea_id);
+            var edit_task_list_editor = CKEDITOR.replace(textarea_id);
+            edit_task_list_editor.on('change', function (evt) {
 
+                var ajaxurl = public_path + 'autoSaveEditChecklist';
+                
+                var formData = new FormData();
+                formData.append('task_check_list_id', task_list_item_id);
+                formData.append('checklist', evt.editor.getData());
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: "POST",
+                    data: formData,
+                    // THIS MUST BE DONE FOR FILE UPLOADING
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                }); //ajax
+            });
+            
             //Toggle the content area to show
             $('#task-item-collapse-' + task_list_item_id).collapse('show');
-            $(this)
-                    .css({'display': 'none'});
+            $(this).css({'display': 'none'});
             $(this).siblings('.alert_delete').css({'display': 'none'});
         });
 
@@ -1066,8 +1089,8 @@
                 //$('.text-area-content').remove();
             });
         });
-        
-        
+
+
 
         function makeid()
         {

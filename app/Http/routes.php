@@ -1,4 +1,5 @@
 <?php
+
 //Ckeditor fix temp route
 Route::get('/editor', 'CKEditorController@index');
 
@@ -20,6 +21,8 @@ Route::get('logout', 'SessionController@destroy');
 //job posting can be accessed by would be applicants(they need to view the job posting without logging in)
 Route::resource('job', 'JobController');
 Route::post('updateJob/{id}', 'JobController@update');
+Route::get('addJobFormCompany', 'JobController@addJobFormCompany');
+Route::post('addJobCompany', 'JobController@addJobCompany');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
@@ -36,7 +39,7 @@ Route::post('register', 'UserController@register');
 Route::resource('a', 'ApplicantController');
 Route::get('a/{id}', ['as' => 'a', 'uses' => 'ApplicantController@show', 'https' => true]);
 Route::post('saveApplicantNotes', 'ApplicantController@saveApplicantNotes');
-Route::post('getApplicantQuizResults','ApplicantController@getApplicantQuizResults');
+Route::post('getApplicantQuizResults', 'ApplicantController@getApplicantQuizResults');
 
 
 /* Add or Remove Applicant from the User Table */
@@ -56,9 +59,9 @@ Route::get('getChartData/{id}', 'CompanyController@getChartData');
 /* For Assigning User Roles */
 Route::post('updateRole', 'CompanyController@updateRole');
 
-/*For Video*/
-Route::post('saveVideo','VideoController@saveVideo');
-Route::post('deleteVideo','VideoController@deleteVideo');
+/* For Video */
+Route::post('saveVideo', 'VideoController@saveVideo');
+Route::post('deleteVideo', 'VideoController@deleteVideo');
 
 /* For Video Status */
 Route::post('/addVideoTag', 'VideoController@addVideoTag');
@@ -78,10 +81,10 @@ Route::any('quizElasticSearchView', 'QuizController@quizElasticSearchView');
 /*
  * Indeed Applicant Importer (Don't put this in any middleware, 
  * the script should not login to insert the data from Indeed
- **/
+ * */
 
-Route::post('addJobFromCrawler','CrawlerController@addJobFromCrawler');
-Route::post('addApplicantFromCrawler','CrawlerController@addApplicantFromCrawler');
+Route::post('addJobFromCrawler', 'CrawlerController@addJobFromCrawler');
+Route::post('addApplicantFromCrawler', 'CrawlerController@addApplicantFromCrawler');
 
 Route::group(['middleware' => 'guest'], function () {
 
@@ -131,18 +134,18 @@ Route::group(['middleware' => 'auth'], function () {
         /* Unassigning Team members from a project */
         Route::any('unassignTeamMember', 'CompanyController@unassignTeamMember');
 
-        /*For Assigning Companies to a team*/
-        Route::post('assignCompanyToTeam','CompanyController@assignCompanyToTeam');
-        Route::post('unassignCompanyFromTeam','CompanyController@unassignCompanyFromTeam');
-        
-        /*Sharing Jobs to a User*/
-        Route::post('shareJobToUser','CompanyController@shareJobToUser');
-        Route::post('unshareJobFromUser','CompanyController@unshareJobFromUser');
-        
-        /*Sharing Jobs to a Company*/
-        Route::post('shareJobToCompany','CompanyController@shareJobToCompany');
-        Route::post('unshareJobFromCompany','CompanyController@unshareJobFromCompany');
-        
+        /* For Assigning Companies to a team */
+        Route::post('assignCompanyToTeam', 'CompanyController@assignCompanyToTeam');
+        Route::post('unassignCompanyFromTeam', 'CompanyController@unassignCompanyFromTeam');
+
+        /* Sharing Jobs to a User */
+        Route::post('shareJobToUser', 'CompanyController@shareJobToUser');
+        Route::post('unshareJobFromUser', 'CompanyController@unshareJobFromUser');
+
+        /* Sharing Jobs to a Company */
+        Route::post('shareJobToCompany', 'CompanyController@shareJobToCompany');
+        Route::post('unshareJobFromCompany', 'CompanyController@unshareJobFromCompany');
+
         /* For assigning employees with tasks from the tasklist of a given project */
         Route::any('assignTaskList', 'CompanyController@assignTaskList');
         Route::any('unassignTaskList', 'CompanyController@unassignTaskList');
@@ -154,38 +157,39 @@ Route::group(['middleware' => 'auth'], function () {
         /* For assigning tests to jobs */
         Route::any('assignTestToApplicant', 'CompanyController@assignTestToApplicant');
         Route::any('unassignTestFromApplicant', 'CompanyController@unassignTestFromApplicant');
-        
-        /*For sharing jobs with employees per company*/
+
+        /* For sharing jobs with employees per company */
         Route::any('shareToCompanyEmployee', 'CompanyController@shareToCompanyEmployee');
         Route::any('unshareFromCompanyEmployee', 'CompanyController@unshareFromCompanyEmployee');
-        
+
         /* For Getting the tasklist when you're dropping an employee to a project */
         Route::any('getTaskList', 'CompanyController@getTaskList');
 
-        /*Saving a Spreadsheet type task*/
-        Route::any('saveSpreadsheet','TaskController@saveSpreadsheet');
-        
+        /* Saving a Spreadsheet type task */
+        Route::any('saveSpreadsheet', 'TaskController@saveSpreadsheet');
+
         //For CkEditor Image file upload
         Route::any('saveImage&responseType=json', 'TaskController@saveImage');
 
         Route::get('company/{id}', ['as' => 'company', 'uses' => 'CompanyController@show', 'https' => true]);
-        
-        Route::get('getCompanyProjects/{id}','CompanyController@getCompanyProjects');
-        
-        /*For Company Load on Demand*/
-        Route::get('getJobsTab/{id}','CompanyController@getJobsTab');
-        Route::get('getAssignProjectsTab/{id}','CompanyController@getAssignProjectsTab');
-        Route::get('getAssignTestsTab/{id}','CompanyController@getAssignTestsTab');
-        Route::get('getAssignAuthorityLevelsTab/{id}','CompanyController@getAssignAuthorityLevelsTab');
-        Route::get('getShareJobsTab/{id}','CompanyController@getShareJobsTab');
-        /*For Projects Load on Demand*/
-        Route::get('getSubprojects/{project_id}/{company_id}','CompanyController@getSubprojects');
-        Route::get('getSubprojectsForCompanyEmployee/{user_id}/{project_id}/{company_id}','CompanyController@getSubprojectsForCompanyEmployee');
-        /*For Share Companies Load on Demand*/
-        Route::get('getEmployees/{company_id}/{job_id}','CompanyController@getEmployees');
-        /*For Assign Projects Load on Demand*/
-        Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}','CompanyController@getCompanyEmployeesForProject');
-        
+
+        Route::get('getCompanyProjects/{id}', 'CompanyController@getCompanyProjects');
+
+        /* For Company Load on Demand */
+        Route::get('getJobsTab/{id}', 'CompanyController@getJobsTab');
+        Route::get('getEmployeesTab/{id}','CompanyController@getEmployeesTab');
+        Route::get('getAssignTab/{id}', 'CompanyController@getAssignTab');
+        Route::get('getAssignProjectsTab/{id}', 'CompanyController@getAssignProjectsTab');
+        Route::get('getAssignTestsTab/{id}', 'CompanyController@getAssignTestsTab');
+        Route::get('getAssignAuthorityLevelsTab/{id}', 'CompanyController@getAssignAuthorityLevelsTab');
+        Route::get('getShareJobsTab/{id}', 'CompanyController@getShareJobsTab');
+        /* For Projects Load on Demand */
+        Route::get('getSubprojects/{project_id}/{company_id}', 'CompanyController@getSubprojects');
+        Route::get('getSubprojectsForCompanyEmployee/{user_id}/{project_id}/{company_id}', 'CompanyController@getSubprojectsForCompanyEmployee');
+        /* For Share Companies Load on Demand */
+        Route::get('getEmployees/{company_id}/{job_id}', 'CompanyController@getEmployees');
+        /* For Assign Projects Load on Demand */
+        Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}', 'CompanyController@getCompanyEmployeesForProject');
     });
 
     /**
@@ -200,18 +204,24 @@ Route::group(['middleware' => 'auth'], function () {
      * Project
      */
     Route::resource('project', 'ProjectController');
-    Route::get('addProjectForm','ProjectController@addProjectForm');
-    Route::post('addProject','ProjectController@addProject');
+    Route::get('addProjectForm', 'ProjectController@addProjectForm');
+    Route::post('addProject', 'ProjectController@addProject');
+    
+    /*
+     * Employees
+     **/
+    Route::get('addEmployeeForm','UserController@addEmployeeForm');
+    Route::post('addEmployee','UserController@addEmployee');
     
     /**
      * Task List
      */
     Route::resource('task', 'TaskController');
-    
-    /*Add Briefcase(a briefcase is a Subproject)*/
-    Route::get('addBriefcaseForm','TaskController@addBriefcaseForm');
-    Route::post('addBriefcase','TaskController@addBriefcase');
-    
+
+    /* Add Briefcase(a briefcase is a Subproject) */
+    Route::get('addBriefcaseForm', 'TaskController@addBriefcaseForm');
+    Route::post('addBriefcase', 'TaskController@addBriefcase');
+
     Route::any('task/delete/{id}', 'TaskController@delete');
     Route::post('taskTimer/{id}', 'TaskController@taskTimer');
     Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
@@ -225,16 +235,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('saveTaskCheckListHeader', 'TaskController@saveTaskCheckListHeader');
     Route::post('saveTaskCheckList', 'TaskController@saveTaskCheckList');
     Route::post('cancelAddNewTask', 'TaskController@cancelAddNewTask');
-    Route::post('getTaskChecklistItem','TaskController@getTaskChecklistItem');
-    
-    
+    Route::post('getTaskChecklistItem', 'TaskController@getTaskChecklistItem');
+    Route::post('autoSaveEditChecklist','TaskController@autoSaveEditChecklist');
+
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');
     Route::resource('event', 'EventsController');
-    
-    
-    
-    
-    
+
+
+
+
+
     Route::resource('bug', 'BugController');
     Route::resource('note', 'NoteController');
     Route::resource('comment', 'CommentController');

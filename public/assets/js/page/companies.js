@@ -86,7 +86,7 @@ function unshareFromCompanyEmployee(user_id, company_id, job_id) {
 }
 
 function myJobsScripts() {
-    
+
 }
 
 function assignProjectsScripts() {
@@ -198,7 +198,6 @@ function assignProjectsScripts() {
         }
     });
 
-
     /*Edit Profile of an employee*/
     $('.taskgroup-list').on('click', '.edit-profile', function () {
 
@@ -261,8 +260,7 @@ function assignProjectsScripts() {
 
         //Password Editor
         var password_ele = '<input type="password" name="password" class="form-control edit-password" placeholder="Edit Password" value=""/>';
-        ;
-
+        
         var password_ele = '<div class="text-area-content">';
         password_ele += '<div class="input-group">';
         password_ele += '<span class="input-group-addon" id="password-addon" ><i class="fa fa-lock" aria-hidden="true"></i></span>';
@@ -961,6 +959,49 @@ function shareJobsScripts() {
 
 }
 
+function assignScripts() {
+
+    $('#assign_tabs').one('click', '.assign_projects_tab', function () {
+        var url = public_path + 'getAssignProjectsTab/' + company_id;
+        if ($.trim($('#assign_projects').is(':empty'))) {
+            $('#assign_projects').load(url, function () {
+                assignProjectsScripts();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.assign_tests_tab', function () {
+        var url = public_path + 'getAssignTestsTab/' + company_id;
+        if ($.trim($('#assign_tests').is(':empty'))) {
+            $('#assign_tests').load(url, function () {
+                assignTestsScripts();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.assign_authority_levels_tab', function () {
+        var url = public_path + 'getAssignAuthorityLevelsTab/' + company_id;
+        if ($.trim($('#assign_authority_levels').is(':empty'))) {
+            $('#assign_authority_levels').load(url, function () {
+                assignAuthorityLevels();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.share_jobs_tab', function () {
+        var url = public_path + 'getShareJobsTab/' + company_id;
+        if ($.trim($('#share_jobs').is(':empty'))) {
+            $('#share_jobs').load(url, function () {
+                shareJobsScripts();
+            });
+        }
+    });
+}
+
+function employeesScripts() {
+    
+}
+
 /*For load on demand tabs*/
 var company_id = window.location.pathname.split('/').pop();
 
@@ -973,44 +1014,27 @@ $('#company_tabs').one('click', '.jobs_tab', function () {
     }
 });
 
-$('#company_tabs').one('click', '.assign_projects_tab', function () {
-    var url = public_path + 'getAssignProjectsTab/' + company_id;
-    if ($.trim($('#assign_projects').is(':empty'))) {
-        $('#assign_projects').load(url, function () {
-            assignProjectsScripts();
+$('#company_tabs').one('click', '.employees_tab', function () {
+    var url = public_path + 'getEmployeesTab/' + company_id;
+    if ($.trim($('#employees').is(':empty'))) {
+        $('#employees').load(url, function () {
+            employeesScripts();
         });
     }
 });
 
-$('#company_tabs').one('click', '.assign_tests_tab', function () {
-    var url = public_path + 'getAssignTestsTab/' + company_id;
-    if ($.trim($('#assign_tests').is(':empty'))) {
-        $('#assign_tests').load(url, function () {
-            assignTestsScripts();
-        });
-    }
-});
-
-$('#company_tabs').one('click', '.assign_authority_levels_tab', function () {
-    var url = public_path + 'getAssignAuthorityLevelsTab/' + company_id;
-    if ($.trim($('#assign_authority_levels').is(':empty'))) {
-        $('#assign_authority_levels').load(url, function () {
-            assignAuthorityLevels();
-        });
-    }
-});
-
-$('#company_tabs').one('click', '.share_jobs_tab', function () {
-    var url = public_path + 'getShareJobsTab/' + company_id;
-    if ($.trim($('#share_jobs').is(':empty'))) {
-        $('#share_jobs').load(url, function () {
-            shareJobsScripts();
+$('#company_tabs').one('click', '.assign_tab', function () {
+    var url = public_path + 'getAssignTab/' + company_id;
+    if ($.trim($('#assign').is(':empty'))) {
+        $('#assign').load(url, function () {
+            assignScripts();
+            $('.assign_projects_tab').click();
         });
     }
 });
 
 /*Subprojects Load on Demand*/
-$('#my_projects').on('click','.toggle-subprojects', function () {
+$('#my_projects').on('click', '.toggle-subprojects', function () {
     //var project_id = $(this).attr('id').split('-').pop();
     var project_id = $(this).find('.project_id').val();
     //var company_id = $(this).find('.company_id').val();
@@ -1024,8 +1048,8 @@ $('#my_projects').on('click','.toggle-subprojects', function () {
                 var task_id = $(this).parent().attr('id').split('-').pop();
                 var task_url = public_path + '/task/' + task_id;
                 if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
-                    $('#load-task-assign-' + task_id).load(task_url,function(){
-                        $('#project-'+project_id).removeClass('toggle-subprojects');
+                    $('#load-task-assign-' + task_id).load(task_url, function () {
+                        $('#project-' + project_id).removeClass('toggle-subprojects');
                     });
                 }
             });
@@ -1033,7 +1057,7 @@ $('#my_projects').on('click','.toggle-subprojects', function () {
     }
 });
 
-$('#shared_projects').on('click','.toggle-subprojects', function () {
+$('#shared_projects').on('click', '.toggle-subprojects', function () {
     //var project_id = $(this).attr('id').split('-').pop();
     var project_id = $(this).find('.project_id').val();
     //var company_id = $(this).find('.company_id').val();
@@ -1047,8 +1071,8 @@ $('#shared_projects').on('click','.toggle-subprojects', function () {
                 var task_id = $(this).parent().attr('id').split('-').pop();
                 var task_url = public_path + '/task/' + task_id;
                 if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
-                    $('#load-task-assign-' + task_id).load(task_url,function(){
-                        $('#project-'+project_id).removeClass('toggle-subprojects');
+                    $('#load-task-assign-' + task_id).load(task_url, function () {
+                        $('#project-' + project_id).removeClass('toggle-subprojects');
                     });
                 }
             });
@@ -1084,13 +1108,13 @@ $('#my_projects').on('click', '.save-project', function (e) {
         $('#add-project-form').remove();
         $('#add-project').removeClass('disabled');
         var project_count = project_container.find('.project-row').last().children().length;
-        
-        if(project_count === 1) {
+
+        if (project_count === 1) {
             project_container.find('.project-row').last().append(data);
         } else {
-            project_container.append('<div class="project-row row">'+data+'</div>');
+            project_container.append('<div class="project-row row">' + data + '</div>');
         }
-        
+
 
     });
 });

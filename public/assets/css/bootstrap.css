@@ -6502,7 +6502,7 @@ button.list-group-item-danger.active:focus {
   font-size: 20px;
   font-weight: 600;
   float: left;
-  cursor: default;
+  cursor: pointer;
 }
 .box .box-header a {
   color: #444;
