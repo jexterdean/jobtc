@@ -74,6 +74,7 @@
         e.preventDefault();
         var user_id = $(this).siblings('.user_id').val();
         var edit_employee_form = public_path + 'editEmployeeForm/'+user_id;
+        var ajaxurl = public_path + 'editEmployee';
         
         BootstrapDialog.show({
             title: 'Edit Employee <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
@@ -88,7 +89,7 @@
                     label: 'Save',
                     cssClass: 'btn-edit btn-shadow',
                     action: function (dialog) {
-                        var ajaxurl = public_path + '/editEmployee/';
+                        
                         var form = $(".edit-employee-form")[0];
 
                         var formData = new FormData(form);
