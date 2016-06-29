@@ -125,6 +125,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('item', 'ItemController');
         Route::resource('payment', 'PaymentController');
         Route::resource('user', 'UserController');
+        Route::resource('user.company', 'UserController');
         Route::resource('company', 'CompanyController');
         Route::resource('applicant', 'ApplicantController');
         Route::resource('assigneduser', 'AssignedController');
@@ -211,7 +212,10 @@ Route::group(['middleware' => 'auth'], function () {
      * Employees
      **/
     Route::get('addEmployeeForm','UserController@addEmployeeForm');
+    Route::get('editEmployeeForm/{id}','UserController@editEmployeeForm');
     Route::post('addEmployee','UserController@addEmployee');
+    Route::post('editEmployee','UserController@editEmployee');
+    Route::post('removeEmployeeFromCompany','UserController@removeEmployeeFromCompany');
     
     /**
      * Task List

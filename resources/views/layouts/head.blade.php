@@ -57,6 +57,12 @@
     {!!  HTML::style('assets/css/page/applicants.css')  !!}
     @endif
     
+    @if(in_array('users',$assets))
+    {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
+    {!!  HTML::style('assets/css/page/users.css')  !!}
+    @endif
+    
+    
     @if(in_array('profiles',$assets))
     {!!  HTML::style('assets/css/page/profiles.css')  !!}
     @endif

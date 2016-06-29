@@ -2,26 +2,7 @@
     @foreach($profiles->chunk(2) as $chunk)
     <div class="row employee-row">
         @foreach($chunk as $profile)
-        <div class="col-md-6 employee-column">
-            <div class="row">
-                <div class="col-md-9">
-                    <a class="profile-toggle" data-toggle="collapse" href="#profile-collapse-{{$profile->user->user_id}}">
-                        <i class="pull-left" aria-hidden="true">
-                            @if($profile->user->photo === '' || $profile->user->photo === NULL)
-                            <img class="employee-photo" src="{{url('assets/user/default-avatar.jpg')}}" />
-                            @else
-                            <img class="employee-photo" src="{{url($profile->user->photo)}}"/>
-                            @endif
-                        </i>
-                        <div class="employee-details">
-                            <div class="name">{{$profile->user->name}}</div>
-                            <div class="email">{{$profile->user->email}}</div>
-                            <div class="phone">{{$profile->user->phone}}</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+        @include('user.partials._newemployee')
         @endforeach
     </div>
     @endforeach
@@ -57,8 +38,6 @@
         var employee_container = $('.employee-container');
         var company_id = $('.employee_tab_options').find('.company_id').val();
 
-        console.log(company_id);
-
         var data = {
             'name': $('input[name="employee-name"]').val(),
             'email': $('input[name="employee-email"]').val(),
@@ -86,4 +65,90 @@
         $('#add-employee').removeClass('disabled');
         $('#add-employee-form').remove();
     });
+
+    /*
+     * Employee Options      
+     **/
+
+    $('#employees').on('click', '.edit-employee', function (e) {
+        e.preventDefault();
+        var user_id = $(this).siblings('.user_id').val();
+        var edit_employee_form = public_path + 'editEmployeeForm/'+user_id;
+        
+        BootstrapDialog.show({
+            title: 'Edit Employee <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            size: 'size-normal',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Save',
+                    cssClass: 'btn-edit btn-shadow',
+                    action: function (dialog) {
+                        var ajaxurl = public_path + '/editEmployee/';
+                        var form = $(".edit-employee-form")[0];
+
+                        var formData = new FormData(form);
+                        formData.append('user_id', user_id);
+
+                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                        $button.disable();
+                        $button.spin();
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                
+                                dialog.close();
+                                
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax
+                    }
+                }],
+            data: {
+                'pageToLoad': edit_employee_form
+            },
+            onshown: function (ref) {
+                //initCkeditor(ref);
+            },
+            closable: false
+        });
+
+    });
+
+    $('#employees').on('click', '.remove-employee', function (e) {
+        e.preventDefault();
+
+        var user_id = $(this).siblings('.user_id').val();
+        var company_id = $(this).siblings('.company_id').val();
+        var url = public_path + 'removeEmployeeFromCompany';
+
+        BootstrapDialog.confirm('Are you sure you want to fire this employee?', function (result) {
+            if (result) {
+                var data = {
+                    'user_id': user_id,
+                    'company_id': company_id
+                };
+
+                $.post(url, data, function (data) {
+                    $('#employee-' + data).remove();
+                });
+            }
+        });
+    });
+
 </script>
