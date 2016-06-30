@@ -77,8 +77,13 @@
 }
 
 .employee-photo {
-    height: 80px;
-    width: 80px;
+    height: 100px;
+    width: 100px;
+}
+
+.edit-employee-photo {
+    height: 150px;
+    width: 150px;
 }
 
 .task-list {

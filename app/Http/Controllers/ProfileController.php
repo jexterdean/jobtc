@@ -24,6 +24,15 @@ class ProfileController extends BaseController {
 
         return view('user.profile', ['assets' => $assets, 'countries' => $countries_option]);
     }
+    
+    public function show(Request $request, $id) {
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $assets = ['profiles'];
+
+        return view('user.profile', ['assets' => $assets, 'countries' => $countries_option]);
+    }
 
     public function changePassword(Request $request) {
         /*$user = Auth::user();

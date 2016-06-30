@@ -30,7 +30,9 @@
             </div>
         </div>
     </div>
+    @if(isset($applicant))
     <input name="applicant_id" type="hidden" value="{{$applicant->id}}"/>
     <input name="job_id" type="hidden" value="{{$applicant->job_id}}"/>
     <input name="profile_id" type="hidden" value="{{$user_info->profile->id or '0'}}"/>
+    @endif
 </form>

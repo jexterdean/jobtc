@@ -153,10 +153,6 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="pull-right">
-                                            @if(Auth::user('user')->user_id === $project->user_id)
-                                            <a href="{{ route('project.edit',$project->project_id) }}" class="btn-edit btn-shadow btn show_edit_form" data-toggle='modal' data-target='#edit_project_form'><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
-                                            <a href="{{ route('project.destroy',$project->project_id) }}" class="btn-delete btn-shadow btn alert_delete"><i class='fa fa-times'></i> Delete</a>
-                                            @endif
                                             <input type="hidden" class="project_id" value="{{$project->project_id}}" />
                                             <input type="hidden" class="company_id" value="{{$project->company_id}}"/>
                                         </div>
@@ -377,10 +373,8 @@
                             <li id="profile-{{$profile->user->user_id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <a class="profile-toggle" data-toggle="collapse" href="#profile-collapse-{{$profile->user->user_id}}">
-                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
-                                            <div class="name">{{$profile->user->name}}</div>
-                                        </a>
+                                        <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                        <div class="name">{{$profile->user->name}}</div>
                                     </div>
                                     <div class="pull-right">
                                         <a href="#" class="drag-handle">
@@ -393,98 +387,55 @@
                                         </a>
                                     </div>
                                 </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="box box-default">
+            <div class="box-container">
+                <div class="box-header">
+                    <h3 class="box-title">Companies</h3>
+                </div>
+                <div class="box-body">
+                    <div class="box-content">
+                        <ul class="company-list-group list-group">
+                            @foreach($user_companies as $user_company)
+                            <li id="company-{{$user_company->id}}" class="list-group-item">
                                 <div class="row">
-                                    <div id="profile-collapse-{{$profile->user->user_id}}" class="collapse">
-                                        <div class="profile-container">
-                                            <ul class="list-group">                                                        
-                                                <li class="email list-group-item"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;<a href="mailto:{{$profile->user->email}}">{{$profile->user->email}}</a></li>
-                                                <li class="phone list-group-item"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;<a href="tel:{{$profile->user->phone}}">{{$profile->user->phone}}<a></li>
-                                                            <li class="skype list-group-item"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;<a href="skype:{{$profile->user->skype}}">{{$profile->user->skype}}</a></li>
-                                                            <li class="address_1 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_1}}</li>
-                                                            <li class="address_2 list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->address_2}}</li>
-                                                            <li class="zipcode list-group-item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{$profile->user->zipcode}}</li>
-                                                            <li class="country list-group-item">
-                                                                <i class="fa fa-globe" aria-hidden="true"></i>&nbsp;
-                                                                @foreach($countries as $country)
-                                                                @if($country->country_id === $profile->user->country_id)
-                                                                {{$country->country_name}}
-                                                                @endif
-                                                                @endforeach
-                                                            </li>
-                                                            <li class="country-dropdown hidden list-group-item">
-                                                                <form role="form">
-                                                                    <div class="form-group">
-                                                                        <label><i class="fa fa-globe" aria-hidden="true"></i></label>
-                                                                        &nbsp;
-                                                                        <div class="btn-group">
-                                                                            <select class="form-control edit-country" name="country_id" aria-describedby="country-addon">
-                                                                                @foreach($countries as $country)
-                                                                                @if($country->country_id === $profile->user->country_id)
-                                                                                <option selected="selected" value="{{$country->country_id}}">{{$country->country_name}}</option>
-                                                                                @else
-                                                                                <option value="{{$country->country_id}}">{{$country->country_name}}</option>
-                                                                                @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>    
-                                                            </li>
-                                                            <li class="facebook list-group-item"><i class="fa fa-facebook-square" aria-hidden="true"></i>&nbsp;{{$profile->user->facebook}}</li>
-                                                            <li class="linkedin list-group-item"><i class="fa fa-linkedin-square" aria-hidden="true"></i>&nbsp;{{$profile->user->linkedin}}</li>
-                                                            </ul>
-                                                            </div>                                        
-                                                            </div>
-                                                            </div>
-                                                            </li>
-                                                            @endforeach
-                                                            </ul>
-                                                            </div>  
-                                                            </div>
-                                                            </div>
-                                                            </div>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <div class="box box-default">
-                                                                    <div class="box-container">
-                                                                        <div class="box-header">
-                                                                            <h3 class="box-title">Companies</h3>
-                                                                        </div>
-                                                                        <div class="box-body">
-                                                                            <div class="box-content">
-                                                                                <ul class="company-list-group list-group">
-                                                                                    @foreach($user_companies as $user_company)
-                                                                                    <li id="company-{{$user_company->id}}" class="list-group-item">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-9">
-                                                                                                <a id="employee-toggle-{{$user_company->id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$user_company->id}}">
-                                                                                                    <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
-                                                                                                    {{$user_company->name}}
-                                                                                                </a>
-                                                                                            </div>
-                                                                                            <div class="pull-right">
-                                                                                                <a href="#" class="drag-handle">
-                                                                                                    <i class="fa fa-arrows"></i>
-                                                                                                </a>
-                                                                                                <a href="#" class="unassign-company hidden">
-                                                                                                    <i class="fa fa-times"></i>
-                                                                                                    <input class="company_id" type="hidden" value="{{$user_company->id}}"/>
-                                                                                                    <input class="project_id" type="hidden" value=""/>
-                                                                                                </a>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="row">
-                                                                                            <div id="employee-toggle-collapse-{{$user_company->id}}" class="employee-list collapse">
+                                    <div class="col-md-9">
+                                        <a id="employee-toggle-{{$user_company->id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$user_company->id}}">
+                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                            {{$user_company->name}}
+                                        </a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="#" class="drag-handle">
+                                            <i class="fa fa-arrows"></i>
+                                        </a>
+                                        <a href="#" class="unassign-company hidden">
+                                            <i class="fa fa-times"></i>
+                                            <input class="company_id" type="hidden" value="{{$user_company->id}}"/>
+                                            <input class="project_id" type="hidden" value=""/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="employee-toggle-collapse-{{$user_company->id}}" class="employee-list collapse">
 
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                    @endforeach
-                                                                                </ul>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
+                                    </div>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
