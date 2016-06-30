@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Company;
 use App\Models\Profile;
 use App\Models\Comment;
+use App\Models\Video;
 use Bican\Roles\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use DB;
@@ -66,6 +67,8 @@ class UserController extends BaseController {
 
         $user_info = User::with('profile')->where('user_id', $logged_in_user)->first();
 
+        $videos = Video::with('video_tags')->where('unique_id', $user_id)->where('user_type','employee')->orderBy('id', 'desc')->get();
+        
         $comments = Comment::with('user')
                 ->where('belongs_to', 'employee')
                 ->where('unique_id', $user_id)
@@ -78,6 +81,7 @@ class UserController extends BaseController {
             'country' => $countries,
             'role' => $role,
             'user_info' => $user_info,
+            'videos' => $videos,
             'comments' => $comments,
             'assets' => $assets,
             'count' => 0]);
@@ -427,6 +431,18 @@ class UserController extends BaseController {
 
 
         return $user_id;
+    }
+    
+    public function saveEmployeeNotes(Request $request) {
+        $employee_id = $request->input('employee_id');
+        $notes = $request->input('notes');
+
+        $employee = User::where('user_id', $employee_id);
+        $employee->update([
+            'notes' => $notes
+        ]);
+
+        return "true";
     }
 
 }

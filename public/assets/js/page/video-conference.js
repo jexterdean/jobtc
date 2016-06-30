@@ -140,26 +140,47 @@ var subscribeToStreams = function (streams) {
 
 var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_type) {
 
-    var applicant_id = $('.page_applicant_id').val();
-    
-    console.log('applicant_id: ' +applicant_id);
-    
-    var job_id = $('.job_id').val();
+    var page_type = $('.page_type').val();
+
     var stream_id = localStreamId;
     //var file_extension = '.mkv';
     var file_extension = '.webm';
     //var file_extension = '.mp4';
-    
+
     var video_url = recordingUrl + stream_id + file_extension;
 
-    formData = new FormData();
-    formData.append('applicant_id', applicant_id);
-    formData.append('job_id', job_id);
-    formData.append('stream_id', stream_id);
-    formData.append('local_stream_id', localStreamId);
-    formData.append('remote_stream_id', remoteStreamId);
-    formData.append('video_type', video_type);
-    formData.append('video_url', video_url);
+    if (page_type === 'applicant') {
+        var applicant_id = $('.page_applicant_id').val();
+
+        console.log('applicant_id: ' + applicant_id);
+
+        var job_id = $('.job_id').val();
+
+        formData = new FormData();
+        formData.append('applicant_id', applicant_id);
+        formData.append('job_id', job_id);
+        formData.append('stream_id', stream_id);
+        formData.append('local_stream_id', localStreamId);
+        formData.append('remote_stream_id', remoteStreamId);
+        formData.append('video_type', video_type);
+        formData.append('video_url', video_url);
+        formData.append('page_type', page_type);
+    }
+
+    if (page_type === 'employee') {
+        var employee_id = $('.employee_id').val();
+        
+        console.log('employee_id: ' + employee_id);
+
+        formData = new FormData();
+        formData.append('employee_id', employee_id);
+        formData.append('stream_id', stream_id);
+        formData.append('local_stream_id', localStreamId);
+        formData.append('remote_stream_id', remoteStreamId);
+        formData.append('video_type', video_type);
+        formData.append('video_url', video_url);
+        formData.append('page_type', page_type);
+    }
 
     var ajaxurl = public_path + 'saveVideo';
 
@@ -200,7 +221,7 @@ $('.interview-applicant').clickToggle(function () {
     $('.nav-tabs a[href="#video-tab"]').tab('show');
     var config = {audio: true, video: true, data: true, videoSize: [752, 720, 752, 720]};
     localStream = Erizo.Stream(config);
-    
+
     getRoom(room_name, function (res) {
         console.log(res);
         if (res === "no-room") {
@@ -260,7 +281,7 @@ $('.interview-applicant').clickToggle(function () {
                         room.connect();
 
                         localStream.play("localVideo");
-                        
+
                         $('.interview-applicant').addClass('btn-warning');
                         $('.interview-applicant').removeClass('btn-success');
                         $('.interview-applicant').children('span').text('Leave Conference');
@@ -394,7 +415,7 @@ $('.record-button').clickToggle(function () {
     $(this).removeClass('btn-danger');
     $(this).find('i').css('color', 'green');
     $(this).children('span').text('Start Recording');
-   
+
     //Stop local Recording
     if (localRecordingId !== undefined) {
         room.stopRecording(localRecordingId);

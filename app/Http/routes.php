@@ -216,6 +216,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('addEmployee','UserController@addEmployee');
     Route::post('editEmployee','UserController@editEmployee');
     Route::post('removeEmployeeFromCompany','UserController@removeEmployeeFromCompany');
+    Route::post('saveEmployeeNotes', 'UserController@saveEmployeeNotes');
     
     /**
      * Task List

@@ -114,17 +114,17 @@ $(".submit-comment").click(function (e) {
 
 
 //For Applicant Notes
-var applicant_notes = CKEDITOR.replace('applicant-notes',{
+var employee_notes = CKEDITOR.replace('employee-notes',{
 height: '200px'
 });
 
-applicant_notes.on('change', function (evt) {
+employee_notes.on('change', function (evt) {
 
-    var ajaxurl = public_path + 'saveApplicantNotes';
-    var applicant_id = window.location.href.split("/").pop();
+    var ajaxurl = public_path + 'saveEmployeeNotes';
+    var employee_id = $('.employee_id').val();
 
     var formData = new FormData();
-    formData.append('applicant_id', applicant_id);
+    formData.append('employee_id', employee_id);
     formData.append('notes', evt.editor.getData());
 
     $.ajax({

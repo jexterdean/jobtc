@@ -98,34 +98,37 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="video-archive-tab">
                         <div class="video-page-container">
+                           @foreach($videos as $video)
                             <div class="video-element-holder">
                                 <div class="row">
                                     <div class="col-xs-10">
-                                        <video id="video-archive-item-" class="video-archive-item" controls="controls"  preload="metadata" src="">
+                                        <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls="controls"  preload="metadata" src="{{url($video->video_url)}}">
                                             Your browser does not support the video tag.
+                                            <!--source src="{{url($video->video_url)}}"-->
                                         </video>
                                     </div>
                                     <div class="col-xs-2">
                                         <button class="btn btn-danger btn-shadow pull-right delete-video"><i class="fa fa-times"></i></button>
-                                        <input class="video_id" type="hidden" value=""/>
+                                        <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <textarea class="video-status-container">
-                                                
+                                                {{$video->video_tags['tags']}}
                                         </textarea>
-                                        <input class="video_id" type="hidden" value=""/>
+                                        <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="tests-tab">
 
                     </div>
                     <div role="tabpanel" class="tab-pane" id="notes-tab">
-                        <textarea id="applicant-notes">{{$profile->user->notes}}</textarea>
+                        <textarea id="employee-notes">{{$profile->user->notes}}</textarea>
                     </div>
                 </div>
             </div>
@@ -151,7 +154,7 @@
                                     <text>{{$role->description}}</text>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-7">
 
                                         <div class="employee-email">
                                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
@@ -166,7 +169,7 @@
                                             <a href="skype:{{$profile->user->skype}}" class="applicant-skype">{{$profile->user->skype}}</a>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                         <div class="employee-address">
                                             <i class="fa fa-map-marker" aria-hidden="true"></i>
                                             <text>{{$profile->user->address_1}}</text>
@@ -241,4 +244,7 @@
         </div>
     </div>
 </div>
+<div class="mini-space"></div>
+<input class="employee_id" type="hidden" value="{{$profile->user->user_id}}"/>
+<input class="page_type" type="hidden" value="employee"/>
 @stop
