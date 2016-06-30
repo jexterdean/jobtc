@@ -66,7 +66,10 @@ class UserController extends BaseController {
 
         $user_info = User::with('profile')->where('user_id', $logged_in_user)->first();
 
-        $comments = Comment::with('user')->where('belongs_to', 'user')->where('unique_id', $user_id)->orderBy('comment_id', 'desc')->get();
+        $comments = Comment::with('user')
+                ->where('belongs_to', 'employee')
+                ->where('unique_id', $user_id)
+                ->orderBy('comment_id', 'desc')->get();
 
         $assets = ['users', 'real-time'];
 

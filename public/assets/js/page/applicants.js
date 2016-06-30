@@ -80,7 +80,7 @@ $(".submit-comment").click(function (e) {
     var ajaxurl = public_path + '/addComment';
     var form = $(".add-comment-form")[0];
     var formData = new FormData(form);
-    console.log(job_id);
+    
     formData.append('module', 'applicant');
     formData.append('send_email', $('.email-comment').is(':checked'));
     formData.append('job_id',job_id);

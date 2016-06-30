@@ -31,8 +31,11 @@
         </div>
     </div>
     @if(isset($applicant))
-    <input name="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+    <input name="unique_id" type="hidden" value="{{$applicant->id}}"/>
     <input name="job_id" type="hidden" value="{{$applicant->job_id}}"/>
     <input name="profile_id" type="hidden" value="{{$user_info->profile->id or '0'}}"/>
+    @endif
+    @if(isset($profile))
+    <input name="unique_id" type="hidden" value="{{Auth::user('user')->user_id}}"/>
     @endif
 </form>

@@ -75,15 +75,15 @@ $('.status-container').tagEditor({
 
 $(".submit-comment").click(function (e) {
     e.preventDefault();
-    var applicant_id = $('input[name=applicant_id]').val();
-    var job_id = $('input[name=job_id]').val();
+    var user_id = $('input[name=user_id]').val();
+    console.log('user_id: '+user_id);
+    
     var ajaxurl = public_path + '/addComment';
     var form = $(".add-comment-form")[0];
     var formData = new FormData(form);
-    console.log(job_id);
-    formData.append('module', 'applicant');
+    formData.append('module', 'employee');
     formData.append('send_email', $('.email-comment').is(':checked'));
-    formData.append('job_id',job_id);
+    formData.append('unique_id',user_id);
 
     if ($.trim($(".comment-textarea").val())) {
         $.ajax({
@@ -103,7 +103,7 @@ $(".submit-comment").click(function (e) {
                 $('.comment-textarea').attr('disabled', false);
                 $('.submit-comment').attr('disabled', false);
                 socket.emit('applicant-comment', data);
-                $('#comment-list-' + applicant_id).prepend(data);
+                $('#comment-list-' + user_id).prepend(data);
             },
             error: function (xhr, status, error) {
 
