@@ -11,7 +11,7 @@ var absolute_path = page_url.split('/')[1];
 
 
 //var socket = io.connect(socket_url);
-console.log(socket);
+//console.log(socket);
 //Create room and join room for socket.io
 //Create Room for that page only
 socket.emit('create', page_url);
@@ -32,9 +32,10 @@ if (absolute_path === 'company') {
  * Receive applicant comments from the Server
  **/
 socket.on('applicant-comment', function (msg) {
-    console.log(msg);
     var unique_id = $(msg).find('.unique_id').val();
-
+    console.log(unique_id);
+    
+    
     var comment_id = $('.comment-list').find('.comment_id').eq(0).val();
     if (comment_id === 'undefined') {
         comment_id = 0;

@@ -143,7 +143,7 @@ Class CommentController extends BaseController {
                 });
             }
 
-            return view('common.commentListItem', ['comment' => $new_comment_item]);
+            return view('common.commentListItem', ['comment' => $new_comment_item,'employee' => $unique_id]);
         }
     }
 

@@ -30,7 +30,7 @@
     <input class="comment_id" type="hidden" value="{{$comment->comment_id}}">
     
     @if(isset($comment->user->user_id))
-    <input class="unique_id" type="hidden" value="{{$comment->user->user_id}}">
+    <input class="unique_id" type="hidden" value="{{$employee}}">
     @endif
     @if(isset($comment->applicant->id))
     <input class="unique_id" type="hidden" value="{{$comment->applicant->id}}">

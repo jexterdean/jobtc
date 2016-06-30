@@ -36,6 +36,6 @@
     <input name="profile_id" type="hidden" value="{{$user_info->profile->id or '0'}}"/>
     @endif
     @if(isset($profile))
-    <input name="unique_id" type="hidden" value="{{Auth::user('user')->user_id}}"/>
+    <input name="unique_id" type="hidden" value="{{$profile->user_id}}"/>
     @endif
 </form>
