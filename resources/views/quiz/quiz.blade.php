@@ -15,13 +15,13 @@
                                     <div class="panel-group test-group" data-type="1" id="accordion" role="tablist" aria-multiselectable="true">
                                         @if(count($test) > 0)
                                             @foreach($test as $val)
-                                            <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" data-version="{{ $val->version_id }}" data-order="{{ $val->order }}" class="panel test-list-1 task-list">
-                                                <div class="panel-heading task-header" data-target="#collapse-1-{{ $val->version_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                            <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" data-version="{{ $val->version_id }}" data-parent="{{ $val->parent_test_id }}" data-order="{{ $val->order }}" class="panel test-list-1 task-list">
+                                                <div class="panel-heading task-header" data-target="#collapse-1-{{ $val->version_id }}" role="tab" id="headingOne" aria-expanded="true" aria-controls="collapseOne">
                                                     <div class="row">
                                                         <div class="col-xs-5">
                                                             <h4 class="panel-title task-list-header">
                                                                 {{ substr($val->title, 0, 25) . (strlen($val->title) > 25 ? '...' : '') }}
-                                                                <span class="test-version">{{ 'v' . $val->version }}</span>
+                                                                &nbsp;v<span class="test-version">{{ $val->version }}</span>
                                                             </h4>
                                                         </div>
                                                         <div class="col-xs-7">
@@ -105,8 +105,7 @@
                                                                                     </ul>
                                                                                 </div>
                                                                             </div>
-                                                                            @if($val->user_id == Auth::user('user')->user_id)
-                                                                            <div class="pull-right" style="padding-right: 10px;">
+                                                                            <div class="question-btn-area pull-right{{ $val->user_id == Auth::user('user')->user_id ? '' : ' hidden' }}" style="padding-right: 10px;">
                                                                                 <a href="#" id="{{ $q->id }}" class="delete-question-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
                                                                                     <i class="fa fa-times" aria-hidden="true"></i> Question
                                                                                 </a>&nbsp;&nbsp;&nbsp;
@@ -114,7 +113,6 @@
                                                                                     <i class="fa fa-pencil" aria-hidden="true"></i> Edit
                                                                                 </a>
                                                                             </div>
-                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -125,23 +123,24 @@
                                                                 </li>
                                                                 @endif
                                                             </ul>
-                                                            @if($val->user_id == Auth::user('user')->user_id)
-                                                            <a class="btn btn-submit btn-shadow btn-sm check-list-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id) }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
-                                                                <i class="glyphicon glyphicon-plus"></i> Question
-                                                            </a>&nbsp;&nbsp;&nbsp;
-                                                            <a class="btn btn-submit btn-shadow btn-sm trigger-add-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id . '&trigger=1') }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
-                                                                <i class="glyphicon glyphicon-plus"></i> New Question
-                                                            </a>&nbsp;&nbsp;&nbsp;
-                                                            <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="btn btn-assign btn-shadow">
-                                                                <i class="fa fa-eye"></i> Preview
-                                                            </a>&nbsp;&nbsp;&nbsp;
-                                                            <a href="#" data-type="1" id="{{ $val->version_id }}" class="test-delete-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
-                                                                <i class="fa fa-times" aria-hidden="true"></i> Test
-                                                            </a>&nbsp;&nbsp;&nbsp;
-                                                            <a href="{{ url('quiz/' . $val->id .'/edit?p=test') }}" data-method="GET" data-title="Edit Test" class="trigger-links btn btn-edit btn-shadow">
-                                                                <i class="fa fa-pencil"></i> Edit
-                                                            </a>
-                                                            @endif
+
+                                                            <div class="test-btn-area {{ $val->user_id == Auth::user('user')->user_id ? '' : ' hidden' }}">
+                                                                <a class="btn btn-submit btn-shadow btn-sm check-list-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id) }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
+                                                                    <i class="glyphicon glyphicon-plus"></i> Question
+                                                                </a>&nbsp;&nbsp;&nbsp;
+                                                                <a class="btn btn-submit btn-shadow btn-sm trigger-add-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id . '&trigger=1') }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
+                                                                    <i class="glyphicon glyphicon-plus"></i> New Question
+                                                                </a>&nbsp;&nbsp;&nbsp;
+                                                                <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="btn btn-assign btn-shadow">
+                                                                    <i class="fa fa-eye"></i> Preview
+                                                                </a>&nbsp;&nbsp;&nbsp;
+                                                                <a href="#" data-type="1" id="{{ $val->version_id }}" class="test-delete-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
+                                                                    <i class="fa fa-times" aria-hidden="true"></i> Test
+                                                                </a>&nbsp;&nbsp;&nbsp;
+                                                                <a href="{{ url('quiz/' . $val->id .'/edit?p=test') }}" data-method="GET" data-title="Edit Test" class="trigger-links btn btn-edit btn-shadow">
+                                                                    <i class="fa fa-pencil"></i> Edit
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
