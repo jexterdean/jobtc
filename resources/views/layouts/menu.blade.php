@@ -123,6 +123,9 @@
         @endif
         <li class="divider"></li>
         <li>
+            <a href="{{ url('/profile') }}"><i class="glyphicon glyphicon-user"></i> My Profile</a>
+        </li>
+        <li>
             <a href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
         </li>
     </ul>
