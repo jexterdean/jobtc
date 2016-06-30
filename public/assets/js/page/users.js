@@ -15,43 +15,24 @@ $.fn.clickToggle = function (func1, func2) {
     });
     return this;
 };
-
+var unique_id = $('.employee_id').val();
+var tag_type = 'employee';
 $('.status-container').tagEditor({
     maxTags: 9999,
     placeholder: 'Enter tags ...',
     autocomplete: {
         delay: 0, // show suggestions immediately
         position: {collision: 'flip'}, // automatic menu position up/down
-        source: public_path + 'getAvailableTags'
+        source: public_path + 'getTags/'+ unique_id + '/' +tag_type
     },
     onChange: function (field, editor, tags) {
-        var ajaxurl = public_path + 'addTag';
-
-        var job_id;
-        var applicant_id;
-
-        //For Single page applicant
-        if ($('.add-comment-form').length > 0) {
-
-            job_id = $('input[name=job_id]').val();
-            applicant_id = $('input[name=applicant_id]').val();
-
-        }
-
-        //For Multiple applicants page
-        if ($('.applicant-list-table').length > 0) {
-
-            parent_container = '#' + $(field).parent().parent().attr('id');
-
-            job_id = $(parent_container).find('.job_id').val();
-            applicant_id = $(parent_container).find('.applicant_id').val();
-
-        }
-
+        var ajaxurl = public_path + 'addNewTag';
         var token = $('input[name=_token]').val();
+        
+        
         var formData = new FormData();
-        formData.append('job_id', job_id);
-        formData.append('applicant_id', applicant_id);
+        formData.append('unique_id',unique_id);
+        formData.append('tag_type',tag_type);
         formData.append('tags', tags);
         formData.append('_token', token);
         $.ajax({
@@ -69,7 +50,6 @@ $('.status-container').tagEditor({
 
             }
         }); //ajax
-        //alert(tags);
     }
 });
 

@@ -67,6 +67,9 @@ Route::post('deleteVideo', 'VideoController@deleteVideo');
 Route::post('/addVideoTag', 'VideoController@addVideoTag');
 Route::get('/getAvailableVideoTags', 'VideoController@getVideoTags');
 
+/*For Tags*/
+Route::post('addNewTag','TagController@addTag');
+Route::get('getTags/{id}/{tag_type}','TagController@getTags');
 /*
  * Quiz
  */

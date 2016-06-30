@@ -28,7 +28,9 @@
                             <text>{{date_format(date_create($profile->user->created_at),'M d,Y')}}</text>
                             <br />
                             <textarea class="status-container">
-                                        
+                            @if(isset($user_tags))            
+                            {{$user_tags->tags}}
+                            @endif
                             </textarea>
                         </div>
                     </div>
@@ -98,7 +100,7 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="video-archive-tab">
                         <div class="video-page-container">
-                           @foreach($videos as $video)
+                            @foreach($videos as $video)
                             <div class="video-element-holder">
                                 <div class="row">
                                     <div class="col-xs-10">
@@ -115,7 +117,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <textarea class="video-status-container">
-                                                {{$video->video_tags['tags']}}
+                                                {{$video->tags['tags']}}
                                         </textarea>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>
@@ -195,11 +197,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    @if(Auth::user('user'))
                     <textarea class="status-container">
-                                           
+                      @if(isset($user_tags))            
+                            {{$user_tags->tags}}
+                            @endif                     
                     </textarea>
-                    @endif
                 </div>
             </div>
             @if(Auth::check('user'))

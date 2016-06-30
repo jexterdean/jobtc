@@ -10,6 +10,7 @@ use App\Models\Profile;
 use App\Models\Job;
 use App\Models\Applicant;
 use App\Models\ApplicantTag;
+use App\Models\Tag;
 use App\Models\ApplicantRating;
 use App\Models\Comment;
 use App\Models\Video;
@@ -79,7 +80,7 @@ class ApplicantController extends Controller {
                 //$comments = Comment::with('user', 'profile')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
 
                 $comments = Comment::with('user')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
-            } elseif(Auth::check('applicant') || !Auth::check()) {
+            } elseif (Auth::check('applicant') || !Auth::check()) {
 
                 $user_info = Applicant::where('id', $id)->first();
 
@@ -91,14 +92,18 @@ class ApplicantController extends Controller {
 
             $job = Job::where('id', $applicant->job_id)->first();
 
-            $statuses = ApplicantTag::where('applicant_id', $id)->first();
+            $statuses = Tag::where('unique_id', $id)
+                    ->where('tag_type','applicant')
+                    ->first();
 
             $prevApplicant = Applicant::where('id', '>', $id)->where('job_id', $applicant->job_id)->min('id');
             $nextApplicant = Applicant::where('id', '<', $id)->where('job_id', $applicant->job_id)->max('id');
 
             $rating = ApplicantRating::where('applicant_id', $id)->first();
 
-            $videos = Video::with('video_tags')->where('unique_id', $id)->where('user_type','applicant')->orderBy('id', 'desc')->get();
+            $videos = Video::with(['tags' => function($query) {
+                            $query->where('tag_type', 'video')->first();
+                        }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();
 
             //Get the test permissions
 
@@ -129,7 +134,7 @@ class ApplicantController extends Controller {
                     $v->question_choices = json_decode($v->question_choices);
                 }
             }
-            
+
             //This is for the Test Review(Will be put in place at a later date) --06/09/2016
             $r = TestResultModel::where('unique_id', $id)->where('belongs_to', 'applicant')->get();
             $review_result = array();
@@ -142,7 +147,7 @@ class ApplicantController extends Controller {
                 }
             }
 
-            $assets = ['applicants', 'quizzes','real-time'];
+            $assets = ['applicants', 'quizzes', 'real-time'];
 
             return view('applicants.show', [
                 'applicant' => $applicant,
@@ -461,12 +466,12 @@ class ApplicantController extends Controller {
         $questions = Question::where('test_id', $quiz_id)
                 ->orderBy('order', 'ASC')
                 ->get();
-        
-         if (count($questions) > 0) {
-                foreach ($questions as $v) {
-                    $v->question_choices = json_decode($v->question_choices);
-                }
+
+        if (count($questions) > 0) {
+            foreach ($questions as $v) {
+                $v->question_choices = json_decode($v->question_choices);
             }
+        }
 
         //Get Review details
         $results = TestResultModel::where('test_id', $quiz_id)->get();
@@ -481,15 +486,15 @@ class ApplicantController extends Controller {
         }
 
         $get_completed_test = TestCompleted::where('id', $test_completed->id)
-                    ->get();
-        
-        /*return view('applicants.partials._quizresults', [
-            'tests' => $tests,
-            'questions' => $questions,
-            'review_result' => $review_result,
-            'tests_completed' => $get_completed_test
-        ]);*/
+                ->get();
+
+        /* return view('applicants.partials._quizresults', [
+          'tests' => $tests,
+          'questions' => $questions,
+          'review_result' => $review_result,
+          'tests_completed' => $get_completed_test
+          ]); */
         return $final_score;
     }
-    
+
 }

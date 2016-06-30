@@ -55,7 +55,7 @@
                             <br />
                             <textarea class="status-container">
                                         @if(isset($statuses))
-                                            {{$statuses->status}}
+                                            {{$statuses->tags}}
                                         @endif    
                             </textarea>
                             @endif
@@ -150,7 +150,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <textarea class="video-status-container">
-                                                {{$video->video_tags['tags']}}
+                                                {{$video->tags['tags']}}
                                         </textarea>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>
@@ -212,13 +212,13 @@
                                 {{$applicant->name}}&nbsp;
                                 @if(Auth::user('user')->user_id === $job->user_id)
                                 @if($applicant->hired === 'No')
-                                    <a href="#" class='pull-right btn btn-edit btn-shadow bg-light-blue-gradient hire'>Hire</a>
-                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
-                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                <a href="#" class='pull-right btn btn-edit btn-shadow bg-light-blue-gradient hire'>Hire</a>
+                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                                 @else
-                                    <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
-                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
-                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
+                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                                 @endif
                                 @endif
                                 </text>
@@ -236,7 +236,7 @@
                                 <textarea class="status-container">
                                             @if(isset($statuses))
                                             {{$statuses->tags}}
-                                            @endif
+                                        @endif    
                                 </textarea>
                                 @endif
                             </div>

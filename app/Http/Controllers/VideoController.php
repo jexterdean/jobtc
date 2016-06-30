@@ -200,6 +200,7 @@ class VideoController extends Controller {
     }
 
     public function addVideoTag(Request $request) {
+        
         $user_id = $request->user()->id;
         $job_id = $request->input('job_id');
         $applicant_id = $request->input('applicant_id');

@@ -142,6 +142,7 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
 
     var page_type = $('.page_type').val();
 
+    console.log(page_type);
     var stream_id = localStreamId;
     //var file_extension = '.mkv';
     var file_extension = '.webm';
@@ -169,7 +170,7 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
 
     if (page_type === 'employee') {
         var employee_id = $('.employee_id').val();
-        
+
         console.log('employee_id: ' + employee_id);
 
         formData = new FormData();
@@ -510,7 +511,6 @@ socket.on('delete-video', function (video_id) {
     video_element.remove();
 });
 
-
 $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
     $('.video-status-container').tagEditor('destroy');
     $('.video-status-container').tagEditor({
@@ -520,29 +520,17 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
         autocomplete: {
             delay: 0, // show suggestions immediately
             position: {collision: 'flip'}, // automatic menu position up/down
-            source: public_path + 'getAvailableVideoTags'
+            source: public_path + 'getTags/' + $(this).siblings('.video_id') + '/video' 
         },
         onChange: function (field, editor, tags) {
-            var ajaxurl = public_path + 'addVideoTag';
+            var ajaxurl = public_path + 'addNewTag';
 
-            var job_id;
-            var applicant_id;
-            var video_id = $(field).siblings('.video_id').val();
-
-            //For Single page applicant
-            if ($('.add-comment-form').length > 0) {
-
-                job_id = $('input[name=job_id]').val();
-                applicant_id = $('input[name=applicant_id]').val();
-            }
-
-            var token = $('input[name=_token]').val();
+            var unique_id = $(field).siblings('.video_id').val();
+            var tag_type = 'video';
             var formData = new FormData();
-            formData.append('job_id', job_id);
-            formData.append('applicant_id', applicant_id);
-            formData.append('video_id', video_id);
-            formData.append('video_status', tags);
-            //formData.append('_token', token);
+            formData.append('unique_id', unique_id);
+            formData.append('tag_type', tag_type);
+            formData.append('tags', tags);
             $.ajax({
                 url: ajaxurl,
                 type: "POST",

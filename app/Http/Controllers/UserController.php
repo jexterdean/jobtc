@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\Profile;
 use App\Models\Comment;
 use App\Models\Video;
+use App\Models\Tag;
 use Bican\Roles\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use DB;
@@ -67,7 +68,13 @@ class UserController extends BaseController {
 
         $user_info = User::with('profile')->where('user_id', $logged_in_user)->first();
 
-        $videos = Video::with('video_tags')->where('unique_id', $user_id)->where('user_type','employee')->orderBy('id', 'desc')->get();
+        $videos = Video::with(['tags' =>function($query){
+            $query->where('tag_type','video')->first();
+        }])->where('unique_id', $user_id)->where('user_type','employee')->orderBy('id', 'desc')->get();
+        
+        $user_tags = Tag::where('unique_id', $user_id)
+                ->where('tag_type', 'employee')
+                ->first();
         
         $comments = Comment::with('user')
                 ->where('belongs_to', 'employee')
@@ -81,6 +88,7 @@ class UserController extends BaseController {
             'country' => $countries,
             'role' => $role,
             'user_info' => $user_info,
+            'user_tags' => $user_tags,
             'videos' => $videos,
             'comments' => $comments,
             'assets' => $assets,
