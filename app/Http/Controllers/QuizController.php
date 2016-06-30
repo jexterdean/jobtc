@@ -90,7 +90,8 @@ class QuizController extends BaseController {
                 ) as review_only,
                 fp_test_personal.id as version_id,
                 fp_test_personal.version,
-                fp_test_personal.order
+                fp_test_personal.order,
+                fp_test_personal.parent_test_id
             '))
             ->leftJoin('test', 'test.id', '=', 'test_personal.test_id')
             ->orderBy('test_personal.order', 'asc')
@@ -158,7 +159,8 @@ class QuizController extends BaseController {
                 ) as review_only,
                 fp_test_community.id as version_id,
                 fp_test_community.version,
-                fp_test_community.order
+                fp_test_community.order,
+                fp_test_community.parent_test_id
             '))
             ->leftJoin('test', 'test.id', '=', 'test_community.test_id')
             ->orderByRaw('fp_test_community.order = 0')
@@ -305,6 +307,8 @@ class QuizController extends BaseController {
                     $personal = new TestPersonal();
                     $personal->user_id = Auth::user()->user_id;
                     $personal->test_id = $test->id;
+                    $personal->order = 1;
+                    $personal->parent_test_id = $test->id;
                     $personal->save();
                 }
 
@@ -601,7 +605,6 @@ class QuizController extends BaseController {
         try {
             if ($page == "test") {
                 $test = Test::find($id);
-                $test->user_id = Auth::user()->user_id;
                 $test->title = Input::get('title');
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
@@ -1008,20 +1011,32 @@ class QuizController extends BaseController {
         $table = Input::get('type') == 1 ? 'test_personal' : 'test_community';
         $thisTest = DB::table($table)
             ->where('user_id', '=', Auth::user()->user_id)
-            ->where('test_id', '=', Input::get('id'))
+            ->where('parent_test_id', '=', Input::get('parent_test_id'))
             ->orderBy('version', 'DESC')
             ->first();
 
         //update order of other test before insert
-        DB::table('test_community')
+        DB::table($table)
             ->where('order', '>=', Input::get('order'))
             ->increment('order');
 
+        $test_id = Input::get('id');
+
+        //copy as new test
+        if(Input::get('type') == 1){
+            $personal = Test::find(Input::get('id'));
+            $newPersonal = $personal->replicate();
+            $newPersonal->user_id = Auth::user()->user_id;
+            $newPersonal->save();
+            $test_id = $newPersonal->id;
+        }
+
         $test = Input::get('type') == 1 ? new TestPersonal() : new TestCommunity();
         $test->user_id = Auth::user()->user_id;
-        $test->test_id = Input::get('id');
+        $test->test_id = $test_id;
         $test->version = $thisTest ? $thisTest->version + 1 : 1;
         $test->order = Input::get('order') ? Input::get('order') : 1;
+        $test->parent_test_id = Input::get('parent_test_id');
         $test->save();
 
         if(Input::get('type') == 2){
@@ -1193,7 +1208,6 @@ class QuizController extends BaseController {
             else if($type == 3){
                 $client->delete($params);
             }
-
         }
     }
 }

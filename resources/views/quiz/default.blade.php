@@ -171,6 +171,15 @@
         $thisTest.find('.trigger-add-btn').trigger('click');
         @endif
 
+        //region Toggle Collapse
+        $(document).on('click', '.task-header', function(e){
+            e.preventDefault();
+
+            var target = $(this).parent().find('.panel-collapse');
+            target.collapse('toggle');
+        });
+        //endregion
+
         //region Test Sort and Drag and Clone
         var t = $('.test-group');
         t.sortable({
@@ -192,20 +201,20 @@
 
                     if($(ui.item).prev().length != 0){
                         thisItem = $(ui.item)
-                            .clone(true)
+                            .clone(false, false)
                             .insertAfter(destinationAppend);
                         order = destinationAppend.data('order') + 1;
                     }
                     else{
                         if($(ui.item).next().length != 0){
                             thisItem = $(ui.item)
-                                .clone(true)
+                                .clone(false, false)
                                 .insertBefore(destinationAppend);
                             order = destinationAppend.data('order') + 1;
                         }
                         else{
                             thisItem = $(ui.item)
-                                .clone(true)
+                                .clone(false, false)
                                 .appendTo(destinationAppend);
                         }
                     }
@@ -216,7 +225,9 @@
                         {
                             id: $(ui.item).data('id'),
                             order: order,
-                            type: destinationEle.data('type')
+                            version: thisItem.find('.test-version').html(),
+                            type: destinationEle.data('type'),
+                            parent_test_id: thisItem.data('parent')
                         },
                         function(v){
                             var newTarget = 'collapse-' + destinationEle.data('type') + '-' + v.version_id;
@@ -232,7 +243,7 @@
                                 .attr('id', newTarget);
                             thisItem
                                 .find('.test-version')
-                                .html('v' + v.version);
+                                .html(v.version);
                             thisItem
                                 .find('.test-delete-btn')
                                 .data('type', destinationEle.data('type'));
@@ -242,6 +253,14 @@
 
                             if(destinationEle.data('type') == "2"){
                                 testPaginationInit();
+                            }
+                            else{
+                                thisItem
+                                    .find('.test-btn-area')
+                                    .removeClass('hidden');
+                                thisItem
+                                    .find('.question-btn-area')
+                                    .removeClass('hidden');
                             }
                         }
                     );
