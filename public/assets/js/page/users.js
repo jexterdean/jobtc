@@ -75,7 +75,7 @@ $('.status-container').tagEditor({
 
 $(".submit-comment").click(function (e) {
     e.preventDefault();
-    var user_id = $('input[name=user_id]').val();
+    var user_id = $('input[name=unique_id]').val();
     console.log('user_id: '+user_id);
     
     var ajaxurl = public_path + '/addComment';

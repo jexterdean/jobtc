@@ -1,5 +1,5 @@
 /*Initialize socket transactions(for real time update)*/
-var socket = io('https://job.tc:3000');
+//var socket = io('https://job.tc:3000');
 var socket_port = '3000';
 var base_url = 'https://' + window.location.host;
 var site_name = base_url.split(':');
@@ -10,7 +10,7 @@ var page_url = window.location.pathname;
 var absolute_path = page_url.split('/')[1];
 
 
-//var socket = io.connect(socket_url);
+var socket = io.connect(socket_url);
 console.log(socket);
 //Create room and join room for socket.io
 //Create Room for that page only
@@ -33,7 +33,7 @@ if (absolute_path === 'company') {
  **/
 socket.on('applicant-comment', function (msg) {
     console.log(msg);
-    var applicant_id = $(msg).find('.applicant_id').val();
+    var unique_id = $(msg).find('.unique_id').val();
 
     var comment_id = $('.comment-list').find('.comment_id').eq(0).val();
     if (comment_id === 'undefined') {
@@ -46,7 +46,7 @@ socket.on('applicant-comment', function (msg) {
     //Update the comment list
     var new_comment_id = $(msg).find('.comment_id').val();
     if (new_comment_id !== comment_id) {
-        $('#comment-list-' + applicant_id).prepend(msg);
+        $('#comment-list-' + unique_id).prepend(msg);
         $('.comment-list').animate({scrollTop: 0}, 'slow');
     }
 });

@@ -74,7 +74,7 @@ Class CommentController extends BaseController {
             $commenter_type = 'applicant';
         }
 
-        $job_id = $request->input('job_id');
+
         $unique_id = $request->input('unique_id');
         $comment = $request->input('comment');
         $send_email = $request->input('send_email');
@@ -92,6 +92,7 @@ Class CommentController extends BaseController {
 
         if ($belongs_to === 'applicant') {
 
+            $job_id = $request->input('job_id');
             $job_owner = Job::where('id', $job_id)->first();
 
             if (Auth::check('user')) {
@@ -118,8 +119,32 @@ Class CommentController extends BaseController {
                     $message->subject($job_owner->title);
                 });
             }
+
+            return view('common.commentListItem', ['comment' => $new_comment_item]);
         }
-        return view('common.commentListItem', ['comment' => $new_comment_item, 'applicant' => $applicant_id]);
+
+
+        if ($belongs_to === 'employee') {
+
+            $new_comment_item = Comment::with('user')
+                    ->where('comment_id', $new_comment->comment_id)
+                    ->first();
+
+            //Get from and to address            
+            $from_email = User::where('user_id', $commenter_id)->first();
+            $to_email = User::where('user_id', $unique_id)->first();
+
+            if ($send_email === 'true') {
+                Mail::queue('emails.commentEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'comment' => $comment], function ($message) use ($from_email, $to_email) {
+                    $message->from($from_email->email, $from_email->name);
+                    $message->to($to_email->email, $to_email->name);
+                    //$message->to(['jobtcmailer@gmail.com'],$to_email->name);
+                    $message->subject($from_email->name);
+                });
+            }
+
+            return view('common.commentListItem', ['comment' => $new_comment_item]);
+        }
     }
 
 }
