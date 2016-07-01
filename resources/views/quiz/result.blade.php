@@ -1,4 +1,4 @@
-<div class="panel-group" id="accordion_" role="tablist" aria-multiselectable="true">
+<div class="panel-group hidden" id="accordion_" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default">
         <div class="panel-container">
             <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#task-details" data-parent="#accordion_" aria-expanded="true">

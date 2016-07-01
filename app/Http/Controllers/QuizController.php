@@ -33,7 +33,6 @@ class QuizController extends BaseController {
             'page' => 'quiz'
         ];
         $this->setData($data);
-        $data['test_limit'] = 6;
 
         return View::make('quiz.default', $data);
     }
@@ -91,9 +90,11 @@ class QuizController extends BaseController {
                 fp_test_personal.id as version_id,
                 fp_test_personal.version,
                 fp_test_personal.order,
-                fp_test_personal.parent_test_id
+                fp_test_personal.parent_test_id,
+                fp_user.name
             '))
             ->leftJoin('test', 'test.id', '=', 'test_personal.test_id')
+            ->leftJoin('user', 'user.user_id', '=', 'test.user_id')
             ->orderBy('test_personal.order', 'asc')
             ->whereNotNull('test_personal.test_id')
             ->whereNotNull('test.id')
@@ -144,6 +145,8 @@ class QuizController extends BaseController {
 
         $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
         $data['triggerTest'] = $trigger;
+
+        $data['test_limit'] = 6;
     }
 
     private function getTestCommunity($id = [], $result = []){
@@ -160,9 +163,11 @@ class QuizController extends BaseController {
                 fp_test_community.id as version_id,
                 fp_test_community.version,
                 fp_test_community.order,
-                fp_test_community.parent_test_id
+                fp_test_community.parent_test_id,
+                fp_user.name
             '))
             ->leftJoin('test', 'test.id', '=', 'test_community.test_id')
+            ->leftJoin('user', 'user.user_id', '=', 'test.user_id')
             ->orderByRaw('fp_test_community.order = 0')
             ->orderBy('test_community.order', 'asc')
             ->whereNotNull('test_community.test_id')
