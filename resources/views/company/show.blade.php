@@ -5,6 +5,7 @@
     @if(Auth::user('user')->level() === 1)
     <li class="jobs_tab"><a data-toggle="pill" href="#my_jobs">Jobs</a></li>
     <li><a class="employees_tab" data-toggle="pill" href="#employees">Employees</a></li>
+    <li><a class="positions_tab" data-toggle="pill" href="#positions">Positions</a></li>
     <li><a class="assign_tab" data-toggle="pill" href="#assign">Assign</a></li>
     @endif
 </ul>
@@ -19,6 +20,11 @@
     <div id="employees" class="tab-pane fade in">
         <!--Load the content with AJAX when the user clicks on tab-->
     </div>
+    
+    <div id="positions" class="tab-pane fade in">
+        <!--Load the content with AJAX when the user clicks on tab-->
+    </div>
+    
     <div id="assign" class="tab-pane fade in">
         <!--Load the content with AJAX when the user clicks on tab-->
     </div>

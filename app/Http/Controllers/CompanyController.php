@@ -662,6 +662,19 @@ class CompanyController extends BaseController {
         ]);
     }
     
+    public function getPositionsTab(Request $request, $id) {
+        $user_id = Auth::user('user')->user_id;
+        
+        $positions = Role::where('company_id',$id)->get();
+        $employees = Profile::with('user')->where('company_id',$id)->get();
+        
+        return view('company.partials._positionslist',[
+            'positions' => $positions,
+            'employees' => $employees,
+            'company_id' => $id
+        ]);
+    }
+    
     public function getAssignTab(Request $request,$id) {
         
         //Getting Assign Project Data

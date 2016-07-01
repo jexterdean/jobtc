@@ -1002,6 +1002,10 @@ function employeesScripts() {
     
 }
 
+function positionsScripts() {
+    
+}
+
 /*For load on demand tabs*/
 var company_id = window.location.pathname.split('/').pop();
 
@@ -1019,6 +1023,15 @@ $('#company_tabs').one('click', '.employees_tab', function () {
     if ($.trim($('#employees').is(':empty'))) {
         $('#employees').load(url, function () {
             employeesScripts();
+        });
+    }
+});
+
+$('#company_tabs').one('click', '.positions_tab', function () {
+    var url = public_path + 'getPositionsTab/' + company_id;
+    if ($.trim($('#positions').is(':empty'))) {
+        $('#positions').load(url, function () {
+            positionsScripts();
         });
     }
 });
