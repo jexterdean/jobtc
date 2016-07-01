@@ -85,6 +85,28 @@ function unshareFromCompanyEmployee(user_id, company_id, job_id) {
 
 }
 
+function assignPositionPermission(role_id,permission_id) {
+     var url = public_path + 'assignPositionPermission';
+
+    var data = {
+        'role_id': role_id,
+        'permission_id': permission_id
+    };
+
+    $.post(url, data);
+}
+
+function unassignPositionPermission(role_id,permission_id) {
+     var url = public_path + 'unassignPositionPermission';
+
+    var data = {
+        'role_id': role_id,
+        'permission_id': permission_id
+    };
+
+    $.post(url, data);
+}
+
 function myJobsScripts() {
 
 }
@@ -260,7 +282,7 @@ function assignProjectsScripts() {
 
         //Password Editor
         var password_ele = '<input type="password" name="password" class="form-control edit-password" placeholder="Edit Password" value=""/>';
-        
+
         var password_ele = '<div class="text-area-content">';
         password_ele += '<div class="input-group">';
         password_ele += '<span class="input-group-addon" id="password-addon" ><i class="fa fa-lock" aria-hidden="true"></i></span>';
@@ -999,11 +1021,46 @@ function assignScripts() {
 }
 
 function employeesScripts() {
-    
+
 }
 
 function positionsScripts() {
-    
+
+    $('.permission-list-group').on('click', '.position-permission', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var role_id = $(this).children('.role_id').val();
+        var permission_id = $(this).children('.permission_id').val();
+        
+        var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
+        assign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+        assign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+        
+        var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
+        unassign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+        unassign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+        
+
+        /*Assign the Task List to this user*/
+        if ($(this).hasClass('bg-gray')) {
+            $(this).switchClass('bg-gray', 'bg-green', function () {
+                $(this).html(assign_html);
+                //shareToCompanyEmployee(user_id, company_id, job_id);
+                assignPositionPermission(role_id,permission_id);
+            });
+        }
+        /*Unassign the Task List from this user*/
+        if ($(this).hasClass('bg-green')) {
+            $(this).switchClass('bg-green', 'bg-gray', function () {
+                $(this).html(unassign_html);
+                //unshareFromCompanyEmployee(user_id, company_id, job_id);
+                unassignPositionPermission(role_id,permission_id);
+            });
+        }
+    });
+
+
 }
 
 /*For load on demand tabs*/

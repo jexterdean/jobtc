@@ -8,6 +8,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Profile;
+use App\Models\Module;
+use App\Models\Permission;
+use App\Models\PermissionRole;
+use App\Models\PermissionUser;
 
 class RoleController extends Controller
 {
@@ -106,11 +110,39 @@ class RoleController extends Controller
         $position->level = 1;
         $position->save();
                 
-        $employees = Profile::with('user')->where('company_id',$company_id)->get();
+        $modules = Module::all();
+        $permissions = Permission::all();
+        $permission_role = PermissionRole::all();
         
         return view('roles.partials._newposition',[
             'position' => $position,
-            'employees' => $employees
+            'permissions' => $permissions,
+            'permission_role' => $permission_role,
+            'modules' => $modules,
         ]);
+    }
+    
+    public function assignPositionPermission(Request $request) {
+        
+        $role_id = $request->input('role_id');
+        $permission_id = $request->input('permission_id');
+        
+        $permission_role = new PermissionRole();
+        $permission_role->role_id = $role_id;
+        $permission_role->permission_id = $permission_id;
+        $permission_role->save();
+        
+        return "true";
+    }
+    
+    public function unassignPositionPermission(Request $request) {
+        
+        $role_id = $request->input('role_id');
+        $permission_id = $request->input('permission_id');
+         
+        $permission_role = PermissionRole::where('permission_id',$permission_id)->where('role_id',$role_id);
+        $permission_role->delete();
+        
+        return "true";
     }
 }

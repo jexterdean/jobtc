@@ -28,6 +28,10 @@ use App\Models\ShareJob;
 use App\Models\ShareJobCompany;
 use App\Models\ShareJobCompanyPermission;
 use App\Models\Test;
+use App\Models\Module;
+use App\Models\Permission;
+use App\Models\PermissionUser;
+use App\Models\PermissionRole;
 use Auth;
 use View;
 use Redirect;
@@ -666,11 +670,15 @@ class CompanyController extends BaseController {
         $user_id = Auth::user('user')->user_id;
         
         $positions = Role::where('company_id',$id)->get();
-        $employees = Profile::with('user')->where('company_id',$id)->get();
+        $modules = Module::all();
+        $permissions = Permission::all();
+        $permission_role = PermissionRole::all();
         
         return view('company.partials._positionslist',[
             'positions' => $positions,
-            'employees' => $employees,
+            'permissions' => $permissions,
+            'permission_role' => $permission_role,
+            'modules' => $modules,
             'company_id' => $id
         ]);
     }

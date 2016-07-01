@@ -153,7 +153,7 @@
                                 <text class="media-heading">{{$profile->user->name}}</text>
                                 <br />
                                 <div class="employee-position">
-                                    <text>{{$role->description}}</text>
+                                    <text>{{$role->name}}</text>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-7">

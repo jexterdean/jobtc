@@ -6,15 +6,7 @@
             </div>
             <div class="box-body">
                 <div id="position-collapse-{{$position->id}}" class="box-content collapse">
-                    <ul class="list-group">
-                        @foreach($employees as $employee)
-                        @if($employee->role_id === $position->id)
-                        <li class="list-group-item">
-                            {{$employee->user->name}}
-                        </li>
-                        @endif
-                        @endforeach
-                    </ul>
+                    @include('company.partials._positionpermissions')
                 </div><!--Box Container-->
             </div>
         </div>
