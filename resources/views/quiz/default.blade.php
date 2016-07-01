@@ -173,8 +173,6 @@
 
         //region Toggle Collapse
         $(document).on('click', '.task-header', function(e){
-            e.preventDefault();
-
             var target = $(this).parent().find('.panel-collapse');
             target.collapse('toggle');
         });
@@ -253,6 +251,9 @@
 
                             if(destinationEle.data('type') == "2"){
                                 testPaginationInit();
+                                thisItem
+                                    .find('.test-version-area')
+                                    .removeClass('hidden');
                             }
                             else{
                                 thisItem
@@ -261,6 +262,9 @@
                                 thisItem
                                     .find('.question-btn-area')
                                     .removeClass('hidden');
+                                thisItem
+                                    .find('.test-version-area')
+                                    .addClass('hidden');
                             }
                         }
                     );

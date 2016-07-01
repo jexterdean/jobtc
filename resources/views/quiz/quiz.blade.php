@@ -16,20 +16,23 @@
                                         @if(count($test) > 0)
                                             @foreach($test as $val)
                                             <div id="collapse-container-{{ $val->id }}" data-id="{{ $val->id }}" data-version="{{ $val->version_id }}" data-parent="{{ $val->parent_test_id }}" data-order="{{ $val->order }}" class="panel test-list-1 task-list">
-                                                <div class="panel-heading task-header" data-target="#collapse-1-{{ $val->version_id }}" role="tab" id="headingOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <div class="panel-heading task-header" data-toggle="tooltip" data-placement="top" title="Author: {{ $val->name }}" data-target="#collapse-1-{{ $val->version_id }}" role="tab" id="headingOne" aria-expanded="true" aria-controls="collapseOne">
                                                     <div class="row">
                                                         <div class="col-xs-5">
                                                             <h4 class="panel-title task-list-header">
                                                                 {{ substr($val->title, 0, 25) . (strlen($val->title) > 25 ? '...' : '') }}
-                                                                &nbsp;v<span class="test-version">{{ $val->version }}</span>
+                                                                <span class="test-version-area hidden">&nbsp;v<span class="test-version">{{ $val->version }}</span></span>
                                                             </h4>
                                                         </div>
                                                         <div class="col-xs-7">
                                                             <div class="btn-group pull-right">
                                                                 <strong>Questions:</strong> {{ count($val->question) }}&nbsp;&nbsp;&nbsp;
                                                                 <strong>Time:</strong> {{ date('i:s', $val->total_time) }}&nbsp;&nbsp;&nbsp;
-                                                                <a class="trigger-links tc-icons" data-title="Result" data-method="" href="{{ url('quizRanking/' . $val->id) }}">
+                                                                <a class="tc-icons" href="{{ url('quiz/' . $val->id . '?p=review') }}">
                                                                     <i class="fa fa-eye"></i>
+                                                                </a>
+                                                                <a class="trigger-links tc-icons" data-title="Result" data-method="" href="{{ url('quizRanking/' . $val->id) }}">
+                                                                    <i class="fa fa-signal" aria-hidden="true"></i>
                                                                 </a>
                                                                 <a href="#" class="drag-test move-test tc-icons">
                                                                     <i class="fa fa-arrows" aria-hidden="true"></i>
