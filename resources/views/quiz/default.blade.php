@@ -176,6 +176,11 @@
             var target = $(this).parent().find('.panel-collapse');
             target.collapse('toggle');
         });
+
+        $(document).on('click', '.question-header', function(e){
+            var target = $(this).closest('.question-list').find('.question-collapse');
+            target.collapse('toggle');
+        });
         //endregion
 
         //region Test Sort and Drag and Clone
@@ -266,6 +271,15 @@
                                     .find('.test-version-area')
                                     .addClass('hidden');
                             }
+
+                            if(v.question.length != 0){
+                                var q = v.question;
+                                thisItem.find('.delete-question-btn').each(function(e){
+                                    if(q[this.id] != undefined){
+                                        $(this).attr('id', q[this.id]);
+                                    }
+                                });
+                            }
                         }
                     );
                 }
@@ -290,8 +304,7 @@
         //endregion
 
         //region Test Delete
-        var test_delete_btn = $('.test-delete-btn');
-        test_delete_btn.click(function(e){
+        $(document).on('click', '.test-delete-btn', function(e){
             var thisId = this.id;
             var testType = $(this).data('type');
             var thisTest = $(this).closest('.task-list');
@@ -363,9 +376,7 @@
         //endregion
 
         //region Question Delete
-
-        var delete_question_btn = $('.delete-question-btn');
-        delete_question_btn.click(function(e){
+        $(document).on('click', '.delete-question-btn', function(e){
             var thisId = this.id;
             var thisQuestion = $(this).closest('.question-list');
             $.ajax({
@@ -429,7 +440,7 @@
         });
         //endregion
 
-        //region Question Delete
+        //region File Delete
         var delete_file_btn = $('.delete-file-btn');
         delete_file_btn.click(function(e){
             e.preventDefault();
