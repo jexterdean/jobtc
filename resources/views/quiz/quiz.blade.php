@@ -53,7 +53,7 @@
                                                                 <li id="question-{{ $q->id }}" data-id="{{ $q->id }}" class="list-group-item task-list-item question-list">
                                                                     <div class="row task-list-details">
                                                                         <div class="col-md-8">
-                                                                            <a data-toggle="collapse" href="#question-collapse-1-{{ $val->version . '-' . $q->id }}" class="checklist-header" style="font-size: 22px;">
+                                                                            <a href="#question-collapse-1-{{ $val->version . '-' . $q->id }}" class="question-header checklist-header" style="font-size: 22px;">
                                                                                 <?php
                                                                                 $q->question = preg_replace("/<\/*[a-z0-9\s\"'.=;:-]*>/i", "", $q->question);
                                                                                 ?>

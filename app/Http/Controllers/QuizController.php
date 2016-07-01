@@ -1028,12 +1028,25 @@ class QuizController extends BaseController {
         $test_id = Input::get('id');
 
         //copy as new test
+        $question_new = array();
         if(Input::get('type') == 1){
             $personal = Test::find(Input::get('id'));
             $newPersonal = $personal->replicate();
             $newPersonal->user_id = Auth::user()->user_id;
             $newPersonal->save();
             $test_id = $newPersonal->id;
+
+            $question = Question::where('test_id', '=', Input::get('id'))
+                ->get();
+            if(count($question) > 0){
+                foreach($question as $q){
+                    $newQuestion = $q->replicate();
+                    $newQuestion->test_id = $test_id;
+                    $newQuestion->save();
+
+                    $question_new[$q->id] = $newQuestion->id;
+                }
+            }
         }
 
         $test = Input::get('type') == 1 ? new TestPersonal() : new TestCommunity();
@@ -1055,7 +1068,8 @@ class QuizController extends BaseController {
         $info = (object)array(
             'version_id' => $test->id,
             'version' => $test->version,
-            'order' => $test->order
+            'order' => $test->order,
+            'question' => $question_new
         );
         header("Content-type: application/json");
         return response()->json($info);
