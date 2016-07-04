@@ -59,8 +59,12 @@
                             <div class="row" style="margin: 15px 0 45px;">
                                 <div class="col-md-12">
                                     <div class="job-header pull-right">
+                                        @if(Auth::user('user')->can('edit.jobs') && $module_permissions->where('slug','edit.jobs')->count() === 1)
                                         <a class="btn btn-edit btn-lg btn-shadow edit-job" data-toggle="modal" style="font-size: 18px;"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
+                                        @endif
+                                        @if(Auth::user('user')->can('delete.jobs') && $module_permissions->where('slug','delete.jobs')->count() === 1)
                                         <a class="btn btn-delete btn-lg btn-shadow delete-job" style="font-size: 18px;"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                        @endif
                                         <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
                                     </div>
                                 </div>

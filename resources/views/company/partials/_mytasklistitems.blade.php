@@ -15,7 +15,6 @@
             </div>
             <div class="col-xs-6">
                 <div class="btn-group pull-right">
-                    <a href="#" data-toggle='modal' data-target='#edit_task_{{ $val->task_id }}' class="edit-tasklist"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
             </div>
@@ -46,14 +45,18 @@
         </div>
         @if($project_owner === Auth::user('user_id')->user_id)
         <div class="pull-right">
+            @if(Auth::user('user')->can('delete.projects') && $module_permissions->where('slug','delete.projects')->count() === 1)
             <a href="#" class="btn-delete btn-shadow btn delete-project">
                 <i class="fa fa-times"></i> 
                 Delete
             </a>
+            @endif
+            @if(Auth::user('user')->can('edit.projects') && $module_permissions->where('slug','edit.projects')->count() === 1)
             <a href="{{url('project/'.$project_id.'/edit')}}" class="btn-edit btn-shadow btn edit-project" data-toggle="modal" data-target="#edit_project_form">
                 <i class="fa fa-pencil" aria-hidden="true"></i> 
                 Edit
             </a>
+            @endif
             <input class="project_id" type="hidden" value="{{$project_id}}"/>
         </div>
         @endif

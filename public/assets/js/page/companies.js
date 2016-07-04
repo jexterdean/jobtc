@@ -85,23 +85,25 @@ function unshareFromCompanyEmployee(user_id, company_id, job_id) {
 
 }
 
-function assignPositionPermission(role_id,permission_id) {
+function assignPositionPermission(role_id,permission_id,company_id) {
      var url = public_path + 'assignPositionPermission';
 
     var data = {
         'role_id': role_id,
-        'permission_id': permission_id
+        'permission_id': permission_id,
+        'company_id': company_id
     };
 
     $.post(url, data);
 }
 
-function unassignPositionPermission(role_id,permission_id) {
+function unassignPositionPermission(role_id,permission_id,company_id) {
      var url = public_path + 'unassignPositionPermission';
 
     var data = {
         'role_id': role_id,
-        'permission_id': permission_id
+        'permission_id': permission_id,
+        'company_id': company_id
     };
 
     $.post(url, data);
@@ -1032,14 +1034,17 @@ function positionsScripts() {
 
         var role_id = $(this).children('.role_id').val();
         var permission_id = $(this).children('.permission_id').val();
+        var company_id = $(this).children('.company_id').val();
         
         var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
         assign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
         assign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+        assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
         
         var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
         unassign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
         unassign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+        unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
         
 
         /*Assign the Task List to this user*/
@@ -1047,7 +1052,7 @@ function positionsScripts() {
             $(this).switchClass('bg-gray', 'bg-green', function () {
                 $(this).html(assign_html);
                 //shareToCompanyEmployee(user_id, company_id, job_id);
-                assignPositionPermission(role_id,permission_id);
+                assignPositionPermission(role_id,permission_id,company_id);
             });
         }
         /*Unassign the Task List from this user*/
@@ -1055,7 +1060,7 @@ function positionsScripts() {
             $(this).switchClass('bg-green', 'bg-gray', function () {
                 $(this).html(unassign_html);
                 //unshareFromCompanyEmployee(user_id, company_id, job_id);
-                unassignPositionPermission(role_id,permission_id);
+                unassignPositionPermission(role_id,permission_id,company_id);
             });
         }
     });

@@ -126,10 +126,12 @@ class RoleController extends Controller
         
         $role_id = $request->input('role_id');
         $permission_id = $request->input('permission_id');
+        $company_id = $request->input('company_id');
         
         $permission_role = new PermissionRole();
         $permission_role->role_id = $role_id;
         $permission_role->permission_id = $permission_id;
+        $permission_role->company_id = $company_id;
         $permission_role->save();
         
         return "true";
@@ -139,8 +141,9 @@ class RoleController extends Controller
         
         $role_id = $request->input('role_id');
         $permission_id = $request->input('permission_id');
+        $company_id = $request->input('company_id');
          
-        $permission_role = PermissionRole::where('permission_id',$permission_id)->where('role_id',$role_id);
+        $permission_role = PermissionRole::where('permission_id',$permission_id)->where('role_id',$role_id)->where('company_id',$company_id);
         $permission_role->delete();
         
         return "true";

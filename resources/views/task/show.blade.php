@@ -95,11 +95,6 @@
                 @if(Auth::user('user')->user_id === $task->user_id)
                 <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
-                @if($current_time)
-                <a class="btn btn-shadow btn-sm btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
-                @else
-                <a class="btn btn-shadow btn-sm btn-timer timer-btn start_time">Start Time</a>
-                @endif
                 <div class="col-sm-4">
                     @foreach($links as $link)
                     <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a><br/>
@@ -107,59 +102,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="col-sm-5">
-                            <h4 class="text-center text-bold bg-black timer-text" id="timer" style="font-size: 20px!important;padding: 0 5px;">
-                                00:00:00
-                            </h4>
-                        </div>
-                        <div class="col-sm-7">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <h4 class="text-left text-bold bg-black" id="timer" style="font-size: 20px!important;">
-                                        Time: <strong class="total-time">{{ $_total }}</strong>
-                                    </h4>
-                                </div>
-                                <div class="col-sm-4" >
-                                    <a href="#timer-table-{{ $task->task_id }}" class="btn btn-sm btn-black pull-right" aria-expanded="true" data-widget="collapse" data-toggle="collapse"><i class="fa fa-chevron-down"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="collapse" id="timer-table-{{ $task->task_id }}">
-                            <table class="table table-responsive">
-                                <tbody class="task-table-body">
-                                    @if(count($task_timer) > 0)
-                                    <?php $total = 0; ?>
-                                    @foreach($task_timer as $val)
-                                    <?php $total += $val->time ?>
-                                    <tr>
-                                        <td>{{ $val->name }}</td>
-                                        <td class="text-center">{{ $val->start_time != '0000-00-00 00:00:00' ? date('d/m/Y g:i:s A', strtotime($val->start_time)) : '&nbsp;'}}</td>
-                                        <td class="text-center">{{ $val->end_time != '0000-00-00 00:00:00' ? date('d/m/Y g:i:s A', strtotime($val->end_time)) : '&nbsp;'}}</td>
-                                        <td class="text-center">{{ $val->time ? $val->time : '0.00' }}</td>
-                                        <td class="text-center" style="width: 5%;"><a href=' {{ url('deleteTaskTimer/' . $val->id) }}' class='alert_delete '> <i class='fa fa-trash-o fa-2x'></i> </a></td>
-                                    </tr>
-                                    @endforeach
-                                    <tr>
-                                        <td class="text-right" colspan="3"><strong>Total Time:</strong></td>
-                                        <td class="text-center">{{ number_format($total,2) }}</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    @else
-                                    <tr>
-                                        <td colspan="5">No data was found.</td>
-                                    </tr>
-                                    @endif
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>

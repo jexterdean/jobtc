@@ -227,7 +227,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('addPositionForm', 'RoleController@addPositionForm');
     Route::post('addPosition', 'RoleController@addPosition');
     Route::post('assignPositionPermission','RoleController@assignPositionPermission');
-    Route::post('unassignPositionPermission','RoleController@assignPositionPermission');
+    Route::post('unassignPositionPermission','RoleController@unassignPositionPermission');
     /**
      * Task List
      */

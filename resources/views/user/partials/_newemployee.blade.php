@@ -18,21 +18,24 @@
                 <div class="phone"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;<a href="tel:{{$profile->user->phone}}">{{$profile->user->phone}}</a></div>
                 <div class="skype"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;<a href="skype:{{$profile->user->skype}}">{{$profile->user->skype}}</a></div>
             </div>
-
         </div>
         <div class="employee-options pull-right">
             <a target="_blank" href="{{url('user/'.$profile->user->user_id.'/company/'.$profile->company_id)}}" class="btn-edit btn-shadow btn employee-profile">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 Profile
             </a>
+            @if(Auth::user('user')->can('edit.employees') && $module_permissions->where('slug','edit.employees')->count() === 1)
             <a href="#" class="btn-edit btn-shadow btn edit-employee">
                 <i class="fa fa-pencil" aria-hidden="true"></i> 
                 Edit
             </a>
+            @endif
+            @if(Auth::user('user')->can('remove.employees') && $module_permissions->where('slug','remove.employees')->count() === 1)
             <a href="#" class="btn-delete btn-shadow btn remove-employee">
                 <i class="fa fa-times"></i> 
                 Remove
             </a>
+            @endif
             <input class="user_id" type="hidden" value="{{$profile->user_id}}"/>
             <input class="company_id" type="hidden" value="{{$company_id}}"/>
         </div>
