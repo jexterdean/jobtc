@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Profile;
 use App\Models\Job;
 use App\Models\Company;
 use App\Models\Applicant;
 use App\Models\ApplicantTag;
 use App\Models\MailBox;
 use App\Models\MailBoxAlias;
+use App\Models\Permission;
+use App\Models\PermissionRole;
 use Auth;
 use Redirect;
 
@@ -100,7 +103,7 @@ class JobController extends Controller {
         $permissions_list = [];
 
         $permissions_role = PermissionRole::with('permission')
-                ->where('company_id', $id)
+                ->where('company_id', $job->company_id)
                 ->where('role_id', $user_profile_role->role_id)
                 ->get();
 
