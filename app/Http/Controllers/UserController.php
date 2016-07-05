@@ -10,6 +10,8 @@ use App\Models\Profile;
 use App\Models\Comment;
 use App\Models\Video;
 use App\Models\Tag;
+use App\Models\PermissionRole;
+use App\Models\Permission;
 use Bican\Roles\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use DB;
@@ -62,24 +64,24 @@ class UserController extends BaseController {
 
         $profile = Profile::with('user')->where('user_id', $user_id)->where('company_id', $company_id)->first();
 
-        $countries =  Country::where('country_id',$profile->user->country_id)->first();
-        
+        $countries = Country::where('country_id', $profile->user->country_id)->first();
+
         $role = Role::where('id', $profile->role_id)->first();
 
         $user_info = User::with('profile')->where('user_id', $logged_in_user)->first();
 
-        $videos = Video::with(['tags' =>function($query){
-            $query->where('tag_type','video')->first();
-        }])->where('unique_id', $user_id)->where('user_type','employee')->orderBy('id', 'desc')->get();
-        
+        $videos = Video::with(['tags' => function($query) {
+                        $query->where('tag_type', 'video')->first();
+                    }])->where('unique_id', $user_id)->where('user_type', 'employee')->orderBy('id', 'desc')->get();
+
         $user_tags = Tag::where('unique_id', $user_id)
                 ->where('tag_type', 'employee')
                 ->first();
-        
+
         $comments = Comment::with('user')
-                ->where('belongs_to', 'employee')
-                ->where('unique_id', $user_id)
-                ->orderBy('comment_id', 'desc')->get();
+                        ->where('belongs_to', 'employee')
+                        ->where('unique_id', $user_id)
+                        ->orderBy('comment_id', 'desc')->get();
 
         $assets = ['users', 'real-time'];
 
@@ -440,7 +442,7 @@ class UserController extends BaseController {
 
         return $user_id;
     }
-    
+
     public function saveEmployeeNotes(Request $request) {
         $employee_id = $request->input('employee_id');
         $notes = $request->input('notes');
@@ -451,6 +453,42 @@ class UserController extends BaseController {
         ]);
 
         return "true";
+    }
+
+    public function getEmployees(Request $request, $id) {
+
+        $user_id = Auth::user('user')->user_id;
+
+        $profiles = Profile::where('company_id', $id)->get();
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_role = PermissionRole::with('permission')
+                ->where('company_id', $id)
+                ->where('role_id', $user_profile_role->role_id)
+                ->get();
+
+        foreach ($permissions_role as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        $assets = ['companies', 'real-time'];
+
+        return view('user.employees', [
+            'profiles' => $profiles,
+            'countries' => $countries_option,
+            'module_permissions' => $module_permissions,
+            'assets' => $assets,
+            'company_id' => $id,
+        ]);
     }
 
 }

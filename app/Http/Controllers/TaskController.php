@@ -14,6 +14,9 @@ use App\Models\TaskChecklistOrder;
 use App\Models\TaskCheckListPermission;
 use App\Models\Link;
 use App\Models\LinkCategory;
+use App\Models\Profile;
+use App\Models\Permission;
+use App\Models\PermissionRole;
 use View;
 use Auth;
 use Redirect;
@@ -123,8 +126,28 @@ class TaskController extends BaseController {
         $categories = LinkCategory::all()
                 ->lists('name', 'id')
                 ->toArray();
+        
+        
+        $company_id = Project::where('project_id',$task->project_id)->pluck('company_id');
+        
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
 
+        $permissions_list = [];
 
+        $permissions_role = PermissionRole::with('permission')
+                ->where('company_id', $company_id)
+                ->where('role_id', $user_profile_role->role_id)
+                ->get();
+
+        foreach ($permissions_role as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        
         $assets = ['calendar'];
 
         return view('task.show', [
@@ -135,7 +158,8 @@ class TaskController extends BaseController {
             'current_time' => $current_time,
             'percentage' => number_format($percentage, 0),
             'links' => $links,
-            'categories' => $categories
+            'categories' => $categories,
+            'module_permissions' => $module_permissions
         ]);
     }
 

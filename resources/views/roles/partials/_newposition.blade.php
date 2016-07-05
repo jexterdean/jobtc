@@ -6,7 +6,7 @@
             </div>
             <div class="box-body">
                 <div id="position-collapse-{{$position->id}}" class="box-content collapse">
-                    @include('company.partials._positionpermissions')
+                    @include('roles.partials._positionpermissions')
                 </div><!--Box Container-->
             </div>
         </div>

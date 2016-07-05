@@ -140,23 +140,21 @@ class JobController extends Controller {
                 'count' => 0
             ]);
         } else {
-            
-             $job = Job::with('applicants')->where('id', $id)->first();
+
+            $job = Job::with('applicants')->where('id', $id)->first();
 
             $applicants = Applicant::with(['tags' => function ($query) {
                             $query->orderBy('created_at', 'desc');
                         }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
-                        
-            $assets = ['jobs'];            
-            
+
+            $assets = ['jobs'];
+
             return view('jobs.show', [
                 'job' => $job,
                 'applicants' => $applicants,
                 'assets' => $assets,
                 'count' => 0
             ]);
-            
-            
         }
     }
 

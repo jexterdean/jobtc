@@ -14,6 +14,8 @@ use App\Models\Job;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
+use App\Models\Permission;
+use App\Models\PermissionRole;
 use Illuminate\Http\Request;
 
 class Helper
@@ -238,6 +240,34 @@ class Helper
         
     }
     
+    public static function getPermissions() {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $user_profile_role = Profile::where('user_id', $user_id)->get();
+
+        $company_id_list = [];
+        $role_id_list = [];
+        
+        foreach ($user_profile_role as $profile_role) {
+            array_push($company_id_list,$profile_role->company_id);
+            array_push($role_id_list,$profile_role->role_id);
+        }
+        
+        $permissions_list = [];
+
+        $permissions_role = PermissionRole::with('permission')
+                ->whereIn('company_id', $company_id_list)
+                ->get();
+
+        foreach ($permissions_role as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        return $module_permissions;
+    }
     
     public static function br2nl($string)
     {

@@ -106,12 +106,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('links', 'LinkController');
     Route::resource('linkCategory', 'LinkCategoryController');
 
-    /**
-     *  Client
-     */
-    /**
-     * Admin only(Level 1 access)
-     */
+
     Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
             ->where('billing_type', 'invoice|estimate');
     Route::get('/billing/{billing_type}/{billing_id}', ['uses' => 'BillingController@show'])
@@ -197,9 +192,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     /**
-     * Staff
-     */
-    /**
      * CSS Reference
      */
     Route::resource('css', 'CssController');
@@ -214,6 +206,7 @@ Route::group(['middleware' => 'auth'], function () {
     /*
      * Employees
      * */
+    Route::get('employees/{id}','UserController@getEmployees');
     Route::get('addEmployeeForm', 'UserController@addEmployeeForm');
     Route::get('editEmployeeForm/{id}', 'UserController@editEmployeeForm');
     Route::post('addEmployee', 'UserController@addEmployee');
@@ -224,10 +217,20 @@ Route::group(['middleware' => 'auth'], function () {
     /*
      * Positions
      */
+    Route::resource('positions', 'RoleController');
     Route::get('addPositionForm', 'RoleController@addPositionForm');
     Route::post('addPosition', 'RoleController@addPosition');
     Route::post('assignPositionPermission','RoleController@assignPositionPermission');
     Route::post('unassignPositionPermission','RoleController@unassignPositionPermission');
+    
+    /* 
+     * Assigning 
+     **/
+    Route::get('assignProjects/{id}','AssignController@assignProjects');
+    Route::get('assignTests/{id}','AssignController@assignTests');
+    Route::get('assignAuthorityLevels/{id}','AssignController@assignAuthorityLevels');
+    Route::get('assignJobs/{id}','AssignController@assignJobs');
+    
     /**
      * Task List
      */
