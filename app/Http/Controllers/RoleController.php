@@ -12,6 +12,7 @@ use App\Models\Module;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\PermissionUser;
+use Auth;
 
 class RoleController extends Controller
 {
@@ -54,7 +55,23 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $user_id = Auth::user('user')->user_id;
+
+        $positions = Role::where('company_id', $id)->get();
+        $modules = Module::all();
+        $permissions = Permission::all();
+        $permission_role = PermissionRole::all();
+
+        $assets = ['companies', 'real-time'];
+        
+        return view('roles.show', [
+            'positions' => $positions,
+            'permissions' => $permissions,
+            'permission_role' => $permission_role,
+            'modules' => $modules,
+            'assets' => $assets,
+            'company_id' => $id
+        ]);
     }
 
     /**
@@ -119,6 +136,7 @@ class RoleController extends Controller
             'permissions' => $permissions,
             'permission_role' => $permission_role,
             'modules' => $modules,
+            'company_id' => $company_id
         ]);
     }
     
