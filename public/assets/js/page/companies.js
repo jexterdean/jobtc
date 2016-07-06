@@ -1381,6 +1381,88 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
         $('#add-position-form').remove();
     });
     
+    $('#positions').on('click','.edit-position',function(e){
+       e.preventDefault();
+        var position_id = $(this).siblings('.position_id').val();
+        var company_id = $(this).siblings('.company_id').val();
+        var edit_position_form = public_path + 'editPositionForm/'+position_id;
+        var ajaxurl = public_path + 'editPosition';
+       
+       BootstrapDialog.show({
+            title: 'Edit Position <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            size: 'size-normal',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Save',
+                    cssClass: 'btn-edit btn-shadow',
+                    action: function (dialog) {
+                        
+                        var form = $(".edit-position-form")[0];
+
+                        var formData = new FormData(form);
+                        formData.append('position_id', position_id);
+                        formData.append('company_id', company_id);
+
+                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                        $button.disable();
+                        $button.spin();
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                var new_position_title = $(form).find('.title').val();
+                                $('#position-'+position_id+' .box-title').text(new_position_title);
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax
+                    }
+                }],
+            data: {
+                'pageToLoad': edit_position_form
+            },
+            onshown: function (ref) {
+                //initCkeditor(ref);
+            },
+            closable: false
+        });
+       
+    });
+    
+    $('#positions').on('click','.delete-position',function(e){
+       e.stopImmediatePropagation();
+       
+        var position_id = $(this).siblings('.position_id').val();
+        var url = public_path + 'deletePosition';
+
+        BootstrapDialog.confirm('Are you sure you want to delete this position?', function (result) {
+            if (result) {
+                var data = {
+                    'position_id': position_id
+                };
+
+                $.post(url, data, function (data) {
+                    $('#position-' + data).remove();
+                });
+            }
+        });
+    });
+    
     $('.permission-list-group').on('click', '.position-permission', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
