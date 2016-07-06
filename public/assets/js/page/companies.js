@@ -1255,6 +1255,7 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
 
     $('#employees').on('click', '.edit-employee', function (e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         var user_id = $(this).siblings('.user_id').val();
         var edit_employee_form = public_path + 'editEmployeeForm/'+user_id;
         var ajaxurl = public_path + 'editEmployee';
