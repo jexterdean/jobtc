@@ -1,4 +1,15 @@
 {
+    "ace": {
+        "search": {
+            "@backwards": "false",
+            "@highlightmatches": "true",
+            "@matchcase": "false",
+            "@preservecase": "false",
+            "@regex": "false",
+            "@wholeword": "false",
+            "@wraparound": "true"
+        }
+    },
     "console": {
         "@expanded": true,
         "@height": "153",
@@ -6,8 +17,8 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab0",
-                    "tab1"
+                    "tab1",
+                    "tab0"
                 ]
             },
             "name": "pane1",
@@ -22,13 +33,13 @@
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1466437887097
+                            "timestamp": 1467702883912
                         },
                         "filter": true,
                         "title": "bash - \"job.tc\"",
                         "tooltip": "bash - \"job.tc\"",
                         "terminal": {
-                            "id": "devel_970",
+                            "id": "devel_819",
                             "cwd": "",
                             "width": 1648,
                             "height": 127
@@ -43,12 +54,37 @@
                     "path": "",
                     "className": [],
                     "document": {
+                        "filter": true,
                         "title": "Immediate",
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1466437887099
+                        "tooltip": "Immediate (Javascript (browser))",
+                        "immediate": {
+                            "folds": [],
+                            "scrolltop": 0,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 2,
+                                    "column": 0
+                                },
+                                "end": {
+                                    "row": 2,
+                                    "column": 0
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": 0,
+                            "type": "jsbrowser",
+                            "history": [],
+                            "pos": 0
                         },
-                        "filter": true
+                        "hash": "bc37e9908b413249fe666f189265c03143e4d841",
+                        "meta": {},
+                        "changed": false
                     },
                     "editorType": "immediate",
                     "active": false
@@ -76,18 +112,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 7,
-            "@document": 5,
+            "@document": 3,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 7,
-            "@tab": 6,
-            "@undoManager": 7
-            "@session": 4,
-            "@tab": 4,
-            "@undoManager": 5
+            "@session": 2,
+            "@tab": 3,
+            "@undoManager": 3
         }
     },
     "findinfiles": {
@@ -105,7 +137,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab3",
+            "tab2",
             "tab0"
         ]
     },
@@ -144,18 +176,22 @@
         "@showfs": true,
         "expanded": {
             "json()": [
-                "/",
-                "/public",
-                "/public/ckeditor"
+                "/"
+            ]
+        }
+    },
+    "search-history": {
+        "search": {
+            "json()": [
+                "show"
             ]
         }
     },
     "tabs": {
         "json()": {
-            "focus": "/public/ckeditor/config.js",
+            "focus": "/app/Http/Controllers/JobController.php",
             "meta": {
                 "accessList": [
-                    "tab3",
                     "tab2"
                 ]
             },
@@ -164,39 +200,19 @@
                 {
                     "type": "tab",
                     "name": "tab2",
-                    "path": "/app/Http/routes.php",
+                    "path": "/app/Http/Controllers/JobController.php",
                     "className": [
-                        "tab2"
-                    ],
-                    "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1466437974483
-                        },
-                        "filter": true,
-                        "title": "routes.php",
-                        "tooltip": "/app/Http/routes.php",
-                        "ace": {}
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab3",
-                    "path": "/public/ckeditor/config.js",
-                    "className": [
-                        "tab3",
+                        "tab2",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1466438332545
+                            "timestamp": 1467703096081
                         },
                         "filter": true,
-                        "title": "config.js",
-                        "tooltip": "/public/ckeditor/config.js",
+                        "title": "JobController.php",
+                        "tooltip": "/app/Http/Controllers/JobController.php",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -210,7 +226,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/public/ckeditor/config.js"
+            "/"
         ]
     }
 }

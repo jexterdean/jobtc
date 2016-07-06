@@ -10,6 +10,9 @@
         "@path": "/.c9/builders",
         "@saveall": true
     },
+    "codeintel": {
+        "@dismiss_installer": true
+    },
     "find.nak": {
         "@searchLimit": 100
     },
