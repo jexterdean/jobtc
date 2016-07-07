@@ -1324,6 +1324,7 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
 
                             },
                             success: function (data) {
+                                
                                 var name = $(form).find('input[name="name"]').val();
                                 var email = $(form).find('input[name="email"]').val();
                                 var phone = $(form).find('input[name="phone"]').val();
@@ -1337,7 +1338,9 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
                                 var position = $(form).find('select[name="role_id"] option:selected').text();
                                 var country = $(form).find('select[name="country_id"] option:selected').text();
                                 
-                                //Update Employee information 
+                                console.log(data);
+                                //Update Employee information
+                                $('#employee-'+user_id).find('.employee-photo').attr('src',public_path+data);
                                 $('#employee-'+user_id).find('.name').children('a').text(name);
                                 $('#employee-'+user_id).find('.email').children('a').text(email);
                                 $('#employee-'+user_id).find('.phone').children('a').text(phone);
