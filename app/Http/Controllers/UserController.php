@@ -326,14 +326,20 @@ class UserController extends BaseController {
         return view('forms.addEmployeeForm');
     }
 
-    public function editEmployeeForm(Request $request, $id) {
-
-        $profile = Profile::with('user')->where('user_id', $id)->first();
-
+    public function editEmployeeForm(Request $request, $company_id,$user_id) {
+        
+        $profile = Profile::with('user')
+                ->where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+        
+        $positions = Role::where('company_id',$company_id)->get();
+        
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
         return view('forms.editEmployeeForm', [
             'profile' => $profile,
+            'positions' => $positions,
             'countries' => $countries_option
         ]);
     }
@@ -381,8 +387,11 @@ class UserController extends BaseController {
     public function editEmployee(Request $request) {
 
         $user_id = $request->input('user_id');
-
+        $company_id = $request->input('company_id');
+        
         $user = User::where('user_id', $user_id);
+        $profile = Profile::where('user_id',$user_id)
+                ->where('company_id',$company_id);
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -414,6 +423,10 @@ class UserController extends BaseController {
             'skype' => $request->input('skype'),
             'facebook' => $request->input('facebook'),
             'linkedin' => $request->input('linkedin'),
+        ]);
+        
+        $profile->update([
+           'role_id' =>  $request->input('role_id')
         ]);
 
         return $photo_path;
@@ -463,8 +476,6 @@ class UserController extends BaseController {
 
         $modules = Module::all();
         $permissions = Permission::all();
-        $permission_role = PermissionRole::all();
-        $permission_user = PermissionUser::all();
         
         $user_profile_role = Profile::where('user_id', $user_id)
                 ->where('company_id', $company_id)
@@ -472,12 +483,17 @@ class UserController extends BaseController {
 
         $permissions_list = [];
 
-        $permissions_role = PermissionRole::with('permission')
+        $permission_role = PermissionRole::with('permission')
                 ->where('company_id', $company_id)
                 ->where('role_id', $user_profile_role->role_id)
                 ->get();
 
-        foreach ($permissions_role as $role) {
+        $permission_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+        
+        foreach ($permission_role as $role) {
             array_push($permissions_list, $role->permission_id);
         }
 
@@ -495,13 +511,9 @@ class UserController extends BaseController {
             'modules' => $modules,
             'module_role_permissions' => $module_role_permissions,
             'assets' => $assets,
-            'user_id' => $user_id,
-            'company_id' => $company_id
+            'user_id' => intval($user_id),
+            'company_id' => intval($company_id)
         ]);
-    }
-
-    public function editEmployeePermissions(Request $request) {
-        
     }
 
     public function getEmployees(Request $request, $id) {

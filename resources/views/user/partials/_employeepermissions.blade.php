@@ -17,7 +17,7 @@
                             <label>{{ $permission->name }}</label>
                         </div>
                         <div class="pull-right">
-                            @if($permission_user->where('user_id',$user_id)->where('permission_id',$permission->id)->count() > 0)
+                            @if($permission_user->where('user_id',$user_id)->where('permission_id',$permission->id)->where('company_id',$company_id)->count() > 0)
                             <div class="btn btn-default btn-shadow bg-green employee-permission">
                                 <i class="fa fa-check" aria-hidden="true"></i> 
                                 <input class="user_id" type="hidden" value="{{$user_id}}">

@@ -1285,7 +1285,8 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         var user_id = $(this).siblings('.user_id').val();
-        var edit_employee_form = public_path + 'editEmployeeForm/'+user_id;
+        var company_id = $(this).siblings('.company_id').val();
+        var edit_employee_form = public_path + 'editEmployeeForm/'+company_id+'/'+user_id;
         var ajaxurl = public_path + 'editEmployee';
         
         BootstrapDialog.show({
@@ -1306,6 +1307,7 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
 
                         var formData = new FormData(form);
                         formData.append('user_id', user_id);
+                        formData.append('company_id', company_id);
 
                         var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                         $button.disable();
@@ -1322,6 +1324,32 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
 
                             },
                             success: function (data) {
+                                var name = $(form).find('input[name="name"]').val();
+                                var email = $(form).find('input[name="email"]').val();
+                                var phone = $(form).find('input[name="phone"]').val();
+                                var skype = $(form).find('input[name="skype"]').val();
+                                var facebook = $(form).find('input[name="facebook"]').val();
+                                var linkedin = $(form).find('input[name="linkedin"]').val();
+                                var address_1 = $(form).find('input[name="address_1"]').val();
+                                var address_2 = $(form).find('input[name="address_2"]').val();
+                                var zipcode = $(form).find('input[name="zipcode"]').val();
+                                
+                                var position = $(form).find('select[name="role_id"] option:selected').text();
+                                var country = $(form).find('select[name="country_id"] option:selected').text();
+                                
+                                //Update Employee information 
+                                $('#employee-'+user_id).find('.name').children('a').text(name);
+                                $('#employee-'+user_id).find('.email').children('a').text(email);
+                                $('#employee-'+user_id).find('.phone').children('a').text(phone);
+                                $('#employee-'+user_id).find('.skype').children('a').text(skype);
+                                $('#employee-'+user_id).find('.address_1').children('span').text(address_1);
+                                $('#employee-'+user_id).find('.address_2').children('span').text(address_2);
+                                $('#employee-'+user_id).find('.zipcode').children('span').text(zipcode);
+                                $('#employee-'+user_id).find('.facebook').children('span').text(facebook);
+                                $('#employee-'+user_id).find('.linkedin').children('span').text(linkedin);
+                                
+                                $('#employee-'+user_id).find('.position').children('span').text(position);
+                                $('#employee-'+user_id).find('.country').children('span').text(country);
                                 
                                 dialog.close();
                                 

@@ -18,7 +18,7 @@
                             <label>{!! $permission->name !!}</label>
                         </div>
                         <div class="pull-right">
-                            @if($permission_role->where('role_id',$position->id)->where('permission_id',$permission->id)->count() > 0)
+                            @if($permission_role->where('role_id',$position->id)->where('permission_id',$permission->id)->where('company_id',$company_id)->count() > 0)
                             <div class="btn btn-default btn-shadow bg-green position-permission">
                                 <i class="fa fa-check" aria-hidden="true"></i> 
                                 <input class="role_id" type="hidden" value="{{$position->id}}">
