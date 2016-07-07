@@ -153,11 +153,11 @@
                                 <text class="media-heading">{{$profile->user->name}}</text>
                                 <br />
                                 <div class="employee-position">
+                                    <i class="fa fa-flag" aria-hidden="true"></i>
                                     <text>{{$role->name}}</text>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-7">
-
                                         <div class="employee-email">
                                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                             <a href="mailto:{{$profile->user->email}}">{{$profile->user->email}}</a>

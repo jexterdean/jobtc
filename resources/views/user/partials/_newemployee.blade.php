@@ -1,6 +1,6 @@
 <div id="employee-{{$profile->user_id}}" class="col-md-6 employee-column">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <i class="pull-left" aria-hidden="true">
                 @if($profile->user->photo === '' || $profile->user->photo === NULL)
                 <img class="employee-photo" src="{{url('assets/user/default-avatar.jpg')}}" />
@@ -14,6 +14,7 @@
                         {{$profile->user->name}}
                     </a>
                 </div>
+                <div class="position"><i class="fa fa-flag" aria-hidden="true"></i>&nbsp;{{$profile->role->name}}</div>
                 <div class="email"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;<a href="mailto:{{$profile->user->email}}">{{$profile->user->email}}</a></div>
                 <div class="phone"><i class="fa fa-phone-square" aria-hidden="true"></i>&nbsp;<a href="tel:{{$profile->user->phone}}">{{$profile->user->phone}}</a></div>
                 <div class="skype"><i class="fa fa-skype" aria-hidden="true"></i>&nbsp;<a href="skype:{{$profile->user->skype}}">{{$profile->user->skype}}</a></div>
@@ -23,6 +24,10 @@
             <a target="_blank" href="{{url('user/'.$profile->user->user_id.'/company/'.$profile->company_id)}}" class="btn-edit btn-shadow btn employee-profile">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 Profile
+            </a>
+            <a href="#" class="btn-edit btn-shadow btn edit-employee-permissions">
+                <i class="fa fa-flag" aria-hidden="true"></i>
+                Permissions
             </a>
             @if(Auth::user('user')->can('edit.employees') && $module_permissions->where('slug','edit.employees')->count() === 1)
             <a href="#" class="btn-edit btn-shadow btn edit-employee">

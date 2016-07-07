@@ -209,11 +209,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('employees/{id}','UserController@getEmployees');
     Route::get('addEmployeeForm', 'UserController@addEmployeeForm');
     Route::get('editEmployeeForm/{id}', 'UserController@editEmployeeForm');
+    Route::get('editEmployeePermissionsForm/{id}', 'UserController@editEmployeePermissionsForm');
+    Route::post('editEmployeePermissions', 'UserController@editEmployeePermissions');
     Route::post('addEmployee', 'UserController@addEmployee');
     Route::post('editEmployee', 'UserController@editEmployee');
     Route::post('removeEmployeeFromCompany', 'UserController@removeEmployeeFromCompany');
     Route::post('saveEmployeeNotes', 'UserController@saveEmployeeNotes');
-
+    
+        
+    
     /*
      * Positions
      */
@@ -225,6 +229,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('deletePosition', 'RoleController@deletePosition');
     Route::post('assignPositionPermission','RoleController@assignPositionPermission');
     Route::post('unassignPositionPermission','RoleController@unassignPositionPermission');
+    Route::post('assignEmployeePermission','RoleController@assignEmployeePermission');
+    Route::post('unassignEmployeePermission','RoleController@unassignEmployeePermission');
     
     /* 
      * Assigning 

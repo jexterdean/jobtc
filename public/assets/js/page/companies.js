@@ -1252,7 +1252,34 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
     /*
      * Employee Options      
      **/
-
+    
+    $('#employees').on('click','.edit-employee-permissions',function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var user_id = $(this).siblings('.company_id').val();
+        var company_id = $(this).siblings('.company_id').val();
+        var edit_employee_form = public_path + 'editEmployeePermissionsForm/'+company_id;
+        
+        
+        BootstrapDialog.show({
+            title: 'Edit Permissions <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            size: 'size-wide',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            data: {
+                'pageToLoad': edit_employee_form
+            },
+            onshown: function (ref) {
+                
+            },
+            closable: false
+        });
+    });
+    
     $('#employees').on('click', '.edit-employee', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
