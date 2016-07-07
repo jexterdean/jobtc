@@ -220,6 +220,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('positions', 'RoleController');
     Route::get('addPositionForm', 'RoleController@addPositionForm');
     Route::post('addPosition', 'RoleController@addPosition');
+    Route::get('editPositionForm/{id}', 'RoleController@editPositionForm');
+    Route::post('editPosition', 'RoleController@editPosition');
+    Route::post('deletePosition', 'RoleController@deletePosition');
     Route::post('assignPositionPermission','RoleController@assignPositionPermission');
     Route::post('unassignPositionPermission','RoleController@unassignPositionPermission');
     

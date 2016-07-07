@@ -240,24 +240,19 @@ class Helper
         
     }
     
-    public static function getPermissions() {
+    public static function getPermissions($company_id) {
         
         $user_id = Auth::user('user')->user_id;
         
-        $user_profile_role = Profile::where('user_id', $user_id)->get();
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
 
-        $company_id_list = [];
-        $role_id_list = [];
-        
-        foreach ($user_profile_role as $profile_role) {
-            array_push($company_id_list,$profile_role->company_id);
-            array_push($role_id_list,$profile_role->role_id);
-        }
-        
         $permissions_list = [];
 
         $permissions_role = PermissionRole::with('permission')
-                ->whereIn('company_id', $company_id_list)
+                ->where('company_id', $company_id)
+                ->where('role_id', $user_profile_role->role_id)
                 ->get();
 
         foreach ($permissions_role as $role) {

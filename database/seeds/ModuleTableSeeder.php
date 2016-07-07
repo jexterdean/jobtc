@@ -49,6 +49,14 @@ class ModuleTableSeeder extends Seeder {
             $positions_module->name = 'Positions';
             $positions_module->save();
         }
+        
+        //For Tickets Module
+        $tickets_module_count = Module::where('name', 'Tickets')->count();
+        if ($tickets_module_count === 0) {
+            $tickets_module = new Module();
+            $tickets_module->name = 'Tickets';
+            $tickets_module->save();
+        }
     }
 
 }

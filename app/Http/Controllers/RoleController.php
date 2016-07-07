@@ -61,6 +61,23 @@ class RoleController extends Controller
         $modules = Module::all();
         $permissions = Permission::all();
         $permission_role = PermissionRole::all();
+        
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_role = PermissionRole::with('permission')
+                ->where('company_id', $id)
+                ->where('role_id', $user_profile_role->role_id)
+                ->get();
+
+        foreach ($permissions_role as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         $assets = ['companies', 'real-time'];
         
@@ -69,6 +86,7 @@ class RoleController extends Controller
             'permissions' => $permissions,
             'permission_role' => $permission_role,
             'modules' => $modules,
+            'module_permissions' => $module_permissions,
             'assets' => $assets,
             'company_id' => $id
         ]);
@@ -113,6 +131,15 @@ class RoleController extends Controller
         return view('forms.addPositionForm');
     }
     
+    public function editPositionForm(Request $request,$id) {
+        
+        $position = Role::find($id);
+        
+        return view('forms.editPositionForm',[
+            'position' => $position
+        ]);
+    }
+    
     public function addPosition(Request $request) {
         $company_id = $request->input('company_id');
         $position_title = $request->input('position_title');
@@ -138,6 +165,33 @@ class RoleController extends Controller
             'modules' => $modules,
             'company_id' => $company_id
         ]);
+    }
+    
+    public function editPosition(Request $request) {
+        
+        $position_id = $request->input('position_id');
+        $company_id = $request->input('company_id');
+        $name = $request->input('title');
+        $description = $request->input('description');
+        
+        $position = Role::where('id',$position_id);
+        $position->update([
+           'name' => $name,
+            'slug' => strtolower($name).'-'.$company_id,
+            'description' => $description
+        ]);
+        
+        return "true";
+    }
+    
+    public function deletePosition(Request $request) {
+        
+        $position_id = $request->input('position_id');
+        
+        $position = Role::where('id',$position_id);
+        $position->delete();
+        
+        return $position_id;
     }
     
     public function assignPositionPermission(Request $request) {
