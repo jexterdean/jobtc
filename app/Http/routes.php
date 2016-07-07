@@ -209,7 +209,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('employees/{id}','UserController@getEmployees');
     Route::get('addEmployeeForm', 'UserController@addEmployeeForm');
     Route::get('editEmployeeForm/{id}', 'UserController@editEmployeeForm');
-    Route::get('editEmployeePermissionsForm/{id}', 'UserController@editEmployeePermissionsForm');
+    Route::get('editEmployeePermissionsForm/{company_id}/{user_id}', 'UserController@editEmployeePermissionsForm');
     Route::post('editEmployeePermissions', 'UserController@editEmployeePermissions');
     Route::post('addEmployee', 'UserController@addEmployee');
     Route::post('editEmployee', 'UserController@editEmployee');

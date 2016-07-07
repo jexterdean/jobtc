@@ -457,9 +457,9 @@ class UserController extends BaseController {
         return "true";
     }
 
-    public function editEmployeePermissionsForm(Request $request, $id) {
+    public function editEmployeePermissionsForm(Request $request, $company_id,$user_id) {
 
-        $user_id = Auth::user('user')->user_id;
+        //$user_id = Auth::user('user')->user_id;
 
         $modules = Module::all();
         $permissions = Permission::all();
@@ -467,13 +467,13 @@ class UserController extends BaseController {
         $permission_user = PermissionUser::all();
         
         $user_profile_role = Profile::where('user_id', $user_id)
-                ->where('company_id', $id)
+                ->where('company_id', $company_id)
                 ->first();
 
         $permissions_list = [];
 
         $permissions_role = PermissionRole::with('permission')
-                ->where('company_id', $id)
+                ->where('company_id', $company_id)
                 ->where('role_id', $user_profile_role->role_id)
                 ->get();
 
@@ -496,7 +496,7 @@ class UserController extends BaseController {
             'module_role_permissions' => $module_role_permissions,
             'assets' => $assets,
             'user_id' => $user_id,
-            'company_id' => $id
+            'company_id' => $company_id
         ]);
     }
 

@@ -1,4 +1,9 @@
-<label class='center-block permissions-title'>{{$position->name}} Permissions</label>
+<label class='center-block permissions-title'>
+    {{$position->name}} Permissions
+    <a class="position-permissions-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Changing permissions here changes them for all with the position {{$position->name}}">
+        <i class="fa fa-question-circle" aria-hidden="true"></i>
+    </a>
+</label>
 <ul class="position-permissions-list-group list-group">
     @foreach($modules as $module)
     <li class="list-group-item">
@@ -38,6 +43,8 @@
     @endforeach
 </ul>
 <script>
+$('.position-permissions-tooltip').tooltip();
+    
 function assignPositionPermission(role_id,permission_id,company_id) {
      var url = public_path + 'assignPositionPermission';
 

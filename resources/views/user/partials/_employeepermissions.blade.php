@@ -1,5 +1,5 @@
 <label class='center-block permissions-title'>User Permissions&nbsp;
-    <a class="user-permissions-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="This can override position permissions">
+    <a class="user-permissions-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Changes permissions for this user only. This will override position permissions">
         <i class="fa fa-question-circle" aria-hidden="true"></i>
     </a>
 </label>

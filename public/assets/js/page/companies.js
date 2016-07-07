@@ -1256,13 +1256,14 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
     $('#employees').on('click','.edit-employee-permissions',function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
-        var user_id = $(this).siblings('.company_id').val();
+        var user_id = $(this).siblings('.user_id').val();
         var company_id = $(this).siblings('.company_id').val();
-        var edit_employee_form = public_path + 'editEmployeePermissionsForm/'+company_id;
-        
+        var edit_employee_permissions_form = public_path + 'editEmployeePermissionsForm/'+company_id+'/'+user_id;
+        console.log(user_id);
+        var employee_name = $('#employee-'+user_id).find('.name').text().trim();
         
         BootstrapDialog.show({
-            title: 'Edit Permissions <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            title: 'Edit Permissions for '+employee_name+'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
             size: 'size-wide',
             message: function (dialog) {
                 var $message = $('<div></div>');
@@ -1271,7 +1272,7 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
                 return $message;
             },
             data: {
-                'pageToLoad': edit_employee_form
+                'pageToLoad': edit_employee_permissions_form
             },
             onshown: function (ref) {
                 
