@@ -1,11 +1,26 @@
 <form id="add-employee-form" class="add-employee-form">
     <div class="row">
         <div class="col-md-12">
-            <input class="form-control" name="employee-name" placeholder="Name" value="" />
-            <br />
-            <input class="form-control" name="employee-email" placeholder="Email" value="" />
-            <br />
-            <input type="password" class="form-control" name="employee-password" placeholder="Password" value="" />
+            <div class="center-block">
+                <label class="radio-inline"><input id="new-employee-tab" checked="checked" name="employee-tab" type="radio" value="" data-target="#new-employee">New User</label>
+                <label class="radio-inline"><input id="existing-user-tab" name="employee-tab" type="radio" value="" data-target="#existing-user">Existing User</label>
+            </div>
+            <div class="tab-content">
+                <div id="new-employee" class="tab-pane active">
+                    <input class="form-control" name="employee-name" placeholder="Name" value="" />
+                    <br />
+                    <input class="form-control" name="employee-email" placeholder="Email" value="" />
+                    <br />
+                    <input type="password" class="form-control" name="employee-password" placeholder="Password" value="" />
+                </div>
+                <div id="existing-user" class="tab-pane">
+                    <select name="user_id" class='form-control input-xlarge select2me' placeholder="Select Position">
+                        @foreach($profiles as $profile)
+                        <option value="{{$profile->user_id}}">{{$profile->user->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <br />
             <div class="center-block">
                 <label class="radio-inline"><input id="existing-position-tab" checked="checked" name="position-tab" type="radio" value="" data-target="#existing-position">Existing Position</label>
@@ -29,6 +44,10 @@
 </form>
 <script>
     $('input[name="position-tab"]').click(function () {
+        $(this).tab('show');
+    });
+    
+    $('input[name="employee-tab"]').click(function () {
         $(this).tab('show');
     });
 </script>

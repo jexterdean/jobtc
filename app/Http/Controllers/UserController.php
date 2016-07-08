@@ -324,10 +324,29 @@ class UserController extends BaseController {
 
     public function addEmployeeForm(Request $request, $id) {
 
+        $user_id = Auth::user('user')->user_id;
+
         $positions = Role::where('company_id', $id)->get();
 
+        $user_list = [];
+
+        $company_profiles = Profile::with('user')
+                ->where('user_id', '<>', $user_id)
+                ->where('company_id', $id)
+                ->get();
+        
+        foreach ($company_profiles as $company_profile) {
+            array_push($user_list, $company_profile->user_id);
+        }
+        
+        $profiles = Profile::with('user')
+                ->whereNotIn('user_id', $user_list)
+                ->where('user_id', '<>' ,$user_id)
+                ->get();
+
         return view('forms.addEmployeeForm', [
-            'positions' => $positions
+            'positions' => $positions,
+            'profiles' => $profiles
         ]);
     }
 
@@ -350,13 +369,30 @@ class UserController extends BaseController {
     }
 
     public function addEmployee(Request $request) {
-        
-        $user_id = Auth::user('user')->user_id;
-        
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $password = $request->input('password');
+
+        $employee_id = Auth::user('user')->user_id;
+
         $company_id = $request->input('company_id');
+
+        if ($request->has('name')) {
+            $name = $request->input('name');
+            $email = $request->input('email');
+            $password = $request->input('password');
+
+            $user = new User;
+            $user->name = $name;
+            $user->password = bcrypt($password);
+            $user->email = $email;
+            $user->ticketit_admin = 0;
+            $user->ticketit_agent = 0;
+            $user->user_status = 'Active';
+            $user->save();
+        }
+
+        if ($request->has('user_id')) {
+            $user_id = $request->input('user_id');
+            $user = User::find($user_id);
+        }
 
         if ($request->has('role_id')) {
             $role_id = $request->input('role_id');
@@ -378,17 +414,7 @@ class UserController extends BaseController {
             $user_role->save();
         }
 
-
-        $user = new User;
-        $user->name = $name;
-        $user->password = bcrypt($password);
-        $user->email = $email;
-        $user->ticketit_admin = 0;
-        $user->ticketit_agent = 0;
-        $user->user_status = 'Active';
-        $user->save();
-
-//Set the newly registered user to current company
+        //Set the newly registered user to current company
         $profile = new Profile;
         $profile->user_id = $user->user_id;
         $profile->company_id = $company_id;
@@ -403,7 +429,7 @@ class UserController extends BaseController {
 
         $permission_user = PermissionUser::with('permission')
                 ->where('company_id', $company_id)
-                ->where('user_id', $user_id)
+                ->where('user_id', $employee_id)
                 ->get();
 
         foreach ($permission_user as $role) {
@@ -566,12 +592,12 @@ class UserController extends BaseController {
 
         $permissions_list = [];
 
-        $permissions_role = PermissionRole::with('permission')
+        $permissions_user = PermissionUser::with('permission')
                 ->where('company_id', $id)
-                ->where('role_id', $user_profile_role->role_id)
+                ->where('user_id', $user_id)
                 ->get();
 
-        foreach ($permissions_role as $role) {
+        foreach ($permissions_user as $role) {
             array_push($permissions_list, $role->permission_id);
         }
 

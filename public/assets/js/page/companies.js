@@ -1228,15 +1228,24 @@ $('#employees').on('click', '#add-employee', function (e) {
 
                     var ajaxurl = public_path + 'addEmployee';
                     var form = $(".add-employee-form")[0];
-                    var name = $(form).find('input[name="employee-name"]').val();
-                    var email = $(form).find('input[name="employee-email"]').val();
-                    var password = $(form).find('input[name="employee-password"]').val();
+
 
                     var formData = new FormData();
                     formData.append('company_id', company_id);
-                    formData.append('name', name);
-                    formData.append('email', email);
-                    formData.append('password', password);
+
+                    if ($('#new-employee').hasClass('active') === true) {
+                        var name = $(form).find('input[name="employee-name"]').val();
+                        var email = $(form).find('input[name="employee-email"]').val();
+                        var password = $(form).find('input[name="employee-password"]').val();
+                        formData.append('name', name);
+                        formData.append('email', email);
+                        formData.append('password', password);
+                    }
+
+                    if ($('#existing-user').hasClass('active') === true) {
+                        var user_id = $(form).find('select[name="user_id"] option:selected').val();
+                        formData.append('user_id', user_id);
+                    }
 
                     if ($('#existing-position').hasClass('active') === true) {
                         var role_id = $(form).find('select[name="role_id"] option:selected').val();

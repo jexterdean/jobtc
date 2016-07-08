@@ -13,7 +13,7 @@
 <div class="mini-space"></div>
 <div class="row">
     <div class="employee_tab_options">
-        @if(Auth::user('user')->can('create.employees') && $module_permissions->where('slug','create.employees')->count() === 1)
+        @if($module_permissions->where('slug','create.employees')->count() === 1)
         <a href="#" id="add-employee" class="btn btn-shadow btn-default add-employee">
             <i class="fa fa-plus"></i> 
             <strong>New Employee</strong>
