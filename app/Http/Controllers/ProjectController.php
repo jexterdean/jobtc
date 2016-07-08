@@ -184,7 +184,7 @@ class ProjectController extends BaseController {
          $permissions_list = [];
 
         $permissions_user = PermissionUser::with('permission')
-                ->where('company_id', $company_id)
+                ->where('company_id', $project->company_id)
                 ->where('user_id', $user_id)
                 ->get();
 
