@@ -331,7 +331,6 @@ class UserController extends BaseController {
         $user_list = [];
 
         $company_profiles = Profile::with('user')
-                ->where('user_id', '<>', $user_id)
                 ->where('company_id', $id)
                 ->get();
         
@@ -339,9 +338,7 @@ class UserController extends BaseController {
             array_push($user_list, $company_profile->user_id);
         }
         
-        $profiles = Profile::with('user')
-                ->whereNotIn('user_id', $user_list)
-                ->where('user_id', '<>' ,$user_id)
+        $profiles = User::whereNotIn('user_id', $user_list)
                 ->get();
 
         return view('forms.addEmployeeForm', [
