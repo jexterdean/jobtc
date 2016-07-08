@@ -666,7 +666,7 @@ class CompanyController extends BaseController {
 
         $permissions_list = [];
 
-        $permissions_user = PermissionRole::with('permission')
+        $permissions_user = PermissionUser::with('permission')
                 ->where('company_id', $id)
                 ->where('user_id', $user_id)
                 ->get();
@@ -726,12 +726,26 @@ class CompanyController extends BaseController {
         $modules = Module::all();
         $permissions = Permission::all();
         $permission_role = PermissionRole::all();
+        
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         return view('company.partials._positionslist', [
             'positions' => $positions,
             'permissions' => $permissions,
             'permission_role' => $permission_role,
             'modules' => $modules,
+            'module_permissions' => $module_permissions,
             'company_id' => $id
         ]);
     }
