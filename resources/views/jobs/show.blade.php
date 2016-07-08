@@ -110,7 +110,7 @@
                                             </div>
                                             <div id="collapse-2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                                 <div class="panel-body">
-                                                    <div class="panel-content" data-content="{{ url('quiz/10?p=slider&mini=1') }}">
+                                                    <div class="panel-content" data-content="{{ url('quizAssessment/' . $job->id) }}">
                                                     </div>
                                                 </div>
                                             </div>

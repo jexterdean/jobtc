@@ -6,9 +6,7 @@
         <div class="box-container">
             <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
                 <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
-                @foreach($tests_completed->where('test_id',$test->id) as $completed)
-                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>    
-                @endforeach
+                <div class="btn pull-right">Score: {{$test->total_score}} / {{$test->total_points}}</div>
             </div>
             <div class="box-body">
                 <div class="box-content collapse">
@@ -30,9 +28,7 @@
         <div class="box-container">
             <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
                 <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
-                @foreach($tests_completed->where('test_id',$test->id) as $completed)
-                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>    
-                @endforeach
+                <div class="btn pull-right">Score: {{$test->total_score}} / {{$test->total_points}}</div>
             </div>
             <div class="box-body">
                 <div id="test-collapse-{{$test->id}}" class="box-content collapse">
@@ -104,9 +100,7 @@
         <div class="box-container">
             <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
                 <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
-                @foreach($tests_completed->where('test_id',$test->id) as $completed)
-                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>        
-                @endforeach
+                <div class="btn pull-right">Score: {{$test->total_score}} / {{$test->total_points}}</div>
             </div>
             <div class="box-body">
                 <div class="box-content collapse">
@@ -129,7 +123,7 @@
             <div class="box-header" id="test-{{$test->id}}" data-toggle="collapse" data-target="#test-collapse-{{$test->id}}">
                 <h3 class="box-title"><i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{ $test->title }}</h3>
                 @foreach($tests_completed->where('test_id',$test->id) as $completed)
-                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>    
+                <div class="btn pull-right">Score: {{$completed->score}} / {{$completed->total_score}}</div>
                 @endforeach
             </div>
             <div class="box-body">
@@ -144,3 +138,44 @@
 @endforeach
 @endif
 
+<div class="tests-container">
+    <div class="box box-default">
+        <div class="box-container">
+            <div class="box-body">
+                <div class="box-content text-right">
+                    @foreach($tests_tags as $tag=>$score)
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label>{{ strtoupper($tag) }}</label>
+                        </div>
+                        <div class="col-md-1">
+                            {{ $score }}
+                        </div>
+                        <div class="col-md-2">
+                            <label>Adjusted</label>
+                        </div>
+                        <div class="col-md-1">
+                            {{ array_key_exists($tag, $tests_adjust_tags) ? $tests_adjust_tags[$tag] : $score }}
+                        </div>
+                    </div>
+                    @endforeach
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label>Total</label>
+                        </div>
+                        <div class="col-md-1">
+                            {{ $test_score_total }}
+                        </div>
+                        <div class="col-md-2">
+                            <label>Adjusted</label>
+                        </div>
+                        <div class="col-md-1">
+                            {{ array_sum($tests_adjust_tags) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
