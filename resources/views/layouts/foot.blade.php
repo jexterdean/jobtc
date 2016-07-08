@@ -217,12 +217,14 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/bootstrap-tagsinput.js')  !!}
 @endif
 
-
-
 @if(in_array('slider',$assets))
 {!!  HTML::script('assets/js/jquery.nstSlider.js')  !!}
 @endif
 
+@if(in_array('assign',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!!  HTML::script('assets/js/page/assign.js')  !!}
+@endif
 <script>
     $(function () {
         //to fix the ajax PATCH/POST method type of form not working

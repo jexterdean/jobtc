@@ -1,6 +1,6 @@
 /*
-    Company Module Css
-    Created on : May 18, 2016, 10:43:40 AM
+    Assign Module Css
+    Created on : July 5, 2016
     Author     : Jexter Dean Buenaventura
 */
 
@@ -77,8 +77,8 @@
 }
 
 .employee-photo {
-    height: 130px;
-    width: 130px;
+    height: 100px;
+    width: 100px;
 }
 
 .edit-employee-photo {

@@ -22,6 +22,17 @@
                 </div>
             </div>
             <div class="form-group">
+                <select name="role_id" class='form-control input-xlarge select2me' placeholder="Select Position">
+                    @foreach($positions as $position)
+                    @if($position->id == $profile->role_id)
+                    <option selected="selected" value='{{$position->id}}'>{{$position->name}}</option>
+                    @else
+                    <option value='{{$position->id}}'>{{$position->name}}</option>
+                    @endif
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 {!!  Form::input('text','name',$profile->user->name,['class' => 'form-control', 'placeholder' =>
                 'Name']) !!}
             </div>
@@ -44,7 +55,7 @@
             </div>
             <div class="form-group">
                 {!!  Form::input('text','zipcode',$profile->user->zipcode,['class' => 'form-control', 'placeholder'
-                => 'Enter Phone']) !!}
+                => 'Enter Zipcode']) !!}
             </div>
             <div class="form-group">
                 <select name="country_id" class='form-control input-xlarge select2me' placeholder="Select Country">

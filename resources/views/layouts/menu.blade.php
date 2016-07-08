@@ -2,13 +2,19 @@
     <button>GO</button>
     <ul class="dl-menu">
         @if(Auth::check())
-        <?php $companies = \App\Helpers\Helper::getCompanyLinks(); ?>
+        <?php 
+        $companies = \App\Helpers\Helper::getCompanyLinks(); 
+        ?>
+        
         <li>
             <a href="#add_company" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Company</span></a>
         </li>
         <li class="divider"></li>
         @if(count($companies) > 0)
         @foreach($companies as $company)
+        <?php 
+        $module_permissions = \App\Helpers\Helper::getPermissions($company->company->id);
+        ?>
         <li class="dropdown">
             <a href="{{ url('company/' . $company->company->id) }}">
                 <i class="fa fa-institution" aria-hidden="true"></i> <span>{{ $company->company->name }}</span>
@@ -21,7 +27,7 @@
                         <i class="fa fa-briefcase" aria-hidden="true"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                @if(Auth::user('user')->can('view.projects'))
+                @if($module_permissions->where('slug','view.projects')->count() === 1)
                 <li>
                     <a href="#">
                         <i class="fa fa-folder-open"></i>
@@ -50,7 +56,7 @@
                 @endif
                 @if(Auth::check('user'))
                 <?php $jobs = $company->jobs; ?>
-                @if(Auth::user('user')->can('view.jobs'))
+                @if($module_permissions->where('slug','view.jobs')->count() === 1)
                 <li>
                     <a href="#">
                         <i class="fa fa-clipboard" aria-hidden="true"></i>
@@ -58,7 +64,7 @@
                     </a>
                     <ul class="dl-submenu">
                         <li class="dl-back"><a href="#">back</a></li>
-                        @if(Auth::user('user')->can('create.jobs'))
+                        @if($module_permissions->where('slug','create.jobs')->count() === 1)
                         <li>
                             <a href="#add_job" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Job</span></a>
                         </li>
@@ -66,7 +72,6 @@
                         <li class="divider"></li>
                         @if(count($jobs) > 0)
                         @foreach($jobs as $job)
-                        
                         <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
                             <a href="{{ url('job/' . $job->id) }}" class="dropdown-toggle">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i> <span>{{ $job->title }}</span>
@@ -79,7 +84,6 @@
                                 </li>
                                 @endforeach
                             </ul>
-                            
                         </li>
                         @endif
                         @endforeach
@@ -88,18 +92,31 @@
                 </li>
                 @endif
                 @endif
+                @if($module_permissions->where('slug','view.tests')->count() === 1)
                 <li>
                     <a href="{{ url('quiz') }}">
-                        <i class="glyphicon glyphicon-education"></i> <span>Test</span>
+                        <i class="glyphicon glyphicon-education"></i> 
+                        <span>Test</span>
                     </a>
                 </li>
+                @endif
+                @if($module_permissions->where('slug','view.tickets')->count() === 1)
                 <li>
                     <a href="#">
                         <i class="fa fa-envelope"></i>
-                        <span>Email</span>
+                        <span>Tickets</span>
                     </a>
                     <ul class="dl-submenu">
                         <li class="dl-back"><a href="#">back</a></li>
+                        @if($module_permissions->where('slug','create.tickets')->count() === 1)
+                        <li>
+                            <a href="#add_ticket" data-toggle="modal">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                <span>New Ticket</span>
+                            </a>
+                        </li>
+                        @endif
+                        <li class="divider"></li>
                         <li>
                             @if(Auth::user()->ticketit_admin)
                             <a href="{{ url('tickets-admin') }}">
@@ -114,12 +131,6 @@
                             @endif
                         </li>
                         <li>
-                            <a href="#add_ticket" data-toggle="modal">
-                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                <span>New Ticket</span>
-                            </a>
-                        </li>
-                        <li>
                             <a href="{{ url('tickets-admin?c=complete') }}" data-toggle="modal">
                                 <i class="glyphicon glyphicon-thumbs-up"></i>
                                 <span>Resolved Tickets</span>
@@ -127,6 +138,71 @@
                         </li>
                     </ul>
                 </li>
+                @endif
+                @if($module_permissions->where('slug','view.employees')->count() === 1)
+                <li>
+                    <a href="{{url('/employees/'.$company->company->id)}}">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <span>Employees</span>
+                    </a>
+                </li>
+                @endif
+                @if(Auth::user('user')->level() === 1 || $module_permissions->where('slug','view.employees')->count() === 1)
+                <li>
+                    <a href="{{url('/positions/'.$company->company->id)}}">
+                        <i class="fa fa-flag" aria-hidden="true"></i>
+                        <span>Positions</span>
+                    </a>
+                </li>
+                @endif
+                @if(
+                $module_permissions->where('slug','assign.projects')->count() === 1 || 
+                $module_permissions->where('slug','assign.jobs')->count() === 1 || 
+                $module_permissions->where('slug','assign.tests')->count() === 1 || 
+                $module_permissions->where('slug','assign.positions')->count() === 1
+                )
+                <li>
+                    <a href="#">
+                        <i class="fa fa-share-alt" aria-hidden="true"></i>
+                        <span>Assign</span>
+                    </a>
+                    <ul class="dl-submenu">
+                        <li class="dl-back"><a href="#">back</a></li>
+                        @if($module_permissions->where('slug','assign.projects')->count() === 1)
+                        <li>
+                            <a href="{{url('/assignProjects/'.$company->company->id)}}">
+                                <i class="fa fa-folder-open"></i>
+                                <span>Projects</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if($module_permissions->where('slug','assign.jobs')->count() === 1)
+                        <li>
+                            <a href="{{url('/assignJobs/'.$company->company->id)}}">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                <span>Jobs</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if($module_permissions->where('slug','assign.tests')->count() === 1)
+                        <li>
+                            <a href="{{url('/assignTests/'.$company->company->id)}}">
+                                <i class="glyphicon glyphicon-education"></i> 
+                                <span>Tests</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if($module_permissions->where('slug','assign.positions')->count() === 1)
+                        <li>
+                            <a href="{{url('/assignAuthorityLevels/'.$company->company->id)}}">
+                                <i class="fa fa-users" aria-hidden="true"></i>
+                                <span>Authority Levels</span>
+                            </a>
+                        </li>
+                        @endif
+                    </ul>
+                </li>
+                @endif
             </ul>
         </li>
         @endforeach

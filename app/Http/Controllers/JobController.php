@@ -5,15 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Profile;
 use App\Models\Job;
 use App\Models\Company;
+use App\Models\Profile;
 use App\Models\Applicant;
 use App\Models\ApplicantTag;
 use App\Models\MailBox;
 use App\Models\MailBoxAlias;
 use App\Models\Permission;
 use App\Models\PermissionRole;
+use App\Models\ShareJob;
 use Auth;
 use Redirect;
 
@@ -88,40 +89,73 @@ class JobController extends Controller {
      */
     public function show($id) {
 
-        $user_id = Auth::user('user')->user_id;
+        if (Auth::check()) {
+            $user_id = Auth::user('user')->user_id;
 
-        $job = Job::with('applicants')->where('id', $id)->first();
+            $job = Job::with('applicants')->where('id', $id)->first();
 
-        $applicants = Applicant::with(['tags' => function ($query) {
-                        $query->orderBy('created_at', 'desc');
-                    }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
-        
-    $user_profile_role = Profile::where('user_id', $user_id)
-                ->where('company_id', $job->company_id)
-                ->first();
+            $applicants = Applicant::with(['tags' => function ($query) {
+                            $query->orderBy('created_at', 'desc');
+                        }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
 
-        $permissions_list = [];
+            $user_profile_role_count = Profile::where('user_id', $user_id)
+                    ->where('company_id', $job->company_id)
+                    ->count();
 
-        $permissions_role = PermissionRole::with('permission')
-                ->where('company_id', $job->company_id)
-                ->where('role_id', $user_profile_role->role_id)
-                ->get();
+            $is_shared = ShareJob::where('user_id', $user_id)
+                    ->where('job_id', $job->id)
+                    ->count();
 
-        foreach ($permissions_role as $role) {
-            array_push($permissions_list, $role->permission_id);
+            if ($user_profile_role_count > 0) {
+
+                $user_profile_role = Profile::where('user_id', $user_id)
+                        ->where('company_id', $job->company_id)
+                        ->first();
+
+                $permissions_list = [];
+
+                $permissions_role = PermissionRole::with('permission')
+                        ->where('company_id', $job->company_id)
+                        ->where('role_id', $user_profile_role->role_id)
+                        ->get();
+
+                foreach ($permissions_role as $role) {
+                    array_push($permissions_list, $role->permission_id);
+                }
+
+                $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+            }
+
+            if ($user_profile_role_count === 0 && $is_shared === 0) {
+                $module_permissions = Permission::where('slug', 'view.jobs')->get();
+            }
+
+            $assets = ['jobs'];
+
+            return view('jobs.show', [
+                'job' => $job,
+                'applicants' => $applicants,
+                'module_permissions' => $module_permissions,
+                'assets' => $assets,
+                'count' => 0
+            ]);
+        } else {
+
+            $job = Job::with('applicants')->where('id', $id)->first();
+
+            $applicants = Applicant::with(['tags' => function ($query) {
+                            $query->orderBy('created_at', 'desc');
+                        }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
+
+            $assets = ['jobs'];
+
+            return view('jobs.show', [
+                'job' => $job,
+                'applicants' => $applicants,
+                'assets' => $assets,
+                'count' => 0
+            ]);
         }
-
-        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-
-        $assets = ['jobs'];
-
-        return view('jobs.show', [
-            'job' => $job,
-            'applicants' => $applicants,
-            'module_permissions' => $module_permissions,
-            'assets' => $assets,
-            'count' => 0
-        ]);
     }
 
     /**
