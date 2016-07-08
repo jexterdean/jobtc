@@ -699,7 +699,7 @@ class CompanyController extends BaseController {
 
         $permissions_list = [];
 
-        $permissions_user = PermissionRole::with('permission')
+        $permissions_user = PermissionUser::with('permission')
                 ->where('company_id', $id)
                 ->where('user_id', $user_id)
                 ->get();
