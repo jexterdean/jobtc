@@ -38,12 +38,6 @@
 </div>
 <div class="user_test_area"></div>
 
-
-@if(in_array('slider',$assets))
-asdasdasdasd
-{!!  HTML::style('assets/css/jquery.nstSlider.css')  !!}
-{!!  HTML::script('assets/js/jquery.nstSlider.js')  !!}
-@endif
 <script>
     $(function(e){
         var user_test_area = $('.user_test_area');

@@ -17,7 +17,7 @@ if(count($test_community) > 0){
                             <strong>Questions:</strong> {{ count($val->question) }}&nbsp;&nbsp;&nbsp;
                             <strong>Time:</strong> {{ date('i:s', $val->total_time) }}&nbsp;&nbsp;&nbsp;
                             <a class="trigger-links tc-icons" data-title="Result" data-method="" href="{{ url('quizRanking/' . $val->id) }}">
-                                <i class="fa fa-eye"></i>
+                                <i class="fa fa-signal"></i>
                             </a>
                             <a href="#" class="drag-test move-test tc-icons">
                                 <i class="fa fa-arrows" aria-hidden="true"></i>

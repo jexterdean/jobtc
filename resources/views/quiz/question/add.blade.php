@@ -102,7 +102,7 @@
         </div>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group hidden">
     <div class="row">
         <label class="col-sm-2 text-right">Score Tag</label>
         <div class="col-md-10">
