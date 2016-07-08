@@ -20,6 +20,7 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
 use App\Models\TeamCompany;
+use App\Models\Permission;
 use App\Models\PermissionUser;
 use \DB;
 use \Auth;
