@@ -117,7 +117,9 @@
                 <br/>
             </div>
             <div class="row">
+                @if($module_permissions->where('slug','create.briefcases')->count() === 1)
                 <button class="btn btn-shadow btn-default" data-toggle="modal" data-target="#add_task"><i class="fa fa-plus"></i> <strong>New Briefcase</strong></button>
+                @endif
             </div>
         </div>
         <div class="col-md-4">

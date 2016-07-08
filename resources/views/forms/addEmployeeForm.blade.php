@@ -14,11 +14,15 @@
                     <input type="password" class="form-control" name="employee-password" placeholder="Password" value="" />
                 </div>
                 <div id="existing-user" class="tab-pane">
+                    @if($profiles->count() > 0)
                     <select name="user_id" class='form-control input-xlarge select2me' placeholder="Select Position">
-                        @foreach($profiles->unique() as $profile)
+                        @foreach($profiles as $profile)
                         <option value="{{$profile->user_id}}">{{$profile->name}}&nbsp;({{$profile->email}})</option>
                         @endforeach
                     </select>
+                    @else
+                    <div class="form-control">No Users Available</div>
+                    @endif
                 </div>
             </div>
             <br />
