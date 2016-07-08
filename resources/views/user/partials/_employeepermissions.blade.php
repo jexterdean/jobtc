@@ -18,14 +18,14 @@
                         </div>
                         <div class="pull-right">
                             @if($permission_user->where('user_id',$user_id)->where('permission_id',$permission->id)->where('company_id',$company_id)->count() > 0)
-                            <div class="btn btn-default btn-shadow bg-green employee-permission">
+                            <div id="permission-{{$permission->id}}" class="btn btn-default btn-shadow bg-green employee-permission">
                                 <i class="fa fa-check" aria-hidden="true"></i> 
                                 <input class="user_id" type="hidden" value="{{$user_id}}">
                                 <input class="permission_id" type="hidden" value="{{$permission->id}}">
                                 <input class="company_id" type="hidden" value="{{$company_id}}">
                             </div>
                             @else
-                            <div class="btn btn-default btn-shadow bg-gray employee-permission">
+                            <div id="permission-{{$permission->id}}" class="btn btn-default btn-shadow bg-gray employee-permission">
                                 <i class="fa fa-plus" aria-hidden="true"></i>     
                                 <input class="user_id" type="hidden" value="{{$user_id}}">
                                 <input class="permission_id" type="hidden" value="{{$permission->id}}">

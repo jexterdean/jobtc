@@ -322,19 +322,24 @@ class UserController extends BaseController {
         return redirect()->route('company', [$profile->company_id]);
     }
 
-    public function addEmployeeForm(Request $request) {
-        return view('forms.addEmployeeForm');
+    public function addEmployeeForm(Request $request, $id) {
+
+        $positions = Role::where('company_id', $id)->get();
+
+        return view('forms.addEmployeeForm', [
+            'positions' => $positions
+        ]);
     }
 
-    public function editEmployeeForm(Request $request, $company_id,$user_id) {
-        
+    public function editEmployeeForm(Request $request, $company_id, $user_id) {
+
         $profile = Profile::with('user')
                 ->where('user_id', $user_id)
                 ->where('company_id', $company_id)
                 ->first();
-        
-        $positions = Role::where('company_id',$company_id)->get();
-        
+
+        $positions = Role::where('company_id', $company_id)->get();
+
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
         return view('forms.editEmployeeForm', [
@@ -345,11 +350,34 @@ class UserController extends BaseController {
     }
 
     public function addEmployee(Request $request) {
-
+        
+        $user_id = Auth::user('user')->user_id;
+        
         $name = $request->input('name');
         $email = $request->input('email');
         $password = $request->input('password');
         $company_id = $request->input('company_id');
+
+        if ($request->has('role_id')) {
+            $role_id = $request->input('role_id');
+
+            $user_role = Role::where('company_id', $company_id)
+                    ->where('id', $role_id)
+                    ->first();
+        }
+
+        if ($request->has('position')) {
+            $position = $request->input('position');
+
+            $user_role = new Role();
+            $user_role->company_id = $company_id;
+            $user_role->name = $position;
+            $user_role->slug = strtolower($position) . '-' . $company_id;
+            $user_role->description = '';
+            $user_role->level = 1;
+            $user_role->save();
+        }
+
 
         $user = new User;
         $user->name = $name;
@@ -359,12 +387,6 @@ class UserController extends BaseController {
         $user->ticketit_agent = 0;
         $user->user_status = 'Active';
         $user->save();
-
-//Assign it as a staff user first
-        $user_role = Role::where('company_id', $company_id)
-                ->where('level', 2)
-                ->first();
-
 
 //Set the newly registered user to current company
         $profile = new Profile;
@@ -377,9 +399,23 @@ class UserController extends BaseController {
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
+        $permissions_list = [];
+
+        $permission_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permission_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
         return view('user.partials._newemployee', [
             'profile' => $profile,
             'countries' => $countries_option,
+            'module_permissions' => $module_permissions,
             'company_id' => $company_id
         ]);
     }
@@ -388,10 +424,10 @@ class UserController extends BaseController {
 
         $user_id = $request->input('user_id');
         $company_id = $request->input('company_id');
-        
+
         $user = User::where('user_id', $user_id);
-        $profile = Profile::where('user_id',$user_id)
-                ->where('company_id',$company_id);
+        $profile = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id);
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -424,9 +460,9 @@ class UserController extends BaseController {
             'facebook' => $request->input('facebook'),
             'linkedin' => $request->input('linkedin'),
         ]);
-        
+
         $profile->update([
-           'role_id' =>  $request->input('role_id')
+            'role_id' => $request->input('role_id')
         ]);
 
         return $photo_path;
@@ -470,13 +506,13 @@ class UserController extends BaseController {
         return "true";
     }
 
-    public function editEmployeePermissionsForm(Request $request, $company_id,$user_id) {
+    public function editEmployeePermissionsForm(Request $request, $company_id, $user_id) {
 
         //$user_id = Auth::user('user')->user_id;
 
         $modules = Module::all();
         $permissions = Permission::all();
-        
+
         $user_profile_role = Profile::where('user_id', $user_id)
                 ->where('company_id', $company_id)
                 ->first();
@@ -492,15 +528,15 @@ class UserController extends BaseController {
                 ->where('company_id', $company_id)
                 ->where('user_id', $user_id)
                 ->get();
-        
+
         foreach ($permission_role as $role) {
             array_push($permissions_list, $role->permission_id);
         }
 
         $position = Role::where('id', $user_profile_role->role_id)->first();
-        
+
         $module_role_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
+
         $assets = ['companies', 'real-time'];
 
         return view('forms.editEmployeePermissionsForm', [

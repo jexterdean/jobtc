@@ -15,7 +15,7 @@
                 <li class="permission-list-group-item list-group-item">
                     <div class="row">
                         <div class="col-md-6">
-                            <label>{!! $permission->name !!}</label>
+                            <label>{{ $permission->name }}</label>
                         </div>
                         <div class="pull-right">
                             @if($permission_role->where('role_id',$position->id)->where('permission_id',$permission->id)->where('company_id',$company_id)->count() > 0)
@@ -92,17 +92,24 @@ $('.permission-list-group').on('click', '.position-permission', function (e) {
         if ($(this).hasClass('bg-gray')) {
             $(this).switchClass('bg-gray', 'bg-green', function () {
                 $(this).html(assign_html);
-                //shareToCompanyEmployee(user_id, company_id, job_id);
                 assignPositionPermission(role_id,permission_id,company_id);
             });
         }
+        
+        if($(this).hasClass('bg-gray') && $('#permission-'+permission_id).hasClass('bg-gray')) {
+            $('#permission-'+permission_id).click();
+        }
+        
         /*Unassign the Task List from this user*/
         if ($(this).hasClass('bg-green')) {
             $(this).switchClass('bg-green', 'bg-gray', function () {
                 $(this).html(unassign_html);
-                //unshareFromCompanyEmployee(user_id, company_id, job_id);
                 unassignPositionPermission(role_id,permission_id,company_id);
             });
+        }
+        
+        if($(this).hasClass('bg-green') && $('#permission-'+permission_id).hasClass('bg-green')) {
+            $('#permission-'+permission_id).click();
         }
     });
 

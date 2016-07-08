@@ -35,7 +35,7 @@
                     </a>
                     <ul class="dl-submenu">
                         <li class="dl-back"><a href="#">back</a></li>
-                        @if(Auth::user('user')->can('create.projects'))
+                        @if($module_permissions->where('slug','create.projects')->count() === 1)
                         <li>
                             <a href="#add_project" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Project</span></a>
                         </li>

@@ -197,6 +197,17 @@ class RoleController extends Controller {
         $permission_role->company_id = $company_id;
         $permission_role->save();
 
+        $profiles = Profile::where('company_id', $company_id)->where('role_id', $role_id)->get();
+
+        foreach ($profiles as $profile) {
+
+            $permission_user = new PermissionUser();
+            $permission_user->user_id = $profile->user_id;
+            $permission_user->permission_id = $permission_id;
+            $permission_user->company_id = $company_id;
+            $permission_user->save();
+        }
+
         return "true";
     }
 
@@ -208,10 +219,17 @@ class RoleController extends Controller {
 
         $permission_role = PermissionRole::where('permission_id', $permission_id)->where('role_id', $role_id)->where('company_id', $company_id);
         $permission_role->delete();
+        
+         $profiles = Profile::where('company_id', $company_id)->where('role_id', $role_id)->get();
+
+        foreach ($profiles as $profile) {
+            $permission_user = PermissionUser::where('permission_id', $permission_id)->where('user_id', $profile->user_id)->where('company_id', $company_id);
+            $permission_user->delete();
+        }
 
         return "true";
     }
-    
+
     public function assignEmployeePermission(Request $request) {
 
         $user_id = $request->input('user_id');

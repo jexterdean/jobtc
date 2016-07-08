@@ -85,8 +85,8 @@ function unshareFromCompanyEmployee(user_id, company_id, job_id) {
 
 }
 
-function assignPositionPermission(role_id,permission_id,company_id) {
-     var url = public_path + 'assignPositionPermission';
+function assignPositionPermission(role_id, permission_id, company_id) {
+    var url = public_path + 'assignPositionPermission';
 
     var data = {
         'role_id': role_id,
@@ -97,8 +97,8 @@ function assignPositionPermission(role_id,permission_id,company_id) {
     $.post(url, data);
 }
 
-function unassignPositionPermission(role_id,permission_id,company_id) {
-     var url = public_path + 'unassignPositionPermission';
+function unassignPositionPermission(role_id, permission_id, company_id) {
+    var url = public_path + 'unassignPositionPermission';
 
     var data = {
         'role_id': role_id,
@@ -1035,24 +1035,24 @@ function positionsScripts() {
         var role_id = $(this).children('.role_id').val();
         var permission_id = $(this).children('.permission_id').val();
         var company_id = $(this).children('.company_id').val();
-        
+
         var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
         assign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
         assign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
         assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
-        
+
         var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
         unassign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
         unassign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
         unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
-        
+
 
         /*Assign the Task List to this user*/
         if ($(this).hasClass('bg-gray')) {
             $(this).switchClass('bg-gray', 'bg-green', function () {
                 $(this).html(assign_html);
                 //shareToCompanyEmployee(user_id, company_id, job_id);
-                assignPositionPermission(role_id,permission_id,company_id);
+                assignPositionPermission(role_id, permission_id, company_id);
             });
         }
         /*Unassign the Task List from this user*/
@@ -1060,7 +1060,7 @@ function positionsScripts() {
             $(this).switchClass('bg-green', 'bg-gray', function () {
                 $(this).html(unassign_html);
                 //unshareFromCompanyEmployee(user_id, company_id, job_id);
-                unassignPositionPermission(role_id,permission_id,company_id);
+                unassignPositionPermission(role_id, permission_id, company_id);
             });
         }
     });
@@ -1203,359 +1203,438 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
 
 
 /*Add Employee*/
-    $('#employees').on('click', '#add-employee', function (e) {
-        e.stopImmediatePropagation();
-        $(this).addClass('disabled');
+$('#employees').on('click', '#add-employee', function (e) {
+    e.stopImmediatePropagation();
+    //$(this).addClass('disabled');
 
-        var url = public_path + 'addEmployeeForm';
-        var employee_container = $('.employee-container');
+    var company_id = $(this).siblings('.company_id').val();
 
-        $.get(url, function (data) {
-            employee_container.append(data);
-        });
-    });
+    var add_employee_form = public_path + 'addEmployeeForm/' + company_id;
+    var employee_container = $('.employee-container');
 
-    $('#employees').on('click', '.save-employee', function (e) {
-        e.stopImmediatePropagation();
-        var url = public_path + 'addEmployee';
-        var employee_container = $('.employee-container');
-        var company_id = $('.employee_tab_options').find('.company_id').val();
+    BootstrapDialog.show({
+        title: 'Add Employee <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Add',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
 
-        var data = {
-            'name': $('input[name="employee-name"]').val(),
-            'email': $('input[name="employee-email"]').val(),
-            'password': $('input[name="employee-password"]').val(),
-            'company_id': company_id
-        };
+                    var ajaxurl = public_path + 'addEmployee';
+                    var form = $(".add-employee-form")[0];
+                    var name = $(form).find('input[name="employee-name"]').val();
+                    var email = $(form).find('input[name="employee-email"]').val();
+                    var password = $(form).find('input[name="employee-password"]').val();
 
-        $.post(url, data, function (data) {
-            $('#add-employee-form').remove();
-            $('#add-employee').removeClass('disabled');
-            var employee_count = employee_container.find('.employee-row').last().children().length;
+                    var formData = new FormData();
+                    formData.append('company_id', company_id);
+                    formData.append('name', name);
+                    formData.append('email', email);
+                    formData.append('password', password);
 
-            if (employee_count === 1) {
-                employee_container.find('.employee-row').last().append(data);
-            } else {
-                employee_container.append('<div class="row employee-row">' + data + '</div>');
-            }
-
-
-        });
-    });
-
-    $('#employees').on('click', '.cancel-employee', function (e) {
-        e.stopImmediatePropagation();
-        $('#add-employee').removeClass('disabled');
-        $('#add-employee-form').remove();
-    });
-
-    /*
-     * Employee Options      
-     **/
-    
-    $('#employees').on('click','.edit-employee-permissions',function(e){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        var user_id = $(this).siblings('.user_id').val();
-        var company_id = $(this).siblings('.company_id').val();
-        var edit_employee_permissions_form = public_path + 'editEmployeePermissionsForm/'+company_id+'/'+user_id;
-        console.log(user_id);
-        var employee_name = $('#employee-'+user_id).find('.name').text().trim();
-        
-        BootstrapDialog.show({
-            title: 'Edit Permissions for '+employee_name+'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
-            size: 'size-wide',
-            message: function (dialog) {
-                var $message = $('<div></div>');
-                var pageToLoad = dialog.getData('pageToLoad');
-                $message.load(pageToLoad);
-                return $message;
-            },
-            data: {
-                'pageToLoad': edit_employee_permissions_form
-            },
-            onshown: function (ref) {
-                
-            },
-            closable: false
-        });
-    });
-    
-    $('#employees').on('click', '.edit-employee', function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        var user_id = $(this).siblings('.user_id').val();
-        var company_id = $(this).siblings('.company_id').val();
-        var edit_employee_form = public_path + 'editEmployeeForm/'+company_id+'/'+user_id;
-        var ajaxurl = public_path + 'editEmployee';
-        
-        BootstrapDialog.show({
-            title: 'Edit Employee <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
-            size: 'size-normal',
-            message: function (dialog) {
-                var $message = $('<div></div>');
-                var pageToLoad = dialog.getData('pageToLoad');
-                $message.load(pageToLoad);
-                return $message;
-            },
-            buttons: [{
-                    label: 'Save',
-                    cssClass: 'btn-edit btn-shadow',
-                    action: function (dialog) {
-                        
-                        var form = $(".edit-employee-form")[0];
-
-                        var formData = new FormData(form);
-                        formData.append('user_id', user_id);
-                        formData.append('company_id', company_id);
-
-                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                        $button.disable();
-                        $button.spin();
-
-                        $.ajax({
-                            url: ajaxurl,
-                            type: "POST",
-                            data: formData,
-                            // THIS MUST BE DONE FOR FILE UPLOADING
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function () {
-
-                            },
-                            success: function (data) {
-                                
-                                var name = $(form).find('input[name="name"]').val();
-                                var email = $(form).find('input[name="email"]').val();
-                                var phone = $(form).find('input[name="phone"]').val();
-                                var skype = $(form).find('input[name="skype"]').val();
-                                var facebook = $(form).find('input[name="facebook"]').val();
-                                var linkedin = $(form).find('input[name="linkedin"]').val();
-                                var address_1 = $(form).find('input[name="address_1"]').val();
-                                var address_2 = $(form).find('input[name="address_2"]').val();
-                                var zipcode = $(form).find('input[name="zipcode"]').val();
-                                
-                                var position = $(form).find('select[name="role_id"] option:selected').text();
-                                var country = $(form).find('select[name="country_id"] option:selected').text();
-                                
-                                console.log(data);
-                                //Update Employee information
-                                $('#employee-'+user_id).find('.employee-photo').attr('src',public_path+data);
-                                $('#employee-'+user_id).find('.name').children('a').text(name);
-                                $('#employee-'+user_id).find('.email').children('a').text(email);
-                                $('#employee-'+user_id).find('.phone').children('a').text(phone);
-                                $('#employee-'+user_id).find('.skype').children('a').text(skype);
-                                $('#employee-'+user_id).find('.address_1').children('span').text(address_1);
-                                $('#employee-'+user_id).find('.address_2').children('span').text(address_2);
-                                $('#employee-'+user_id).find('.zipcode').children('span').text(zipcode);
-                                $('#employee-'+user_id).find('.facebook').children('span').text(facebook);
-                                $('#employee-'+user_id).find('.linkedin').children('span').text(linkedin);
-                                
-                                $('#employee-'+user_id).find('.position').children('span').text(position);
-                                $('#employee-'+user_id).find('.country').children('span').text(country);
-                                
-                                dialog.close();
-                                
-                            },
-                            error: function (xhr, status, error) {
-
-                            }
-                        }); //ajax
+                    if ($('#existing-position').hasClass('active') === true) {
+                        var role_id = $(form).find('select[name="role_id"] option:selected').val();
+                        formData.append('role_id', role_id);
                     }
-                }],
-            data: {
-                'pageToLoad': edit_employee_form
-            },
-            onshown: function (ref) {
-                //initCkeditor(ref);
-            },
-            closable: false
-        });
 
+                    if ($('#new-position').hasClass('active') === true) {
+                        var position = $(form).find('input[name="position"]').val();
+                        formData.append('position', position);
+                    }
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+
+                            var employee_count = employee_container.find('.employee-row').last().children().length;
+
+                            if (employee_count === 1) {
+                                employee_container.find('.employee-row').last().append(data);
+                            } else {
+                                employee_container.append('<div class="row employee-row">' + data + '</div>');
+                            }
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax
+                }
+            }],
+        data: {
+            'pageToLoad': add_employee_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
     });
 
-    $('#employees').on('click', '.remove-employee', function (e) {
-        e.preventDefault();
+    //$.get(url, function (data) {
+    //employee_container.append(data);
+    //});
 
-        var user_id = $(this).siblings('.user_id').val();
-        var company_id = $(this).siblings('.company_id').val();
-        var url = public_path + 'removeEmployeeFromCompany';
+});
 
-        BootstrapDialog.confirm('Are you sure you want to fire this employee?', function (result) {
-            if (result) {
-                var data = {
-                    'user_id': user_id,
-                    'company_id': company_id
-                };
+/*$('#employees').on('click', '.save-employee', function (e) {
+ e.stopImmediatePropagation();
+ var url = public_path + 'addEmployee';
+ var employee_container = $('.employee-container');
+ var company_id = $('.employee_tab_options').find('.company_id').val();
+ 
+ var data = {
+ 'name': $('input[name="employee-name"]').val(),
+ 'email': $('input[name="employee-email"]').val(),
+ 'password': $('input[name="employee-password"]').val(),
+ 'company_id': company_id
+ };
+ 
+ $.post(url, data, function (data) {
+ $('#add-employee-form').remove();
+ $('#add-employee').removeClass('disabled');
+ var employee_count = employee_container.find('.employee-row').last().children().length;
+ 
+ if (employee_count === 1) {
+ employee_container.find('.employee-row').last().append(data);
+ } else {
+ employee_container.append('<div class="row employee-row">' + data + '</div>');
+ }
+ 
+ 
+ });
+ });*/
 
-                $.post(url, data, function (data) {
-                    $('#employee-' + data).remove();
-                });
-            }
-        });
+/*$('#employees').on('click', '.cancel-employee', function (e) {
+ e.stopImmediatePropagation();
+ $('#add-employee').removeClass('disabled');
+ $('#add-employee-form').remove();
+ });*/
+
+/*
+ * Employee Options      
+ **/
+
+$('#employees').on('click', '.edit-employee-permissions', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_employee_permissions_form = public_path + 'editEmployeePermissionsForm/' + company_id + '/' + user_id;
+    console.log(user_id);
+    var employee_name = $('#employee-' + user_id).find('.name').text().trim();
+
+    BootstrapDialog.show({
+        title: 'Edit Permissions for ' + employee_name + '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-wide',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        data: {
+            'pageToLoad': edit_employee_permissions_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
     });
-    
-    /*Company Positions*/
-     $('#positions').on('click', '#add-position', function (e) {
-        e.stopImmediatePropagation();
-        $(this).addClass('disabled');
+});
 
-        var url = public_path + 'addPositionForm';
-        var position_container = $('.position_container');
+$('#employees').on('click', '.edit-employee', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_employee_form = public_path + 'editEmployeeForm/' + company_id + '/' + user_id;
+    var ajaxurl = public_path + 'editEmployee';
 
-        $.get(url, function (data) {
-            position_container.append(data);
-        });
+    BootstrapDialog.show({
+        title: 'Edit Employee <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var form = $(".edit-employee-form")[0];
+
+                    var formData = new FormData(form);
+                    formData.append('user_id', user_id);
+                    formData.append('company_id', company_id);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+
+                            var name = $(form).find('input[name="name"]').val();
+                            var email = $(form).find('input[name="email"]').val();
+                            var phone = $(form).find('input[name="phone"]').val();
+                            var skype = $(form).find('input[name="skype"]').val();
+                            var facebook = $(form).find('input[name="facebook"]').val();
+                            var linkedin = $(form).find('input[name="linkedin"]').val();
+                            var address_1 = $(form).find('input[name="address_1"]').val();
+                            var address_2 = $(form).find('input[name="address_2"]').val();
+                            var zipcode = $(form).find('input[name="zipcode"]').val();
+
+                            var position = $(form).find('select[name="role_id"] option:selected').text();
+                            var country = $(form).find('select[name="country_id"] option:selected').text();
+
+                            //Update Employee information
+                            $('#employee-' + user_id).find('.employee-photo').attr('src', public_path + data);
+                            $('#employee-' + user_id).find('.name').children('a').text(name);
+                            $('#employee-' + user_id).find('.email').children('a').text(email);
+                            $('#employee-' + user_id).find('.phone').children('a').text(phone);
+                            $('#employee-' + user_id).find('.skype').children('a').text(skype);
+                            $('#employee-' + user_id).find('.address_1').children('span').text(address_1);
+                            $('#employee-' + user_id).find('.address_2').children('span').text(address_2);
+                            $('#employee-' + user_id).find('.zipcode').children('span').text(zipcode);
+                            $('#employee-' + user_id).find('.facebook').children('span').text(facebook);
+                            $('#employee-' + user_id).find('.linkedin').children('span').text(linkedin);
+
+                            $('#employee-' + user_id).find('.position').children('span').text(position);
+                            $('#employee-' + user_id).find('.country').children('span').text(country);
+
+                            dialog.close();
+
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax
+                }
+            }],
+        data: {
+            'pageToLoad': edit_employee_form
+        },
+        onshown: function (ref) {
+            //initCkeditor(ref);
+        },
+        closable: false
     });
 
-    $('#positions').on('click', '.save-position', function (e) {
-        e.stopImmediatePropagation();
-        var url = public_path + 'addPosition';
-        var position_container = $('.position_container');
-        var company_id = $('.position_tab_options').find('.company_id').val();
-        
-        var data = {
-            'position_title': $('input[name="position-title"]').val(),
-            'position_description': $('textarea[name="position-description"]').val(),
-            'company_id': company_id
-        };
+});
 
-        $.post(url, data, function (data) {
-            $('#add-position-form').remove();
-            $('#add-position').removeClass('disabled');
-            var position_count = position_container.find('.position-row').last().children().length;
+$('#employees').on('click', '.remove-employee', function (e) {
+    e.preventDefault();
 
-            if (position_count === 1) {
-                position_container.find('.position-row').last().append(data);
-            } else {
-                position_container.append('<div class="position-row row">' + data + '</div>');
-            }
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var url = public_path + 'removeEmployeeFromCompany';
 
+    BootstrapDialog.confirm('Are you sure you want to fire this employee?', function (result) {
+        if (result) {
+            var data = {
+                'user_id': user_id,
+                'company_id': company_id
+            };
 
-        });
+            $.post(url, data, function (data) {
+                $('#employee-' + data).remove();
+            });
+        }
     });
+});
 
-    $('#positions').on('click', '.cancel-position', function (e) {
-        e.stopImmediatePropagation();
-        $('#add-position').removeClass('disabled');
+/*Company Positions*/
+$('#positions').on('click', '#add-position', function (e) {
+    e.stopImmediatePropagation();
+    $(this).addClass('disabled');
+
+    var url = public_path + 'addPositionForm';
+    var position_container = $('.position_container');
+
+    $.get(url, function (data) {
+        position_container.append(data);
+    });
+});
+
+$('#positions').on('click', '.save-position', function (e) {
+    e.stopImmediatePropagation();
+    var url = public_path + 'addPosition';
+    var position_container = $('.position_container');
+    var company_id = $('.position_tab_options').find('.company_id').val();
+
+    var data = {
+        'position_title': $('input[name="position-title"]').val(),
+        'position_description': $('textarea[name="position-description"]').val(),
+        'company_id': company_id
+    };
+
+    $.post(url, data, function (data) {
         $('#add-position-form').remove();
-    });
-    
-    $('#positions').on('click','.edit-position',function(e){
-       e.preventDefault();
-        var position_id = $(this).siblings('.position_id').val();
-        var company_id = $(this).siblings('.company_id').val();
-        var edit_position_form = public_path + 'editPositionForm/'+position_id;
-        var ajaxurl = public_path + 'editPosition';
-       
-       BootstrapDialog.show({
-            title: 'Edit Position <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
-            size: 'size-normal',
-            message: function (dialog) {
-                var $message = $('<div></div>');
-                var pageToLoad = dialog.getData('pageToLoad');
-                $message.load(pageToLoad);
-                return $message;
-            },
-            buttons: [{
-                    label: 'Save',
-                    cssClass: 'btn-edit btn-shadow',
-                    action: function (dialog) {
-                        
-                        var form = $(".edit-position-form")[0];
+        $('#add-position').removeClass('disabled');
+        var position_count = position_container.find('.position-row').last().children().length;
 
-                        var formData = new FormData(form);
-                        formData.append('position_id', position_id);
-                        formData.append('company_id', company_id);
-
-                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                        $button.disable();
-                        $button.spin();
-
-                        $.ajax({
-                            url: ajaxurl,
-                            type: "POST",
-                            data: formData,
-                            // THIS MUST BE DONE FOR FILE UPLOADING
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function () {
-
-                            },
-                            success: function (data) {
-                                var new_position_title = $(form).find('.title').val();
-                                $('#position-'+position_id+' .box-title').text(new_position_title);
-                                dialog.close();
-                            },
-                            error: function (xhr, status, error) {
-
-                            }
-                        }); //ajax
-                    }
-                }],
-            data: {
-                'pageToLoad': edit_position_form
-            },
-            onshown: function (ref) {
-                //initCkeditor(ref);
-            },
-            closable: false
-        });
-       
-    });
-    
-    $('#positions').on('click','.delete-position',function(e){
-       e.stopImmediatePropagation();
-       
-        var position_id = $(this).siblings('.position_id').val();
-        var url = public_path + 'deletePosition';
-
-        BootstrapDialog.confirm('Are you sure you want to delete this position?', function (result) {
-            if (result) {
-                var data = {
-                    'position_id': position_id
-                };
-
-                $.post(url, data, function (data) {
-                    $('#position-' + data).remove();
-                });
-            }
-        });
-    });
-    
-    $('.permission-list-group').on('click', '.position-permission', function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        var role_id = $(this).children('.role_id').val();
-        var permission_id = $(this).children('.permission_id').val();
-        var company_id = $(this).children('.company_id').val();
-        
-        var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
-        assign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
-        assign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
-        assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
-        
-        var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
-        unassign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
-        unassign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
-        unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
-        
-
-        /*Assign the Task List to this user*/
-        if ($(this).hasClass('bg-gray')) {
-            $(this).switchClass('bg-gray', 'bg-green', function () {
-                $(this).html(assign_html);
-                //shareToCompanyEmployee(user_id, company_id, job_id);
-                assignPositionPermission(role_id,permission_id,company_id);
-            });
+        if (position_count === 1) {
+            position_container.find('.position-row').last().append(data);
+        } else {
+            position_container.append('<div class="position-row row">' + data + '</div>');
         }
-        /*Unassign the Task List from this user*/
-        if ($(this).hasClass('bg-green')) {
-            $(this).switchClass('bg-green', 'bg-gray', function () {
-                $(this).html(unassign_html);
-                //unshareFromCompanyEmployee(user_id, company_id, job_id);
-                unassignPositionPermission(role_id,permission_id,company_id);
+
+
+    });
+});
+
+$('#positions').on('click', '.cancel-position', function (e) {
+    e.stopImmediatePropagation();
+    $('#add-position').removeClass('disabled');
+    $('#add-position-form').remove();
+});
+
+$('#positions').on('click', '.edit-position', function (e) {
+    e.preventDefault();
+    var position_id = $(this).siblings('.position_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_position_form = public_path + 'editPositionForm/' + position_id;
+    var ajaxurl = public_path + 'editPosition';
+
+    BootstrapDialog.show({
+        title: 'Edit Position <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var form = $(".edit-position-form")[0];
+
+                    var formData = new FormData(form);
+                    formData.append('position_id', position_id);
+                    formData.append('company_id', company_id);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            var new_position_title = $(form).find('.title').val();
+                            $('#position-' + position_id + ' .box-title').text(new_position_title);
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax
+                }
+            }],
+        data: {
+            'pageToLoad': edit_position_form
+        },
+        onshown: function (ref) {
+            //initCkeditor(ref);
+        },
+        closable: false
+    });
+
+});
+
+$('#positions').on('click', '.delete-position', function (e) {
+    e.stopImmediatePropagation();
+
+    var position_id = $(this).siblings('.position_id').val();
+    var url = public_path + 'deletePosition';
+
+    BootstrapDialog.confirm('Are you sure you want to delete this position?', function (result) {
+        if (result) {
+            var data = {
+                'position_id': position_id
+            };
+
+            $.post(url, data, function (data) {
+                $('#position-' + data).remove();
             });
         }
     });
+});
+
+$('.permission-list-group').on('click', '.position-permission', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var role_id = $(this).children('.role_id').val();
+    var permission_id = $(this).children('.permission_id').val();
+    var company_id = $(this).children('.company_id').val();
+
+    var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
+    assign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+    assign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+    assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+    var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
+    unassign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+    unassign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+    unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+
+    /*Assign the Task List to this user*/
+    if ($(this).hasClass('bg-gray')) {
+        $(this).switchClass('bg-gray', 'bg-green', function () {
+            $(this).html(assign_html);
+            //shareToCompanyEmployee(user_id, company_id, job_id);
+            assignPositionPermission(role_id, permission_id, company_id);
+        });
+    }
+    /*Unassign the Task List from this user*/
+    if ($(this).hasClass('bg-green')) {
+        $(this).switchClass('bg-green', 'bg-gray', function () {
+            $(this).html(unassign_html);
+            //unshareFromCompanyEmployee(user_id, company_id, job_id);
+            unassignPositionPermission(role_id, permission_id, company_id);
+        });
+    }
+});
