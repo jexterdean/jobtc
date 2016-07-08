@@ -10,8 +10,10 @@
                         $ref = 0;
                         foreach($v->tags as $tags=>$points){
                             $displayed_points = $points;
-                            if(array_key_exists($tags, $slide_setting)){
-                                $displayed_points = $points + ($points * ($slide_setting->$tags/100));
+                            if(count($slide_setting) > 0){
+                                if(array_key_exists($tags, $slide_setting)){
+                                    $displayed_points = $points + ($points * ($slide_setting->$tags/100));
+                                }
                             }
                             $points_width = number_format(($displayed_points != 0 && $max_points_per_test[$v->test_id] != 0 ? ($displayed_points/$max_points_per_test[$v->test_id] * 100) : $displayed_points), 2);
                             $points_width = $displayed_points > $max_points_per_test[$v->test_id] ? 100 : $points_width;
