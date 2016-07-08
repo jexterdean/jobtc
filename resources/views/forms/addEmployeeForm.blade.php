@@ -16,7 +16,7 @@
                 <div id="existing-user" class="tab-pane">
                     <select name="user_id" class='form-control input-xlarge select2me' placeholder="Select Position">
                         @foreach($profiles as $profile)
-                        <option value="{{$profile->user_id}}">{{$profile->user->name}}</option>
+                        <option value="{{$profile->user_id}}">{{$profile->user->name}}&nbsp;({{$profile->user->email}})</option>
                         @endforeach
                     </select>
                 </div>
