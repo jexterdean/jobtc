@@ -43,6 +43,10 @@
                     <input class="form-control" name="position" placeholder="New Position" value="" />
                 </div>
             </div>
+            <br />
+            <div class="center-block">
+                
+            </div>
         </div>
     </div>
 </form>
