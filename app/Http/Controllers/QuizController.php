@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 use App\Models\TestPerApplicant;
+use App\Models\TestPerJob;
+use App\Models\Applicant;
 use \View;
 use \DB;
 use \Validator;
@@ -1232,35 +1234,9 @@ class QuizController extends BaseController {
 
     public function quizAssessment($id){
         $data = [];
-        $tags = DB::table('test_per_job')
-            ->leftJoin('test', 'test.id', '=', 'test_per_job.test_id')
-            ->select('test.default_tags')
-            ->where('test_per_job.job_id', $id)
-            ->where('test.default_tags', '!=' , '')
-            ->whereNotNull('test.id')
-            ->get();
-        $test_tags = ['general'];
-        if(count($tags) > 0) {
-            foreach ($tags as $v) {
-                $default_tags = $v->default_tags ? explode(',', $v->default_tags) : array();
-                if(count($default_tags) > 0){
-                    foreach($default_tags as $t){
-                        $test_tags[] = strtolower($t);
-                    }
-                }
-            }
-        }
-        $test_tags = array_filter(array_unique($test_tags));
-        $data['test_tags'] = $test_tags;
 
-        $slide_setting = DB::table('test_slider')
-            ->where('job_id', '=', $id)
-            ->pluck('slider_setting');
-        if($slide_setting){
-            $slide_setting = json_decode($slide_setting);
-        }
-        $data['slide_setting'] = $slide_setting;
-
+        //get all test Per Job and  Per Applicants
+        $test_id = $this->quizGetTestIds($data,$id);
 
         $data['job_id'] = $id;
 
@@ -1296,27 +1272,67 @@ class QuizController extends BaseController {
         }
     }
     public function quizUserAssessment($id){
-        $max_points = DB::table('test_per_job')
-            ->leftJoin('test', 'test.id', '=', 'test_per_job.test_id')
-            ->leftJoin('question', 'question.test_id', '=', 'test_per_job.test_id')
-            ->select(DB::raw('
-                fp_test.id,
-                SUM(
-                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
-                ) as max_points
-            '))
-            ->where('test_per_job.job_id', $id)
-            ->whereNotNull('test.id')
-            ->groupBy('test_per_job.test_id')
-            ->get();
-        $max_points_per_test = [];
-        if(count($max_points) > 0) {
-            foreach ($max_points as $v) {
-                $max_points_per_test[$v->id] = $v->max_points;
-            }
-        }
-        $data['max_points_per_test'] = $max_points_per_test;
+        $data = [];
 
+        //get all test Per Job and  Per Applicants
+        $test_id = $this->quizGetTestIds($data, $id);
+
+        $user = DB::table('applicants')
+            ->select(DB::raw('
+                fp_applicants.id as user_id,
+                fp_applicants.name
+            '))
+            ->where('applicants.job_id', $id)
+            ->get();
+        if(count($user) > 0) {
+            foreach ($user as $v) {
+                $v->test = DB::table('test')
+                    ->leftJoin('question', 'question.test_id', '=', 'test.id')
+                    ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
+                    ->select(DB::raw('
+                        IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
+                        SUM(IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points)) as score
+                    '))
+                    ->where('test_result.unique_id', '=', $v->user_id)
+                    ->where('test_result.result', '=', 1)
+                    ->whereIn('test.id', $test_id)
+                    ->whereNotNull('test.id')
+                    ->groupBy('default_tags')
+                    ->lists('score', 'default_tags');
+                $v->points_tags_total = array_sum($v->test);
+            }
+
+            //sort according to total tag points
+            $this->arraySort($user, 'points_tags_total', false);
+        }
+        $data['user'] = $user;
+
+        $data['progressColor'] = array('success', 'info', 'warning', 'danger');
+
+        return View::make('quiz.assessmentSlider', $data);
+    }
+    private function quizGetTestIds(&$data, $id){
+        $test_jobs_id = DB::table('test_per_job')
+            ->where('job_id', $id)
+            ->lists('test_id');
+        $test_applicants_id = DB::table('test_per_applicant')
+            ->leftJoin('applicants', 'applicants.id', '=', 'test_per_applicant.applicant_id')
+            ->where('job_id', $id)
+            ->lists('test_id');
+        $test_id = array_unique(array_merge($test_jobs_id, $test_applicants_id));
+
+        //get tags
+        $tags = DB::table('test')
+            ->select(DB::raw('LOWER(fp_test.default_tags) default_tags'))
+            ->whereIn('test.id', $test_id)
+            ->where('test.default_tags', '!=' , '')
+            ->groupBy('default_tags')
+            ->orderBy('default_tags')
+            ->lists('default_tags');
+        $test_tags = array_merge(['general'], $tags);
+        $data['test_tags'] = array_unique($test_tags);
+
+        //get slider default setting
         $slide_setting = DB::table('test_slider')
             ->where('job_id', '=', $id)
             ->pluck('slider_setting');
@@ -1325,93 +1341,21 @@ class QuizController extends BaseController {
         }
         $data['slide_setting'] = $slide_setting;
 
-        $u = DB::table('test_per_job')
-            ->leftJoin('test', 'test.id', '=', 'test_per_job.test_id')
-            ->leftJoin('applicants', 'applicants.job_id', '=', 'test_per_job.job_id')
-            ->leftJoin('test_per_applicant', 'test_per_applicant.applicant_id', '=', 'applicants.id')
+        //get max points per test
+        $max_points_per_test = DB::table('test')
+            ->leftJoin('question', 'question.test_id', '=', 'test.id')
             ->select(DB::raw('
-                fp_applicants.id as user_id,
-                fp_applicants.name,
-                fp_applicants.photo,
-                fp_test.default_tags,
-                fp_test_per_job.test_id,
-                fp_test_per_job.job_id
+                IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
+                SUM(
+                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                ) as max_points
             '))
-            ->whereNotNull('applicants.id')
+            ->whereIn('test.id', $test_id)
             ->whereNotNull('test.id')
-            ->where('test_per_job.job_id', $id)
-            ->groupBy('test_per_job.test_id')
-            ->groupBy('applicants.id')
-            ->get();
-        $user = [];
-        if(count($u) > 0){
-            foreach($u as $v){
-                $this_user = array_key_exists($v->user_id, $user) ? $user[$v->user_id] : $v;
-                if(!array_key_exists($v->user_id, $user)) {
-                    $this_user->points_tags_total = 0;
-                    $this_user->total_points = 0;
-                }
+            ->groupBy('test.id')
+            ->lists('max_points', 'default_tags');
+        $data['max_points_per_test'] = $max_points_per_test;
 
-                if(!array_key_exists('tags', $this_user)) {
-                    $this_user->tags = [];
-                }
-                $tags_array = $v->default_tags ? explode(',', $v->default_tags) : array();
-                $tags_array = array_filter(array_unique($tags_array));
-                if (count($tags_array) > 0) {
-                    foreach ($tags_array as $t) {
-                        if(!array_key_exists(strtolower($t), $this_user->tags)) {
-                            $this_user->tags[strtolower($t)] = 0;
-                        }
-                    }
-                }
-                if(!array_key_exists('general', $this_user->tags)) {
-                    $this_user->tags['general'] = 0; //general tag
-                }
-
-                $result = DB::table('test_result')
-                    ->select(DB::raw('
-                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
-                        IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points) as score,
-                        fp_test_result.result
-                    '))
-                    ->leftJoin('test_per_job', 'test_per_job.test_id', '=', 'test_result.test_id')
-                    ->leftJoin('question', function($join){
-                        $join->on('question.test_id', '=', 'test_per_job.test_id')
-                            ->on('question.id', '=', 'test_result.question_id');
-                    })
-                    ->where('test_per_job.job_id', '=', $v->job_id)
-                    ->where('test_result.test_id', '=', $v->test_id)
-                    ->where('test_result.unique_id', '=', $v->user_id)
-                    ->where('test_result.result', '=', 1)
-                    ->whereNotNull('question.id')
-                    ->get();
-                if(count($result) > 0){
-                    foreach($result as $r){
-                        if($r->result) {
-                            if (count($tags_array) > 0) {
-                                foreach ($tags_array as $t) {
-                                    $this_user->tags[strtolower($t)] += $r->score;
-                                    $this_user->points_tags_total += $r->score;
-                                }
-                            } else {
-                                $this_user->tags['general'] += $r->score; //general tag if not tag
-                                $this_user->points_tags_total += $r->score;
-                            }
-                        }
-                    }
-                }
-
-                $user[$v->user_id] = $this_user;
-            }
-        }
-
-        //sort according to total tag points
-        $this->arraySort($user, 'points_tags_total', false);
-
-        $data['user'] = $user;
-
-        $data['progressColor'] = array('success', 'info', 'warning', 'danger');
-
-        return View::make('quiz.assessmentSlider', $data);
+        return $test_id;
     }
 }
