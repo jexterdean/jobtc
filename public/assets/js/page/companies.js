@@ -1228,11 +1228,12 @@ $('#employees').on('click', '#add-employee', function (e) {
 
                     var ajaxurl = public_path + 'addEmployee';
                     var form = $(".add-employee-form")[0];
-
+                    var authority = $(form).find('input[name="authority"]:checked').val();
 
                     var formData = new FormData();
                     formData.append('company_id', company_id);
-
+                    formData.append('authority', authority);
+                    
                     if ($('#new-employee').hasClass('active') === true) {
                         var name = $(form).find('input[name="employee-name"]').val();
                         var email = $(form).find('input[name="employee-email"]').val();
