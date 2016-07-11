@@ -154,16 +154,6 @@ class JobController extends Controller {
         }
     }
     private function getApplicantsInfo($id){
-        //get test per Job and Applicants
-        $test_jobs_id = \DB::table('test_per_job')
-            ->where('job_id', $id)
-            ->lists('test_id');
-        $test_applicants_id = \DB::table('test_per_applicant')
-            ->leftJoin('applicants', 'applicants.id', '=', 'test_per_applicant.applicant_id')
-            ->where('job_id', $id)
-            ->lists('test_id');
-        $test_id = array_unique(array_merge($test_jobs_id, $test_applicants_id));
-
         $applicants = Applicant::with(['tags' => function ($query) {
                 $query->orderBy('created_at', 'desc');
             }])
@@ -201,11 +191,16 @@ class JobController extends Controller {
                 $join->on('question.id', '=', 'test_result.question_id');
             })
             ->where('applicants.job_id', $id)
-            ->whereIn('test_result.test_id', $test_id)
             ->orderBy('average', 'desc')
             ->orderBy('applicants.created_at', 'desc')
             ->groupBy('applicants.id')
             ->paginate(5);
+        if(count($applicants) > 0){
+            foreach($applicants as $v){
+                $v->average = $v->average ? $v->average : 0;
+            }
+        }
+        //exit;
 
         return $applicants;
     }
