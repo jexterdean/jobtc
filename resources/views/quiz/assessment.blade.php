@@ -7,7 +7,7 @@
                 <strong>{{ strtoupper($v) }}</strong>
             </div>
             <div class="col-md-8">
-                <div class="nstSlider" id="{{ $v }}" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="{{ $slide_setting ? $slide_setting->$v : 0 }}" data-cur_max="0" >
+                <div class="nstSlider" id="{{ $v }}" style="width: 100%;" data-range_min="-100" data-range_max="100" data-cur_min="{{ array_key_exists($v, $slide_setting) ? $slide_setting->$v : 0 }}" data-cur_max="0" >
                     <div class="bar"></div>
                     <div class="leftGrip"></div>
                 </div>
@@ -84,7 +84,7 @@
                     progressBar
                         .attr('aria-valuenow', newPoints)
                         .css('width', newPercentage + '%')
-                        .html(newPoints);
+                        .html(newPercentage.toFixed() + '%');
 
                     var thisUserList = progressBar.closest('.list-group-item');
                     var thisProgress = $(this).find('.progress-bar');
