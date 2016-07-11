@@ -13,7 +13,6 @@
             </div>
             <div class="col-xs-6">
                 <div class="btn-group pull-right">
-                    <a href="#" data-toggle='modal' data-target='#edit_task_{{ $task->task_id }}' class="edit-tasklist"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#" class="drag-handle move-tasklist"><i class="fa fa-arrows" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
             </div>

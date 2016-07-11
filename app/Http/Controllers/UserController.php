@@ -10,9 +10,11 @@ use App\Models\Profile;
 use App\Models\Comment;
 use App\Models\Video;
 use App\Models\Tag;
+use App\Models\PermissionUser;
 use App\Models\PermissionRole;
 use App\Models\Permission;
 use Bican\Roles\Models\Role;
+use App\Models\Module;
 use Illuminate\Support\Facades\Storage;
 use DB;
 use Illuminate\Http\Request;
@@ -320,45 +322,96 @@ class UserController extends BaseController {
         return redirect()->route('company', [$profile->company_id]);
     }
 
-    public function addEmployeeForm(Request $request) {
-        return view('forms.addEmployeeForm');
+    public function addEmployeeForm(Request $request, $id) {
+
+        $user_id = Auth::user('user')->user_id;
+
+        $positions = Role::where('company_id', $id)->get();
+
+        $user_list = [];
+
+        $company_profiles = Profile::with('user')
+                ->where('company_id', $id)
+                ->get();
+        
+        foreach ($company_profiles as $company_profile) {
+            array_push($user_list, $company_profile->user_id);
+        }
+        
+        $profiles = User::whereNotIn('user_id', $user_list)
+                ->get();
+
+        return view('forms.addEmployeeForm', [
+            'positions' => $positions,
+            'profiles' => $profiles
+        ]);
     }
 
-    public function editEmployeeForm(Request $request, $id) {
+    public function editEmployeeForm(Request $request, $company_id, $user_id) {
 
-        $profile = Profile::with('user')->where('user_id', $id)->first();
+        $profile = Profile::with('user')
+                ->where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $positions = Role::where('company_id', $company_id)->get();
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
         return view('forms.editEmployeeForm', [
             'profile' => $profile,
+            'positions' => $positions,
             'countries' => $countries_option
         ]);
     }
 
     public function addEmployee(Request $request) {
 
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $employee_id = Auth::user('user')->user_id;
+
         $company_id = $request->input('company_id');
 
-        $user = new User;
-        $user->name = $name;
-        $user->password = bcrypt($password);
-        $user->email = $email;
-        $user->ticketit_admin = 0;
-        $user->ticketit_agent = 0;
-        $user->user_status = 'Active';
-        $user->save();
+        if ($request->has('name')) {
+            $name = $request->input('name');
+            $email = $request->input('email');
+            $password = $request->input('password');
 
-//Assign it as a staff user first
-        $user_role = Role::where('company_id', $company_id)
-                ->where('level', 2)
-                ->first();
+            $user = new User;
+            $user->name = $name;
+            $user->password = bcrypt($password);
+            $user->email = $email;
+            $user->ticketit_admin = 0;
+            $user->ticketit_agent = 0;
+            $user->user_status = 'Active';
+            $user->save();
+        }
 
+        if ($request->has('user_id')) {
+            $user_id = $request->input('user_id');
+            $user = User::find($user_id);
+        }
 
-//Set the newly registered user to current company
+        if ($request->has('role_id')) {
+            $role_id = $request->input('role_id');
+
+            $user_role = Role::where('company_id', $company_id)
+                    ->where('id', $role_id)
+                    ->first();
+        }
+
+        if ($request->has('position')) {
+            $position = $request->input('position');
+
+            $user_role = new Role();
+            $user_role->company_id = $company_id;
+            $user_role->name = $position;
+            $user_role->slug = strtolower($position) . '-' . $company_id;
+            $user_role->description = '';
+            $user_role->level = 1;
+            $user_role->save();
+        }
+
+        //Set the newly registered user to current company
         $profile = new Profile;
         $profile->user_id = $user->user_id;
         $profile->company_id = $company_id;
@@ -369,9 +422,23 @@ class UserController extends BaseController {
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
+        $permissions_list = [];
+
+        $permission_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $employee_id)
+                ->get();
+
+        foreach ($permission_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
         return view('user.partials._newemployee', [
             'profile' => $profile,
             'countries' => $countries_option,
+            'module_permissions' => $module_permissions,
             'company_id' => $company_id
         ]);
     }
@@ -379,8 +446,11 @@ class UserController extends BaseController {
     public function editEmployee(Request $request) {
 
         $user_id = $request->input('user_id');
+        $company_id = $request->input('company_id');
 
         $user = User::where('user_id', $user_id);
+        $profile = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id);
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
@@ -412,6 +482,10 @@ class UserController extends BaseController {
             'skype' => $request->input('skype'),
             'facebook' => $request->input('facebook'),
             'linkedin' => $request->input('linkedin'),
+        ]);
+
+        $profile->update([
+            'role_id' => $request->input('role_id')
         ]);
 
         return $photo_path;
@@ -455,11 +529,57 @@ class UserController extends BaseController {
         return "true";
     }
 
+    public function editEmployeePermissionsForm(Request $request, $company_id, $user_id) {
+
+        //$user_id = Auth::user('user')->user_id;
+
+        $modules = Module::all();
+        $permissions = Permission::all();
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permission_role = PermissionRole::with('permission')
+                ->where('company_id', $company_id)
+                ->where('role_id', $user_profile_role->role_id)
+                ->get();
+
+        $permission_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permission_role as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $position = Role::where('id', $user_profile_role->role_id)->first();
+
+        $module_role_permissions = Permission::whereIn('id', $permissions_list)->get();
+
+        $assets = ['companies', 'real-time'];
+
+        return view('forms.editEmployeePermissionsForm', [
+            'position' => $position,
+            'permissions' => $permissions,
+            'permission_role' => $permission_role,
+            'permission_user' => $permission_user,
+            'modules' => $modules,
+            'module_role_permissions' => $module_role_permissions,
+            'assets' => $assets,
+            'user_id' => intval($user_id),
+            'company_id' => intval($company_id)
+        ]);
+    }
+
     public function getEmployees(Request $request, $id) {
 
         $user_id = Auth::user('user')->user_id;
 
-        $profiles = Profile::where('company_id', $id)->get();
+        $profiles = Profile::with('role')->where('company_id', $id)->get();
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
@@ -469,17 +589,17 @@ class UserController extends BaseController {
 
         $permissions_list = [];
 
-        $permissions_role = PermissionRole::with('permission')
+        $permissions_user = PermissionUser::with('permission')
                 ->where('company_id', $id)
-                ->where('role_id', $user_profile_role->role_id)
+                ->where('user_id', $user_id)
                 ->get();
 
-        foreach ($permissions_role as $role) {
+        foreach ($permissions_user as $role) {
             array_push($permissions_list, $role->permission_id);
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
+
         $assets = ['companies', 'real-time'];
 
         return view('user.employees', [

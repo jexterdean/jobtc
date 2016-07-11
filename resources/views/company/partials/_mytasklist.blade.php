@@ -47,7 +47,7 @@
         </div>
         <div class="mini-space"></div>
         <div class="project_tab_options">
-            @if(Auth::user('user')->can('create.projects') && $module_permissions->where('slug','create.projects')->count() === 1)
+            @if($module_permissions->where('slug','create.projects')->count() === 1)
             <a href="#" id="add-project" class="btn btn-shadow btn-default add-project">
                 <i class="fa fa-plus"></i> 
                 <strong>New Project</strong>

@@ -17,6 +17,7 @@ use App\Models\LinkCategory;
 use App\Models\Profile;
 use App\Models\Permission;
 use App\Models\PermissionRole;
+use App\Models\PermissionUser;
 use View;
 use Auth;
 use Redirect;
@@ -136,12 +137,12 @@ class TaskController extends BaseController {
 
         $permissions_list = [];
 
-        $permissions_role = PermissionRole::with('permission')
+        $permissions_user = PermissionUser::with('permission')
                 ->where('company_id', $company_id)
-                ->where('role_id', $user_profile_role->role_id)
+                ->where('user_id', $user_id)
                 ->get();
 
-        foreach ($permissions_role as $role) {
+        foreach ($permissions_user as $role) {
             array_push($permissions_list, $role->permission_id);
         }
 

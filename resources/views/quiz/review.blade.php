@@ -53,7 +53,7 @@
                                                 <label>Your Answer</label>
                                                 <div>
                                                     {!!
-                                                        $v->result_answer ?
+                                                        $v->result_answer != '' ?
                                                             (
                                                                 $v->question_type_id == 1 ?
                                                                 (
@@ -88,6 +88,11 @@
                                                         {{ $v->question_answer }}
                                                     @endif
                                                 </div>
+                                            </div>
+                                            <div class="form-inline">
+                                                <label>Points</label>&nbsp;{{ $v->result ?
+                                                ($v->question_type_id == 3 ? $v->result_points : $v->points) : 0
+                                                 }}
                                             </div>
                                             @endif
 

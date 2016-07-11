@@ -62,15 +62,6 @@ class PermissionsTableSeeder extends Seeder {
         }
 
         //Permissions for Briefcases
-        $viewBriefCasePermissionCount = Permission::where('slug', 'view.briefcases')->count();
-        if ($viewBriefCasePermissionCount === 0) {
-            $viewBriefCasePermission = Permission::create([
-                        'name' => 'View Briefcases',
-                        'slug' => 'view.briefcases',
-                        'description' => 'Projects', // optional
-                        'model' => 'App\Models\Project'
-            ]);
-        }
         $createBriefCasePermissionCount = Permission::where('slug', 'create.briefcases')->count();
         if ($createBriefCasePermissionCount === 0) {
             $createBriefCasePermission = Permission::create([
@@ -102,16 +93,6 @@ class PermissionsTableSeeder extends Seeder {
         }
 
         //Permissions for Task List Items
-        $viewTaskListItemsPermissionCount = Permission::where('slug', 'view.tasks')->count();
-        if ($viewTaskListItemsPermissionCount === 0) {
-            $viewTaskListItemsPermission = Permission::create([
-                        'name' => 'View Tasks',
-                        'slug' => 'view.tasks',
-                        'description' => 'Projects', // optional
-                        'model' => 'App\Models\Task'
-            ]);
-        }
-
         $createTaskListItemsPermissionCount = Permission::where('slug', 'create.tasks')->count();
         if ($createTaskListItemsPermissionCount === 0) {
             $createTaskListItemsPermission = Permission::create([

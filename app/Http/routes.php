@@ -78,6 +78,9 @@ Route::any('testSort', 'QuizController@testSort');
 Route::post('questionSort', 'QuizController@questionSort');
 Route::get('userSlider/{id}', 'QuizController@userSlider');
 Route::get('quizRanking/{id}', 'QuizController@quizRanking');
+Route::get('quizAssessment/{id}', 'QuizController@quizAssessment');
+Route::post('quizSliderSave', 'QuizController@quizSliderSave');
+Route::get('quizUserAssessment/{id}', 'QuizController@quizUserAssessment');
 Route::post('quizAddPersonalCommunity', 'QuizController@quizAddPersonalCommunity');
 Route::post('quizSearch', 'QuizController@quizSearch');
 Route::any('quizElasticSearchView', 'QuizController@quizElasticSearchView');
@@ -207,13 +210,17 @@ Route::group(['middleware' => 'auth'], function () {
      * Employees
      * */
     Route::get('employees/{id}','UserController@getEmployees');
-    Route::get('addEmployeeForm', 'UserController@addEmployeeForm');
-    Route::get('editEmployeeForm/{id}', 'UserController@editEmployeeForm');
+    Route::get('addEmployeeForm/{id}', 'UserController@addEmployeeForm');
+    Route::get('editEmployeeForm/{company_id}/{user_id}', 'UserController@editEmployeeForm');
+    Route::get('editEmployeePermissionsForm/{company_id}/{user_id}', 'UserController@editEmployeePermissionsForm');
+    Route::post('editEmployeePermissions', 'UserController@editEmployeePermissions');
     Route::post('addEmployee', 'UserController@addEmployee');
     Route::post('editEmployee', 'UserController@editEmployee');
     Route::post('removeEmployeeFromCompany', 'UserController@removeEmployeeFromCompany');
     Route::post('saveEmployeeNotes', 'UserController@saveEmployeeNotes');
-
+    
+        
+    
     /*
      * Positions
      */
@@ -225,6 +232,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('deletePosition', 'RoleController@deletePosition');
     Route::post('assignPositionPermission','RoleController@assignPositionPermission');
     Route::post('unassignPositionPermission','RoleController@unassignPositionPermission');
+    Route::post('assignEmployeePermission','RoleController@assignEmployeePermission');
+    Route::post('unassignEmployeePermission','RoleController@unassignEmployeePermission');
     
     /* 
      * Assigning 

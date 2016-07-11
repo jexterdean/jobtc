@@ -124,6 +124,76 @@ class ApplicantController extends Controller {
             }
 
             $tests = Test::whereIn('id', array_unique($test_ids))->get();
+            $slide_setting = \DB::table('test_slider')
+                ->where('job_id', '=', $applicant->job_id)
+                ->pluck('slider_setting');
+            if($slide_setting){
+                $slide_setting = json_decode($slide_setting);
+            }
+
+            $tests_tags = [];
+            $tests_adjust_tags = [];
+            $test_score_total = 0;
+            if(count($tests) > 0){
+                foreach($tests as $v){
+                    $v->total_points = 0;
+                    $v->total_score = 0;
+                    $tags = $v->default_tags ? explode(',', $v->default_tags) : array();
+                    if (count($tags) > 0) {
+                        foreach ($tags as $t) {
+                            if(!array_key_exists(strtolower($t), $tests_tags)) {
+                                $tests_tags[strtolower($t)] = 0;
+                            }
+                        }
+                    }
+                    else {
+                        if(!array_key_exists('general', $tests_tags)) {
+                            $tests_tags['general'] = 0;
+                        }
+                    }
+
+                    $result = \DB::table('test_result')
+                        ->select(\DB::raw('
+                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
+                            fp_question.question_tags,
+                            IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points) as score,
+                            fp_test_result.result
+                        '))
+                        ->leftJoin('question', function($join){
+                            $join->on('question.id', '=', 'test_result.question_id')
+                                ->on('question.test_id', '=', 'test_result.test_id');
+                        })
+                        ->where('test_result.test_id', '=', $v->id)
+                        ->where('test_result.unique_id', '=', $applicant->id)
+                        ->whereNotNull('question.id')
+                        ->get();
+                    //echo $v->id . ' ' . (count($result)) . '<br /><br />';
+                    if(count($result) > 0) {
+                        foreach ($result as $r) {
+                            $v->total_points += $r->score;
+                            if ($r->result) {
+                                $v->total_score += $r->points;
+                                $test_score_total += $r->points;
+                                if (count($tags) > 0) {
+                                    foreach ($tags as $t) {
+                                        $tests_tags[strtolower($t)] += $r->points;
+                                    }
+                                } else {
+                                    $tests_tags['general'] += $r->points;
+                                }
+                            }
+                        }
+
+                        if (count($slide_setting) > 0) {
+                            foreach ($slide_setting as $tag => $percentage) {
+                                $points = array_key_exists($tag, $tests_tags) ? $tests_tags[$tag] : 0;
+                                $adjustment = $points + ($points * $percentage / 100);
+                                $tests_adjust_tags[$tag] = $adjustment;
+                            }
+                        }
+                    }
+                }
+            }
 
             $questions = Question::whereIn('test_id', array_unique($test_ids))
                     ->orderBy('order', 'ASC')
@@ -156,6 +226,9 @@ class ApplicantController extends Controller {
                 'statuses' => $statuses,
                 'job' => $job,
                 'tests' => $tests,
+                'tests_tags' => $tests_tags,
+                'tests_adjust_tags' => $tests_adjust_tags,
+                'test_score_total' => $test_score_total,
                 'tests_completed' => $tests_completed,
                 'review_result' => $review_result,
                 'questions' => $questions,

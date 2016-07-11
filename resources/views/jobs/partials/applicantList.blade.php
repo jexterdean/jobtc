@@ -62,6 +62,7 @@
                 </textarea>
                 <input class="job_id" type="hidden" value="{{$applicant->job_id}}" />
                 <input class="applicant_id" type="hidden" value="{{$applicant->id}}" />
+                <label>Score:</label> {{ $applicant->total_score }}
             </div>
             @else
             <div class="col-xs-3">
@@ -98,6 +99,7 @@
                 </textarea>
                 <input class="job_id" type="hidden" value="{{$applicant->job_id}}" />
                 <input class="applicant_id" type="hidden" value="{{$applicant->id}}" />
+                <label>Score:</label> {{ $applicant->total_score }}
             </div>
             @endif
         </div>

@@ -20,6 +20,8 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
 use App\Models\TeamCompany;
+use App\Models\Permission;
+use App\Models\PermissionUser;
 use \DB;
 use \Auth;
 use \View;
@@ -180,6 +182,19 @@ class ProjectController extends BaseController {
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)->get();
 
+         $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $project->company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
         $assets = ['datepicker', 'real-time'];
 
         return view('project.show', [
@@ -194,6 +209,7 @@ class ProjectController extends BaseController {
             'task_permissions' => $task_permissions,
             'assignedUsers' => $assignedUser,
             'assign_username' => $assign_username,
+            'module_permissions' => $module_permissions,
             'assets' => $assets
         ]);
     }
