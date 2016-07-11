@@ -84,7 +84,7 @@
                     progressBar
                         .attr('aria-valuenow', newPoints)
                         .css('width', newPercentage + '%')
-                        .html(newPercentage.toFixed() + '%');
+                        .html(newPoints);
 
                     var thisUserList = progressBar.closest('.list-group-item');
                     var thisProgress = $(this).find('.progress-bar');
