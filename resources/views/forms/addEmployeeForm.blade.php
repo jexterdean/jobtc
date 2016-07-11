@@ -45,7 +45,9 @@
             </div>
             <br />
             <div class="center-block">
-                
+                <div class="form-control">User is: </div>
+                <label class="radio-inline"><input id="" checked="checked" name="position-tab" type="radio" value="" data-target="#existing-position">Existing Position</label>
+                <label class="radio-inline"><input id="new-position-tab" name="position-tab" type="radio" value="" data-target="#new-position">New Position</label>
             </div>
         </div>
     </div>
