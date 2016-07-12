@@ -167,7 +167,6 @@ class ApplicantController extends Controller {
                         ->where('test_result.unique_id', '=', $applicant->id)
                         ->whereNotNull('question.id')
                         ->get();
-                    //echo $v->id . ' ' . (count($result)) . '<br /><br />';
                     if(count($result) > 0) {
                         foreach ($result as $r) {
                             $v->total_points += $r->score;
