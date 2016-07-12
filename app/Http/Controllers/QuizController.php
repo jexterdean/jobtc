@@ -406,31 +406,40 @@ class QuizController extends BaseController {
                         ->first();
 
                 $r = $q->question_type_id == 3 ?
-                        0 :
-                        (
-                        $q->question_type_id == 1 ?
-                                ($q->question_answer == Input::get('answer') ? 1 : 0) :
-                                (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0)
-                        );
+                    0 :
+                    (
+                    $q->question_type_id == 1 ?
+                        ($q->question_answer == Input::get('answer') ? 1 : 0) :
+                        (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0)
+                    );
 
-                $result = new TestResultModel();
-                $result->test_id = $id;
-                $result->question_id = Input::get('question_id');
-                //$result->user_id = Auth::user()->user_id;
+                $unique_id = Auth::check('user') ?
+                    Auth::user('user')->user_id :
+                    (Auth::check('applicant') ? Auth::user('applicant')->id : '');
 
-                if (Auth::check('user')) {
-                    $result->unique_id = Auth::user('user')->user_id;
-                    $result->belongs_to = 'employee';
+                $resultExist = $unique_id ?
+                    TestResultModel::where('question_id', Input::get('question_id'))
+                    ->where('unique_id', $unique_id)
+                    ->count() > 1 : 1;
+                if(!$resultExist) {
+                    $result = new TestResultModel();
+                    $result->test_id = $id;
+                    $result->question_id = Input::get('question_id');
+
+                    if (Auth::check('user')) {
+                        $result->unique_id = Auth::user('user')->user_id;
+                        $result->belongs_to = 'employee';
+                    }
+
+                    if (Auth::check('applicant')) {
+                        $result->unique_id = Auth::user('applicant')->id;
+                        $result->belongs_to = 'applicant';
+                    }
+
+                    $result->answer = Input::get('answer');
+                    $result->result = $r;
+                    $result->save();
                 }
-
-                if (Auth::check('applicant')) {
-                    $result->unique_id = Auth::user('applicant')->id;
-                    $result->belongs_to = 'applicant';
-                }
-
-                $result->answer = Input::get('answer');
-                $result->result = $r;
-                $result->save();
             }
 
             DB::commit();
@@ -1286,24 +1295,53 @@ class QuizController extends BaseController {
             ->get();
         if(count($user) > 0) {
             foreach ($user as $v) {
-                $v->test = DB::table('test')
+                $test = DB::table('test')
                     ->leftJoin('question', 'question.test_id', '=', 'test.id')
-                    ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
+                    ->leftJoin('test_result', function($join){
+                        $join->on('test_result.test_id', '=', 'test.id')
+                            ->on('test_result.question_id', '=', 'question.id');
+                    })
                     ->select(DB::raw('
                         IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
-                        SUM(IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points)) as score
+                        SUM(
+                            IF(
+                                fp_test_result.result = 1,
+                                IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                                0
+                            )
+                        ) as score,
+                        SUM(
+                            IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                        ) as total
                     '))
                     ->where('test_result.unique_id', '=', $v->user_id)
-                    ->where('test_result.result', '=', 1)
                     ->whereIn('test.id', $test_id)
                     ->whereNotNull('test.id')
                     ->groupBy('default_tags')
-                    ->lists('score', 'default_tags');
-                $v->points_tags_total = array_sum($v->test);
+                    ->get();
+                $v->points_tags_total = 0;
+                $v->test_total = 0;
+                $v->average_total = 0;
+                $v->test = array();
+                $count = count($test);
+                if($count > 0) {
+                    foreach($test as $t){
+                        $thisTag = $t->default_tags;
+                        $thisPercentage = array_key_exists($thisTag, $data['slide_setting']) ?
+                            $data['slide_setting']->$thisTag : 0;
+                        $thisScore = $t->score + ($t->score * $thisPercentage/100);
+                        $thisTotal = $thisScore > $t->total ? $thisScore : $t->total;
+                        $v->test[$thisTag] = $t;
+                        $v->points_tags_total += $thisScore;
+                        $v->test_total += $t->total;
+                    }
+
+                    $v->average_total = number_format($v->points_tags_total/$v->test_total, 4) * 100;
+                }
             }
 
             //sort according to total tag points
-            $this->arraySort($user, 'points_tags_total', false);
+            $this->arraySort($user, 'average_total', false);
         }
         $data['user'] = $user;
 
@@ -1336,9 +1374,7 @@ class QuizController extends BaseController {
         $slide_setting = DB::table('test_slider')
             ->where('job_id', '=', $id)
             ->pluck('slider_setting');
-        if($slide_setting){
-            $slide_setting = json_decode($slide_setting);
-        }
+        $slide_setting = $slide_setting ? json_decode($slide_setting) : (Object)array();
         $data['slide_setting'] = $slide_setting;
 
         //get max points per test
@@ -1352,7 +1388,7 @@ class QuizController extends BaseController {
             '))
             ->whereIn('test.id', $test_id)
             ->whereNotNull('test.id')
-            ->groupBy('test.id')
+            ->groupBy('default_tags')
             ->lists('max_points', 'default_tags');
         $data['max_points_per_test'] = $max_points_per_test;
 
