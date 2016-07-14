@@ -188,7 +188,8 @@ class JobController extends Controller {
             })
             ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
             ->leftJoin('question', function($join){
-                $join->on('question.id', '=', 'test_result.question_id');
+                $join->on('question.id', '=', 'test_result.question_id')
+                    ->on('question.test_id', '=', 'test.id');
             })
             ->where('applicants.job_id', $id)
             ->orderBy('average', 'desc')

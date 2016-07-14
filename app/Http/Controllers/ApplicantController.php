@@ -155,7 +155,6 @@ class ApplicantController extends Controller {
                     $result = \DB::table('test_result')
                         ->select(\DB::raw('
                             IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
-                            fp_question.question_tags,
                             IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points) as score,
                             fp_test_result.result
                         '))
