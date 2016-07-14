@@ -360,18 +360,37 @@ class UserController extends BaseController {
 
         $positions = Role::where('company_id', $company_id)->get();
 
-        $profile_levels_count = ProfileLevel::where('profile_id', $profile->id)
-                ->where('unique_id', $my_profile->id)
+
+        //Check if this employee is below you 
+
+        $logged_user_above_count = ProfileLevel::where('profile_id', $my_profile->id)
+                ->where('profile_level', 'above')
+                ->where('unique_id', $profile->id)
                 ->count();
 
-        if ($profile_levels_count === 0) {
-            $profile_levels = new ProfileLevel();
-            $profile_levels->profile_id = $profile->id;
-            $profile_levels->unique_id = $my_profile->id;
-            $profile_levels->profile_level = 'equal';
-            $profile_levels->save();
-        } else {
+        $employee_is_below_count = ProfileLevel::where('profile_id', $profile->id)
+                ->where('profile_level', 'below')
+                ->where('unique_id', $my_profile->id)
+                ->count();
+        
+        $employee_is_above_count = ProfileLevel::where('profile_id', $my_profile->id)
+                ->where('profile_level', 'below')
+                ->where('unique_id', $profile->id)
+                ->count();
+        
 
+        if ($logged_user_above_count > 0 && $employee_is_below_count === 0) {
+
+            $profile_levels = ProfileLevel::where('profile_id', $my_profile->id)
+                    ->where('unique_id', $profile->id)
+                    ->first();
+        } elseif ($logged_user_above_count === 0 && $employee_is_below_count > 0) {
+            
+            $profile_levels = ProfileLevel::where('profile_id', $profile->id)
+                    ->where('unique_id', $my_profile->id)
+                    ->first();
+            
+        } else {
             $profile_levels = ProfileLevel::where('profile_id', $profile->id)
                     ->where('unique_id', $my_profile->id)
                     ->first();
@@ -382,6 +401,9 @@ class UserController extends BaseController {
         return view('forms.editEmployeeForm', [
             'profile' => $profile,
             'profile_levels' => $profile_levels,
+            'logged_user_above_count' => $logged_user_above_count,
+            'employee_is_above_count' => $employee_is_above_count,
+            'employee_is_below_count' => $employee_is_below_count,
             'positions' => $positions,
             'countries' => $countries_option
         ]);
@@ -568,9 +590,18 @@ class UserController extends BaseController {
 
             $profile_levels = ProfileLevel::where('profile_id', $profile->pluck('id'))->where('unique_id', $my_profile->id);
 
-            $profile_levels->update([
-                'profile_level' => $authority
-            ]);
+            if ($profile_levels->count() > 0) {
+
+                $profile_levels->update([
+                    'profile_level' => $authority
+                ]);
+            } else {
+                $new_profile_level = new ProfileLevel();
+                $new_profile_level->profile_id = $profile->pluck('id');
+                $new_profile_level->profile_level = $authority;
+                $new_profile_level->unique_id = $my_profile->id;
+                $new_profile_level->save();
+            }
         }
 
         return json_encode($data);
