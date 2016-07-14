@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProfileLevel extends Model
 {
-    protected $fillable = ['profile_id','profile_ids_above','profile_ids_equal','profile_ids_below'];
+    protected $fillable = ['profile_id','profile_level','unique_id'];
 
     protected $primaryKey = 'id';
     protected $table = 'profile_levels';

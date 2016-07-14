@@ -15,9 +15,8 @@ class CreateTableUserLevels extends Migration
         Schema::create('profile_levels',function(Blueprint $table) {
            $table->increments('id');
             $table->integer('profile_id');
-            $table->string('profile_ids_above')->nullable();
-            $table->string('profile_ids_equal')->nullable();
-            $table->string('profile_ids_below')->nullable();
+            $table->string('profile_level')->nullable();
+            $table->integer('unique_id')->nullable();
             $table->timestamps();
         });
     }
