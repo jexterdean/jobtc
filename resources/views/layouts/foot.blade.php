@@ -296,45 +296,11 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
             $('#task-list-box').slimScroll({
     height: '250px'
     });
-            /*region Auto Change and Select Category Name*/
-            $('.category-name')
-            .bind('keyup keypress blur', function(){
-            var myStr = $(this).val();
-                    myStr = myStr.toLowerCase();
-                    myStr = myStr.replace(/\s+/g, "-");
-                    $(this).val(myStr);
-            })
-            .focusout(function(){
-            $('#category-name').val($(this).val());
-                    var cat_form = $('.category-form');
-                    var form_data = cat_form.serializeArray();
-                    var url = cat_form.attr('action');
-                    var cat_value = $(this).val();
-                    if ($(this).val()){
-            form_data.push(
-            {name:'slug', value:$(this).val()},
-            {name:'request_from_link_page', value:'1'}
-            );
-                    $.post(url, form_data, function(data){
-                    var _return_data = jQuery.parseJSON(data);
-                            var option_ele = '<option value>Select Category</option>';
-                            $.each(_return_data, function(key, val){
-                            var is_selected = cat_value == val.name ? 'selected' : '';
-                                    option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
-                            });
-                            $('select.category').html(option_ele);
-                    });
-            }
-
-            $(this).val('');
-            });
-            /*endregion*/
-
             /*region load task page to project page*/
             var load_task_page = function(){
-            $('.load-task-assign').each(function(){
-            $(this).load($(this).data('url'));
-            });
+                $('.load-task-assign').each(function(){
+                    $(this).load($(this).data('url'));
+                });
             };
             load_task_page();
             /*endregion*/

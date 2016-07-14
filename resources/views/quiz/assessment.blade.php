@@ -25,7 +25,11 @@
     <button type="button" class="btn btn-delete resetBtn">Reset</button>
 </div>
 <div class="user_test_area"></div>
-
+<style>
+    .progress .progress-bar{
+        color: #222222;
+    }
+</style>
 <script>
     $(function(e){
         var nstSlider = $('.nstSlider');
@@ -70,10 +74,14 @@
                     var origPoints = progressBar.data('points');
                     var origMax = progressBar.data('maxpoints');
                     var newPoints = origPoints + (origPoints * (leftValue/100));
-                    var newMax = origMax + (origMax * (leftValue/100));
+                    var newMax = parseFloat(progressBar.attr('aria-valuemax'));
+                    newMax = newMax ? newMax : 0;
 
                     newPoints = newPoints.toFixed(2);
-                    newMax = newMax.toFixed(0);
+                    newPoints = newPoints > origMax ? origMax : newPoints;
+
+                    newMax = newPoints > newMax ? newPoints : newMax;
+                    newMax = newMax.toFixed(2);
 
                     var newPercentage = newPoints/origMax;
                     newPercentage = newPercentage.toFixed(2) * 100;
@@ -84,15 +92,22 @@
                     progressBar
                         .attr('aria-valuenow', newPoints)
                         .css('width', newPercentage + '%')
-                        .html(newPoints);
+                        .html(newPoints != 0 ? newPoints + '/' + newMax : '');
 
                     var thisUserList = progressBar.closest('.list-group-item');
                     var thisProgress = $(this).find('.progress-bar');
+                    var thisScore = 0;
                     var thisTotal = 0;
                     thisProgress.each(function(e){
-                        thisTotal += parseFloat($(this).attr('aria-valuenow'));
+                        if($(this).attr('aria-valuenow') > 0){
+                            thisScore += parseFloat($(this).attr('aria-valuenow'));
+                            thisTotal += parseFloat($(this).attr('aria-valuemax'));
+                        }
                     });
-                    thisUserList.data('total', thisTotal);
+                    var thisAverage = (thisScore/thisTotal) * 100;
+                    thisAverage = isNaN(thisAverage) ? 0 : thisAverage;
+                    thisAverage = thisAverage.toFixed(2);
+                    thisUserList.data('total', thisAverage);
                 });
 
                 var list = user_test_area.find('.user-list-slider');

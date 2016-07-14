@@ -1228,11 +1228,12 @@ $('#employees').on('click', '#add-employee', function (e) {
 
                     var ajaxurl = public_path + 'addEmployee';
                     var form = $(".add-employee-form")[0];
-
+                    var authority = $(form).find('input[name="authority"]:checked').val();
 
                     var formData = new FormData();
                     formData.append('company_id', company_id);
-
+                    formData.append('authority', authority);
+                    
                     if ($('#new-employee').hasClass('active') === true) {
                         var name = $(form).find('input[name="employee-name"]').val();
                         var email = $(form).find('input[name="employee-email"]').val();
@@ -1647,3 +1648,23 @@ $('.permission-list-group').on('click', '.position-permission', function (e) {
         });
     }
 });
+
+
+ $( ".column" ).sortable({
+      connectWith: ".column",
+      handle: ".portlet-header",
+      cancel: ".portlet-toggle",
+      placeholder: "portlet-placeholder ui-corner-all"
+    });
+ 
+    $( ".portlet" )
+      .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+      .find( ".portlet-header" )
+        .addClass( "ui-widget-header ui-corner-all" )
+        .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+ 
+    $( ".portlet-toggle" ).click(function() {
+      var icon = $( this );
+      icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+      icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+    });

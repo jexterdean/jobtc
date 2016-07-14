@@ -43,14 +43,43 @@
                     <input class="form-control" name="position" placeholder="New Position" value="" />
                 </div>
             </div>
+            <br />
+            <div>
+                <label>User's Authority is: </label>
+                <br />
+                <label class="radio-inline"><input id="" checked="checked" name="authority" type="radio" value="above">
+                    Above You
+                    <a class="above-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users above you can see all your projects and jobs. They can change your permissions.">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    </a>
+                </label>
+                <label class="radio-inline">
+                    <input name="authority" type="radio" value="equal">
+                    Equal You
+                    <a class="equal-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users equal to you can't see your projects and jobs unless you share them. You can't change any of their permissions. ">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    </a>
+                </label>
+                <label class="radio-inline">
+                    <input name="authority" type="radio" value="below" >
+                    Below You
+                    <a class="below-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users below you can't see your projects and jobs unless you share them. You can access and change all their projects, jobs and permissions.">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    </a>
+                </label>
+            </div>
         </div>
     </div>
 </form>
 <script>
+    $('.above-you-tooltip').tooltip();
+    $('.equal-you-tooltip').tooltip();
+    $('.below-you-tooltip').tooltip();
+    
     $('input[name="position-tab"]').click(function () {
         $(this).tab('show');
     });
-    
+
     $('input[name="employee-tab"]').click(function () {
         $(this).tab('show');
     });

@@ -159,6 +159,7 @@ class TaskController extends BaseController {
             'current_time' => $current_time,
             'percentage' => number_format($percentage, 0),
             'links' => $links,
+            'user_id' => $user_id,
             'categories' => $categories,
             'module_permissions' => $module_permissions
         ]);

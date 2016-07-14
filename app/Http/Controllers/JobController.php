@@ -208,6 +208,59 @@ class JobController extends Controller {
         }
     }
 
+    private function getApplicantsInfo($id){
+        $applicants = Applicant::with(['tags' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->select(\DB::raw('
+                fp_applicants.*,
+                IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
+                SUM(
+                    IF(
+                        fp_test_result.result = 1,
+                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                        0
+                    )
+                ) as total_score,
+                SUM(
+                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                ) as max_points,
+                (ROUND(
+                    SUM(
+                        IF(
+                            fp_test_result.result = 1,
+                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                            0
+                        )
+                    )/SUM(
+                        IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                    ),
+                    4
+                ) * 100) as average
+            '))
+            ->leftJoin('test_result', function($join){
+                $join->on('test_result.unique_id', '=', 'applicants.id');
+            })
+            ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
+            ->leftJoin('question', function($join){
+                $join->on('question.id', '=', 'test_result.question_id')
+                    ->on('question.test_id', '=', 'test.id');
+            })
+            ->where('applicants.job_id', $id)
+            ->orderBy('average', 'desc')
+            ->orderBy('applicants.created_at', 'desc')
+            ->groupBy('applicants.id')
+            ->paginate(5);
+        if(count($applicants) > 0){
+            foreach($applicants as $v){
+                $v->average = $v->average ? $v->average : 0;
+            }
+        }
+        //exit;
+
+        return $applicants;
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

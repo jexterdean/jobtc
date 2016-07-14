@@ -15,6 +15,7 @@ use App\Models\PermissionRole;
 use App\Models\Permission;
 use Bican\Roles\Models\Role;
 use App\Models\Module;
+use App\Models\ProfileLevel;
 use Illuminate\Support\Facades\Storage;
 use DB;
 use Illuminate\Http\Request;
@@ -333,11 +334,11 @@ class UserController extends BaseController {
         $company_profiles = Profile::with('user')
                 ->where('company_id', $id)
                 ->get();
-        
+
         foreach ($company_profiles as $company_profile) {
             array_push($user_list, $company_profile->user_id);
         }
-        
+
         $profiles = User::whereNotIn('user_id', $user_list)
                 ->get();
 
@@ -368,7 +369,6 @@ class UserController extends BaseController {
     public function addEmployee(Request $request) {
 
         $employee_id = Auth::user('user')->user_id;
-
         $company_id = $request->input('company_id');
 
         if ($request->has('name')) {
@@ -393,7 +393,6 @@ class UserController extends BaseController {
 
         if ($request->has('role_id')) {
             $role_id = $request->input('role_id');
-
             $user_role = Role::where('company_id', $company_id)
                     ->where('id', $role_id)
                     ->first();
@@ -420,8 +419,85 @@ class UserController extends BaseController {
 
         $user->attachRole($user_role->id);
 
+        if ($request->has('authority')) {
+            $authority = $request->input('authority');
+
+            $my_profile = Profile::where('user_id', $employee_id)->where('company_id', $company_id)->first();
+
+            $profile_id_levels_count = ProfileLevel::where('profile_id', $my_profile->id)->count();
+
+            if ($profile_id_levels_count > 0) {
+                $profile_levels = ProfileLevel::where('profile_id', $my_profile->id);
+                if ($authority == 'above') {
+                    $profile_id_array = [];
+                    $profile_ids_above = $profile_levels->pluck('profile_ids_above');
+                    if ($profile_ids_above === '' || $profile_ids_above === NULL) {
+                        $profile_levels->update([
+                            'profile_ids_above' => $profile->id
+                        ]);
+                    } else {
+                        array_push($profile_id_array, $profile_ids_above);
+                        array_push($profile_id_array, $profile->id);
+                        $profile_levels->update([
+                            'profile_ids_above' => implode(',', $profile_id_array)
+                        ]);
+                    }
+                }
+                if ($authority == 'equal') {
+                    $profile_id_array = [];
+                    $profile_ids_equal = $profile_levels->pluck('profile_ids_equal');
+                    if ($profile_ids_equal === '' || $profile_ids_equal === NULL) {
+                        $profile_levels->update([
+                            'profile_ids_equal' => $profile->id
+                        ]);
+                    } else {
+                        array_push($profile_id_array, $profile_ids_equal);
+                        array_push($profile_id_array, $profile->id);
+                        $profile_levels->update([
+                            'profile_ids_equal' => implode(',', $profile_id_array)
+                        ]);
+                    }
+                }
+                if ($authority == 'below') {
+                    $profile_id_array = [];
+                    $profile_ids_below = $profile_levels->pluck('profile_ids_below');
+                    if ($profile_ids_below === '' || $profile_ids_below === NULL) {
+                        $profile_levels->update([
+                            'profile_ids_below' => $profile->id
+                        ]);
+                    } else {
+                        array_push($profile_id_array, $profile_ids_below);
+                        array_push($profile_id_array, $profile->id);
+                        $profile_levels->update([
+                            'profile_ids_below' => implode(',', $profile_id_array)
+                        ]);
+                    }
+                }
+            } else {
+                $profile_levels = new ProfileLevel();
+                if ($authority == 'above') {
+                    $profile_levels->profile_id = $my_profile->id;
+                    $profile_levels->profile_ids_above = $profile->id;
+                    $profile_levels->save();
+                }
+                if ($authority == 'equal') {
+                    $profile_levels->profile_id = $my_profile->id;
+                    $profile_levels->profile_ids_equal = $profile->id;
+                    $profile_levels->save();
+                }
+                if ($authority == 'below') {
+                    $profile_levels->profile_id = $my_profile->id;
+                    $profile_levels->profile_ids_below = $profile->id;
+                    $profile_levels->save();
+                }
+            }
+        }
+
+
+
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
+        //Role Manager Permissions(Bican Roles Permissions)
         $permissions_list = [];
 
         $permission_user = PermissionUser::with('permission')

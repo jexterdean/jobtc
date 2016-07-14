@@ -3,8 +3,8 @@
     @foreach($modules as $module)
     <li class="list-group-item">
         <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
-        <a data-toggle="collapse" data-target="#permission-collapse-{{$position->id}}-{{$module->id}}">{{$module->name}}</a>
-        <div id="permission-collapse-{{$position->id}}-{{$module->id}}" class="collapse">
+        <a data-toggle="collapse" data-target="#permission-collapse-{{$position->id}}-{{$module->id}}-position">{{$module->name}}</a>
+        <div id="permission-collapse-{{$position->id}}-{{$module->id}}-position" class="collapse">
             <ul class="permission-list-group list-group">
                 @foreach($permissions->where('description',$module->name) as $permission)
                 <li class="permission-list-group-item list-group-item">
