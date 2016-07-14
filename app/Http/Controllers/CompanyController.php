@@ -32,6 +32,8 @@ use App\Models\Module;
 use App\Models\Permission;
 use App\Models\PermissionUser;
 use App\Models\PermissionRole;
+use App\Models\Applicant;
+use App\Models\Comment;
 use Auth;
 use View;
 use Redirect;
@@ -65,6 +67,38 @@ class CompanyController extends BaseController {
     }
 
     public function show($company_id) {
+
+        $projects = Project::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(5)->get();
+
+        $jobs = Job::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(5)->get();
+        
+        $employees = Profile::with('user')->where('company_id',$company_id)->take(5)->get();
+        
+        $job_list = Job::where('company_id',$company_id)->lists('id');
+        
+        $applicants = Applicant::whereIn('job_id',$job_list)->orderBy('created_at','desc')->take(5)->get();
+        
+        $applicant_list = Applicant::whereIn('job_id',$job_list)->lists('id');
+        
+        $comments = Comment::with('applicant')->whereIn('unique_id',$applicant_list)
+                ->where('belongs_to','applicant')
+                ->orderBy('created_at','desc')
+                ->take(5)
+                ->get();
+        
+        $assets = ['companies', 'real-time'];
+
+        return View::make('company.show', [
+                    'projects' => $projects,
+                    'jobs' => $jobs,
+                    'employees' => $employees,
+                    'applicants' => $applicants,
+                    'comments' => $comments,
+                    'assets' => $assets
+        ]);
+    }
+
+    public function getCompanyModules($company_id) {
 
         //Getting Assign Project Data
         $user_id = Auth::user('user')->user_id;
@@ -659,7 +693,7 @@ class CompanyController extends BaseController {
                 //->where('company_id','<>',$id)
                 //->where('user_id','<>',$user_id)
                 ->get();
-        
+
         $user_profile_role = Profile::where('user_id', $user_id)
                 ->where('company_id', $id)
                 ->first();
@@ -693,7 +727,7 @@ class CompanyController extends BaseController {
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
-         $user_profile_role = Profile::where('user_id', $user_id)
+        $user_profile_role = Profile::where('user_id', $user_id)
                 ->where('company_id', $id)
                 ->first();
 
@@ -709,8 +743,8 @@ class CompanyController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
-        
+
+
         return view('company.partials._employees', [
             'profiles' => $profiles,
             'countries' => $countries_option,
@@ -726,7 +760,7 @@ class CompanyController extends BaseController {
         $modules = Module::all();
         $permissions = Permission::all();
         $permission_role = PermissionRole::all();
-        
+
         $permissions_list = [];
 
         $permissions_user = PermissionUser::with('permission')
