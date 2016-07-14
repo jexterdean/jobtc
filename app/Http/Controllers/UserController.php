@@ -350,6 +350,9 @@ class UserController extends BaseController {
 
     public function editEmployeeForm(Request $request, $company_id, $user_id) {
 
+        $my_profile = Profile::where('user_id', Auth::user('user')->user_id)
+                        ->where('company_id', $company_id)->first();
+
         $profile = Profile::with('user')
                 ->where('user_id', $user_id)
                 ->where('company_id', $company_id)
@@ -357,10 +360,28 @@ class UserController extends BaseController {
 
         $positions = Role::where('company_id', $company_id)->get();
 
+        $profile_levels_count = ProfileLevel::where('profile_id', $profile->id)
+                ->where('unique_id', $my_profile->id)
+                ->count();
+
+        if ($profile_levels_count === 0) {
+            $profile_levels = new ProfileLevel();
+            $profile_levels->profile_id = $profile->id;
+            $profile_levels->unique_id = $my_profile->id;
+            $profile_levels->profile_level = 'equal';
+            $profile_levels->save();
+        } else {
+
+            $profile_levels = ProfileLevel::where('profile_id', $profile->id)
+                    ->where('unique_id', $my_profile->id)
+                    ->first();
+        }
+
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
         return view('forms.editEmployeeForm', [
             'profile' => $profile,
+            'profile_levels' => $profile_levels,
             'positions' => $positions,
             'countries' => $countries_option
         ]);
@@ -411,7 +432,14 @@ class UserController extends BaseController {
         }
 
         //Set the newly registered user to current company
-        $profile = new Profile;
+        $no_company_profile_count = Profile::where('user_id', $user->user_id)->where('company_id', 0)->count();
+        if ($no_company_profile_count > 0) {
+
+            $delete_profile = Profile::where('user_id', $user->user_id)->where('company_id', 0);
+            $delete_profile->delete();
+        }
+
+        $profile = new Profile();
         $profile->user_id = $user->user_id;
         $profile->company_id = $company_id;
         $profile->role_id = $user_role->id;
@@ -424,76 +452,12 @@ class UserController extends BaseController {
 
             $my_profile = Profile::where('user_id', $employee_id)->where('company_id', $company_id)->first();
 
-            $profile_id_levels_count = ProfileLevel::where('profile_id', $my_profile->id)->count();
-
-            if ($profile_id_levels_count > 0) {
-                $profile_levels = ProfileLevel::where('profile_id', $my_profile->id);
-                if ($authority == 'above') {
-                    $profile_id_array = [];
-                    $profile_ids_above = $profile_levels->pluck('profile_ids_above');
-                    if ($profile_ids_above === '' || $profile_ids_above === NULL) {
-                        $profile_levels->update([
-                            'profile_ids_above' => $profile->id
-                        ]);
-                    } else {
-                        array_push($profile_id_array, $profile_ids_above);
-                        array_push($profile_id_array, $profile->id);
-                        $profile_levels->update([
-                            'profile_ids_above' => implode(',', $profile_id_array)
-                        ]);
-                    }
-                }
-                if ($authority == 'equal') {
-                    $profile_id_array = [];
-                    $profile_ids_equal = $profile_levels->pluck('profile_ids_equal');
-                    if ($profile_ids_equal === '' || $profile_ids_equal === NULL) {
-                        $profile_levels->update([
-                            'profile_ids_equal' => $profile->id
-                        ]);
-                    } else {
-                        array_push($profile_id_array, $profile_ids_equal);
-                        array_push($profile_id_array, $profile->id);
-                        $profile_levels->update([
-                            'profile_ids_equal' => implode(',', $profile_id_array)
-                        ]);
-                    }
-                }
-                if ($authority == 'below') {
-                    $profile_id_array = [];
-                    $profile_ids_below = $profile_levels->pluck('profile_ids_below');
-                    if ($profile_ids_below === '' || $profile_ids_below === NULL) {
-                        $profile_levels->update([
-                            'profile_ids_below' => $profile->id
-                        ]);
-                    } else {
-                        array_push($profile_id_array, $profile_ids_below);
-                        array_push($profile_id_array, $profile->id);
-                        $profile_levels->update([
-                            'profile_ids_below' => implode(',', $profile_id_array)
-                        ]);
-                    }
-                }
-            } else {
-                $profile_levels = new ProfileLevel();
-                if ($authority == 'above') {
-                    $profile_levels->profile_id = $my_profile->id;
-                    $profile_levels->profile_ids_above = $profile->id;
-                    $profile_levels->save();
-                }
-                if ($authority == 'equal') {
-                    $profile_levels->profile_id = $my_profile->id;
-                    $profile_levels->profile_ids_equal = $profile->id;
-                    $profile_levels->save();
-                }
-                if ($authority == 'below') {
-                    $profile_levels->profile_id = $my_profile->id;
-                    $profile_levels->profile_ids_below = $profile->id;
-                    $profile_levels->save();
-                }
-            }
+            $profile_levels = new ProfileLevel();
+            $profile_levels->profile_id = $profile->id;
+            $profile_levels->profile_level = $authority;
+            $profile_levels->unique_id = $my_profile->id;
+            $profile_levels->save();
         }
-
-
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
@@ -515,6 +479,7 @@ class UserController extends BaseController {
             'profile' => $profile,
             'countries' => $countries_option,
             'module_permissions' => $module_permissions,
+            'profile_levels' => $profile_levels,
             'company_id' => $company_id
         ]);
     }
@@ -534,6 +499,10 @@ class UserController extends BaseController {
             $photo_path = $photo_save->getPathname();
         } else {
             $photo_path = User::where('user_id', $user_id)->pluck('photo');
+
+            if ($photo_path === '' || $photo_path === NULL) {
+                $photo_path = 'assets/user/default-avatar.jpg';
+            }
         }
 
         if ($request->hasFile('resume')) {
@@ -547,7 +516,6 @@ class UserController extends BaseController {
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
             'phone' => $request->input('phone'),
             'photo' => $photo_path,
             'resume' => $resume_path,
@@ -560,23 +528,69 @@ class UserController extends BaseController {
             'linkedin' => $request->input('linkedin'),
         ]);
 
-        $profile->update([
-            'role_id' => $request->input('role_id')
-        ]);
+        $data = array('photo' => $photo_path);
 
-        return $photo_path;
+        if ($request->has('position')) {
+            $position = $request->input('position');
+
+            $user_role = new Role();
+            $user_role->company_id = $company_id;
+            $user_role->name = $position;
+            $user_role->slug = strtolower($position) . '-' . $company_id;
+            $user_role->description = '';
+            $user_role->level = 1;
+            $user_role->save();
+
+            $profile->update([
+                'role_id' => $user_role->id
+            ]);
+
+            $data['position'] = $user_role->name;
+        }
+
+        if ($request->has('role_id')) {
+            $role_id = $request->input('role_id');
+            $profile->update([
+                'role_id' => $role_id
+            ]);
+
+            $user_role = Role::find($role_id);
+
+            $data['position'] = $user_role->name;
+        }
+
+        if ($request->has('authority')) {
+            $authority = $request->input('authority');
+
+            $employee_id = Auth::user('user')->user_id;
+
+            $my_profile = Profile::where('user_id', $employee_id)->where('company_id', $company_id)->first();
+
+            $profile_levels = ProfileLevel::where('profile_id', $profile->pluck('id'))->where('unique_id', $my_profile->id);
+
+            $profile_levels->update([
+                'profile_level' => $authority
+            ]);
+        }
+
+        return json_encode($data);
     }
 
     public function removeEmployeeFromCompany(Request $request) {
         $user_id = $request->input('user_id');
         $company_id = $request->input('company_id');
 
-//Delete profile for this company
         $profile = Profile::where('user_id', $user_id)->where('company_id', $company_id);
+
+        //Remove profile levels
+        $profile_levels = ProfileLevel::where('profile_id', $profile->pluck('id'))->orWhere('unique_id', $profile->pluck('id'));
+        $profile_levels->delete();
+
+        //Delete profile for this company
         $profile->delete();
 
-//Add a profile with company id 0 for this user 
-//if this user doesn't have any other profile with other companies
+        //Add a profile with company id 0 for this user 
+        //if this user doesn't have any other profile with other companies
         $profile_count = Profile::where('user_id', $user_id)->count();
 
         if ($profile_count === 0) {
@@ -588,8 +602,6 @@ class UserController extends BaseController {
             $personal_profile->role_id = $personal_user_role->id;
             $personal_profile->save();
         }
-
-
         return $user_id;
     }
 
@@ -676,15 +688,30 @@ class UserController extends BaseController {
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
+        $is_above = ProfileLevel::where('profile_level', 'above')
+                ->where('unique_id', $user_profile_role->id)
+                ->get();
+
         $assets = ['companies', 'real-time'];
 
         return view('user.employees', [
             'profiles' => $profiles,
             'countries' => $countries_option,
+            'is_above' => $is_above,
             'module_permissions' => $module_permissions,
             'assets' => $assets,
             'company_id' => $id,
         ]);
+    }
+
+    private function removeFromString($str, $item) {
+        $parts = explode(',', $str);
+
+        while (($i = array_search($item, $parts)) !== false) {
+            unset($parts[$i]);
+        }
+
+        return implode(',', $parts);
     }
 
 }

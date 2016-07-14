@@ -2,17 +2,17 @@
     <button>GO</button>
     <ul class="dl-menu">
         @if(Auth::check())
-        <?php 
-        $companies = \App\Helpers\Helper::getCompanyLinks(); 
+        <?php
+        $companies = \App\Helpers\Helper::getCompanyLinks();
         ?>
-        
+
         <li>
             <a href="#add_company" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Company</span></a>
         </li>
         <li class="divider"></li>
         @if(count($companies) > 0)
         @foreach($companies as $company)
-        <?php 
+        <?php
         $module_permissions = \App\Helpers\Helper::getPermissions($company->company->id);
         ?>
         <li class="dropdown">
@@ -41,21 +41,67 @@
                         </li>
                         @endif
                         <li class="divider"></li>
-                        <?php $project = $company->projects; ?>
-                        @if(count($project) > 0)
-                        @foreach($project as $val)
-                        <li class="{{ count($val->briefcase) > 0 ? 'dropdown' : '' }}">
-                            <a href="{{ url('project/' . $val->project_id ) }}">
-                                <i class="fa fa-briefcase" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-folder-open"></i>
+                                <span> My Projects </span>
                             </a>
+                            <ul class="dl-submenu">
+                                <li class="dl-back"><a href="#">back</a></li>
+                                <?php $my_projects = \App\Helpers\Helper::getMyProjects($company->company->id); ?>
+                                @if(count($my_projects) > 0)
+                                @foreach($my_projects as $val)
+                                <li class="{{ count($val->briefcase) > 0 ? 'dropdown' : '' }}">
+                                    <a href="{{ url('project/' . $val->project_id ) }}">
+                                        <i class="fa fa-briefcase" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
                         </li>
-                        @endforeach
-                        @endif
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-folder-open"></i>
+                                <span> Shared Projects </span>
+                            </a>
+                            <ul class="dl-submenu">
+                                <li class="dl-back"><a href="#">back</a></li>
+                                <?php $shared_projects = \App\Helpers\Helper::getSharedProjects($company->company->id); ?>
+                                @if(count($shared_projects) > 0)
+                                @foreach($shared_projects as $val)
+                                <li class="{{ count($val->briefcase) > 0 ? 'dropdown' : '' }}">
+                                    <a href="{{ url('project/' . $val->project_id ) }}">
+                                        <i class="fa fa-briefcase" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-folder-open"></i>
+                                <span> Subordinate Projects </span>
+                            </a>
+                            <ul class="dl-submenu">
+                                <li class="dl-back"><a href="#">back</a></li>
+                                <?php $subordinate_projects = \App\Helpers\Helper::getSubordinateProjects($company->company->id); ?>
+                                @if(count($subordinate_projects) > 0)
+                                @foreach($subordinate_projects as $val)
+                                <li class="{{ count($val->briefcase) > 0 ? 'dropdown' : '' }}">
+                                    <a href="{{ url('project/' . $val->project_id ) }}">
+                                        <i class="fa fa-briefcase" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
+                                    </a>
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 @endif
                 @if(Auth::check('user'))
-                <?php $jobs = $company->jobs; ?>
                 @if($module_permissions->where('slug','view.jobs')->count() === 1)
                 <li>
                     <a href="#">
@@ -70,28 +116,95 @@
                         </li>
                         @endif
                         <li class="divider"></li>
-                        @if(count($jobs) > 0)
-                        @foreach($jobs as $job)
-                        <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
-                            <a href="{{ url('job/' . $job->id) }}" class="dropdown-toggle">
-                                <i class="fa fa-clipboard" aria-hidden="true"></i> <span>{{ $job->title }}</span>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                <span>My Jobs</span>
                             </a>
-                            @if(count($job->applicants) > 0)
-                            <ul class="dropdown-menu">
-                                @foreach($job->applicants as $applicants)
-                                <li>
-                                    <a href="{{ url('a/' . $applicants->id) }}"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> {{ $applicants->name }}</a>
+                            <ul class="dl-submenu">
+                                <li class="dl-back"><a href="#">back</a></li>
+                                <?php $my_jobs = \App\Helpers\Helper::getMyJobs($company->company->id); ?>
+                                @if(count($my_jobs) > 0)
+                                @foreach($my_jobs as $job)
+                                <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
+                                    <a href="{{ url('job/' . $job->id) }}" class="dropdown-toggle">
+                                        <i class="fa fa-clipboard" aria-hidden="true"></i> <span>{{ $job->title }}</span>
+                                    </a>
+                                    @if(count($job->applicants) > 0)
+                                    <ul class="dropdown-menu">
+                                        @foreach($job->applicants as $applicants)
+                                        <li>
+                                            <a href="{{ url('a/' . $applicants->id) }}"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> {{ $applicants->name }}</a>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
                                 </li>
                                 @endforeach
+                                @endif
                             </ul>
                         </li>
-                        @endif
-                        @endforeach
-                        @endif
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                <span>Shared Jobs</span>
+                            </a>
+                            <ul class="dl-submenu">
+                                <li class="dl-back"><a href="#">back</a></li>
+                                <?php $shared_jobs = \App\Helpers\Helper::getSharedJobs($company->company->id); ?>
+                                @if(count($shared_jobs) > 0)
+                                @foreach($shared_jobs as $job)
+                                <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
+                                    <a href="{{ url('job/' . $job->id) }}" class="dropdown-toggle">
+                                        <i class="fa fa-clipboard" aria-hidden="true"></i> <span>{{ $job->title }}</span>
+                                    </a>
+                                    @if(count($job->applicants) > 0)
+                                    <ul class="dropdown-menu">
+                                        @foreach($job->applicants as $applicants)
+                                        <li>
+                                            <a href="{{ url('a/' . $applicants->id) }}"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> {{ $applicants->name }}</a>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                <span>Subordinate Jobs</span>
+                            </a>
+                            <ul class="dl-submenu">
+                                <li class="dl-back"><a href="#">back</a></li>
+                                <?php $subordinate_jobs = \App\Helpers\Helper::getSubordinateJobs($company->company->id); ?>
+                                @if(count($subordinate_jobs) > 0)
+                                @foreach($subordinate_jobs as $job)
+                                <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
+                                    <a href="{{ url('job/' . $job->id) }}" class="dropdown-toggle">
+                                        <i class="fa fa-clipboard" aria-hidden="true"></i> <span>{{ $job->title }}</span>
+                                    </a>
+                                    @if(count($job->applicants) > 0)
+                                    <ul class="dropdown-menu">
+                                        @foreach($job->applicants as $applicants)
+                                        <li>
+                                            <a href="{{ url('a/' . $applicants->id) }}"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> {{ $applicants->name }}</a>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
+                        </li>
+
                     </ul>
                 </li>
-                @endif
-                @endif
+                @endif <!--Permissions-->
+                @endif <!--Auth Check-->
                 @if($module_permissions->where('slug','view.tests')->count() === 1)
                 <li>
                     <a href="{{ url('quiz') }}">

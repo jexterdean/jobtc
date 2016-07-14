@@ -1233,7 +1233,7 @@ $('#employees').on('click', '#add-employee', function (e) {
                     var formData = new FormData();
                     formData.append('company_id', company_id);
                     formData.append('authority', authority);
-                    
+
                     if ($('#new-employee').hasClass('active') === true) {
                         var name = $(form).find('input[name="employee-name"]').val();
                         var email = $(form).find('input[name="employee-email"]').val();
@@ -1393,12 +1393,52 @@ $('#employees').on('click', '.edit-employee', function (e) {
                 cssClass: 'btn-edit btn-shadow',
                 action: function (dialog) {
 
-                    var form = $(".edit-employee-form")[0];
+                    var form = $(".edit-employee-form");
 
-                    var formData = new FormData(form);
+                    var formData = new FormData();
                     formData.append('user_id', user_id);
                     formData.append('company_id', company_id);
+                    
+                    var photo = $(form).find('input[name="photo"]')[0].files[0];
+                    var name = $(form).find('input[name="name"]').val();
+                    var email = $(form).find('input[name="email"]').val();
+                    var phone = $(form).find('input[name="phone"]').val();
+                    var skype = $(form).find('input[name="skype"]').val();
+                    var facebook = $(form).find('input[name="facebook"]').val();
+                    var linkedin = $(form).find('input[name="linkedin"]').val();
+                    var address_1 = $(form).find('input[name="address_1"]').val();
+                    var address_2 = $(form).find('input[name="address_2"]').val();
+                    var zipcode = $(form).find('input[name="zipcode"]').val();
+                    var authority = $(form).find('input[name="authority"]:checked').val();
+                    
+                    
+                    var country = $(form).find('select[name="country_id"] option:selected').text();
+                    var country_id = $(form).find('select[name="country_id"] option:selected').val();
 
+                    formData.append('name', name);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('skype', skype);
+                    formData.append('facebook', facebook);
+                    formData.append('linkedin', linkedin);
+                    formData.append('address_1', address_1);
+                    formData.append('address_2', address_2);
+                    formData.append('zipcode', zipcode);
+                    formData.append('country_id', country_id);
+                    formData.append('photo',photo);
+                    formData.append('authority',authority);
+                    console.log(authority);
+
+                    if ($('#new-position').hasClass('active') === true) {
+                        var position = $(form).find('input[name="position"]').val();
+                        formData.append('position', position);
+                    }
+
+                    if ($('#existing-position').hasClass('active') === true) {
+                        var role_id = $(form).find('select[name="role_id"] option:selected').val();
+                        formData.append('role_id', role_id);
+                    }
+                   
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
                     $button.spin();
@@ -1414,22 +1454,10 @@ $('#employees').on('click', '.edit-employee', function (e) {
 
                         },
                         success: function (data) {
-
-                            var name = $(form).find('input[name="name"]').val();
-                            var email = $(form).find('input[name="email"]').val();
-                            var phone = $(form).find('input[name="phone"]').val();
-                            var skype = $(form).find('input[name="skype"]').val();
-                            var facebook = $(form).find('input[name="facebook"]').val();
-                            var linkedin = $(form).find('input[name="linkedin"]').val();
-                            var address_1 = $(form).find('input[name="address_1"]').val();
-                            var address_2 = $(form).find('input[name="address_2"]').val();
-                            var zipcode = $(form).find('input[name="zipcode"]').val();
-
-                            var position = $(form).find('select[name="role_id"] option:selected').text();
-                            var country = $(form).find('select[name="country_id"] option:selected').text();
-
+                            var json_data = JSON.parse(data);    
+                                
                             //Update Employee information
-                            $('#employee-' + user_id).find('.employee-photo').attr('src', public_path + data);
+                            $('#employee-' + user_id).find('.employee-photo').attr('src',public_path + json_data.photo);
                             $('#employee-' + user_id).find('.name').children('a').text(name);
                             $('#employee-' + user_id).find('.email').children('a').text(email);
                             $('#employee-' + user_id).find('.phone').children('a').text(phone);
@@ -1440,7 +1468,7 @@ $('#employees').on('click', '.edit-employee', function (e) {
                             $('#employee-' + user_id).find('.facebook').children('span').text(facebook);
                             $('#employee-' + user_id).find('.linkedin').children('span').text(linkedin);
 
-                            $('#employee-' + user_id).find('.position').children('span').text(position);
+                            $('#employee-' + user_id).find('.position').children('span').text(json_data.position);
                             $('#employee-' + user_id).find('.country').children('span').text(country);
 
                             dialog.close();
@@ -1650,21 +1678,21 @@ $('.permission-list-group').on('click', '.position-permission', function (e) {
 });
 
 
- $( ".column" ).sortable({
-      connectWith: ".column",
-      handle: ".portlet-header",
-      cancel: ".portlet-toggle",
-      placeholder: "portlet-placeholder ui-corner-all"
-    });
- 
-    $( ".portlet" )
-      .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
-      .find( ".portlet-header" )
-        .addClass( "ui-widget-header ui-corner-all" )
-        .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
- 
-    $( ".portlet-toggle" ).click(function() {
-      var icon = $( this );
-      icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
-      icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
-    });
+$(".column").sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+});
+
+$(".portlet")
+        .addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+        .find(".portlet-header")
+        .addClass("ui-widget-header ui-corner-all")
+        .prepend("<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+
+$(".portlet-toggle").click(function () {
+    var icon = $(this);
+    icon.toggleClass("ui-icon-minusthick ui-icon-plusthick");
+    icon.closest(".portlet").find(".portlet-content").toggle();
+});
