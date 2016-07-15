@@ -48,7 +48,7 @@
                 <label>User's Authority is: </label>
                 <br />
                 <label class="radio-inline">
-                    @if($profile_levels->profile_level === 'above')
+                    @if($employee_is_above_count === 1)
                     <input id="" checked="checked" name="authority" type="radio" value="above">
                     @else
                     <input id=""  name="authority" type="radio" value="above">
@@ -59,7 +59,7 @@
                     </a>
                 </label>
                 <label class="radio-inline">
-                    @if($profile_levels->profile_level === 'equal')
+                    @if(isset($profile_levels) && $profile_levels->where('profile_level','equal')->count() === 1)
                     <input id="" checked="checked" name="authority" type="radio" value="equal">
                     @else
                     <input id=""  name="authority" type="radio" value="equal">
@@ -70,7 +70,7 @@
                     </a>
                 </label>
                 <label class="radio-inline">
-                    @if($profile_levels->profile_level === 'below')
+                    @if($employee_is_below_count === 1 || $logged_user_above_count === 1)
                     <input id="" checked="checked" name="authority" type="radio" value="below">
                     @else
                     <input id="" name="authority" type="radio" value="below">
