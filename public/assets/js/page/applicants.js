@@ -153,6 +153,7 @@ $('.edit-applicant').on('click', function (e) {
                     formData.append('applicant_id', applicant_id);
                     formData.append('company_id', company_id);
 
+                    var resume = $(form).find('input[name="resume"]')[0].files[0];
                     var photo = $(form).find('input[name="photo"]')[0].files[0];
                     var name = $(form).find('input[name="name"]').val();
                     var email = $(form).find('input[name="email"]').val();
@@ -166,6 +167,7 @@ $('.edit-applicant').on('click', function (e) {
                     formData.append('email', email);
                     formData.append('phone', phone);
                     formData.append('photo', photo);
+                    formData.append('resume',resume);
 
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
