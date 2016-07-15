@@ -25,19 +25,20 @@
                 <i class="fa fa-user" aria-hidden="true"></i>
                 Profile
             </a>
-            @if($module_permissions->where('slug','assign.positions')->count() === 1 && $is_above->where('profile_id',$profile->id)->count() === 0)
+            
+            @if($module_permissions->where('slug','assign.positions')->count() === 1)  
             <a href="#" class="btn-edit btn-shadow btn edit-employee-permissions">
                 <i class="fa fa-flag" aria-hidden="true"></i>
                 Permissions
             </a>
             @endif
-            @if($module_permissions->where('slug','edit.employees')->count() === 1 && $is_above->where('profile_id',$profile->id)->count() === 0)
+            @if($module_permissions->where('slug','edit.employees')->count() === 1)
             <a href="#" class="btn-edit btn-shadow btn edit-employee">
                 <i class="fa fa-pencil" aria-hidden="true"></i> 
                 Edit
             </a>
             @endif
-            @if($module_permissions->where('slug','remove.employees')->count() === 1 && $is_above->where('profile_id',$profile->id)->count() === 0)
+            @if($module_permissions->where('slug','remove.employees')->count() === 1)
             <a href="#" class="btn-delete btn-shadow btn remove-employee">
                 <i class="fa fa-times"></i> 
                 Remove

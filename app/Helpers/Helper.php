@@ -375,6 +375,7 @@ class Helper
         
         $profile_levels = ProfileLevel::where('profile_id',$profile->id)
                 ->where('profile_level','above')
+                ->orWhere('profile_level','equal')
                 ->get();
         
         $subordinate_user_id_list = [];

@@ -65,7 +65,7 @@
                     <input id=""  name="authority" type="radio" value="equal">
                     @endif
                     Equal You
-                    <a class="equal-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users equal to you can't see your projects and jobs unless you share them. You can't change any of their permissions. ">
+                    <a class="equal-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users equal you can see your projects and jobs. You can access and change all their projects, jobs and permissions.">
                         <i class="fa fa-question-circle" aria-hidden="true"></i>
                     </a>
                 </label>
@@ -76,7 +76,7 @@
                     <input id="" name="authority" type="radio" value="below">
                     @endif
                     Below You
-                    <a class="below-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users below you can't see your projects and jobs unless you share them. You can access and change all their projects, jobs and permissions.">
+                    <a class="below-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users below you can't see your projects and jobs unless you share them. You can change any of their permissions. ">
                         <i class="fa fa-question-circle" aria-hidden="true"></i>
                     </a>
                 </label>

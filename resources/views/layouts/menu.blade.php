@@ -5,7 +5,6 @@
         <?php
         $companies = \App\Helpers\Helper::getCompanyLinks();
         ?>
-
         <li>
             <a href="#add_company" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Company</span></a>
         </li>

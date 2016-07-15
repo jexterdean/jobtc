@@ -42,6 +42,7 @@
                             <text class="media-heading">{{$applicant->name}}&nbsp;<a href="{{$applicant->id}}" class="delete-applicant"><i class="fa fa-trash"></i></a></text>
                             @else
                             <text class="media-heading">{{$applicant->name}}</text>
+                            <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
                             @endif
                             <br />
                             <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
@@ -190,7 +191,7 @@
             </div>
             <div class="mini-space"></div>
             @endif
-            <div class="applicant-posting-info hidden-xs">
+            <div id="applicant-{{$applicant->id}}" class="applicant-posting-info hidden-xs">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="media">
@@ -223,14 +224,27 @@
                                 @endif
                                 </text>
                                 @else
-                                <text class="media-heading">{{$applicant->name}}</text>
+                                <text class="media-heading applicant-name"><span>{{$applicant->name}}</span></text>
+                                @if(Auth::user('applicant'))
+                                <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
                                 @endif
+                                @endif
+
                                 <br />
                                 <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
                                 <br />
                                 <a href="mailto:{{$applicant->email}}" class="applicant-email">{{$applicant->email}}</a>
                                 <br />
                                 <text>{{date_format(date_create($applicant->created_at),'M d,Y')}}</text>
+                                <br />
+                                @if(Auth::user('applicant'))
+                                <div class="applicant-options">
+                                    <a class="btn btn-edit btn-shadow bg-light-blue-gradient edit-applicant" href="#"><i class="fa fa-pencil" aria-hidden="true"></i>  Edit </a>
+                                    <a class="btn btn-edit btn-shadow bg-light-blue-gradient edit-applicant-password" href="#">Change Password</a>
+                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                </div>
+                                @endif
                                 <br />
                                 @if(Auth::user('user'))
                                 <textarea class="status-container">

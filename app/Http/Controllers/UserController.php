@@ -360,9 +360,7 @@ class UserController extends BaseController {
 
         $positions = Role::where('company_id', $company_id)->get();
 
-
         //Check if this employee is below you 
-
         $logged_user_above_count = ProfileLevel::where('profile_id', $my_profile->id)
                 ->where('profile_level', 'above')
                 ->where('unique_id', $profile->id)
@@ -372,12 +370,11 @@ class UserController extends BaseController {
                 ->where('profile_level', 'below')
                 ->where('unique_id', $my_profile->id)
                 ->count();
-        
+
         $employee_is_above_count = ProfileLevel::where('profile_id', $my_profile->id)
                 ->where('profile_level', 'below')
                 ->where('unique_id', $profile->id)
                 ->count();
-        
 
         if ($logged_user_above_count > 0 && $employee_is_below_count === 0) {
 
@@ -385,11 +382,10 @@ class UserController extends BaseController {
                     ->where('unique_id', $profile->id)
                     ->first();
         } elseif ($logged_user_above_count === 0 && $employee_is_below_count > 0) {
-            
+
             $profile_levels = ProfileLevel::where('profile_id', $profile->id)
                     ->where('unique_id', $my_profile->id)
                     ->first();
-            
         } else {
             $profile_levels = ProfileLevel::where('profile_id', $profile->id)
                     ->where('unique_id', $my_profile->id)
@@ -496,12 +492,30 @@ class UserController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        //Check if this employee is below you 
+        $logged_user_above_count = ProfileLevel::where('profile_id', $my_profile->id)
+                ->where('profile_level', 'above')
+                ->where('unique_id', $profile->id)
+                ->count();
 
+        $employee_is_below_count = ProfileLevel::where('profile_id', $profile->id)
+                ->where('profile_level', 'below')
+                ->where('unique_id', $my_profile->id)
+                ->count();
+
+        $employee_is_above_count = ProfileLevel::where('profile_id', $my_profile->id)
+                ->where('profile_level', 'below')
+                ->where('unique_id', $profile->id)
+                ->count();
+        
         return view('user.partials._newemployee', [
             'profile' => $profile,
             'countries' => $countries_option,
             'module_permissions' => $module_permissions,
-            'profile_levels' => $profile_levels,
+            'logged_user_above_count' => $logged_user_above_count,
+            'employee_is_below_count' => $employee_is_below_count,
+            'employee_is_above_count' => $employee_is_above_count,
             'company_id' => $company_id
         ]);
     }
@@ -589,18 +603,21 @@ class UserController extends BaseController {
             $my_profile = Profile::where('user_id', $employee_id)->where('company_id', $company_id)->first();
 
             $profile_levels = ProfileLevel::where('profile_id', $profile->pluck('id'))->where('unique_id', $my_profile->id);
+            
+            //If my profile id is equal to the employee id, Logged in user is editing his/her profile
+            if ($my_profile->id !== $profile->pluck('id')) {
+                if ($profile_levels->count() > 0) {
 
-            if ($profile_levels->count() > 0) {
-
-                $profile_levels->update([
-                    'profile_level' => $authority
-                ]);
-            } else {
-                $new_profile_level = new ProfileLevel();
-                $new_profile_level->profile_id = $profile->pluck('id');
-                $new_profile_level->profile_level = $authority;
-                $new_profile_level->unique_id = $my_profile->id;
-                $new_profile_level->save();
+                    $profile_levels->update([
+                        'profile_level' => $authority
+                    ]);
+                } else {
+                    $new_profile_level = new ProfileLevel();
+                    $new_profile_level->profile_id = $profile->pluck('id');
+                    $new_profile_level->profile_level = $authority;
+                    $new_profile_level->unique_id = $my_profile->id;
+                    $new_profile_level->save();
+                }
             }
         }
 
@@ -719,16 +736,11 @@ class UserController extends BaseController {
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
-        $is_above = ProfileLevel::where('profile_level', 'above')
-                ->where('unique_id', $user_profile_role->id)
-                ->get();
-
         $assets = ['companies', 'real-time'];
 
         return view('user.employees', [
             'profiles' => $profiles,
             'countries' => $countries_option,
-            'is_above' => $is_above,
             'module_permissions' => $module_permissions,
             'assets' => $assets,
             'company_id' => $id,
