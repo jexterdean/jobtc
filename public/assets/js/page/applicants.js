@@ -185,15 +185,16 @@ $('.edit-applicant').on('click', function (e) {
                         },
                         success: function (data) {
                             var json_data = JSON.parse(data);
-
+                            
                             //Update Employee information
+                            $('.applicant-posting-resume').attr('src','https://docs.google.com/viewer?url='+public_path + json_data.resume+'&embedded=true');
                             $('.add-comment-form').find('.employee-photo').attr('src', public_path + json_data.photo);
                             $('.add-comment-form').find('.media-heading').text(name);
                             $('#applicant-' + applicant_id).find('.applicant-photo').attr('src', public_path + json_data.photo);
                             $('#applicant-' + applicant_id).find('.applicant-name').text(name);
                             $('#applicant-' + applicant_id).find('.applicant-email').text(email);
                             $('#applicant-' + applicant_id).find('.applicant-phone').text(phone);
-
+                            
                             dialog.close();
 
                         },

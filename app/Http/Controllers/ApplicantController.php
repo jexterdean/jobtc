@@ -295,7 +295,7 @@ class ApplicantController extends Controller {
             'resume' => $resume_path
         ]);
 
-        $data = array('photo' => $photo_path);
+        $data = array('photo' => $photo_path,'resume' => $resume_path);
         return json_encode($data);
     }
 
