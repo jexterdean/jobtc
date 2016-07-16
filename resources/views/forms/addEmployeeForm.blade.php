@@ -56,14 +56,14 @@
                 <label class="radio-inline">
                     <input name="authority" type="radio" value="equal">
                     Equal You
-                    <a class="equal-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users equal to you can't see your projects and jobs unless you share them. You can't change any of their permissions. ">
+                    <a class="equal-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users equal you can see your projects and jobs. You can access and change all their projects, jobs and permissions.">
                         <i class="fa fa-question-circle" aria-hidden="true"></i>
                     </a>
                 </label>
                 <label class="radio-inline">
                     <input name="authority" type="radio" value="below" >
                     Below You
-                    <a class="below-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users below you can't see your projects and jobs unless you share them. You can access and change all their projects, jobs and permissions.">
+                    <a class="below-you-tooltip" href="#" data-toggle="tooltip" data-placement="top" title="Users below you can't see your projects and jobs unless you share them. You can change any of their permissions. ">
                         <i class="fa fa-question-circle" aria-hidden="true"></i>
                     </a>
                 </label>

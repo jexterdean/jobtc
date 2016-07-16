@@ -124,6 +124,160 @@ applicant_notes.on('change', function (evt) {
 
 });
 
+$('.edit-applicant').on('click', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var applicant_id = $(this).siblings('.applicant_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_applicant_form = public_path + 'a/' + applicant_id + '/edit';
+    var ajaxurl = public_path + 'a/' + applicant_id;
+
+    BootstrapDialog.show({
+        title: 'Edit Profile <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var form = $(".edit-applicant-form");
+
+                    var formData = new FormData();
+                    formData.append('_method', "PATCH");
+                    formData.append('applicant_id', applicant_id);
+                    formData.append('company_id', company_id);
+
+                    var resume = $(form).find('input[name="resume"]')[0].files[0];
+                    var photo = $(form).find('input[name="photo"]')[0].files[0];
+                    var name = $(form).find('input[name="name"]').val();
+                    var email = $(form).find('input[name="email"]').val();
+                    var phone = $(form).find('input[name="phone"]').val();
+
+                    console.log('name:' + name);
+                    console.log('email:' + email);
+                    console.log('phone:' + phone);
+
+                    formData.append('name', name);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('photo', photo);
+                    formData.append('resume',resume);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            var json_data = JSON.parse(data);
+                            
+                            //Update Employee information
+                            $('.applicant-posting-resume').attr('src','https://docs.google.com/viewer?url='+public_path + json_data.resume+'&embedded=true');
+                            $('.add-comment-form').find('.employee-photo').attr('src', public_path + json_data.photo);
+                            $('.add-comment-form').find('.media-heading').text(name);
+                            $('#applicant-' + applicant_id).find('.applicant-photo').attr('src', public_path + json_data.photo);
+                            $('#applicant-' + applicant_id).find('.applicant-name').text(name);
+                            $('#applicant-' + applicant_id).find('.applicant-email').text(email);
+                            $('#applicant-' + applicant_id).find('.applicant-phone').text(phone);
+                            
+                            dialog.close();
+
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': edit_applicant_form
+        },
+        onshown: function (ref) {
+            //initCkeditor(ref);
+        },
+        closable: false
+    });
+
+});
+
+$('.edit-applicant-password').on('click', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var applicant_id = $(this).siblings('.applicant_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_applicant_form = public_path + 'editApplicantPasswordForm';
+    var ajaxurl = public_path + 'editApplicantPassword';
+
+    BootstrapDialog.show({
+        title: 'Edit Password <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'save-password btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var form = $(".edit-applicant-password-form");
+
+                    var formData = new FormData();
+                    
+                    var new_password = $(form).find('input[name="new_password"]').val();
+                    formData.append('applicant_id', applicant_id);
+                    formData.append('company_id', company_id);
+                    formData.append('new_password', new_password);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': edit_applicant_form
+        },
+        onshown: function (ref) {
+            $('.save-password').attr('disabled',true);
+        },
+        closable: false
+    });
+});
 
 $('.hire').click(function () {
 

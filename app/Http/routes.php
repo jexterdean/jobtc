@@ -38,6 +38,9 @@ Route::post('register', 'UserController@register');
 /* For Applicant */
 Route::resource('a', 'ApplicantController');
 Route::get('a/{id}', ['as' => 'a', 'uses' => 'ApplicantController@show', 'https' => true]);
+Route::get('editApplicantPasswordForm','ApplicantController@editApplicantPasswordForm');
+Route::post('editApplicantPassword','ApplicantController@editApplicantPassword');
+Route::post('checkApplicantPassword', 'ApplicantController@checkApplicantPassword');
 Route::post('saveApplicantNotes', 'ApplicantController@saveApplicantNotes');
 Route::post('getApplicantQuizResults', 'ApplicantController@getApplicantQuizResults');
 
