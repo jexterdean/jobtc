@@ -269,8 +269,12 @@ class ApplicantController extends Controller {
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
-            $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
+            if (file_exists(public_path('assets/user/' . $photo->getClientOriginalName()))) {
+                $photo_path = 'assets/user/' . $photo->getClientOriginalName();
+            } else {
+                $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+                $photo_path = $photo_save->getPathname();
+            }
         } else {
             $photo_path = Applicant::where('id', $id)->pluck('photo');
 
@@ -281,8 +285,12 @@ class ApplicantController extends Controller {
 
         if ($request->hasFile('resume')) {
             $resume = $request->file('resume');
-            $resume_save = $resume->move('assets/user/resumes', $resume->getClientOriginalName());
-            $resume_path = $resume_save->getPathname();
+            if (file_exists(public_path('assets/user/' . $resume->getClientOriginalName()))) {
+                $resume_path = 'assets/user/' . $resume->getClientOriginalName();
+            } else {
+                $resume_save = $resume->move('assets/user/resumes', $resume->getClientOriginalName());
+                $resume_path = $resume_save->getPathname();
+            }
         } else {
             $resume_path = Applicant::where('id', $id)->pluck('resume');
         }
@@ -295,7 +303,7 @@ class ApplicantController extends Controller {
             'resume' => $resume_path
         ]);
 
-        $data = array('photo' => $photo_path,'resume' => $resume_path);
+        $data = array('photo' => $photo_path, 'resume' => $resume_path);
         return json_encode($data);
     }
 
@@ -312,28 +320,27 @@ class ApplicantController extends Controller {
     /* Edit Applicant Password Form */
 
     public function editApplicantPasswordForm(Request $request) {
-        
+
         $applicant_id = $request->input('applicant_id');
-        
-        return view('forms.editApplicantPasswordForm',[
+
+        return view('forms.editApplicantPasswordForm', [
             'applicant_id' => $applicant_id
         ]);
     }
 
     public function checkApplicantPassword(Request $request) {
-        
+
         $applicant_id = $request->input('applicant_id');
         $password = $request->input('current_password');
 
         $applicant = Applicant::where('id', $applicant_id)->first();
 
         if (Hash::check($password, $applicant->password)) {
-            
+
             return "true";
         } else {
             return "false";
         }
-        
     }
 
     public function editApplicantPassword(Request $request) {
