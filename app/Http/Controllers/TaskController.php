@@ -451,7 +451,7 @@ class TaskController extends BaseController {
         $file_name = $request->file('upload');
 
         if (file_exists(public_path('assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()))) {
-            $uploaded_file_name = 'assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName();
+            $uploaded_file_name = $file_name->getClientOriginalName();
         } else {
             $file_name->move(
                     'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
