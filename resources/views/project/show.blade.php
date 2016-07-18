@@ -84,12 +84,12 @@
                 <div class="modal fade" id="edit_task_{{ $val->task_id }}" role="basic" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                        @include('task/edit', ['task'=> $val] )
+                            @include('task/edit', ['task'=> $val] )
                         </div>
                     </div>
                 </div>
                 <div id="collapse-container-{{ $val->task_id }}" class="panel task-list">
-                    <div class="panel-heading task-header" data-target="#collapse-{{ $val->task_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                    <div id="task-{{ $val->task_id }}" class="panel-heading task-header toggle-briefcase" data-target="#collapse-{{ $val->task_id }}" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                         <div class="row">
                             <div class="col-xs-6">
                                 <h4 class="panel-title task-list-header">{{ $val->task_title }}</h4>
@@ -101,11 +101,14 @@
                                 </div>
                             </div>
                         </div>
+                        <input class="project_id" type="hidden" value="{{$project->company_id}}"/>
+                        <input class="task_id" type="hidden" value="{{$val->task_id}}"/>
+                        <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
                     </div>
                     <div id="collapse-{{ $val->task_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                         <div class="panel-body">
                             <div class="panel-content">
-                                <div class="load-task-assign" data-url="{{ url('task/' . $val->task_id ) }}" style="margin-top: -10px;"></div>
+                                <div id="load-task-assign-{{$val->task_id}}" class="load-task-assign" style="margin-top: -10px;"></div>
                             </div>
                         </div>
                     </div>
@@ -131,61 +134,61 @@
                             <h4 class="panel-title">Project Details<span class="pull-right">{{ $project->ref_no }}</span></h4>
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                        <div class="panel-body">
-                            <div class="panel-content">
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>Title:</strong></td>
-                                            <td>{{ $project->project_title }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Description:</strong></td>
-                                            <td>{{ $project->project_description }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Account:</strong></td>
-                                            <td>{{ $project->account }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Company:</strong></td>
-                                            <td>{{ $companies->where('id',$project->company_id)->first()->name}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Project Type:</strong></td>
-                                            <td>{{ $project->project_type }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Start & Deadline:</strong></td>
-                                            <td>
-                                                {{ date("d M Y, h:ia", strtotime($project->start_date)) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Deadline:</strong></td>
-                                            <td>
-                                                {{ date("d M Y, h:ia", strtotime($project->deadline)) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Currency & Rate:</strong></td>
-                                            <td>
-                                                {{ $project->currency }}
-                                                {{ $project->rate_value }}
-                                                {{ $project->rate_type }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <a href="{{ route('project.destroy',$project->project_id) }}" class="alert_delete"><i class='fa-2x fa fa-trash-o'></i></a>&nbsp;&nbsp;&nbsp;
-                                        <a href="{{ route('project.edit',$project->project_id) }}" class="show_edit_form" data-toggle='modal' data-target='#ajax'><i class='fa-2x fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;
+                            <div class="panel-body">
+                                <div class="panel-content">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Title:</strong></td>
+                                                <td>{{ $project->project_title }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Description:</strong></td>
+                                                <td>{{ $project->project_description }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Account:</strong></td>
+                                                <td>{{ $project->account }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Company:</strong></td>
+                                                <td>{{ $companies->where('id',$project->company_id)->first()->name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Project Type:</strong></td>
+                                                <td>{{ $project->project_type }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Start & Deadline:</strong></td>
+                                                <td>
+                                                    {{ date("d M Y, h:ia", strtotime($project->start_date)) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Deadline:</strong></td>
+                                                <td>
+                                                    {{ date("d M Y, h:ia", strtotime($project->deadline)) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Currency & Rate:</strong></td>
+                                                <td>
+                                                    {{ $project->currency }}
+                                                    {{ $project->rate_value }}
+                                                    {{ $project->rate_type }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <a href="{{ route('project.destroy',$project->project_id) }}" class="alert_delete"><i class='fa-2x fa fa-trash-o'></i></a>&nbsp;&nbsp;&nbsp;
+                                            <a href="{{ route('project.edit',$project->project_id) }}" class="show_edit_form" data-toggle='modal' data-target='#ajax'><i class='fa-2x fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </div><!--End Project Details-->
                 @include('common.employeeList')

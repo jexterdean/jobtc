@@ -160,7 +160,8 @@ class TaskController extends BaseController {
             'percentage' => number_format($percentage, 0),
             'links' => $links,
             'categories' => $categories,
-            'module_permissions' => $module_permissions
+            'module_permissions' => $module_permissions,
+            'company_id' => $company_id
         ]);
     }
 
@@ -538,13 +539,35 @@ class TaskController extends BaseController {
         return "true";
     }
 
-    public function getTaskChecklistItem(Request $request) {
-        $task_check_list_id = $request->input('task_check_list_id');
+    public function getTaskChecklistItem(Request $request, $task_check_list_id, $company_id) {
+        //$task_check_list_id = $request->input('task_check_list_id');
 
-        $data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
+        //$data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
 
+        //return json_encode($data);
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $list_item = TaskChecklist::where('id',$task_check_list_id)->first();
+       
+        $permissions_list = [];
 
-        return json_encode($data);
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        return view('task.partials._taskchecklistitem',[
+            'list_item' => $list_item,
+            'module_permissions' => $module_permissions
+        ]);
+        
     }
 
     public function saveSpreadsheet(Request $request) {
@@ -633,6 +656,35 @@ class TaskController extends BaseController {
         return "true";
     }
 
+    public function getTaskListItem(Request $request, $id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        
+        $list_item = TaskChecklist::where('id',$id)->first();
+        
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        return view('task._partials._taskchecklistitem',[
+            'list_item' => $list_item,
+            'module_permissions' => $module_permissions
+        ]);
+    }
 }
 
 ?>

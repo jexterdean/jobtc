@@ -195,8 +195,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getEmployees/{company_id}/{job_id}', 'CompanyController@getEmployees');
     /* For Assign Projects Load on Demand */
     Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}', 'CompanyController@getCompanyEmployeesForProject');
-
-
+    
     /**
      * CSS Reference
      */
@@ -268,7 +267,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('saveTaskCheckListHeader', 'TaskController@saveTaskCheckListHeader');
     Route::post('saveTaskCheckList', 'TaskController@saveTaskCheckList');
     Route::post('cancelAddNewTask', 'TaskController@cancelAddNewTask');
-    Route::post('getTaskChecklistItem', 'TaskController@getTaskChecklistItem');
+    Route::get('getTaskChecklistItem/{task_check_list_id}/{company_id}', 'TaskController@getTaskChecklistItem');
     Route::post('autoSaveEditChecklist', 'TaskController@autoSaveEditChecklist');
 
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');

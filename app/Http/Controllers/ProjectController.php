@@ -195,7 +195,7 @@ class ProjectController extends BaseController {
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
         
-        $assets = ['datepicker', 'real-time'];
+        $assets = ['projects','datepicker','real-time'];
 
         return view('project.show', [
             'project' => $project,

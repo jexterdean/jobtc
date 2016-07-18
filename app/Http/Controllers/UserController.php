@@ -297,14 +297,6 @@ class UserController extends BaseController {
         $user->password = bcrypt($request->input('password'));
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
-        $user->photo = '';
-        $user->address_1 = $request->input('address_1');
-        $user->address_2 = $request->input('address_2');
-        $user->zipcode = $request->input('zipcode');
-        $user->country_id = $request->input('country_id');
-        $user->skype = '';
-        $user->facebook = '';
-        $user->linkedin = '';
         $user->ticketit_admin = 0;
         $user->ticketit_agent = 0;
         $user->user_status = 'Active';
