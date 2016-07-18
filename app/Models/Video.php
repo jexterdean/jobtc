@@ -23,4 +23,8 @@ class Video extends Model
     public function video_tags() {
         return $this->hasOne('App\Models\VideoTag');
     }
+    
+    public function tags() {
+        return $this->hasOne('App\Models\Tag','unique_id');
+    }
 }

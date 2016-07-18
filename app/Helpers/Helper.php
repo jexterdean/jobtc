@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use App\Models\Company;
 use App\Models\Profile;
+use App\Models\ProfileLevel;
 use App\Models\Project;
 use App\Models\ShareJob;
 use App\Models\ShareJobCompanyPermission;
@@ -14,6 +15,9 @@ use App\Models\Job;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
+use App\Models\Permission;
+use App\Models\PermissionRole;
+use App\Models\PermissionUser;
 use Illuminate\Http\Request;
 
 class Helper
@@ -132,8 +136,66 @@ class Helper
         $user_id = Auth::user('user_id')->user_id;
         
         $companies = Profile::with('company')->where('user_id',$user_id)->get();
-        
-        //$companies = Company::orderBy('name', 'asc')->get();
+
+        if(count($companies) > 0){
+            foreach($companies as $company){
+
+                $job_list_ids = [];
+                $company_list_ids = [];
+                $project_id_list = [];
+
+                $where = ['user_id'=>$user_id,'company_id' => $company->company->id];
+                //Get owned projects
+                $owned_projects = Project::where($where)->get();
+
+                //Get Team Member projects
+                $team_members = TeamMember::where($where)->get();
+
+                $team_projects = TeamProject::all();
+
+                foreach($owned_projects as $owned_project) {
+                    array_push($project_id_list, $owned_project->project_id);
+                }
+
+                //Use the team id to get the projects the users are involved with
+                foreach($team_members as $member) {
+                    foreach($team_projects as $project) {
+                        if ($member->team_id === $project->team_id) {
+                            array_push($project_id_list, $project->project_id);
+                        }
+                    }
+                }
+
+                $company->projects = Project::whereIn('project_id',$project_id_list)->get();
+
+                //Get Jobs under a certain company
+                array_push($company_list_ids,$company->company->id);
+
+                $owned_jobs = Job::where($where)->get();
+
+                $shared_jobs = ShareJob::where('user_id',$user_id)->get();
+
+                $shared_jobs_companies = ShareJobCompanyPermission::whereIn('company_id',$company_list_ids)->where($where)->get();
+
+                foreach($owned_jobs as $owned_job) {
+                    array_push($job_list_ids,$owned_job->id);
+                }
+
+                foreach($shared_jobs as $shared_job) {
+                    array_push($job_list_ids,$shared_job->job_id);
+                }
+
+                foreach($shared_jobs_companies as $shared_jobs_company) {
+                    array_push($job_list_ids,$shared_jobs_company->job_id);
+                }
+
+                $company->jobs = Job::whereIn('id',$job_list_ids)->get();
+
+                foreach($company->jobs as $job){
+                    $job->applicants = Applicant::where('job_id',$job->id)->get();
+                }
+            }
+        }
 
         return $companies;
     }
@@ -177,6 +239,161 @@ class Helper
         }
 
         return $jobs;
+        
+    }
+    
+    public static function getPermissions($company_id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+ 
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $user_role) {
+            array_push($permissions_list, $user_role->permission_id);
+        }
+        
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        return $module_permissions;
+    }
+    
+    public static function getMyProjects($company_id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $my_projects = Project::where('company_id',$company_id)
+                ->where('user_id',$user_id)
+                ->get();
+        
+        return $my_projects;
+    } 
+    
+    public static function getSharedProjects($company_id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->get();
+        
+        $team_projects = TeamProject::all();
+        
+        $project_id_list = [];
+        
+         //Use the team id to get the projects the users are involved with
+        foreach ($team_members as $member) {
+            foreach ($team_projects as $project) {
+                if ($member->team_id === $project->team_id) {
+                    array_push($project_id_list, $project->project_id);
+                }
+            }
+        }
+        
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                ->get();
+        
+        return $shared_projects;
+    } 
+    
+    public static function getSubordinateProjects($company_id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $profile = Profile::where('company_id',$company_id)
+                ->where('user_id',$user_id)->first();
+        
+        $profile_levels = ProfileLevel::where('profile_id',$profile->id)
+                ->where('profile_level','above')
+                ->get();
+        
+        $subordinate_user_id_list = [];
+        $subordinate_profile_id_list = [];
+        
+        foreach($profile_levels as $profile_level) {
+            array_push($subordinate_profile_id_list,$profile_level->unique_id);
+        }
+        
+        $subordinate_profiles = Profile::whereIn('id',$subordinate_profile_id_list)->where('company_id',$company_id)->get(); 
+        
+        foreach($subordinate_profiles as $subordinate_profile) {
+            array_push($subordinate_user_id_list,$subordinate_profile->user_id);
+        }
+        
+        $subordinate_projects = Project::whereIn('user_id',$subordinate_user_id_list)->where('company_id',$company_id)->get();
+        
+        return $subordinate_projects;
+    }
+    
+    
+    public static function getMyJobs($company_id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $my_jobs = Job::where('user_id',$user_id)
+                ->where('company_id',$company_id)
+                ->get();
+        
+        return $my_jobs;
+    }
+    
+    public static function getSharedJobs($company_id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $job_id_list = [];
+        
+        $shared_jobs_list = ShareJob::where('user_id',$user_id)->get();
+        
+        foreach($shared_jobs_list as $shared_job) {
+            array_push($job_id_list,$shared_job->job_id);
+        }
+        
+        $shared_jobs = Job::whereIn('id',$job_id_list)->where('company_id',$company_id)->get();
+        
+        return $shared_jobs;
+    }
+    
+    public static function getSubordinateJobs($company_id) {
+          
+        $user_id = Auth::user('user')->user_id;
+        
+        $profile = Profile::where('company_id',$company_id)
+                ->where('user_id',$user_id)->first();
+        
+        $profile_levels = ProfileLevel::where('profile_id',$profile->id)
+                ->where('profile_level','above')
+                ->orWhere('profile_level','equal')
+                ->get();
+        
+        $subordinate_user_id_list = [];
+        $subordinate_profile_id_list = [];
+        
+        foreach($profile_levels as $profile_level) {
+            array_push($subordinate_profile_id_list,$profile_level->unique_id);
+        }
+        
+        $subordinate_profiles = Profile::whereIn('id',$subordinate_profile_id_list)->where('company_id',$company_id)->get(); 
+        
+        foreach($subordinate_profiles as $subordinate_profile) {
+            array_push($subordinate_user_id_list,$subordinate_profile->user_id);
+        }
+        
+        $subordinate_jobs = Job::whereIn('user_id',$subordinate_user_id_list)->where('company_id',$company_id)->get();
+        
+        return $subordinate_jobs;
         
     }
     

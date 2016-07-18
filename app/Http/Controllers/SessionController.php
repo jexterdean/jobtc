@@ -71,18 +71,12 @@ class SessionController extends Controller {
     public function create(Request $request) {
 
         //Get the authority level for the user
-
-
         if (Auth::check('user') || Auth::viaRemember('user')) {
 
             $user = User::where('user_id', Auth::user('user')->user_id)->first();
             $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
 
-            if ($user->level() === 1) {
-                return redirect()->route('dashboard');
-            } else {
-                return redirect()->route('company', [$profile->company_id]);
-            }
+            return redirect()->route('company', [$profile->company_id]);
         } elseif (Auth::check('applicant') || Auth::viaRemember('applicant')) {
             return redirect()->route('a', [Auth::user('applicant')->id]);
         }
@@ -126,7 +120,6 @@ class SessionController extends Controller {
                 $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
 
                 return redirect()->route('company', [$profile->company_id]);
-                
             } else if (Auth::attempt("applicant", ['email' => $email, 'password' => $pass], $remember)) {
 
                 $applicant = Applicant::where('email', $email)->first();
@@ -204,10 +197,14 @@ class SessionController extends Controller {
     public function authorizeUsersAndApplicants(Request $request) {
         if (Auth::check("user") || Auth::viaRemember("user")) {
             // Authentication passed...
-            return redirect()->intended('dashboard');
+            $user = User::where('user_id', Auth::user('user')->user_id)->first();
+            $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+
+            return redirect()->route('company', [$profile->company_id]);
         } else if (Auth::check("applicant") || Auth::viaRemember("applicant")) {
-            //return redirect()->route('a', [Auth::user("applicant")->id]);   
-            return redirect()->intended('dashboard');
+           
+            return redirect()->route('a', [Auth::user("applicant")->id]);   
+            //return redirect()->intended('dashboard');
         } else {
             return redirect()->intended('dashboard');
         }

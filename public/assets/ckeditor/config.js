@@ -7,6 +7,8 @@ CKEDITOR.editorConfig = function (config) {
     // Define changes to default configuration here. For example:
     // config.language = 'fr';
     // config.uiColor = '#AADC6E';
+    config.toolbarCanCollapse = true;
+
     config.toolbar = [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },
 	{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
@@ -28,7 +30,7 @@ CKEDITOR.editorConfig = function (config) {
     ];
     
     
-    config.extraPlugins = 'autocorrect,ckwebspeech,uploadimage';
+    config.extraPlugins = 'ckwebspeech,uploadimage';
     
     config.saveUrl = '/saveImage';
     //config.saveUrl = 'http://localhost:8000/saveImage';
@@ -57,7 +59,7 @@ CKEDITOR.editorConfig = function (config) {
     
     
     //Css changes
-    //config.height = '200px';
+    config.height = '200px';
 
     //config.autoParagraph = false;
     config.removePlugins = 'autosave';

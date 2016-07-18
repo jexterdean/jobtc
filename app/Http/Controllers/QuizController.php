@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use App\Models\TestPerApplicant;
+use App\Models\TestPerJob;
+use App\Models\Applicant;
 use \View;
 use \DB;
 use \Validator;
@@ -15,9 +18,12 @@ use App\Models\TestPersonal;
 use App\Models\TestCommunity;
 use App\Models\Question;
 use App\Models\TestResultModel;
+use App\Models\TestSlider;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Elasticsearch\ClientBuilder as ES;
+use PhanAn\Remote\Remote;
 
 class QuizController extends BaseController {
 
@@ -87,11 +93,16 @@ class QuizController extends BaseController {
                         fp_test_result.unique_id = ' . Auth::user('user')->user_id . '
                 ) as review_only,
                 fp_test_personal.id as version_id,
-                fp_test_personal.version
+                fp_test_personal.version,
+                fp_test_personal.order,
+                fp_test_personal.parent_test_id,
+                fp_user.name
             '))
             ->leftJoin('test', 'test.id', '=', 'test_personal.test_id')
+            ->leftJoin('user', 'user.user_id', '=', 'test.user_id')
             ->orderBy('test_personal.order', 'asc')
             ->whereNotNull('test_personal.test_id')
+            ->whereNotNull('test.id')
             ->where('test_personal.user_id', '=', Auth::user('user')->user_id)
             ->get();
         if (count($test) > 0) {
@@ -130,7 +141,21 @@ class QuizController extends BaseController {
         }
         $data['test'] = $test;
 
-        $test_community = DB::table('test_community')
+        $data['test_community'] = $this->getTestCommunity([], $result);
+
+        //get shared files
+        $file_dir = public_path() . '/assets/shared-files';
+        $files = is_dir($file_dir) ? \File::allFiles($file_dir) : array();
+        $data['files'] = $files;
+
+        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
+        $data['triggerTest'] = $trigger;
+
+        $data['test_limit'] = 6;
+    }
+
+    private function getTestCommunity($id = [], $result = []){
+        $query = DB::table('test_community')
             ->select(DB::raw('
                 fp_test.*,
                 (
@@ -141,12 +166,21 @@ class QuizController extends BaseController {
                         fp_test_result.unique_id = ' . Auth::user('user')->user_id . '
                 ) as review_only,
                 fp_test_community.id as version_id,
-                fp_test_community.version
+                fp_test_community.version,
+                fp_test_community.order,
+                fp_test_community.parent_test_id,
+                fp_user.name
             '))
             ->leftJoin('test', 'test.id', '=', 'test_community.test_id')
+            ->leftJoin('user', 'user.user_id', '=', 'test.user_id')
+            ->orderByRaw('fp_test_community.order = 0')
             ->orderBy('test_community.order', 'asc')
             ->whereNotNull('test_community.test_id')
-            ->get();
+            ->whereNotNull('test.id');
+        if(count($id) > 0){
+            $query->whereIn('test_community.id', $id);
+        }
+        $test_community = $query->get();
         if (count($test_community) > 0) {
             foreach ($test_community as $t) {
                 $t->total_time = 0;
@@ -164,7 +198,8 @@ class QuizController extends BaseController {
                 }
                 $t->question = $questions;
 
-                $score = 0;
+                //comment not used for now
+                /*$score = 0;
                 $taker_count = 0;
                 if (count($result) > 0) {
                     foreach ($result as $r) {
@@ -178,18 +213,10 @@ class QuizController extends BaseController {
                     }
                 }
                 $t->average = $score > 0 ? number_format($score / $taker_count) : $score;
-                $t->average .= '%';
+                $t->average .= '%';*/
             }
         }
-        $data['test_community'] = $test_community;
-
-        //get shared files
-        $file_dir = public_path() . '/assets/shared-files';
-        $files = is_dir($file_dir) ? \File::allFiles($file_dir) : array();
-        $data['files'] = $files;
-
-        $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : '';
-        $data['triggerTest'] = $trigger;
+        return $test_community;
     }
 
     /**
@@ -290,6 +317,8 @@ class QuizController extends BaseController {
                     $personal = new TestPersonal();
                     $personal->user_id = Auth::user()->user_id;
                     $personal->test_id = $test->id;
+                    $personal->order = 1;
+                    $personal->parent_test_id = $test->id;
                     $personal->save();
                 }
 
@@ -349,11 +378,15 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
+                $question->note = Input::get('note');
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
                 if(Input::get('max_point')) {
                     $question->max_point = Input::get('max_point');
+                }
+                if(Input::get('question_tags')) {
+                    $question->question_tags = Input::get('question_tags');
                 }
                 $question->save();
 
@@ -378,31 +411,43 @@ class QuizController extends BaseController {
                         ->first();
 
                 $r = $q->question_type_id == 3 ?
-                        0 :
-                        (
-                        $q->question_type_id == 1 ?
-                                ($q->question_answer == Input::get('answer') ? 1 : 0) :
-                                (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0)
-                        );
+                    0 :
+                    (
+                    $q->question_type_id == 1 ?
+                        ($q->question_answer == Input::get('answer') ? 1 : 0) :
+                        (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0)
+                    );
 
-                $result = new TestResultModel();
-                $result->test_id = $id;
-                $result->question_id = Input::get('question_id');
-                //$result->user_id = Auth::user()->user_id;
+                $unique_id = Auth::check('user') ?
+                    Auth::user('user')->user_id :
+                    (Auth::check('applicant') ? Auth::user('applicant')->id : '');
 
-                if (Auth::check('user')) {
-                    $result->unique_id = Auth::user('user')->user_id;
-                    $result->belongs_to = 'employee';
+                $resultExist = $unique_id ?
+                    TestResultModel::where('question_id', Input::get('question_id'))
+                    ->where('unique_id', $unique_id)
+                    ->count() > 1 : 1;
+                if(!$resultExist) {
+                    $result = new TestResultModel();
+                    $result->test_id = $id;
+                    $result->question_id = Input::get('question_id');
+
+                    if (Auth::check('user')) {
+                        $result->unique_id = Auth::user('user')->user_id;
+                        $result->belongs_to = 'employee';
+                    }
+
+                    if (Auth::check('applicant')) {
+                        $result->unique_id = Auth::user('applicant')->id;
+                        $result->belongs_to = 'applicant';
+                    }
+
+                    $result->answer = Input::get('answer');
+                    if(Input::get('record_id')) {
+                        $result->record_id = Input::get('record_id');
+                    }
+                    $result->result = $r;
+                    $result->save();
                 }
-
-                if (Auth::check('applicant')) {
-                    $result->unique_id = Auth::user('applicant')->id;
-                    $result->belongs_to = 'applicant';
-                }
-
-                $result->answer = Input::get('answer');
-                $result->result = $r;
-                $result->save();
             }
 
             DB::commit();
@@ -470,10 +515,13 @@ class QuizController extends BaseController {
                     fp_test_result.id as result_id,
                     fp_test_result.answer as result_answer,
                     fp_test_result.result,
+                    fp_test_result.record_id,
                     fp_test_result.points as result_points'
                 ))
                 ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
-                ->where('question.test_id', '=', $id)
+                ->where('test_result.test_id', '=', $id)
+                ->where('test_result.unique_id', '=', Auth::user()->user_id)
+                ->whereNotNull('question.id')
                 ->orderBy('question.order', 'ASC')
                 ->get();
         }
@@ -481,14 +529,14 @@ class QuizController extends BaseController {
             $questions_info = DB::table('question')
                 ->where('test_id', '=', $id)
                 ->whereRaw('
-                (
-                    SELECT count(fp_test_result.id)
-                    FROM fp_test_result
-                    WHERE
-                        fp_test_result.question_id = fp_question.id AND
-                        fp_test_result.unique_id = ' . Auth::user()->user_id . '
-                ) = 0
-            ')
+                    (
+                        SELECT count(fp_test_result.id)
+                        FROM fp_test_result
+                        WHERE
+                            fp_test_result.question_id = fp_question.id AND
+                            fp_test_result.unique_id = ' . Auth::user()->user_id . '
+                    ) = 0
+                ')
                 ->orderBy('order', 'ASC')
                 ->get();
         }
@@ -586,7 +634,6 @@ class QuizController extends BaseController {
         try {
             if ($page == "test") {
                 $test = Test::find($id);
-                $test->user_id = Auth::user()->user_id;
                 $test->title = Input::get('title');
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
@@ -597,6 +644,22 @@ class QuizController extends BaseController {
                 $test->default_tags = Input::get('default_tags');
                 $test->default_points = Input::get('default_points');
                 $test->save();
+
+                //update to elastic search
+                $community = TestCommunity::where('test_id', '=', $test->id)->get();
+                if(count($community) > 0){
+                    foreach($community as $v){
+                        $community = (Object)$test->getOriginal();
+                        $community->author_id = $community->user_id;
+                        unset($community->id);
+                        unset($community->user_id);
+                        unset($community->version);
+                        unset($community->created_at);
+                        unset($community->updated_at);
+                        unset($community->order);
+                        $this->quizElasticSearch($v->id, 2, (array)$community);
+                    }
+                }
 
                 if (Input::file('completion_image_upload')) {
                     $shared_dir = public_path() . '/assets/shared-files/image/';
@@ -652,13 +715,13 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
+                $question->note = Input::get('note');
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
                 if(Input::get('max_point')) {
                     $question->max_point = Input::get('max_point');
                 }
-                $question->question_tags = Input::get('question_tags');
                 if (Input::get('clear_photo')) {
                     $photo_dir = public_path() . '/assets/img/question/';
                     $photo_dir .= $question->question_photo;
@@ -737,6 +800,11 @@ class QuizController extends BaseController {
                     $test = TestCommunity::find($id);
                     $test->order = $order;
                     $test->save();
+
+                    //update to elastic search
+                    $this->quizElasticSearch($id, 2, [
+                        'order' => $order
+                    ]);
                 }
 
                 $order ++;
@@ -778,12 +846,16 @@ class QuizController extends BaseController {
     public function destroy($id) {
         $t = isset($_GET['t']) ? $_GET['t'] : 1;
         if ($t == 1) {
-            DB::table('test')
+            $type = isset($_GET['type']) ? $_GET['type'] : '';
+            $table = $type == 2 ? 'test_community' : 'test_personal';
+            DB::table($table)
                 ->where('id', '=', $id)
                 ->delete();
-            DB::table('question')
-                ->where('test_id', '=', $id)
-                ->delete();
+
+            if($type == 2) {
+                //delete to elastic search
+                $this->quizElasticSearch($id, 3);
+            }
         }
         else if ($t == 2) {
             DB::table('question')
@@ -965,21 +1037,414 @@ class QuizController extends BaseController {
         $table = Input::get('type') == 1 ? 'test_personal' : 'test_community';
         $thisTest = DB::table($table)
             ->where('user_id', '=', Auth::user()->user_id)
-            ->where('test_id', '=', Input::get('id'))
+            ->where('parent_test_id', '=', Input::get('parent_test_id'))
             ->orderBy('version', 'DESC')
             ->first();
 
+        //update order of other test before insert
+        DB::table($table)
+            ->where('order', '>=', Input::get('order'))
+            ->increment('order');
+
+        $test_id = Input::get('id');
+
+        //copy as new test
+        $question_new = array();
+        if(Input::get('type') == 1){
+            $personal = Test::find(Input::get('id'));
+            $newPersonal = $personal->replicate();
+            $newPersonal->user_id = Auth::user()->user_id;
+            $newPersonal->save();
+            $test_id = $newPersonal->id;
+
+            $question = Question::where('test_id', '=', Input::get('id'))
+                ->get();
+            if(count($question) > 0){
+                foreach($question as $q){
+                    $newQuestion = $q->replicate();
+                    $newQuestion->test_id = $test_id;
+                    $newQuestion->save();
+
+                    $question_new[$q->id] = $newQuestion->id;
+                }
+            }
+        }
+
         $test = Input::get('type') == 1 ? new TestPersonal() : new TestCommunity();
         $test->user_id = Auth::user()->user_id;
-        $test->test_id = Input::get('id');
+        $test->test_id = $test_id;
         $test->version = $thisTest ? $thisTest->version + 1 : 1;
+        $test->order = Input::get('order') ? Input::get('order') : 1;
+        $test->parent_test_id = Input::get('parent_test_id');
         $test->save();
+
+        if(Input::get('type') == 2){
+            //index to elastic search
+            $community = $test->getOriginal();
+            $community += $test->test->getOriginal();
+            $community = (Object)$community;
+            $this->quizElasticSearch($test->id, 1, $community);
+        }
 
         $info = (object)array(
             'version_id' => $test->id,
-            'version' => $test->version
+            'version' => $test->version,
+            'order' => $test->order,
+            'question' => $question_new
         );
         header("Content-type: application/json");
         return response()->json($info);
+    }
+
+    public function quizSearch(Request $request){
+        $validation = Validator::make($request->all(), [
+            'search' => 'required'
+        ]);
+
+        $r = array();
+        if ($validation->fails()) {
+            $r = $this->getTestCommunity();
+        }
+        else {
+            $ids = [];
+            $search = Input::get('search');
+            $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+
+            $body = [
+                "sort" => [
+                    ["order" => ["order" => "asc"]],
+                    ["id" => ["order" => "asc"]]
+                ]
+            ];
+
+            $matches = [
+                ['match' => ['title' => $search]]
+            ];
+            preg_match('!\d+!', $search, $m);
+            $version = array_key_exists(0, $m) ? $m[0] : '';
+            if ($version) {
+                $matches[] = ['match' => ['version' => $version]];
+            }
+
+            $body['query'] = [
+                'bool' => [
+                    'must' => $matches
+                ]
+            ];
+
+            //get data
+            $params = [
+                'index' => 'default',
+                'type' => 'test',
+                'client' => [
+                    'ignore' => 404
+                ],
+                "fields" => "",
+                'body' => $body
+            ];
+            $s = $client->search($params);
+            $m = $s['hits']['hits'];
+
+            if (count($m) > 0) {
+                foreach ($m as $t) {
+                    $ids[] = $t['_id'];
+                }
+                $r = $this->getTestCommunity($ids);
+            }
+        }
+
+        return View::make('quiz.community', [
+            'test_community' => $r,
+            'test_limit' => 6
+        ]);
+    }
+    public function quizElasticSearchView(){
+        $client = ES::create()
+            ->setHosts(\Config::get('elasticsearch.host'))
+            ->build();
+
+        $body = [
+            "sort" => [
+                ["order" => ["order" => "asc"]],
+                ["id" => ["order" => "asc"]]
+            ]
+        ];
+
+        $search = '';
+        $body= [];
+        if($search) {
+            $matches = [
+                ['match' => ['title' => $search]]
+            ];
+            preg_match('!\d+!', $search, $m);
+            $version = array_key_exists(0, $m) ? $m[0] : '';
+            if ($version) {
+                $matches[] = ['match' => ['version' => $version]];
+            }
+
+            $body['query'] = [
+                'bool' => [
+                    'must' => $matches
+                ]
+            ];
+        }
+
+        //get data
+        $params = [
+            'index' => 'default',
+            'type' => 'test',
+            'client' => [
+                'ignore' => 404
+            ],
+            'body' => $body
+        ];
+        $s = $client->search($params);
+
+        //delete
+        if(isset($_GET['d'])) {
+            $hits = $s['hits']['hits'];
+            if (count($hits) > 0) {
+                foreach($hits as $v){
+                    $this->quizElasticSearch($v['_id'], 3);
+                }
+            }
+        }
+        else if(isset($_GET['i'])){
+            $test = TestCommunity::find($_GET['i']);
+            //index to elastic search
+            $community = $test->getOriginal();
+            $community += $test->test->getOriginal();
+            $community = (Object)$community;
+            $this->quizElasticSearch($test->id, 1, $community);
+        }
+        else {
+            echo '<pre>';
+            print_r($s);
+        }
+    }
+    private function quizElasticSearch($id, $type = 1, $body = []){
+        //1 = insert
+        //2 = update
+        //3 = delete
+        if($id) {
+            $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+            $params = [
+                'index' => 'default',
+                'type' => 'test',
+                'id' => $id
+            ];
+            if($type == 1){
+                $params['body'] = $body;
+                $client->index($params);
+            }
+            else if($type == 2){
+                $params['body']['doc'] = $body;
+                $client->update($params);
+            }
+            else if($type == 3){
+                $client->delete($params);
+            }
+        }
+    }
+
+    public function quizAssessment($id){
+        $data = [];
+
+        //get all test Per Job and  Per Applicants
+        $test_id = $this->quizGetTestIds($data,$id);
+
+        $data['job_id'] = $id;
+
+        return View::make('quiz.assessment', $data);
+    }
+    public function quizSliderSave(Request $request){
+        $validation = Validator::make($request->all(), [
+            'job_id' => 'required',
+            'slider_setting' => 'required'
+        ]);
+
+        if (!$validation->fails()) {
+            try {
+                $slide_id = DB::table('test_slider')
+                    ->where('job_id', '=', Input::get('job_id'))
+                    ->pluck('id');
+                $slider = new TestSlider();
+                if ($slide_id) {
+                    $slider = TestSlider::find($slide_id);
+                }
+
+                $slider->job_id = Input::get('job_id');
+                $slider->author_id = Auth::user()->user_id;
+                $slider->slider_setting = json_encode(Input::get('slider_setting'));
+                $slider->save();
+            }
+            catch (\Exception $e) {
+                print_r($e);
+            }
+        }
+        else{
+            echo 'error';
+        }
+    }
+    public function quizUserAssessment($id){
+        $data = [];
+
+        //get all test Per Job and  Per Applicants
+        $test_id = $this->quizGetTestIds($data, $id);
+
+        $user = DB::table('applicants')
+            ->select(DB::raw('
+                fp_applicants.id as user_id,
+                fp_applicants.name
+            '))
+            ->where('applicants.job_id', $id)
+            ->get();
+        if(count($user) > 0) {
+            foreach ($user as $v) {
+                $test = DB::table('test')
+                    ->leftJoin('question', 'question.test_id', '=', 'test.id')
+                    ->leftJoin('test_result', function($join){
+                        $join->on('test_result.test_id', '=', 'test.id')
+                            ->on('test_result.question_id', '=', 'question.id');
+                    })
+                    ->select(DB::raw('
+                        IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
+                        SUM(
+                            IF(
+                                fp_test_result.result = 1,
+                                IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                                0
+                            )
+                        ) as score,
+                        SUM(
+                            IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                        ) as total
+                    '))
+                    ->where('test_result.unique_id', '=', $v->user_id)
+                    ->whereIn('test.id', $test_id)
+                    ->whereNotNull('test.id')
+                    ->groupBy('default_tags')
+                    ->get();
+                $v->points_tags_total = 0;
+                $v->test_total = 0;
+                $v->average_total = 0;
+                $v->test = array();
+                $count = count($test);
+                if($count > 0) {
+                    foreach($test as $t){
+                        $thisTag = $t->default_tags;
+                        $thisPercentage = array_key_exists($thisTag, $data['slide_setting']) ?
+                            $data['slide_setting']->$thisTag : 0;
+                        $thisScore = $t->score + ($t->score * $thisPercentage/100);
+                        $thisTotal = $thisScore > $t->total ? $thisScore : $t->total;
+                        $v->test[$thisTag] = $t;
+                        $v->points_tags_total += $thisScore;
+                        $v->test_total += $t->total;
+                    }
+
+                    $v->average_total = number_format($v->points_tags_total/$v->test_total, 4) * 100;
+                }
+            }
+
+            //sort according to total tag points
+            $this->arraySort($user, 'average_total', false);
+        }
+        $data['user'] = $user;
+
+        $data['progressColor'] = array('success', 'info', 'warning', 'danger');
+
+        return View::make('quiz.assessmentSlider', $data);
+    }
+    private function quizGetTestIds(&$data, $id){
+        $test_jobs_id = DB::table('test_per_job')
+            ->where('job_id', $id)
+            ->lists('test_id');
+        $test_applicants_id = DB::table('test_per_applicant')
+            ->leftJoin('applicants', 'applicants.id', '=', 'test_per_applicant.applicant_id')
+            ->where('job_id', $id)
+            ->lists('test_id');
+        $test_id = array_unique(array_merge($test_jobs_id, $test_applicants_id));
+
+        //get tags
+        $tags = DB::table('test')
+            ->select(DB::raw('LOWER(fp_test.default_tags) default_tags'))
+            ->whereIn('test.id', $test_id)
+            ->where('test.default_tags', '!=' , '')
+            ->groupBy('default_tags')
+            ->orderBy('default_tags')
+            ->lists('default_tags');
+        $test_tags = array_merge(['general'], $tags);
+        $data['test_tags'] = array_unique($test_tags);
+
+        //get slider default setting
+        $slide_setting = DB::table('test_slider')
+            ->where('job_id', '=', $id)
+            ->pluck('slider_setting');
+        $slide_setting = $slide_setting ? json_decode($slide_setting) : (Object)array();
+        $data['slide_setting'] = $slide_setting;
+
+        //get max points per test
+        $max_points_per_test = DB::table('test')
+            ->leftJoin('question', 'question.test_id', '=', 'test.id')
+            ->select(DB::raw('
+                IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
+                SUM(
+                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                ) as max_points
+            '))
+            ->whereIn('test.id', $test_id)
+            ->whereNotNull('test.id')
+            ->groupBy('default_tags')
+            ->lists('max_points', 'default_tags');
+        $data['max_points_per_test'] = $max_points_per_test;
+
+        return $test_id;
+    }
+
+    public function quizVideo(){
+        $data = [
+            'assets' => []
+        ];
+
+        return View::make('quiz.video', $data);
+    }
+    public function quizSaveVideo(Request $request) {
+        $stream_id = $request->input('stream_id');
+        $media_server = "laravel.software";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        $convert_to_webm_command = 'ffmpeg -y -i /var/www/recordings/' . $stream_id . '.mkv -c:v copy -crf 10 -b:v 0 -c:a libvorbis /var/www/recordings/' . $stream_id . '.webm';
+        //Run the mkv file in ffmpeg to repair it(Since erizo makes an invalid mkv file for the html5 video tag)
+        $remote_connection->exec($convert_to_webm_command);
+    }
+    public function quizDeleteVideo($id) {
+        $media_server = "laravel.software";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        //delete mkv
+        $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.mkv';
+        $remote_connection->exec($delete_steam);
+
+        //delete webm
+        $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.webm';
+        $remote_connection->exec($delete_steam);
     }
 }

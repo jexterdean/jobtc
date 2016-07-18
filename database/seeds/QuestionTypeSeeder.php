@@ -13,7 +13,8 @@ class QuestionTypeSeeder extends Seeder
     {
         DB::table('question_type')->insert(array(
             array('type' => 'Multiple Choice'),
-            array('type' => 'Fill in the Blank')
+            array('type' => 'Fill in the Blank'),
+            array('type' => 'Written Answer')
         ));
 
     }

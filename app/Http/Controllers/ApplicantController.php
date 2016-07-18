@@ -10,6 +10,7 @@ use App\Models\Profile;
 use App\Models\Job;
 use App\Models\Applicant;
 use App\Models\ApplicantTag;
+use App\Models\Tag;
 use App\Models\ApplicantRating;
 use App\Models\Comment;
 use App\Models\Video;
@@ -26,6 +27,7 @@ use App\Models\TeamProject;
 use App\Models\TaskCheckListPermission;
 use App\Models\TestResultModel;
 use App\Models\TestCompleted;
+use Hash;
 use Auth;
 use Mail;
 
@@ -79,7 +81,7 @@ class ApplicantController extends Controller {
                 //$comments = Comment::with('user', 'profile')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
 
                 $comments = Comment::with('user')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
-            } elseif(Auth::check('applicant') || !Auth::check()) {
+            } elseif (Auth::check('applicant') || !Auth::check()) {
 
                 $user_info = Applicant::where('id', $id)->first();
 
@@ -91,14 +93,18 @@ class ApplicantController extends Controller {
 
             $job = Job::where('id', $applicant->job_id)->first();
 
-            $statuses = ApplicantTag::where('applicant_id', $id)->first();
+            $statuses = Tag::where('unique_id', $id)
+                    ->where('tag_type', 'applicant')
+                    ->first();
 
             $prevApplicant = Applicant::where('id', '>', $id)->where('job_id', $applicant->job_id)->min('id');
             $nextApplicant = Applicant::where('id', '<', $id)->where('job_id', $applicant->job_id)->max('id');
 
             $rating = ApplicantRating::where('applicant_id', $id)->first();
 
-            $videos = Video::with('video_tags')->where('unique_id', $id)->where('user_type','applicant')->orderBy('id', 'desc')->get();
+            $videos = Video::with(['tags' => function($query) {
+                            $query->where('tag_type', 'video')->first();
+                        }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();
 
             //Get the test permissions
 
@@ -119,6 +125,73 @@ class ApplicantController extends Controller {
             }
 
             $tests = Test::whereIn('id', array_unique($test_ids))->get();
+            $slide_setting = \DB::table('test_slider')
+                    ->where('job_id', '=', $applicant->job_id)
+                    ->pluck('slider_setting');
+            if ($slide_setting) {
+                $slide_setting = json_decode($slide_setting);
+            }
+
+            $tests_tags = [];
+            $tests_adjust_tags = [];
+            $test_score_total = 0;
+            if (count($tests) > 0) {
+                foreach ($tests as $v) {
+                    $v->total_points = 0;
+                    $v->total_score = 0;
+                    $tags = $v->default_tags ? explode(',', $v->default_tags) : array();
+                    if (count($tags) > 0) {
+                        foreach ($tags as $t) {
+                            if (!array_key_exists(strtolower($t), $tests_tags)) {
+                                $tests_tags[strtolower($t)] = 0;
+                            }
+                        }
+                    } else {
+                        if (!array_key_exists('general', $tests_tags)) {
+                            $tests_tags['general'] = 0;
+                        }
+                    }
+
+                    $result = \DB::table('test_result')
+                            ->select(\DB::raw('
+                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
+                            IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points) as score,
+                            fp_test_result.result
+                        '))
+                            ->leftJoin('question', function($join) {
+                                $join->on('question.id', '=', 'test_result.question_id')
+                                ->on('question.test_id', '=', 'test_result.test_id');
+                            })
+                            ->where('test_result.test_id', '=', $v->id)
+                            ->where('test_result.unique_id', '=', $applicant->id)
+                            ->whereNotNull('question.id')
+                            ->get();
+                    if (count($result) > 0) {
+                        foreach ($result as $r) {
+                            $v->total_points += $r->score;
+                            if ($r->result) {
+                                $v->total_score += $r->points;
+                                $test_score_total += $r->points;
+                                if (count($tags) > 0) {
+                                    foreach ($tags as $t) {
+                                        $tests_tags[strtolower($t)] += $r->points;
+                                    }
+                                } else {
+                                    $tests_tags['general'] += $r->points;
+                                }
+                            }
+                        }
+
+                        if (count($slide_setting) > 0) {
+                            foreach ($slide_setting as $tag => $percentage) {
+                                $points = array_key_exists($tag, $tests_tags) ? $tests_tags[$tag] : 0;
+                                $adjustment = $points + ($points * $percentage / 100);
+                                $tests_adjust_tags[$tag] = $adjustment;
+                            }
+                        }
+                    }
+                }
+            }
 
             $questions = Question::whereIn('test_id', array_unique($test_ids))
                     ->orderBy('order', 'ASC')
@@ -129,7 +202,7 @@ class ApplicantController extends Controller {
                     $v->question_choices = json_decode($v->question_choices);
                 }
             }
-            
+
             //This is for the Test Review(Will be put in place at a later date) --06/09/2016
             $r = TestResultModel::where('unique_id', $id)->where('belongs_to', 'applicant')->get();
             $review_result = array();
@@ -142,7 +215,7 @@ class ApplicantController extends Controller {
                 }
             }
 
-            $assets = ['applicants', 'quizzes','real-time'];
+            $assets = ['applicants', 'quizzes', 'real-time'];
 
             return view('applicants.show', [
                 'applicant' => $applicant,
@@ -151,6 +224,9 @@ class ApplicantController extends Controller {
                 'statuses' => $statuses,
                 'job' => $job,
                 'tests' => $tests,
+                'tests_tags' => $tests_tags,
+                'tests_adjust_tags' => $tests_adjust_tags,
+                'test_score_total' => $test_score_total,
                 'tests_completed' => $tests_completed,
                 'review_result' => $review_result,
                 'questions' => $questions,
@@ -170,7 +246,12 @@ class ApplicantController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        //
+
+        $applicant = Applicant::find($id);
+
+        return view('forms.editApplicantForm', [
+            'applicant' => $applicant
+        ]);
     }
 
     /**
@@ -181,7 +262,49 @@ class ApplicantController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+        $applicant_id = $request->input('applicant_id');
+        $company_id = $request->input('company_id');
+
+        $applicant = Applicant::where('id', $id);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            if (file_exists(public_path('assets/user/' . $photo->getClientOriginalName()))) {
+                $photo_path = 'assets/user/' . $photo->getClientOriginalName();
+            } else {
+                $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+                $photo_path = $photo_save->getPathname();
+            }
+        } else {
+            $photo_path = Applicant::where('id', $id)->pluck('photo');
+
+            if ($photo_path === '' || $photo_path === NULL) {
+                $photo_path = 'assets/user/default-avatar.jpg';
+            }
+        }
+
+        if ($request->hasFile('resume')) {
+            $resume = $request->file('resume');
+            if (file_exists(public_path('assets/user/resumes/' . $resume->getClientOriginalName()))) {
+                $resume_path = 'assets/user/resumes/' . $resume->getClientOriginalName();
+            } else {
+                $resume_save = $resume->move('assets/user/resumes', $resume->getClientOriginalName());
+                $resume_path = $resume_save->getPathname();
+            }
+        } else {
+            $resume_path = Applicant::where('id', $id)->pluck('resume');
+        }
+
+        $applicant->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'photo' => $photo_path,
+            'resume' => $resume_path
+        ]);
+
+        $data = array('photo' => $photo_path, 'resume' => $resume_path);
+        return json_encode($data);
     }
 
     /**
@@ -192,6 +315,45 @@ class ApplicantController extends Controller {
      */
     public function destroy($id) {
         //
+    }
+
+    /* Edit Applicant Password Form */
+
+    public function editApplicantPasswordForm(Request $request) {
+
+        $applicant_id = $request->input('applicant_id');
+
+        return view('forms.editApplicantPasswordForm', [
+            'applicant_id' => $applicant_id
+        ]);
+    }
+
+    public function checkApplicantPassword(Request $request) {
+
+        $applicant_id = $request->input('applicant_id');
+        $password = $request->input('current_password');
+
+        $applicant = Applicant::where('id', $applicant_id)->first();
+
+        if (Hash::check($password, $applicant->password)) {
+
+            return "true";
+        } else {
+            return "false";
+        }
+    }
+
+    public function editApplicantPassword(Request $request) {
+
+        $applicant_id = $request->input('applicant_id');
+        $new_password = bcrypt($request->input('new_password'));
+
+        $applicant = Applicant::where('id', $applicant_id);
+        $applicant->update([
+            'password' => $new_password
+        ]);
+
+        return "true";
     }
 
     /* Get Applicants */
@@ -461,12 +623,12 @@ class ApplicantController extends Controller {
         $questions = Question::where('test_id', $quiz_id)
                 ->orderBy('order', 'ASC')
                 ->get();
-        
-         if (count($questions) > 0) {
-                foreach ($questions as $v) {
-                    $v->question_choices = json_decode($v->question_choices);
-                }
+
+        if (count($questions) > 0) {
+            foreach ($questions as $v) {
+                $v->question_choices = json_decode($v->question_choices);
             }
+        }
 
         //Get Review details
         $results = TestResultModel::where('test_id', $quiz_id)->get();
@@ -481,15 +643,15 @@ class ApplicantController extends Controller {
         }
 
         $get_completed_test = TestCompleted::where('id', $test_completed->id)
-                    ->get();
-        
-        /*return view('applicants.partials._quizresults', [
-            'tests' => $tests,
-            'questions' => $questions,
-            'review_result' => $review_result,
-            'tests_completed' => $get_completed_test
-        ]);*/
+                ->get();
+
+        /* return view('applicants.partials._quizresults', [
+          'tests' => $tests,
+          'questions' => $questions,
+          'review_result' => $review_result,
+          'tests_completed' => $get_completed_test
+          ]); */
         return $final_score;
     }
-    
+
 }

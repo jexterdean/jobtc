@@ -29,27 +29,29 @@ function removeDuplicates(listName, newItem) {
     return !dupl;
 }
 
-function assignTask(user_id, task_id, project_id) {
+function assignTask(user_id, task_id, project_id, company_id) {
 
     var url = public_path + 'assignTaskList';
 
     var data = {
         'user_id': user_id,
         'task_id': task_id,
-        'project_id': project_id
+        'project_id': project_id,
+        'company_id': company_id
     };
 
     $.post(url, data);
 }
 
-function unassignTask(user_id, task_id, project_id) {
+function unassignTask(user_id, task_id, project_id, company_id) {
 
     var url = public_path + 'unassignTaskList';
 
     var data = {
         'user_id': user_id,
         'task_id': task_id,
-        'project_id': project_id
+        'project_id': project_id,
+        'company_id': company_id
     };
 
     $.post(url, data);
@@ -83,6 +85,34 @@ function unshareFromCompanyEmployee(user_id, company_id, job_id) {
 
 }
 
+function assignPositionPermission(role_id, permission_id, company_id) {
+    var url = public_path + 'assignPositionPermission';
+
+    var data = {
+        'role_id': role_id,
+        'permission_id': permission_id,
+        'company_id': company_id
+    };
+
+    $.post(url, data);
+}
+
+function unassignPositionPermission(role_id, permission_id, company_id) {
+    var url = public_path + 'unassignPositionPermission';
+
+    var data = {
+        'role_id': role_id,
+        'permission_id': permission_id,
+        'company_id': company_id
+    };
+
+    $.post(url, data);
+}
+
+function myJobsScripts() {
+
+}
+
 function assignProjectsScripts() {
     //For Dragging employees to projects
     $('.taskgroup-list').sortable({
@@ -96,6 +126,9 @@ function assignProjectsScripts() {
         receive: function (event, ui) {
 
             project_id = $(this).siblings().find('.project_id').val();
+            //company_id = $(this).siblings().find('.company_id').val();
+            company_id = window.location.pathname.split('/').pop();
+            console.log('company_id' + company_id);
             list_group_user_id = $(ui.item).attr('id');
             user_id = list_group_user_id.split('-').pop();
 
@@ -118,7 +151,8 @@ function assignProjectsScripts() {
             team_url = public_path + 'createTeam';
             team_data = {
                 'project_id': project_id,
-                'user_id': user_id
+                'user_id': user_id,
+                'company_id': company_id
             };
 
             $.post(team_url, team_data, function (data) {
@@ -178,11 +212,8 @@ function assignProjectsScripts() {
             $.post(team_url, team_data, function (data) {
                 //Assign the team id to the this list group item's input
                 //$(ui.item).find('.team_id').val(team_id);
-                //$(ui.item).find('.profile-container').html(data);
+                $(ui.item).find('.employee-list').html(data);
             });
-
-            //Remove warning that no employee is assigned.
-            $(this).find('li:contains("No Employees assigned to this project.")').remove();
 
 
         },
@@ -190,7 +221,6 @@ function assignProjectsScripts() {
 
         }
     });
-
 
     /*Edit Profile of an employee*/
     $('.taskgroup-list').on('click', '.edit-profile', function () {
@@ -254,7 +284,6 @@ function assignProjectsScripts() {
 
         //Password Editor
         var password_ele = '<input type="password" name="password" class="form-control edit-password" placeholder="Edit Password" value=""/>';
-        ;
 
         var password_ele = '<div class="text-area-content">';
         password_ele += '<div class="input-group">';
@@ -470,29 +499,32 @@ function assignProjectsScripts() {
         var user_id = $(this).children('.user_id').val();
         var task_id = $(this).children('.task_id').val();
         var project_id = $(this).children('.project_id').val();
+        var company_id = $(this).children('.company_id').val();
 
         var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
         assign_html += '<input class="user_id" type="hidden" value="' + user_id + '"/>';
         assign_html += '<input class="task_id" type="hidden" value="' + task_id + '"/>';
         assign_html += '<input class="project_id" type="hidden" value="' + project_id + '"/>';
+        assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
 
         var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
         unassign_html += '<input class="user_id" type="hidden" value="' + user_id + '"/>';
         unassign_html += '<input class="task_id" type="hidden" value="' + task_id + '"/>';
         unassign_html += '<input class="project_id" type="hidden" value="' + project_id + '"/>';
+        unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
 
         /*Assign the Task List to this user*/
         if ($(this).hasClass('bg-gray')) {
             $(this).switchClass('bg-gray', 'bg-green', function () {
                 $(this).html(assign_html);
-                assignTask(user_id, task_id, project_id);
+                assignTask(user_id, task_id, project_id, company_id);
             });
         }
         /*Unassign the Task List from this user*/
         if ($(this).hasClass('bg-green')) {
             $(this).switchClass('bg-green', 'bg-gray', function () {
                 $(this).html(unassign_html);
-                unassignTask(user_id, task_id, project_id);
+                unassignTask(user_id, task_id, project_id, company_id);
             });
         }
 
@@ -560,6 +592,35 @@ function assignProjectsScripts() {
 
         $.post(url, data);
     });
+
+    /*Employees per Company Load on Demand*/
+    $('.company-list-group').on('click', '.toggle-employees', function () {
+
+        var project_id = $(this).find('.project_id').val();
+        var company_id = $(this).find('.company_id').val();
+
+        var url = public_path + 'getCompanyEmployeesForProject/' + project_id + '/' + company_id;
+
+        if ($.trim($('#employee-toggle-collapse-' + project_id + '-' + company_id).is(':empty'))) {
+            $('#employee-toggle-collapse-' + project_id + '-' + company_id).load(url, function () {
+
+            });
+        }
+    });
+    $('.company-list-group').on('click', '.toggle-subprojects', function () {
+        var employee_id = $(this).find('.user_id').val();
+        var project_id = $(this).find('.project_id').val();
+        var company_id = $(this).find('.company_id').val();
+
+        var url = public_path + 'getSubprojectsForCompanyEmployee/' + employee_id + '/' + project_id + '/' + company_id;
+        if ($.trim($('#employee-collapse-' + employee_id + '-' + project_id + '-' + company_id).is(':empty'))) {
+            $('#employee-collapse-' + employee_id + '-' + project_id + '-' + company_id).load(url, function () {
+
+            });
+        }
+    });
+
+
 } //end assign project scripts
 
 function assignTestsScripts() {
@@ -789,7 +850,7 @@ function shareJobsScripts() {
 
             } else {
                 company_id = list_group_id.split('-').pop();
-                
+
                 var identicalItemCount = $("#company-" + company_id + ' .list-group').children('li:contains(' + ui.item.find('.job_id').val() + ')').length;
 
                 //If a duplicate, remove it
@@ -799,9 +860,9 @@ function shareJobsScripts() {
 
                 //Show unassign button
                 $(ui.item).find('.unshare-job').removeClass('hidden');
-                
+
                 $(ui.item).find('.company_id').val(company_id);
-                
+
                 //Share Job to a Company
                 share_url = public_path + 'shareJobToCompany';
                 share_data = {
@@ -814,9 +875,9 @@ function shareJobsScripts() {
                     //$(ui.item).find('.job_id').val(data);
                     //$(ui.item).find('.employee-list').html(data);
                     //$(ui.item).find('.employee-list').html(data);
-                    $(ui.item).find('.toggle-employees').attr('id','shared-company-item-'+data);
-                    $(ui.item).find('.toggle-employees').attr('href','#employee-collapse-'+data);
-                    $(ui.item).find('.employee-list').attr('id','employee-collapse-'+data);
+                    $(ui.item).find('.toggle-employees').attr('id', 'shared-company-item-' + data);
+                    $(ui.item).find('.toggle-employees').attr('href', '#employee-collapse-' + data);
+                    $(ui.item).find('.employee-list').attr('id', 'employee-collapse-' + data);
                 });
             }
 
@@ -868,7 +929,7 @@ function shareJobsScripts() {
     });
 
     /*Employees per Company Load on Demand*/
-    $('.job-list-group').on('click','.toggle-employees', function () {
+    $('.job-list-group').on('click', '.toggle-employees', function () {
         var shared_company_job_id = $(this).attr('id').split('-').pop();
         var job_id = $(this).parent().parent().parent().attr('id').split('-').pop();
         var company_id = $(this).parent().parent().parent().parent().attr('id').split('-').pop();
@@ -922,48 +983,139 @@ function shareJobsScripts() {
 
 }
 
+function assignScripts() {
+
+    $('#assign_tabs').one('click', '.assign_projects_tab', function () {
+        var url = public_path + 'getAssignProjectsTab/' + company_id;
+        if ($.trim($('#assign_projects').is(':empty'))) {
+            $('#assign_projects').load(url, function () {
+                assignProjectsScripts();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.assign_tests_tab', function () {
+        var url = public_path + 'getAssignTestsTab/' + company_id;
+        if ($.trim($('#assign_tests').is(':empty'))) {
+            $('#assign_tests').load(url, function () {
+                assignTestsScripts();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.assign_authority_levels_tab', function () {
+        var url = public_path + 'getAssignAuthorityLevelsTab/' + company_id;
+        if ($.trim($('#assign_authority_levels').is(':empty'))) {
+            $('#assign_authority_levels').load(url, function () {
+                assignAuthorityLevels();
+            });
+        }
+    });
+
+    $('#assign_tabs').one('click', '.share_jobs_tab', function () {
+        var url = public_path + 'getShareJobsTab/' + company_id;
+        if ($.trim($('#share_jobs').is(':empty'))) {
+            $('#share_jobs').load(url, function () {
+                shareJobsScripts();
+            });
+        }
+    });
+}
+
+function employeesScripts() {
+
+}
+
+function positionsScripts() {
+
+    $('.permission-list-group').on('click', '.position-permission', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var role_id = $(this).children('.role_id').val();
+        var permission_id = $(this).children('.permission_id').val();
+        var company_id = $(this).children('.company_id').val();
+
+        var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
+        assign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+        assign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+        assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+        var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
+        unassign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+        unassign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+        unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+
+        /*Assign the Task List to this user*/
+        if ($(this).hasClass('bg-gray')) {
+            $(this).switchClass('bg-gray', 'bg-green', function () {
+                $(this).html(assign_html);
+                //shareToCompanyEmployee(user_id, company_id, job_id);
+                assignPositionPermission(role_id, permission_id, company_id);
+            });
+        }
+        /*Unassign the Task List from this user*/
+        if ($(this).hasClass('bg-green')) {
+            $(this).switchClass('bg-green', 'bg-gray', function () {
+                $(this).html(unassign_html);
+                //unshareFromCompanyEmployee(user_id, company_id, job_id);
+                unassignPositionPermission(role_id, permission_id, company_id);
+            });
+        }
+    });
+
+
+}
+
 /*For load on demand tabs*/
 var company_id = window.location.pathname.split('/').pop();
-$('#company_tabs').one('click', '.assign_projects_tab', function () {
-    var url = public_path + 'getAssignProjectsTab/' + company_id;
-    if ($.trim($('#assign_projects').is(':empty'))) {
-        $('#assign_projects').load(url, function () {
-            assignProjectsScripts();
+
+$('#company_tabs').one('click', '.jobs_tab', function () {
+    var url = public_path + 'getJobsTab/' + company_id;
+    if ($.trim($('#my_jobs').is(':empty'))) {
+        $('#my_jobs').load(url, function () {
+            myJobsScripts();
         });
     }
 });
 
-$('#company_tabs').one('click', '.assign_tests_tab', function () {
-    var url = public_path + 'getAssignTestsTab/' + company_id;
-    if ($.trim($('#assign_tests').is(':empty'))) {
-        $('#assign_tests').load(url, function () {
-            assignTestsScripts();
+$('#company_tabs').one('click', '.employees_tab', function () {
+    var url = public_path + 'getEmployeesTab/' + company_id;
+    if ($.trim($('#employees').is(':empty'))) {
+        $('#employees').load(url, function () {
+            employeesScripts();
         });
     }
 });
 
-$('#company_tabs').one('click', '.assign_authority_levels_tab', function () {
-    var url = public_path + 'getAssignAuthorityLevelsTab/' + company_id;
-    if ($.trim($('#assign_authority_levels').is(':empty'))) {
-        $('#assign_authority_levels').load(url, function () {
-            assignAuthorityLevels();
+$('#company_tabs').one('click', '.positions_tab', function () {
+    var url = public_path + 'getPositionsTab/' + company_id;
+    if ($.trim($('#positions').is(':empty'))) {
+        $('#positions').load(url, function () {
+            positionsScripts();
         });
     }
 });
 
-$('#company_tabs').one('click', '.share_jobs_tab', function () {
-    var url = public_path + 'getShareJobsTab/' + company_id;
-    if ($.trim($('#share_jobs').is(':empty'))) {
-        $('#share_jobs').load(url, function () {
-            shareJobsScripts();
+$('#company_tabs').one('click', '.assign_tab', function () {
+    var url = public_path + 'getAssignTab/' + company_id;
+    if ($.trim($('#assign').is(':empty'))) {
+        $('#assign').load(url, function () {
+            assignScripts();
+            $('.assign_projects_tab').click();
         });
     }
 });
 
 /*Subprojects Load on Demand*/
-$('.toggle-subprojects').one('click', function () {
-    var project_id = $(this).attr('id').split('-').pop();
-    var url = public_path + 'getSubprojects/' + company_id + '/' + project_id;
+$('#my_projects').on('click', '.toggle-subprojects', function () {
+    //var project_id = $(this).attr('id').split('-').pop();
+    var project_id = $(this).find('.project_id').val();
+    //var company_id = $(this).find('.company_id').val();
+    var company_id = window.location.pathname.split('/').pop();
+
+    var url = public_path + 'getSubprojects/' + project_id + '/' + company_id;
 
     if ($.trim($('#project-collapse-' + project_id).is(':empty'))) {
         $('#project-collapse-' + project_id).load(url, function () {
@@ -971,18 +1123,576 @@ $('.toggle-subprojects').one('click', function () {
                 var task_id = $(this).parent().attr('id').split('-').pop();
                 var task_url = public_path + '/task/' + task_id;
                 if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
-                    $('#load-task-assign-' + task_id).load(task_url);
+                    $('#load-task-assign-' + task_id).load(task_url, function () {
+                        $('#project-' + project_id).removeClass('toggle-subprojects');
+                    });
                 }
             });
         });
     }
 });
 
+$('#shared_projects').on('click', '.toggle-subprojects', function () {
+    //var project_id = $(this).attr('id').split('-').pop();
+    var project_id = $(this).find('.project_id').val();
+    //var company_id = $(this).find('.company_id').val();
+    var company_id = window.location.pathname.split('/').pop();
 
-/*$('.task-header').on('click')(function () {
- var task_id = $(this).parent().attr('id').split('-').pop();
- var task_url = public_path + '/task/' + task_id;
- console.log($('.load-task-assign').attr('id'));
- var task_container = '#' + $('.load-task-assign').attr('id');
- $(task_container).load(task_url);
+    var url = public_path + 'getSubprojects/' + project_id + '/' + company_id;
+
+    if ($.trim($('#project-collapse-' + project_id).is(':empty'))) {
+        $('#project-collapse-' + project_id).load(url, function () {
+            $(this).find('.task-header').each(function () {
+                var task_id = $(this).parent().attr('id').split('-').pop();
+                var task_url = public_path + '/task/' + task_id;
+                if ($.trim($('#load-task-assign-' + task_id).is(':empty'))) {
+                    $('#load-task-assign-' + task_id).load(task_url, function () {
+                        $('#project-' + project_id).removeClass('toggle-subprojects');
+                    });
+                }
+            });
+        });
+    }
+});
+
+/*Add Projects*/
+$('#my_projects').on('click', '#add-project', function (e) {
+    e.stopImmediatePropagation();
+    $(this).addClass('disabled');
+
+    var url = public_path + 'addProjectForm';
+    var project_container = $('.project_container');
+
+    $.get(url, function (data) {
+        project_container.append(data);
+    });
+});
+
+$('#my_projects').on('click', '.save-project', function (e) {
+    e.stopImmediatePropagation();
+    var url = public_path + 'addProject';
+    var project_container = $('.project_container');
+    var company_id = $('.project_tab_options').find('.company_id').val();
+
+    var data = {
+        'project_title': $('input[name="project-title"]').val(),
+        'company_id': company_id
+    };
+
+    $.post(url, data, function (data) {
+        $('#add-project-form').remove();
+        $('#add-project').removeClass('disabled');
+        var project_count = project_container.find('.project-row').last().children().length;
+
+        if (project_count === 1) {
+            project_container.find('.project-row').last().append(data);
+        } else {
+            project_container.append('<div class="project-row row">' + data + '</div>');
+        }
+
+
+    });
+});
+
+$('#my_projects').on('click', '.cancel-project', function (e) {
+    e.stopImmediatePropagation();
+    $('#add-project').removeClass('disabled');
+    $('#add-project-form').remove();
+});
+
+
+
+/*Add Employee*/
+$('#employees').on('click', '#add-employee', function (e) {
+    e.stopImmediatePropagation();
+    //$(this).addClass('disabled');
+
+    var company_id = $(this).siblings('.company_id').val();
+
+    var add_employee_form = public_path + 'addEmployeeForm/' + company_id;
+    var employee_container = $('.employee-container');
+
+    BootstrapDialog.show({
+        title: 'Add Employee <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Add',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var ajaxurl = public_path + 'addEmployee';
+                    var form = $(".add-employee-form")[0];
+                    var authority = $(form).find('input[name="authority"]:checked').val();
+
+                    var formData = new FormData();
+                    formData.append('company_id', company_id);
+                    formData.append('authority', authority);
+
+                    if ($('#new-employee').hasClass('active') === true) {
+                        var name = $(form).find('input[name="employee-name"]').val();
+                        var email = $(form).find('input[name="employee-email"]').val();
+                        var password = $(form).find('input[name="employee-password"]').val();
+                        formData.append('name', name);
+                        formData.append('email', email);
+                        formData.append('password', password);
+                    }
+
+                    if ($('#existing-user').hasClass('active') === true) {
+                        var user_id = $(form).find('select[name="user_id"] option:selected').val();
+                        formData.append('user_id', user_id);
+                    }
+
+                    if ($('#existing-position').hasClass('active') === true) {
+                        var role_id = $(form).find('select[name="role_id"] option:selected').val();
+                        formData.append('role_id', role_id);
+                    }
+
+                    if ($('#new-position').hasClass('active') === true) {
+                        var position = $(form).find('input[name="position"]').val();
+                        formData.append('position', position);
+                    }
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+
+                            var employee_count = employee_container.find('.employee-row').last().children().length;
+
+                            if (employee_count === 1) {
+                                employee_container.find('.employee-row').last().append(data);
+                            } else {
+                                employee_container.append('<div class="row employee-row">' + data + '</div>');
+                            }
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax
+                }
+            }],
+        data: {
+            'pageToLoad': add_employee_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+
+    //$.get(url, function (data) {
+    //employee_container.append(data);
+    //});
+
+});
+
+/*$('#employees').on('click', '.save-employee', function (e) {
+ e.stopImmediatePropagation();
+ var url = public_path + 'addEmployee';
+ var employee_container = $('.employee-container');
+ var company_id = $('.employee_tab_options').find('.company_id').val();
+ 
+ var data = {
+ 'name': $('input[name="employee-name"]').val(),
+ 'email': $('input[name="employee-email"]').val(),
+ 'password': $('input[name="employee-password"]').val(),
+ 'company_id': company_id
+ };
+ 
+ $.post(url, data, function (data) {
+ $('#add-employee-form').remove();
+ $('#add-employee').removeClass('disabled');
+ var employee_count = employee_container.find('.employee-row').last().children().length;
+ 
+ if (employee_count === 1) {
+ employee_container.find('.employee-row').last().append(data);
+ } else {
+ employee_container.append('<div class="row employee-row">' + data + '</div>');
+ }
+ 
+ 
+ });
  });*/
+
+/*$('#employees').on('click', '.cancel-employee', function (e) {
+ e.stopImmediatePropagation();
+ $('#add-employee').removeClass('disabled');
+ $('#add-employee-form').remove();
+ });*/
+
+/*
+ * Employee Options      
+ **/
+
+$('#employees').on('click', '.edit-employee-permissions', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_employee_permissions_form = public_path + 'editEmployeePermissionsForm/' + company_id + '/' + user_id;
+    console.log(user_id);
+    var employee_name = $('#employee-' + user_id).find('.name').text().trim();
+
+    BootstrapDialog.show({
+        title: 'Edit Permissions for ' + employee_name + '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-wide',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        data: {
+            'pageToLoad': edit_employee_permissions_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+});
+
+$('#employees').on('click', '.edit-employee', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_employee_form = public_path + 'editEmployeeForm/' + company_id + '/' + user_id;
+    var ajaxurl = public_path + 'editEmployee';
+
+    BootstrapDialog.show({
+        title: 'Edit Employee <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var form = $(".edit-employee-form");
+
+                    var formData = new FormData();
+                    formData.append('user_id', user_id);
+                    formData.append('company_id', company_id);
+                    
+                    var photo = $(form).find('input[name="photo"]')[0].files[0];
+                    var name = $(form).find('input[name="name"]').val();
+                    var email = $(form).find('input[name="email"]').val();
+                    var phone = $(form).find('input[name="phone"]').val();
+                    var skype = $(form).find('input[name="skype"]').val();
+                    var facebook = $(form).find('input[name="facebook"]').val();
+                    var linkedin = $(form).find('input[name="linkedin"]').val();
+                    var address_1 = $(form).find('input[name="address_1"]').val();
+                    var address_2 = $(form).find('input[name="address_2"]').val();
+                    var zipcode = $(form).find('input[name="zipcode"]').val();
+                    var authority = $(form).find('input[name="authority"]:checked').val();
+                    
+                    
+                    var country = $(form).find('select[name="country_id"] option:selected').text();
+                    var country_id = $(form).find('select[name="country_id"] option:selected').val();
+
+                    formData.append('name', name);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('skype', skype);
+                    formData.append('facebook', facebook);
+                    formData.append('linkedin', linkedin);
+                    formData.append('address_1', address_1);
+                    formData.append('address_2', address_2);
+                    formData.append('zipcode', zipcode);
+                    formData.append('country_id', country_id);
+                    formData.append('photo',photo);
+                    formData.append('authority',authority);
+                    console.log(authority);
+
+                    if ($('#new-position').hasClass('active') === true) {
+                        var position = $(form).find('input[name="position"]').val();
+                        formData.append('position', position);
+                    }
+
+                    if ($('#existing-position').hasClass('active') === true) {
+                        var role_id = $(form).find('select[name="role_id"] option:selected').val();
+                        formData.append('role_id', role_id);
+                    }
+                   
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            var json_data = JSON.parse(data);    
+                                
+                            //Update Employee information
+                            $('#employee-' + user_id).find('.employee-photo').attr('src',public_path + json_data.photo);
+                            $('#employee-' + user_id).find('.name').children('a').text(name);
+                            $('#employee-' + user_id).find('.email').children('a').text(email);
+                            $('#employee-' + user_id).find('.phone').children('a').text(phone);
+                            $('#employee-' + user_id).find('.skype').children('a').text(skype);
+                            $('#employee-' + user_id).find('.address_1').children('span').text(address_1);
+                            $('#employee-' + user_id).find('.address_2').children('span').text(address_2);
+                            $('#employee-' + user_id).find('.zipcode').children('span').text(zipcode);
+                            $('#employee-' + user_id).find('.facebook').children('span').text(facebook);
+                            $('#employee-' + user_id).find('.linkedin').children('span').text(linkedin);
+
+                            $('#employee-' + user_id).find('.position').children('span').text(json_data.position);
+                            $('#employee-' + user_id).find('.country').children('span').text(country);
+
+                            dialog.close();
+
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax
+                }
+            }],
+        data: {
+            'pageToLoad': edit_employee_form
+        },
+        onshown: function (ref) {
+            //initCkeditor(ref);
+        },
+        closable: false
+    });
+
+});
+
+$('#employees').on('click', '.remove-employee', function (e) {
+    e.preventDefault();
+
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var url = public_path + 'removeEmployeeFromCompany';
+
+    BootstrapDialog.confirm('Are you sure you want to fire this employee?', function (result) {
+        if (result) {
+            var data = {
+                'user_id': user_id,
+                'company_id': company_id
+            };
+
+            $.post(url, data, function (data) {
+                $('#employee-' + data).remove();
+            });
+        }
+    });
+});
+
+/*Company Positions*/
+$('#positions').on('click', '#add-position', function (e) {
+    e.stopImmediatePropagation();
+    $(this).addClass('disabled');
+
+    var url = public_path + 'addPositionForm';
+    var position_container = $('.position_container');
+
+    $.get(url, function (data) {
+        position_container.append(data);
+    });
+});
+
+$('#positions').on('click', '.save-position', function (e) {
+    e.stopImmediatePropagation();
+    var url = public_path + 'addPosition';
+    var position_container = $('.position_container');
+    var company_id = $('.position_tab_options').find('.company_id').val();
+
+    var data = {
+        'position_title': $('input[name="position-title"]').val(),
+        'position_description': $('textarea[name="position-description"]').val(),
+        'company_id': company_id
+    };
+
+    $.post(url, data, function (data) {
+        $('#add-position-form').remove();
+        $('#add-position').removeClass('disabled');
+        var position_count = position_container.find('.position-row').last().children().length;
+
+        if (position_count === 1) {
+            position_container.find('.position-row').last().append(data);
+        } else {
+            position_container.append('<div class="position-row row">' + data + '</div>');
+        }
+
+
+    });
+});
+
+$('#positions').on('click', '.cancel-position', function (e) {
+    e.stopImmediatePropagation();
+    $('#add-position').removeClass('disabled');
+    $('#add-position-form').remove();
+});
+
+$('#positions').on('click', '.edit-position', function (e) {
+    e.preventDefault();
+    var position_id = $(this).siblings('.position_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var edit_position_form = public_path + 'editPositionForm/' + position_id;
+    var ajaxurl = public_path + 'editPosition';
+
+    BootstrapDialog.show({
+        title: 'Edit Position <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var form = $(".edit-position-form")[0];
+
+                    var formData = new FormData(form);
+                    formData.append('position_id', position_id);
+                    formData.append('company_id', company_id);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            var new_position_title = $(form).find('.title').val();
+                            $('#position-' + position_id + ' .box-title').text(new_position_title);
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax
+                }
+            }],
+        data: {
+            'pageToLoad': edit_position_form
+        },
+        onshown: function (ref) {
+            //initCkeditor(ref);
+        },
+        closable: false
+    });
+
+});
+
+$('#positions').on('click', '.delete-position', function (e) {
+    e.stopImmediatePropagation();
+
+    var position_id = $(this).siblings('.position_id').val();
+    var url = public_path + 'deletePosition';
+
+    BootstrapDialog.confirm('Are you sure you want to delete this position?', function (result) {
+        if (result) {
+            var data = {
+                'position_id': position_id
+            };
+
+            $.post(url, data, function (data) {
+                $('#position-' + data).remove();
+            });
+        }
+    });
+});
+
+$('.permission-list-group').on('click', '.position-permission', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var role_id = $(this).children('.role_id').val();
+    var permission_id = $(this).children('.permission_id').val();
+    var company_id = $(this).children('.company_id').val();
+
+    var assign_html = '<i class="fa fa-check" aria-hidden="true"></i>';
+    assign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+    assign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+    assign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+    var unassign_html = '<i class="fa fa-plus" aria-hidden="true"></i>';
+    unassign_html += '<input class="role_id" type="hidden" value="' + role_id + '"/>';
+    unassign_html += '<input class="permission_id" type="hidden" value="' + permission_id + '"/>';
+    unassign_html += '<input class="company_id" type="hidden" value="' + company_id + '"/>';
+
+
+    /*Assign the Task List to this user*/
+    if ($(this).hasClass('bg-gray')) {
+        $(this).switchClass('bg-gray', 'bg-green', function () {
+            $(this).html(assign_html);
+            //shareToCompanyEmployee(user_id, company_id, job_id);
+            assignPositionPermission(role_id, permission_id, company_id);
+        });
+    }
+    /*Unassign the Task List from this user*/
+    if ($(this).hasClass('bg-green')) {
+        $(this).switchClass('bg-green', 'bg-gray', function () {
+            $(this).html(unassign_html);
+            //unshareFromCompanyEmployee(user_id, company_id, job_id);
+            unassignPositionPermission(role_id, permission_id, company_id);
+        });
+    }
+});
+
+
+$(".column").sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+});
+
+$(".portlet")
+        .addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+        .find(".portlet-header")
+        .addClass("ui-widget-header ui-corner-all")
+        .prepend("<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+
+$(".portlet-toggle").click(function () {
+    var icon = $(this);
+    icon.toggleClass("ui-icon-minusthick ui-icon-plusthick");
+    icon.closest(".portlet").find(".portlet-content").toggle();
+});

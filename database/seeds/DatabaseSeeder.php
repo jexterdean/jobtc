@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         //comment for now because seeding this is not required
         $this->call(RolesTableSeeder::class);
         $this->call(PermissionsTableSeeder::class);
+        $this->call(ModuleTableSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(MeetingSeeder::class);
         $this->call(PaymentMethodSeeder::class);

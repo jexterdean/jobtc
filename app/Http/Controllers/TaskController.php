@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use Bican\Roles\Exceptions\RoleDeniedException;
 use Illuminate\Http\Request;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\TaskTimer;
 use App\Models\TaskChecklist;
 use App\Models\TaskChecklistOrder;
+use App\Models\TaskCheckListPermission;
 use App\Models\Link;
 use App\Models\LinkCategory;
+use App\Models\Profile;
+use App\Models\Permission;
+use App\Models\PermissionRole;
+use App\Models\PermissionUser;
 use View;
 use Auth;
 use Redirect;
@@ -123,6 +129,26 @@ class TaskController extends BaseController {
                 ->toArray();
 
 
+        $company_id = Project::where('project_id', $task->project_id)->pluck('company_id');
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
+
         $assets = ['calendar'];
 
         return view('task.show', [
@@ -133,7 +159,9 @@ class TaskController extends BaseController {
             'current_time' => $current_time,
             'percentage' => number_format($percentage, 0),
             'links' => $links,
-            'categories' => $categories
+            'categories' => $categories,
+            'module_permissions' => $module_permissions,
+            'company_id' => $company_id
         ]);
     }
 
@@ -225,6 +253,14 @@ class TaskController extends BaseController {
 
     public function delete(Request $request, $id) {
         $task = Task::where('task_id', $id)->delete();
+
+        //Check if the task exists in the task checklist permission table and delete it
+        $task_check_list_permission_count = TaskCheckListPermission::where('task_id', $id)->count();
+
+        if ($task_check_list_permission_count > 0) {
+            $task_check_list_permission = TaskCheckListPermission::where('task_id', $id);
+            $task_check_list_permission->delete();
+        }
 
         return json_encode($task);
     }
@@ -414,16 +450,21 @@ class TaskController extends BaseController {
     public function saveImage(Request $request) {
 
         $file_name = $request->file('upload');
-        
-        $file_name->move(
-                'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
-        );
+
+        if (file_exists(public_path('assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()))) {
+            $uploaded_file_name = $file_name->getClientOriginalName();
+        } else {
+            $file_name->move(
+                    'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
+            );
+            $uploaded_file_name = $file_name->getClientOriginalName();
+        }
 
         $data = array(
             "uploaded" => 1,
-            "fileName" => $file_name->getClientOriginalName(),
-            "url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
-            //"url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
+            "fileName" => $uploaded_file_name,
+            "url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $uploaded_file_name
+                //"url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $uploaded_file_name
         );
 
         return json_encode($data);
@@ -466,10 +507,10 @@ class TaskController extends BaseController {
         $task_checklist_id = $request->input('task_check_list_id');
         $checklist_header = $request->input('checklist_header');
 
-        if($checklist_header === '') {
+        if ($checklist_header === '') {
             $checklist_header = 'No Title';
         }
-        
+
         $task_check_list = TaskChecklist::where('id', $task_checklist_id);
         $task_check_list->update([
             'checklist_header' => $checklist_header
@@ -498,15 +539,37 @@ class TaskController extends BaseController {
         return "true";
     }
 
-    public function getTaskChecklistItem(Request $request) {
-        $task_check_list_id = $request->input('task_check_list_id');
+    public function getTaskChecklistItem(Request $request, $task_check_list_id, $company_id) {
+        //$task_check_list_id = $request->input('task_check_list_id');
+
+        //$data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
+
+        //return json_encode($data);
         
-        $data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
+        $user_id = Auth::user('user')->user_id;
+        
+        $list_item = TaskChecklist::where('id',$task_check_list_id)->first();
+       
+        $permissions_list = [];
 
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
 
-        return json_encode($data);
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        return view('task.partials._taskchecklistitem',[
+            'list_item' => $list_item,
+            'module_permissions' => $module_permissions
+        ]);
+        
     }
-    
+
     public function saveSpreadsheet(Request $request) {
         //$taskCheckList = new TaskChecklist($request->all());
         //$taskCheckList->save();
@@ -514,9 +577,9 @@ class TaskController extends BaseController {
         $task_check_list_id = $request->input('task_check_list_id');
         $checklist_header = $request->input('checklist_header');
         $checklist = $request->input('checklist');
-        
+
         $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
-        
+
         $taskCheckList->update([
             'checklist_header' => $checklist_header,
             'checklist' => $checklist,
@@ -539,9 +602,89 @@ class TaskController extends BaseController {
         }
 
         return json_encode($data);
-        
     }
 
+    public function addBriefcaseForm() {
+        return view('forms.addBriefcaseForm');
+    }
+
+    public function addBriefcase(Request $request) {
+
+        $user_id = Auth::user('user')->user_id;
+        $project_id = $request->input('project_id');
+        $title = $request->input('title');
+
+        $project = Project::where('project_id', $project_id)->first();
+
+        $task = new Task;
+        $task->belongs_to = 'project';
+        $task->unique_id = $project_id;
+        $task->task_title = $title;
+        $task->task_description = '';
+        $task->is_visible = 'yes';
+        $task->task_status = 'pending';
+        $task->user_id = $user_id;
+        $task->project_id = $project_id;
+        $task->save();
+
+        //If the one who added the briefcase isn't the project owner,
+        // Give permissions to them automatically
+        if ($project->user_id !== $user_id) {
+            $task_check_list_permission = new TaskCheckListPermission();
+            $task_check_list_permission->task_id = $task->task_id;
+            $task_check_list_permission->user_id = $user_id;
+            $task_check_list_permission->project_id = $project_id;
+            $task_check_list_permission->company_id = $project->company_id;
+            $task_check_list_permission->save();
+        }
+
+        return view('task.partials._briefcase', [
+            'task' => $task
+        ]);
+    }
+
+    public function autoSaveEditChecklist(Request $request) {
+        $task_check_list_id = $request->input('task_check_list_id');
+        $checklist = $request->input('checklist');
+
+        $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
+
+        $taskCheckList->update([
+            'checklist' => $checklist
+        ]);
+
+        return "true";
+    }
+
+    public function getTaskListItem(Request $request, $id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        
+        $list_item = TaskChecklist::where('id',$id)->first();
+        
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        return view('task._partials._taskchecklistitem',[
+            'list_item' => $list_item,
+            'module_permissions' => $module_permissions
+        ]);
+    }
 }
 
 ?>

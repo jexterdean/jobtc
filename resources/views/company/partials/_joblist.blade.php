@@ -21,7 +21,7 @@
                                     @if($test->id === $test_job->test_id
                                     && $job->id === $test_job->job_id)
                                     <li class="bg-gray list-group-item">
-                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{$test->title}}
+                                        {{$test->title}}
                                         <div class="pull-right">
                                             <div class="btn-group pull-right">
                                                 <a href="#" class="drag-handle">
@@ -59,7 +59,7 @@
                                             @if($test->id === $test_applicant->test_id 
                                             && $applicant->id === $test_applicant->applicant_id)
                                             <li class="bg-gray list-group-item">
-                                                <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{$test->title}}
+                                                {{$test->title}}
                                                 <div class="pull-right">
                                                     <div class="btn-group pull-right">
                                                         <a href="#" class="drag-handle">
@@ -101,7 +101,7 @@
                         <ul class="job-applicant-list list-group">
                             @foreach($tests as $test)
                             <li class="bg-gray list-group-item">
-                                <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;{{$test->title}}
+                                {{$test->title}}
                                 <div class="pull-right">
                                     <div class="btn-group pull-right">
                                         <a href="#" class="drag-handle">

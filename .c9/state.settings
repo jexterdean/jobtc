@@ -1,4 +1,15 @@
 {
+    "ace": {
+        "search": {
+            "@backwards": "false",
+            "@highlightmatches": "true",
+            "@matchcase": "false",
+            "@preservecase": "false",
+            "@regex": "false",
+            "@wholeword": "false",
+            "@wraparound": "true"
+        }
+    },
     "console": {
         "@expanded": true,
         "@height": "153",
@@ -6,8 +17,8 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab0",
-                    "tab1"
+                    "tab1",
+                    "tab0"
                 ]
             },
             "name": "pane1",
@@ -17,21 +28,20 @@
                     "name": "tab0",
                     "path": "",
                     "className": [
-                        "tab0",
-                        "focus"
+                        "tab0"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1466237951033
+                            "timestamp": 1467702883912
                         },
                         "filter": true,
                         "title": "bash - \"job.tc\"",
                         "tooltip": "bash - \"job.tc\"",
                         "terminal": {
-                            "id": "devel_880",
+                            "id": "devel_819",
                             "cwd": "",
-                            "width": 1094,
+                            "width": 1648,
                             "height": 127
                         }
                     },
@@ -42,29 +52,44 @@
                     "type": "tab",
                     "name": "tab1",
                     "path": "",
-                    "className": [
-                        "tab1"
-                    ],
+                    "className": [],
                     "document": {
-                        "changed": false,
-                        "meta": {},
                         "filter": true,
-                        "title": "Immediate (Javascript (browser))",
+                        "title": "Immediate",
                         "tooltip": "Immediate (Javascript (browser))",
                         "immediate": {
+                            "folds": [],
+                            "scrolltop": 0,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 2,
+                                    "column": 0
+                                },
+                                "end": {
+                                    "row": 2,
+                                    "column": 0
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": 0,
                             "type": "jsbrowser",
                             "history": [],
                             "pos": 0
-                        }
+                        },
+                        "hash": "bc37e9908b413249fe666f189265c03143e4d841",
+                        "meta": {},
+                        "changed": false
                     },
                     "editorType": "immediate",
                     "active": false
                 }
             ],
-                "accessList": []
-            },
-            "name": "pane1",
-            "nodes": [],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -84,16 +109,15 @@
     },
     "ext": {
         "counters": {
-            "@ace": 2,
+            "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
             "@document": 3,
             "@form": 5,
-            "@immediate": 1,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 3,
+            "@session": 2,
             "@tab": 3,
             "@undoManager": 3
         }
@@ -113,6 +137,7 @@
     },
     "panecycle": {
         "json()": [
+            "tab2",
             "tab0"
         ]
     },
@@ -155,17 +180,45 @@
             ]
         }
     },
-    "recentfiles": {
-        "json()": []
+    "search-history": {
+        "search": {
+            "json()": [
+                "show"
+            ]
+        }
     },
     "tabs": {
         "json()": {
-            "focus": "tab0",
+            "focus": "/app/Http/Controllers/JobController.php",
             "meta": {
-                "accessList": []
+                "accessList": [
+                    "tab2"
+                ]
             },
             "name": "pane0",
-            "nodes": [],
+            "nodes": [
+                {
+                    "type": "tab",
+                    "name": "tab2",
+                    "path": "/app/Http/Controllers/JobController.php",
+                    "className": [
+                        "tab2",
+                        "focus"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1467703096081
+                        },
+                        "filter": true,
+                        "title": "JobController.php",
+                        "tooltip": "/app/Http/Controllers/JobController.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": true
+                }
+            ],
             "skin": "editor_tab",
             "skinset": "default",
             "type": "pane"
@@ -173,7 +226,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/readme.md"
+            "/"
         ]
     }
 }

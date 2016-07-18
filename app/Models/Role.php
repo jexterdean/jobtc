@@ -19,4 +19,7 @@ class Role extends Model
         return $this->hasOne('App\Models\RoleUser');
     }
     
+    public function permission_role() {
+        return $this->hasOne('App\Models\PermissionRole');
+    }
 }

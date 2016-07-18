@@ -9,7 +9,8 @@ class TeamMember extends Model
     public $timestamps = true;
     protected $fillable = [
         'team_id',
-        'user_id'
+        'user_id',
+        'company_id'
     ];
     protected $primaryKey = 'id';
     protected $table = 'team_member';
@@ -25,4 +26,5 @@ class TeamMember extends Model
     public function user() {
         return $this->belongsTo('App\Models\User');
     }
+    
 }

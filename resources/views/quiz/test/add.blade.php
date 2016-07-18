@@ -122,6 +122,7 @@
         //region Tags
         var tag_input = $('.tag-input');
         tag_input.tagsinput({
+            maxTags: 1,
             cancelConfirmKeysOnEmpty: false, //prevent enter to submit form
             tagClass: function(item) {
                 return 'label label-success'

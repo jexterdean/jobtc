@@ -57,6 +57,12 @@
     {!!  HTML::style('assets/css/page/applicants.css')  !!}
     @endif
     
+    @if(in_array('users',$assets))
+    {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
+    {!!  HTML::style('assets/css/page/users.css')  !!}
+    @endif
+    
+    
     @if(in_array('profiles',$assets))
     {!!  HTML::style('assets/css/page/profiles.css')  !!}
     @endif
@@ -73,6 +79,11 @@
     @if(in_array('slider',$assets))
     {!!  HTML::style('assets/css/jquery.nstSlider.css')  !!}
     @endif
+    
+    @if(in_array('assign',$assets))
+    {!!  HTML::style('assets/css/page/assign.css')  !!}
+    @endif
+    
     <!--Multi-navigation css-->
     {!!  HTML::style('assets/css/menu.css')  !!}
     <script> var public_path = "{{ URL::to('/') }}/"; </script>

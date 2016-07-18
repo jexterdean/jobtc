@@ -35,6 +35,15 @@
                                                 ''
                                             !!}
 
+                                            @if($v->question_type_id == 4)
+                                            <div class="form-group">
+                                                <label>Note:</label>
+                                                <div>
+                                                    {!! $v->note ? $v->note : '<em style="color: #f00;">No note!</em>' !!}
+                                                </div>
+                                            </div>
+                                            @endif
+
                                             <div class="form-group">
                                                 <label>Explanation:</label>
                                                 <div>
@@ -48,12 +57,18 @@
                                                     {!! $v->marking_criteria ? $v->marking_criteria : '<em style="color: #f00;">No criteria!</em>' !!}
                                                 </div>
                                             </div>
+                                            @elseif($v->question_type_id == 4 && $v->record_id)
+                                            <video id="quiz-video-play" controls="controls" preload="metadata" src="https://laravel.software/recordings/{{ $v->record_id }}.webm">
+                                                Your browser does not support the video tag.
+                                            </video>
                                             @endif
+
+                                            @if($v->question_type_id != 4)
                                             <div class="form-group">
                                                 <label>Your Answer</label>
                                                 <div>
                                                     {!!
-                                                        $v->result_answer ?
+                                                        $v->result_answer != '' ?
                                                             (
                                                                 $v->question_type_id == 1 ?
                                                                 (
@@ -74,8 +89,9 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                            @endif
 
-                                            @if($v->question_type_id != 3)
+                                            @if(!in_array($v->question_type_id, array(3, 4)))
                                             <div class="form-group">
                                                 <label>Correct Answer</label>
                                                 <div>
@@ -89,6 +105,11 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                            <div class="form-inline">
+                                                <label>Points</label>&nbsp;{{ $v->result ?
+                                                ($v->question_type_id == 3 ? $v->result_points : $v->points) : 0
+                                                 }}
+                                            </div>
                                             @endif
 
                                             <div class="text-center">
@@ -99,10 +120,10 @@
                                                         <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
                                                         <span class="glyphicon glyphicon-time"></span>
                                                     </button>
-                                                    @if($v->question_type_id == 3)
+                                                    @if(in_array($v->question_type_id, array(3, 4)))
                                                     <div class="pull-right" style="padding-left: 5px;">
                                                         <div class="input-group">
-                                                            <input type="number" name="points[{{ $v->result_id }}]" value="{{ $v->result_points }}" max="{{ $v->max_point }}" class="form-control" style="width: 70px;">
+                                                            <input type="number" name="points[{{ $v->result_id }}]" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control" style="width: 70px;">
                                                             <div class="input-group-addon">/{{ $v->max_point }}</div>
                                                         </div>
                                                     </div>

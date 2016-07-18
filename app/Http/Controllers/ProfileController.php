@@ -24,6 +24,15 @@ class ProfileController extends BaseController {
 
         return view('user.profile', ['assets' => $assets, 'countries' => $countries_option]);
     }
+    
+    public function show(Request $request, $id) {
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $assets = ['profiles'];
+
+        return view('user.profile', ['assets' => $assets, 'countries' => $countries_option]);
+    }
 
     public function changePassword(Request $request) {
         /*$user = Auth::user();
@@ -81,10 +90,18 @@ class ProfileController extends BaseController {
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
-            $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
+            if (file_exists(public_path('assets/user/' . $photo->getClientOriginalName()))) {
+                $photo_path = 'assets/user/' . $photo->getClientOriginalName();
+            } else {
+                $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+                $photo_path = $photo_save->getPathname();
+            }
         } else {
             $photo_path = User::where('user_id', $user_id)->pluck('photo');
+
+            if ($photo_path === '' || $photo_path === NULL) {
+                $photo_path = 'assets/user/default-avatar.jpg';
+            }
         }
 
         if ($password !== '') {

@@ -22,6 +22,14 @@ class Project extends Model
     protected $primaryKey = 'project_id';
     protected $table = 'project';
 
+    public function user() {
+        return $this->belongsTo('App\Models\User');
+    }
+    
+    public function company() {
+        return $this->belongsTo('App\Models\Company');
+    }
+    
     public function task() {
         return $this->hasMany('App\Models\Task');
     }

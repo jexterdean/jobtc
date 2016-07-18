@@ -12,7 +12,7 @@ class QuestionTypeSeederNewType extends Seeder
     public function run()
     {
         DB::table('question_type')->insert(array(
-            array('type' => 'Written Answer')
+            array('type' => 'Video Question')
         ));
     }
 }

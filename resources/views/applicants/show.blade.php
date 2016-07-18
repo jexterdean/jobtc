@@ -42,6 +42,7 @@
                             <text class="media-heading">{{$applicant->name}}&nbsp;<a href="{{$applicant->id}}" class="delete-applicant"><i class="fa fa-trash"></i></a></text>
                             @else
                             <text class="media-heading">{{$applicant->name}}</text>
+                            <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
                             @endif
                             <br />
                             <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
@@ -55,7 +56,7 @@
                             <br />
                             <textarea class="status-container">
                                         @if(isset($statuses))
-                                            {{$statuses->status}}
+                                            {{$statuses->tags}}
                                         @endif    
                             </textarea>
                             @endif
@@ -150,7 +151,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <textarea class="video-status-container">
-                                                {{$video->video_tags['tags']}}
+                                                {{$video->tags['tags']}}
                                         </textarea>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
                                     </div>
@@ -190,7 +191,7 @@
             </div>
             <div class="mini-space"></div>
             @endif
-            <div class="applicant-posting-info hidden-xs">
+            <div id="applicant-{{$applicant->id}}" class="applicant-posting-info hidden-xs">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="media">
@@ -212,19 +213,23 @@
                                 {{$applicant->name}}&nbsp;
                                 @if(Auth::user('user')->user_id === $job->user_id)
                                 @if($applicant->hired === 'No')
-                                    <a href="#" class='pull-right btn btn-edit btn-shadow bg-light-blue-gradient hire'>Hire</a>
-                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
-                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                <a href="#" class='pull-right btn btn-edit btn-shadow bg-light-blue-gradient hire'>Hire</a>
+                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                                 @else
-                                    <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
-                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
-                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
+                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                                 @endif
                                 @endif
                                 </text>
                                 @else
-                                <text class="media-heading">{{$applicant->name}}</text>
+                                <text class="media-heading applicant-name"><span>{{$applicant->name}}</span></text>
+                                @if(Auth::user('applicant'))
+                                <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
                                 @endif
+                                @endif
+
                                 <br />
                                 <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
                                 <br />
@@ -232,11 +237,20 @@
                                 <br />
                                 <text>{{date_format(date_create($applicant->created_at),'M d,Y')}}</text>
                                 <br />
+                                @if(Auth::user('applicant'))
+                                <div class="applicant-options">
+                                    <a class="btn btn-edit btn-shadow bg-light-blue-gradient edit-applicant" href="#"><i class="fa fa-pencil" aria-hidden="true"></i>  Edit </a>
+                                    <a class="btn btn-edit btn-shadow bg-light-blue-gradient edit-applicant-password" href="#">Change Password</a>
+                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                </div>
+                                @endif
+                                <br />
                                 @if(Auth::user('user'))
                                 <textarea class="status-container">
                                             @if(isset($statuses))
                                             {{$statuses->tags}}
-                                            @endif
+                                        @endif    
                                 </textarea>
                                 @endif
                             </div>
@@ -299,4 +313,5 @@
 <input class="applicant_score" type="hidden" value="{{$rating->score or ''}}"/>
 <input class="page_applicant_id" type="hidden" value="{{$applicant->id}}"/>
 <input class="job_id" type="hidden" value="{{$applicant->job_id}}"/>
+<input class="page_type" type="hidden" value="applicant"/>
 @stop

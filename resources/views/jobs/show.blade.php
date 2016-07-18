@@ -59,8 +59,12 @@
                             <div class="row" style="margin: 15px 0 45px;">
                                 <div class="col-md-12">
                                     <div class="job-header pull-right">
+                                        @if(Auth::user('user')->can('edit.jobs') && $module_permissions->where('slug','edit.jobs')->count() === 1)
                                         <a class="btn btn-edit btn-lg btn-shadow edit-job" data-toggle="modal" style="font-size: 18px;"><i class="fa fa-pencil"></i>&nbsp;Edit</a>
+                                        @endif
+                                        @if(Auth::user('user')->can('delete.jobs') && $module_permissions->where('slug','delete.jobs')->count() === 1)
                                         <a class="btn btn-delete btn-lg btn-shadow delete-job" style="font-size: 18px;"><i class="fa fa-trash-o"></i>&nbsp;Delete</a>
+                                        @endif
                                         <input name="job_id" class="job_id" type="hidden" value="{{$job->id}}"/>
                                     </div>
                                 </div>
@@ -106,7 +110,7 @@
                                             </div>
                                             <div id="collapse-2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                                 <div class="panel-body">
-                                                    <div class="panel-content" data-content="{{ url('quiz/10?p=slider&mini=1') }}">
+                                                    <div class="panel-content" data-content="{{ url('quizAssessment/' . $job->id) }}">
                                                     </div>
                                                 </div>
                                             </div>

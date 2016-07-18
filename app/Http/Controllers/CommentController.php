@@ -74,8 +74,8 @@ Class CommentController extends BaseController {
             $commenter_type = 'applicant';
         }
 
-        $job_id = $request->input('job_id');
-        $applicant_id = $request->input('applicant_id');
+
+        $unique_id = $request->input('unique_id');
         $comment = $request->input('comment');
         $send_email = $request->input('send_email');
         $belongs_to = $request->input('module');
@@ -83,39 +83,68 @@ Class CommentController extends BaseController {
         $new_comment = new Comment([
             'commenter_id' => $commenter_id,
             'commenter_type' => $commenter_type,
-            'unique_id' => $applicant_id,
+            'unique_id' => $unique_id,
             'belongs_to' => $belongs_to,
             'comment' => $comment
         ]);
 
         $new_comment->save();
 
-        $job_owner = Job::where('id', $job_id)->first();
-        
-        if (Auth::check('user')) {
-            $new_comment_item = Comment::with('user')->where('comment_id', $new_comment->comment_id)->first();
+        if ($belongs_to === 'applicant') {
+
+            $job_id = $request->input('job_id');
+            $job_owner = Job::where('id', $job_id)->first();
+
+            if (Auth::check('user')) {
+                $new_comment_item = Comment::with('user')
+                        ->where('comment_id', $new_comment->comment_id)
+                        ->first();
+
+                //Get from and to address            
+                $from_email = User::where('user_id', $commenter_id)->first();
+                $to_email = Applicant::where('id', $unique_id)->first();
+            } elseif (Auth::check('applicant')) {
+                $new_comment_item = Comment::with('applicant')->where('comment_id', $new_comment->comment_id)->first();
+
+                //Get from and to address            
+                $from_email = Applicant::where('id', $unique_id)->first();
+                $to_email = User::where('user_id', $job_owner->user_id)->first();
+            }
+
+            if ($send_email === 'true') {
+                Mail::queue('emails.commentEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'job_owner' => $job_owner, 'comment' => $comment], function ($message) use ($from_email, $to_email, $job_owner) {
+                    $message->from($from_email->email, $from_email->name);
+                    $message->to($to_email->email, $to_email->name);
+                    //$message->to(['jobtcmailer@gmail.com'],$to_email->name);
+                    $message->subject($job_owner->title);
+                });
+            }
+
+            return view('common.commentListItem', ['comment' => $new_comment_item]);
+        }
+
+
+        if ($belongs_to === 'employee') {
+
+            $new_comment_item = Comment::with('user')
+                    ->where('comment_id', $new_comment->comment_id)
+                    ->first();
 
             //Get from and to address            
             $from_email = User::where('user_id', $commenter_id)->first();
-            $to_email = Applicant::where('id', $applicant_id)->first();
-        } elseif (Auth::check('applicant')) {
-            $new_comment_item = Comment::with('applicant')->where('comment_id', $new_comment->comment_id)->first();
+            $to_email = User::where('user_id', $unique_id)->first();
 
-            //Get from and to address            
-            $from_email = Applicant::where('id', $applicant_id)->first();
-            $to_email = User::where('user_id', $job_owner->user_id)->first();
+            if ($send_email === 'true') {
+                Mail::queue('emails.commentEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'comment' => $comment], function ($message) use ($from_email, $to_email) {
+                    $message->from($from_email->email, $from_email->name);
+                    $message->to($to_email->email, $to_email->name);
+                    //$message->to(['jobtcmailer@gmail.com'],$to_email->name);
+                    $message->subject($from_email->name);
+                });
+            }
+
+            return view('common.commentListItem', ['comment' => $new_comment_item,'employee' => $unique_id]);
         }
-
-        if ($send_email === 'true') {
-            Mail::queue('emails.commentEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'job_owner' => $job_owner, 'comment' => $comment], function ($message) use ($from_email, $to_email, $job_owner) {
-                $message->from($from_email->email, $from_email->name);
-                $message->to($to_email->email,$to_email->name);
-                //$message->to(['jobtcmailer@gmail.com'],$to_email->name);
-                $message->subject($job_owner->title);
-            });
-        }
-
-        return view('common.commentListItem', ['comment' => $new_comment_item, 'applicant' => $applicant_id]);
     }
 
 }

@@ -7,10 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Job;
 use App\Models\Company;
+use App\Models\Profile;
 use App\Models\Applicant;
 use App\Models\ApplicantTag;
 use App\Models\MailBox;
 use App\Models\MailBoxAlias;
+use App\Models\Permission;
+use App\Models\PermissionRole;
+use App\Models\ShareJob;
 use Auth;
 use Redirect;
 
@@ -85,20 +89,121 @@ class JobController extends Controller {
      */
     public function show($id) {
 
-        $job = Job::with('applicants')->where('id', $id)->first();
+        if (Auth::check()) {
+            $user_id = Auth::user('user')->user_id;
 
+            $job = Job::with('applicants')->where('id', $id)->first();
+
+            $applicants = $this->getApplicantsInfo($id);
+
+            $user_profile_role_count = Profile::where('user_id', $user_id)
+                    ->where('company_id', $job->company_id)
+                    ->count();
+
+            $is_shared = ShareJob::where('user_id', $user_id)
+                    ->where('job_id', $job->id)
+                    ->count();
+
+            if ($user_profile_role_count > 0) {
+
+                $user_profile_role = Profile::where('user_id', $user_id)
+                        ->where('company_id', $job->company_id)
+                        ->first();
+
+                $permissions_list = [];
+
+                $permissions_role = PermissionRole::with('permission')
+                        ->where('company_id', $job->company_id)
+                        ->where('role_id', $user_profile_role->role_id)
+                        ->get();
+
+                foreach ($permissions_role as $role) {
+                    array_push($permissions_list, $role->permission_id);
+                }
+
+                $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+            }
+
+            if ($user_profile_role_count === 0 && $is_shared === 0) {
+                $module_permissions = Permission::where('slug', 'view.jobs')->get();
+            }
+
+            $assets = ['jobs', 'slider'];
+
+            return view('jobs.show', [
+                'job' => $job,
+                'applicants' => $applicants,
+                'module_permissions' => $module_permissions,
+                'assets' => $assets,
+                'count' => 0
+            ]);
+        } else {
+
+            $job = Job::with('applicants')->where('id', $id)->first();
+
+            $applicants = $this->getApplicantsInfo($id);
+
+            $assets = ['jobs', 'slider'];
+
+            return view('jobs.show', [
+                'job' => $job,
+                'applicants' => $applicants,
+                'assets' => $assets,
+                'count' => 0
+            ]);
+        }
+    }
+    private function getApplicantsInfo($id){
         $applicants = Applicant::with(['tags' => function ($query) {
-                        $query->orderBy('created_at', 'desc');
-                    }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->select(\DB::raw('
+                fp_applicants.*,
+                IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
+                SUM(
+                    IF(
+                        fp_test_result.result = 1,
+                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                        0
+                    )
+                ) as total_score,
+                SUM(
+                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                ) as max_points,
+                (ROUND(
+                    SUM(
+                        IF(
+                            fp_test_result.result = 1,
+                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                            0
+                        )
+                    )/SUM(
+                        IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                    ),
+                    4
+                ) * 100) as average
+            '))
+            ->leftJoin('test_result', function($join){
+                $join->on('test_result.unique_id', '=', 'applicants.id');
+            })
+            ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
+            ->leftJoin('question', function($join){
+                $join->on('question.id', '=', 'test_result.question_id')
+                    ->on('question.test_id', '=', 'test.id');
+            })
+            ->where('applicants.job_id', $id)
+            ->orderBy('average', 'desc')
+            ->orderBy('applicants.created_at', 'desc')
+            ->groupBy('applicants.id')
+            ->paginate(5);
+        if(count($applicants) > 0){
+            foreach($applicants as $v){
+                $v->average = $v->average ? $v->average : 0;
+            }
+        }
+        //exit;
 
-        $assets = ['jobs'];
-
-        return view('jobs.show', [
-            'job' => $job,
-            'applicants' => $applicants,
-            'assets' => $assets,
-            'count' => 0
-        ]);
+        return $applicants;
     }
 
     /**
@@ -363,7 +468,7 @@ class JobController extends Controller {
         if ($name !== '' || $email !== '') {
             $applicant->save();
             $message = "Application Submitted";
-            
+
             Auth::loginUsingId("applicant", $applicant->id);
         } else {
             $message = "Application Denied";
@@ -401,7 +506,7 @@ class JobController extends Controller {
           $mailboxalias->save(); */
 
         //return $message; 
-        
+
         return $applicant->id;
     }
 
@@ -504,6 +609,29 @@ class JobController extends Controller {
             //No Duplicates, return true to the jquery Validator
             return "true";
         }
+    }
+
+    public function addJobFormCompany() {
+        return view('forms.addJobForm');
+    }
+
+    public function addJobCompany(Request $request) {
+
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $job_title = $request->input('job_title');
+
+        $job = new Job();
+        $job->user_id = $user_id;
+        $job->company_id = $company_id;
+        $job->title = $job_title;
+        $job->save();
+
+
+        return view('jobs.partials._newjob', [
+            'job' => $job,
+            'company_id' => $company_id
+        ]);
     }
 
 }

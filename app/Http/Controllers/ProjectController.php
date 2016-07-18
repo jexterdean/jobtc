@@ -12,11 +12,16 @@ use App\Models\AssignedUser;
 use App\Models\Note;
 use App\Models\Attachment;
 use App\Models\Task;
+use App\Models\TaskChecklist;
+use App\Models\TaskChecklistOrder;
 use App\Models\TaskCheckListPermission;
 use App\Models\Timer;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamProject;
+use App\Models\TeamCompany;
+use App\Models\Permission;
+use App\Models\PermissionUser;
 use \DB;
 use \Auth;
 use \View;
@@ -123,12 +128,11 @@ class ProjectController extends BaseController {
     public function show($id) {
 
         $user_id = Auth::user('user')->user_id;
-        
+
         $user_authority = User::find($user_id);
-        
+
         if ($user_authority->level() === 1) {
             $project = Project::find($id);
-        
         } elseif ($user_authority->level() > 1) {
             $project = Project::find($id);
         }
@@ -177,8 +181,21 @@ class ProjectController extends BaseController {
 
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)->get();
+
+         $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $project->company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
         
-        $assets = ['datepicker','real-time'];
+        $assets = ['projects','datepicker','real-time'];
 
         return view('project.show', [
             'project' => $project,
@@ -192,6 +209,7 @@ class ProjectController extends BaseController {
             'task_permissions' => $task_permissions,
             'assignedUsers' => $assignedUser,
             'assign_username' => $assign_username,
+            'module_permissions' => $module_permissions,
             'assets' => $assets
         ]);
     }
@@ -229,34 +247,21 @@ class ProjectController extends BaseController {
         //
         $project = Project::find($id);
 
-        $validation = Validator::make($request->all(), [
-                    'project_title' => 'required|unique:project,project_title',
-                    'client_id' => 'required',
-                    'start_date' => 'required|date_format:"d-m-Y"',
-                    'deadline' => 'required|date_format:"d-m-Y"|after:start_date',
-                    'rate_type' => 'required',
-                    'rate_value' => 'required|numeric'
-        ]);
-
-        if ($validation->fails()) {
-            return redirect()->back();
-        }
-
-        $project->project_title = Input::get('project_title');
-        $project->account = Input::get('account');
-        $project->currency = Input::get('currency');
-        $project->project_type = Input::get('project_type');
-        $project->client_id = Input::get('client_id');
-        $project->start_date = date("Y-m-d H:i:s", strtotime(Input::get('start_date')));
-        $project->deadline = date("Y-m-d H:i:s", strtotime(Input::get('deadline')));
-        $project->project_description = Input::get('project_description');
-        $project->rate_type = Input::get('rate_type');
-        $project->rate_value = Input::get('rate_value');
+        $project->project_title = $request->input('project_title');
+        $project->account = $request->input('account');
+        $project->currency = $request->input('currency');
+        $project->project_type = $request->input('project_type');
+        $project->company_id = $request->input('company_id');
+        $project->start_date = date("Y-m-d H:i:s", strtotime($request->input('start_date')));
+        $project->deadline = date("Y-m-d H:i:s", strtotime($request->input('deadline')));
+        $project->project_description = $request->input('project_description');
+        $project->rate_type = $request->input('rate_type');
+        $project->rate_value = $request->input('rate_value');
         $project->save();
 
-        return redirect()->route('project.show', $id);
+        return $project->project_title;
     }
-
+  
     /**
      * Remove the specified resource from storage.
      *
@@ -303,6 +308,58 @@ class ProjectController extends BaseController {
         $project->delete();
 
         return redirect()->back();
+    }
+
+    public function delete(Request $request) {
+
+        $project_id = $request->input('project_id');
+
+        //First get the tasks inside the project
+        $task_count = Task::where('project_id', $project_id)->count();
+        $task_ids = Task::where('project_id', $project_id)->get();
+        $task_ids_array = [];
+
+        foreach ($task_ids as $id) {
+            array_push($task_ids_array, $id);
+        }
+
+        //Then delete the task list order
+        $task_check_list_order_count = TaskChecklistOrder::whereIn('task_id', $task_ids_array)->count();
+        if ($task_check_list_order_count > 0 && $task_count > 0) {
+            $task_check_list_order = TaskChecklistOrder::whereIn('task_id', $task_ids_array);
+            $task_check_list_order->delete();
+        }
+
+        //Then delete the task list permissions
+        $task_check_list_permissions_count = TaskCheckListPermission::whereIn('task_id', $task_ids_array)->count();
+        if ($task_check_list_permissions_count > 0 && $task_count > 0) {
+            $task_check_list_permissions = TaskCheckListPermission::whereIn('task_id', $task_ids_array);
+            $task_check_list_permissions->delete();
+        }
+
+        //Then delete the task list items themselves
+        $task_check_list_items_count = TaskChecklist::whereIn('task_id', $task_ids_array)->count();
+        if ($task_check_list_items_count > 0 && $task_count > 0) {
+            $task_check_list_items = TaskChecklist::whereIn('task_id', $task_ids_array);
+            $task_check_list_items->delete();
+        }
+        //Then delete the project tasks
+        if ($task_count > 0) {
+            $tasks = Task::where('project_id', $project_id);
+            $tasks->delete();
+        }
+
+        //Then unmap the companies that are mapped to these projects
+        $team_companies_count = TeamCompany::where('project_id', $project_id)->count();
+        if ($team_companies_count > 0) {
+            $team_companies = TeamCompany::where('project_id', $project_id);
+            $team_companies->delete();
+        }
+        //Then finally delete the project
+        $project = Project::where('project_id', $project_id);
+        $project->delete();
+
+        return "true";
     }
 
     public function startTimer() {
@@ -397,5 +454,36 @@ class ProjectController extends BaseController {
 
         return redirect()->back();
     }
+    
+    public function addProjectForm(){
+        return view('forms.addProjectForm');
+    }
+    
+    public function addProject(Request $request){
+        
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $project_title = $request->input('project_title');
+        
+        $project = new Project();
+        $project->project_title = $project_title;
+        $project->account = '';
+        $project->currency = '';
+        $project->project_type = 'Standard';
+        $project->user_id = $user_id;
+        $project->company_id = $company_id;
+        $project->project_description = '';
+        $project->rate_type = '';
+        $project->rate_value = 0;
+        $project->save();
 
+        $update_project_ref = Project::find($project->project_id);
+        $update_project_ref->ref_no = $project->project_id;
+        $update_project_ref->save();
+        
+        return view('project.partials._newproject',[
+            'project' => $project,
+            'company_id' => $company_id
+        ]);
+    }
 }

@@ -10,7 +10,9 @@ class TestPersonal extends Model
     protected $fillable = [
         'user_id',
         'test_id',
-        'order'
+        'order',
+        'version',
+        'parent_test_id'
     ];
     protected $primaryKey = 'id';
     protected $table = 'test_personal';

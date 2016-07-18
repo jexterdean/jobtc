@@ -19,7 +19,9 @@ class TestPersonalSeeder extends Seeder
                     ->insert([
                         'test_id' => $v->id,
                         'user_id' => $v->user_id,
-                        'order' => $v->order
+                        'order' => $v->order,
+                        'version' => 1,
+                        'parent_test_id' => $v->id
                     ]);
             }
         }

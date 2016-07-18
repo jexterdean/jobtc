@@ -162,6 +162,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 <!--Page Specific scripts-->
 
 @if (in_array('companies',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/OrgChart/dist/js/jquery.orgchart.js')  !!}
 {!!  HTML::script('assets/js/page/companies.js')  !!}
 @endif
@@ -191,6 +192,16 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/video-conference.js')  !!}
 @endif
 
+@if(in_array('users',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!!  HTML::script('assets/js/jquery-tagEditor/jquery.caret.min.js')  !!}
+{!!  HTML::script('assets/js/jquery-tagEditor/jquery.tag-editor.min.js')  !!}
+{!!  HTML::script('assets/js/page/users.js')  !!}
+{!!  HTML::script('assets/js/erizo.js')  !!}
+{!!  HTML::script('assets/js/page/video-conference.js')  !!}
+@endif
+
+
 @if(in_array('profiles',$assets))
 {!!  HTML::script('assets/js/page/profiles.js')  !!}
 @endif
@@ -206,10 +217,21 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/bootstrap-tagsinput.js')  !!}
 @endif
 
-
-
 @if(in_array('slider',$assets))
 {!!  HTML::script('assets/js/jquery.nstSlider.js')  !!}
+@endif
+
+@if(in_array('assign',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!!  HTML::script('assets/js/page/assign.js')  !!}
+@endif
+
+@if(in_array('projects',$assets))
+{!!  HTML::script('assets/js/page/projects.js')  !!}
+@endif
+
+@if(in_array('dashboard',$assets))
+{!!  HTML::script('assets/js/page/dashboard.js')  !!}
 @endif
 
 <script>

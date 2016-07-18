@@ -28,7 +28,8 @@
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
-                                            <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header">{!! $list_item->checklist_header !!}</a>
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
+                                            <input type="hidden" class="company_id" value="{{$company_id}}" />
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -55,20 +56,6 @@
                                     </div>
                                     <div class="row">
                                         <div id="task-item-collapse-{{$list_item->id}}" class="task-item-collapse collapse">
-                                            <div class="checklist-item">{!! $list_item->checklist !!}</div>
-                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                            <hr/>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="pull-right" style="margin-right: 5px;">
-                                                        <a href="#" class="btn-delete btn-shadow btn alert_delete view-btn-delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;
-                                                        <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
-                                                        <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                                        <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -87,18 +74,16 @@
         </div>
         <div class="row">
             <div class="col-sm-8">
+                @if($module_permissions->where('slug','create.tasks')->count() === 1)
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
-
                 <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
-                <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
-                @if(Auth::user('user')->user_id === $task->user_id)
-                <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
-                @if($current_time)
-                <a class="btn btn-shadow btn-sm btn-delete timer-btn stop_time" data-current="{{ $current_time->_time }}" id="{{ $current_time->id }}">Stop Time</a>
-                @else
-                <a class="btn btn-shadow btn-sm btn-timer timer-btn start_time">Start Time</a>
+                @if($module_permissions->where('slug','edit.briefcases')->count() === 1)
+                <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
+                @endif
+                @if($module_permissions->where('slug','delete.briefcases')->count() === 1)
+                <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
                 <div class="col-sm-4">
                     @foreach($links as $link)
@@ -107,59 +92,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="col-sm-5">
-                            <h4 class="text-center text-bold bg-black timer-text" id="timer" style="font-size: 20px!important;padding: 0 5px;">
-                                00:00:00
-                            </h4>
-                        </div>
-                        <div class="col-sm-7">
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <h4 class="text-left text-bold bg-black" id="timer" style="font-size: 20px!important;">
-                                        Time: <strong class="total-time">{{ $_total }}</strong>
-                                    </h4>
-                                </div>
-                                <div class="col-sm-4" >
-                                    <a href="#timer-table-{{ $task->task_id }}" class="btn btn-sm btn-black pull-right" aria-expanded="true" data-widget="collapse" data-toggle="collapse"><i class="fa fa-chevron-down"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="collapse" id="timer-table-{{ $task->task_id }}">
-                            <table class="table table-responsive">
-                                <tbody class="task-table-body">
-                                    @if(count($task_timer) > 0)
-                                    <?php $total = 0; ?>
-                                    @foreach($task_timer as $val)
-                                    <?php $total += $val->time ?>
-                                    <tr>
-                                        <td>{{ $val->name }}</td>
-                                        <td class="text-center">{{ $val->start_time != '0000-00-00 00:00:00' ? date('d/m/Y g:i:s A', strtotime($val->start_time)) : '&nbsp;'}}</td>
-                                        <td class="text-center">{{ $val->end_time != '0000-00-00 00:00:00' ? date('d/m/Y g:i:s A', strtotime($val->end_time)) : '&nbsp;'}}</td>
-                                        <td class="text-center">{{ $val->time ? $val->time : '0.00' }}</td>
-                                        <td class="text-center" style="width: 5%;"><a href=' {{ url('deleteTaskTimer/' . $val->id) }}' class='alert_delete '> <i class='fa fa-trash-o fa-2x'></i> </a></td>
-                                    </tr>
-                                    @endforeach
-                                    <tr>
-                                        <td class="text-right" colspan="3"><strong>Total Time:</strong></td>
-                                        <td class="text-center">{{ number_format($total,2) }}</td>
-                                        <td>&nbsp;</td>
-                                    </tr>
-                                    @else
-                                    <tr>
-                                        <td colspan="5">No data was found.</td>
-                                    </tr>
-                                    @endif
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -515,20 +448,6 @@
                 //saveChecklistContent(task_check_list_id, evt.editor.getData());
             });
 
-
-
-            /*if (check_list_container.length > 10) {
-             
-             $('body').animate({
-             scrollTop: _body.get(0).scrollHeight / 2
-             }, 500);
-             
-             } else {
-             $('body').animate({
-             scrollTop: 0
-             }, 500);
-             }*/
-
             check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
                 e.preventDefault();
@@ -695,12 +614,35 @@
             //var textarea_id = $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').attr('id');
             var textarea_id = $(this).parent().parent().parent().parent().parent().parent().find('.edit-checklist-item').attr('id');
 
-            CKEDITOR.replace(textarea_id);
+            var edit_task_list_editor = CKEDITOR.replace(textarea_id);
+            edit_task_list_editor.on('change', function (evt) {
+
+                var ajaxurl = public_path + 'autoSaveEditChecklist';
+
+                var formData = new FormData();
+                formData.append('task_check_list_id', task_list_item_id);
+                formData.append('checklist', evt.editor.getData());
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: "POST",
+                    data: formData,
+                    // THIS MUST BE DONE FOR FILE UPLOADING
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                }); //ajax
+            });
 
             //Toggle the content area to show
             $('#task-item-collapse-' + task_list_item_id).collapse('show');
-            $(this)
-                    .css({'display': 'none'});
+            $(this).css({'display': 'none'});
             $(this).siblings('.alert_delete').css({'display': 'none'});
         });
 
@@ -793,7 +735,7 @@
          console.log('trigger');
          });*/
         //region For Tasklist Delete
-        $('#accordion').on('click', '.delete-tasklist', function (e) {
+        $('.task-list').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             var task_id = url.split('/').pop();
@@ -1081,6 +1023,17 @@
             });
         });
 
+        $('.check-list-container').on('click', '.toggle-tasklistitem', function () {
+            
+            var task_list_item_id = $(this).siblings('.task_list_item_id').val();
+            var company_id = $(this).siblings('.company_id').val();
+            
+            var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' +company_id;
+
+            $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
+                $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
+            });
+        });
 
         function makeid()
         {

@@ -22,3 +22,12 @@
         </div>
     </div>
 </form>
+<script>
+    var editor = CKEDITOR.replace('edit-description', {
+        startupFocus: true
+    });
+    
+    editor.on('change', function (evt) {
+        $('#edit-description').text(evt.editor.getData());
+    });
+</script>

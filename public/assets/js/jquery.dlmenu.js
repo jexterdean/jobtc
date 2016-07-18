@@ -70,15 +70,15 @@
 			var self = this;
 
 			this.$trigger.on( 'click.dlmenu', function() {
-				
+
 				if( self.open ) {
-					self._closeMenu();
+                    self._closeMenu();
 				} 
 				else {
 					self._openMenu();
 					// clicking somewhere else makes the menu close
 					$body.off( 'click' ).on( 'click.dlmenu', function() {
-						self._closeMenu() ;
+                        self._closeMenu();
 					} );
 					
 				}
@@ -87,11 +87,11 @@
 			} );
 
 			this.$menuitems.on( 'click.dlmenu li a', function( event ) {
-
                 if(!$(this).find('a').attr('data-toggle')){
                     event.stopPropagation();
                 }
                 else{
+                    event.stopPropagation();
                     var target = $(this).find('a').data('target') ? $(this).find('a').data('target') : $(this).find('a').attr('href');
                     $(target).modal('show');
                     self._closeMenu();
@@ -100,7 +100,7 @@
 				var $item = $(this),
 					$submenu = $item.children( 'ul.dl-submenu' );
 
-				if( $submenu.length > 0 ) {
+				if( $submenu.length > 0) {
 
 					var $flyin = $submenu.clone().insertAfter( self.$menu ).addClass( self.options.animationClasses.in ),
 						onAnimationEndFn = function() {

@@ -29,7 +29,7 @@
 {!!  HTML::script('assets/js/plugins/datatables/dataTables.bootstrap.js')  !!}
 <script>
     $(function(e){
-        console.log('aw');
+        $.fn.dataTableExt.sErrMode = 'throw';
         $('#ranking-table').DataTable({
               "pageLength": 5,
               "bLengthChange": false,

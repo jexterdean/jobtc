@@ -51,7 +51,7 @@ class Applicant extends Model implements
     }
     
     public function tags() {
-        return $this->hasMany('App\Models\ApplicantTag','applicant_id','id');
+        return $this->hasMany('App\Models\Tag','unique_id','id');
     }
     
     public function comment() {

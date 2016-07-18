@@ -28,7 +28,7 @@ CKEDITOR.editorConfig = function (config) {
     ];
     
     
-    config.extraPlugins = 'autocorrect,ckwebspeech,uploadimage,contextmenu';
+    config.extraPlugins = 'ckwebspeech,uploadimage,contextmenu';
     
     config.saveUrl = '/saveImage';
     //config.saveUrl = 'http://localhost:8000/saveImage';
@@ -36,8 +36,8 @@ CKEDITOR.editorConfig = function (config) {
     //config.pollUrl = '/autoSave';
     
     //For file uploads, specifically image uploads
-    //config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
-    config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
+    config.filebrowserImageUploadUrl = 'https://job.tc/pm/saveImage';
+    //config.filebrowserImageUploadUrl = 'http://localhost:8000/saveImage';
     
     //For ckwebspeechs
     config.ckwebspeech = {'culture': 'en',
@@ -55,11 +55,11 @@ CKEDITOR.editorConfig = function (config) {
     //config.uiColor = '#F3F4F5';
     
     
-     var wh = window.innerHeight;
+     //var wh = window.innerHeight;
     //Css changes
-    config.height = wh - 200 +'px';
+    config.height = '200px';
 
-    //Disbale resize
+    //Disable resize
     config.resize_enabled = false;
 
     //config.autoParagraph = false;

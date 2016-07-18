@@ -28,6 +28,12 @@ use App\Models\ShareJob;
 use App\Models\ShareJobCompany;
 use App\Models\ShareJobCompanyPermission;
 use App\Models\Test;
+use App\Models\Module;
+use App\Models\Permission;
+use App\Models\PermissionUser;
+use App\Models\PermissionRole;
+use App\Models\Applicant;
+use App\Models\Comment;
 use Auth;
 use View;
 use Redirect;
@@ -62,6 +68,38 @@ class CompanyController extends BaseController {
 
     public function show($company_id) {
 
+        $projects = Project::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(5)->get();
+
+        $jobs = Job::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(5)->get();
+        
+        $employees = Profile::with('user')->where('company_id',$company_id)->take(5)->get();
+        
+        $job_list = Job::where('company_id',$company_id)->lists('id');
+        
+        $applicants = Applicant::whereIn('job_id',$job_list)->orderBy('created_at','desc')->take(5)->get();
+        
+        $applicant_list = Applicant::whereIn('job_id',$job_list)->lists('id');
+        
+        $comments = Comment::with('applicant')->whereIn('unique_id',$applicant_list)
+                ->where('belongs_to','applicant')
+                ->orderBy('created_at','desc')
+                ->take(5)
+                ->get();
+        
+        $assets = ['companies', 'real-time'];
+
+        return View::make('company.show', [
+                    'projects' => $projects,
+                    'jobs' => $jobs,
+                    'employees' => $employees,
+                    'applicants' => $applicants,
+                    'comments' => $comments,
+                    'assets' => $assets
+        ]);
+    }
+
+    public function getCompanyModules($company_id) {
+
         //Getting Assign Project Data
         $user_id = Auth::user('user')->user_id;
 
@@ -69,8 +107,8 @@ class CompanyController extends BaseController {
 
         $companies = Company::where('id', $company_id)->get();
 
-        $teams = Team::with(['team_member' => function($query) {
-                        $query->with('user')->get();
+        $teams = Team::with(['team_member' => function($query) use($company_id) {
+                        $query->with('user')->where('company_id', $company_id)->get();
                     }])->get();
 
         $team_grouping = Project::with('team_project')->where('company_id', $company_id)->get();
@@ -88,24 +126,12 @@ class CompanyController extends BaseController {
         $owned_projects = Project::where('user_id', $user_id)->where('company_id', $company_id)->get();
 
         //Get Team Member projects
-        $team_members = TeamMember::where('user_id', $user_id)->get();
+        $team_members = TeamMember::where('user_id', $user_id)->where('company_id', $company_id)->get();
 
         $team_projects = TeamProject::all();
 
-        $team_companies = TeamCompany::all();
-
         foreach ($owned_projects as $owned_project) {
             array_push($project_id_list, $owned_project->project_id);
-        }
-
-        //Get companies involved with projects(It should show on the other companies projects tab)
-        foreach ($team_companies as $company) {
-            foreach ($team_projects as $project) {
-                if ($company->project_id === $project->project_id && $company->company_id !== $company_id) {
-                    array_push($project_id_list, $project->project_id);
-                    array_push($company_id_list, $company->company_id);
-                }
-            }
         }
 
         //Use the team id to get the projects the users are involved with
@@ -120,21 +146,50 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
 
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                ->get();
 
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         $assets = ['companies', 'real-time'];
 
         return View::make('company.show', [
+                    'company_id' => $company_id,
                     'projects' => $projects,
+                    'shared_projects' => $shared_projects,
                     'task_permissions' => $task_permissions,
                     'profiles' => $profiles,
                     'companies' => $companies,
                     'teams' => $teams,
                     'team_grouping' => $team_grouping,
                     'countries' => $countries_option,
+                    'module_permissions' => $module_permissions,
                     'assets' => $assets
         ]);
     }
@@ -158,7 +213,7 @@ class CompanyController extends BaseController {
 
     public function store(Request $request) {
 
-        $user_id = Auth::user()->user_id;
+        $user_id = Auth::user('user')->user_id;
 
         $validation = Validator::make(Input::all(), [
                     'name' => 'required|unique:companies',
@@ -242,6 +297,17 @@ class CompanyController extends BaseController {
         $profile->role_id = $admin->id;
         $profile->save();
 
+        $user = User::where('user_id', $user_id)->first();
+
+
+        $new_user_role = Role::where('company_id', 0)->first();
+
+        $user->detachRole($new_user_role->id);
+        $user->attachRole($admin->id);
+
+        $no_company_profile = Profile::where('company_id', 0)->where('user_id', $user_id);
+        $no_company_profile->delete();
+
         return Redirect::to('company/' . $companies->id)->withSuccess("Company added successfully!!");
     }
 
@@ -314,6 +380,7 @@ class CompanyController extends BaseController {
 
         $user_id = $request->input('user_id');
         $project_id = $request->input('project_id');
+        $company_id = $request->input('company_id');
 
         $project_exists = Team::where('project_id', $project_id)->count();
 
@@ -321,14 +388,14 @@ class CompanyController extends BaseController {
 
             $team_id = Team::where('project_id', $project_id)->pluck('id');
 
-            $team_member_exists = TeamMember::where('user_id', $user_id)->where('team_id', $team_id)->first();
+            $team_member_exists = TeamMember::where('user_id', $user_id)->where('team_id', $team_id)->where('company_id', $company_id)->first();
 
             $team_project_exists = TeamProject::where('team_id', $team_id)->where('team_id', $team_id)->first();
 
             if (!$team_member_exists > 0) {
                 $team_member->team_id = $team_id;
                 $team_member->user_id = $user_id;
-
+                $team_member->company_id = $company_id;
                 $team_member->save();
             }
 
@@ -351,6 +418,7 @@ class CompanyController extends BaseController {
             //Save the user as a team member
             $team_member->team_id = $team_id;
             $team_member->user_id = $user_id;
+            $team_member->company_id = $company_id;
             $team_member->save();
 
             //Map Project to the team id    
@@ -366,7 +434,13 @@ class CompanyController extends BaseController {
                 ->get();
         $task_permissions = TaskCheckListPermission::where('project_id', $project_id)->where('user_id', $user_id)->get();
 
-        return view('company.partials._tasklist', ['tasks' => $tasks, 'task_permissions' => $task_permissions, 'project_id' => $project_id, 'user_id' => $user_id]);
+        return view('company.partials._tasklist', [
+            'tasks' => $tasks,
+            'task_permissions' => $task_permissions,
+            'project_id' => $project_id,
+            'user_id' => $user_id,
+            'company_id' => $company_id
+        ]);
     }
 
     public function unassignTeamMember(Request $request) {
@@ -395,7 +469,16 @@ class CompanyController extends BaseController {
         $team_company->company_id = $company_id;
         $team_company->save();
 
-        return "true";
+        //Get employees of the company except for the logged in user
+        $employees = Profile::with('user')
+                ->where('company_id', $company_id)
+                ->get();
+
+        return view('company.partials._projectemployeelist', [
+            'employees' => $employees,
+            'project_id' => $project_id,
+            'company_id' => $company_id
+        ]);
     }
 
     public function unassignCompanyFromTeam(Request $request) {
@@ -405,6 +488,16 @@ class CompanyController extends BaseController {
         $team_company = TeamCompany::where('project_id', $project_id)->where('company_id', $company_id);
         $team_company->delete();
 
+        $team_project = TeamProject::where('project_id', $project_id)->first();
+
+        //Remove company users from team
+        $team_member = TeamMember::where('team_id', $team_project->team_id)->where('company_id', $company_id);
+        $team_member->delete();
+
+        //Remove the task check list permissions for for users on the unassigned companies
+        $task_check_list_permissions = TaskCheckListPermission::where('company_id', $company_id)->where('project_id', $project_id);
+        $task_check_list_permissions->delete();
+
         return "true";
     }
 
@@ -412,13 +505,33 @@ class CompanyController extends BaseController {
         $user_id = $request->input('user_id');
         $task_id = $request->input('task_id');
         $project_id = $request->input('project_id');
+        $company_id = $request->input('company_id');
 
         $task_list_permission = new TaskCheckListPermission();
 
         $task_list_permission->user_id = $user_id;
         $task_list_permission->task_id = $task_id;
         $task_list_permission->project_id = $project_id;
+        $task_list_permission->company_id = $company_id;
         $task_list_permission->save();
+
+        //Get Project Team
+        $team_project = TeamProject::where('project_id', $project_id)->first();
+
+        //Check if the user is already a team member for that project
+        $is_team_member = TeamMember::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->where('team_id', $team_project->team_id)
+                ->count();
+
+        if ($is_team_member === 0) {
+
+            $team_member = new TeamMember();
+            $team_member->user_id = $user_id;
+            $team_member->team_id = $team_project->team_id;
+            $team_member->company_id = $company_id;
+            $team_member->save();
+        }
 
         return $user_id;
     }
@@ -427,9 +540,20 @@ class CompanyController extends BaseController {
         $user_id = $request->input('user_id');
         $task_id = $request->input('task_id');
         $project_id = $request->input('project_id');
+        $company_id = $request->input('company_id');
 
-        $task_list_permission = TaskCheckListPermission::where('user_id', $user_id)->where('task_id', $task_id)->where('project_id', $project_id);
+        $task_list_permission = TaskCheckListPermission::where('user_id', $user_id)
+                ->where('task_id', $task_id)
+                ->where('project_id', $project_id)
+                ->where('company_id', $company_id);
         $task_list_permission->delete();
+
+        //Check if user still has tasks in this project
+        $has_tasks = TaskCheckListPermission::where('user_id', $user_id)->where('project_id', $project_id)->count();
+        if ($has_tasks === 0) {
+            $team_member = TeamMember::where('user_id', $user_id)->where('company_id', $company_id);
+            $team_member->delete();
+        }
 
         return $user_id;
     }
@@ -543,7 +667,124 @@ class CompanyController extends BaseController {
         return $project_array;
     }
 
-    public function getAssignProjectsTab(Request $request, $id) {
+    /* For Load on Demand Tabs */
+
+    public function getJobsTab(Request $request, $id) {
+
+        $user_id = Auth::user('user')->user_id;
+
+        $my_jobs = Job::where('company_id', $id)->where('user_id', $user_id)->get();
+
+        $shared_jobs_user = ShareJob::where('user_id', $user_id)->get();
+        $shared_jobs_company = ShareJobCompany::where('company_id', $id)->get();
+
+
+        $shared_jobs_list = [];
+
+        foreach ($shared_jobs_user as $user_job) {
+            array_push($shared_jobs_list, $user_job->job_id);
+        }
+
+        foreach ($shared_jobs_company as $company_job) {
+            array_push($shared_jobs_list, $company_job->job_id);
+        }
+
+        $shared_jobs = Job::with('user')->whereIn('id', $shared_jobs_list)
+                //->where('company_id','<>',$id)
+                //->where('user_id','<>',$user_id)
+                ->get();
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
+        return view('company.partials._myjobslist', [
+            'my_jobs' => $my_jobs,
+            'shared_jobs' => $shared_jobs,
+            'module_permissions' => $module_permissions,
+            'company_id' => $id
+        ]);
+    }
+
+    public function getEmployeesTab(Request $request, $id) {
+
+        $user_id = Auth::user('user')->user_id;
+
+        $profiles = Profile::where('company_id', $id)->get();
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
+
+        return view('company.partials._employees', [
+            'profiles' => $profiles,
+            'countries' => $countries_option,
+            'module_permissions' => $module_permissions,
+            'company_id' => $id
+        ]);
+    }
+
+    public function getPositionsTab(Request $request, $id) {
+        $user_id = Auth::user('user')->user_id;
+
+        $positions = Role::where('company_id', $id)->get();
+        $modules = Module::all();
+        $permissions = Permission::all();
+        $permission_role = PermissionRole::all();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
+        return view('company.partials._positionslist', [
+            'positions' => $positions,
+            'permissions' => $permissions,
+            'permission_role' => $permission_role,
+            'modules' => $modules,
+            'module_permissions' => $module_permissions,
+            'company_id' => $id
+        ]);
+    }
+
+    public function getAssignTab(Request $request, $id) {
 
         //Getting Assign Project Data
         $user_id = Auth::user('user')->user_id;
@@ -559,16 +800,16 @@ class CompanyController extends BaseController {
         //Get owned projects
         $owned_projects = Project::where('user_id', $user_id)->where('company_id', $id)->get();
 
-        $teams = Team::with(['team_member' => function($query) {
-                        $query->with('user')->get();
+        $teams = Team::with(['team_member' => function($query) use($id) {
+                        $query->with('user')->where('company_id', $id)->get();
                     }])->get();
 
         //Get Team Member projects
-        $team_members = TeamMember::where('user_id', $user_id)->get();
+        $team_members = TeamMember::where('user_id', $user_id)->where('company_id', $id)->get();
 
         $team_projects = TeamProject::all();
 
-        $team_companies = TeamCompany::all();
+        $team_companies = TeamCompany::where('company_id', '<>', $id)->get();
 
         foreach ($owned_projects as $owned_project) {
             array_push($project_id_list, $owned_project->project_id);
@@ -586,23 +827,146 @@ class CompanyController extends BaseController {
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->whereIn('project_id', $project_id_list)->where('company_id', $id)->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                ->get();
 
 
         $user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->get();
+                    }])->where('id', '<>', $id)->where('id', '<>', 0)->get();
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
 
-        return view('company.partials._projectlist', [
+        return view('company.partials._assign', [
+            'company_id' => $id,
             'projects' => $projects,
+            'shared_projects' => $shared_projects,
             'profiles' => $profiles,
             'user_companies' => $user_companies,
             'teams' => $teams,
             'team_members' => $team_members,
             'team_grouping' => $team_grouping,
             'team_companies' => $team_companies,
-            'countries' => $countries_option
+            'countries' => $countries_option,
+            'module_permissions' => $module_permissions
+        ]);
+    }
+
+    public function getAssignProjectsTab(Request $request, $id) {
+
+        //Getting Assign Project Data
+        $user_id = Auth::user('user')->user_id;
+
+        $countries_option = Country::orderBy('country_name', 'asc')->get();
+
+        $team_grouping = Project::with('team_project')->where('company_id', $id)->get();
+
+        $profiles = Profile::where('company_id', $id)->get();
+
+        $project_id_list = [];
+
+        //Get owned projects
+        $owned_projects = Project::where('user_id', $user_id)->where('company_id', $id)->get();
+
+        $teams = Team::with(['team_member' => function($query) use($id) {
+                        $query->with('user')->where('company_id', $id)->get();
+                    }])->get();
+
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id', $user_id)->where('company_id', $id)->get();
+
+        $team_projects = TeamProject::all();
+
+        $team_companies = TeamCompany::where('company_id', '<>', $id)->get();
+
+        foreach ($owned_projects as $owned_project) {
+            array_push($project_id_list, $owned_project->project_id);
+        }
+
+        //Use the team id to get the projects the users are involved with
+        foreach ($team_members as $member) {
+            foreach ($team_projects as $project) {
+                if ($member->team_id === $project->team_id) {
+                    array_push($project_id_list, $project->project_id);
+                }
+            }
+        }
+
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        $shared_projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                ->get();
+
+
+        $user_companies = Company::with(['profile' => function($query) use($user_id) {
+                        $query->where('user_id', $user_id)->get();
+                    }])->where('id', '<>', $id)->where('id', '<>', 0)->get();
+
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
+        return view('company.partials._projectlist', [
+            'company_id' => $id,
+            'projects' => $projects,
+            'shared_projects' => $shared_projects,
+            'profiles' => $profiles,
+            'user_companies' => $user_companies,
+            'teams' => $teams,
+            'team_members' => $team_members,
+            'team_grouping' => $team_grouping,
+            'team_companies' => $team_companies,
+            'countries' => $countries_option,
+            'module_permissions' => $module_permissions
         ]);
     }
 
@@ -619,16 +983,16 @@ class CompanyController extends BaseController {
         $test_jobs = TestPerJob::all();
 
         $company_users = Profile::with('user')->where('company_id', $id)->get();
-        
+
         $company_user_ids = [];
-        
+
         //Get all tests by users within the company
-        foreach($company_users as $company_user) {
-            array_push($company_user_ids,$company_user->user_id);
+        foreach ($company_users as $company_user) {
+            array_push($company_user_ids, $company_user->user_id);
         }
-        
+
         $tests = Test::whereIn('user_id', $company_user_ids)->get();
-        
+
         $authority_levels = Role::where('company_id', $id)->orderBy('level', 'asc')->get();
 
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
@@ -661,22 +1025,22 @@ class CompanyController extends BaseController {
 
         $profiles = Profile::with('user')->where('company_id', $id)->where('user_id', '<>', $user_id)->get();
 
-         /*$user_companies = Company::with(['profile' => function($query) use($user_id) {
-                        $query->where('user_id', $user_id)->get();
-                    }])->where('id','<>',$id)->get();*/
-        
-        $user_companies = Company::with('profile')->where('id','<>',$id)->get();
-        
+        /* $user_companies = Company::with(['profile' => function($query) use($user_id) {
+          $query->where('user_id', $user_id)->get();
+          }])->where('id','<>',$id)->get(); */
+
+        $user_companies = Company::with('profile')->where('id', '<>', $id)->where('id', '<>', 0)->get();
+
         $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->get();
-        
+
         $shared_jobs = ShareJob::all();
-        
+
         $shared_jobs_companies = ShareJobCompany::all();
-        
+
         //Get company permissions
         //$shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id',$id)->get();
-        $shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id',$id)->get();
-        
+        $shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id', $id)->get();
+
         return view('company.partials._sharejobslist', [
             'profiles' => $profiles,
             'jobs' => $jobs,
@@ -719,9 +1083,8 @@ class CompanyController extends BaseController {
         $shared_jobs_companies->job_id = $job_id;
         $shared_jobs_companies->company_id = $company_id;
         $shared_jobs_companies->save();
-        
+
         return $shared_jobs_companies->id;
-            
     }
 
     public function unshareJobFromCompany(Request $request) {
@@ -735,70 +1098,143 @@ class CompanyController extends BaseController {
         return "true";
     }
 
-    public function getSubprojects(Request $request, $company_id, $project_id) {
+    public function getSubprojects(Request $request, $project_id, $company_id) {
 
         //Getting Assign Project Data
         $user_id = Auth::user('user')->user_id;
 
-        //Get projects with their tasks and task permissions
-        $projects = Project::with(['task' => function($query) {
-                        $query->orderBy('task_title', 'asc')->get();
-                    }], 'task_permission')->where('project_id', $project_id)->where('company_id', $company_id)->first();
+        $is_project_owner = Project::where('project_id', $project_id)
+                ->where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->count();
 
-        $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
+        $project = Project::where('project_id', $project_id)->first();
+        $project_owner = $project->user_id;
+        $project_company = $project->company_id;
+
+        //Check if the user is the owner of the project and that user owns it in this company
+        if ($is_project_owner > 0) {
+
+            $tasks = Task::where('project_id', $project_id)->orderBy('task_title', 'asc')->get();
+        } else {
+
+            //Get task permissions first for logged in user and current company selected
+            $task_permissions = TaskCheckListPermission::where('user_id', $user_id)
+                    ->where('project_id', $project_id)
+                    ->where('company_id', $company_id)
+                    ->get();
+
+            $task_ids = [];
+
+            foreach ($task_permissions as $permission) {
+                array_push($task_ids, $permission->task_id);
+            }
+
+            $tasks = Task::whereIn('task_id', $task_ids)->orderBy('task_title', 'asc')->get();
+        }
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         return view('company.partials._mytasklistitems', [
-            'projects' => $projects,
-            'task_permissions' => $task_permissions
+            'tasks' => $tasks,
+            'project_id' => $project_id,
+            'project_owner' => $project_owner,
+            'module_permissions' => $module_permissions
         ]);
     }
-    
+
+    public function getSubprojectsForCompanyEmployee(Request $request, $user_id, $project_id, $company_id) {
+
+        //Get projects with their tasks and task permissions
+        $tasks = Task::where('project_id', $project_id)
+                ->orderBy('task_title', 'asc')
+                ->get();
+        $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->where('company_id', $company_id)->get();
+
+        return view('company.partials._companytasklist', [
+            'tasks' => $tasks,
+            'task_permissions' => $task_permissions,
+            'user_id' => $user_id,
+            'project_id' => $project_id,
+            'company_id' => $company_id
+        ]);
+    }
+
     public function getEmployees(Request $request, $company_id, $job_id) {
-        
+
         $user_id = Auth::user('user')->user_id;
-        
+
         //Get employees of the company except for the logged in user
         $employees = Profile::with('user')
-                ->where('user_id','<>',$user_id)
-                ->where('company_id',$company_id)
+                ->where('user_id', '<>', $user_id)
+                ->where('company_id', $company_id)
                 ->get();
-        
+
         //Get company permissions
-        $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id',$company_id)->where('job_id',$job_id)->get();
-        
-        return view('company.partials._employeelist',[
+        $shared_company_jobs_permissions = ShareJobCompanyPermission::where('company_id', $company_id)->where('job_id', $job_id)->get();
+
+        return view('company.partials._employeelist', [
             'employees' => $employees,
             'shared_company_jobs_permissions' => $shared_company_jobs_permissions,
             'job_id' => $job_id
         ]);
     }
-    
+
+    public function getCompanyEmployeesForProject(Request $request, $project_id, $company_id) {
+
+        //Get employees of the company except for the logged in user
+        $employees = Profile::with('user')
+                ->where('company_id', $company_id)
+                ->get();
+
+        return view('company.partials._projectemployeelist', [
+            'employees' => $employees,
+            'project_id' => $project_id,
+            'company_id' => $company_id
+        ]);
+    }
+
     public function shareToCompanyEmployee(Request $request) {
-        
+
         $user_id = $request->input('user_id');
         $company_id = $request->input('company_id');
         $job_id = $request->input('job_id');
-     
-        
+
+
         $company_permission = new ShareJobCompanyPermission();
         $company_permission->user_id = $user_id;
         $company_permission->company_id = $company_id;
         $company_permission->job_id = $job_id;
         $company_permission->save();
-        
+
         return "true";
     }
-    
-     public function unshareFromCompanyEmployee(Request $request) {
-        
+
+    public function unshareFromCompanyEmployee(Request $request) {
+
         $user_id = $request->input('user_id');
         $company_id = $request->input('company_id');
         $job_id = $request->input('job_id');
-     
-        
-        $company_permission = ShareJobCompanyPermission::where('user_id',$user_id)->where('company_id',$company_id)->where('job_id',$job_id);
+
+
+        $company_permission = ShareJobCompanyPermission::where('user_id', $user_id)->where('company_id', $company_id)->where('job_id', $job_id);
         $company_permission->delete();
-        
+
         return "true";
     }
 

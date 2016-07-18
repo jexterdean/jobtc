@@ -3,12 +3,12 @@
         <div class="media-left">
             <a href="#">
                 @if(isset($comment->user->photo))
-                                <img class="comment-photo" src="{{url($comment->user->photo)}}" alt="Employee Photo">
-                                @elseif(isset($comment->applicant->photo))
-                                <img class="comment-photo" src="{{url($comment->applicant->photo)}}" alt="Employee Photo">
-                                @else
-                                <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
-                                @endif
+                <img class="comment-photo" src="{{url($comment->user->photo)}}" alt="Employee Photo">
+                @elseif(isset($comment->applicant->photo))
+                <img class="comment-photo" src="{{url($comment->applicant->photo)}}" alt="Employee Photo">
+                @else
+                <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
+                @endif
             </a>
             @if(isset($comment->user->name))
             <text class="media-heading">{{$comment->user->name}}</text>
@@ -28,7 +28,13 @@
         </tr>
     </table>
     <input class="comment_id" type="hidden" value="{{$comment->comment_id}}">
-    <input class="applicant_id" type="hidden" value="{{$comment->applicant->id}}">
+    
+    @if(isset($employee))
+    <input class="unique_id" type="hidden" value="{{$employee}}">
+    @endif
+    @if(isset($comment->applicant->id))
+    <input class="unique_id" type="hidden" value="{{$comment->applicant->id}}">
+    @endif
 </div>
 <!--div class="mini-space"></div-->
 
