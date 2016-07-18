@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Elasticsearch\ClientBuilder as ES;
+use PhanAn\Remote\Remote;
 
 class QuizController extends BaseController {
 
@@ -377,11 +378,15 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
+                $question->note = Input::get('note');
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
                 if(Input::get('max_point')) {
                     $question->max_point = Input::get('max_point');
+                }
+                if(Input::get('question_tags')) {
+                    $question->question_tags = Input::get('question_tags');
                 }
                 $question->save();
 
@@ -437,6 +442,9 @@ class QuizController extends BaseController {
                     }
 
                     $result->answer = Input::get('answer');
+                    if(Input::get('record_id')) {
+                        $result->record_id = Input::get('record_id');
+                    }
                     $result->result = $r;
                     $result->save();
                 }
@@ -507,6 +515,7 @@ class QuizController extends BaseController {
                     fp_test_result.id as result_id,
                     fp_test_result.answer as result_answer,
                     fp_test_result.result,
+                    fp_test_result.record_id,
                     fp_test_result.points as result_points'
                 ))
                 ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
@@ -706,6 +715,7 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
+                $question->note = Input::get('note');
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
@@ -1393,5 +1403,48 @@ class QuizController extends BaseController {
         $data['max_points_per_test'] = $max_points_per_test;
 
         return $test_id;
+    }
+
+    public function quizVideo(){
+        $data = [
+            'assets' => []
+        ];
+
+        return View::make('quiz.video', $data);
+    }
+    public function quizSaveVideo(Request $request) {
+        $stream_id = $request->input('stream_id');
+        $media_server = "laravel.software";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        $convert_to_webm_command = 'ffmpeg -y -i /var/www/recordings/' . $stream_id . '.mkv -c:v copy -crf 10 -b:v 0 -c:a libvorbis /var/www/recordings/' . $stream_id . '.webm';
+        //Run the mkv file in ffmpeg to repair it(Since erizo makes an invalid mkv file for the html5 video tag)
+        $remote_connection->exec($convert_to_webm_command);
+    }
+    public function quizDeleteVideo($id) {
+        $media_server = "laravel.software";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        //delete mkv
+        $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.mkv';
+        $remote_connection->exec($delete_steam);
+
+        //delete webm
+        $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.webm';
+        $remote_connection->exec($delete_steam);
     }
 }

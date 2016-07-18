@@ -87,6 +87,9 @@ Route::get('quizUserAssessment/{id}', 'QuizController@quizUserAssessment');
 Route::post('quizAddPersonalCommunity', 'QuizController@quizAddPersonalCommunity');
 Route::post('quizSearch', 'QuizController@quizSearch');
 Route::any('quizElasticSearchView', 'QuizController@quizElasticSearchView');
+Route::any('quizVideo', 'QuizController@quizVideo');
+Route::post('quizSaveVideo', 'QuizController@quizSaveVideo');
+Route::get('quizDeleteVideo/{id}', 'QuizController@quizDeleteVideo');
 /*
  * Indeed Applicant Importer (Don't put this in any middleware, 
  * the script should not login to insert the data from Indeed

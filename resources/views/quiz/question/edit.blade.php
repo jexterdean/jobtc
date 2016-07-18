@@ -19,12 +19,16 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="form-inline question-points-area<?php echo $questions_info->question_type_id == 3 ? ' hidden' : ''; ?>" data-type="">
+        <div class="form-inline question-points-area<?php echo in_array($questions_info->question_type_id, array(1, 2)) ? '' : ' hidden'; ?>" data-type="">
             <label>Points:</label>
             <input type="text" name="points" style="width: 80px;" class="q-form points-form form-control" value="{{ $questions_info->points }}" />
         </div>
         <div class="form-inline question-points-area<?php echo $questions_info->question_type_id == 3 ? '' : ' hidden'; ?>" data-type="3" style="white-space: nowrap">
             <label>Maximum Score:</label>
+            <input type="text" name="max_point" style="width: 70px;" class="q-form points-form form-control" value="{{ $questions_info->max_point }}" />
+        </div>
+        <div class="form-inline question-points-area<?php echo $questions_info->question_type_id == 4 ? '' : ' hidden'; ?>" data-type="4" style="white-space: nowrap">
+            <label>Score:</label>
             <input type="text" name="max_point" style="width: 70px;" class="q-form points-form form-control" value="{{ $questions_info->max_point }}" />
         </div>
     </div>
@@ -34,6 +38,14 @@
         <label class="col-sm-2 text-right">Question:</label>
         <div class="col-md-10">
             <textarea name="question" class="q-form form-control summernote-editor">{{ $questions_info->question }}</textarea>
+        </div>
+    </div>
+</div>
+<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 4 ? '' : ' hidden'; ?>" data-type="4">
+    <div class="row">
+        <label class="col-sm-2 text-right">Note:</label>
+        <div class="col-md-10">
+            <textarea name="note" class="q-form form-control summernote-editor">{{ $questions_info->note }}</textarea>
         </div>
     </div>
 </div>
@@ -145,16 +157,16 @@
     <div class="row">
         <label class="col-sm-2 text-right">Marking Criteria:</label>
         <div class="col-md-10">
-            <textarea name="marking_criteria" class="q-form form-control summernote-editor" rows="3">{{ $questions_info->marking_criteria }}</textarea>
+            <textarea name="marking_criteria" class="q-form form-control summernote-editor" rows="3" <?php echo $questions_info->question_type_id == 3 ? '' : 'disabled'; ?>>{{ $questions_info->marking_criteria }}</textarea>
         </div>
     </div>
 </div>
 
-<div class="form-group hidden">
+<div class="form-group question-answer-area<?php echo $questions_info->question_type_id == 4 ? '' : ' hidden'; ?>" data-type="4">
     <div class="row">
         <label class="col-sm-2 text-right">Score Tag</label>
         <div class="col-md-10">
-            <input type="text" name="question_tags" value="{{ $questions_info->question_tags }}" class="tag-input form-control" data-role="tagsinput" style="width: 100%;" />
+            <input type="text" name="question_tags" value="{{ $questions_info->question_tags }}" class="q-form tag-input form-control" data-role="tagsinput" style="width: 100%;" <?php echo $questions_info->question_type_id == 4 ? '' : 'disabled'; ?>/>
         </div>
     </div>
 </div>
@@ -207,6 +219,7 @@
         //region Tags
         var tag_input = $('.tag-input');
         tag_input.tagsinput({
+            maxTags: 1,
             cancelConfirmKeysOnEmpty: false, //prevent enter to submit form
             tagClass: function(item) {
                 return 'label label-success'
