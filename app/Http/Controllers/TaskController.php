@@ -127,10 +127,10 @@ class TaskController extends BaseController {
         $categories = LinkCategory::all()
                 ->lists('name', 'id')
                 ->toArray();
-        
-        
-        $company_id = Project::where('project_id',$task->project_id)->pluck('company_id');
-        
+
+
+        $company_id = Project::where('project_id', $task->project_id)->pluck('company_id');
+
         $user_profile_role = Profile::where('user_id', $user_id)
                 ->where('company_id', $company_id)
                 ->first();
@@ -147,8 +147,8 @@ class TaskController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
-        
+
+
         $assets = ['calendar'];
 
         return view('task.show', [
@@ -253,12 +253,12 @@ class TaskController extends BaseController {
 
     public function delete(Request $request, $id) {
         $task = Task::where('task_id', $id)->delete();
-        
+
         //Check if the task exists in the task checklist permission table and delete it
-        $task_check_list_permission_count = TaskCheckListPermission::where('task_id',$id)->count();
-        
-        if($task_check_list_permission_count > 0) {
-            $task_check_list_permission = TaskCheckListPermission::where('task_id',$id);
+        $task_check_list_permission_count = TaskCheckListPermission::where('task_id', $id)->count();
+
+        if ($task_check_list_permission_count > 0) {
+            $task_check_list_permission = TaskCheckListPermission::where('task_id', $id);
             $task_check_list_permission->delete();
         }
 
@@ -450,16 +450,21 @@ class TaskController extends BaseController {
     public function saveImage(Request $request) {
 
         $file_name = $request->file('upload');
-        
-        $file_name->move(
-                'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
-        );
+
+        if (file_exists(public_path('assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()))) {
+            $uploaded_file_name = $file_name->getClientOriginalName();
+        } else {
+            $file_name->move(
+                    'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
+            );
+            $uploaded_file_name = $file_name->getClientOriginalName();
+        }
 
         $data = array(
             "uploaded" => 1,
-            "fileName" => $file_name->getClientOriginalName(),
-            "url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
-            //"url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()
+            "fileName" => $uploaded_file_name,
+            "url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $uploaded_file_name
+                //"url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $uploaded_file_name
         );
 
         return json_encode($data);
@@ -502,10 +507,10 @@ class TaskController extends BaseController {
         $task_checklist_id = $request->input('task_check_list_id');
         $checklist_header = $request->input('checklist_header');
 
-        if($checklist_header === '') {
+        if ($checklist_header === '') {
             $checklist_header = 'No Title';
         }
-        
+
         $task_check_list = TaskChecklist::where('id', $task_checklist_id);
         $task_check_list->update([
             'checklist_header' => $checklist_header
@@ -536,13 +541,13 @@ class TaskController extends BaseController {
 
     public function getTaskChecklistItem(Request $request) {
         $task_check_list_id = $request->input('task_check_list_id');
-        
+
         $data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
 
 
         return json_encode($data);
     }
-    
+
     public function saveSpreadsheet(Request $request) {
         //$taskCheckList = new TaskChecklist($request->all());
         //$taskCheckList->save();
@@ -550,9 +555,9 @@ class TaskController extends BaseController {
         $task_check_list_id = $request->input('task_check_list_id');
         $checklist_header = $request->input('checklist_header');
         $checklist = $request->input('checklist');
-        
+
         $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
-        
+
         $taskCheckList->update([
             'checklist_header' => $checklist_header,
             'checklist' => $checklist,
@@ -575,22 +580,20 @@ class TaskController extends BaseController {
         }
 
         return json_encode($data);
-        
     }
 
-    
     public function addBriefcaseForm() {
         return view('forms.addBriefcaseForm');
     }
-    
+
     public function addBriefcase(Request $request) {
-        
+
         $user_id = Auth::user('user')->user_id;
         $project_id = $request->input('project_id');
         $title = $request->input('title');
-        
-        $project = Project::where('project_id',$project_id)->first();
-        
+
+        $project = Project::where('project_id', $project_id)->first();
+
         $task = new Task;
         $task->belongs_to = 'project';
         $task->unique_id = $project_id;
@@ -604,7 +607,7 @@ class TaskController extends BaseController {
 
         //If the one who added the briefcase isn't the project owner,
         // Give permissions to them automatically
-        if($project->user_id !== $user_id) {
+        if ($project->user_id !== $user_id) {
             $task_check_list_permission = new TaskCheckListPermission();
             $task_check_list_permission->task_id = $task->task_id;
             $task_check_list_permission->user_id = $user_id;
@@ -612,25 +615,25 @@ class TaskController extends BaseController {
             $task_check_list_permission->company_id = $project->company_id;
             $task_check_list_permission->save();
         }
-        
-        return view('task.partials._briefcase',[
+
+        return view('task.partials._briefcase', [
             'task' => $task
         ]);
     }
-    
+
     public function autoSaveEditChecklist(Request $request) {
         $task_check_list_id = $request->input('task_check_list_id');
         $checklist = $request->input('checklist');
-        
+
         $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
-        
+
         $taskCheckList->update([
             'checklist' => $checklist
         ]);
-        
+
         return "true";
     }
-    
+
 }
 
 ?>
