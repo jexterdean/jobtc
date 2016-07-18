@@ -279,19 +279,6 @@ class UserController extends BaseController {
             return Redirect::to('register')->withErrors($validation->messages());
         }
 
-        /* if ($request->hasFile('photo')) {
-          $photo = $request->file('photo');
-          $photo_save = $photo->move('assets/user/' , $photo->getClientOriginalName());
-          $photo_path = $photo_save->getPathname();
-          } else {
-          $photo_path = "assets/user/default-avatar.jpg";
-          } */
-
-//Get the Client Role for the company
-//$client_role = Role::where('company_id',1)->where('level',2)->first();
-//$client_role = Role::where('company_id',6)->where('level',2)->first();
-
-
         $user = new User;
         $user->name = $request->input('name');
         $user->password = bcrypt($request->input('password'));
@@ -308,17 +295,17 @@ class UserController extends BaseController {
                 ->first();
 
 //Set the newly registered user to company id 0(No Company)
-        $profile = new Profile;
-        $profile->user_id = $user->user_id;
-        $profile->company_id = 0;
-        $profile->role_id = $new_user_role->id;
-        $profile->save();
+        //$profile = new Profile;
+        //$profile->user_id = $user->user_id;
+        //$profile->company_id = 0;
+        //$profile->role_id = $new_user_role->id;
+        //$profile->save();
 
         $user->attachRole($new_user_role->id);
 
         Auth::loginUsingId("user", $user->user_id);
 
-        return redirect()->route('company', [$profile->company_id]);
+        return redirect()->route('dashboard');
     }
 
     public function addEmployeeForm(Request $request, $id) {

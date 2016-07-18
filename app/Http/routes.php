@@ -276,10 +276,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');
     Route::resource('event', 'EventsController');
 
-
-
-
-
     Route::resource('bug', 'BugController');
     Route::resource('note', 'NoteController');
     Route::resource('comment', 'CommentController');

@@ -230,6 +230,10 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/projects.js')  !!}
 @endif
 
+@if(in_array('dashboard',$assets))
+{!!  HTML::script('assets/js/page/dashboard.js')  !!}
+@endif
+
 <script>
     $(function () {
         //to fix the ajax PATCH/POST method type of form not working
