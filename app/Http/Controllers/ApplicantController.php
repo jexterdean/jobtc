@@ -285,8 +285,8 @@ class ApplicantController extends Controller {
 
         if ($request->hasFile('resume')) {
             $resume = $request->file('resume');
-            if (file_exists(public_path('assets/user/' . $resume->getClientOriginalName()))) {
-                $resume_path = 'assets/user/' . $resume->getClientOriginalName();
+            if (file_exists(public_path('assets/user/resumes/' . $resume->getClientOriginalName()))) {
+                $resume_path = 'assets/user/resumes/' . $resume->getClientOriginalName();
             } else {
                 $resume_save = $resume->move('assets/user/resumes', $resume->getClientOriginalName());
                 $resume_path = $resume_save->getPathname();

@@ -147,10 +147,16 @@ class UserController extends BaseController {
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
-            $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
+            if (file_exists(public_path('assets/user/' . $photo->getClientOriginalName()))) {
+                $photo_path = 'assets/user/' . $photo->getClientOriginalName();
+            } else {
+                $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+                $photo_path = $photo_save->getPathname();
+            }
         } else {
-            $photo_path = "assets/user/avatar.png";
+            if ($photo_path === '' || $photo_path === NULL) {
+                $photo_path = 'assets/user/default-avatar.jpg';
+            }
         }
 
         $ticketit_admin = $request->input('ticketit_admin');
@@ -492,7 +498,7 @@ class UserController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
+
         //Check if this employee is below you 
         $logged_user_above_count = ProfileLevel::where('profile_id', $my_profile->id)
                 ->where('profile_level', 'above')
@@ -508,7 +514,7 @@ class UserController extends BaseController {
                 ->where('profile_level', 'below')
                 ->where('unique_id', $profile->id)
                 ->count();
-        
+
         return view('user.partials._newemployee', [
             'profile' => $profile,
             'countries' => $countries_option,
@@ -531,8 +537,12 @@ class UserController extends BaseController {
 
         if ($request->hasFile('photo')) {
             $photo = $request->file('photo');
-            $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
+            if (file_exists(public_path('assets/user/' . $photo->getClientOriginalName()))) {
+                $photo_path = 'assets/user/' . $photo->getClientOriginalName();
+            } else {
+                $photo_save = $photo->move('assets/user/', $photo->getClientOriginalName());
+                $photo_path = $photo_save->getPathname();
+            }
         } else {
             $photo_path = User::where('user_id', $user_id)->pluck('photo');
 
@@ -540,15 +550,19 @@ class UserController extends BaseController {
                 $photo_path = 'assets/user/default-avatar.jpg';
             }
         }
-
+        
         if ($request->hasFile('resume')) {
             $resume = $request->file('resume');
-            $resume_save = $resume->move('assets/user/resumes', $resume->getClientOriginalName());
-            $resume_path = $resume_save->getPathname();
+            if (file_exists(public_path('assets/user/resumes/' . $resume->getClientOriginalName()))) {
+                $resume_path = 'assets/user/resumes/' . $resume->getClientOriginalName();
+            } else {
+                $resume_save = $resume->move('assets/user/resumes/', $resume->getClientOriginalName());
+                $resume_path = $resume_save->getPathname();
+            }
         } else {
             $resume_path = User::where('user_id', $user_id)->pluck('resume');
         }
-
+        
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -603,7 +617,7 @@ class UserController extends BaseController {
             $my_profile = Profile::where('user_id', $employee_id)->where('company_id', $company_id)->first();
 
             $profile_levels = ProfileLevel::where('profile_id', $profile->pluck('id'))->where('unique_id', $my_profile->id);
-            
+
             //If my profile id is equal to the employee id, Logged in user is editing his/her profile
             if ($my_profile->id !== $profile->pluck('id')) {
                 if ($profile_levels->count() > 0) {
