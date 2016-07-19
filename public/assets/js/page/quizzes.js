@@ -98,6 +98,8 @@ slider_div.on('click','.btn-next',function (e) {
         }
         var quiz_id = $(this).closest('.slider-container').find('.quiz_id').val();
         var ajaxurl = public_path + 'quiz?id=' + quiz_id + '&p=exam';
+        console.log(ajaxurl);
+        console.log(data);
         $.ajax({
             url: ajaxurl,
             data: data,
@@ -106,7 +108,9 @@ slider_div.on('click','.btn-next',function (e) {
                 slider_div.remove();
             },
             error: function (a, b, c) {
-
+                console.log(a);
+                console.log(b);
+                console.log(c);
             }
         });
     }
