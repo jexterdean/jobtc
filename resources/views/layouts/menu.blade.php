@@ -41,6 +41,12 @@
                         @endif
                         <li class="divider"></li>
                         <li>
+                             <a href="{{url('company/'.$company->company->id.'/projects')}}">
+                                <i class="fa fa-folder-open"></i>
+                                <span> All Projects </span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="#">
                                 <i class="fa fa-folder-open"></i>
                                 <span> My Projects </span>

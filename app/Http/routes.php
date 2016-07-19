@@ -208,6 +208,7 @@ Route::group(['middleware' => 'auth'], function () {
      * Project
      */
     Route::resource('project', 'ProjectController');
+    Route::get('company/{company_id}/projects','ProjectController@getCompanyProjects');
     Route::get('addProjectForm', 'ProjectController@addProjectForm');
     Route::post('addProject', 'ProjectController@addProject');
 

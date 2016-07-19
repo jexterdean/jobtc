@@ -88,6 +88,9 @@
     {!!  HTML::style('assets/css/page/dashboard.css')  !!}
     @endif
     
+    @if(in_array('projects',$assets))
+    {!!  HTML::style('assets/css/page/projects.css')  !!}
+    @endif
     <!--Multi-navigation css-->
     {!!  HTML::style('assets/css/menu.css')  !!}
     <script> var public_path = "{{ URL::to('/') }}/"; </script>

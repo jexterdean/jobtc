@@ -195,6 +195,8 @@ class ProjectController extends BaseController {
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
         
+        $project_owner = $project->user_id;
+        
         $assets = ['projects','datepicker','real-time'];
 
         return view('project.show', [
@@ -210,7 +212,8 @@ class ProjectController extends BaseController {
             'assignedUsers' => $assignedUser,
             'assign_username' => $assign_username,
             'module_permissions' => $module_permissions,
-            'assets' => $assets
+            'assets' => $assets,
+            'project_owner' => $project_owner
         ]);
     }
 
@@ -483,6 +486,18 @@ class ProjectController extends BaseController {
         
         return view('project.partials._newproject',[
             'project' => $project,
+            'company_id' => $company_id
+        ]);
+    }
+    
+    public function getCompanyProjects($company_id) {
+        
+        $projects = Project::where('company_id',$company_id)->get();
+        $assets = ['projects'];
+        
+        return view('project.index', [
+            'projects' => $projects,
+            'assets' => $assets,
             'company_id' => $company_id
         ]);
     }
