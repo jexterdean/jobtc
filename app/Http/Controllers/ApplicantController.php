@@ -195,15 +195,6 @@ class ApplicantController extends Controller {
             }
 
             $questions = Question::whereIn('question.test_id', array_unique($test_ids))
-                ->select(\DB::raw(
-                    'fp_question.*,
-                    fp_test_result.id as result_id,
-                    fp_test_result.answer as result_answer,
-                    fp_test_result.result,
-                    fp_test_result.record_id,
-                    fp_test_result.points as result_points'
-                ))
-                ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
                 ->orderBy('order', 'ASC')
                 ->get();
 
@@ -211,6 +202,26 @@ class ApplicantController extends Controller {
             if (count($questions) > 0) {
                 foreach ($questions as $v) {
                     $v->question_choices = json_decode($v->question_choices);
+
+                    $test_result = \DB::table('test_result')
+                        ->select(\DB::raw(
+                            'fp_test_result.id as result_id,
+                            fp_test_result.answer as result_answer,
+                            fp_test_result.result,
+                            fp_test_result.record_id,
+                            fp_test_result.points as result_points'
+                        ))
+                        ->where('question_id', $v->id)
+                        ->where('unique_id', $applicant->id)
+                        ->get();
+                    if(count($test_result)> 0){
+                        foreach($test_result as $r){
+                            foreach($r as $field=>$value){
+                                $v->$field = $value;
+                            }
+                        }
+                    }
+
                     if($v->question_type_id == 4){
                         $video_questions[] = $v;
                     }
