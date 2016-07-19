@@ -40,44 +40,46 @@
                             </div>
                         </div>
                         @foreach($questions->where('test_id',$test->id) as $question)
-                        <div class="slider-div">
-                            <div class="slider-body">
-                                <div class="form-group">
-                                    <h3>{{ $question->question }}</h3>
-                                </div>
-                                {!! $question->question_photo ?
-                                '<div class="form-group">' .
-                                    HTML::image('/assets/img/question/' . $question->question_photo, '') .
-                                    '</div>' :
-                                ''
-                                !!}
-                                @if($question->question_type_id == 1)
-                                    @foreach($question->question_choices as $key=>$value)
-                                    <div class="answer-area form-group">
-                                        <input type="radio" class="simple radio" name="answer[{{ $question->id }}]" id="radio-{{ $key }}-{{ $question->id }}" value="{{ $key }}" />
-                                        <label for="radio-{{ $key }}-{{ $question->id }}">{{ $value }}</label>
-                                    </div>
-                                    @endforeach
-                                @elseif($question->question_type_id == 2)
-                                <div class="form-group">
-                                    <input type="text" name="answer[{{ $question->id }}]" class="form-control" placeholder="answer here..." />
-                                </div>
-                                @elseif($v->question_type_id == 3)
+                            @if($question->question_type_id != 4)
+                            <div class="slider-div">
+                                <div class="slider-body">
                                     <div class="form-group">
-                                        <textarea name="answer[{{ $question->id }}]" class="form-control summernote-editor" rows="3" placeholder="answer here..."></textarea>
+                                        <h3>{{ $question->question }}</h3>
                                     </div>
-                                @elseif($v->question_type_id == 4)
-                                    <div class="quiz-video" id="quiz-video-{{ $question->id }}"></div>
-                                @endif
-                                <div class="text-center">
-                                    <button type="button" data-type="{{ $question->question_type_id }}" class="btn btn-submit btn-next{{ $question->question_type_id == 4 ? ' hidden' : '' }}" id="{{ $question->id }}">Next</button>
-                                    <button class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $question->length ? $question->length : '' }}">
-                                        <span class="timer-area">{{ $question->length ? date('i:s', strtotime($question->length)) : '' }}</span>
-                                        <span class="glyphicon glyphicon-time"></span>
-                                    </button>
+                                    {!! $question->question_photo ?
+                                    '<div class="form-group">' .
+                                        HTML::image('/assets/img/question/' . $question->question_photo, '') .
+                                        '</div>' :
+                                    ''
+                                    !!}
+                                    @if($question->question_type_id == 1)
+                                        @foreach($question->question_choices as $key=>$value)
+                                        <div class="answer-area form-group">
+                                            <input type="radio" class="simple radio" name="answer[{{ $question->id }}]" id="radio-{{ $key }}-{{ $question->id }}" value="{{ $key }}" />
+                                            <label for="radio-{{ $key }}-{{ $question->id }}">{{ $value }}</label>
+                                        </div>
+                                        @endforeach
+                                    @elseif($question->question_type_id == 2)
+                                    <div class="form-group">
+                                        <input type="text" name="answer[{{ $question->id }}]" class="form-control" placeholder="answer here..." />
+                                    </div>
+                                    @elseif($v->question_type_id == 3)
+                                        <div class="form-group">
+                                            <textarea name="answer[{{ $question->id }}]" class="form-control summernote-editor" rows="3" placeholder="answer here..."></textarea>
+                                        </div>
+                                    @elseif($v->question_type_id == 4)
+                                        <div class="quiz-video" id="quiz-video-{{ $question->id }}"></div>
+                                    @endif
+                                    <div class="text-center">
+                                        <button type="button" data-type="{{ $question->question_type_id }}" class="btn btn-shadow btn-submit btn-next{{ $question->question_type_id == 4 ? ' hidden' : '' }}" id="{{ $question->id }}">Next</button>
+                                        <button class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $question->length ? $question->length : '' }}">
+                                            <span class="timer-area">{{ $question->length ? date('i:s', strtotime($question->length)) : '' }}</span>
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            @endif
                         @endforeach
                         <div class="slider-div text-center">
                             <div class="slider-body">
