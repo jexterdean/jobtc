@@ -231,6 +231,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @endif
 
 @if(in_array('dashboard',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/page/dashboard.js')  !!}
 @endif
 

@@ -322,6 +322,9 @@
         @endif
         <li class="divider"></li>
         <li>
+            <a href="{{ url('/dashboard') }}"><i class="fa fa-bars" aria-hidden="true"></i> My Dashboard</a>
+        </li>
+        <li>
             <a href="{{ url('/profile') }}"><i class="glyphicon glyphicon-user"></i> My Profile</a>
         </li>
         <li>

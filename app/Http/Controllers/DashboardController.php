@@ -28,7 +28,7 @@ class DashboardController extends BaseController {
 
         $projects = Project::where('user_id', $user_id)->get();
         
-        $assets = ['dashboard'];
+        $assets = ['dashboard','real-time'];
         
         return view('user.dashboard', [
                     'projects' => $projects,

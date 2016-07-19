@@ -228,7 +228,7 @@ class ProjectController extends BaseController {
 
         $user = User::orderBy('name', 'asc')
                 ->lists('name', 'email');
-
+        
         return view('project.edit', [
             'project' => $project,
             'clients' => $client_options,

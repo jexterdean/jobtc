@@ -147,7 +147,8 @@ class TaskController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-
+        
+        $project_owner = Project::where('project_id',$task->project_id)->pluck('user_id');
 
         $assets = ['calendar'];
 
@@ -161,7 +162,8 @@ class TaskController extends BaseController {
             'links' => $links,
             'categories' => $categories,
             'module_permissions' => $module_permissions,
-            'company_id' => $company_id
+            'company_id' => $company_id,
+            'project_owner' => $project_owner
         ]);
     }
 

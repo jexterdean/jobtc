@@ -74,9 +74,15 @@ class SessionController extends Controller {
         if (Auth::check('user') || Auth::viaRemember('user')) {
 
             $user = User::where('user_id', Auth::user('user')->user_id)->first();
-            $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+            $user_has_profile = Profile::where('user_id', Auth::user('user')->user_id)->count();
 
-            return redirect()->route('company', [$profile->company_id]);
+            if ($user_has_profile > 0) {
+                $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+
+                return redirect()->route('company', [$profile->company_id]);
+            } else {
+                return redirect()->route('dashboard');
+            }
         } elseif (Auth::check('applicant') || Auth::viaRemember('applicant')) {
             return redirect()->route('a', [Auth::user('applicant')->id]);
         }
@@ -117,9 +123,15 @@ class SessionController extends Controller {
                 //return redirect()->route('dashboard');
 
                 $user = User::where('user_id', Auth::user('user')->user_id)->first();
-                $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+                $user_has_profile = Profile::where('user_id', Auth::user('user')->user_id)->count();
 
-                return redirect()->route('company', [$profile->company_id]);
+                if ($user_has_profile > 0) {
+                    $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+
+                    return redirect()->route('company', [$profile->company_id]);
+                } else {
+                    return redirect()->route('dashboard');
+                }
             } else if (Auth::attempt("applicant", ['email' => $email, 'password' => $pass], $remember)) {
 
                 $applicant = Applicant::where('email', $email)->first();
@@ -198,12 +210,18 @@ class SessionController extends Controller {
         if (Auth::check("user") || Auth::viaRemember("user")) {
             // Authentication passed...
             $user = User::where('user_id', Auth::user('user')->user_id)->first();
-            $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+            $user_has_profile = Profile::where('user_id', Auth::user('user')->user_id)->count();
 
-            return redirect()->route('company', [$profile->company_id]);
+            if ($user_has_profile > 0) {
+                $profile = Profile::where('user_id', Auth::user('user')->user_id)->first();
+
+                return redirect()->route('company', [$profile->company_id]);
+            } else {
+                return redirect()->route('dashboard');
+            }
         } else if (Auth::check("applicant") || Auth::viaRemember("applicant")) {
-           
-            return redirect()->route('a', [Auth::user("applicant")->id]);   
+
+            return redirect()->route('a', [Auth::user("applicant")->id]);
             //return redirect()->intended('dashboard');
         } else {
             return redirect()->intended('dashboard');

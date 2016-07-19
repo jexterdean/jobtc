@@ -74,15 +74,15 @@
         </div>
         <div class="row">
             <div class="col-sm-8">
-                @if($module_permissions->where('slug','create.tasks')->count() === 1)
+                @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                 @endif
-                @if($module_permissions->where('slug','edit.briefcases')->count() === 1)
+                @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                 @endif
-                @if($module_permissions->where('slug','delete.briefcases')->count() === 1)
+                @if($module_permissions->where('slug','delete.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
                 <div class="col-sm-4">

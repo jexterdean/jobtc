@@ -36,7 +36,7 @@
 <div class="project-options row">
     <div class="col-md-12">
         <div class="pull-left">
-            @if($module_permissions->where('slug','create.briefcases')->count() === 1)
+            @if($module_permissions->where('slug','create.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
             <a href="#" id="add-briefcase" class="btn btn-shadow btn-default add-briefcase">
                 <i class="fa fa-plus"></i> 
                 <strong>New Briefcase</strong>
@@ -46,13 +46,13 @@
         </div>
         @if($project_owner === Auth::user('user_id')->user_id)
         <div class="pull-right">
-            @if($module_permissions->where('slug','delete.projects')->count() === 1)
+            @if($module_permissions->where('slug','delete.projects')->count() === 1 || $project_owner === Auth::user('user')->user_id)
             <a href="#" class="btn-delete btn-shadow btn delete-project">
                 <i class="fa fa-times"></i> 
                 Delete
             </a>
             @endif
-            @if($module_permissions->where('slug','edit.projects')->count() === 1)
+            @if($module_permissions->where('slug','edit.projects')->count() === 1 || $project_owner === Auth::user('user')->user_id)
             <a href="{{url('project/'.$project_id.'/edit')}}" class="btn-edit btn-shadow btn edit-project" data-toggle="modal" data-target="#edit_project_form">
                 <i class="fa fa-pencil" aria-hidden="true"></i> 
                 Edit
@@ -98,7 +98,6 @@
                             count = row_index;
                             previous_count = row_index + 1;
                             row_count_after_total = row_count_after + count;
-                            console.log('row_index: '+row_index);
                             
                             while(count < row_count_after_total) {
                                 next_col = $('.project_container .row').eq(count).children(':first-child');
