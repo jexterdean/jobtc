@@ -110,17 +110,19 @@
                                                 ($v->question_type_id == 3 ? $v->result_points : $v->points) : 0
                                                  }}
                                             </div>
+                                            @elseif(!Auth::check('user'))
+                                            <div class="form-inline">
+                                                <label>Points</label>&nbsp;{{ $v->result ?
+                                                    (in_array($v->question_type_id, array(3,4)) ? $v->result_points : $v->points) : 0
+                                                 }}
+                                            </div>
                                             @endif
 
                                             <div class="text-center">
                                                 <div>
                                                     <button type="button" class="btn btn-shadow btn-delete btn-prev" id="{{ $v->result_id }}">Previous</button>
                                                     <button type="button" class="btn btn-shadow btn-submit btn-next" id="{{ $v->result_id }}">Next</button>
-                                                    <button type="button" class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
-                                                        <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
-                                                        <span class="glyphicon glyphicon-time"></span>
-                                                    </button>
-                                                    @if(in_array($v->question_type_id, array(3, 4)))
+                                                    @if(Auth::check('user') && in_array($v->question_type_id, array(3, 4)))
                                                     <div class="pull-right" style="padding-left: 5px;">
                                                         <div class="input-group">
                                                             <input type="number" name="points[{{ $v->result_id }}]" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control" style="width: 70px;">

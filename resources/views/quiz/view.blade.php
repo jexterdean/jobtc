@@ -258,13 +258,12 @@
                 .closest('.slider-div')
                 .next('.slider-div')
                 .find('.btn-next');
-
             var quiz_video = $(this)
                 .closest('.slider-div')
                 .next('.slider-div')
                 .find('.quiz-video');
             if(quiz_video.length != 0){
-                createRoom("quiz", function (room_id) {
+                createRoom("quiz-{{ Auth::user('user')->user_id }}", function (room_id) {
                     createToken(room_id, "user", "presenter", function (token) {
                         room = Erizo.Room({ token: token });
 
