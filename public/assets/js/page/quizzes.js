@@ -83,6 +83,7 @@ slider_div.on('click','.btn-next',function (e) {
             question_id: thisId,
             answer: answer == undefined ? '' : answer
         };
+        console.log(recordingId);
         if(recordingId){
             room.stopRecording(recordingId, function(result, error){
                 if (result === undefined){
