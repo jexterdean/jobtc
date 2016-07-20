@@ -214,3 +214,17 @@ and open the template in the editor.
     position: relative;
     top: 25px;
 }
+
+.job-column {
+    position: relative;
+    display: block;
+    padding: 5px 10px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.job-details {
+    position: relative;
+    left: 5px;
+}

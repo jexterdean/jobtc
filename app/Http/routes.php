@@ -23,6 +23,7 @@ Route::resource('job', 'JobController');
 Route::post('updateJob/{id}', 'JobController@update');
 Route::get('addJobFormCompany', 'JobController@addJobFormCompany');
 Route::post('addJobCompany', 'JobController@addJobCompany');
+Route::get('company/{company_id}/jobs','JobController@getCompanyJobs');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');

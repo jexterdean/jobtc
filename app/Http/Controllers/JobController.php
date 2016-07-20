@@ -153,11 +153,12 @@ class JobController extends Controller {
             ]);
         }
     }
-    private function getApplicantsInfo($id){
+
+    private function getApplicantsInfo($id) {
         $applicants = Applicant::with(['tags' => function ($query) {
-                $query->orderBy('created_at', 'desc');
-            }])
-            ->select(\DB::raw('
+                        $query->orderBy('created_at', 'desc');
+                    }])
+                ->select(\DB::raw('
                 fp_applicants.*,
                 IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
                 SUM(
@@ -183,21 +184,21 @@ class JobController extends Controller {
                     4
                 ) * 100) as average
             '))
-            ->leftJoin('test_result', function($join){
-                $join->on('test_result.unique_id', '=', 'applicants.id');
-            })
-            ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
-            ->leftJoin('question', function($join){
-                $join->on('question.id', '=', 'test_result.question_id')
+                ->leftJoin('test_result', function($join) {
+                    $join->on('test_result.unique_id', '=', 'applicants.id');
+                })
+                ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
+                ->leftJoin('question', function($join) {
+                    $join->on('question.id', '=', 'test_result.question_id')
                     ->on('question.test_id', '=', 'test.id');
-            })
-            ->where('applicants.job_id', $id)
-            ->orderBy('average', 'desc')
-            ->orderBy('applicants.created_at', 'desc')
-            ->groupBy('applicants.id')
-            ->paginate(5);
-        if(count($applicants) > 0){
-            foreach($applicants as $v){
+                })
+                ->where('applicants.job_id', $id)
+                ->orderBy('average', 'desc')
+                ->orderBy('applicants.created_at', 'desc')
+                ->groupBy('applicants.id')
+                ->paginate(5);
+        if (count($applicants) > 0) {
+            foreach ($applicants as $v) {
                 $v->average = $v->average ? $v->average : 0;
             }
         }
@@ -630,6 +631,17 @@ class JobController extends Controller {
 
         return view('jobs.partials._newjob', [
             'job' => $job,
+            'company_id' => $company_id
+        ]);
+    }
+
+    public function getCompanyJobs(Request $request, $company_id) {
+        $jobs = Job::where('company_id', $company_id)->get();
+        $assets = ['jobs'];
+
+        return view('jobs.index', [
+            'jobs' => $jobs,
+            'assets' => $assets,
             'company_id' => $company_id
         ]);
     }

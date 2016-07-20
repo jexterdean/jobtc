@@ -122,6 +122,12 @@
                         @endif
                         <li class="divider"></li>
                         <li>
+                            <a href="{{url('company/'.$company->company->id.'/jobs')}}">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                <span>All Jobs</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="#">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                                 <span>My Jobs</span>
