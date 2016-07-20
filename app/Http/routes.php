@@ -87,6 +87,9 @@ Route::get('quizUserAssessment/{id}', 'QuizController@quizUserAssessment');
 Route::post('quizAddPersonalCommunity', 'QuizController@quizAddPersonalCommunity');
 Route::post('quizSearch', 'QuizController@quizSearch');
 Route::any('quizElasticSearchView', 'QuizController@quizElasticSearchView');
+Route::any('quizVideo', 'QuizController@quizVideo');
+Route::post('quizSaveVideo', 'QuizController@quizSaveVideo');
+Route::get('quizDeleteVideo/{id}', 'QuizController@quizDeleteVideo');
 /*
  * Indeed Applicant Importer (Don't put this in any middleware, 
  * the script should not login to insert the data from Indeed
@@ -197,8 +200,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}', 'CompanyController@getCompanyEmployeesForProject');
     /* For Company Links Load on Demand */
     Route::get('companyLinks/{company_id}', 'CompanyController@companyLinks');
-
-
+    
     /**
      * CSS Reference
      */
@@ -208,6 +210,7 @@ Route::group(['middleware' => 'auth'], function () {
      * Project
      */
     Route::resource('project', 'ProjectController');
+    Route::get('company/{company_id}/projects','ProjectController@getCompanyProjects');
     Route::get('addProjectForm', 'ProjectController@addProjectForm');
     Route::post('addProject', 'ProjectController@addProject');
 
@@ -270,15 +273,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('saveTaskCheckListHeader', 'TaskController@saveTaskCheckListHeader');
     Route::post('saveTaskCheckList', 'TaskController@saveTaskCheckList');
     Route::post('cancelAddNewTask', 'TaskController@cancelAddNewTask');
-    Route::post('getTaskChecklistItem', 'TaskController@getTaskChecklistItem');
+    Route::get('getTaskChecklistItem/{task_check_list_id}/{company_id}', 'TaskController@getTaskChecklistItem');
     Route::post('autoSaveEditChecklist', 'TaskController@autoSaveEditChecklist');
 
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');
     Route::resource('event', 'EventsController');
-
-
-
-
 
     Route::resource('bug', 'BugController');
     Route::resource('note', 'NoteController');

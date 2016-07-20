@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Elasticsearch\ClientBuilder as ES;
+use PhanAn\Remote\Remote;
 
 class QuizController extends BaseController {
 
@@ -56,7 +57,7 @@ class QuizController extends BaseController {
                     IF(
                         fp_test_result.result = 1,
                         IF(
-                            fp_question.question_type_id = 3,
+                            fp_question.question_type_id IN (3,4),
                             fp_test_result.points,
                             fp_question.points
                         ),
@@ -65,7 +66,7 @@ class QuizController extends BaseController {
                 ) as score,
                 SUM(
                     IF(
-                        fp_question.question_type_id = 3,
+                        fp_question.question_type_id IN (3,4),
                         fp_question.max_point,
                         fp_question.points
                     )
@@ -377,11 +378,15 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
+                $question->note = Input::get('note');
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
                 if(Input::get('max_point')) {
                     $question->max_point = Input::get('max_point');
+                }
+                if(Input::get('question_tags')) {
+                    $question->question_tags = Input::get('question_tags');
                 }
                 $question->save();
 
@@ -405,17 +410,22 @@ class QuizController extends BaseController {
                 $q = Question::where('id', Input::get('question_id'))
                         ->first();
 
-                $r = $q->question_type_id == 3 ?
-                    0 :
+                $r = in_array($q->question_type_id, array(3,4)) ?
+                    Input::get('result') :
                     (
-                    $q->question_type_id == 1 ?
+                        $q->question_type_id == 1 ?
                         ($q->question_answer == Input::get('answer') ? 1 : 0) :
                         (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0)
                     );
 
-                $unique_id = Auth::check('user') ?
-                    Auth::user('user')->user_id :
-                    (Auth::check('applicant') ? Auth::user('applicant')->id : '');
+                $unique_id =
+                    Input::get('unique_id') ?
+                    Input::get('unique_id') :
+                    (
+                        Auth::check('user') ?
+                        Auth::user('user')->user_id :
+                        (Auth::check('applicant') ? Auth::user('applicant')->id : '')
+                    );
 
                 $resultExist = $unique_id ?
                     TestResultModel::where('question_id', Input::get('question_id'))
@@ -426,17 +436,29 @@ class QuizController extends BaseController {
                     $result->test_id = $id;
                     $result->question_id = Input::get('question_id');
 
-                    if (Auth::check('user')) {
-                        $result->unique_id = Auth::user('user')->user_id;
-                        $result->belongs_to = 'employee';
-                    }
-
-                    if (Auth::check('applicant')) {
-                        $result->unique_id = Auth::user('applicant')->id;
+                    if(Input::get('unique_id')){
+                        $result->unique_id = Input::get('unique_id');
                         $result->belongs_to = 'applicant';
+                    }
+                    else{
+                        if (Auth::check('user')) {
+                            $result->unique_id = Auth::user('user')->user_id;
+                            $result->belongs_to = 'employee';
+                        }
+
+                        if (Auth::check('applicant')) {
+                            $result->unique_id = Auth::user('applicant')->id;
+                            $result->belongs_to = 'applicant';
+                        }
                     }
 
                     $result->answer = Input::get('answer');
+                    if(Input::get('record_id')) {
+                        $result->record_id = Input::get('record_id');
+                    }
+                    if(Input::get('points')) {
+                        $result->points = Input::get('points');
+                    }
                     $result->result = $r;
                     $result->save();
                 }
@@ -507,6 +529,7 @@ class QuizController extends BaseController {
                     fp_test_result.id as result_id,
                     fp_test_result.answer as result_answer,
                     fp_test_result.result,
+                    fp_test_result.record_id,
                     fp_test_result.points as result_points'
                 ))
                 ->leftJoin('test_result', 'test_result.question_id', '=', 'question.id')
@@ -706,6 +729,7 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
+                $question->note = Input::get('note');
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
@@ -885,14 +909,14 @@ class QuizController extends BaseController {
                     iF(
                         fp_test_result.result = 1,
                         IF(
-                            fp_question.question_type_id = 3,
+                            fp_question.question_type_id IN (3,4),
                             fp_test_result.points,
                             fp_question.points
                         ),
                         0
                     )
                 ) as total_score,
-                SUM(IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)) as total_points
+                SUM(IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)) as total_points
             '))
             ->groupBy('test_result.unique_id')
             ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
@@ -917,7 +941,7 @@ class QuizController extends BaseController {
 
                 $result = DB::table('test_result')
                     ->select(DB::raw('
-                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
+                        IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points) as points,
                         fp_question.question_tags
                     '))
                     ->leftJoin('question', 'question.id', '=', 'test_result.question_id')
@@ -983,7 +1007,7 @@ class QuizController extends BaseController {
         $total_score = DB::table('question')
             ->select(DB::raw('SUM(
                 IF(
-                    fp_question.question_type_id = 3,
+                    fp_question.question_type_id IN (3,4),
                     fp_question.max_point,
                     fp_question.points
                 )
@@ -995,7 +1019,7 @@ class QuizController extends BaseController {
                 fp_user.name,
                 SUM(
                     IF(
-                        fp_question.question_type_id = 3,
+                        fp_question.question_type_id IN (3,4),
                         fp_question.max_point,
                         fp_question.points
                     )
@@ -1306,12 +1330,12 @@ class QuizController extends BaseController {
                         SUM(
                             IF(
                                 fp_test_result.result = 1,
-                                IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                                IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points),
                                 0
                             )
                         ) as score,
                         SUM(
-                            IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                            IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                         ) as total
                     '))
                     ->where('test_result.unique_id', '=', $v->user_id)
@@ -1383,7 +1407,7 @@ class QuizController extends BaseController {
             ->select(DB::raw('
                 IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
                 SUM(
-                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                    IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                 ) as max_points
             '))
             ->whereIn('test.id', $test_id)
@@ -1393,5 +1417,48 @@ class QuizController extends BaseController {
         $data['max_points_per_test'] = $max_points_per_test;
 
         return $test_id;
+    }
+
+    public function quizVideo(){
+        $data = [
+            'assets' => []
+        ];
+
+        return View::make('quiz.video', $data);
+    }
+    public function quizSaveVideo(Request $request) {
+        $stream_id = $request->input('stream_id');
+        $media_server = "laravel.software";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        $convert_to_webm_command = 'ffmpeg -y -i /var/www/recordings/' . $stream_id . '.mkv -c:v copy -crf 10 -b:v 0 -c:a libvorbis /var/www/recordings/' . $stream_id . '.webm';
+        //Run the mkv file in ffmpeg to repair it(Since erizo makes an invalid mkv file for the html5 video tag)
+        $remote_connection->exec($convert_to_webm_command);
+    }
+    public function quizDeleteVideo($id) {
+        $media_server = "laravel.software";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        //delete mkv
+        $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.mkv';
+        $remote_connection->exec($delete_steam);
+
+        //delete webm
+        $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.webm';
+        $remote_connection->exec($delete_steam);
     }
 }

@@ -352,7 +352,7 @@
             var qArea = $(this).closest('.modal-body');
             if($.inArray(showThisQArea, ["1", "2"]) == -1){
                 qArea
-                    .find('.question-answer-area[data-type!="3"], .question-points-area[data-type=""]')
+                    .find('.question-answer-area[data-type!="' + showThisQArea + '"], .question-points-area[data-type!="' + showThisQArea + '"]')
                     .addClass('hidden');
                 qArea
                     .find('.question-answer-area[data-type="' + showThisQArea + '"], .question-points-area[data-type="' + showThisQArea + '"]')

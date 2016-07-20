@@ -54,65 +54,7 @@
                                 <input type="password" class="form-control text required" aria-describedby="password-span" placeholder="Password" name="password" tabindex="2" id="login_password" value="" />
                             </div>
                             <br/>
-                            <!--div class="input-group">
-                                <span class="input-group-addon" id="photo-span"><i class="fa fa-picture-o" aria-hidden="true"></i></span>
-                                <input type="file" class="form-control text" aria-describedby="photo-span" placeholder="Photo" name="photo" tabindex="2" id="login_photo" value="" />
-                            </div-->
-                            <div class="input-group">
-                                <span class="input-group-addon" id="address-1-span"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="address-1-span" placeholder="Address 1" name="address_1" tabindex="2" id="login_address_1" value="" />
-                            </div>
-                            <br/>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="address-2-span"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="address-2-span" placeholder="Address 2" name="address_2" tabindex="2" id="login_address_2" value="" />
-                            </div>
-                            <br/>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="zipcode-span"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="zipcode-span" placeholder="Zipcode" name="zipcode" tabindex="2" id="login_zipcode" value="" />
-                            </div>
-                            <br/>
-                            <div class="form-group">
-                                <select name="country_id" class="form-control" id="country">
-                                    <option for="country">Country:</option>
-                                    @foreach($countries as $country)
-                                    
-                                    <option value="{{$country->country_id}}">{{$country->country_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <br/>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="phone-span"><i class="fa fa-phone-square" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="phone-span" placeholder="Phone Number" name="phone" tabindex="2" id="login_phone" value="" />
-                            </div>
-                            <br/>
-                            <!--div class="input-group">
-                                <span class="input-group-addon" id="skype-span"><i class="fa fa-skype" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="skype-span" placeholder="Skype" name="skype" tabindex="2" id="login_skype" value="" />
-                            </div>
-                            <br />
-                            <div class="input-group">
-                                <span class="input-group-addon" id="facebook-span"><i class="fa fa-facebook-square" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="facebook-span" placeholder="Facebook" name="facebook" tabindex="2" id="login_facebook" value="" />
-                            </div>
-                            <br />
-                            <div class="input-group">
-                                <span class="input-group-addon" id="linkedin-span"><i class="fa fa-linkedin-square" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control text" aria-describedby="linkedin-span" placeholder="Linkedin" name="linkedin" tabindex="2" id="login_linkedin" value="" />
-                            </div>
-                            <br />
-                            <div class="form-group">
-                                <label for="company">Select Company:</label>
-                                <select name="company" class="form-control" id="company">
-                                    @foreach($companies as $company)
-                                    <option value="{{$company->id}}">{{$company->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <br /-->
-                            <div class="input-group">
+                            <div class="input-group pull-right">
                                 <input type="submit" class="btn btn-edit btn-shadow submit" name="register" tabindex="4" value="Register" />
                             </div>
                         </form>

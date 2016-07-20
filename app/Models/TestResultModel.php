@@ -13,6 +13,7 @@ class TestResultModel extends Model
         'belongs_to',
         'unique_id',
         'answer',
+        'record_id',
         'result',
         'points'
     ];

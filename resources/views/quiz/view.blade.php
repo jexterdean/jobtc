@@ -24,7 +24,7 @@
                                     </div>
                                     @foreach($questions_info as $ref=>$v)
                                     <div class="slider-div">
-                                        <div class="slider-body">
+                                        <div class="slider-body" style="{{ $v->question_type_id == 4 ? 'width: 800px;' : '' }}">
                                             <div class="form-group">
                                                 <span style="font-size: 23px;">{!! $v->question !!}</span>
                                             </div>
@@ -49,9 +49,11 @@
                                                 <div class="form-group">
                                                     <textarea name="answer[{{ $v->id }}]" class="form-control summernote-editor" rows="3" placeholder="answer here..."></textarea>
                                                 </div>
+                                            @elseif($v->question_type_id == 4)
+                                                <div class="quiz-video" id="quiz-video-{{ $v->id }}"></div>
                                             @endif
                                             <div class="text-center">
-                                                <button type="button" data-type="{{ $v->question_type_id }}" class="btn btn-shadow btn-submit btn-next" id="{{ $v->id }}">Next</button>
+                                                <button type="button" data-type="{{ $v->question_type_id }}" class="btn btn-shadow btn-submit btn-next{{ $v->question_type_id == 4 ? ' hidden' : '' }}" id="{{ $v->id }}">Next</button>
                                                 <button type="button" class="btn btn-shadow btn-timer time-limit hidden" data-length="{{ $v->length ? $v->length : '' }}">
                                                     <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
                                                     <span class="glyphicon glyphicon-time"></span>
@@ -119,9 +121,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/mode/xml/xml.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.min.js"></script>
+{!!  HTML::script('assets/js/erizo.js')  !!}
+
 <style>
     .note-editable{
         height: 400px;
+    }
+    .quiz-video{
+        height: 600px;
+        width: 100%;
     }
 </style>
 <script>
@@ -130,6 +138,66 @@
         var slider_div = $('.slider-div');
         var btn_next = $('.btn-next');
         var btn_prev = $('.btn-prev');
+        var recordingId = '', room, localStream;
+
+        //region Video
+        var recordingUrl = "https://laravel.software/recordings/";
+        var serverUrl = "https://laravel.software:3333/";
+
+        var createToken = function (room_id, username, role, callback) {
+            var req = new XMLHttpRequest();
+            var url = serverUrl + 'createToken/';
+            var body = {room_id: room_id, username: 'user', role: 'presenter'};
+            req.onreadystatechange = function () {
+                if (req.readyState === 4) {
+                    callback(req.responseText);
+                }
+            };
+            req.open('POST', url, true);
+            req.setRequestHeader('Content-Type', 'application/json');
+            req.send(JSON.stringify(body));
+        };
+        var createRoom = function (room_name, callback) {
+            var req = new XMLHttpRequest();
+            var url = serverUrl + 'createRoom/';
+            var body = {room_name: room_name};
+            req.onreadystatechange = function () {
+                if (req.readyState === 4) {
+                    callback(req.responseText);
+                }
+            };
+            req.open('POST', url, true);
+            req.setRequestHeader('Content-Type', 'application/json');
+            req.send(JSON.stringify(body));
+        };
+        var saveVideo = function(localStreamId){
+            var file_extension = '.webm';
+            var video_url = recordingUrl + localStreamId + file_extension;
+
+            var ajaxurl = public_path + 'quizSaveVideo';
+            var formData = new FormData();
+            formData.append('stream_id', localStreamId);
+            $.ajax({
+                url: ajaxurl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    console.log('save video');
+                },
+                complete: function () {
+
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: retrying');
+                }
+            }); //ajax
+        };
+        //endregion
 
         btn_next.click(function(e){
             var thisId = this.id;
@@ -149,6 +217,19 @@
                    question_id: thisId,
                    answer: answer == undefined ? '' : answer
                 };
+                console.log(recordingId);
+                if(recordingId){
+                    room.stopRecording(recordingId, function(result, error){
+                        if (result === undefined){
+                            console.log("Error", error);
+                        } else {
+                            saveVideo(recordingId);
+                            recordingId = '';
+                        }
+                    });
+                    data.record_id = recordingId;
+                    localStream.close();
+                }
                 $.ajax({
                     url: '{{ URL::to('quiz') . '?id=' . $tests_info->id }}&p=exam',
                     data: data,
@@ -173,10 +254,93 @@
                 .closest('.slider-div')
                 .next('.slider-div')
                 .find('.time-limit');
-            if(time_limit.length != 0){
-                if(time_limit.data('length') != "00:00:00"){
-                    time_limit.removeClass('hidden');
-                    time_limit.timerStart();
+            var nextBtn = $(this)
+                .closest('.slider-div')
+                .next('.slider-div')
+                .find('.btn-next');
+            var quiz_video = $(this)
+                .closest('.slider-div')
+                .next('.slider-div')
+                .find('.quiz-video');
+            if(quiz_video.length != 0){
+                createRoom("quiz-{{ Auth::user('user')->user_id }}", function (room_id) {
+                    createToken(room_id, "user", "presenter", function (token) {
+                        room = Erizo.Room({ token: token });
+
+                        //region Record and Save Video
+                        localStream = Erizo.Stream({ audio: true, video: true, data: true });
+                        localStream.addEventListener("access-accepted", function () {
+                            var subscribeToStreams = function (streams) {
+                                for (var index in streams) {
+                                    var stream = streams[index];
+                                    if (localStream.getID() !== stream.getID()) {
+                                        room.subscribe(stream);
+                                    }
+                                }
+                            };
+
+                            room.addEventListener("room-connected", function (roomEvent) {
+                                room.publish(localStream);
+                                subscribeToStreams(roomEvent.streams);
+                            });
+
+                            room.addEventListener("stream-subscribed", function(streamEvent) {
+                                var stream = streamEvent.stream;
+                                var div = document.createElement('div');
+                                div.setAttribute("style", "width: 320px; height: 240px;");
+                                div.setAttribute("id", "test" + stream.getID());
+
+                                document.body.appendChild(div);
+                                stream.play("test" + stream.getID());
+                            });
+
+                            room.addEventListener("stream-added", function (streamEvent) {
+                                var streams = [];
+                                streams.push(streamEvent.stream);
+                                subscribeToStreams(streams);
+
+                                room.startRecording(localStream, function(rId, error) {
+                                    if (rId === undefined){
+                                        console.log("Error", error);
+                                    } else {
+                                        recordingId = rId;
+                                        console.log("Recording started, the id of the recording is ", rId);
+
+                                        nextBtn.removeClass('hidden');
+                                        if(time_limit.length != 0){
+                                            console.log(recordingId);
+                                            if(time_limit.data('length') != "00:00:00"){
+                                                time_limit.removeClass('hidden');
+                                                time_limit.timerStart();
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+
+                            room.addEventListener("stream-removed", function (streamEvent) {
+                                // Remove stream from DOM
+                                var stream = streamEvent.stream;
+                                if (stream.elementID !== undefined) {
+                                    var element = document.getElementById(stream.elementID);
+                                    document.body.removeChild(element);
+                                }
+                            });
+
+                            room.connect();
+                            localStream.play(quiz_video.attr('id'));
+                        });
+                        localStream.init();
+                        //endregion
+                    });
+                });
+            }
+            else{
+                if(time_limit.length != 0){
+                    if(time_limit.data('length') != "00:00:00"){
+                        time_limit.removeClass('hidden');
+                        time_limit.timerStart();
+                    }
                 }
             }
 

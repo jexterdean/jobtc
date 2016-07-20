@@ -213,6 +213,10 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
 }
 
 //Toggle the button to start the video conference
+$('#localVideo').css({
+    height: '100%',
+    width: '772px'
+});
 $('.interview-applicant').clickToggle(function () {
     //var room_name_tmp = $('title').text();
     var room_name_tmp = window.location.pathname;
@@ -220,7 +224,7 @@ $('.interview-applicant').clickToggle(function () {
 
     // Select tab by name
     $('.nav-tabs a[href="#video-tab"]').tab('show');
-    var config = {audio: true, video: true, data: true, videoSize: [752, 720, 752, 720]};
+    var config = {audio: true, video: true, data: true};
     localStream = Erizo.Stream(config);
 
     getRoom(room_name, function (res) {

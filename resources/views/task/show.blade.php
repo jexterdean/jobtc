@@ -49,7 +49,8 @@
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
-                                            <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header">{!! $list_item->checklist_header !!}</a>
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
+                                            <input type="hidden" class="company_id" value="{{$company_id}}" />
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
@@ -130,19 +131,19 @@
         </div>
         <div class="row">
             <div class="col-sm-8">
-                @if($module_permissions->where('slug','create.tasks')->count() === 1)
+                @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
                 @endif
-                @if($module_permissions->where('slug','edit.briefcases')->count() === 1)
+                @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                 @endif
-                @if($module_permissions->where('slug','delete.briefcases')->count() === 1)
+                @if($module_permissions->where('slug','delete.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
             </div>
             <div class="col-sm-4">
-                
+
             </div>
         </div>
     </div>
@@ -670,7 +671,7 @@
             edit_task_list_editor.on('change', function (evt) {
 
                 var ajaxurl = public_path + 'autoSaveEditChecklist';
-                
+
                 var formData = new FormData();
                 formData.append('task_check_list_id', task_list_item_id);
                 formData.append('checklist', evt.editor.getData());
@@ -691,7 +692,7 @@
                     }
                 }); //ajax
             });
-            
+
             //Toggle the content area to show
             $('#task-item-collapse-' + task_list_item_id).collapse('show');
             $(this).css({'display': 'none'});
@@ -1129,13 +1130,22 @@
                 success: function (data) {
                 },
                 error: function (xhr, status, error) {
-
                 }
             }); //ajax
             $('#link-' + this.id).remove();
         });
         //endregion
+        $('.check-list-container').on('click', '.toggle-tasklistitem', function () {
+            
+            var task_list_item_id = $(this).siblings('.task_list_item_id').val();
+            var company_id = $(this).siblings('.company_id').val();
+            
+            var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' +company_id;
 
+            $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
+                $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
+            });
+        });
 
         function makeid()
         {
