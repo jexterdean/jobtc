@@ -25,6 +25,27 @@
                             <ul class="tasklist-group list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $list_item)
+                                {{--region Briefcase Item Add Link--}}
+                                <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id . '-' . $list_item->id }}" tabindex="-1" role="basic" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                                <h4 class="modal-title">Add Link</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
+                                                {!! Form::hidden('task_id',$task->task_id) !!}
+                                                {!! Form::hidden('task_item_id',$list_item->id) !!}
+                                                {!! Form::hidden('user_id',$user_id) !!}
+                                                {!! Form::hidden('company_id',$company_id) !!}
+                                                @include('links/partials/_form')
+                                                {!! Form::close()  !!}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{--endregion--}}
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
@@ -56,6 +77,42 @@
                                     </div>
                                     <div class="row">
                                         <div id="task-item-collapse-{{$list_item->id}}" class="task-item-collapse collapse">
+                                            <div class="checklist-item">{!! $list_item->checklist !!}</div>
+                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
+                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            @foreach($links as $link)
+                                                <hr/>
+                                                @if($link->task_item_id == $list_item->id)
+                                                <div class="col-md-12" id="link-{{$link->id}}">
+                                                    <div class="col-md-3">
+                                                        <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a>
+                                                    </div>
+                                                    <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
+                                                    <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
+                                                    @if($user_id == $link->user_id)
+                                                        <a href="{{ route('links.destroy', $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+                                                    @endif
+                                                    </div>
+                                                    <hr/>
+                                                </div>
+                                                @endif
+                                            @endforeach
+                                            <hr/>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="pull-right" style="margin-right: 5px;">
+                                                        <a href="#" class="btn-edit btn-shadow btn" data-toggle="modal" data-target="#add_link_{{ $task->task_id . '-' . $list_item->id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;&nbsp;
+                                                        @if($module_permissions->where('slug','edit.tasks')->count() === 1)
+                                                        <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>&nbsp;&nbsp;&nbsp;
+                                                        @endif
+                                                        @if($module_permissions->where('slug','delete.tasks')->count() === 1)
+                                                        <a href="#" class="btn-delete btn-shadow btn alert_delete view-btn-delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
+                                                        @endif
+                                                        <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
+                                                        <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -77,7 +134,6 @@
                 @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
-                <a href="#" class="btn btn-edit btn-sm btn-shadow" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                 @endif
                 @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
@@ -85,11 +141,6 @@
                 @if($module_permissions->where('slug','delete.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
-                <div class="col-sm-4">
-                    @foreach($links as $link)
-                    <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a><br/>
-                    @endforeach
-                </div>
             </div>
             <div class="col-sm-4">
 
@@ -97,6 +148,8 @@
         </div>
     </div>
 </div>
+{!! Form::close() !!}
+{!! Form::open(['method' => 'DELETE','class' => 'delete-form']) !!}
 {!! Form::close() !!}
 <div class="modal fade" id="ajax" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
@@ -277,7 +330,7 @@
 
         };
 
-        /*region Check List*/
+        //region Check List
         //For Checklist Status
         _body.on('click', '.checklist-status', function (e) {
             //$('.checklist-status').click(function (e) {
@@ -734,6 +787,7 @@
          edit_btn.bind().trigger('click');
          console.log('trigger');
          });*/
+         //endregion
         //region For Tasklist Delete
         $('.task-list').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
@@ -745,8 +799,9 @@
 
             $.post(url);
         });
-        /*endregion*/
-        /*region Timer*/
+        //endregion
+
+        //region Timer
         var element = _body.find('.timer-text');
         function startEditTimer(s) {
             var timerStart = parseInt(0) + parseInt(s);
@@ -847,9 +902,9 @@
                     }
 
                 });
-        /*endregion*/
+        //endregion
 
-        //Add Spreadsheet
+        //region Add Spreadsheet
         _body.on('click', '.add-spreadsheet', function () {
 
             var spreadsheet_name = 'task-spreadsheet-' + makeid();
@@ -1022,7 +1077,64 @@
                 //$('.text-area-content').remove();
             });
         });
+        //endregion
 
+        //region Auto Change and Select Category Name
+        var _category_name = '';
+        $('.category-name')
+        .bind('keyup keypress blur', function(){
+            _category_name = $(this).val();
+            var myStr = $(this).val();
+            myStr = myStr.toLowerCase();
+            myStr = myStr.replace(/\s+/g, "-");
+            $(this).val(myStr);
+        })
+        .focusout(function(){
+            var cat_form = $('.category-form');
+            var form_data = [];
+            var url = public_path + 'linkCategory';
+            var cat_value = $(this).val();
+            if ($(this).val()){
+                form_data.push(
+                    {name:'slug', value:$(this).val()},
+                    {name:'name', value:_category_name},
+                    {name:'request_from_link_page', value:'1'}
+                );
+                $.post(url, form_data, function(data){
+                    var _return_data = jQuery.parseJSON(data);
+                    var option_ele = '<option value>Select Category</option>';
+                    $.each(_return_data, function(key, val){
+                        var is_selected = cat_value == val.name ? 'selected' : '';
+                        option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
+                    });
+                    $('select.category').html(option_ele);
+                });
+            }
+
+            $(this).val('');
+        });
+
+        $('.remove-link').on('click',function(e){
+            e.preventDefault();
+
+            var formData = new FormData();
+            $.ajax({
+                url: $(this).attr('href'),
+                type: "DELETE",
+                data: formData,
+                // THIS MUST BE DONE FOR FILE UPLOADING
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                },
+                success: function (data) {
+                },
+                error: function (xhr, status, error) {
+                }
+            }); //ajax
+            $('#link-' + this.id).remove();
+        });
+        //endregion
         $('.check-list-container').on('click', '.toggle-tasklistitem', function () {
             
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();

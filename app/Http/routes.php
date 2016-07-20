@@ -199,6 +199,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getEmployees/{company_id}/{job_id}', 'CompanyController@getEmployees');
     /* For Assign Projects Load on Demand */
     Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}', 'CompanyController@getCompanyEmployeesForProject');
+    /* For Company Links Load on Demand */
+    Route::get('companyLinks/{company_id}', 'CompanyController@companyLinks');
     
     /**
      * CSS Reference

@@ -327,6 +327,9 @@
                     </ul>
                 </li>
                 @endif
+                <li>
+                    <a href="{{ url('companyLinks/'.$company->company->id) }}"><i class="fa fa-globe" aria-hidden="true"></i> Links</a>
+                </li>
             </ul>
         </li>
         @endforeach

@@ -34,6 +34,7 @@ use App\Models\PermissionUser;
 use App\Models\PermissionRole;
 use App\Models\Applicant;
 use App\Models\Comment;
+use App\Models\Link;
 use Auth;
 use View;
 use Redirect;
@@ -1238,6 +1239,25 @@ class CompanyController extends BaseController {
         return "true";
     }
 
+    public function companyLinks($company_id){
+        $links = Link::where('company_id',$company_id)
+            ->leftJoin('link_categories', function($join){
+                $join->on('links.category_id', '=', 'link_categories.id');
+            })
+            ->orderBy('link_categories.name')
+            ->get();
+        $_links = [];
+        foreach($links as $link){
+            $_links[$link->name][] = (Object)$link;
+        }
+        $assets = ['companies', 'real-time'];
+
+        return view(
+            'company.partials._companylinks',[
+                'links' => $_links,
+                'assets' => $assets
+            ]);
+    }
 }
 
 ?>
