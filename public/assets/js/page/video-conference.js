@@ -291,6 +291,8 @@ $('.interview-applicant').clickToggle(function () {
                         $('.interview-applicant').removeClass('btn-success');
                         $('.interview-applicant').children('span').text('Leave Conference');
                         $('.interview-applicant').siblings('button').show();
+
+                        $('.btn-video').removeClass('hidden');
                     });
                     localStream.init();
                 });
@@ -359,6 +361,7 @@ $('.interview-applicant').clickToggle(function () {
                     $('.interview-applicant').children('span').text('Leave Conference');
                     $('.interview-applicant').siblings('button').show();
 
+                    $('.btn-video').removeClass('hidden');
                 });
                 localStream.init();
             });
@@ -439,34 +442,105 @@ $('.record-button').clickToggle(function () {
     $('.save-progress').text("Saving");
 });
 
-$('.delete-video').click(function () {
+var quizVideoRecordId;
+$('body').on('click','.btn-video',function (e) {
+    var video_btn = $(this);
+    var time_limit = $(this).parent().find('.time-limit-conference');
+    var question_point = $(this).parent().find('.video-conference-points');
+
+    if($(this).data('status') == 1) {
+        var remote_streams = room.remoteStreams;
+        console.log(remote_streams);
+        for (var i in remote_streams) {
+            var s = remote_streams[i];
+            if (localStream.getID() === s.getID()) {
+
+            }
+            else {
+                room.startRecording(s, function (id) {
+                    quizVideoRecordId = id;
+                    console.log('started: ' + quizVideoRecordId);
+
+                    time_limit.timerStart();
+                    video_btn.data('status', 2);
+                    video_btn.html('Score');
+                });
+            }
+
+        }
+    }
+    else if($(this).data('status') == 2) {
+        if (quizVideoRecordId !== undefined) {
+            clearInterval(interval);
+            $(this).html('Start');
+            $(this).data('status', 1);
+
+            room.stopRecording(quizVideoRecordId);
+
+            var file_extension = '.webm';
+            var video_url = recordingUrl + quizVideoRecordId + file_extension;
+
+            var ajaxUrl = public_path + 'quizSaveVideo';
+            console.log(ajaxUrl);
+            var formData = new FormData();
+            formData.append('stream_id', quizVideoRecordId);
+            $.ajax({
+                url: ajaxUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    console.log('save video');
+                },
+                complete: function () {
+
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: retrying');
+                }
+            }); //ajax
+
+            var test_id = $(this).data('test');
+            var unique_id = $(this).data('unique');
+            var data = {
+                record_id: quizVideoRecordId,
+                question_id: this.id,
+                answer: '',
+                result: 1,
+                unique_id: unique_id,
+                points: question_point.val(),
+                video_conference: 1
+            };
+            ajaxUrl = public_path + 'quiz?id=' + test_id + '&p=exam';
+            console.log(ajaxUrl);
+            $.ajax({
+                url: ajaxUrl,
+                data: data,
+                method: "POST",
+                success: function (doc) {
+
+                },
+                error: function (a, b, c) {
+
+                }
+            });
+            quizVideoRecordId = undefined;
+        }
+    }
+});
+
+$('.delete-quiz-video').click(function () {
     var video_element = $(this).parent().parent().parent();
     var video_id = $(this).siblings('.video_id').val();
 
-    var ajaxurl = public_path + 'deleteVideo';
-    var formData = new FormData();
-
-    formData.append('video_id', video_id);
-
-    $.ajax({
-        url: ajaxurl,
-        type: "POST",
-        data: formData,
-        // THIS MUST BE DONE FOR FILE UPLOADING
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-
-        },
-        success: function (data) {
-            video_element.remove();
-        },
-        complete: function () {
-
-        },
-        error: function (xhr, status, error) {
-        }
-
+    var ajaxUrl = public_path + 'quizDeleteResult';
+    $.post(ajaxUrl, { result_id: video_id }, function (data) {
+        console.log(data);
+        video_element.remove();
     });
 });
 

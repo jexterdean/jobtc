@@ -153,7 +153,7 @@
                                                             <input type="number" name="video-conference-points" id="{{ $v->result_id }}" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control video-conference-points" style="width: 70px;">
                                                             <div class="input-group-addon">/{{ $v->max_point }}</div>
                                                         </div>
-                                                        <button type="button" class="btn btn-shadow btn-submit btn-video" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Start</button>
+                                                        <button type="button" class="btn btn-shadow btn-submit btn-video hidden" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Start</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -193,6 +193,27 @@
                                                 {{$video->tags['tags']}}
                                         </textarea>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+
+                            @foreach($quiz_videos as $video)
+                            <div class="video-element-holder">
+                                <div class="row">
+                                    <div class="col-xs-10">
+                                        <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls="controls"  preload="metadata" src="https://laravel.software/recordings/{{ $video->record_id }}.webm">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <button class="btn btn-danger btn-shadow pull-right delete-quiz-video"><i class="fa fa-times"></i></button>
+                                        <input class="video_id" type="hidden" value="{{$video->id}}"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label>Points:</label>&nbsp;{{ $video->points }}
                                     </div>
                                 </div>
                             </div>

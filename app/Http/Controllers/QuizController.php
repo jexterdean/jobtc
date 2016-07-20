@@ -427,25 +427,20 @@ class QuizController extends BaseController {
                         (Auth::check('applicant') ? Auth::user('applicant')->id : '')
                     );
 
-                $resultExist = $unique_id ?
-                    TestResultModel::where('question_id', Input::get('question_id'))
-                    ->where('unique_id', $unique_id)
-                    ->count() > 1 : 1;
-                if(!$resultExist) {
+                if(Input::get('video_conference')){
                     $result = new TestResultModel();
                     $result->test_id = $id;
                     $result->question_id = Input::get('question_id');
 
-                    if(Input::get('unique_id')){
+                    if (Input::get('unique_id')) {
                         $result->unique_id = Input::get('unique_id');
                         $result->belongs_to = 'applicant';
                     }
-                    else{
+                    else {
                         if (Auth::check('user')) {
                             $result->unique_id = Auth::user('user')->user_id;
                             $result->belongs_to = 'employee';
                         }
-
                         if (Auth::check('applicant')) {
                             $result->unique_id = Auth::user('applicant')->id;
                             $result->belongs_to = 'applicant';
@@ -453,14 +448,50 @@ class QuizController extends BaseController {
                     }
 
                     $result->answer = Input::get('answer');
-                    if(Input::get('record_id')) {
+                    if (Input::get('record_id')) {
                         $result->record_id = Input::get('record_id');
                     }
-                    if(Input::get('points')) {
+                    if (Input::get('points')) {
                         $result->points = Input::get('points');
                     }
                     $result->result = $r;
                     $result->save();
+                }
+                else {
+                    $resultExist = $unique_id ?
+                        TestResultModel::where('question_id', Input::get('question_id'))
+                            ->where('unique_id', $unique_id)
+                            ->count() > 1 : 1;
+                    if (!$resultExist) {
+                        $result = new TestResultModel();
+                        $result->test_id = $id;
+                        $result->question_id = Input::get('question_id');
+
+                        if (Input::get('unique_id')) {
+                            $result->unique_id = Input::get('unique_id');
+                            $result->belongs_to = 'applicant';
+                        } else {
+                            if (Auth::check('user')) {
+                                $result->unique_id = Auth::user('user')->user_id;
+                                $result->belongs_to = 'employee';
+                            }
+
+                            if (Auth::check('applicant')) {
+                                $result->unique_id = Auth::user('applicant')->id;
+                                $result->belongs_to = 'applicant';
+                            }
+                        }
+
+                        $result->answer = Input::get('answer');
+                        if (Input::get('record_id')) {
+                            $result->record_id = Input::get('record_id');
+                        }
+                        if (Input::get('points')) {
+                            $result->points = Input::get('points');
+                        }
+                        $result->result = $r;
+                        $result->save();
+                    }
                 }
             }
 
@@ -1460,5 +1491,20 @@ class QuizController extends BaseController {
         //delete webm
         $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.webm';
         $remote_connection->exec($delete_steam);
+    }
+
+    public function quizDeleteResult(Request $request){
+        try{
+            if($request->input('result_id')) {
+                $r = TestResultModel::find($request->input('result_id'));
+                if ($r->record_id) {
+                    $this->quizDeleteVideo($r->record_id);
+                }
+                $r->delete();
+            }
+        }
+        catch (\Exception $e) {
+            print_r($e);
+        }
     }
 }

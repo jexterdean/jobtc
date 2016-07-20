@@ -94,34 +94,7 @@ class JobController extends Controller {
 
             $job = Job::with('applicants')->where('id', $id)->first();
 
-            $applicants = Applicant::with(['tags' => function ($query) {
-                    $query->orderBy('created_at', 'desc');
-                }])
-                ->select(\DB::raw('
-                    fp_applicants.*,
-                    SUM(
-                        IF(
-                            fp_test_result.result = 1,
-                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
-                            0
-                        )
-                    ) as total_score
-                '))
-                ->leftJoin('test_per_job', 'test_per_job.job_id', '=', 'applicants.job_id')
-                ->leftJoin('test_result', function($join){
-                    $join->on('test_result.unique_id', '=', 'applicants.id')
-                        ->on('test_result.test_id', '=', 'test_per_job.test_id')
-                        ->where('test_result.result', '=', 1);
-                })
-                ->leftJoin('question', function($join){
-                    $join->on('question.test_id', '=', 'test_per_job.test_id')
-                        ->on('question.id', '=', 'test_result.question_id');
-                })
-                ->where('applicants.job_id', $id)
-                ->orderBy('total_score', 'desc')
-                ->orderBy('applicants.created_at', 'desc')
-                ->groupBy('applicants.id')
-                ->paginate(5);
+            $applicants = $this->getApplicantsInfo($id);
 
             $user_profile_role_count = Profile::where('user_id', $user_id)
                     ->where('company_id', $job->company_id)
@@ -168,34 +141,7 @@ class JobController extends Controller {
 
             $job = Job::with('applicants')->where('id', $id)->first();
 
-            $applicants = Applicant::with(['tags' => function ($query) {
-                    $query->orderBy('created_at', 'desc');
-                }])
-                ->select(\DB::raw('
-                    fp_applicants.*,
-                    SUM(
-                        IF(
-                            fp_test_result.result = 1,
-                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
-                            0
-                        )
-                    ) as total_score
-                '))
-                ->leftJoin('test_per_job', 'test_per_job.job_id', '=', 'applicants.job_id')
-                ->leftJoin('test_result', function($join){
-                    $join->on('test_result.unique_id', '=', 'applicants.id')
-                        ->on('test_result.test_id', '=', 'test_per_job.test_id')
-                        ->where('test_result.result', '=', 1);
-                })
-                ->leftJoin('question', function($join){
-                    $join->on('question.test_id', '=', 'test_per_job.test_id')
-                        ->on('question.id', '=', 'test_result.question_id');
-                })
-                ->where('applicants.job_id', $id)
-                ->orderBy('total_score', 'desc')
-                ->orderBy('applicants.created_at', 'desc')
-                ->groupBy('applicants.id')
-                ->paginate(5);
+            $applicants = $this->getApplicantsInfo($id);
 
             $assets = ['jobs', 'slider'];
 
@@ -218,22 +164,22 @@ class JobController extends Controller {
                 SUM(
                     IF(
                         fp_test_result.result = 1,
-                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                        IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points),
                         0
                     )
                 ) as total_score,
                 SUM(
-                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                    IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                 ) as max_points,
                 (ROUND(
                     SUM(
                         IF(
                             fp_test_result.result = 1,
-                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                            IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points),
                             0
                         )
                     )/SUM(
-                        IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                        IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                     ),
                     4
                 ) * 100) as average
@@ -256,7 +202,6 @@ class JobController extends Controller {
                 $v->average = $v->average ? $v->average : 0;
             }
         }
-        //exit;
 
         return $applicants;
     }

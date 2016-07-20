@@ -102,10 +102,15 @@ class ApplicantController extends Controller {
 
             $rating = ApplicantRating::where('applicant_id', $id)->first();
 
-            $videos = Video::with(['tags' => function($query) {
-                            $query->where('tag_type', 'video')->first();
-                        }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();
+            $quiz_videos = \DB::table('test_result')
+                ->where('unique_id', $id)
+                ->where('belongs_to', 'applicant')
+                ->orderBy('id', 'desc')
+                ->get();
 
+            $videos = Video::with(['tags' => function($query) {
+                $query->where('tag_type', 'video')->first();
+            }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();
             //Get the test permissions
 
             $test_ids = [];
@@ -256,6 +261,7 @@ class ApplicantController extends Controller {
                 'review_result' => $review_result,
                 'questions' => $questions,
                 'video_questions' => $video_questions,
+                'quiz_videos' => $quiz_videos,
                 'previous_applicant' => $prevApplicant,
                 'next_applicant' => $nextApplicant,
                 'rating' => $rating,
