@@ -85,14 +85,6 @@
 <div class="form-group">
     <div class="row">
         <label class="col-sm-3 text-right">Default Question Time</label>
-        <div class="col-md-9">
-
-        </div>
-    </div>
-</div>
-<div class="form-group">
-    <div class="row">
-        <label class="col-sm-3 text-right">Default Question Time</label>
         <div class="col-md-3">
             <input type="text" name="default_time" class="time-form form-control" style="width: 100px;" value="{{ $tests_info->default_time ? date('i:s', strtotime($tests_info->default_time)) : '' }}" />
         </div>

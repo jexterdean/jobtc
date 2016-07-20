@@ -308,45 +308,6 @@ function savePoints(thisId){
     }
 };
 
-$('body').on('click','.btn-video',function (e) {
-    var time_limit = $(this).parent().find('.time-limit-conference');
-    var question_point = $(this).parent().find('.video-conference-points');
-    if($(this).data('status') == 1) {
-        time_limit.timerStart();
-        $(this).data('status', 2);
-        $(this).html('Score');
-    }
-    else if($(this).data('status') == 2) {
-        clearInterval(interval);
-        $(this).html('Start');
-        $(this).data('status', 1);
-
-        var test_id = $(this).data('test');
-        var unique_id = $(this).data('unique');
-        var result_id = question_point.attr('id');
-        var data = {
-            question_id: this.id,
-            answer: '',
-            result: 1,
-            unique_id: unique_id,
-            points: question_point.val()
-        };
-        var ajaxUrl = public_path + 'quiz' +
-            (result_id ? ('/' + result_id + '?p=exam') : ('?id=' + test_id + '&p=exam'));
-        $.ajax({
-            url: ajaxUrl,
-            data: data,
-            method: result_id ? "PATCH" : "POST",
-            success: function(doc) {
-
-            },
-            error: function(a, b, c){
-
-            }
-        });
-    }
-});
-
 //region summer note
 var options = $.extend(true,
         {
@@ -391,6 +352,7 @@ $.fn.timerStart = function () {
         if (time_limit == 0) {
             clearInterval(interval);
             timer_btn.parent().find('.btn-next').trigger('click');
+            timer_btn.parent().find('.btn-video').trigger('click');
         }
 
         m = Math.floor(time_limit / 60); //Get remaining minutes
