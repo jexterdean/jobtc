@@ -116,7 +116,7 @@ class SessionController extends Controller {
 
         if ($validator->fails()) {
 
-            return redirect()->route('home')->withErrors($validator, 'login')->withInput();
+            return redirect()->route('login')->withErrors($validator, 'login')->withInput($request->input('email'));
         } else {
             if (Auth::attempt("user", ['email' => $email, 'password' => $pass], $remember)) {
 
