@@ -38,6 +38,7 @@
                                                 {!! Form::hidden('task_id',$task->task_id) !!}
                                                 {!! Form::hidden('task_item_id',$list_item->id) !!}
                                                 {!! Form::hidden('user_id',$user_id) !!}
+                                                {!! Form::hidden('company_id',$company_id) !!}
                                                 @include('links/partials/_form')
                                                 {!! Form::close()  !!}
                                             </div>
@@ -78,6 +79,23 @@
                                             <div class="checklist-item">{!! $list_item->checklist !!}</div>
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            @foreach($links as $link)
+                                                <hr/>
+                                                @if($link->task_item_id == $list_item->id)
+                                                <div class="col-md-12" id="link-{{$link->id}}">
+                                                    <div class="col-md-3">
+                                                        <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a>
+                                                    </div>
+                                                    <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
+                                                    <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
+                                                    @if($user_id == $link->user_id)
+                                                        <a href="{{ route('links.destroy', $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+                                                    @endif
+                                                    </div>
+                                                    <hr/>
+                                                </div>
+                                                @endif
+                                            @endforeach
                                             <hr/>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -122,11 +140,6 @@
                 @if($module_permissions->where('slug','delete.briefcases')->count() === 1)
                 <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
-                <div class="col-sm-4">
-                    @foreach($links as $link)
-                    <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a><br/>
-                    @endforeach
-                </div>
             </div>
             <div class="col-sm-4">
                 
@@ -134,6 +147,8 @@
         </div>
     </div>
 </div>
+{!! Form::close() !!}
+{!! Form::open(['method' => 'DELETE','class' => 'delete-form']) !!}
 {!! Form::close() !!}
 <div class="modal fade" id="ajax" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
@@ -1096,6 +1111,28 @@
             }
 
             $(this).val('');
+        });
+
+        $('.remove-link').on('click',function(e){
+            e.preventDefault();
+
+            var formData = new FormData();
+            $.ajax({
+                url: $(this).attr('href'),
+                type: "DELETE",
+                data: formData,
+                // THIS MUST BE DONE FOR FILE UPLOADING
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                },
+                success: function (data) {
+                },
+                error: function (xhr, status, error) {
+
+                }
+            }); //ajax
+            $('#link-' + this.id).remove();
         });
         //endregion
 
