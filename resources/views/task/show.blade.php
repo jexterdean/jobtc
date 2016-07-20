@@ -109,7 +109,7 @@
                                                         <a href="#" class="btn-delete btn-shadow btn alert_delete view-btn-delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
                                                         @endif
                                                         <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                                        <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                                        <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -148,9 +148,6 @@
         </div>
     </div>
 </div>
-{!! Form::close() !!}
-{!! Form::open(['method' => 'DELETE','class' => 'delete-form']) !!}
-{!! Form::close() !!}
 <div class="modal fade" id="ajax" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1114,9 +1111,8 @@
             $(this).val('');
         });
 
-        $('.remove-link').on('click',function(e){
+        $('.check-list-container').on('click','.remove-link',function(e){
             e.preventDefault();
-
             var formData = new FormData();
             $.ajax({
                 url: $(this).attr('href'),
@@ -1132,15 +1128,16 @@
                 error: function (xhr, status, error) {
                 }
             }); //ajax
-            $('#link-' + this.id).remove();
+            $('#link-' + this.id + ',.link-' + this.id).remove();
         });
         //endregion
         $('.check-list-container').on('click', '.toggle-tasklistitem', function () {
             
             var task_list_item_id = $(this).siblings('.task_list_item_id').val();
             var company_id = $(this).siblings('.company_id').val();
-            
-            var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' +company_id;
+            var task_list_id = $(this).siblings('.task_list_id').val();
+
+            var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' +company_id + '/' + task_list_id;
 
             $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
                 $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
