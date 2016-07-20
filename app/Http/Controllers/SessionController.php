@@ -87,7 +87,7 @@ class SessionController extends Controller {
             return redirect()->route('a', [Auth::user('applicant')->id]);
         }
 
-        return View::make('session.create');
+        return redirect('login')->withInput(Request::flashExcept('password'));
     }
 
     /**
@@ -116,7 +116,8 @@ class SessionController extends Controller {
 
         if ($validator->fails()) {
 
-            return redirect()->route('login')->withErrors($validator, 'login')->withInput($request->input('email'));
+            return redirect('login')->withInput();
+            
         } else {
             if (Auth::attempt("user", ['email' => $email, 'password' => $pass], $remember)) {
 
@@ -141,7 +142,7 @@ class SessionController extends Controller {
 
                 //$applicant = Applicant::where('email',$email)->where('password',bcrypt($pass))->first();
 
-                return redirect()->route('home')->withErrors($validator, 'login')->withInput();
+                return redirect('login')->withInput();
                 //return redirect()->route('a', [$applicant->id]);
             }
         }
