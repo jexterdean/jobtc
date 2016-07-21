@@ -11,7 +11,7 @@
         <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
         <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
         @if($user_id == $link->user_id)
-            <a href="{{ route('links.destroy', $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+            <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
         @endif
         </div>
         <hr/>

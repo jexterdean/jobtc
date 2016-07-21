@@ -130,4 +130,16 @@ class LinkController extends BaseController
 
         return redirect()->route('links.index');
     }
+
+    public function deleteLink($id)
+    {
+
+        /** @var  $link Link*/
+        $link  = Link::find($id);
+        if(count($link) > 0){
+            $link->delete();
+        }
+
+        return redirect()->route('links.index');
+    }
 }

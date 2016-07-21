@@ -115,6 +115,7 @@ Route::group(['middleware' => 'auth'], function () {
      * Links
      */
     Route::resource('links', 'LinkController');
+    Route::any('deleteLink/{id}', 'LinkController@deleteLink');
     Route::resource('linkCategory', 'LinkCategoryController');
 
 
@@ -275,7 +276,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('saveTaskCheckListHeader', 'TaskController@saveTaskCheckListHeader');
     Route::post('saveTaskCheckList', 'TaskController@saveTaskCheckList');
     Route::post('cancelAddNewTask', 'TaskController@cancelAddNewTask');
-    Route::get('getTaskChecklistItem/{task_check_list_id}/{company_id}', 'TaskController@getTaskChecklistItem');
+    Route::get('getTaskChecklistItem/{task_check_list_id}/{company_id}/{task_list_id}', 'TaskController@getTaskChecklistItem');
     Route::post('autoSaveEditChecklist', 'TaskController@autoSaveEditChecklist');
 
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');

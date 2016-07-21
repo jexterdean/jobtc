@@ -90,7 +90,7 @@
                                                     <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
                                                     <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
                                                     @if($user_id == $link->user_id)
-                                                        <a href="{{ route('links.destroy', $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+                                                        <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
                                                     @endif
                                                     </div>
                                                     <hr/>
@@ -130,7 +130,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-8" style="white-space: nowrap!important">
                 @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
@@ -1113,21 +1113,7 @@
 
         $('.check-list-container').on('click','.remove-link',function(e){
             e.preventDefault();
-            var formData = new FormData();
-            $.ajax({
-                url: $(this).attr('href'),
-                type: "DELETE",
-                data: formData,
-                // THIS MUST BE DONE FOR FILE UPLOADING
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                },
-                success: function (data) {
-                },
-                error: function (xhr, status, error) {
-                }
-            }); //ajax
+            $.post($(this).attr('href'));
             $('#link-' + this.id + ',.link-' + this.id).remove();
         });
         //endregion

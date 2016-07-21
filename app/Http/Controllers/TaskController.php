@@ -571,7 +571,7 @@ class TaskController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        echo $task_check_list_id;
+
         $links = Link::select(
                 'links.id', 'title',
                 'url', 'descriptions',
