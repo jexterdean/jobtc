@@ -132,7 +132,7 @@
                                                                     <i class="glyphicon glyphicon-plus"></i> Question
                                                                 </a>&nbsp;&nbsp;&nbsp;
                                                                 <a class="btn btn-submit btn-shadow btn-sm trigger-add-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id . '&trigger=1') }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
-                                                                    <i class="glyphicon glyphicon-plus"></i> New Question
+                                                                    <i class="glyphicon glyphicon-plus"></i> Questions
                                                                 </a>&nbsp;&nbsp;&nbsp;
                                                                 <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="btn btn-assign btn-shadow">
                                                                     <i class="fa fa-eye"></i> Preview

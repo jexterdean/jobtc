@@ -23,7 +23,7 @@ Route::resource('job', 'JobController');
 Route::post('updateJob/{id}', 'JobController@update');
 Route::get('addJobFormCompany', 'JobController@addJobFormCompany');
 Route::post('addJobCompany', 'JobController@addJobCompany');
-Route::get('company/{company_id}/jobs','JobController@getCompanyJobs');
+Route::get('company/{company_id}/jobs', 'JobController@getCompanyJobs');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
@@ -39,8 +39,8 @@ Route::post('register', 'UserController@register');
 /* For Applicant */
 Route::resource('a', 'ApplicantController');
 Route::get('a/{id}', ['as' => 'a', 'uses' => 'ApplicantController@show', 'https' => true]);
-Route::get('editApplicantPasswordForm','ApplicantController@editApplicantPasswordForm');
-Route::post('editApplicantPassword','ApplicantController@editApplicantPassword');
+Route::get('editApplicantPasswordForm', 'ApplicantController@editApplicantPasswordForm');
+Route::post('editApplicantPassword', 'ApplicantController@editApplicantPassword');
 Route::post('checkApplicantPassword', 'ApplicantController@checkApplicantPassword');
 Route::post('saveApplicantNotes', 'ApplicantController@saveApplicantNotes');
 Route::post('getApplicantQuizResults', 'ApplicantController@getApplicantQuizResults');
@@ -202,7 +202,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}', 'CompanyController@getCompanyEmployeesForProject');
     /* For Company Links Load on Demand */
     Route::get('companyLinks/{company_id}', 'CompanyController@companyLinks');
-    
+
     /**
      * CSS Reference
      */
@@ -212,14 +212,14 @@ Route::group(['middleware' => 'auth'], function () {
      * Project
      */
     Route::resource('project', 'ProjectController');
-    Route::get('company/{company_id}/projects','ProjectController@getCompanyProjects');
+    Route::get('company/{company_id}/projects', 'ProjectController@getCompanyProjects');
     Route::get('addProjectForm', 'ProjectController@addProjectForm');
     Route::post('addProject', 'ProjectController@addProject');
 
     /*
      * Employees
      * */
-    Route::get('employees/{id}','UserController@getEmployees');
+    Route::get('employees/{id}', 'UserController@getEmployees');
     Route::get('addEmployeeForm/{id}', 'UserController@addEmployeeForm');
     Route::get('editEmployeeForm/{company_id}/{user_id}', 'UserController@editEmployeeForm');
     Route::get('editEmployeePermissionsForm/{company_id}/{user_id}', 'UserController@editEmployeePermissionsForm');
@@ -228,9 +228,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('editEmployee', 'UserController@editEmployee');
     Route::post('removeEmployeeFromCompany', 'UserController@removeEmployeeFromCompany');
     Route::post('saveEmployeeNotes', 'UserController@saveEmployeeNotes');
-    
-        
-    
+
+
+
     /*
      * Positions
      */
@@ -240,19 +240,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('editPositionForm/{id}', 'RoleController@editPositionForm');
     Route::post('editPosition', 'RoleController@editPosition');
     Route::post('deletePosition', 'RoleController@deletePosition');
-    Route::post('assignPositionPermission','RoleController@assignPositionPermission');
-    Route::post('unassignPositionPermission','RoleController@unassignPositionPermission');
-    Route::post('assignEmployeePermission','RoleController@assignEmployeePermission');
-    Route::post('unassignEmployeePermission','RoleController@unassignEmployeePermission');
-    
-    /* 
+    Route::post('assignPositionPermission', 'RoleController@assignPositionPermission');
+    Route::post('unassignPositionPermission', 'RoleController@unassignPositionPermission');
+    Route::post('assignEmployeePermission', 'RoleController@assignEmployeePermission');
+    Route::post('unassignEmployeePermission', 'RoleController@unassignEmployeePermission');
+
+    /*
      * Assigning 
-     **/
-    Route::get('assignProjects/{id}','AssignController@assignProjects');
-    Route::get('assignTests/{id}','AssignController@assignTests');
-    Route::get('assignAuthorityLevels/{id}','AssignController@assignAuthorityLevels');
-    Route::get('assignJobs/{id}','AssignController@assignJobs');
-    
+     * */
+    Route::get('assignProjects/{id}', 'AssignController@assignProjects');
+    Route::get('assignTests/{id}', 'AssignController@assignTests');
+    Route::get('assignAuthorityLevels/{id}', 'AssignController@assignAuthorityLevels');
+    Route::get('assignJobs/{id}', 'AssignController@assignJobs');
+
     /**
      * Task List
      */
@@ -338,6 +338,12 @@ Route::group(['middleware' => 'auth'], function () {
      */
     Route::resource('payroll', 'PayrollController');
     Route::get('payrollJson', 'PayrollController@payrollJson');
+
+    /*
+     * Search 
+     * */
+    Route::get('/searchIndex', 'SearchController@searchIndex');
+    Route::get('/search/{type}', 'SearchController@search');
 });
 
 Route::group(['prefix' => 'api'], function () {

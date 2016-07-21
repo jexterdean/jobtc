@@ -28,6 +28,7 @@ use \View;
 use \Validator;
 use \Input;
 use \Redirect;
+use Elasticsearch\ClientBuilder as ES;
 
 class ProjectController extends BaseController {
 
@@ -483,6 +484,10 @@ class ProjectController extends BaseController {
         $update_project_ref = Project::find($project->project_id);
         $update_project_ref->ref_no = $project->project_id;
         $update_project_ref->save();
+        
+        //Create an index for searching
+        
+        
         
         return view('project.partials._newproject',[
             'project' => $project,
