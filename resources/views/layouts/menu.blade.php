@@ -1,3 +1,5 @@
+
+
 <div id="dl-menu" class="dl-menuwrapper">
     <button>GO</button>
     <ul class="dl-menu">
@@ -41,7 +43,7 @@
                         @endif
                         <li class="divider"></li>
                         <li>
-                             <a href="{{url('company/'.$company->company->id.'/projects')}}">
+                            <a href="{{url('company/'.$company->company->id.'/projects')}}">
                                 <i class="fa fa-folder-open"></i>
                                 <span> All Projects </span>
                             </a>
@@ -347,3 +349,22 @@
         </li>
     </ul>
 </div>
+<?php
+$modules = \App\Helpers\Helper::getSearchModules();
+?>
+<div class="search-container">
+    <div class="input-group">
+        <span class="input-group-btn">
+            <select class="btn">
+                @foreach($modules as $module)
+                <option value="{{strtolower($module->name)}}">{{$module->name}}</option>
+                @endforeach
+            </select>
+        </span>
+        <input id="search-field" name="search" type="text" class="form-control">
+    </div>
+</div>
+
+
+
+

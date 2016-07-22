@@ -22,56 +22,37 @@ class SearchController extends Controller {
 
             case "project" :
 
-                $body = [
-                    "sort" => [
-                        ["order" => ["order" => "asc"]],
-                        ["id" => ["order" => "asc"]]
-                    ]
-                ];
-
-                $matches = [
-                    ['match' => ['title' => $search]]
-                ];
-                preg_match('!\d+!', $search, $m);
-                $version = array_key_exists(0, $m) ? $m[0] : '';
-                if ($version) {
-                    $matches[] = ['match' => ['version' => $version]];
-                }
-
-                $body['query'] = [
-                    'bool' => [
-                        'must' => $matches
-                    ]
-                ];
-
                 //Build elasticsearch query
                 $params = [
                     'index' => 'default',
-                    'type' => 'projects',
-                    'client' => [
-                        'ignore' => 404
-                    ],
-                    "fields" => "",
-                    'body' => $body
+                    'type' => 'project',
+                    'body' => [
+                        'query' => [
+                            'match' => [
+                                'project_title' => $search
+                            ]
+                        ]
+                    ]
                 ];
                 $search_results = $search_client->search($params);
 
-                $searched_projects = $search_results['hits']['hits'];
+                $searched_projects = $search_results["hits"]["hits"];
 
-                $project_ids = [];
+                $count = 0;
 
-                if (count($searched_projects) > 0) {
-                    foreach ($searched_projects as $searched_project) {
-                        $project_ids[] = $searched_project['_id'];
-                    }
+                $ids = [];
+                
+                foreach($searched_projects as $project) {
+                    array_push($ids,$project["_id"]);
                 }
-
-                $results = Project::whereIn('project_id', $project_ids)->get();
-
-                $assets = ['companies'];
+                
+                $results = Project::whereIn('project_id',$ids)->get();
+                
+                $assets = ['search'];
 
                 return view('search.results', [
-                    'type' => $search_results,
+                    'results' => $results,
+                    'type' => $type,
                     'assets' => $assets
                 ]);
 
@@ -82,6 +63,47 @@ class SearchController extends Controller {
     public function searchIndex(Request $request) {
         $assets = ['companies'];
         return view('search.search', [
+            'assets' => $assets
+        ]);
+    }
+
+    public function enter($age, $name) {
+
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'name' => $name,
+            'age' => $age
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $results = $client->index($params);       //using Index() function to inject the data
+        $assets = ['companies'];
+
+        return view('search.results', [
+            'type' => $results,
+            'assets' => $assets
+        ]);
+    }
+
+    public function find($age) {
+
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['body']['query']['match']['project_title'] = $age;
+
+        $results = $client->search($params);       //using Index() function to inject the data
+
+        $assets = ['companies'];
+
+        return view('search.find', [
+            'type' => json_encode($results),
             'assets' => $assets
         ]);
     }

@@ -344,7 +344,9 @@ Route::group(['middleware' => 'auth'], function () {
      * Search 
      * */
     Route::get('/searchIndex', 'SearchController@searchIndex');
-    Route::get('/search/{type}', 'SearchController@search');
+    Route::get('/enter/{age}/{name}', 'SearchController@enter');
+    Route::get('/find/{age}', 'SearchController@find');
+    Route::get('/search/{type}','SearchController@search');
 });
 
 Route::group(['prefix' => 'api'], function () {

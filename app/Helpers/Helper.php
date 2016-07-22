@@ -18,6 +18,7 @@ use App\Models\TeamProject;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\PermissionUser;
+use App\Models\Module;
 use Illuminate\Http\Request;
 
 class Helper
@@ -395,6 +396,12 @@ class Helper
         
         return $subordinate_jobs;
         
+    }
+    
+    public static function getSearchModules() {
+        $modules = Module::all();
+        
+        return $modules;
     }
     
     public static function br2nl($string)

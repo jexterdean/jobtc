@@ -1,0 +1,57 @@
+/*
+    Dashboard Module Css
+    Created on : May 18, 2016, 10:43:40 AM
+    Author     : Jexter Dean Buenaventura
+*/
+
+.space {
+    padding: 15px;
+}
+.mini-space {
+    padding: 5px;
+}
+
+.search-container {
+    position: relative;
+    top: 5px;
+    margin: 0 auto;
+    width: 50%;
+}
+
+.search-column {
+    position: relative;
+    display: block;
+    padding: 5px 10px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+  .column {
+    width: 25%;
+    float: left;
+    padding-bottom: 100px;
+  }
+  .portlet {
+    margin: 0 1em 1em 0;
+    padding: 0.3em;
+  }
+  .portlet-header {
+    padding: 0.2em 0.3em;
+    margin-bottom: 0.5em;
+    position: relative;
+  }
+  .portlet-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+  }
+  .portlet-content {
+    padding: 0.4em;
+  }
+  .portlet-placeholder {
+    border: 1px dotted black;
+    margin: 0 1em 1em 0;
+    height: 50px;
+  }
