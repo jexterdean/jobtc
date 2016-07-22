@@ -125,7 +125,7 @@ class SearchController extends Controller {
             foreach ($tickets as $ticket) {
 
                 $params['body'] = array(
-                    'title' => $test->title
+                    'title' => $ticket->title
                 );
                 $params['index'] = 'default';
                 $params['type'] = 'ticket';
