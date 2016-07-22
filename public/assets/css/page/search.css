@@ -27,6 +27,11 @@
     border: 1px solid #ddd;
 }
 
+.project-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
   .column {
     width: 25%;
     float: left;

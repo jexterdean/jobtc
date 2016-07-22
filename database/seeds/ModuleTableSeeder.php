@@ -25,6 +25,13 @@ class ModuleTableSeeder extends Seeder {
             $jobs_module->name = 'Jobs';
             $jobs_module->save();
         }
+        //For Applicants Module
+        $applicants_module_count = Module::where('name', 'Applicants')->count();
+        if ($applicants_module_count === 0) {
+            $applicants_module = new Module();
+            $applicants_module->name = 'Applicants';
+            $applicants_module->save();
+        }
 
         //For Employees Module
         $employees_module_count = Module::where('name', 'Employees')->count();
@@ -57,6 +64,8 @@ class ModuleTableSeeder extends Seeder {
             $tickets_module->name = 'Tickets';
             $tickets_module->save();
         }
+        
+        
     }
 
 }

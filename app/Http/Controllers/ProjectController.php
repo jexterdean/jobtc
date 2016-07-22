@@ -492,7 +492,8 @@ class ProjectController extends BaseController {
                 ->build();
         $params = array();
         $params['body'] = array(
-            'project_title' => $project_title
+            'project_title' => $project_title,
+            'company_id' => $company_id
         );
         $params['index'] = 'default';
         $params['type'] = 'project';

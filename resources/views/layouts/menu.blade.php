@@ -355,9 +355,9 @@ $modules = \App\Helpers\Helper::getSearchModules();
 <div class="search-container">
     <div class="input-group">
         <span class="input-group-btn">
-            <select class="btn">
+            <select class="module-selector btn">
                 @foreach($modules as $module)
-                <option value="{{strtolower($module->name)}}">{{$module->name}}</option>
+                <option value="{{strtolower(str_singular($module->name))}}">{{$module->name}}</option>
                 @endforeach
             </select>
         </span>
