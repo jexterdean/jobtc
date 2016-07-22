@@ -28,6 +28,7 @@ Route::get('company/{company_id}/jobs', 'JobController@getCompanyJobs');
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
 Route::post('saveJobNotes', 'JobController@saveJobNotes');
+Route::post('saveJobCriteria', 'JobController@saveJobCriteria');
 /* Check for duplicate emails upon Applying to a Job */
 Route::post('checkApplicantDuplicateEmail', 'JobController@checkApplicantDuplicateEmail');
 
@@ -43,6 +44,7 @@ Route::get('editApplicantPasswordForm', 'ApplicantController@editApplicantPasswo
 Route::post('editApplicantPassword', 'ApplicantController@editApplicantPassword');
 Route::post('checkApplicantPassword', 'ApplicantController@checkApplicantPassword');
 Route::post('saveApplicantNotes', 'ApplicantController@saveApplicantNotes');
+Route::post('saveApplicantCriteria', 'ApplicantController@saveApplicantCriteria');
 Route::post('getApplicantQuizResults', 'ApplicantController@getApplicantQuizResults');
 
 
