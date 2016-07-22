@@ -301,8 +301,10 @@ class SearchController extends Controller {
                     array_push($ids, $employee["_id"]);
                 }
 
-                $results = User::whereIn('user_id', $ids)->get();
-
+                $results = User::with(['profile' => function($query){
+                    $query->with('company')->get();
+                }])->whereIn('user_id', $ids)->get();
+                
                 $assets = ['search'];
 
                 return view('search.results', [

@@ -289,6 +289,18 @@ class UserController extends BaseController {
         $user->user_status = 'Active';
         $user->save();
 
+        //Create an index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'name' => $user->name
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'employee';
+        $params['id'] = $user->user_id;
+        $results = $client->index($params);       //using Index() function to inject the data
 
         $new_user_role = Role::where('company_id', 0)
                 ->where('level', 2)
@@ -408,6 +420,19 @@ class UserController extends BaseController {
             $user->ticketit_agent = 0;
             $user->user_status = 'Active';
             $user->save();
+
+            //Create an index for searching
+            $client = ES::create()
+                    ->setHosts(\Config::get('elasticsearch.host'))
+                    ->build();
+            $params = array();
+            $params['body'] = array(
+                'name' => $user->name
+            );
+            $params['index'] = 'default';
+            $params['type'] = 'employee';
+            $params['id'] = $user->user_id;
+            $results = $client->index($params);       //using Index() function to inject the data
         }
 
         if ($request->has('user_id')) {
@@ -529,7 +554,7 @@ class UserController extends BaseController {
                 $photo_path = 'assets/user/default-avatar.jpg';
             }
         }
-        
+
         if ($request->hasFile('resume')) {
             $resume = $request->file('resume');
             if (file_exists(public_path('assets/user/resumes/' . $resume->getClientOriginalName()))) {
@@ -541,7 +566,7 @@ class UserController extends BaseController {
         } else {
             $resume_path = User::where('user_id', $user_id)->pluck('resume');
         }
-        
+
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -556,6 +581,21 @@ class UserController extends BaseController {
             'facebook' => $request->input('facebook'),
             'linkedin' => $request->input('linkedin'),
         ]);
+
+        //Update the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'doc' => [
+                'name' => $user->name
+            ]
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'employee';
+        $params['id'] = $user->user_id;
+        $results = $client->update($params);       //using Index() function to inject the data
 
         $data = array('photo' => $photo_path);
 

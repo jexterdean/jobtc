@@ -117,6 +117,19 @@ class ProjectController extends BaseController {
         $update_project_ref->ref_no = $project->project_id;
         $update_project_ref->save();
 
+        //Create an index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'project_title' => $project->project_title,
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['id'] = $project->project_id;
+        $results = $client->index($params);       //using Index() function to inject the data
+
         return redirect()->route('project.show', $project->project_id);
     }
 
@@ -263,6 +276,21 @@ class ProjectController extends BaseController {
         $project->rate_value = $request->input('rate_value');
         $project->save();
 
+        //Update the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'doc' => [
+                'project_title' => $project->project_title
+            ]
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['id'] = $project->project_id;
+        $results = $client->update($params);       //using Index() function to inject the data
+
         return $project->project_title;
     }
 
@@ -359,10 +387,25 @@ class ProjectController extends BaseController {
             $team_companies = TeamCompany::where('project_id', $project_id);
             $team_companies->delete();
         }
-        //Then finally delete the project
+        
         $project = Project::where('project_id', $project_id);
+        
+         //Delete the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['id'] = $project->pluck('project_id');
+        $results = $client->delete($params);       //using Index() function to inject the data
+        
+        //Then finally delete the project
         $project->delete();
 
+      
+        
         return "true";
     }
 
@@ -486,20 +529,18 @@ class ProjectController extends BaseController {
         $update_project_ref->save();
 
         //Create an index for searching
-        
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
                 ->build();
         $params = array();
         $params['body'] = array(
-            'project_title' => $project_title,
-            'company_id' => $company_id
+            'project_title' => $project_titleu
         );
         $params['index'] = 'default';
         $params['type'] = 'project';
         $params['id'] = $project->project_id;
         $results = $client->index($params);       //using Index() function to inject the data
-        
+
         return view('project.partials._newproject', [
             'project' => $project,
             'company_id' => $company_id

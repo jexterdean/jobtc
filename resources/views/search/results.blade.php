@@ -29,11 +29,16 @@
     </div>
     @endif
     @if($type === 'employee')
+    @foreach($result->profile as $profile)
     <div class="col-md-6 search-column">
-        <a class="employee-name" target="_blank" href="{{url('user/'.$result->user_id)}}">
+        <a class="employee-name" target="_blank" href="{{url('user/'.$result->user_id.'/company/'.$profile->company_id)}}">
             {{$result->name}}
         </a>
+        <div class="company">
+            {{$profile->company->name}}
+        </div>
     </div>
+    @endforeach
     @endif
     @if($type === 'test')
     <div class="col-md-6 search-column">

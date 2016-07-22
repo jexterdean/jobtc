@@ -145,6 +145,19 @@ class RoleController extends Controller {
         $position->level = 1;
         $position->save();
 
+        //Create an index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'name' => $position->name
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'position';
+        $params['id'] = $position->id;
+        $results = $client->index($params);       //using Index() function to inject the data
+
         $modules = Module::all();
         $permissions = Permission::all();
         $permission_role = PermissionRole::all();
@@ -172,6 +185,21 @@ class RoleController extends Controller {
             'description' => $description
         ]);
 
+        //Update the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'doc' => [
+                'name' => $position->name
+            ]
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'position';
+        $params['id'] = $position->id;
+        $results = $client->update($params);       //using Index() function to inject the data
+
         return "true";
     }
 
@@ -180,6 +208,18 @@ class RoleController extends Controller {
         $position_id = $request->input('position_id');
 
         $position = Role::where('id', $position_id);
+
+        //Delete the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+
+        $params['index'] = 'default';
+        $params['type'] = 'position';
+        $params['id'] = $position->pluck('id');
+        $results = $client->delete($params);       //using Index() function to inject the data
+
         $position->delete();
 
         return $position_id;
@@ -219,8 +259,8 @@ class RoleController extends Controller {
 
         $permission_role = PermissionRole::where('permission_id', $permission_id)->where('role_id', $role_id)->where('company_id', $company_id);
         $permission_role->delete();
-        
-         $profiles = Profile::where('company_id', $company_id)->where('role_id', $role_id)->get();
+
+        $profiles = Profile::where('company_id', $company_id)->where('role_id', $role_id)->get();
 
         foreach ($profiles as $profile) {
             $permission_user = PermissionUser::where('permission_id', $permission_id)->where('user_id', $profile->user_id)->where('company_id', $company_id);

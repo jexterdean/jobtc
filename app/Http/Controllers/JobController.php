@@ -17,6 +17,7 @@ use App\Models\PermissionRole;
 use App\Models\ShareJob;
 use Auth;
 use Redirect;
+use Elasticsearch\ClientBuilder as ES;
 
 class JobController extends Controller {
 
@@ -78,7 +79,20 @@ class JobController extends Controller {
         $job->photo = $photo_path;
         $job->save();
 
-        return Redirect::to('job/' . $job->id)->withSuccess('Job added successfully!!');
+        //Create an index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'title' => $job->title
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'job';
+        $params['id'] = $job->id;
+        $results = $client->index($params);       //using Index() function to inject the data
+
+        return Redirect::to('job/' . $job->id);
     }
 
     /**
@@ -245,6 +259,22 @@ class JobController extends Controller {
         $job->photo = $photo_path;
         $job->save();
 
+        //Update the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'doc' => [
+                'title' => $job->title
+            ]
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'job';
+        $params['id'] = $job->id;
+        $results = $client->update($params);       //using Index() function to inject the data
+
+
         $message = 'Job Updated';
         return $message;
     }
@@ -280,9 +310,21 @@ class JobController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        $user_id = Auth::user()->user_id;
+        $user_id = Auth::user('user')->user_id;
 
         $job = Job::find($id);
+
+        //Delete the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+
+        $params['index'] = 'default';
+        $params['type'] = 'job';
+        $params['id'] = $job->pluck('id');
+        $results = $client->delete($params);       //using Index() function to inject the data
+
         $job->delete();
 
         $message = "Job Deleted";
@@ -468,6 +510,20 @@ class JobController extends Controller {
         if ($name !== '' || $email !== '') {
             $applicant->save();
             $message = "Application Submitted";
+
+            //Create an index for searching
+            $client = ES::create()
+                    ->setHosts(\Config::get('elasticsearch.host'))
+                    ->build();
+            $params = array();
+            $params['body'] = array(
+                'name' => $applicant->name
+            );
+            $params['index'] = 'default';
+            $params['type'] = 'applicant';
+            $params['id'] = $applicant->id;
+            $results = $client->index($params);       //using Index() function to inject the data
+
 
             Auth::loginUsingId("applicant", $applicant->id);
         } else {
