@@ -85,6 +85,9 @@
                     @endif
                     @if(Auth::check() && Auth::user()->level() === 1)
                     <li role="presentation">
+                        <a href="#criteria-tab" aria-controls="profile" role="tab" data-toggle="tab">Criteria</a>
+                    </li>
+                    <li role="presentation">
                         <a href="#notes-tab" aria-controls="profile" role="tab" data-toggle="tab">Notes</a>
                     </li>
                     @endif
@@ -222,6 +225,9 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="tests-tab">
                         @include('applicants.partials._quizlist')
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="criteria-tab">
+                        <textarea id="assessment-instruction">{{$applicant->criteria}}</textarea>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="notes-tab">
                         <textarea id="applicant-notes">{{$applicant->notes}}</textarea>

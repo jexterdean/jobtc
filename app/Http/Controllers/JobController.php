@@ -595,6 +595,18 @@ class JobController extends Controller {
         return "true";
     }
 
+    public function saveJobCriteria(Request $request) {
+        $job_id = $request->input('job_id');
+        $criteria = $request->input('criteria');
+
+        $job = Job::where('id', $job_id);
+        $job->update([
+            'criteria' => $criteria
+        ]);
+
+        return "true";
+    }
+
     public function checkApplicantDuplicateEmail(Request $request) {
 
         $email = $request->input('email');

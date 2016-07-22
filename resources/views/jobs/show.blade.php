@@ -91,13 +91,13 @@
                                         <div id="collapse-container-2" class="panel task-list">
                                             <div class="panel-heading task-header" data-target="#collapse-1" role="tab" id="headingOne" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                                                 <div class="row">
-                                                    <h4 class="panel-title task-list-header">Applicant Assessment Instuctions</h4>
+                                                    <h4 class="panel-title task-list-header">Applicant Assessment Criteria</h4>
                                                 </div>
                                             </div>
                                             <div id="collapse-1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                                 <div class="panel-body">
                                                     <div class="panel-content">
-                                                        <textarea class="form-control assessment-instruction" id="assessment-instruction"></textarea>
+                                                        <textarea class="form-control assessment-instruction" id="assessment-instruction">{{$job->criteria}}</textarea>
                                                     </div>
                                                 </div>
                                             </div>

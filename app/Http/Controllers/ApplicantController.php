@@ -533,6 +533,18 @@ class ApplicantController extends Controller {
         return "true";
     }
 
+    public function saveApplicantCriteria(Request $request) {
+        $applicant_id = $request->input('applicant_id');
+        $criteria = $request->input('criteria');
+
+        $applicant = Applicant::where('id', $applicant_id);
+        $applicant->update([
+            'criteria' => $criteria
+        ]);
+
+        return "true";
+    }
+
     public function hireApplicant(Request $request) {
 
         $applicant_id = $request->input('applicant_id');

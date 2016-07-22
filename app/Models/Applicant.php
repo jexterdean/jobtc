@@ -33,7 +33,7 @@ class Applicant extends Model implements
      * @var array
      */
     
-    protected $fillable = ['job_id','name','email','phone','resume','photo','password','remember_token','notes','hired'];
+    protected $fillable = ['job_id','name','email','phone','resume','photo','password','remember_token','notes','criteria','hired'];
 
     /**
      * The attributes excluded from the model's JSON form.
