@@ -1162,5 +1162,4 @@
             return text;
         }
 
-    })
 </script>

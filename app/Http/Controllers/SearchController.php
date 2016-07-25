@@ -175,7 +175,7 @@ class SearchController extends Controller {
                     'body' => [
                         'query' => [
                             'query_string' => [
-                                'query' => 'project_title:' . $term . '*'
+                                'query' => 'project_title:*' . $term . '*'
                             ]
                         ]
                     ]
@@ -212,7 +212,7 @@ class SearchController extends Controller {
                     'body' => [
                         'query' => [
                             'query_string' => [
-                                'query' => 'title:' . $term . '*'
+                                'query' => 'title:*' . $term . '*'
                             ]
                         ]
                     ]
@@ -286,7 +286,7 @@ class SearchController extends Controller {
                     'body' => [
                         'query' => [
                             'query_string' => [
-                                'query' => 'name:' . $term . '*'
+                                'query' => 'name:*' . $term . '*'
                             ]
                         ]
                     ]
@@ -362,7 +362,7 @@ class SearchController extends Controller {
                     'body' => [
                         'query' => [
                             'query_string' => [
-                                'query' => 'name:' . $term . '*'
+                                'query' => 'name:*' . $term . '*'
                             ]
                         ]
                     ]
@@ -399,7 +399,7 @@ class SearchController extends Controller {
                     'body' => [
                         'query' => [
                             'query_string' => [
-                                'query' => 'subject:' . $term . '*'
+                                'query' => 'subject:*' . $term . '*'
                             ]
                         ]
                     ]

@@ -223,13 +223,13 @@ Route::group(['middleware' => 'auth'], function () {
     /* 
      * Briefcases 
      **/
-    Route::resource('task', 'TaskController');
+    Route::resource('task', 'TaskController'); //This is temporary, need it for briefcases loaded as project
     Route::resource('briefcase', 'BriefcaseController');
     
     /*
      * Task List Items 
      **/
-    Route::resource('tasklistitem', 'TaskListItemController');
+    Route::resource('taskitem', 'TaskListItemController');
     
     /*
      * Employees

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use App\Models\Applicant;
@@ -21,10 +22,9 @@ use App\Models\PermissionUser;
 use App\Models\Module;
 use Illuminate\Http\Request;
 
-class Helper
-{
-    public static function showMessage()
-    {
+class Helper {
+
+    public static function showMessage() {
         if (Session::has('errors')) {
 
             $error = Session::get('errors')->First();
@@ -33,7 +33,6 @@ class Helper
 					<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
 					<strong>$error</strong>
 				</div>";
-
         } elseif (Session::has('success')) {
 
             $success = Session::get('success');
@@ -45,13 +44,11 @@ class Helper
         }
     }
 
-    public static function getRandomHexColor()
-    {
+    public static function getRandomHexColor() {
         return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
     }
 
-    public static function getRandomColor()
-    {
+    public static function getRandomColor() {
         $PORTLETCOLOR = array(
             "primary",
             "danger",
@@ -62,8 +59,7 @@ class Helper
         echo $PORTLETCOLOR[$index];
     }
 
-    public static function getAvatar($username)
-    {
+    public static function getAvatar($username) {
         $user = DB::table('user')->where('username', '=', $username)->first();
         if (isset($user->user_avatar))
             $url = 'assets/user/' . $user->user_avatar;
@@ -72,8 +68,7 @@ class Helper
         echo url($url);
     }
 
-    public static function getProgressStatus($value)
-    {
+    public static function getProgressStatus($value) {
         if ($value == 0)
             return "<span class='label label-sm label-danger'>Pending</span>";
         elseif ($value < 50)
@@ -84,68 +79,68 @@ class Helper
             return "<span class='label label-sm label-success'>Completed</span>";
     }
 
-    public static function getProjectLinks(){
-        /*$project = DB::table('project')
-            ->orderBy('project_title', 'asc')
-            ->get();*/
-        
+    public static function getProjectLinks() {
+        /* $project = DB::table('project')
+          ->orderBy('project_title', 'asc')
+          ->get(); */
+
         $user_id = Auth::user()->user_id;
-        
-        /*$team_projects = DB::table('project')
-                         ->join('team_project','team_project.project_id','=','project.project_id')
-                         ->join('team_member','team_member.team_id','=','team_project.team_id')
-                         ->distinct()
-                         ->select('team_member.user_id')
-                         ->get();*/
-        
+
+        /* $team_projects = DB::table('project')
+          ->join('team_project','team_project.project_id','=','project.project_id')
+          ->join('team_member','team_member.team_id','=','team_project.team_id')
+          ->distinct()
+          ->select('team_member.user_id')
+          ->get(); */
+
         $project_id_list = [];
-        
+
         //Get owned projects
-        $owned_projects = Project::where('user_id',$user_id)->get();
-        
+        $owned_projects = Project::where('user_id', $user_id)->get();
+
         //Get Team Member projects
-        $team_members = TeamMember::where('user_id',$user_id)->get();
-        
+        $team_members = TeamMember::where('user_id', $user_id)->get();
+
         $team_projects = TeamProject::all();
-        
-        foreach($owned_projects as $owned_project) {
+
+        foreach ($owned_projects as $owned_project) {
             array_push($project_id_list, $owned_project->project_id);
         }
-        
+
         //Use the team id to get the projects the users are involved with
-        foreach($team_members as $member) {
-            foreach($team_projects as $project) {
+        foreach ($team_members as $member) {
+            foreach ($team_projects as $project) {
                 if ($member->team_id === $project->team_id) {
                     array_push($project_id_list, $project->project_id);
                 }
             }
         }
-        
-        $project_list = Project::whereIn('project_id',$project_id_list)->get();
-        
+
+        $project_list = Project::whereIn('project_id', $project_id_list)->get();
+
         return $project_list;
     }
-    
-    public static function getCompanyLinks(){
-        
-        /*$companies = Company::with(['profile' => function($query) {
-            //Get user that is logged in
-            $user_id = Auth::user()->user_id;
-            $query->where('user_id',$user_id)->get();
-        }])->get();*/
-        
-        $user_id = Auth::user('user_id')->user_id;
-        
-        $companies = Profile::with('company')->where('user_id',$user_id)->get();
 
-        if(count($companies) > 0){
-            foreach($companies as $company){
+    public static function getCompanyLinks() {
+
+        /* $companies = Company::with(['profile' => function($query) {
+          //Get user that is logged in
+          $user_id = Auth::user()->user_id;
+          $query->where('user_id',$user_id)->get();
+          }])->get(); */
+
+        $user_id = Auth::user('user_id')->user_id;
+
+        $companies = Profile::with('company')->where('user_id', $user_id)->get();
+
+        if (count($companies) > 0) {
+            foreach ($companies as $company) {
 
                 $job_list_ids = [];
                 $company_list_ids = [];
                 $project_id_list = [];
 
-                $where = ['user_id'=>$user_id,'company_id' => $company->company->id];
+                $where = ['user_id' => $user_id, 'company_id' => $company->company->id];
                 //Get owned projects
                 $owned_projects = Project::where($where)->get();
 
@@ -154,105 +149,104 @@ class Helper
 
                 $team_projects = TeamProject::all();
 
-                foreach($owned_projects as $owned_project) {
+                foreach ($owned_projects as $owned_project) {
                     array_push($project_id_list, $owned_project->project_id);
                 }
 
                 //Use the team id to get the projects the users are involved with
-                foreach($team_members as $member) {
-                    foreach($team_projects as $project) {
+                foreach ($team_members as $member) {
+                    foreach ($team_projects as $project) {
                         if ($member->team_id === $project->team_id) {
                             array_push($project_id_list, $project->project_id);
                         }
                     }
                 }
 
-                $company->projects = Project::whereIn('project_id',$project_id_list)->get();
+                $company->projects = Project::whereIn('project_id', $project_id_list)->get();
 
                 //Get Jobs under a certain company
-                array_push($company_list_ids,$company->company->id);
+                array_push($company_list_ids, $company->company->id);
 
                 $owned_jobs = Job::where($where)->get();
 
-                $shared_jobs = ShareJob::where('user_id',$user_id)->get();
+                $shared_jobs = ShareJob::where('user_id', $user_id)->get();
 
-                $shared_jobs_companies = ShareJobCompanyPermission::whereIn('company_id',$company_list_ids)->where($where)->get();
+                $shared_jobs_companies = ShareJobCompanyPermission::whereIn('company_id', $company_list_ids)->where($where)->get();
 
-                foreach($owned_jobs as $owned_job) {
-                    array_push($job_list_ids,$owned_job->id);
+                foreach ($owned_jobs as $owned_job) {
+                    array_push($job_list_ids, $owned_job->id);
                 }
 
-                foreach($shared_jobs as $shared_job) {
-                    array_push($job_list_ids,$shared_job->job_id);
+                foreach ($shared_jobs as $shared_job) {
+                    array_push($job_list_ids, $shared_job->job_id);
                 }
 
-                foreach($shared_jobs_companies as $shared_jobs_company) {
-                    array_push($job_list_ids,$shared_jobs_company->job_id);
+                foreach ($shared_jobs_companies as $shared_jobs_company) {
+                    array_push($job_list_ids, $shared_jobs_company->job_id);
                 }
 
-                $company->jobs = Job::whereIn('id',$job_list_ids)->get();
+                $company->jobs = Job::whereIn('id', $job_list_ids)->get();
 
-                foreach($company->jobs as $job){
-                    $job->applicants = Applicant::where('job_id',$job->id)->get();
+                foreach ($company->jobs as $job) {
+                    $job->applicants = Applicant::where('job_id', $job->id)->get();
                 }
             }
         }
 
         return $companies;
     }
-    
+
     public static function getJobLinks() {
-        
+
         $job_list_ids = [];
         $company_list_ids = [];
-        
-        $user_id = Auth::user('user')->user_id;
-        
-        $profiles = Profile::where('user_id',$user_id)->get();
-        
-        //Get all the company ids mapped to the user
-        foreach($profiles as $profile) {
-            array_push($company_list_ids,$profile->company_id);
-        }
-        
-        $owned_jobs = Job::where('user_id',$user_id)->get();
-        
-        $shared_jobs = ShareJob::where('user_id',$user_id)->get();
-        
-        $shared_jobs_companies = ShareJobCompanyPermission::whereIn('company_id',$company_list_ids)->where('user_id',$user_id)->get();
-        
-        foreach($owned_jobs as $owned_job) {
-            array_push($job_list_ids,$owned_job->id);
-        }
-        
-        foreach($shared_jobs as $shared_job) {
-            array_push($job_list_ids,$shared_job->job_id);
-        }
-        
-        foreach($shared_jobs_companies as $shared_jobs_company) {
-            array_push($job_list_ids,$shared_jobs_company->job_id);
-        }
-        
-        $jobs = Job::whereIn('id',$job_list_ids)->get();
 
-        foreach($jobs as $job){
-            $job->applicants = Applicant::where('job_id',$job->id)->get();
+        $user_id = Auth::user('user')->user_id;
+
+        $profiles = Profile::where('user_id', $user_id)->get();
+
+        //Get all the company ids mapped to the user
+        foreach ($profiles as $profile) {
+            array_push($company_list_ids, $profile->company_id);
+        }
+
+        $owned_jobs = Job::where('user_id', $user_id)->get();
+
+        $shared_jobs = ShareJob::where('user_id', $user_id)->get();
+
+        $shared_jobs_companies = ShareJobCompanyPermission::whereIn('company_id', $company_list_ids)->where('user_id', $user_id)->get();
+
+        foreach ($owned_jobs as $owned_job) {
+            array_push($job_list_ids, $owned_job->id);
+        }
+
+        foreach ($shared_jobs as $shared_job) {
+            array_push($job_list_ids, $shared_job->job_id);
+        }
+
+        foreach ($shared_jobs_companies as $shared_jobs_company) {
+            array_push($job_list_ids, $shared_jobs_company->job_id);
+        }
+
+        $jobs = Job::whereIn('id', $job_list_ids)->get();
+
+        foreach ($jobs as $job) {
+            $job->applicants = Applicant::where('job_id', $job->id)->get();
         }
 
         return $jobs;
-        
     }
-    
+
     public static function getPermissions($company_id) {
-        
+
         $user_id = Auth::user('user')->user_id;
-        
+
         $user_profile_role = Profile::where('user_id', $user_id)
                 ->where('company_id', $company_id)
                 ->first();
 
         $permissions_list = [];
- 
+
         $permissions_user = PermissionUser::with('permission')
                 ->where('company_id', $company_id)
                 ->where('user_id', $user_id)
@@ -261,37 +255,39 @@ class Helper
         foreach ($permissions_user as $user_role) {
             array_push($permissions_list, $user_role->permission_id);
         }
-        
+
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
+
         return $module_permissions;
     }
-    
+
     public static function getMyProjects($company_id) {
-        
+
         $user_id = Auth::user('user')->user_id;
-        
-        $my_projects = Project::where('company_id',$company_id)
-                ->where('user_id',$user_id)
+
+        $my_projects = Project::with(['task' => function($query) {
+                        $query->with('task_list_items')->get();
+                    }])->where('company_id', $company_id)
+                ->where('user_id', $user_id)
                 ->get();
-        
+
         return $my_projects;
-    } 
-    
+    }
+
     public static function getSharedProjects($company_id) {
-        
+
         $user_id = Auth::user('user')->user_id;
-        
+
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)
                 ->where('company_id', $company_id)
                 ->get();
-        
+
         $team_projects = TeamProject::all();
-        
+
         $project_id_list = [];
-        
-         //Use the team id to get the projects the users are involved with
+
+        //Use the team id to get the projects the users are involved with
         foreach ($team_members as $member) {
             foreach ($team_projects as $project) {
                 if ($member->team_id === $project->team_id) {
@@ -299,130 +295,132 @@ class Helper
                 }
             }
         }
-        
+
         $shared_projects = Project::with(['task' => function($query) {
-                        $query->orderBy('task_title', 'asc')->get();
+                        $query->with('task_list_items')->orderBy('task_title', 'asc')->get();
                     }], 'task_permission', 'company', 'user')
                 ->whereIn('project_id', $project_id_list)
                 ->get();
-        
+
         return $shared_projects;
-    } 
-    
+    }
+
     public static function getSubordinateProjects($company_id) {
-        
+
         $user_id = Auth::user('user')->user_id;
-        
-        $profile = Profile::where('company_id',$company_id)
-                ->where('user_id',$user_id)->first();
-        
-        $profile_levels = ProfileLevel::where('profile_id',$profile->id)
-                ->where('profile_level','above')
+
+        $profile = Profile::where('company_id', $company_id)
+                        ->where('user_id', $user_id)->first();
+
+        $profile_levels = ProfileLevel::where('profile_id', $profile->id)
+                ->where('profile_level', 'above')
                 ->get();
-        
+
         $subordinate_user_id_list = [];
         $subordinate_profile_id_list = [];
-        
-        foreach($profile_levels as $profile_level) {
-            array_push($subordinate_profile_id_list,$profile_level->unique_id);
+
+        foreach ($profile_levels as $profile_level) {
+            array_push($subordinate_profile_id_list, $profile_level->unique_id);
         }
-        
-        $subordinate_profiles = Profile::whereIn('id',$subordinate_profile_id_list)->where('company_id',$company_id)->get(); 
-        
-        foreach($subordinate_profiles as $subordinate_profile) {
-            array_push($subordinate_user_id_list,$subordinate_profile->user_id);
+
+        $subordinate_profiles = Profile::whereIn('id', $subordinate_profile_id_list)->where('company_id', $company_id)->get();
+
+        foreach ($subordinate_profiles as $subordinate_profile) {
+            array_push($subordinate_user_id_list, $subordinate_profile->user_id);
         }
-        
-        $subordinate_projects = Project::whereIn('user_id',$subordinate_user_id_list)->where('company_id',$company_id)->get();
-        
+
+        $subordinate_projects = Project::with(['task' => function($query) {
+                        $query->with('task_list_items')->get();
+                    }])->whereIn('user_id', $subordinate_user_id_list)->where('company_id', $company_id)->get();
+
         return $subordinate_projects;
     }
-    
-    
+
     public static function getMyJobs($company_id) {
-        
+
         $user_id = Auth::user('user')->user_id;
-        
-        $my_jobs = Job::where('user_id',$user_id)
-                ->where('company_id',$company_id)
+
+        $my_jobs = Job::where('user_id', $user_id)
+                ->where('company_id', $company_id)
                 ->get();
-        
+
         return $my_jobs;
     }
-    
+
     public static function getSharedJobs($company_id) {
-        
+
         $user_id = Auth::user('user')->user_id;
-        
+
         $job_id_list = [];
-        
-        $shared_jobs_list = ShareJob::where('user_id',$user_id)->get();
-        
-        foreach($shared_jobs_list as $shared_job) {
-            array_push($job_id_list,$shared_job->job_id);
+
+        $shared_jobs_list = ShareJob::where('user_id', $user_id)->get();
+
+        foreach ($shared_jobs_list as $shared_job) {
+            array_push($job_id_list, $shared_job->job_id);
         }
-        
-        $shared_jobs = Job::whereIn('id',$job_id_list)->where('company_id',$company_id)->get();
-        
+
+        $shared_jobs = Job::whereIn('id', $job_id_list)->where('company_id', $company_id)->get();
+
         return $shared_jobs;
     }
-    
+
     public static function getSubordinateJobs($company_id) {
-          
+
         $user_id = Auth::user('user')->user_id;
-        
-        $profile = Profile::where('company_id',$company_id)
-                ->where('user_id',$user_id)->first();
-        
-        $profile_levels = ProfileLevel::where('profile_id',$profile->id)
-                ->where('profile_level','above')
-                ->orWhere('profile_level','equal')
+
+        $profile = Profile::where('company_id', $company_id)
+                        ->where('user_id', $user_id)->first();
+
+        $profile_levels = ProfileLevel::where('profile_id', $profile->id)
+                ->where('profile_level', 'above')
+                ->orWhere('profile_level', 'equal')
                 ->get();
-        
+
         $subordinate_user_id_list = [];
         $subordinate_profile_id_list = [];
-        
-        foreach($profile_levels as $profile_level) {
-            array_push($subordinate_profile_id_list,$profile_level->unique_id);
+
+        foreach ($profile_levels as $profile_level) {
+            array_push($subordinate_profile_id_list, $profile_level->unique_id);
         }
-        
-        $subordinate_profiles = Profile::whereIn('id',$subordinate_profile_id_list)->where('company_id',$company_id)->get(); 
-        
-        foreach($subordinate_profiles as $subordinate_profile) {
-            array_push($subordinate_user_id_list,$subordinate_profile->user_id);
+
+        $subordinate_profiles = Profile::whereIn('id', $subordinate_profile_id_list)->where('company_id', $company_id)->get();
+
+        foreach ($subordinate_profiles as $subordinate_profile) {
+            array_push($subordinate_user_id_list, $subordinate_profile->user_id);
         }
-        
-        $subordinate_jobs = Job::whereIn('user_id',$subordinate_user_id_list)->where('company_id',$company_id)->get();
-        
+
+        $subordinate_jobs = Job::whereIn('user_id', $subordinate_user_id_list)->where('company_id', $company_id)->get();
+
         return $subordinate_jobs;
-        
     }
-    
+
     public static function getSearchModules() {
         $modules = Module::all();
-        
+
         return $modules;
     }
-    
-    public static function br2nl($string)
-    {
+
+    public static function getBriefcases($task_id) {
+        
+    }
+
+    public static function br2nl($string) {
         return preg_replace('/\<br(\s*)?\/?\>/i', "", $string);
     }
 
-    public static function mynl2br($string)
-    {
+    public static function mynl2br($string) {
         $string = str_replace("'", "&#039;", $string);
         $string = nl2br($string);
         return ($string);
     }
 
-    public static function DisplayArray($ar, $color = "000"){
+    public static function DisplayArray($ar, $color = "000") {
         echo '<pre style="color: #' . $color . '">';
         print_r($ar);
         echo '</pre>';
     }
 
-    public static function checkFileIsAudio($tmp){
+    public static function checkFileIsAudio($tmp) {
         $allowed = array(
             '3gp', 'aa', 'aac', 'aax', 'act',
             'aiff', 'amr', 'ape', 'au', 'awb',
@@ -434,14 +432,14 @@ class Helper
             'wma', 'wv', 'webm'
         );
         $ext = substr(strrchr(basename($tmp), '.'), 1);
-        if(in_array($ext, $allowed)) {
+        if (in_array($ext, $allowed)) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
-    public static function getMimeType($tmp){
+
+    public static function getMimeType($tmp) {
         $mime_types = array(
             '3dm' => array('x-world/x-3dmf'),
             '3dmf' => array('x-world/x-3dmf'),
@@ -1669,13 +1667,13 @@ class Helper
         );
 
         $ext = substr(strrchr(basename($tmp), '.'), 1);
-        if(array_key_exists($ext, $mime_types)) {
+        if (array_key_exists($ext, $mime_types)) {
             return $mime_types[$ext];
-        }
-        else {
+        } else {
             return false;
         }
     }
+
 }
 
 ?>
