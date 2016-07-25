@@ -1,6 +1,7 @@
 {!! Form::open(['url' => ['taskTimer/' . $task->task_id],'class' => 'task-form'])  !!}
 {!! Form::hidden('task_id',$task->task_id) !!}
 {!! Form::hidden('user_id',$task->user_id) !!}
+{!! Form::close()  !!}
 <?php $_total = 0; ?>
 @foreach($task_timer as $timer)
 <?php $_total += $timer->time ?>
@@ -25,27 +26,6 @@
                             <ul class="tasklist-group list-group" id="list_group_{{ $task->task_id }}">
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $list_item)
-                                {{--region Briefcase Item Add Link--}}
-                                <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id . '-' . $list_item->id }}" tabindex="-1" role="basic" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                                <h4 class="modal-title">Add Link</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                                                {!! Form::hidden('task_id',$task->task_id) !!}
-                                                {!! Form::hidden('task_item_id',$list_item->id) !!}
-                                                {!! Form::hidden('user_id',$user_id) !!}
-                                                {!! Form::hidden('company_id',$company_id) !!}
-                                                @include('links/partials/_form')
-                                                {!! Form::close()  !!}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{--endregion--}}
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
@@ -81,7 +61,6 @@
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                             @foreach($links as $link)
-                                                <hr/>
                                                 @if($link->task_item_id == $list_item->id)
                                                 <div class="col-md-12" id="link-{{$link->id}}">
                                                     <div class="col-md-3">
@@ -101,7 +80,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="pull-right" style="margin-right: 5px;">
-                                                        <a href="#" class="btn-edit btn-shadow btn" data-toggle="modal" data-target="#add_link_{{ $task->task_id . '-' . $list_item->id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;&nbsp;
+                                                        <a href="#" class="btn-edit btn-shadow btn add-link-modal" data-target="#add_link_{{ $list_item->task_id }}" id="{{$list_item->id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;&nbsp;
                                                         @if($module_permissions->where('slug','edit.tasks')->count() === 1)
                                                         <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>&nbsp;&nbsp;&nbsp;
                                                         @endif
@@ -182,7 +161,10 @@
             <div class="modal-body">
                 {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
                 {!! Form::hidden('task_id',$task->task_id) !!}
-                @include('links/partials/_form')
+                {!! Form::hidden('task_item_id',0) !!}
+                {!! Form::hidden('user_id',$user_id) !!}
+                {!! Form::hidden('company_id',$company_id) !!}
+                @include('links/partials/_add_form')
                 {!! Form::close()  !!}
             </div>
         </div>
@@ -1111,22 +1093,29 @@
             $(this).val('');
         });
 
-        $('.check-list-container').on('click','.remove-link',function(e){
-            e.preventDefault();
-            $.post($(this).attr('href'));
-            $('#link-' + this.id + ',.link-' + this.id).remove();
-        });
-        //endregion
-        $('.check-list-container').on('click', '.toggle-tasklistitem', function () {
-            
-            var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-            var company_id = $(this).siblings('.company_id').val();
-            var task_list_id = $(this).siblings('.task_list_id').val();
+        $('.check-list-container')
+            .on('click','.remove-link',function(e){
+                e.preventDefault();
+                $.post($(this).attr('href'));
+                $('#link-' + this.id + ',.link-' + this.id).remove();
+            })
+            .on('click','.add-link-modal',function(e){
+                e.preventDefault();
+                var add_link_modal = $($(this).data('target'));
+                var _task_item_id = add_link_modal.find('input[name=task_item_id]');
+                _task_item_id.val(this.id);
+                add_link_modal.modal('show');
+            })
+            .on('click', '.toggle-tasklistitem', function () {
 
-            var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' +company_id + '/' + task_list_id;
+                var task_list_item_id = $(this).siblings('.task_list_item_id').val();
+                var company_id = $(this).siblings('.company_id').val();
+                var task_list_id = $(this).siblings('.task_list_id').val();
 
-            $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
-                $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
+                var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' +company_id + '/' + task_list_id;
+
+                $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
+                    $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
             });
         });
 

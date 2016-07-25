@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     @role('admin')
                     {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                    @include('links/partials/_form')
+                    @include('links/partials/_add_form')
                     {!! Form::close()  !!}
                     @else
                         <div class='alert alert-danger alert-dismissable'>
