@@ -21,6 +21,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="pull-right" style="margin-right: 5px;">
+            <a target="_blank" href="{{url('taskitem/'.$list_item->id)}}" class="btn-edit btn-shadow btn"><i class="fa fa-external-link"></i> View</a>&nbsp;&nbsp;&nbsp;
             <a href="#" class="btn-edit btn-shadow btn add-link-modal" data-target="#add_link_{{ $list_item->task_id }}" id="{{$list_item->id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;&nbsp;
             @if($module_permissions->where('slug','edit.tasks')->count() === 1)
             <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>&nbsp;&nbsp;&nbsp;
