@@ -328,6 +328,7 @@ class Helper {
         }
 
         $subordinate_projects = Project::with(['task' => function($query) {
+                        
                     }])->whereIn('user_id', $subordinate_user_id_list)->where('company_id', $company_id)->get();
 
         return $subordinate_projects;
