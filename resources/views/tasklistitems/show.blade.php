@@ -2,7 +2,7 @@
 @section('content')
 <div id="collapse-{{ $task_id }}">
     <ul class="tasklist-group list-group" id="list_group_{{ $task_id }}">
-        <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
+        <li id="task_item_{{ $list_item->id }}" class="list-group-item task-list-item">
             {{--region Briefcase Item Add Link--}}
             <div class="modal fade add_link_modal" id="add_link_{{ $list_item->task_id . '-' . $list_item->id }}" tabindex="-1" role="basic" aria-hidden="true">
                 <div class="modal-dialog">
