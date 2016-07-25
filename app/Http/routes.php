@@ -129,7 +129,7 @@ Route::group(['middleware' => 'auth'], function () {
             ->where('billing_type', 'invoice|estimate');
     Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
             ->where('billing_type', 'invoice|estimate');
-    Route::resource('task', 'TaskController');
+    
     Route::resource('billing', 'BillingController');
     Route::resource('setting', 'SettingController');
     Route::resource('template', 'TemplateController');
@@ -219,6 +219,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('addProjectForm', 'ProjectController@addProjectForm');
     Route::post('addProject', 'ProjectController@addProject');
 
+    
+    /* 
+     * Briefcases 
+     **/
+    Route::resource('task', 'TaskController');
+    Route::resource('briefcase', 'BriefcaseController');
+    
+    /*
+     * Task List Items 
+     **/
+    Route::resource('tasklistitem', 'TaskListItemController');
+    
     /*
      * Employees
      * */

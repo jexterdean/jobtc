@@ -92,6 +92,14 @@
         {!!  HTML::style('assets/css/page/projects.css')  !!}
         @endif
 
+        @if(in_array('briefcases',$assets))
+        {!!  HTML::style('assets/css/page/briefcases.css')  !!}
+        @endif
+        
+        @if(in_array('tasks',$assets))
+        {!!  HTML::style('assets/css/page/tasks.css')  !!}
+        @endif
+        
         {!!  HTML::style('assets/css/page/search.css')  !!}
         
 

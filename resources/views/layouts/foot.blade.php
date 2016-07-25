@@ -231,6 +231,16 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/projects.js')  !!}
 @endif
 
+@if(in_array('briefcases',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!!  HTML::script('assets/js/page/briefcases.js')  !!}
+@endif
+
+@if(in_array('tasks',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!!  HTML::script('assets/js/page/tasks.js')  !!}
+@endif
+
 @if(in_array('dashboard',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/page/dashboard.js')  !!}
