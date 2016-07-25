@@ -400,10 +400,6 @@ class Helper {
         return $modules;
     }
 
-    public static function getBriefcases($task_id) {
-        
-    }
-
     public static function br2nl($string) {
         return preg_replace('/\<br(\s*)?\/?\>/i', "", $string);
     }
