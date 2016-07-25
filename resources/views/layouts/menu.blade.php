@@ -65,6 +65,15 @@
                                         @foreach($val->task as $briefcase)
                                         <li class="dropdown">
                                             <a href="{{ url('briefcase/' .$briefcase->task_id) }}"><i class="fa fa-bars" aria-hidden="true"></i> {{ $briefcase->task_title }}</a>
+                                            @if(count($briefcase->task_list_items) > 0)
+                                            <ul class="dropdown-menu">
+                                                @foreach($briefcase->task_list_items as $task_list_items)
+                                                <li class="">
+                                                    <a href="{{ url('taskitem/' .$task_list_items->id) }}"><i class="fa fa-file-text-o" aria-hidden="true"></i> {{ $task_list_items->checklist_header }}</a>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @endif
                                         </li>
                                         @endforeach
                                     </ul>

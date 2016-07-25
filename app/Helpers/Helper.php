@@ -266,7 +266,7 @@ class Helper {
         $user_id = Auth::user('user')->user_id;
 
         $my_projects = Project::with(['task' => function($query) {
-                        
+                        $query->with('task_list_items');
                     }])->where('company_id', $company_id)
                 ->where('user_id', $user_id)
                 ->get();
