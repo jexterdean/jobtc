@@ -582,12 +582,18 @@ class TaskController extends BaseController {
             ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
             ->where('task_id', '=', $task_list_id)
             ->get();
-        
+
+        $categories = LinkCategory::all()
+            ->lists('name', 'id')
+            ->toArray();
+
         return view('task.partials._taskchecklistitem',[
             'list_item' => $list_item,
             'module_permissions' => $module_permissions,
             'links' => $links,
-            'user_id' => $user_id
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'categories' => $categories
         ]);
         
     }
