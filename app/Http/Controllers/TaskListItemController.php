@@ -80,7 +80,7 @@ class TaskListItemController extends Controller {
             
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $task_id)->first();
-            $checkList = TaskChecklist::where('id', '=', $id)->get();
+            $checkList = TaskChecklist::where('id', '=', $id)->first();
         }
 
         $links = Link::select(
