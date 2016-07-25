@@ -266,6 +266,7 @@ class Helper {
         $user_id = Auth::user('user')->user_id;
 
         $my_projects = Project::with(['task' => function($query) {
+                        $query->with('task_list_items')->get();
                     }])->where('company_id', $company_id)
                 ->where('user_id', $user_id)
                 ->get();
@@ -296,6 +297,7 @@ class Helper {
         }
 
         $shared_projects = Project::with(['task' => function($query) {
+                        
                     }], 'task_permission', 'company', 'user')
                 ->whereIn('project_id', $project_id_list)
                 ->get();
