@@ -2,18 +2,14 @@
     <button>GO</button>
     <ul class="dl-menu">
         @if(Auth::check())
-        <?php
-        $companies = \App\Helpers\Helper::getCompanyLinks();
-        ?>
+        {{--*/ $companies = \App\Helpers\Helper::getCompanyLinks() /*--}}
         <li>
             <a href="#add_company" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> <span>New Company</span></a>
         </li>
         <li class="divider"></li>
         @if(count($companies) > 0)
         @foreach($companies as $company)
-        <?php
-        $module_permissions = \App\Helpers\Helper::getPermissions($company->company->id);
-        ?>
+        {{--*/ $module_permissions = \App\Helpers\Helper::getPermissions($company->company->id) /*--}}
         <li class="dropdown">
             <a href="{{ url('company/' . $company->company->id) }}">
                 <i class="fa fa-institution" aria-hidden="true"></i> <span>{{ $company->company->name }}</span>
@@ -53,7 +49,7 @@
                             </a>
                             <ul class="dl-submenu">
                                 <li class="dl-back"><a href="#">back</a></li>
-                                <?php $my_projects = \App\Helpers\Helper::getMyProjects($company->company->id); ?>
+                                {{--*/ $my_projects = \App\Helpers\Helper::getMyProjects($company->company->id) /*--}}
                                 @if(count($my_projects) > 0)
                                 @foreach($my_projects as $val)
                                 <li class="{{ count($val->task) > 0 ? 'dropdown' : '' }}">
@@ -65,6 +61,18 @@
                                         @foreach($val->task as $briefcase)
                                         <li class="dropdown">
                                             <a href="{{ url('briefcase/' .$briefcase->task_id) }}"><i class="fa fa-bars" aria-hidden="true"></i> {{ $briefcase->task_title }}</a>
+                                            @if(count($briefcase->task_list_items) > 0)
+                                            <ul class="dropdown-menu">
+                                                @foreach($briefcase->task_list_items as $task_list_item)
+                                                <li class="dropdown">
+                                                    <a href="{{url('taskitem/'.$task_list_item->id)}}">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        {{$task_list_item->checklist_header}}
+                                                    </a>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @endif
                                         </li>
                                         @endforeach
                                     </ul>
@@ -81,7 +89,7 @@
                             </a>
                             <ul class="dl-submenu">
                                 <li class="dl-back"><a href="#">back</a></li>
-                                <?php $shared_projects = \App\Helpers\Helper::getSharedProjects($company->company->id); ?>
+                                {{--*/ $shared_projects = \App\Helpers\Helper::getSharedProjects($company->company->id) /*--}}
                                 @if(count($shared_projects) > 0)
                                 @foreach($shared_projects as $val)
                                 <li class="{{ count($val->task) > 0 ? 'dropdown' : '' }}">
@@ -93,6 +101,18 @@
                                         @foreach($val->task as $briefcase)
                                         <li class="dropdown">
                                             <a href="{{ url('briefcase/' .$briefcase->task_id) }}"><i class="fa fa-bars" aria-hidden="true"></i> {{ $briefcase->task_title }}</a>
+                                            @if(count($briefcase->task_list_items) > 0)
+                                            <ul class="dropdown-menu">
+                                                @foreach($briefcase->task_list_items as $task_list_item)
+                                                <li class="dropdown">
+                                                    <a href="{{url('taskitem/'.$task_list_item->id)}}">
+                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        {{$task_list_item->checklist_header}}
+                                                    </a>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @endif
                                         </li>
                                         @endforeach
                                     </ul>
@@ -109,7 +129,7 @@
                             </a>
                             <ul class="dl-submenu">
                                 <li class="dl-back"><a href="#">back</a></li>
-                                <?php $subordinate_projects = \App\Helpers\Helper::getSubordinateProjects($company->company->id); ?>
+                                {{--*/ $subordinate_projects = \App\Helpers\Helper::getSubordinateProjects($company->company->id) /*--}}
                                 @if(count($subordinate_projects) > 0)
                                 @foreach($subordinate_projects as $val)
                                 <li class="{{ count($val->task) > 0 ? 'dropdown' : '' }}">
@@ -126,6 +146,18 @@
                                                 @foreach($val->task as $briefcase)
                                                 <li class="dropdown">
                                                     <a href="{{ url('briefcase/' .$briefcase->task_id) }}"><i class="fa fa-bars" aria-hidden="true"></i> {{ $briefcase->task_title }}</a>
+                                                    @if(count($briefcase->task_list_items) > 0)
+                                                    <ul class="dropdown-menu">
+                                                        @foreach($briefcase->task_list_items as $task_list_item)
+                                                        <li class="dropdown">
+                                                            <a href="{{url('taskitem/'.$task_list_item->id)}}">
+                                                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                                {{$task_list_item->checklist_header}}
+                                                            </a>
+                                                        </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    @endif
                                                 </li>
                                                 @endforeach
                                             </ul>
@@ -170,7 +202,7 @@
                             </a>
                             <ul class="dl-submenu">
                                 <li class="dl-back"><a href="#">back</a></li>
-                                <?php $my_jobs = \App\Helpers\Helper::getMyJobs($company->company->id); ?>
+                                {{--*/ $my_jobs = \App\Helpers\Helper::getMyJobs($company->company->id) /*--}}
                                 @if(count($my_jobs) > 0)
                                 @foreach($my_jobs as $job)
                                 <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
@@ -198,7 +230,7 @@
                             </a>
                             <ul class="dl-submenu">
                                 <li class="dl-back"><a href="#">back</a></li>
-                                <?php $shared_jobs = \App\Helpers\Helper::getSharedJobs($company->company->id); ?>
+                                {{--*/ $shared_jobs = \App\Helpers\Helper::getSharedJobs($company->company->id) /*--}}
                                 @if(count($shared_jobs) > 0)
                                 @foreach($shared_jobs as $job)
                                 <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
@@ -226,7 +258,7 @@
                             </a>
                             <ul class="dl-submenu">
                                 <li class="dl-back"><a href="#">back</a></li>
-                                <?php $subordinate_jobs = \App\Helpers\Helper::getSubordinateJobs($company->company->id); ?>
+                                {{--*/ $subordinate_jobs = \App\Helpers\Helper::getSubordinateJobs($company->company->id) /*--}}
                                 @if(count($subordinate_jobs) > 0)
                                 @foreach($subordinate_jobs as $job)
                                 <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
@@ -382,9 +414,7 @@
         </li>
     </ul>
 </div>
-<?php
-$modules = \App\Helpers\Helper::getSearchModules();
-?>
+{{--*/ $modules = \App\Helpers\Helper::getSearchModules() /*--}}
 <div class="search-container">
     <div class="input-group">
         <span class="input-group-btn">

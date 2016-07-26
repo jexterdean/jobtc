@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Profile;
 use App\Models\ProfileLevel;
 use App\Models\Project;
+use App\Models\TaskChecklist;
 use App\Models\ShareJob;
 use App\Models\ShareJobCompanyPermission;
 use App\Models\Job;
@@ -266,6 +267,7 @@ class Helper {
         $user_id = Auth::user('user')->user_id;
 
         $my_projects = Project::with(['task' => function($query) {
+                        $query->with('task_list_items')->orderBy('task_title', 'asc')->get();
                     }])->where('company_id', $company_id)
                 ->where('user_id', $user_id)
                 ->get();
@@ -296,7 +298,7 @@ class Helper {
         }
 
         $shared_projects = Project::with(['task' => function($query) {
-                        
+                        $query->with('task_list_items')->orderBy('task_title', 'asc')->get();
                     }], 'task_permission', 'company', 'user')
                 ->whereIn('project_id', $project_id_list)
                 ->get();
@@ -329,7 +331,7 @@ class Helper {
         }
 
         $subordinate_projects = Project::with(['task' => function($query) {
-                        
+                        $query->with('task_list_items')->orderBy('task_title', 'asc')->get();
                     }])->whereIn('user_id', $subordinate_user_id_list)->where('company_id', $company_id)->get();
 
         return $subordinate_projects;
