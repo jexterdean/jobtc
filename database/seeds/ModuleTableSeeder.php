@@ -18,6 +18,23 @@ class ModuleTableSeeder extends Seeder {
             $project_module->name = 'Projects';
             $project_module->save();
         }
+        
+        //For Briefcases Module
+        $briefcase_module_count = Module::where('name', 'Briefcases')->count();
+        if ($briefcase_module_count === 0) {
+            $briefcase_module_count = new Module();
+            $briefcase_module_count->name = 'Briefcases';
+            $briefcase_module_count->save();
+        }
+        
+        //For Task Items Module
+        $task_items_module_count = Module::where('name', 'Task Items')->count();
+        if ($task_items_module_count === 0) {
+            $task_items_module_count = new Module();
+            $task_items_module_count->name = 'Task Items';
+            $task_items_module_count->save();
+        }
+        
         //For Jobs Module
         $jobs_module_count = Module::where('name', 'Jobs')->count();
         if ($jobs_module_count === 0) {
