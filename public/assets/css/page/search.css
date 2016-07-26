@@ -11,11 +11,42 @@
     padding: 5px;
 }
 
+.breadcrumb_container {
+    position: relative;
+    top: 7px;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.breadcrumb {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+}
+
+.breadcrumb li {
+    float: left;
+    background-color: #4285F4;
+    padding: 5px;
+}
+
+.breadcrumb li a {
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.breadcrumb li a:hover {
+    background-color: #111111;
+}
 .search-container {
     position: relative;
     top: 5px;
     margin: 0 auto;
-    width: 50%;
+    width: 90%;
 }
 
 .search-column {

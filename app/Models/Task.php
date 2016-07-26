@@ -24,6 +24,10 @@ class Task extends Model
     protected $primaryKey = 'task_id';
     protected $table = 'task';
     
+    public function project() {
+        return $this->belongsTo('App\Models\Project');
+    }
+    
     public function task_list_items(){
         return $this->hasMany('App\Models\TaskChecklist');
     }

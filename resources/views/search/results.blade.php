@@ -14,6 +14,20 @@
         </a>
     </div>
     @endif
+    @if($type === 'briefcase')
+    <div class="col-md-6 search-column">
+        <a class="briefcase-title" target="_blank" href="{{url('briefcase/'.$result->task_id)}}">
+            {{$result->task_title}}
+        </a>
+    </div>
+    @endif
+    @if($type === 'task item')
+    <div class="col-md-6 search-column">
+        <a class="taskitem-title" target="_blank" href="{{url('taskitem/'.$result->id)}}">
+            {{$result->checklist_header}}
+        </a>
+    </div>
+    @endif
     @if($type === 'job')
     <div class="col-md-6 search-column">
         <a class="job-title" target="_blank" href="{{url('job/'.$result->id)}}">

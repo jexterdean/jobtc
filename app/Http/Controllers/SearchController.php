@@ -7,6 +7,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Elasticsearch\ClientBuilder as ES;
 use App\Models\Project;
+use App\Models\Task;
+use App\Models\TaskChecklist;
 use App\Models\Job;
 use App\Models\User;
 use App\Models\Applicant;
@@ -39,6 +41,44 @@ class SearchController extends Controller {
             }
 
             return "Finished Indexing Projects";
+        }
+
+        if ($type === 'briefcase') {
+        
+            $briefcases = Task::all();
+            
+            $params = array();
+            foreach ($briefcases as $briefcase) {
+
+                $params['body'] = array(
+                    'task_title' => $briefcase->task_title
+                );
+                $params['index'] = 'default';
+                $params['type'] = 'briefcase';
+                $params['id'] = $briefcase->task_id;
+                $results = $client->index($params);       //using Index() function to inject the data
+            }
+
+            return "Finished Indexing Briefcases";
+        }
+        
+        if ($type === 'task item') {
+        
+            $taskitems = TaskChecklist::all();
+            
+            $params = array();
+            foreach ($taskitems as $taskitem) {
+
+                $params['body'] = array(
+                    'checklist_header' => $taskitem->checklist_header
+                );
+                $params['index'] = 'default';
+                $params['type'] = 'taskitem';
+                $params['id'] = $taskitem->id;
+                $results = $client->index($params);       //using Index() function to inject the data
+            }
+
+            return "Finished Indexing Task Items";
         }
 
         if ($type === 'job') {
@@ -135,7 +175,7 @@ class SearchController extends Controller {
 
             return "Finished Indexing Tickets";
         }
-        
+
         if ($type === 'position') {
 
             $positions = Role::all();
@@ -202,7 +242,81 @@ class SearchController extends Controller {
                 ]);
 
                 break;
+                
+            case "briefcase" :
 
+                //Build elasticsearch query
+                $params = [
+                    'index' => 'default',
+                    'type' => 'briefcase',
+                    'body' => [
+                        'query' => [
+                            'query_string' => [
+                                'query' => 'task_title:*' . $term . '*'
+                            ]
+                        ]
+                    ]
+                ];
+                $search_results = $search_client->search($params);
+
+                $searched_briefcases = $search_results["hits"]["hits"];
+
+                $ids = [];
+
+                foreach ($searched_briefcases as $briefcase) {
+                    array_push($ids, $briefcase["_id"]);
+                }
+
+                $results = Task::whereIn('task_id', $ids)->orderBy('task_title', 'desc')->get();
+
+                $assets = ['search'];
+
+                return view('search.results', [
+                    'results' => $results,
+                    'type' => $type,
+                    'term' => $term,
+                    'assets' => $assets
+                ]);
+
+                break;    
+            
+            case "task item" :
+
+                //Build elasticsearch query
+                $params = [
+                    'index' => 'default',
+                    'type' => 'taskitem',
+                    'body' => [
+                        'query' => [
+                            'query_string' => [
+                                'query' => 'checklist_header:*' . $term . '*'
+                            ]
+                        ]
+                    ]
+                ];
+                $search_results = $search_client->search($params);
+
+                $searched_taskitems = $search_results["hits"]["hits"];
+
+                $ids = [];
+
+                foreach ($searched_taskitems as $taskitem) {
+                    array_push($ids, $taskitem["_id"]);
+                }
+
+                $results = TaskChecklist::whereIn('id', $ids)->orderBy('checklist_header', 'desc')->get();
+
+                $assets = ['search'];
+
+                return view('search.results', [
+                    'results' => $results,
+                    'type' => $type,
+                    'term' => $term,
+                    'assets' => $assets
+                ]);
+
+                break;    
+                
             case "job" :
 
                 //Build elasticsearch query
@@ -301,10 +415,10 @@ class SearchController extends Controller {
                     array_push($ids, $employee["_id"]);
                 }
 
-                $results = User::with(['profile' => function($query){
-                    $query->with('company')->get();
-                }])->whereIn('user_id', $ids)->get();
-                
+                $results = User::with(['profile' => function($query) {
+                                $query->with('company')->get();
+                            }])->whereIn('user_id', $ids)->get();
+
                 $assets = ['search'];
 
                 return view('search.results', [
