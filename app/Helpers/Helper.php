@@ -267,21 +267,21 @@ class Helper {
         $user_id = Auth::user('user')->user_id;
 
         $my_projects = Project::with(['task' => function($query) {
-                        
+                        $query->with('task_list_items')->orderBy('task_title', 'asc')->get();
                     }])->where('company_id', $company_id)
                 ->where('user_id', $user_id)
                 ->get();
-                    
+
         return $my_projects;
     }
 
-    public static function getMyTaskListItems($task_id) {
-        
-        $my_task_list_items = TaskChecklist::where('task_id',$task_id)->get();
-        
+    public static function getTaskListItems($task_id) {
+
+        $my_task_list_items = TaskChecklist::where('task_id', $task_id)->get();
+
         return $my_task_list_items;
     }
-    
+
     public static function getSharedProjects($company_id) {
 
         $user_id = Auth::user('user')->user_id;
@@ -305,7 +305,7 @@ class Helper {
         }
 
         $shared_projects = Project::with(['task' => function($query) {
-                        
+                        $query->with('task_list_items')->orderBy('task_title', 'asc')->get();
                     }], 'task_permission', 'company', 'user')
                 ->whereIn('project_id', $project_id_list)
                 ->get();
@@ -338,7 +338,7 @@ class Helper {
         }
 
         $subordinate_projects = Project::with(['task' => function($query) {
-                        
+                        $query->with('task_list_items')->orderBy('task_title', 'asc')->get();
                     }])->whereIn('user_id', $subordinate_user_id_list)->where('company_id', $company_id)->get();
 
         return $subordinate_projects;
