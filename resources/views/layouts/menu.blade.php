@@ -258,7 +258,7 @@
                             </a>
                             <ul class="dl-submenu">
                                 <li class="dl-back"><a href="#">back</a></li>
-                                {{--*/ $subordinate_jobs = \App\Helpers\Helper::getSubordinateJobs($company->company->id); /*--}}
+                                {{--*/ $subordinate_jobs = \App\Helpers\Helper::getSubordinateJobs($company->company->id) /*--}}
                                 @if(count($subordinate_jobs) > 0)
                                 @foreach($subordinate_jobs as $job)
                                 <li class="{{ count($job->applicants) > 0 ? 'dropdown' : '' }}">
