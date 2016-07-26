@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Profile;
 use App\Models\ProfileLevel;
 use App\Models\Project;
+use App\Models\TaskChecklist;
 use App\Models\ShareJob;
 use App\Models\ShareJobCompanyPermission;
 use App\Models\Job;
@@ -266,13 +267,21 @@ class Helper {
         $user_id = Auth::user('user')->user_id;
 
         $my_projects = Project::with(['task' => function($query) {
+                        
                     }])->where('company_id', $company_id)
                 ->where('user_id', $user_id)
                 ->get();
-
+                    
         return $my_projects;
     }
 
+    public static function getMyTaskListItems($task_id) {
+        
+        $my_task_list_items = TaskChecklist::where('task_id',$task_id)->get();
+        
+        return $my_task_list_items;
+    }
+    
     public static function getSharedProjects($company_id) {
 
         $user_id = Auth::user('user')->user_id;
