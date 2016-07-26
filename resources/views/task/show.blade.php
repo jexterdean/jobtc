@@ -27,27 +27,6 @@
                                 @if(count($checkList) > 0)
                                 @foreach($checkList as $list_item)
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
-                                    {{--region Briefcase Item Add Link--}}
-                                    <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id . '-' . $list_item->id }}" tabindex="-1" role="basic" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                                    <h4 class="modal-title">Add Link</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                                                    {!! Form::hidden('task_id',$task->task_id) !!}
-                                                    {!! Form::hidden('task_item_id',$list_item->id) !!}
-                                                    {!! Form::hidden('user_id',$user_id) !!}
-                                                    {!! Form::hidden('company_id',$company_id) !!}
-                                                    @include('links/partials/_form')
-                                                    {!! Form::close()  !!}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{--endregion--}}
                                     <div class="row task-list-details">
                                         <div class="col-md-7">
                                             <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
@@ -81,6 +60,7 @@
                                             <div class="checklist-item">{!! $list_item->checklist !!}</div>
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            <div class="link-column">
                                             @foreach($links as $link)
                                                 @if($link->task_item_id == $list_item->id)
                                                 <div class="col-md-12" id="link-{{$link->id}}">
@@ -95,22 +75,15 @@
                                                     </div>
                                                     <hr/>
                                                 </div>
-                                                <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
-                                                <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                                                    @if($user_id == $link->user_id)
-                                                    <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
-                                                    @endif
-                                                </div>
-                                                <hr/>
-                                            </div>
                                             @endif
                                             @endforeach
+                                             </div>
                                             <hr/>
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="pull-right" style="margin-right: 5px;">
                                                         <a target="_blank" href="{{url('taskitem/'.$list_item->id)}}" class="btn-edit btn-shadow btn"><i class="fa fa-external-link"></i> View</a>&nbsp;&nbsp;&nbsp;
-                                                        <a href="#" class="btn-edit btn-shadow btn add-link-modal" data-target="#add_link_{{ $list_item->task_id }}" id="{{$list_item->id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;&nbsp;
+                                                        <a href="#" class="btn-edit btn-shadow btn add-link-modal" data-toggle="modal" data-target="#add_link_{{ $task->task_id . '-' . $list_item->id }}" id="{{$list_item->id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;&nbsp;
                                                         @if($module_permissions->where('slug','edit.tasks')->count() === 1)
                                                         <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>&nbsp;&nbsp;&nbsp;
                                                         @endif
@@ -124,6 +97,27 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {{--region Briefcase Item Add Link--}}
+                                    <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id . '-' . $list_item->id }}" tabindex="-1" role="basic" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                                    <h4 class="modal-title">Add Link</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
+                                                    {!! Form::hidden('task_id',$list_item->task_id) !!}
+                                                    {!! Form::hidden('task_item_id',$list_item->id) !!}
+                                                    {!! Form::hidden('user_id',$user_id) !!}
+                                                    {!! Form::hidden('company_id',$company_id) !!}
+                                                    @include('links/partials/_add_form')
+                                                    {!! Form::close()  !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--endregion--}}
                                 </li>
                                 @endforeach
                                 @else
@@ -178,25 +172,6 @@
             </div>
         </div>
         <div class="modal-body">
-        </div>
-    </div>
-</div>
-<div class="modal fade add_link_modal" id="add_link_{{ $task->task_id }}" tabindex="-1" role="basic" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                <h4 class="modal-title">Add Link</h4>
-            </div>
-            <div class="modal-body">
-                {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                {!! Form::hidden('task_id',$task->task_id) !!}
-                {!! Form::hidden('task_item_id',0) !!}
-                {!! Form::hidden('user_id',$user_id) !!}
-                {!! Form::hidden('company_id',$company_id) !!}
-                @include('links/partials/_add_form')
-                {!! Form::close()  !!}
-            </div>
         </div>
     </div>
 </div>
@@ -1091,40 +1066,37 @@
         //region Auto Change and Select Category Name
         var _category_name = '';
         $('.category-name')
-                .bind('keyup keypress blur', function () {
-                    _category_name = $(this).val();
-                    var myStr = $(this).val();
-                    myStr = myStr.toLowerCase();
-                    myStr = myStr.replace(/\s+/g, "-");
-                    $(this).val(myStr);
-                })
-                .focusout(function () {
-                    var cat_form = $('.category-form');
-                    var form_data = [];
-                    var url = public_path + 'linkCategory';
-                    var cat_value = $(this).val();
-                    if ($(this).val()) {
-                        form_data.push(
-                                {name: 'slug', value: $(this).val()},
-                        {name: 'name', value: _category_name},
-                        {name: 'request_from_link_page', value: '1'}
-                        );
-                        $.post(url, form_data, function (data) {
-                            var _return_data = jQuery.parseJSON(data);
-                            var option_ele = '<option value>Select Category</option>';
-                            $.each(_return_data, function (key, val) {
-                                var is_selected = cat_value == val.name ? 'selected' : '';
-                                option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
-                            });
-                            $('select.category').html(option_ele);
+            .bind('keyup keypress blur', function () {
+                _category_name = $(this).val();
+                var myStr = $(this).val();
+                myStr = myStr.toLowerCase();
+                myStr = myStr.replace(/\s+/g, "-");
+                $(this).val(myStr);
+            })
+            .focusout(function () {
+                var cat_form = $('.category-form');
+                var form_data = [];
+                var url = public_path + 'linkCategory';
+                var cat_value = $(this).val();
+                if ($(this).val()) {
+                    form_data.push(
+                            {name: 'slug', value: $(this).val()},
+                    {name: 'name', value: _category_name},
+                    {name: 'request_from_link_page', value: '1'}
+                    );
+                    $.post(url, form_data, function (data) {
+                        var _return_data = jQuery.parseJSON(data);
+                        var option_ele = '<option value>Select Category</option>';
+                        $.each(_return_data, function (key, val) {
+                            var is_selected = cat_value == val.name ? 'selected' : '';
+                            option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
                         });
-                    }
+                        $('select.category').html(option_ele);
+                    });
+                }
 
-                    $(this).val('');
-                });
-
-            $(this).val('');
-        });
+                $(this).val('');
+            });
 
         $('.check-list-container')
             .on('click','.remove-link',function(e){
@@ -1132,12 +1104,35 @@
                 $.post($(this).attr('href'));
                 $('#link-' + this.id + ',.link-' + this.id).remove();
             })
-            .on('click','.add-link-modal',function(e){
+            .on('click','.add-link-btn',function(e){
                 e.preventDefault();
-                var add_link_modal = $($(this).data('target'));
-                var _task_item_id = add_link_modal.find('input[name=task_item_id]');
-                _task_item_id.val(this.id);
-                add_link_modal.modal('show');
+                var _this = $(this);
+                var _link_modal = _this.parents('.add_link_modal');
+                var _form = _this.parents('.add_link_modal').find('form');
+                var _user_id = _form.find('input[name="user_id"]').val();
+                var _data = _form.serializeArray();
+                $.post(_form.attr('action'), _data, function (res) {
+                    var _return_data = jQuery.parseJSON(res);
+                    console.log(_return_data);
+                    console.log(_user_id);
+                    $.each(_return_data,function(key,val){
+                        var ele = '<div class="col-md-12" id="link-' + val.id + '">';
+                            ele += '<div class="col-md-3">';
+                            ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                            ele += '</div>';
+                            ele += '<div class="col-md-6" style="text-align: justify">' + val.descriptions + '</div>';
+                            ele += '<div class="col-md-3 text-right">' + val.category_name + '&nbsp;&nbsp;&nbsp;';
+                            ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
+                            ele += '</div>';
+                            ele += '<hr/>';
+                            ele += '</div>';
+                            ele += '<hr/>';
+                        var _link_column = $('#task-item-collapse-' + val.task_item_id).find('.link-column');
+                        _link_column.append(ele);
+                    });
+
+                    _link_modal.modal('hide');
+                });
             })
             .on('click', '.toggle-tasklistitem', function () {
 
@@ -1149,8 +1144,8 @@
 
                 $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
                     $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
+                });
             });
-        });
 
         function makeid()
         {
@@ -1162,5 +1157,5 @@
 
             return text;
         }
-
+    });
 </script>

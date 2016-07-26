@@ -275,13 +275,6 @@ class Helper {
         return $my_projects;
     }
 
-    public static function getTaskListItems($task_id) {
-
-        $my_task_list_items = TaskChecklist::where('task_id', $task_id)->get();
-
-        return $my_task_list_items;
-    }
-
     public static function getSharedProjects($company_id) {
 
         $user_id = Auth::user('user')->user_id;

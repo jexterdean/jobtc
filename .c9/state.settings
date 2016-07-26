@@ -112,14 +112,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 3,
+            "@document": 5,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 2,
-            "@tab": 3,
-            "@undoManager": 3
+            "@session": 4,
+            "@tab": 5,
+            "@undoManager": 5
         }
     },
     "findinfiles": {
@@ -137,7 +137,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab2",
+            "tab4",
             "tab0"
         ]
     },
@@ -173,46 +173,104 @@
         }
     },
     "projecttree": {
+        "@scrollpos": 170,
         "@showfs": true,
         "expanded": {
             "json()": [
-                "/"
+                "/",
+                "/storage",
+                "/storage/framework",
+                "/storage/framework/views",
+                "/resources",
+                "/resources/views",
+                "/resources/views/tasklistitems",
+                "/app",
+                "/app/Helpers",
+                "/resources/views/layouts",
+                "/app/Models"
             ]
         }
+    },
+    "recentfiles": {
+        "json()": []
     },
     "search-history": {
         "search": {
             "json()": [
+                "getTaskCheckList",
+                "getMyProjects",
+                "getSharedProjects",
+                "getMyProjects",
                 "show"
             ]
         }
     },
     "tabs": {
         "json()": {
-            "focus": "/app/Http/Controllers/JobController.php",
+            "focus": "/app/Models/Task.php",
             "meta": {
                 "accessList": [
-                    "tab2"
+                    "tab4",
+                    "tab2",
+                    "tab3"
                 ]
             },
             "name": "pane0",
             "nodes": [
                 {
                     "type": "tab",
-                    "name": "tab2",
-                    "path": "/app/Http/Controllers/JobController.php",
+                    "name": "tab3",
+                    "path": "/resources/views/layouts/menu.blade.php",
                     "className": [
-                        "tab2",
-                        "focus"
+                        "tab3"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1467703096081
+                            "timestamp": 1469526746605
                         },
                         "filter": true,
-                        "title": "JobController.php",
-                        "tooltip": "/app/Http/Controllers/JobController.php",
+                        "title": "menu.blade.php",
+                        "tooltip": "/resources/views/layouts/menu.blade.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab2",
+                    "path": "/app/Helpers/Helper.php",
+                    "className": [
+                        "tab2"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1469527008842
+                        },
+                        "filter": true,
+                        "title": "Helper.php",
+                        "tooltip": "/app/Helpers/Helper.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab4",
+                    "path": "/app/Models/Task.php",
+                    "className": [
+                        "tab4",
+                        "focus"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {},
+                        "filter": true,
+                        "title": "Task.php",
+                        "tooltip": "/app/Models/Task.php",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -226,7 +284,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/"
+            "/app/Models/Task.php"
         ]
     }
 }

@@ -35,7 +35,7 @@
     </div>
     <div class="row">
         <div class="pull-right">
-            {!!  Form::submit('Add Link',['class' => 'btn btn-submit btn-shadow', 'tabindex' =>
+            {!!  Form::submit('Add Link',['class' => 'btn btn-submit btn-shadow add-link-btn', 'tabindex' =>
             '9'])  !!}
         </div>
     </div>
