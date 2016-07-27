@@ -28,7 +28,7 @@
 
 .breadcrumb li {
     float: left;
-    background-color: #4285F4;
+    background-color: #5af;//#4285F4;
     padding: 5px;
 }
 
@@ -40,13 +40,17 @@
 }
 
 .breadcrumb li a:hover {
-    background-color: #111111;
+    background-color: #4285F4;
 }
 .search-container {
     position: relative;
     top: 5px;
     margin: 0 auto;
     width: 90%;
+}
+
+.search-container .module-selector {
+    background-color: #5af !important;
 }
 
 .search-column {

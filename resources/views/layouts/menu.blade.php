@@ -419,8 +419,8 @@
         {{--*/ $breadcrumbs = \App\Helpers\Helper::getBreadcrumbs() /*--}}
         <div class="breadcrumb_container">
             <ul class="breadcrumb">
-                @foreach($breadcrumbs as $breadcrumb)
-                <li><a href="{{url($breadcrumb)}}">{{$breadcrumb}}</a></li>
+                @foreach($breadcrumbs as $title => $url)
+                <li><a href="{{url($url)}}">{{$title}}</a></li>
                 @endforeach
             </ul>
         </div>    
