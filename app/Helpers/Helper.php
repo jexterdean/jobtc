@@ -476,11 +476,6 @@ class Helper {
                                 }])->get();
                         }])->where('id', $taskitem_id)->first();
 
-                    //array_push($breadcrumb, $taskitem->task->project->company->name);
-                    //array_push($breadcrumb, $taskitem->task->project->project_title);
-                    //array_push($breadcrumb, $taskitem->task->task_title);
-                    //array_push($breadcrumb, $taskitem->checklist_header);
-
                     $breadcrumb = array(
                         $taskitem->task->project->company->name => '/company/'. $taskitem->task->project->company->id,
                         $taskitem->task->project->project_title => '/project/' . $taskitem->task->project->project_id,
@@ -592,7 +587,7 @@ class Helper {
                     );
                 }
 
-                if ($url_array[1] === 'a') {
+                if (strpos($url, '/a/')) {
                     $applicant_id = end($url_array);
 
                     $applicant = Applicant::with(['job' => function($query) {
