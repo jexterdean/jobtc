@@ -461,7 +461,7 @@ class Helper {
             $breadcrumb = array(
                 $briefcase->project->company->name => '/company/' . $briefcase->project->company->id,
                 $briefcase->project->project_title => '/project/' . $briefcase->project->project_id,
-                $briefcase->task_title => '/briefcase'. $briefcase->task_id
+                $briefcase->task_title => '/briefcase/'. $briefcase->task_id
             );
         }
 
@@ -482,7 +482,7 @@ class Helper {
                     //array_push($breadcrumb, $taskitem->checklist_header);
 
                     $breadcrumb = array(
-                        $taskitem->task->project->company->name => 'company'. $taskitem->task->project->company->id,
+                        $taskitem->task->project->company->name => '/company/'. $taskitem->task->project->company->id,
                         $taskitem->task->project->project_title => '/project/' . $taskitem->task->project->project_id,
                         $taskitem->task->task_title => '/briefcase/' . $taskitem->task->task_id,
                         $taskitem->checklist_header => '/taskitem/' .$taskitem->id
