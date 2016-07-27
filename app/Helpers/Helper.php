@@ -419,7 +419,7 @@ class Helper {
             );
         }
         //Breadcrumbs for Company Dashboard
-        if (strpos($url, 'company') && !strpos($url, 'projects') && !strpos($url, 'jobs')) {
+        if (strpos($url, 'company') && !strpos($url, 'projects') && !strpos($url, 'jobs') && !strpos($url, 'user')) {
 
             $company_id = end($url_array);
 
@@ -513,7 +513,7 @@ class Helper {
                     
                     $breadcrumb = array(
                         $company->name => '/company/'.$company->id,
-                        $employee->name => '/user/'.$employee->id.'/company/'.$company->id
+                        $employee->name => '/user/'.$employee->user_id.'/company/'.$company->id
                     );                    
                 }
 
