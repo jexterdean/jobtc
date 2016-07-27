@@ -441,7 +441,7 @@ class Helper {
 
             $breadcrumb = array(
                 $project->company->name => '/company/' . $project->company->id,
-                $project->project_title => $url
+                $project->project_title => '/project/'.$project->project_id
             );
         }
 
@@ -461,7 +461,7 @@ class Helper {
             $breadcrumb = array(
                 $briefcase->project->company->name => '/company/' . $briefcase->project->company->id,
                 $briefcase->project->project_title => '/project/' . $briefcase->project->project_id,
-                $briefcase->task_title => $url
+                $briefcase->task_title => '/briefcase'. $briefcase->task_id
             );
         }
 
@@ -485,7 +485,7 @@ class Helper {
                         $taskitem->task->project->company->name => 'company'. $taskitem->task->project->company->id,
                         $taskitem->task->project->project_title => '/project/' . $taskitem->task->project->project_id,
                         $taskitem->task->task_title => '/briefcase/' . $taskitem->task->task_id,
-                        $taskitem->checklist_header => $url
+                        $taskitem->checklist_header => '/taskitem/' .$taskitem->id
                     );
                 }
 
