@@ -441,7 +441,7 @@ class Helper {
 
             $breadcrumb = array(
                 $project->company->name => '/company/' . $project->company->id,
-                $project->project_title => '/project/'.$project->project_id
+                $project->project_title => '/project/' . $project->project_id
             );
         }
 
@@ -461,7 +461,7 @@ class Helper {
             $breadcrumb = array(
                 $briefcase->project->company->name => '/company/' . $briefcase->project->company->id,
                 $briefcase->project->project_title => '/project/' . $briefcase->project->project_id,
-                $briefcase->task_title => '/briefcase/'. $briefcase->task_id
+                $briefcase->task_title => '/briefcase/' . $briefcase->task_id
             );
         }
 
@@ -477,10 +477,10 @@ class Helper {
                         }])->where('id', $taskitem_id)->first();
 
                     $breadcrumb = array(
-                        $taskitem->task->project->company->name => '/company/'. $taskitem->task->project->company->id,
+                        $taskitem->task->project->company->name => '/company/' . $taskitem->task->project->company->id,
                         $taskitem->task->project->project_title => '/project/' . $taskitem->task->project->project_id,
                         $taskitem->task->task_title => '/briefcase/' . $taskitem->task->task_id,
-                        $taskitem->checklist_header => '/taskitem/' .$taskitem->id
+                        $taskitem->checklist_header => '/taskitem/' . $taskitem->id
                     );
                 }
 
@@ -489,36 +489,39 @@ class Helper {
 
                     $company_name = Company::where('id', $company_id)->pluck('name');
                     array_push($breadcrumb, $company_name . ' Employees');
-                    
+
                     $breadcrumb = array(
                         $company_name . ' Employees' => $url
                     );
-                    
                 }
 
                 if (strpos($url, 'company') && strpos($url, 'user')) {
 
                     $company_id = end($url_array);
-                    $user_id = $url_array[2];
+                    for ($i = 0; $i < count($url_array); $i++) {
+                        if ($url_array[$i] === 'user') {
+                            $index = $i + 1;
+                            $user_id = $url_array[$index];
+                            break;
+                        }
+                    }
 
                     $company = Company::where('id', $company_id)->first();
                     $employee = User::where('user_id', $user_id)->first();
-                    //array_push($breadcrumb, $company_name);
-                    //array_push($breadcrumb, $employee);
-                    
+
                     $breadcrumb = array(
-                        $company->name => '/company/'.$company->id,
-                        $employee->name => '/user/'.$employee->user_id.'/company/'.$company->id
-                    );                    
+                        $company->name => '/company/' . $company->id,
+                        $employee->name => '/user/' . $employee->user_id . '/company/' . $company->id
+                    );
                 }
 
                 if (strpos($url, 'quiz')) {
 
                     //array_push($breadcrumb, 'Quizzes');
-                    
+
                     $breadcrumb = array(
                         'Quizzes' => $url
-                    );                    
+                    );
                 }
 
                 if (strpos($url, 'assignProjects')) {
@@ -528,7 +531,7 @@ class Helper {
                     $company = Company::where('id', $company_id)->first();
 
                     $breadcrumb = array(
-                        $company->name => '/company/'.$company->id,
+                        $company->name => '/company/' . $company->id,
                         'Assign Projects' => $url
                     );
                 }
@@ -538,9 +541,9 @@ class Helper {
                     $company_id = end($url_array);
 
                     $company = Company::where('id', $company_id)->first();
-                    
+
                     $breadcrumb = array(
-                        $company->name => '/company/'.$company->id,
+                        $company->name => '/company/' . $company->id,
                         'Assign Projects' => $url
                     );
                 }
@@ -552,7 +555,7 @@ class Helper {
                     $company = Company::where('id', $company_id)->first();
 
                     $breadcrumb = array(
-                        $company->name => '/company/'.$company->id,
+                        $company->name => '/company/' . $company->id,
                         'Assign Tests' => $url
                     );
                 }
@@ -562,15 +565,15 @@ class Helper {
                     $company_id = end($url_array);
 
                     $company = Company::where('id', $company_id)->first();
-                    
+
                     $breadcrumb = array(
-                        $company->name => '/company/'.$company->id,
+                        $company->name => '/company/' . $company->id,
                         'Assign Authority Levels' => $url
                     );
                 }
 
                 if (strpos($url, 'profile')) {
-                    
+
                     $breadcrumb = array(
                         'Profile' => $url
                     );
@@ -580,9 +583,9 @@ class Helper {
                     $job_id = end($url_array);
 
                     $job = Job::with('company')->where('id', $job_id)->first();
-                    
+
                     $breadcrumb = array(
-                        $job->company->name => '/company/'.$job->company->id,
+                        $job->company->name => '/company/' . $job->company->id,
                         $job->title => $url
                     );
                 }
@@ -593,13 +596,12 @@ class Helper {
                     $applicant = Applicant::with(['job' => function($query) {
                                     $query->with('company')->get();
                                 }])->where('id', $applicant_id)->first();
-                    
-                    $breadcrumb = array (
-                        $applicant->job->company->name => '/company/'.$applicant->job->company->id,
-                        $applicant->job->title => '/job/'.$applicant->job->id,
+
+                    $breadcrumb = array(
+                        $applicant->job->company->name => '/company/' . $applicant->job->company->id,
+                        $applicant->job->title => '/job/' . $applicant->job->id,
                         $applicant->name => $url
                     );
-                    
                 }
 
                 if (strpos($url, 'positions')) {
@@ -607,17 +609,17 @@ class Helper {
                     $company_id = end($url_array);
 
                     $company = Company::where('id', $company_id)->first();
-                    
-                    $breadcrumb = array (
-                        $company->name => '/company/'.$company->id,
+
+                    $breadcrumb = array(
+                        $company->name => '/company/' . $company->id,
                         'Positions' => $url
                     );
                 }
 
                 if (strpos($url, 'tickets-admin')) {
                     array_push($breadcrumb, 'Tickets');
-                    
-                    $breadcrumb = array (
+
+                    $breadcrumb = array(
                         'Tickets' => $url
                     );
                 }
@@ -630,7 +632,7 @@ class Helper {
 
                     array_push($breadcrumb, 'Search');
                     array_push($breadcrumb, $module_array[0]);
-                    
+
                     $breadcrumb = array(
                         'Search' => '#',
                         $module_array[0] => $url
