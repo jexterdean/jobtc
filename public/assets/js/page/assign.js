@@ -582,7 +582,7 @@ function assignProjectsScripts() {
             if (term !== '') {
                 $.post(search_url, search_data, function (data) {
                     $('#assign_my_project_companies').html(data);
-                    searchCompaniesPagination(search_data);
+                    companiesPagination();
                     draggableCompanies();
                 });
             } else {
