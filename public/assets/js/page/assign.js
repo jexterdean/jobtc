@@ -563,7 +563,7 @@ function assignProjectsScripts() {
                 });
             } else {
                 var all_employees_url = public_path + 'assignProjects/' + company_id;
-                $('#assign_my_project_employees').load(all_employees_url + ' #assign_my_project_employees .taskgroup-list');
+                $('#assign_my_project_employees').load(all_employees_url + ' #assign_my_project_employees');
                 employeesPagination();
             }
         }
