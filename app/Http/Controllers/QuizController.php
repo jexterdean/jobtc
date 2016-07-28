@@ -262,6 +262,7 @@ class QuizController extends BaseController {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
         $id = isset($_GET['id']) ? $_GET['id'] : '';
         $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : 0;
+        $isStay = isset($_GET['stay']) ? $_GET['stay'] : 0;
         $label = '';
 
         $validation = '';
@@ -273,7 +274,8 @@ class QuizController extends BaseController {
                         'start_message' => 'required',
                         'completion_message' => 'required'
             ]);
-        } else if ($page == "question") {
+        }
+        else if ($page == "question") {
             $label = 'Question';
             $required = [
                 'question_type_id' => 'required',
@@ -284,7 +286,8 @@ class QuizController extends BaseController {
             }
 
             $validation = Validator::make($request->all(), $required);
-        } else if ($page == "exam") {
+        }
+        else if ($page == "exam") {
             $label = 'Exam';
             $validation = Validator::make($request->all(), [
             ]);
@@ -411,7 +414,7 @@ class QuizController extends BaseController {
                         ->first();
 
                 $r = in_array($q->question_type_id, array(3,4)) ?
-                    Input::get('result') :
+                    (Input::get('result') ? Input::get('result') : 0) :
                     (
                         $q->question_type_id == 1 ?
                         ($q->question_answer == Input::get('answer') ? 1 : 0) :

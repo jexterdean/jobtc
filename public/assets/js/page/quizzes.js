@@ -72,13 +72,13 @@ slider_div.on('click','.btn-next',function (e) {
     if (thisId) {
         var thisElement = $('input[name="answer[' + thisId + ']"]');
         var answer =
-                type == 3 ?
-                $('textarea[name="answer[' + thisId + ']"]').summernote('code') :
-                (
-                    thisElement.attr('type') == "radio" ?
-                    $('input[name="answer[' + thisId + ']"]:checked').val() :
-                    thisElement.val()
-                );
+            type == 3 ?
+            CKEDITOR.instances['written_editor_' + thisId].getData() :
+            (
+                thisElement.attr('type') == "radio" ?
+                $('input[name="answer[' + thisId + ']"]:checked').val() :
+                thisElement.val()
+            );
         var data = {
             question_id: thisId,
             answer: answer == undefined ? '' : answer
@@ -97,9 +97,9 @@ slider_div.on('click','.btn-next',function (e) {
             localStream.close();
         }
         var quiz_id = $(this).closest('.slider-container').find('.quiz_id').val();
-        var ajaxurl = public_path + 'quiz?id=' + quiz_id + '&p=exam';
+        var ajaxUrl = public_path + 'quiz?id=' + quiz_id + '&p=exam';
         $.ajax({
-            url: ajaxurl,
+            url: ajaxUrl,
             data: data,
             method: "POST",
             success: function (doc) {

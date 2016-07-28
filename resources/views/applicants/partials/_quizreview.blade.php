@@ -5,11 +5,10 @@
         </div>
     </div>
     @foreach($questions->where('test_id',$test->id) as $question)
-        @if($question->question_type_id != 4)
         <div class="slider-div">
             <div class="slider-body">
                 <div class="form-group text-center">
-                    <span style="font-size: 23px;">{{ $question->question }}</span>
+                    <span style="font-size: 23px;">{!! $question->question !!}</span>
                 </div>
                 {!! $question->question_photo ?
                 '<div class="form-group text-center">' .
@@ -118,7 +117,6 @@
                 </div>
             </div>
         </div>
-        @endif
     @endforeach
     <div class="slider-div text-center">
         <div class="slider-body">

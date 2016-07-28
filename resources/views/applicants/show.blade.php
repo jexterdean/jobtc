@@ -227,7 +227,7 @@
                         @include('applicants.partials._quizlist')
                     </div>
                     <div role="tabpanel" class="tab-pane" id="criteria-tab">
-                        <textarea id="assessment-instruction">{{$applicant->criteria}}</textarea>
+                        <textarea id="assessment-instruction" data-job-id="{{ $job->id }}">{{$job->criteria}}</textarea>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="notes-tab">
                         <textarea id="applicant-notes">{{$applicant->notes}}</textarea>
