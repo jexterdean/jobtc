@@ -419,7 +419,7 @@ class Helper {
             );
         }
         //Breadcrumbs for Company Dashboard
-        if (strpos($url, 'company') && !strpos($url, 'projects') && !strpos($url, 'jobs') && !strpos($url, 'user')) {
+        if (strpos($url, '/company/') && !strpos($url, '/projects/') && !strpos($url, '/jobs/') && !strpos($url, '/user/')) {
 
             $company_id = end($url_array);
 
@@ -430,7 +430,7 @@ class Helper {
             );
         }
         //Breadcrumbs for Projects
-        if (strpos($url, 'project') && !strpos($url, 'search')) {
+        if (strpos($url, '/project/') && !strpos($url, '/search/')) {
 
             $project_id = end($url_array);
 
@@ -446,7 +446,7 @@ class Helper {
         }
 
         //Breadcrumbs for Briefcase
-        if (strpos($url, 'briefcase') && !strpos($url, 'search')) {
+        if (strpos($url, '/briefcase/') && !strpos($url, '/search/')) {
 
             $task_id = end($url_array);
 
@@ -466,7 +466,7 @@ class Helper {
         }
 
         //Breadcrumbs for Task Items
-        if (strpos($url, 'taskitem')) {
+        if (strpos($url, '/taskitem/')) {
 
             $taskitem_id = end($url_array);
 
@@ -484,7 +484,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'employees')) {
+                if (strpos($url, '/employees')) {
                     $company_id = end($url_array);
 
                     $company_name = Company::where('id', $company_id)->pluck('name');
@@ -495,7 +495,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'company') && strpos($url, 'user')) {
+                if (strpos($url, '/company/') && strpos($url, '/user/')) {
 
                     $company_id = end($url_array);
                     for ($i = 0; $i < count($url_array); $i++) {
@@ -515,7 +515,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'quiz')) {
+                if (strpos($url, '/quiz')) {
 
                     //array_push($breadcrumb, 'Quizzes');
 
@@ -524,7 +524,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'assignProjects')) {
+                if (strpos($url, '/assignProjects/')) {
 
                     $company_id = end($url_array);
 
@@ -532,11 +532,11 @@ class Helper {
 
                     $breadcrumb = array(
                         $company->name => '/company/' . $company->id,
-                        'Assign Projects' => $url
+                        'Assign Projects' => '/assignProjects/'. $company->id
                     );
                 }
 
-                if (strpos($url, 'assignJobs')) {
+                if (strpos($url, '/assignJobs/')) {
 
                     $company_id = end($url_array);
 
@@ -544,11 +544,11 @@ class Helper {
 
                     $breadcrumb = array(
                         $company->name => '/company/' . $company->id,
-                        'Assign Jobs' => $url
+                        'Assign Jobs' => '/assignJobs/'. $company->id
                     );
                 }
 
-                if (strpos($url, 'assignTests')) {
+                if (strpos($url, '/assignTests/')) {
 
                     $company_id = end($url_array);
 
@@ -556,11 +556,11 @@ class Helper {
 
                     $breadcrumb = array(
                         $company->name => '/company/' . $company->id,
-                        'Assign Tests' => $url
+                        'Assign Tests' => '/assignTests/'. $company->id
                     );
                 }
 
-                if (strpos($url, 'assignAuthorityLevels')) {
+                if (strpos($url, '/assignAuthorityLevels/')) {
 
                     $company_id = end($url_array);
 
@@ -568,18 +568,18 @@ class Helper {
 
                     $breadcrumb = array(
                         $company->name => '/company/' . $company->id,
-                        'Assign Authority Levels' => $url
+                        'Assign Authority Levels' => '/assignAuthorityLevels/'. $company->id
                     );
                 }
 
-                if (strpos($url, 'profile')) {
+                if (strpos($url, '/profile')) {
 
                     $breadcrumb = array(
                         'Profile' => $url
                     );
                 }
 
-                if (strpos($url, 'job')) {
+                if (strpos($url, '/job/')) {
                     $job_id = end($url_array);
 
                     $job = Job::with('company')->where('id', $job_id)->first();
@@ -604,7 +604,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'positions')) {
+                if (strpos($url, '/positions/')) {
 
                     $company_id = end($url_array);
 
@@ -616,7 +616,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'tickets-admin')) {
+                if (strpos($url, '/tickets-admin')) {
                     array_push($breadcrumb, 'Tickets');
 
                     $breadcrumb = array(
@@ -624,7 +624,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'search')) {
+                if (strpos($url, '/search/')) {
 
                     $term = end($url_array);
 
@@ -639,7 +639,7 @@ class Helper {
                     );
                 }
 
-                if (strpos($url, 'company') && strpos($url, 'projects')) {
+                if (strpos($url, '/company/') && strpos($url, '/projects')) {
                     $company_id = end($url_array);
 
                     $company_name = Company::where('id', $company_id)->pluck('name');
@@ -648,7 +648,7 @@ class Helper {
                     array_push($breadcrumb, 'Projects');
                 }
 
-                if (strpos($url, 'company') && strpos($url, 'jobs')) {
+                if (strpos($url, '/company/') && strpos($url, '/jobs')) {
                     
                 }
 
