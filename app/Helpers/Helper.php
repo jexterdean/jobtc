@@ -544,7 +544,7 @@ class Helper {
 
                     $breadcrumb = array(
                         $company->name => '/company/' . $company->id,
-                        'Assign Projects' => $url
+                        'Assign Jobs' => $url
                     );
                 }
 

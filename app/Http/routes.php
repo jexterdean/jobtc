@@ -362,6 +362,10 @@ Route::group(['middleware' => 'auth'], function () {
     
     /*Search in Assign Projects*/
     Route::post('searchProjects','SearchController@searchProjects');
+    Route::post('searchEmployees','SearchController@searchEmployees');
+    Route::post('searchCompanies','SearchController@searchCompanies');
+    
+    
 });
 
 Route::group(['prefix' => 'api'], function () {

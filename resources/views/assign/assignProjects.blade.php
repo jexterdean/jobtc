@@ -18,6 +18,7 @@
                         </div>
                         <div class="col-md-10">
                             <input id="search-field-projects" name="search-project" type="text" class="form-control" placeholder="Search Projects">
+                            <input type="hidden" class="company_id" value="{{$company_id}}"/>
                         </div>
                     </div>
                 </div>
@@ -193,7 +194,34 @@
                                 </div>
                             </div>
                             @endif
-                            {!! $projects->fragment('p')->render() !!}
+                            @if ($paginator->lastPage() > 1)
+                            <ul class="pagination">
+                                <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
+                                    <a href="{{ $paginator->url(1) }}">First</a>
+                                </li>
+                                @for ($i = 1; $i <= $paginator->lastPage(); $i++)
+                                <?php
+                                $half_total_links = floor($link_limit / 2);
+                                $from = $paginator->currentPage() - $half_total_links;
+                                $to = $paginator->currentPage() + $half_total_links;
+                                if ($paginator->currentPage() < $half_total_links) {
+                                    $to += $half_total_links - $paginator->currentPage();
+                                }
+                                if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
+                                    $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
+                                }
+                                ?>
+                                @if ($from < $i && $i < $to)
+                                <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
+                                    <a href="{{ $paginator->url($i) }}">{{ $i }}</a>
+                                </li>
+                                @endif
+                                @endfor
+                                <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
+                                    <a href="{{ $paginator->url($paginator->lastPage()) }}">Last</a>
+                                </li>
+                            </ul>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -210,11 +238,12 @@
                         </div>
                         <div class="col-md-9">
                             <input id="search-field-employees" name="search-employee" type="text" class="form-control" placeholder="Search Employees">
+                            <input type="hidden" class="company_id" value="{{$company_id}}"/>
                         </div>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-content">
+                    <div id="assign_my_project_employees" class="box-content">
                         <ul class="taskgroup-list list-group">
                             @foreach($profiles as $profile)
                             <li id="profile-{{$profile->user->user_id}}" class="list-group-item">
@@ -243,6 +272,7 @@
                             </li>
                             @endforeach
                         </ul>
+                        {!!$profiles->render()!!}
                     </div>  
                 </div>
             </div>
@@ -260,11 +290,12 @@
                         </div>
                         <div class="col-md-9">
                             <input id="search-field-companies" name="search-project" type="text" class="form-control" placeholder="Search Companies">
+                            <input type="hidden" class="company_id" value="{{$company_id}}"/>
                         </div>
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="box-content">
+                    <div id="assign_my_project_companies" class="box-content">
                         <ul class="company-list-group list-group">
                             @foreach($user_companies as $user_company)
                             <li id="company-{{$user_company->id}}" class="list-group-item">
@@ -294,6 +325,7 @@
                             </li>
                             @endforeach
                         </ul>
+                        {!!$user_companies->render()!!}
                     </div>
                 </div>
             </div>

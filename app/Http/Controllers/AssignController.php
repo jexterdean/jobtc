@@ -49,7 +49,7 @@ class AssignController extends Controller
 
         $team_grouping = Project::with('team_project')->where('company_id', $id)->get();
 
-        $profiles = Profile::where('company_id', $id)->get();
+        $profiles = Profile::where('company_id', $id)->paginate(5);
 
         $project_id_list = [];
 
@@ -85,8 +85,8 @@ class AssignController extends Controller
                         $query->orderBy('task_title', 'asc')->get();
                     }], 'task_permission', 'company', 'user')
                 ->whereIn('project_id', $project_id_list)
-                ->where('company_id', $id)
-                ->where('user_id', $user_id)
+                //->where('company_id', $id)
+                //->where('user_id', $user_id)
                 ->paginate(3);
         
         $shared_projects = Project::with(['task' => function($query) {
@@ -98,7 +98,7 @@ class AssignController extends Controller
 
         $user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->where('id', '<>', $id)->where('id', '<>', 0)->get();
+                    }])->where('id', '<>', $id)->where('id', '<>', 0)->paginate(5);
 
 
         $user_profile_role = Profile::where('user_id', $user_id)
@@ -117,7 +117,10 @@ class AssignController extends Controller
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-
+        
+        //For Pagination, Max limit of visible pagination links
+        $link_limit = 7;
+        
         $assets = ['assign', 'real-time'];
         
         return view('assign.assignProjects', [
@@ -132,7 +135,9 @@ class AssignController extends Controller
             'team_companies' => $team_companies,
             'countries' => $countries_option,
             'module_permissions' => $module_permissions,
-            'assets' => $assets
+            'assets' => $assets,
+            'paginator' => $projects,
+            'link_limit' => $link_limit
         ]);
     }
     
