@@ -558,17 +558,17 @@ function assignProjectsScripts() {
             if (term !== '') {
                 $.post(search_url, search_data, function (data) {
                     $('#assign_my_project_employees').html(data);
-
                     searchEmployeesPagination(search_data);
+                    draggableEmployees();
                 });
             } else {
                 var all_employees_url = public_path + 'assignProjects/' + company_id;
-                $('#assign_my_project_employees').load(all_employees_url + ' #assign_my_project_employees');
+                $('#assign_my_project_employees').load(all_employees_url + ' #assign_my_project_employees .taskgroup-list');
                 employeesPagination();
             }
         }
     });
-    
+
     $('#search-field-companies').on('keypress', function (e) {
         if (e.which == 13) {
             var term = $(this).val();
@@ -582,8 +582,8 @@ function assignProjectsScripts() {
             if (term !== '') {
                 $.post(search_url, search_data, function (data) {
                     $('#assign_my_project_companies').html(data);
-
                     searchCompaniesPagination(search_data);
+                    draggableCompanies();
                 });
             } else {
                 var all_employees_url = public_path + 'assignProjects/' + company_id;
@@ -593,10 +593,126 @@ function assignProjectsScripts() {
         }
     });
 
+    
+
     //For Project Pagination 
     projectsPagination();
     employeesPagination();
     companiesPagination();
+
+    function draggableEmployees() {
+        //For Dragging employees to projects
+        $('.taskgroup-list').sortable({
+            dropOnEmpty: true,
+            connectWith: ".taskgroup-list",
+            handle: '.drag-handle',
+            remove: function (event, ui) {
+                //Don't remove item when dropped to the project list group
+                $(this).append($(ui.item).clone());
+            },
+            receive: function (event, ui) {
+
+                project_id = $(this).siblings().find('.project_id').val();
+                //company_id = $(this).siblings().find('.company_id').val();
+                company_id = window.location.pathname.split('/').pop();
+                console.log('company_id' + company_id);
+                list_group_user_id = $(ui.item).attr('id');
+                user_id = list_group_user_id.split('-').pop();
+
+                //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
+
+                var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.user_id').val() + ')').length;
+
+                console.log(project_id);
+                //If a duplicate, remove it
+                if (identicalItemCount > 1) {
+                    $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.user_id').val() + ')').remove();
+                }
+
+                //Show unassign button
+                $(ui.item).find('.unassign-member').removeClass('hidden');
+                //Remove Edit profile button
+                $(ui.item).find('.edit-profile').remove();
+
+                //Create Team
+                team_url = public_path + 'createTeam';
+                team_data = {
+                    'project_id': project_id,
+                    'user_id': user_id,
+                    'company_id': company_id
+                };
+
+                $.post(team_url, team_data, function (data) {
+                    //Assign the team id to the this list group item's input
+                    //$(ui.item).find('.team_id').val(team_id);
+                    $(ui.item).find('.employee-toggle').attr('href', '#employee-toggle-' + user_id + '-' + project_id);
+                    $(ui.item).find('.briefcase-container').attr('id', 'employee-toggle-' + user_id + '-' + project_id);
+                    $(ui.item).find('.briefcase-container').html(data);
+                });
+
+                //Remove warning that no employee is assigned.
+                $(this).find('li:contains("No Employees assigned to this project.")').remove();
+
+
+            },
+            update: function (event, ui) {
+
+            }
+        });
+    }
+
+    function draggableCompanies() {
+        //For Dragging Companies to Projects
+        $('.company-list-group').sortable({
+            dropOnEmpty: true,
+            connectWith: ".company-list-group",
+            handle: '.drag-handle',
+            remove: function (event, ui) {
+                //Don't remove item when dropped to the project list group
+                $(this).append($(ui.item).clone());
+            },
+            receive: function (event, ui) {
+
+                project_id = $(this).siblings().find('.project_id').val();
+                list_group_company_id = $(ui.item).attr('id');
+                company_id = list_group_company_id.split('-').pop();
+
+                //var identicalItemCount = $("#project-" + project_id + ' .list-group').children('.list-group-item:contains(' + ui.item.text() + ')').length;
+
+                var identicalItemCount = $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.company_id').val() + ')').length;
+
+                //If a duplicate, remove it
+                if (identicalItemCount > 1) {
+                    $("#project-" + project_id + ' .list-group').children('li:contains(' + ui.item.find('.company_id').val() + ')').remove();
+                }
+
+                //Show unassign button
+                $(ui.item).find('.unassign-company').removeClass('hidden');
+                //Remove Edit profile button
+                //$(ui.item).find('.edit-profile').remove();
+
+                //Create Team
+                team_url = public_path + 'assignCompanyToTeam';
+                team_data = {
+                    'project_id': project_id,
+                    'company_id': company_id
+                };
+                console.log('project_id: ' + project_id);
+                console.log('company_id: ' + company_id);
+
+                $.post(team_url, team_data, function (data) {
+                    //Assign the team id to the this list group item's input
+                    //$(ui.item).find('.team_id').val(team_id);
+                    $(ui.item).find('.employee-list').html(data);
+                });
+
+
+            },
+            update: function (event, ui) {
+
+            }
+        });
+    }
 
     //Pagination needed when page is loaded the first time
     function projectsPagination() {
@@ -620,11 +736,12 @@ function assignProjectsScripts() {
             var url = $(this).attr('href');
             $('#assign_my_project_employees').load(url + ' #assign_my_project_employees', function (e) {
                 employeesPagination();
+                draggableEmployees();
             });
         });
     }
-    
-     //Pagination needed when page is loaded the first time
+
+    //Pagination needed when page is loaded the first time
     function companiesPagination() {
         $('#assign_my_project_companies .pagination').on('click', 'a', function (e) {
             e.preventDefault();
@@ -633,6 +750,7 @@ function assignProjectsScripts() {
             var url = $(this).attr('href');
             $('#assign_my_project_companies').load(url + ' #assign_my_project_companies', function (e) {
                 companiesPagination();
+                draggableCompanies();
             });
         });
     }
@@ -652,16 +770,16 @@ function assignProjectsScripts() {
 
     //Pagination when search items are loaded
     function searchEmployeesPagination(search_data) {
-        $('#assign_my_project_companies .pagination').on('click', 'a', function (e) {
+        $('#assign_my_project_employees .pagination').on('click', 'a', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             $.post(url, search_data, function (data) {
-                $('#assign_my_project_companies').html(data);
+                $('#assign_my_project_employees').html(data);
                 searchEmployeesPagination(search_data);
             });
         });
     }
-    
+
     //Pagination when search items are loaded
     function searchCompaniesPagination(search_data) {
         $('#assign_my_project_companies .pagination').on('click', 'a', function (e) {
@@ -669,7 +787,7 @@ function assignProjectsScripts() {
             var url = $(this).attr('href');
             $.post(url, search_data, function (data) {
                 $('#assign_my_project_companies').html(data);
-                searchCompaniesPagination(search_data);
+                searchCompaniesPagination(search_data); 
             });
         });
     }

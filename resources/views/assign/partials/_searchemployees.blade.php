@@ -26,3 +26,4 @@
     </li>
     @endforeach
 </ul>
+{!!$profiles->render()!!}

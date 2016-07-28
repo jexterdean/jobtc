@@ -27,3 +27,4 @@
     </li>
     @endforeach
 </ul>
+{!!$user_companies->render()!!}

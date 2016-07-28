@@ -687,7 +687,7 @@ class SearchController extends Controller {
             'body' => [
                 'query' => [
                     'query_string' => [
-                        'query' => 'name:' . trim($term)
+                        'query' => 'name:' . trim($term).'*'
                     ]
                 ]
             ]
