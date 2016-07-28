@@ -35,16 +35,15 @@
                     <div class="slider-container">
                         <div class="slider-div text-center active">
                             <div class="slider-body">
-                                <h3 style="font-size: 23px;">{{ $test->start_message }}</h3>
+                                <h3 style="font-size: 23px;">{!! $test->start_message !!}</h3>
                                 <button class="btn btn-shadow btn-submit btn-next">Start</button>
                             </div>
                         </div>
                         @foreach($questions->where('test_id',$test->id) as $question)
-                            @if($question->question_type_id != 4)
                             <div class="slider-div">
                                 <div class="slider-body">
                                     <div class="form-group">
-                                        <h3>{{ $question->question }}</h3>
+                                        <h3>{!! $question->question !!}</h3>
                                     </div>
                                     {!! $question->question_photo ?
                                     '<div class="form-group">' .
@@ -63,11 +62,11 @@
                                     <div class="form-group">
                                         <input type="text" name="answer[{{ $question->id }}]" class="form-control" placeholder="answer here..." />
                                     </div>
-                                    @elseif($v->question_type_id == 3)
+                                    @elseif($question->question_type_id == 3)
                                         <div class="form-group">
-                                            <textarea name="answer[{{ $question->id }}]" class="form-control summernote-editor" rows="3" placeholder="answer here..."></textarea>
+                                            <textarea name="answer[{{ $question->id }}]" class="form-control written_editor" id="written_editor_{{ $question->id }}" rows="3" placeholder="answer here..."></textarea>
                                         </div>
-                                    @elseif($v->question_type_id == 4)
+                                    @elseif($question->question_type_id == 4)
                                         <div class="quiz-video" id="quiz-video-{{ $question->id }}"></div>
                                     @endif
                                     <div class="text-center">
@@ -79,7 +78,6 @@
                                     </div>
                                 </div>
                             </div>
-                            @endif
                         @endforeach
                         <div class="slider-div text-center">
                             <div class="slider-body">
