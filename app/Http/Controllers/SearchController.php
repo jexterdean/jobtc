@@ -44,9 +44,9 @@ class SearchController extends Controller {
         }
 
         if ($type === 'briefcase') {
-        
+
             $briefcases = Task::all();
-            
+
             $params = array();
             foreach ($briefcases as $briefcase) {
 
@@ -61,11 +61,11 @@ class SearchController extends Controller {
 
             return "Finished Indexing Briefcases";
         }
-        
+
         if ($type === 'task item') {
-        
+
             $taskitems = TaskChecklist::all();
-            
+
             $params = array();
             foreach ($taskitems as $taskitem) {
 
@@ -196,6 +196,8 @@ class SearchController extends Controller {
         }
     }
 
+    /* For Global Search(Site wide) */
+
     public function search(Request $request, $type) {
 
         $search_client = ES::create()
@@ -242,7 +244,7 @@ class SearchController extends Controller {
                 ]);
 
                 break;
-                
+
             case "briefcase" :
 
                 //Build elasticsearch query
@@ -278,8 +280,8 @@ class SearchController extends Controller {
                     'assets' => $assets
                 ]);
 
-                break;    
-            
+                break;
+
             case "task item" :
 
                 //Build elasticsearch query
@@ -315,8 +317,8 @@ class SearchController extends Controller {
                     'assets' => $assets
                 ]);
 
-                break;    
-                
+                break;
+
             case "job" :
 
                 //Build elasticsearch query
@@ -543,51 +545,55 @@ class SearchController extends Controller {
         }
     }
 
-    public function searchIndex(Request $request) {
-        $assets = ['companies'];
-        return view('search.search', [
-            'assets' => $assets
-        ]);
-    }
+    /* Search in Assign Projects */
 
-    public function enter($age, $name) {
-
-        $client = ES::create()
-                ->setHosts(\Config::get('elasticsearch.host'))
-                ->build();
-        $params = array();
-        $params['body'] = array(
-            'name' => $name,
-            'age' => $age
-        );
-        $params['index'] = 'default';
-        $params['type'] = 'project';
-        $results = $client->index($params);       //using Index() function to inject the data
-        $assets = ['companies'];
-
-        return view('search.results', [
-            'type' => $results,
-            'assets' => $assets
-        ]);
-    }
-
-    public function find($age) {
-
+    public function searchProjects(Request $request) {
+        
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $term = $request->input('term');
+        
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
                 ->build();
 
-        $params['index'] = 'default';
-        $params['type'] = 'project';
-        $params['body']['query']['match']['project_title'] = $age;
+        //Build elasticsearch query
+        $params = [
+            'index' => 'default',
+            'type' => 'project',
+            'body' => [
+                'query' => [
+                    'query_string' => [
+                        'query' => 'project_title:*' . $term . '*'
+                    ]
+                ]
+            ]
+        ];
+        $search_results = $client->search($params);
 
-        $results = $client->search($params);       //using Index() function to inject the data
+        $searched_projects = $search_results["hits"]["hits"];
 
-        $assets = ['companies'];
+        $ids = [];
 
-        return view('search.find', [
-            'type' => json_encode($results),
-            'assets' => $assets
+        foreach ($searched_projects as $project) {
+            array_push($ids, $project["_id"]);
+        }
+
+        $projects = Project::whereIn('project_id', $ids)->where('company_id',$company_id)->orderBy('project_title', 'desc')->get();
+
+        $teams = Team::with(['team_member' => function($query) use($id) {
+                        $query->with('user')->where('company_id', $id)->get();
+                    }])->get();
+
+        //Get Team Member projects
+        $team_members = TeamMember::where('user_id', $user_id)->where('company_id', $id)->get();
+
+        $assets = ['assign', 'real-time'];
+
+        return view('assign.partials._searchprojects', [
+            'projects' => $projects,
+            'teams' => $teams,
+            'team_members' => $team_members
         ]);
     }
 

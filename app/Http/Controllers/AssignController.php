@@ -87,8 +87,8 @@ class AssignController extends Controller
                 ->whereIn('project_id', $project_id_list)
                 ->where('company_id', $id)
                 ->where('user_id', $user_id)
-                ->get();
-
+                ->paginate(3);
+        
         $shared_projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
                     }], 'task_permission', 'company', 'user')

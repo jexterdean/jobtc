@@ -221,3 +221,14 @@
     position: relative;
     left: 5px;
 }
+
+.box-project .box-header  {
+    color: #fff !important;
+    background-color: #5af;
+}
+
+.box-project .box-body .box-content {
+    padding: 10px;
+    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
+    border: 5px solid #5af;
+}

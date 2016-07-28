@@ -473,7 +473,6 @@ function assignProjectsScripts() {
     });
 
     //Unassign Company from project
-
     $('.company-list-group').on('click', '.unassign-company', function () {
 
         var list_item = $(this).parent().parent().parent().parent();
@@ -521,7 +520,11 @@ function assignProjectsScripts() {
         }
     });
 
-
+    
+    $('#search-field-projects').change(function(){
+       console.log($(this).val()); 
+    });
+    
 } //end assign project scripts
 
 function assignTestsScripts() {
@@ -884,7 +887,6 @@ function shareJobsScripts() {
 
 }
 
-
 function assignTask(user_id, task_id, project_id, company_id) {
 
     var url = public_path + 'assignTaskList';
@@ -913,8 +915,7 @@ function unassignTask(user_id, task_id, project_id, company_id) {
     $.post(url, data);
 }
 
-
-
+//Initialize Scripts
 assignProjectsScripts();
 assignTestsScripts();
 assignAuthorityLevels();
