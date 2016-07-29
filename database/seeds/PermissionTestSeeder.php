@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Test;
 
 class PermissionTestSeeder extends Seeder
 {
