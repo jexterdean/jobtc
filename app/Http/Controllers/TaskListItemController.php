@@ -76,7 +76,7 @@ class TaskListItemController extends Controller {
 
         if ($task_order_count > 0) {
             $task_order = TaskChecklistOrder::where('task_id', $task_id)->first();
-            $checkList = TaskChecklist::where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->first();
+            $checkList = TaskChecklist::where('id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->first();
             
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $task_id)->first();

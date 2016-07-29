@@ -16,6 +16,7 @@ use App\Models\Test;
 use App\Models\Role;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\TeamProject;
 use App\Models\TeamCompany;
 use App\Models\Company;
 use App\Models\Profile;
@@ -601,10 +602,11 @@ class SearchController extends Controller {
         foreach ($searched_projects as $project) {
             array_push($ids, $project["_id"]);
         }
+        
+        $project_id_list = [];
 
-        $projects = Project::whereIn('project_id', $ids)->where('company_id', $company_id)->orderBy('project_title', 'asc')->paginate(3);
-
-        $team_companies = TeamCompany::where('company_id', '<>', $company_id)->get();
+        //Get searched projects
+        $project_results = Project::whereIn('project_id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->get();
 
         $teams = Team::with(['team_member' => function($query) use($company_id) {
                         $query->with('user')->where('company_id', $company_id)->get();
@@ -612,6 +614,32 @@ class SearchController extends Controller {
 
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)->where('company_id', $company_id)->get();
+
+        $team_projects = TeamProject::all();
+
+        $team_companies = TeamCompany::where('company_id', '<>', $company_id)->get();
+
+        foreach ($project_results as $project_result) {
+            array_push($project_id_list, $project_result->project_id);
+        }
+
+        //Use the team id to get the projects the users are involved with
+        foreach ($team_members as $member) {
+            foreach ($team_projects as $project) {
+                if ($member->team_id === $project->team_id) {
+                    array_push($project_id_list, $project->project_id);
+                }
+            }
+        }
+        
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $project_id_list)
+                //->where('company_id', $id)
+                //->where('user_id', $user_id)
+                ->paginate(3);
         
         $link_limit = 7;
         

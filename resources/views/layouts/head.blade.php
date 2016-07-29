@@ -2,7 +2,17 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Job.tc</title>
+        {{--*/ $breadcrumbs = \App\Helpers\Helper::getBreadcrumbs(); $lastElement = end($breadcrumbs); /*--}}
+        <title>
+            @foreach($breadcrumbs as $title => $url)
+            @if($lastElement !== $url)
+            {{$title}} -
+            @else
+            {{$title}}
+            @endif
+            @endforeach
+        </title>
+
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <meta http-equiv="Expires" content="Tue, 01 Jan 1995 12:12:12 GMT">
         {!!  HTML::style('assets/css/bootstrap.css')  !!}
@@ -95,13 +105,13 @@
         @if(in_array('briefcases',$assets))
         {!!  HTML::style('assets/css/page/briefcases.css')  !!}
         @endif
-        
+
         @if(in_array('tasks',$assets))
         {!!  HTML::style('assets/css/page/tasks.css')  !!}
         @endif
-        
+
         {!!  HTML::style('assets/css/page/search.css')  !!}
-        
+
 
         <!--Multi-navigation css-->
         {!!  HTML::style('assets/css/menu.css')  !!}
