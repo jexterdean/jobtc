@@ -254,3 +254,12 @@
   .fa-chevron-down{
       color: #3c8dbc!important;
   }
+/*portlet*/
+@media (max-width: 480px) {
+    .column {
+        width: 100%!important;
+        float: left!important;;
+        margin-left: 10px!important;;
+        padding-bottom: 0!important;;
+    }
+}
