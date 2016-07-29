@@ -143,23 +143,14 @@
                                                 @foreach($val->task as $briefcase)
                                                 <li class="dropdown">
                                                     <a href="{{ url('briefcase/' .$briefcase->task_id) }}"><i class="fa fa-bars" aria-hidden="true"></i> {{ $briefcase->task_title }}</a>
-                                                    @if(count($val->task) > 0)
+                                                    @if(count($briefcase->task_list_items) > 0)
                                                     <ul class="dropdown-menu">
-                                                        @foreach($val->task as $briefcase)
+                                                        @foreach($briefcase->task_list_items as $task_list_item)
                                                         <li class="dropdown">
-                                                            <a href="{{ url('briefcase/' .$briefcase->task_id) }}"><i class="fa fa-bars" aria-hidden="true"></i> {{ $briefcase->task_title }}</a>
-                                                            @if(count($briefcase->task_list_items) > 0)
-                                                            <ul class="dropdown-menu">
-                                                                @foreach($briefcase->task_list_items as $task_list_item)
-                                                                <li class="dropdown">
-                                                                    <a href="{{url('taskitem/'.$task_list_item->id)}}">
-                                                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                                        {{$task_list_item->checklist_header}}
-                                                                    </a>
-                                                                </li>
-                                                                @endforeach
-                                                            </ul>
-                                                            @endif
+                                                            <a href="{{url('taskitem/'.$task_list_item->id)}}">
+                                                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                                {{$task_list_item->checklist_header}}
+                                                            </a>
                                                         </li>
                                                         @endforeach
                                                     </ul>
