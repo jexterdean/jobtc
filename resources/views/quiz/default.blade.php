@@ -181,6 +181,7 @@
         });
 
         $(document).on('click', '.question-header', function(e){
+            e.preventDefault();
             var target = $(this).closest('.question-list').find('.question-collapse');
             target.collapse('toggle');
         });
