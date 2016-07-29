@@ -608,7 +608,7 @@ class SearchController extends Controller {
         //Get searched projects
         $project_results = Project::whereIn('project_id', $ids)->get();
 
-        $teams = Team::with(['team_member' => function($query) use($id) {
+        $teams = Team::with(['team_member' => function($query) use($company_id) {
                         $query->with('user')->where('company_id', $company_id)->get();
                     }])->get();
 
