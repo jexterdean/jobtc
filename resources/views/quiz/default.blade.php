@@ -62,6 +62,8 @@
 
 <script>
     $(function(e){
+        var company_id = '{{ $company_id }}';
+
         //region Test Community Pagination
         var testPaginationInit, testPaginationExec;
         testPaginationInit = function(){
@@ -132,6 +134,7 @@
                     url: '{{ URL::to('quizSearch') }}',
                     method: "POST",
                     data: {
+                        company_id: company_id,
                         search: search
                     },
                     success: function(content) {
@@ -227,6 +230,7 @@
                         url,
                         {
                             id: $(ui.item).data('id'),
+                            company_id: company_id,
                             order: order,
                             version: thisItem.find('.test-version').html(),
                             type: destinationEle.data('type'),

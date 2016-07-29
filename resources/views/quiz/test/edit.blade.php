@@ -1,4 +1,4 @@
-{!! Form::open(array('files' => true, 'url' => 'quiz/' . $tests_info->id . '?p=test', 'method' => 'PATCH')) !!}
+{!! Form::open(array('files' => true, 'url' => 'quiz/' . $tests_info->id . '?p=test' . ($company_id ? '&company_id=' . $company_id : ''), 'method' => 'PATCH')) !!}
 <div class="form-group">
     <div class="row">
         <label class="col-sm-3 text-right">Test Title</label>

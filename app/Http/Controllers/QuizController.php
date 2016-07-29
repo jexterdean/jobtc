@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\BaseController;
 use App\Models\TestPerApplicant;
 use App\Models\TestPerJob;
@@ -24,6 +25,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Elasticsearch\ClientBuilder as ES;
 use PhanAn\Remote\Remote;
+use App\Models\Profile;
+use App\Models\PermissionUser;
 
 class QuizController extends BaseController {
 
@@ -35,17 +38,18 @@ class QuizController extends BaseController {
     public function index() {
         $data = [
             'assets' => ['input-mask', 'waiting', 'select', 'tags'],
-            'page' => 'quiz'
+            'page' => 'quiz',
+            'test_permissions' => []
         ];
         $this->setData($data);
 
         return View::make('quiz.default', $data);
     }
 
-    private function setData(&$data) {
+    private function setData(&$data, $company_id = '') {
         $t = DB::table('question_type')
-                ->select('id', 'type')
-                ->get();
+            ->select('id', 'type')
+            ->get();
         $question_type = array_pluck($t, 'type', 'id');
         $data['question_type'] = $question_type;
         $result = DB::table('test_result')
@@ -82,7 +86,7 @@ class QuizController extends BaseController {
             ->get();
         $data['result'] = $result;
 
-        $test = DB::table('test_personal')
+        $testQuery = DB::table('test_personal')
             ->select(DB::raw('
                 fp_test.*,
                 (
@@ -103,8 +107,11 @@ class QuizController extends BaseController {
             ->orderBy('test_personal.order', 'asc')
             ->whereNotNull('test_personal.test_id')
             ->whereNotNull('test.id')
-            ->where('test_personal.user_id', '=', Auth::user('user')->user_id)
-            ->get();
+            ->where('test_personal.user_id', '=', Auth::user('user')->user_id);
+        if($company_id){
+            $testQuery->where('test.company_id', '=', $company_id);
+        }
+        $test = $testQuery->get();
         if (count($test) > 0) {
             foreach ($test as $t) {
                 $t->total_time = 0;
@@ -152,6 +159,8 @@ class QuizController extends BaseController {
         $data['triggerTest'] = $trigger;
 
         $data['test_limit'] = 6;
+
+        $this->getTestPermission($data, $company_id);
     }
 
     private function getTestCommunity($id = [], $result = []){
@@ -219,6 +228,32 @@ class QuizController extends BaseController {
         return $test_community;
     }
 
+    private function getTestPermission(&$data, $company_id){
+        $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : $company_id;
+        $data['company_id'] = $company_id;
+
+        $user_id = Auth::user('user_id')->user_id;
+        $test_permissions = DB::table('permission_user')
+            ->leftJoin('permissions', 'permissions.id', '=', 'permission_user.permission_id')
+            ->select('permissions.slug')
+            ->where('permission_user.company_id', $company_id)
+            ->where('permission_user.user_id', $user_id)
+            ->whereIn('permissions.description', array('Tests', 'Questions'))
+            ->groupBy('permissions.id')
+            ->lists('slug');
+        $data['test_permissions'] = $test_permissions;
+    }
+
+    public function quizPerCompany($id) {
+        $data = [
+            'assets' => ['input-mask', 'waiting', 'select', 'tags'],
+            'page' => 'quiz'
+        ];
+        $this->setData($data, $id);
+
+        return View::make('quiz.default', $data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -263,6 +298,7 @@ class QuizController extends BaseController {
         $id = isset($_GET['id']) ? $_GET['id'] : '';
         $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : 0;
         $isStay = isset($_GET['stay']) ? $_GET['stay'] : 0;
+        $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : '';
         $label = '';
 
         $validation = '';
@@ -305,6 +341,9 @@ class QuizController extends BaseController {
             if ($page == "test") {
                 $test = new Test();
                 $test->user_id = Auth::user()->user_id;
+                if($company_id){
+                    $test->company_id = $company_id;
+                }
                 $test->title = Input::get('title');
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
@@ -381,7 +420,9 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
-                $question->note = Input::get('note');
+                if(Input::get('note')) {
+                    $question->note = Input::get('note');
+                }
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
@@ -500,7 +541,9 @@ class QuizController extends BaseController {
 
             DB::commit();
 
-            $url = 'quiz' . ($trigger ? '?trigger=' . $id : '');
+            $url = $company_id ?
+                'quizPerCompany/' . $company_id . ($trigger ? '?trigger=' . $id : '') :
+                'quiz' . ($trigger ? '?trigger=' . $id : '');
             return Redirect::to($url)
                 ->withSuccess($label . " added successfully!");
         } catch (\Exception $e) {
@@ -648,6 +691,7 @@ class QuizController extends BaseController {
      */
     public function update(Request $request, $id) {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
+        $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : '';
 
         $validation = '';
         if ($page == "test") {
@@ -682,6 +726,9 @@ class QuizController extends BaseController {
         try {
             if ($page == "test") {
                 $test = Test::find($id);
+                if($company_id){
+                    $test->company_id = $company_id;
+                }
                 $test->title = Input::get('title');
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
@@ -763,7 +810,9 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
-                $question->note = Input::get('note');
+                if(Input::get('note')) {
+                    $question->note = Input::get('note');
+                }
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
@@ -808,7 +857,10 @@ class QuizController extends BaseController {
             if($page == "exam"){
                 return 1;
             }
-            return Redirect::to('quiz')
+            $url = $company_id ?
+                'quizPerCompany/' . $company_id :
+                'quiz';
+            return Redirect::to($url)
                 ->withSuccess(($page == "test" ? "Test" : "Question") . " updated successfully!");
         }
         catch (\Exception $e) {
@@ -1102,6 +1154,9 @@ class QuizController extends BaseController {
             $personal = Test::find(Input::get('id'));
             $newPersonal = $personal->replicate();
             $newPersonal->user_id = Auth::user()->user_id;
+            if(Input::get('company_id')){
+                $newPersonal->company_id = Input::get('company_id');
+            }
             $newPersonal->save();
             $test_id = $newPersonal->id;
 
@@ -1203,10 +1258,14 @@ class QuizController extends BaseController {
             }
         }
 
-        return View::make('quiz.community', [
+        $data = [
             'test_community' => $r,
             'test_limit' => 6
-        ]);
+        ];
+        $company_id = Input::get('company_id') ? Input::get('company_id') : '';
+        $this->getTestPermission($data, $company_id);
+
+        return View::make('quiz.community', $data);
     }
     public function quizElasticSearchView(){
         $client = ES::create()

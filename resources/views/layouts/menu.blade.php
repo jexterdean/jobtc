@@ -278,7 +278,7 @@
                         @endif <!--Auth Check-->
                         @if($module_permissions->where('slug','view.tests')->count() === 1)
                         <li>
-                            <a href="{{ url('quiz') }}">
+                            <a href="{{ url('quizPerCompany/' . $company->company->id) }}">
                                 <i class="glyphicon glyphicon-education"></i> 
                                 <span>Test</span>
                             </a>

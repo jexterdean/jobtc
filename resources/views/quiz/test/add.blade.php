@@ -1,4 +1,4 @@
-{!! Form::open(array('files' => true, 'url' => 'quiz?p=test', 'method' => 'POST')) !!}
+{!! Form::open(array('files' => true, 'url' => 'quiz?p=test' . ($company_id ? '&company_id=' . $company_id : ''), 'method' => 'POST')) !!}
 <div class="form-group">
     <div class="row">
         <label class="col-sm-3 text-right">Test Title</label>
