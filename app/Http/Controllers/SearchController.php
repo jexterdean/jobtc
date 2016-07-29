@@ -602,7 +602,14 @@ class SearchController extends Controller {
             array_push($ids, $project["_id"]);
         }
 
-        $projects = Project::whereIn('project_id', $ids)->where('company_id', $company_id)->orderBy('project_title', 'asc')->paginate(3);
+        //Get projects with their tasks and task permissions
+        $projects = Project::with(['task' => function($query) {
+                        $query->orderBy('task_title', 'asc')->get();
+                    }], 'task_permission', 'company', 'user')
+                ->whereIn('project_id', $ids)
+                //->where('company_id', $id)
+                //->where('user_id', $user_id)
+                ->paginate(3);
 
         $team_companies = TeamCompany::where('company_id', '<>', $company_id)->get();
 
