@@ -552,7 +552,8 @@ function assignProjectsScripts() {
             var search_url = public_path + 'searchEmployees';
             var search_data = {
                 'company_id': company_id,
-                'term': term
+                'term': term,
+                'url': 'assignProjects'
             };
 
             if (term !== '') {
@@ -576,7 +577,8 @@ function assignProjectsScripts() {
             var search_url = public_path + 'searchCompanies';
             var search_data = {
                 'company_id': company_id,
-                'term': term
+                'term': term,
+                'url': 'assignProjects'
             };
 
             if (term !== '') {
@@ -592,8 +594,6 @@ function assignProjectsScripts() {
             }
         }
     });
-
-    
 
     //For Project Pagination 
     projectsPagination();
@@ -787,7 +787,7 @@ function assignProjectsScripts() {
             var url = $(this).attr('href');
             $.post(url, search_data, function (data) {
                 $('#assign_my_project_companies').html(data);
-                searchCompaniesPagination(search_data); 
+                searchCompaniesPagination(search_data);
             });
         });
     }
@@ -1148,6 +1148,124 @@ function shareJobsScripts() {
             });
         }
     });
+
+    $('#search-field-jobs').on('keypress', function (e) {
+        if (e.which == 13) {
+            var term = $(this).val();
+            var company_id = $(this).siblings('.company_id').val();
+            var search_url = public_path + 'searchJobs';
+            var search_data = {
+                'company_id': company_id,
+                'term': term
+            };
+
+            if (term !== '') {
+                $.post(search_url, search_data, function (data) {
+                    $('#assign_my_jobs').html(data);
+                    jobsPagination();
+                });
+            } else {
+                var all_jobs_url = public_path + 'assignJobs/' + company_id;
+
+                $('#assign_my_jobs').load(all_jobs_url + ' #assign_my_jobs', function () {
+                    jobsPagination();
+                });
+            }
+        }
+    });
+
+    $('#search-field-employees').on('keypress', function (e) {
+        if (e.which == 13) {
+            var term = $(this).val();
+            var company_id = $(this).siblings('.company_id').val();
+            var search_url = public_path + 'searchEmployees';
+            var search_data = {
+                'company_id': company_id,
+                'term': term,
+                'url': 'assignJobs'
+            };
+
+            if (term !== '') {
+                $.post(search_url, search_data, function (data) {
+                    $('#assign_my_jobs_employees').html(data);
+                    employeesPagination();
+                });
+            } else {
+                var all_employees_url = public_path + 'assignJobs/' + company_id;
+
+                $('#assign_my_jobs_employees').load(all_employees_url + ' #assign_my_jobs_employees', function () {
+                    employeesPagination();
+                });
+            }
+        }
+    });
+
+    $('#search-field-companies').on('keypress', function (e) {
+        if (e.which == 13) {
+            var term = $(this).val();
+            var company_id = $(this).siblings('.company_id').val();
+            var search_url = public_path + 'searchCompanies';
+            var search_data = {
+                'company_id': company_id,
+                'term': term,
+                'url': 'assignJobs'
+            };
+
+            if (term !== '') {
+                $.post(search_url, search_data, function (data) {
+                    $('#share_jobs_companies').html(data);
+                    companiesPagination();
+                });
+            } else {
+                var all_companies_url = public_path + 'assignJobs/' + company_id;
+                $('#share_jobs_companies').load(all_companies_url + ' #share_jobs_companies');
+                companiesPagination();
+            }
+        }
+    });
+
+    jobsPagination();
+    employeesPagination();
+    companiesPagination();
+    
+    //Pagination needed when page is loaded the first time
+    function jobsPagination() {
+        $('#assign_my_jobs .pagination').on('click', 'a', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var url = $(this).attr('href');
+            $('#assign_my_jobs').load(url + ' #assign_my_jobs', function (e) {
+                shareJobsScripts();
+            });
+        });
+    }
+
+    //Pagination needed when page is loaded the first time
+    function employeesPagination() {
+        $('#assign_my_jobs_employees .pagination').on('click', 'a', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var url = $(this).attr('href');
+            $('#assign_my_jobs_employees').load(url + ' #assign_my_jobs_employees', function (e) {
+                shareJobsScripts();
+            });
+        });
+    }
+
+    //Pagination needed when page is loaded the first time
+    function companiesPagination() {
+        $('#share_jobs_companies .pagination').on('click', 'a', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var url = $(this).attr('href');
+            $('#share_jobs_companies').load(url + ' #share_jobs_companies', function (e) {
+                shareJobsScripts();
+            });
+        });
+    }
 
 }
 
