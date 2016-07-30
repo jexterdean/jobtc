@@ -454,10 +454,6 @@ class Helper {
                             $query->with('company')->get();
                         }])->where('task_id', $task_id)->first();
 
-            //array_push($breadcrumb, $briefcase->project->company->name);
-            //array_push($breadcrumb, $briefcase->project->project_title);
-            //array_push($breadcrumb, $briefcase->task_title);
-
             $breadcrumb = array(
                 $briefcase->project->company->name => '/company/' . $briefcase->project->company->id,
                 $briefcase->project->project_title => '/project/' . $briefcase->project->project_id,

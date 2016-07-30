@@ -10,6 +10,8 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskChecklist;
 use App\Models\Job;
+use App\Models\ShareJob;
+use App\Models\ShareJobCompany;
 use App\Models\User;
 use App\Models\Applicant;
 use App\Models\Test;
@@ -201,7 +203,7 @@ class SearchController extends Controller {
 
             return "Finished Indexing Positions";
         }
-        
+
         if ($type === 'company') {
             $companies = Company::all();
 
@@ -571,12 +573,13 @@ class SearchController extends Controller {
     }
 
     /* Search in Assign Projects */
+
     public function searchProjects(Request $request) {
 
         $user_id = Auth::user('user')->user_id;
         $company_id = $request->input('company_id');
         $term = $request->input('term');
-        
+
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
                 ->build();
@@ -602,7 +605,7 @@ class SearchController extends Controller {
         foreach ($searched_projects as $project) {
             array_push($ids, $project["_id"]);
         }
-        
+
         $project_id_list = [];
 
         //Get searched projects
@@ -631,7 +634,7 @@ class SearchController extends Controller {
                 }
             }
         }
-        
+
         //Get projects with their tasks and task permissions
         $projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
@@ -640,10 +643,10 @@ class SearchController extends Controller {
                 //->where('company_id', $id)
                 //->where('user_id', $user_id)
                 ->paginate(3);
-        
+
         $link_limit = 7;
-        
-        return view('assign.partials._searchprojects', [
+
+        return view('assign.partials.assignProjects._searchprojects', [
             'projects' => $projects,
             'teams' => $teams,
             'team_members' => $team_members,
@@ -653,14 +656,16 @@ class SearchController extends Controller {
             'link_limit' => $link_limit
         ]);
     }
-    
-    /*Search Employees in Assign Projects*/
+
+    /* Search Employees in Assign Projects and Assign Jobs */
+
     public function searchEmployees(Request $request) {
-        
+
         $user_id = Auth::user('user')->user_id;
         $company_id = $request->input('company_id');
         $term = $request->input('term');
-        
+        $url = $request->input('url');
+
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
                 ->build();
@@ -687,23 +692,41 @@ class SearchController extends Controller {
             array_push($ids, $employee["_id"]);
         }
 
-        $profiles = Profile::with(['user' => function($query){
-            $query->orderBy('name', 'asc')->get();
-        }])->whereIn('user_id', $ids)->where('company_id', $company_id)->paginate(3);
-        
-        return view('assign.partials._searchemployees', [
-            'profiles' => $profiles
-        ]);
-        
+        $profiles = Profile::with(['user' => function($query) {
+                        $query->orderBy('name', 'asc')->get();
+                    }])->whereIn('user_id', $ids)->where('company_id', $company_id)->paginate(3);
+
+
+        if ($url === 'assignProjects') {
+            return view('assign.partials.assignProjects._searchemployees', [
+                'profiles' => $profiles
+            ]);
+        }
+
+        if ($url === 'assignJobs') {
+
+            $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->get();
+
+            $shared_jobs = ShareJob::all();
+
+            return view('assign.partials.assignJobs._searchemployees', [
+                'jobs' => $jobs,
+                'profiles' => $profiles,
+                'shared_jobs' => $shared_jobs
+            ]);
+        }
     }
-    
-    /*Search Companies in Assign Projects*/
+
+    /* Search Companies in Assign Projects and Assign Jobs */
+
     public function searchCompanies(Request $request) {
-        
+
         $user_id = Auth::user('user')->user_id;
         $company_id = $request->input('company_id');
         $term = $request->input('term');
+        $url = $request->input('url');
         
+
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
                 ->build();
@@ -715,7 +738,7 @@ class SearchController extends Controller {
             'body' => [
                 'query' => [
                     'query_string' => [
-                        'query' => 'name:' . trim($term).'*'
+                        'query' => 'name:' . trim($term) . '*'
                     ]
                 ]
             ]
@@ -730,14 +753,77 @@ class SearchController extends Controller {
             array_push($ids, $company["_id"]);
         }
 
-        $user_companies = Company::with(['profile' => function($query) use($user_id) {
+        if ($url === 'assignProjects') {
+
+            $user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->whereIn('id',$ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);
+                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);
+            
+            return view('assign.partials.assignProjects._searchcompanies', [
+                'user_companies' => $user_companies
+            ]);
+        }
         
-        return view('assign.partials._searchcompanies', [
-            'user_companies' => $user_companies
-        ]);
-        
+        if ($url === 'assignJobs') {
+            
+            $user_companies = Company::with(['profile' => function($query) use($user_id) {
+                        $query->where('user_id', $user_id)->get();
+                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(3);
+            
+            $shared_jobs_companies = ShareJobCompany::all();
+            
+             $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->get();
+
+            $shared_jobs = ShareJob::all();
+            
+            return view('assign.partials.assignJobs._searchcompanies', [
+                'user_companies' => $user_companies,
+                'jobs' => $jobs,
+                'shared_jobs' => $shared_jobs,
+                'shared_jobs_companies' => $shared_jobs_companies
+            ]);
+        }
     }
-    
+
+    /* Search in Assign Jobs */
+
+    public function searchJobs(Request $request) {
+
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $term = $request->input('term');
+
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+
+        //Build elasticsearch query
+        $params = [
+            'index' => 'default',
+            'type' => 'job',
+            'body' => [
+                'query' => [
+                    'query_string' => [
+                        'query' => 'title:' . trim($term) . '*'
+                    ]
+                ]
+            ]
+        ];
+        $search_results = $client->search($params);
+
+        $searched_jobs = $search_results["hits"]["hits"];
+
+        $ids = [];
+
+        foreach ($searched_jobs as $job) {
+            array_push($ids, $job["_id"]);
+        }
+
+        $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->paginate(5);
+
+        return view('assign.partials.assignJobs._searchjobs', [
+            'jobs' => $jobs
+        ]);
+    }
+
 }

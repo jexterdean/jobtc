@@ -141,6 +141,42 @@ class AssignController extends Controller
         ]);
     }
     
+    public function AssignJobs(Request $request, $id) {
+
+        $user_id = Auth::user('user')->user_id;
+
+        $profiles = Profile::with('user')->where('company_id', $id)->where('user_id', '<>', $user_id)->paginate(3);
+
+        /* $user_companies = Company::with(['profile' => function($query) use($user_id) {
+          $query->where('user_id', $user_id)->get();
+          }])->where('id','<>',$id)->get(); */
+
+        $user_companies = Company::with('profile')->where('id', '<>', $id)->where('id', '<>', 0)->paginate(3);
+
+        $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->paginate(5);
+
+        $shared_jobs = ShareJob::all();
+
+        $shared_jobs_companies = ShareJobCompany::all();
+
+        //Get company permissions
+        //$shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id',$id)->get();
+        $shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id', $id)->get();
+
+        $assets = ['assign', 'real-time'];
+        
+        return view('assign.assignJobs', [
+            'profiles' => $profiles,
+            'jobs' => $jobs,
+            'user_companies' => $user_companies,
+            'shared_jobs' => $shared_jobs,
+            'shared_jobs_companies' => $shared_jobs_companies,
+            'shared_company_jobs_permissions' => $shared_company_jobs_permissions,
+            'assets' => $assets,
+            'company_id' => $id
+        ]);
+    }
+    
     public function assignTests(Request $request, $id) {
 
         //Getting Assign Project Data
@@ -196,39 +232,6 @@ class AssignController extends Controller
         ]);
     }
 
-    public function AssignJobs(Request $request, $id) {
-
-        $user_id = Auth::user('user')->user_id;
-
-        $profiles = Profile::with('user')->where('company_id', $id)->where('user_id', '<>', $user_id)->get();
-
-        /* $user_companies = Company::with(['profile' => function($query) use($user_id) {
-          $query->where('user_id', $user_id)->get();
-          }])->where('id','<>',$id)->get(); */
-
-        $user_companies = Company::with('profile')->where('id', '<>', $id)->where('id', '<>', 0)->get();
-
-        $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->get();
-
-        $shared_jobs = ShareJob::all();
-
-        $shared_jobs_companies = ShareJobCompany::all();
-
-        //Get company permissions
-        //$shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id',$id)->get();
-        $shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id', $id)->get();
-
-        $assets = ['assign', 'real-time'];
-        
-        return view('assign.assignJobs', [
-            'profiles' => $profiles,
-            'jobs' => $jobs,
-            'user_companies' => $user_companies,
-            'shared_jobs' => $shared_jobs,
-            'shared_jobs_companies' => $shared_jobs_companies,
-            'shared_company_jobs_permissions' => $shared_company_jobs_permissions,
-            'assets' => $assets
-        ]);
-    }
+    
     
 }
