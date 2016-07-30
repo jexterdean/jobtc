@@ -919,3 +919,8 @@ background: #744783;
 .demo-5 .dl-menuwrapper button:hover, .demo-5 .dl-menuwrapper button.dl-active, .demo-5 .dl-menuwrapper ul {
 background: #643771;
 }
+@media (max-width: 480px) {
+    nav > #navbar > .row > .col-sm-6 {
+        width: 100%!important;
+    }
+}

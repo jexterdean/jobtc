@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
         </button>
     </div>
-    <div class="collapse navbar-collapse" id="navbar">
+    <div class="" id="navbar">
         {{--<ul class="nav navbar-nav">--}}
         @include('layouts.menu')
         {{--</ul>--}}

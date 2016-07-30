@@ -3091,6 +3091,7 @@ fieldset[disabled] a.btn {
   color: #333 !important;
   background-color: #f2f2f2;
   border-color: #ccc !important;
+  margin-bottom: 5px;
 }
 .btn-default:focus,
 .btn-default.focus {
@@ -3148,6 +3149,7 @@ fieldset[disabled] .btn-default.focus {
   color: #fff !important;
   background-color: #4285F4;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-edit:focus,
 .btn-edit.focus {
@@ -3205,6 +3207,7 @@ fieldset[disabled] .btn-edit.focus {
   color: #fff !important;
   background-color: #59ae59;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-submit:focus,
 .btn-submit.focus {
@@ -3262,6 +3265,7 @@ fieldset[disabled] .btn-submit.focus {
   color: #fff !important;
   background-color: #5bc0de;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-assign:focus,
 .btn-assign.focus {
@@ -3319,6 +3323,7 @@ fieldset[disabled] .btn-assign.focus {
   color: #fff !important;
   background-color: #f0ad4e;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-finish:focus,
 .btn-finish.focus {
@@ -3376,6 +3381,7 @@ fieldset[disabled] .btn-finish.focus {
   color: #fff !important;
   background-color: #d9534f;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-delete:focus,
 .btn-delete.focus {
@@ -3433,6 +3439,7 @@ fieldset[disabled] .btn-delete.focus {
   color: #fff !important;
   background-color: #7639d9;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-priority:focus,
 .btn-priority.focus {
@@ -3490,6 +3497,7 @@ fieldset[disabled] .btn-priority.focus {
   color: #fff !important;
   background-color: #d9c518;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-timer:focus,
 .btn-timer.focus {
@@ -3547,6 +3555,7 @@ fieldset[disabled] .btn-timer.focus {
   color: #fff !important;
   background-color: #000;
   border-color: #fff !important;
+  margin-bottom: 5px;
 }
 .btn-black:focus,
 .btn-black.focus {
