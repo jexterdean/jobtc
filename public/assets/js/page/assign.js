@@ -1218,8 +1218,9 @@ function shareJobsScripts() {
                 });
             } else {
                 var all_companies_url = public_path + 'assignJobs/' + company_id;
-                $('#share_jobs_companies').load(all_companies_url + ' #share_jobs_companies');
-                companiesPagination();
+                $('#share_jobs_companies').load(all_companies_url + ' #share_jobs_companies',function(){
+                    companiesPagination();
+                });
             }
         }
     });
