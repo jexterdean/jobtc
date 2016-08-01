@@ -10,10 +10,11 @@
                 <ul style="padding-left: 0!important;">
                     @foreach($links_data as $link)
                     <li class='list-group-item'>
-                        @if(strpos($link->url,'http://') === true || strpos($link->url,'https://' === true))
-                        <a target="_blank" href="{{ $link->url }}">{{ $link->title }}</a>
-                        @else
+                        {{--*/ $parse_url = parse_url($link->url) /*--}}
+                        @if(empty($parse_url['scheme']))
                         <a target="_blank" href="http://{{ $link->url }}">{{ $link->title }}</a>
+                        @else
+                        <a target="_blank" href="{{ $link->url }}">{{ $link->title }}</a>
                         @endif
                     </li>
                     @endforeach
