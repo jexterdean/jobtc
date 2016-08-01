@@ -753,22 +753,18 @@ class SearchController extends Controller {
             array_push($ids, $company["_id"]);
         }
 
+        $user_companies = Company::with(['profile' => function($query) use($user_id) {
+                        $query->where('user_id', $user_id)->get();
+                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);;
+        
         if ($url === 'assignProjects') {
 
-            $user_companies = Company::with(['profile' => function($query) use($user_id) {
-                        $query->where('user_id', $user_id)->get();
-                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);
-            
             return view('assign.partials.assignProjects._searchcompanies', [
                 'user_companies' => $user_companies
             ]);
         }
         
         if ($url === 'assignJobs') {
-            
-            $user_companies = Company::with(['profile' => function($query) use($user_id) {
-                        $query->where('user_id', $user_id)->get();
-                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(3);
             
             $shared_jobs_companies = ShareJobCompany::all();
             
