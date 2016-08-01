@@ -7,7 +7,7 @@
                         <div class="box-header">
                             <h3 class="box-title">{{ $tests_info->title }}</h3>
                             <div class="pull-right" style="margin-right: 10px;">
-                                <a href="{{ url('quiz') }}" class="tc-icons">
+                                <a href="{{ url($company_id ? 'quizPerCompany/' . $company_id : 'quiz') }}" class="tc-icons">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                 </a>
                             </div>

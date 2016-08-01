@@ -80,6 +80,7 @@ Route::get('getTags/{id}/{tag_type}', 'TagController@getTags');
  * Quiz
  */
 Route::resource('quiz', 'QuizController');
+Route::get('quizPerCompany/{id}', 'QuizController@quizPerCompany');
 Route::any('testSort', 'QuizController@testSort');
 Route::post('questionSort', 'QuizController@questionSort');
 Route::get('userSlider/{id}', 'QuizController@userSlider');

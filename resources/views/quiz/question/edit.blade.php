@@ -1,4 +1,4 @@
-{!! Form::open(array('files' => true, 'url' => 'quiz/' . $questions_info->id . '?p=question', 'method' => 'PATCH')) !!}
+{!! Form::open(array('files' => true, 'url' => 'quiz/' . $questions_info->id . '?p=question' . ($company_id ? '&company_id=' . $company_id : ''), 'method' => 'PATCH')) !!}
 <div class="row">
     <div class="col-md-6 form-group">
         <label class="col-sm-4 text-right">Question Type:</label>

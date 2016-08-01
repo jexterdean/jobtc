@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-6">
         <div id="dl-menu" class="dl-menuwrapper">
             <button>GO</button>
             <ul class="dl-menu">
@@ -278,7 +278,7 @@
                         @endif <!--Auth Check-->
                         @if($module_permissions->where('slug','view.tests')->count() === 1)
                         <li>
-                            <a href="{{ url('quiz') }}">
+                            <a href="{{ url('quizPerCompany/' . $company->company->id) }}">
                                 <i class="glyphicon glyphicon-education"></i> 
                                 <span>Test</span>
                             </a>
@@ -416,7 +416,7 @@
             </ul>
         </div>    
     </div>
-    <div class="col-md-6">
+    <div class="col-sm-6">
         {{--*/$modules = \App\Helpers\Helper::getSearchModules()/*--}}
         <div class="search-container">
             <div class="input-group">

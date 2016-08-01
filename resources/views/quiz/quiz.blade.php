@@ -28,15 +28,17 @@
                                                             <div class="btn-group pull-right">
                                                                 <strong>Questions:</strong> {{ count($val->question) }}&nbsp;&nbsp;&nbsp;
                                                                 <strong>Time:</strong> {{ date('i:s', $val->total_time) }}&nbsp;&nbsp;&nbsp;
-                                                                <a class="tc-icons" href="{{ url('quiz/' . $val->id . '?p=review') }}">
+                                                                <a class="tc-icons" href="{{ url('quiz/' . $val->id . '?p=review' . ($company_id ? '&company_id=' . $company_id : '')) }}">
                                                                     <i class="fa fa-eye"></i>
                                                                 </a>
                                                                 <a class="trigger-links tc-icons" data-title="Result" data-method="" href="{{ url('quizRanking/' . $val->id) }}">
                                                                     <i class="fa fa-signal" aria-hidden="true"></i>
                                                                 </a>
+                                                                @if(in_array('drag.tests', $test_permissions))
                                                                 <a href="#" class="drag-test move-test tc-icons">
                                                                     <i class="fa fa-arrows" aria-hidden="true"></i>
                                                                 </a>
+                                                                @endif
                                                                 <a href="#" id="{{ $val->id }}" class="test-delete-btn tc-icons hidden">
                                                                     <i class="fa fa-times" aria-hidden="true"></i>
                                                                 </a>
@@ -66,9 +68,11 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="pull-right">
+                                                                            @if(in_array('drag.question', $test_permissions))
                                                                             <a href="#" class="drag-question icon icon-btn move-tasklist tc-icons">
                                                                                 <i class="fa fa-arrows"></i>
                                                                             </a>
+                                                                            @endif
                                                                             <a href="#" id="{{ $q->id }}" class="icon icon-btn delete-question-btn tc-icons hidden">
                                                                                 <i class="fa fa-times" aria-hidden="true"></i>
                                                                             </a>
@@ -109,12 +113,16 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="question-btn-area pull-right{{ $val->user_id == Auth::user('user')->user_id ? '' : ' hidden' }}" style="padding-right: 10px;">
+                                                                                @if(in_array('delete.questions', $test_permissions))
                                                                                 <a href="#" id="{{ $q->id }}" class="delete-question-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
                                                                                     <i class="fa fa-times" aria-hidden="true"></i> Question
                                                                                 </a>&nbsp;&nbsp;&nbsp;
-                                                                                <a href="{{ url('quiz/' . $q->id .'/edit?p=question') }}" data-method="GET" data-title="Edit Question" class="btn btn-edit btn-shadow trigger-links">
+                                                                                @endif
+                                                                                @if(in_array('edit.questions', $test_permissions))
+                                                                                <a href="{{ url('quiz/' . $q->id .'/edit?p=question' . ($company_id ? '&company_id=' . $company_id : '')) }}" data-method="GET" data-title="Edit Question" class="btn btn-edit btn-shadow trigger-links">
                                                                                     <i class="fa fa-pencil" aria-hidden="true"></i> Edit
                                                                                 </a>
+                                                                                @endif
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -128,21 +136,27 @@
                                                             </ul>
 
                                                             <div class="test-btn-area {{ $val->user_id == Auth::user('user')->user_id ? '' : ' hidden' }}">
-                                                                <a class="btn btn-submit btn-shadow btn-sm check-list-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id) }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
+                                                                @if(in_array('create.questions', $test_permissions))
+                                                                <a class="btn btn-submit btn-shadow btn-sm check-list-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id . ($company_id ? '&company_id=' . $company_id : '')) }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
                                                                     <i class="glyphicon glyphicon-plus"></i> Question
                                                                 </a>&nbsp;&nbsp;&nbsp;
-                                                                <a class="btn btn-submit btn-shadow btn-sm trigger-add-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id . '&trigger=1') }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
+                                                                <a class="btn btn-submit btn-shadow btn-sm trigger-add-btn trigger-links" href="{{ url('quiz/create?p=question&id=' . $val->id . '&trigger=1' . ($company_id ? '&company_id=' . $company_id : '')) }}" data-method="GET" data-title="Add Question" style="font-size: 18px!important;">
                                                                     <i class="glyphicon glyphicon-plus"></i> Questions
                                                                 </a>&nbsp;&nbsp;&nbsp;
-                                                                <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '')) }}" class="btn btn-assign btn-shadow">
+                                                                @endif
+                                                                <a href="{{ url('quiz/' . $val->id . ($val->review_only ? '?p=review' : '') . ($company_id ? ($val->review_only ? '&' : '?') . 'company_id=' . $company_id : '')) }}" class="btn btn-assign btn-shadow">
                                                                     <i class="fa fa-eye"></i> Preview
                                                                 </a>&nbsp;&nbsp;&nbsp;
+                                                                @if(in_array('delete.tests', $test_permissions))
                                                                 <a href="#" data-type="1" id="{{ $val->version_id }}" class="test-delete-btn btn-delete btn-shadow btn" style="font-size: 18px!important;">
                                                                     <i class="fa fa-times" aria-hidden="true"></i> Test
                                                                 </a>&nbsp;&nbsp;&nbsp;
-                                                                <a href="{{ url('quiz/' . $val->id .'/edit?p=test') }}" data-method="GET" data-title="Edit Test" class="trigger-links btn btn-edit btn-shadow">
+                                                                @endif
+                                                                @if(in_array('edit.tests', $test_permissions))
+                                                                <a href="{{ url('quiz/' . $val->id .'/edit?p=test' . ($company_id ? '&company_id=' . $company_id : '')) }}" data-method="GET" data-title="Edit Test" class="trigger-links btn btn-edit btn-shadow">
                                                                     <i class="fa fa-pencil"></i> Edit
                                                                 </a>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -158,10 +172,12 @@
                 </div>
             </div>
             <div class="row">
-                <a class="btn btn-shadow btn-default trigger-links" href="{{ url('quiz/create?p=test') }}" data-method="GET" data-title="Add Test">
+                @if(in_array('create.tests', $test_permissions))
+                <a class="btn btn-shadow btn-default trigger-links" href="{{ url('quiz/create?p=test' . ($company_id ? '&company_id=' . $company_id : '')) }}" data-method="GET" data-title="Add Test">
                     <i class="fa fa-plus"></i>
                     <strong>New Test</strong>
                 </a>
+                @endif
                 <div class="pull-right">
                     <input type="text" name="community_search" class="community-search form-control" />
                     <span style="color: #f00;font-size: 12px;">NOTE: press ENTER to start search</span>
