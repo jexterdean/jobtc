@@ -61,23 +61,28 @@
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                             <div class="link-column">
-                                            @foreach($links as $link)
+                                                @foreach($links as $link)
                                                 @if($link->task_item_id == $list_item->id)
                                                 <div class="col-md-12" id="link-{{$link->id}}">
                                                     <div class="col-md-3">
-                                                        <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a>
+                                                        {{--*/ $parse_url = parse_url($link->url) /*--}}
+                                                        @if(empty($parse_url['scheme']))
+                                                        <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                                        @else
+                                                        <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                                        @endif
                                                     </div>
                                                     <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
                                                     <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                                                    @if($user_id == $link->user_id)
+                                                        @if($user_id == $link->user_id)
                                                         <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
-                                                    @endif
+                                                        @endif
                                                     </div>
                                                     <hr/>
                                                 </div>
-                                            @endif
-                                            @endforeach
-                                             </div>
+                                                @endif
+                                                @endforeach
+                                            </div>
                                             <hr/>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -1066,57 +1071,57 @@
         //region Auto Change and Select Category Name
         var _category_name = '';
         $('.category-name')
-            .bind('keyup keypress blur', function () {
-                _category_name = $(this).val();
-                var myStr = $(this).val();
-                myStr = myStr.toLowerCase();
-                myStr = myStr.replace(/\s+/g, "-");
-                $(this).val(myStr);
-            })
-            .focusout(function () {
-                var cat_form = $('.category-form');
-                var form_data = [];
-                var url = public_path + 'linkCategory';
-                var cat_value = $(this).val();
-                if ($(this).val()) {
-                    form_data.push(
-                            {name: 'slug', value: $(this).val()},
-                    {name: 'name', value: _category_name},
-                    {name: 'request_from_link_page', value: '1'}
-                    );
-                    $.post(url, form_data, function (data) {
-                        var _return_data = jQuery.parseJSON(data);
-                        var option_ele = '<option value>Select Category</option>';
-                        $.each(_return_data, function (key, val) {
-                            var is_selected = cat_value == val.name ? 'selected' : '';
-                            option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
+                .bind('keyup keypress blur', function () {
+                    _category_name = $(this).val();
+                    var myStr = $(this).val();
+                    myStr = myStr.toLowerCase();
+                    myStr = myStr.replace(/\s+/g, "-");
+                    $(this).val(myStr);
+                })
+                .focusout(function () {
+                    var cat_form = $('.category-form');
+                    var form_data = [];
+                    var url = public_path + 'linkCategory';
+                    var cat_value = $(this).val();
+                    if ($(this).val()) {
+                        form_data.push(
+                                {name: 'slug', value: $(this).val()},
+                        {name: 'name', value: _category_name},
+                        {name: 'request_from_link_page', value: '1'}
+                        );
+                        $.post(url, form_data, function (data) {
+                            var _return_data = jQuery.parseJSON(data);
+                            var option_ele = '<option value>Select Category</option>';
+                            $.each(_return_data, function (key, val) {
+                                var is_selected = cat_value == val.name ? 'selected' : '';
+                                option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
+                            });
+                            $('select.category').html(option_ele);
                         });
-                        $('select.category').html(option_ele);
-                    });
-                }
+                    }
 
-                $(this).val('');
-            });
+                    $(this).val('');
+                });
 
         $('.check-list-container')
-            .on('click','.remove-link',function(e){
-                e.preventDefault();
-                $.post($(this).attr('href'));
-                $('#link-' + this.id + ',.link-' + this.id).remove();
-            })
-            .on('click','.add-link-btn',function(e){
-                e.preventDefault();
-                var _this = $(this);
-                var _link_modal = _this.parents('.add_link_modal');
-                var _form = _this.parents('.add_link_modal').find('form');
-                var _user_id = _form.find('input[name="user_id"]').val();
-                var _data = _form.serializeArray();
-                $.post(_form.attr('action'), _data, function (res) {
-                    var _return_data = jQuery.parseJSON(res);
-                    console.log(_return_data);
-                    console.log(_user_id);
-                    $.each(_return_data,function(key,val){
-                        var ele = '<div class="col-md-12" id="link-' + val.id + '">';
+                .on('click', '.remove-link', function (e) {
+                    e.preventDefault();
+                    $.post($(this).attr('href'));
+                    $('#link-' + this.id + ',.link-' + this.id).remove();
+                })
+                .on('click', '.add-link-btn', function (e) {
+                    e.preventDefault();
+                    var _this = $(this);
+                    var _link_modal = _this.parents('.add_link_modal');
+                    var _form = _this.parents('.add_link_modal').find('form');
+                    var _user_id = _form.find('input[name="user_id"]').val();
+                    var _data = _form.serializeArray();
+                    $.post(_form.attr('action'), _data, function (res) {
+                        var _return_data = jQuery.parseJSON(res);
+                        console.log(_return_data);
+                        console.log(_user_id);
+                        $.each(_return_data, function (key, val) {
+                            var ele = '<div class="col-md-12" id="link-' + val.id + '">';
                             ele += '<div class="col-md-3">';
                             ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
                             ele += '</div>';
@@ -1127,25 +1132,25 @@
                             ele += '<hr/>';
                             ele += '</div>';
                             ele += '<hr/>';
-                        var _link_column = $('#task-item-collapse-' + val.task_item_id).find('.link-column');
-                        _link_column.append(ele);
+                            var _link_column = $('#task-item-collapse-' + val.task_item_id).find('.link-column');
+                            _link_column.append(ele);
+                        });
+
+                        _link_modal.modal('hide');
                     });
+                })
+                .on('click', '.toggle-tasklistitem', function () {
 
-                    _link_modal.modal('hide');
+                    var task_list_item_id = $(this).siblings('.task_list_item_id').val();
+                    var company_id = $(this).siblings('.company_id').val();
+                    var task_list_id = $(this).siblings('.task_list_id').val();
+
+                    var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' + company_id + '/' + task_list_id;
+
+                    $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
+                        $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
+                    });
                 });
-            })
-            .on('click', '.toggle-tasklistitem', function () {
-
-                var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-                var company_id = $(this).siblings('.company_id').val();
-                var task_list_id = $(this).siblings('.task_list_id').val();
-
-                var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' +company_id + '/' + task_list_id;
-
-                $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
-                    $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
-                });
-            });
 
         function makeid()
         {

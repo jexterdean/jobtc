@@ -2,23 +2,28 @@
 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
 <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />
 <div class="link-column">
-@foreach($links as $link)
+    @foreach($links as $link)
     @if($link->task_item_id == $list_item->id)
     <div class="col-md-12" id="link-{{$link->id}}">
         <div class="col-md-3">
-            <a href="{{ $link->url }}" target="_blank"><strong>{{ $link->title }}</strong></a>
+            {{--*/ $parse_url = parse_url($link->url) /*--}}
+            @if(empty($parse_url['scheme']))
+            <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+            @else
+            <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+            @endif
         </div>
         <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
         <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-        @if($user_id == $link->user_id)
+            @if($user_id == $link->user_id)
             <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
-        @endif
+            @endif
         </div>
         <hr/>
     </div>
     <hr/>
-@endif
-@endforeach
+    @endif
+    @endforeach
 </div>
 <hr/>
 <div class="row">
