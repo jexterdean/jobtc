@@ -365,6 +365,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('searchProjects','SearchController@searchProjects');
     Route::post('searchEmployees','SearchController@searchEmployees');
     Route::post('searchCompanies','SearchController@searchCompanies');
+    Route::post('searchTests','SearchController@searchTests');
     
     /*Search in Assign Jobs*/
     Route::post('searchJobs','SearchController@searchJobs');

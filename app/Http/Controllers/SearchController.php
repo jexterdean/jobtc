@@ -725,7 +725,7 @@ class SearchController extends Controller {
         $company_id = $request->input('company_id');
         $term = $request->input('term');
         $url = $request->input('url');
-        
+
 
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
@@ -755,23 +755,24 @@ class SearchController extends Controller {
 
         $user_companies = Company::with(['profile' => function($query) use($user_id) {
                         $query->where('user_id', $user_id)->get();
-                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);;
-        
+                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);
+        ;
+
         if ($url === 'assignProjects') {
 
             return view('assign.partials.assignProjects._searchcompanies', [
                 'user_companies' => $user_companies
             ]);
         }
-        
+
         if ($url === 'assignJobs') {
-            
+
             $shared_jobs_companies = ShareJobCompany::all();
-            
-             $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->get();
+
+            $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->get();
 
             $shared_jobs = ShareJob::all();
-            
+
             return view('assign.partials.assignJobs._searchcompanies', [
                 'user_companies' => $user_companies,
                 'jobs' => $jobs,
@@ -819,6 +820,45 @@ class SearchController extends Controller {
 
         return view('assign.partials.assignJobs._searchjobs', [
             'jobs' => $jobs
+        ]);
+    }
+
+    public function searchTests(Request $request) {
+
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $term = $request->input('term');
+
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+
+        //Build elasticsearch query
+        $params = [
+            'index' => 'default',
+            'type' => 'test',
+            'body' => [
+                'query' => [
+                    'query_string' => [
+                        'query' => 'title:' . trim($term) . '*'
+                    ]
+                ]
+            ]
+        ];
+        $search_results = $client->search($params);
+
+        $searched_tests = $search_results["hits"]["hits"];
+
+        $ids = [];
+
+        foreach ($searched_tests as $test) {
+            array_push($ids, $test["_id"]);
+        }
+        
+        $tests = Test::whereIn('id', $ids)->paginate(5);
+        
+         return view('assign.partials.assignTests._searchtests', [
+            'tests' => $tests
         ]);
     }
 

@@ -23,6 +23,7 @@ use App\Models\TaskCheckListPermission;
 use App\Models\TestPerApplicant;
 use App\Models\TestPerJob;
 use App\Models\Job;
+use App\Models\Applicant;
 use App\Models\ShareJob;
 use App\Models\ShareJobCompany;
 use App\Models\ShareJobCompanyPermission;
@@ -38,9 +39,9 @@ use Validator;
 use DB;
 use Input;
 
-class AssignController extends Controller
-{
-   public function assignProjects(Request $request, $id) {
+class AssignController extends Controller {
+
+    public function assignProjects(Request $request, $id) {
 
         //Getting Assign Project Data
         $user_id = Auth::user('user')->user_id;
@@ -88,7 +89,7 @@ class AssignController extends Controller
                 //->where('company_id', $id)
                 //->where('user_id', $user_id)
                 ->paginate(3);
-        
+
         $shared_projects = Project::with(['task' => function($query) {
                         $query->orderBy('task_title', 'asc')->get();
                     }], 'task_permission', 'company', 'user')
@@ -117,12 +118,12 @@ class AssignController extends Controller
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
+
         //For Pagination, Max limit of visible pagination links
         $link_limit = 7;
-        
+
         $assets = ['assign', 'real-time'];
-        
+
         return view('assign.assignProjects', [
             'company_id' => $id,
             'projects' => $projects,
@@ -140,7 +141,7 @@ class AssignController extends Controller
             'link_limit' => $link_limit
         ]);
     }
-    
+
     public function AssignJobs(Request $request, $id) {
 
         $user_id = Auth::user('user')->user_id;
@@ -164,7 +165,7 @@ class AssignController extends Controller
         $shared_company_jobs_permissions = ShareJobCompanyPermission::with('jobs')->where('company_id', $id)->get();
 
         $assets = ['assign', 'real-time'];
-        
+
         return view('assign.assignJobs', [
             'profiles' => $profiles,
             'jobs' => $jobs,
@@ -176,15 +177,16 @@ class AssignController extends Controller
             'company_id' => $id
         ]);
     }
-    
+
     public function assignTests(Request $request, $id) {
 
         //Getting Assign Project Data
         $user_id = Auth::user('user')->user_id;
 
         //Get Jobs by company and user
-        $jobs = Job::with('applicants')->where('user_id', $user_id)->where('company_id', $id)->get();
-
+        $jobs = Job::where('user_id', $user_id)->where('company_id', $id)->paginate(1,['*'],'jobPage');
+        //$jobs->setRelation('applicants',$jobs->applicants()->paginate(3));
+        
         $test_applicants = TestPerApplicant::all();
 
         $test_jobs = TestPerJob::all();
@@ -198,20 +200,24 @@ class AssignController extends Controller
             array_push($company_user_ids, $company_user->user_id);
         }
 
-        $tests = Test::whereIn('user_id', $company_user_ids)->get();
+        $tests = Test::whereIn('user_id', $company_user_ids)->paginate(5);
 
         $authority_levels = Role::where('company_id', $id)->orderBy('level', 'asc')->get();
 
         $task_permissions = TaskCheckListPermission::where('user_id', $user_id)->get();
 
+        $link_limit = 7;
+
         $assets = ['assign', 'real-time'];
-        
+
         return view('assign.assignTests', [
             'jobs' => $jobs,
             'tests' => $tests,
             'test_applicants' => $test_applicants,
             'test_jobs' => $test_jobs,
-            'assets' => $assets 
+            'assets' => $assets,
+            'company_id' => $id,
+            'link_limit' => $link_limit
         ]);
     }
 
@@ -223,7 +229,7 @@ class AssignController extends Controller
         $authority_levels = Role::where('company_id', $id)->orderBy('level', 'asc')->get();
 
         $assets = ['assign', 'real-time'];
-        
+
         return view('assign.assignAuthorityLevels', [
             'profiles' => $profiles,
             'company_users' => $company_users,
@@ -232,6 +238,4 @@ class AssignController extends Controller
         ]);
     }
 
-    
-    
 }
