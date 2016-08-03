@@ -495,6 +495,9 @@ class QuizController extends BaseController {
                     if (Input::get('record_id')) {
                         $result->record_id = Input::get('record_id');
                     }
+                    if (Input::get('local_record_id')) {
+                        $result->local_record_id = Input::get('local_record_id');
+                    }
                     if (Input::get('points')) {
                         $result->points = Input::get('points');
                     }

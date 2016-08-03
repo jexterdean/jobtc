@@ -442,7 +442,7 @@ $('.record-button').clickToggle(function () {
     $('.save-progress').text("Saving");
 });
 
-var quizVideoRecordId;
+var quizVideoRecordId, quizLocalVideoRecordId;
 $('body').on('click','.btn-video',function (e) {
     var video_btn = $(this);
     var time_limit = $(this).parent().find('.time-limit-conference');
@@ -454,12 +454,15 @@ $('body').on('click','.btn-video',function (e) {
         for (var i in remote_streams) {
             var s = remote_streams[i];
             if (localStream.getID() === s.getID()) {
-
+                room.startRecording(s, function (id) {
+                    quizLocalVideoRecordId = id;
+                    console.log('local started: ' + quizLocalVideoRecordId);
+                });
             }
             else {
                 room.startRecording(s, function (id) {
                     quizVideoRecordId = id;
-                    console.log('started: ' + quizVideoRecordId);
+                    console.log('remote started: ' + quizVideoRecordId);
 
                     time_limit.timerStart();
                     video_btn.data('status', 2);
@@ -470,6 +473,34 @@ $('body').on('click','.btn-video',function (e) {
         }
     }
     else if($(this).data('status') == 2) {
+        var file_extension = '.webm', video_url, ajaxUrl, formData;
+        if (quizLocalVideoRecordId !== undefined) {
+            room.stopRecording(quizLocalVideoRecordId);
+
+            video_url = recordingUrl + quizLocalVideoRecordId + file_extension;
+            ajaxUrl = public_path + 'quizSaveVideo';
+            formData = new FormData();
+            formData.append('stream_id', quizLocalVideoRecordId);
+            $.ajax({
+                url: ajaxUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    console.log('local save video');
+                },
+                complete: function () {
+
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: retrying');
+                }
+            });
+        }
         if (quizVideoRecordId !== undefined) {
             clearInterval(interval);
             $(this).html('Start');
@@ -477,12 +508,9 @@ $('body').on('click','.btn-video',function (e) {
 
             room.stopRecording(quizVideoRecordId);
 
-            var file_extension = '.webm';
-            var video_url = recordingUrl + quizVideoRecordId + file_extension;
-
-            var ajaxUrl = public_path + 'quizSaveVideo';
-            console.log(ajaxUrl);
-            var formData = new FormData();
+            video_url = recordingUrl + quizVideoRecordId + file_extension;
+            ajaxUrl = public_path + 'quizSaveVideo';
+            formData = new FormData();
             formData.append('stream_id', quizVideoRecordId);
             $.ajax({
                 url: ajaxUrl,
@@ -502,12 +530,13 @@ $('body').on('click','.btn-video',function (e) {
                 error: function (xhr, status, error) {
                     console.log('Error: retrying');
                 }
-            }); //ajax
+            });
 
             var test_id = $(this).data('test');
             var unique_id = $(this).data('unique');
             var data = {
                 record_id: quizVideoRecordId,
+                local_record_id: quizLocalVideoRecordId,
                 question_id: this.id,
                 answer: '',
                 result: 1,
@@ -528,8 +557,10 @@ $('body').on('click','.btn-video',function (e) {
 
                 }
             });
-            quizVideoRecordId = undefined;
         }
+
+        quizLocalVideoRecordId = undefined;
+        quizVideoRecordId = undefined;
     }
 });
 

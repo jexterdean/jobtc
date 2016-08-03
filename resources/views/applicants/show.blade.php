@@ -145,7 +145,7 @@
                                                 </div>
                                             </div>
                                             <div class="box-body">
-                                                <div {{ Auth::user('user') ? ('id=question-collapse-' . $v->id) : '' }} class="box-content collapse">
+                                                <div {{ Auth::check('applicant') ? '' : ('id=question-collapse-' . $v->id) }} class="box-content collapse">
                                                     {!! $v->note !!}
                                                     <div class="form-inline">
                                                         <button type="button" class="btn btn-shadow btn-timer time-limit-conference" data-length="{{ $v->length ? $v->length : '' }}">
