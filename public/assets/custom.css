@@ -145,6 +145,24 @@ a:active,a:focus{
     font-weight: bold;
     white-space: nowrap;
 }
+
+@media (max-width: 1000px) {
+    .task-list .task-header .task-list-header{
+        white-space: nowrap;
+        overflow: hidden!important;
+        text-overflow: ellipsis!important;
+    }
+}
+@media (max-width: 650px) {
+    .check-list-container .tasklist-group .task-list-item .checklist-header{
+        display: block!important;
+        white-space: nowrap;
+        overflow: hidden!important;
+        text-overflow: ellipsis!important;
+        max-width: 320px!important;
+    }
+}
+
 .task-list .panel-body .panel-content,.checklist-item,.area-content{
     /*border-top: 5px solid rgba(230,230,230, 0.9)!important;
     border-bottom: 5px solid rgba(234, 234, 234, 0.50) !important;

@@ -28,31 +28,33 @@
                                 @foreach($checkList as $list_item)
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
-                                        <div class="col-md-7">
+                                        <div class="col-sm-9">
                                             <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
                                             <input type="hidden" class="company_id" value="{{$company_id}}" />
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                         </div>
-                                        <div class="pull-right">
-                                            @if ($list_item->status === 'Default')
-                                            <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            @elseif($list_item->status === 'Ongoing')
-                                            <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            @elseif($list_item->status === 'Completed')
-                                            <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            @elseif($list_item->status === 'Urgent')
-                                            <div class="btn bg-red btn-shadow checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                            @endif
-                                            &nbsp;&nbsp;&nbsp;
-                                            {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />--}}
+                                        <div class="col-sm-3" style="white-space: nowrap">
+                                            <div class="pull-right">
+                                                @if ($list_item->status === 'Default')
+                                                <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                @elseif($list_item->status === 'Ongoing')
+                                                <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                @elseif($list_item->status === 'Completed')
+                                                <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                @elseif($list_item->status === 'Urgent')
+                                                <div class="btn bg-red btn-shadow checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                @endif
+                                                &nbsp;&nbsp;&nbsp;
+                                                {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                                <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
+                                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />--}}
 
-                                            <a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <!--a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a-->
-                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                                <a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
+                                                <!--a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a-->
+                                                <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
+                                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -138,7 +140,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8" style="white-space: nowrap!important">
+            <div class="col-sm-12">
                 @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;

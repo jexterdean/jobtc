@@ -25,30 +25,32 @@
             </div>
             {{--endregion--}}
             <div class="row task-list-details">
-                <div class="col-md-7">
+                <div class="col-sm-9">
                     <a href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
                     <input type="hidden" class="company_id" value="{{$company_id}}" />
                     <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                     <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />
                 </div>
-                <div class="pull-right">
-                    @if ($list_item->status === 'Default')
-                    <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                    @elseif($list_item->status === 'Ongoing')
-                    <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                    @elseif($list_item->status === 'Completed')
-                    <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                    @elseif($list_item->status === 'Urgent')
-                    <div class="btn bg-red btn-shadow checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                    @endif
-                    &nbsp;&nbsp;&nbsp;
-                    {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                    <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />--}}
+                <div class="col-sm-3" style="white-space: nowrap">
+                    <div class="pull-right">
+                        @if ($list_item->status === 'Default')
+                        <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        @elseif($list_item->status === 'Ongoing')
+                        <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        @elseif($list_item->status === 'Completed')
+                        <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        @elseif($list_item->status === 'Urgent')
+                        <div class="btn bg-red btn-shadow checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        @endif
+                        &nbsp;&nbsp;&nbsp;
+                        {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+                                                <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
+                        <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />--}}
 
-                    <!--a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a-->
-                    <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                    <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />
+                        <!--a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a-->
+                        <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
+                        <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />
+                    </div>
                 </div>
             </div>
             <div class="row">

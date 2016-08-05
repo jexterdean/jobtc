@@ -254,8 +254,21 @@
   .fa-chevron-down{
       color: #3c8dbc!important;
   }
+  .portlet .portlet-content .list-group-item a{
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 /*portlet*/
-@media (max-width: 480px) {
+@media (max-width: 900px) and (min-width:550px){
+    .column {
+        width: 50%!important;
+        float: left!important;
+        padding-bottom: 0!important;
+    }
+}
+@media (max-width: 550px) and (min-width: 380px) {
     .column {
         width: 100%!important;
         float: left!important;

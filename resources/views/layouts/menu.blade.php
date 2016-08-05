@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-6">
         <div id="dl-menu" class="dl-menuwrapper">
-            <button>GO</button>
+            <button type="button" class="btn">GO</button>
             <ul class="dl-menu">
                 @if(Auth::check())
                 {{--*/ $companies = \App\Helpers\Helper::getCompanyLinks() /*--}}
@@ -411,10 +411,10 @@
         <div class="breadcrumb_container">
             <ul class="breadcrumb">
                 @foreach($breadcrumbs as $title => $url)
-                <li><a href="{{url($url)}}">{{$title}}</a></li>
+                <li><a href="{{url($url)}}" title="{{$title}}" data-toggle="tooltip" data-placement="right">{{$title}}</a></li>
                 @endforeach
             </ul>
-        </div>    
+        </div>
     </div>
     <div class="col-sm-6">
         {{--*/$modules = \App\Helpers\Helper::getSearchModules()/*--}}

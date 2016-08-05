@@ -919,8 +919,11 @@ background: #744783;
 .demo-5 .dl-menuwrapper button:hover, .demo-5 .dl-menuwrapper button.dl-active, .demo-5 .dl-menuwrapper ul {
 background: #643771;
 }
-@media (max-width: 480px) {
-    nav > #navbar > .row > .col-sm-6 {
+@media (max-width: 650px) {
+    #dl-menu.dl-menuwrapper {
+        z-index: 1000000!important;
+    }
+    nav .col-sm-6{
         width: 100%!important;
     }
 }
