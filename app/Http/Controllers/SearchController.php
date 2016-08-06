@@ -935,7 +935,7 @@ class SearchController extends Controller {
         //Get Jobs by company and user
         $jobs= Job::find($job_id)->paginate(1,['*'],'jobPage');
         
-        $applicants = Applicant::whereIn('id',$ids)->paginate(3,['*'],'Job'.$job_id.'ApplicantPage');
+        $applicants = Applicant::where('job_id',$job_id)->whereIn('id',$ids)->paginate(3,['*'],'Job'.$job_id.'ApplicantPage');
         
         $test_applicants = TestPerApplicant::all();
 
