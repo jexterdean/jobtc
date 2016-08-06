@@ -370,6 +370,9 @@ Route::group(['middleware' => 'auth'], function () {
     /*Search in Assign Jobs*/
     Route::post('searchJobs','SearchController@searchJobs');
     
+    /*Search in Assign Tests*/
+    Route::post('searchApplicants','SearchController@searchApplicants');
+    
 });
 
 Route::group(['prefix' => 'api'], function () {
