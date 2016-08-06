@@ -1244,12 +1244,20 @@ class CompanyController extends BaseController {
             ->leftJoin('link_categories', function($join){
                 $join->on('links.category_id', '=', 'link_categories.id');
             })
+            ->select(
+                'links.id', 'title',
+                'url', 'descriptions',
+                'tags', 'comments','task_id',
+                'task_item_id', 'user_id',
+                'link_categories.name'
+            )
             ->orderBy('link_categories.name')
             ->get();
         $_links = [];
         foreach($links as $link){
             $_links[$link->name][] = (Object)$link;
         }
+
         $assets = ['companies', 'real-time'];
 
         return view(
