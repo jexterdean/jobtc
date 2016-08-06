@@ -10,6 +10,8 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskChecklist;
 use App\Models\Job;
+use App\Models\TestPerApplicant;
+use App\Models\TestPerJob;
 use App\Models\ShareJob;
 use App\Models\ShareJobCompany;
 use App\Models\User;
@@ -789,6 +791,8 @@ class SearchController extends Controller {
         $user_id = Auth::user('user')->user_id;
         $company_id = $request->input('company_id');
         $term = $request->input('term');
+        $url = $request->input('url');
+
 
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
@@ -816,11 +820,43 @@ class SearchController extends Controller {
             array_push($ids, $job["_id"]);
         }
 
-        $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->paginate(5);
+        if ($url === 'assignJobs') {
 
-        return view('assign.partials.assignJobs._searchjobs', [
-            'jobs' => $jobs
-        ]);
+            $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->paginate(5);
+
+            return view('assign.partials.assignJobs._searchjobs', [
+                'jobs' => $jobs
+            ]);
+        }
+
+        if ($url === 'assignTests') {
+
+            $company_users = Profile::with('user')->where('company_id', $company_id)->get();
+
+            $company_user_ids = [];
+
+            //Get all tests by users within the company
+            foreach ($company_users as $company_user) {
+                array_push($company_user_ids, $company_user->user_id);
+            }
+
+            $tests = Test::whereIn('user_id', $company_user_ids)->paginate(5);
+
+            $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->paginate(1);
+            
+            $jobs->setPath('/assignTests/'.$company_id);
+            
+            $test_applicants = TestPerApplicant::all();
+
+            $test_jobs = TestPerJob::all();
+
+            return view('assign.partials.assignTests._searchjobs', [
+                'jobs' => $jobs,
+                'tests' => $tests,
+                'test_jobs' => $test_jobs,
+                'test_applicants' => $test_applicants
+            ]);
+        }
     }
 
     public function searchTests(Request $request) {
@@ -854,10 +890,10 @@ class SearchController extends Controller {
         foreach ($searched_tests as $test) {
             array_push($ids, $test["_id"]);
         }
-        
+
         $tests = Test::whereIn('id', $ids)->paginate(5);
-        
-         return view('assign.partials.assignTests._searchtests', [
+
+        return view('assign.partials.assignTests._searchtests', [
             'tests' => $tests
         ]);
     }

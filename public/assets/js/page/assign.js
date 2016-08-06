@@ -781,7 +781,6 @@ function assignTestsScripts() {
 
     });
     
-    
      $('#search-field-tests').on('keypress', function (e) {
         if (e.which == 13) {
             var term = $(this).val();
@@ -801,6 +800,32 @@ function assignTestsScripts() {
                 var all_employees_url = public_path + 'assignTests/' + company_id;
                 $('#assign_my_tests').load(all_employees_url + ' #assign_my_tests',function(){
                     testsPagination();
+                });
+            }
+        }
+    });
+    
+    $('#search-field-jobs').on('keypress', function (e) {
+        e.stopImmediatePropagation();
+        if (e.which == 13) {
+            var term = $(this).val();
+            var company_id = $(this).siblings('.company_id').val();
+            var search_url = public_path + 'searchJobs';
+            var search_data = {
+                'company_id': company_id,
+                'term': term,
+                'url' : 'assignTests'
+            };
+
+            if (term !== '') {
+                $.post(search_url, search_data, function (data) {
+                    $('#assign_my_jobs').html(data);
+                    jobsPagination();
+                });
+            } else {
+                var all_employees_url = public_path + 'assignTests/' + company_id;
+                $('#assign_my_jobs').load(all_employees_url + ' #assign_my_jobs',function(){
+                    jobsPagination();
                 });
             }
         }
