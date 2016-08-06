@@ -908,7 +908,7 @@ function assignTestsScripts() {
 
     function applicantsPagination() {
         $('.assign_my_applicants .pagination').on('click', 'a', function (e) {
-            e.preventDefault();
+            //e.preventDefault();
             e.stopImmediatePropagation();
 
             var job_id = $(this).siblings().find('.job_id').val();
