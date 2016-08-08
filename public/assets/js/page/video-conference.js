@@ -259,6 +259,8 @@ $('.interview-applicant').clickToggle(function () {
                             stream = streamEvent.stream;
                             remoteStream = stream;
                             stream.play("remoteVideo");
+
+                            $('.btn-video').removeClass('hidden');
                         });
 
                         room.addEventListener("stream-added", function (streamEvent) {
@@ -291,8 +293,6 @@ $('.interview-applicant').clickToggle(function () {
                         $('.interview-applicant').removeClass('btn-success');
                         $('.interview-applicant').children('span').text('Leave Conference');
                         $('.interview-applicant').siblings('button').show();
-
-                        $('.btn-video').removeClass('hidden');
                     });
                     localStream.init();
                 });
@@ -324,6 +324,8 @@ $('.interview-applicant').clickToggle(function () {
                         console.log('Subscribed to your local stream OK');
                         var stream = streamEvent.stream;
                         stream.play("remoteVideo");
+
+                        $('.btn-video').removeClass('hidden');
                     });
 
                     room.addEventListener("stream-added", function (streamEvent) {
@@ -360,8 +362,6 @@ $('.interview-applicant').clickToggle(function () {
                     $('.interview-applicant').removeClass('btn-success');
                     $('.interview-applicant').children('span').text('Leave Conference');
                     $('.interview-applicant').siblings('button').show();
-
-                    $('.btn-video').removeClass('hidden');
                 });
                 localStream.init();
             });
@@ -466,7 +466,7 @@ $('body').on('click','.btn-video',function (e) {
 
                     time_limit.timerStart();
                     video_btn.data('status', 2);
-                    video_btn.html('Score');
+                    video_btn.html('Score Answer');
                 });
             }
 
@@ -503,7 +503,7 @@ $('body').on('click','.btn-video',function (e) {
         }
         if (quizVideoRecordId !== undefined) {
             clearInterval(interval);
-            $(this).html('Start');
+            $(this).html('Record Answer');
             $(this).data('status', 1);
 
             room.stopRecording(quizVideoRecordId);
