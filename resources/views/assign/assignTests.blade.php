@@ -20,7 +20,14 @@
                             <div id="job-container-{{$job->id}}" class="box box-default">
                                 <div class="box-container">
                                     <div class="box-header">
-                                        <h3 class="box-title">{{$job->title}}</h3>
+                                        <div class="col-md-2">
+                                            <h3 class="box-title">{{$job->title}}</h3>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input id="search-field-applicants" name="search-applicants" type="text" class="form-control" placeholder="Search Applicants">
+                                            <input type="hidden" class="company_id" value="{{$company_id}}"/>
+                                            <input type="hidden" class="job_id" value="{{$job->id}}"/>
+                                        </div>
                                     </div>
                                     <div class="box-body">
                                         <div class="box-content">

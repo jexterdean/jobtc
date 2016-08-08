@@ -239,7 +239,8 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="assign_my_project_employees" class="box-content">
+                    <div  class="box-content">
+                        <div id="assign_my_project_employees">
                         <ul class="taskgroup-list list-group">
                             @foreach($profiles as $profile)
                             <li id="profile-{{$profile->user->user_id}}" class="list-group-item">
@@ -269,6 +270,7 @@
                             @endforeach
                         </ul>
                         {!!$profiles->render()!!}
+                        </div>
                     </div>  
                 </div>
             </div>
@@ -291,7 +293,8 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="assign_my_project_companies" class="box-content">
+                    <div class="box-content">
+                        <div id="assign_my_project_companies">
                         <ul class="company-list-group list-group">
                             @foreach($user_companies as $user_company)
                             <li id="company-{{$user_company->id}}" class="list-group-item">
@@ -322,6 +325,7 @@
                             @endforeach
                         </ul>
                         {!!$user_companies->render()!!}
+                        </div>
                     </div>
                 </div>
             </div>

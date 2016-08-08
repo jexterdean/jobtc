@@ -10,6 +10,8 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskChecklist;
 use App\Models\Job;
+use App\Models\TestPerApplicant;
+use App\Models\TestPerJob;
 use App\Models\ShareJob;
 use App\Models\ShareJobCompany;
 use App\Models\User;
@@ -753,12 +755,11 @@ class SearchController extends Controller {
             array_push($ids, $company["_id"]);
         }
 
-        $user_companies = Company::with(['profile' => function($query) use($user_id) {
-                        $query->where('user_id', $user_id)->get();
-                    }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);
-        ;
-
         if ($url === 'assignProjects') {
+
+            $user_companies = Company::with(['profile' => function($query) use($user_id) {
+                            $query->where('user_id', $user_id)->get();
+                        }])->whereIn('id', $ids)->where('id', '<>', $company_id)->where('id', '<>', 0)->paginate(5);
 
             return view('assign.partials.assignProjects._searchcompanies', [
                 'user_companies' => $user_companies
@@ -767,9 +768,11 @@ class SearchController extends Controller {
 
         if ($url === 'assignJobs') {
 
+            $user_companies = Company::with('profile')->where('id', '<>', $company_id)->where('id', '<>', 0)->whereIn('id', $ids)->paginate(3);
+
             $shared_jobs_companies = ShareJobCompany::all();
 
-            $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->get();
+            $jobs = Job::where('user_id', $user_id)->where('company_id', $company_id)->get();
 
             $shared_jobs = ShareJob::all();
 
@@ -789,6 +792,8 @@ class SearchController extends Controller {
         $user_id = Auth::user('user')->user_id;
         $company_id = $request->input('company_id');
         $term = $request->input('term');
+        $url = $request->input('url');
+
 
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
@@ -816,11 +821,43 @@ class SearchController extends Controller {
             array_push($ids, $job["_id"]);
         }
 
-        $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->paginate(5);
+        if ($url === 'assignJobs') {
 
-        return view('assign.partials.assignJobs._searchjobs', [
-            'jobs' => $jobs
-        ]);
+            $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->paginate(5);
+
+            return view('assign.partials.assignJobs._searchjobs', [
+                'jobs' => $jobs
+            ]);
+        }
+
+        if ($url === 'assignTests') {
+
+            $company_users = Profile::with('user')->where('company_id', $company_id)->get();
+
+            $company_user_ids = [];
+
+            //Get all tests by users within the company
+            foreach ($company_users as $company_user) {
+                array_push($company_user_ids, $company_user->user_id);
+            }
+
+            $tests = Test::whereIn('user_id', $company_user_ids)->paginate(5);
+
+            $jobs = Job::whereIn('id', $ids)->where('user_id', $user_id)->where('company_id', $company_id)->paginate(1, ['*'], 'jobPage');
+
+            //$jobs->setPath('/assignTests/'.$company_id);
+
+            $test_applicants = TestPerApplicant::all();
+
+            $test_jobs = TestPerJob::all();
+
+            return view('assign.partials.assignTests._searchjobs', [
+                'jobs' => $jobs,
+                'tests' => $tests,
+                'test_jobs' => $test_jobs,
+                'test_applicants' => $test_applicants
+            ]);
+        }
     }
 
     public function searchTests(Request $request) {
@@ -854,11 +891,70 @@ class SearchController extends Controller {
         foreach ($searched_tests as $test) {
             array_push($ids, $test["_id"]);
         }
-        
+
         $tests = Test::whereIn('id', $ids)->paginate(5);
-        
-         return view('assign.partials.assignTests._searchtests', [
+
+        return view('assign.partials.assignTests._searchtests', [
             'tests' => $tests
+        ]);
+    }
+
+    public function searchApplicants(Request $request) {
+
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        $job_id = $request->input('job_id');
+        $term = $request->input('term');
+        
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+
+        //Build elasticsearch query
+        $params = [
+            'index' => 'default',
+            'type' => 'applicant',
+            'body' => [
+                'query' => [
+                    'query_string' => [
+                        'query' => 'name:' . trim($term) . '*'
+                    ]
+                ]
+            ]
+        ];
+        $search_results = $client->search($params);
+
+        $searched_applicants = $search_results["hits"]["hits"];
+
+        $ids = [];
+
+        foreach ($searched_applicants as $applicant) {
+            array_push($ids, $applicant["_id"]);
+        }
+                    
+        //Get Jobs by company and user
+        $jobs= Job::find($job_id)->paginate(1,['*'],'jobPage');
+        
+        $applicants = Applicant::where('job_id',$job_id)->whereIn('id',$ids)->paginate(3,['*'],'Job'.$job_id.'ApplicantPage');
+        
+        $test_applicants = TestPerApplicant::all();
+
+        $company_users = Profile::with('user')->where('company_id', $company_id)->get();
+
+        $company_user_ids = [];
+
+        //Get all tests by users within the company
+        foreach ($company_users as $company_user) {
+            array_push($company_user_ids, $company_user->user_id);
+        }
+
+        $tests = Test::whereIn('user_id', $company_user_ids)->paginate(5);
+        
+        return view('assign.partials.assignTests._searchapplicants', [
+            'jobs' => $jobs,
+            'applicants' => $applicants,
+            'tests' => $tests,
+            'test_applicants' => $test_applicants,
         ]);
     }
 
