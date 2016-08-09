@@ -117,7 +117,7 @@ class VideoController extends Controller {
 
             //$clean_mkv_command = '/usr/bin/ffmpeg -y -threads 4 -i /var/www/recordings/' . $stream_id . '.mkv -vcodec copy -acodec copy /var/www/recordings/' . $stream_id . '.webm';
             //Convert the mkv to webm format(tried converting to vp9 webm but only gets the first 2 seconds if run using the exec command)
-            $convert_to_webm_command = 'ffmpeg -y -i /var/www/recordings/' . $stream_id . '.mkv -c:v copy -crf 10 -b:v 0 -c:a libvorbis /var/www/recordings/' . $stream_id . '.webm';
+            $convert_to_webm_command = 'ffmpeg -y -i /var/www/recordings/' . $stream_id . '.mkv -c:v copy -b:v 1M -c:a libvorbis /var/www/recordings/' . $stream_id . '.webm';
 
             //Run the mkv file in ffmpeg to repair it(Since erizo makes an invalid mkv file for the html5 video tag)
             $run_command = $remote_connection->exec($convert_to_webm_command);
@@ -128,9 +128,8 @@ class VideoController extends Controller {
 
             //Merge them side by side
             //$merge_files_command = 'ffmpeg -y -i /var/www/recordings/'.$local_stream_id.'.webm -i /var/www/recordings/'.$remote_stream_id.'.webm -filter_complex "[0:v] setpts=PTS-STARTPTS,scale=iw*2:ih [bg];[1:v] setpts=PTS-STARTPTS [fg];[bg][fg] overlay=w;amerge,pan=stereo:c0<c0+c2:c1<c1+c3" /var/www/recordings/'.$local_stream_id.'.webm';
-            $merge_files_command = 'ffmpeg -y -threads 8 -i /var/www/recordings/' . $local_stream_id . '.webm -i /var/www/recordings/' . $remote_stream_id . '.webm -filter_complex "[0:v]scale=640:480[left];[1:v]scale=640:480[right];[0:a][1:a]amerge=inputs=2[a];[left][right]hstack[out]" -map [out] -map "[a]" /var/www/recordings/' . $local_stream_id . '.webm 2> /dev/null';
-            //$merge_files_command = 'ffmpeg -y -threads 4 -i /var/www/recordings/'.$local_stream_id. '.webm -vf "[in] setpts=PTS-STARTPTS,scale=640:480, pad=2*640:480 [left];movie=/var/www/recordings/'.$remote_stream_id. '.webm, asetpts=PTS-STARTPTS,scale=640:480, fade=out:300:30:alpha=1 [right];[left][right] overlay=w" -b:v 768k /var/www/recordings/'.$local_stream_id. '.webm';
-            //$merge_files_command = 'ffmpeg -y -i /var/www/recordings/'.$local_stream_id. '.webm -i /var/www/recordings/'.$remote_stream_id. '.webm -filter_complex "[0:v] setpts=PTS-STARTPTS, scale=640x480 [left];[1:v] setpts=PTS-STARTPTS, scale=640x480 [right];[left][right] overlay=shortest=1" /var/www/recordings/'.$local_stream_id. '.webm';
+            //$merge_files_command = 'ffmpeg -y -threads 8 -i /var/www/recordings/' . $local_stream_id . '.webm -i /var/www/recordings/' . $remote_stream_id . '.webm -filter_complex "[0:v]scale=640:480[left];[1:v]scale=640:480[right];[0:a][1:a]amerge=inputs=2[a];[left][right]hstack[out]" -map [out] -map "[a]" /var/www/recordings/' . $local_stream_id . '.webm 2> /dev/null';
+            
             //Run the scripts
             $run_command = $remote_connection->exec($clean_local_command . '; ' . $clean_remote_command . '; ' . $merge_files_command);
             //$run_command = $remote_connection->exec($clean_remote_command);

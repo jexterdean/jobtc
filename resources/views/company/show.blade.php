@@ -59,7 +59,7 @@
         <div class="portlet-content">
             @foreach($comments as $comment)
             <li class='list-group-item'>
-                <a target="_blank" href="{{url('applicant/'.$comment->applicant->id)}}">{{$comment->comment}}</a>
+                <a target="_blank" data-toggle="tooltip" data-placement="right" title="{{$comment->comment}}" href="{{url('applicant/'.$comment->applicant->id)}}">{{$comment->comment}}</a>
             </li>
             @endforeach
         </div>

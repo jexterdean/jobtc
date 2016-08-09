@@ -61,7 +61,19 @@ class LinkController extends BaseController
         $link->save();
 
         $task = Task::find($request->task_id);
-        return $request->task_id ? redirect()->route('project.show', $task->project_id) : redirect()->route('links.index');
+
+        $links = Link::select(
+                'links.id', 'title',
+                'url', 'descriptions',
+                'tags', 'comments','task_id',
+                'task_item_id', 'user_id',
+                'link_categories.name as category_name'
+            )
+            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+            ->where('links.id', '=', $link->id)
+            ->get();
+        //return $request->task_id ? redirect()->route('project.show', $task->project_id) : redirect()->route('links.index');
+        return json_encode($links);
     }
 
     /**
@@ -127,6 +139,18 @@ class LinkController extends BaseController
         /** @var  $link Link*/
         $link  = Link::find($id);
         $link->delete();
+
+        return redirect()->route('links.index');
+    }
+
+    public function deleteLink($id)
+    {
+
+        /** @var  $link Link*/
+        $link  = Link::find($id);
+        if(count($link) > 0){
+            $link->delete();
+        }
 
         return redirect()->route('links.index');
     }

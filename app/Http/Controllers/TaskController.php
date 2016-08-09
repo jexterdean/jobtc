@@ -119,10 +119,16 @@ class TaskController extends BaseController {
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
         $finish_checklist = TaskChecklist::where('status', '=', 'Completed')->where('task_id', '=', $id)->count();
         $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
-        $links = Link::select('links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'link_categories.name as category_name')
-                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-                ->where('task_id', '=', $id)
-                ->get();
+        $links = Link::select(
+                    'links.id', 'title',
+                    'url', 'descriptions',
+                    'tags', 'comments',
+                    'task_item_id', 'user_id',
+                    'link_categories.name as category_name'
+                )
+            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+            ->where('task_id', '=', $id)
+            ->get();
 
         $categories = LinkCategory::all()
                 ->lists('name', 'id')
@@ -147,7 +153,8 @@ class TaskController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-
+        
+        $project_owner = Project::where('project_id',$task->project_id)->pluck('user_id');
 
         $assets = ['calendar'];
 
@@ -159,9 +166,11 @@ class TaskController extends BaseController {
             'current_time' => $current_time,
             'percentage' => number_format($percentage, 0),
             'links' => $links,
+            'user_id' => $user_id,
             'categories' => $categories,
             'module_permissions' => $module_permissions,
-            'company_id' => $company_id
+            'company_id' => $company_id,
+            'project_owner' => $project_owner
         ]);
     }
 
@@ -539,7 +548,7 @@ class TaskController extends BaseController {
         return "true";
     }
 
-    public function getTaskChecklistItem(Request $request, $task_check_list_id, $company_id) {
+    public function getTaskChecklistItem(Request $request, $task_check_list_id, $company_id,$task_list_id) {
         //$task_check_list_id = $request->input('task_check_list_id');
 
         //$data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
@@ -562,10 +571,29 @@ class TaskController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
+
+        $links = Link::select(
+                'links.id', 'title',
+                'url', 'descriptions',
+                'tags', 'comments','task_id',
+                'task_item_id', 'user_id',
+                'link_categories.name as category_name'
+            )
+            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+            ->where('task_id', '=', $task_list_id)
+            ->get();
+
+        $categories = LinkCategory::all()
+            ->lists('name', 'id')
+            ->toArray();
+
         return view('task.partials._taskchecklistitem',[
             'list_item' => $list_item,
-            'module_permissions' => $module_permissions
+            'module_permissions' => $module_permissions,
+            'links' => $links,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'categories' => $categories
         ]);
         
     }

@@ -19,4 +19,8 @@ class TaskChecklist extends Model
 
     protected $primaryKey = 'id';
     protected $table = 'task_check_list';
+    
+    public function task() {
+        return $this->belongsTo('App\Models\Task');
+    }
 }

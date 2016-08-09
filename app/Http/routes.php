@@ -23,10 +23,12 @@ Route::resource('job', 'JobController');
 Route::post('updateJob/{id}', 'JobController@update');
 Route::get('addJobFormCompany', 'JobController@addJobFormCompany');
 Route::post('addJobCompany', 'JobController@addJobCompany');
+Route::get('company/{company_id}/jobs', 'JobController@getCompanyJobs');
 
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
 Route::post('saveJobNotes', 'JobController@saveJobNotes');
+Route::post('saveJobCriteria', 'JobController@saveJobCriteria');
 /* Check for duplicate emails upon Applying to a Job */
 Route::post('checkApplicantDuplicateEmail', 'JobController@checkApplicantDuplicateEmail');
 
@@ -38,10 +40,11 @@ Route::post('register', 'UserController@register');
 /* For Applicant */
 Route::resource('a', 'ApplicantController');
 Route::get('a/{id}', ['as' => 'a', 'uses' => 'ApplicantController@show', 'https' => true]);
-Route::get('editApplicantPasswordForm','ApplicantController@editApplicantPasswordForm');
-Route::post('editApplicantPassword','ApplicantController@editApplicantPassword');
+Route::get('editApplicantPasswordForm', 'ApplicantController@editApplicantPasswordForm');
+Route::post('editApplicantPassword', 'ApplicantController@editApplicantPassword');
 Route::post('checkApplicantPassword', 'ApplicantController@checkApplicantPassword');
 Route::post('saveApplicantNotes', 'ApplicantController@saveApplicantNotes');
+Route::post('saveApplicantCriteria', 'ApplicantController@saveApplicantCriteria');
 Route::post('getApplicantQuizResults', 'ApplicantController@getApplicantQuizResults');
 
 
@@ -77,6 +80,7 @@ Route::get('getTags/{id}/{tag_type}', 'TagController@getTags');
  * Quiz
  */
 Route::resource('quiz', 'QuizController');
+Route::get('quizPerCompany/{id}', 'QuizController@quizPerCompany');
 Route::any('testSort', 'QuizController@testSort');
 Route::post('questionSort', 'QuizController@questionSort');
 Route::get('userSlider/{id}', 'QuizController@userSlider');
@@ -90,6 +94,7 @@ Route::any('quizElasticSearchView', 'QuizController@quizElasticSearchView');
 Route::any('quizVideo', 'QuizController@quizVideo');
 Route::post('quizSaveVideo', 'QuizController@quizSaveVideo');
 Route::get('quizDeleteVideo/{id}', 'QuizController@quizDeleteVideo');
+Route::post('quizDeleteResult', 'QuizController@quizDeleteResult');
 /*
  * Indeed Applicant Importer (Don't put this in any middleware, 
  * the script should not login to insert the data from Indeed
@@ -113,6 +118,7 @@ Route::group(['middleware' => 'auth'], function () {
      * Links
      */
     Route::resource('links', 'LinkController');
+    Route::any('deleteLink/{id}', 'LinkController@deleteLink');
     Route::resource('linkCategory', 'LinkCategoryController');
 
 
@@ -124,7 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
             ->where('billing_type', 'invoice|estimate');
     Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
             ->where('billing_type', 'invoice|estimate');
-    Route::resource('task', 'TaskController');
+    
     Route::resource('billing', 'BillingController');
     Route::resource('setting', 'SettingController');
     Route::resource('template', 'TemplateController');
@@ -198,7 +204,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getEmployees/{company_id}/{job_id}', 'CompanyController@getEmployees');
     /* For Assign Projects Load on Demand */
     Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}', 'CompanyController@getCompanyEmployeesForProject');
-    
+    /* For Company Links Load on Demand */
+    Route::get('companyLinks/{company_id}', 'CompanyController@companyLinks');
+
     /**
      * CSS Reference
      */
@@ -208,13 +216,26 @@ Route::group(['middleware' => 'auth'], function () {
      * Project
      */
     Route::resource('project', 'ProjectController');
+    Route::get('company/{company_id}/projects', 'ProjectController@getCompanyProjects');
     Route::get('addProjectForm', 'ProjectController@addProjectForm');
     Route::post('addProject', 'ProjectController@addProject');
 
+    
+    /* 
+     * Briefcases 
+     **/
+    Route::resource('task', 'TaskController'); //This is temporary, need it for briefcases loaded as project
+    Route::resource('briefcase', 'BriefcaseController');
+    
+    /*
+     * Task List Items 
+     **/
+    Route::resource('taskitem', 'TaskListItemController');
+    
     /*
      * Employees
      * */
-    Route::get('employees/{id}','UserController@getEmployees');
+    Route::get('employees/{id}', 'UserController@getEmployees');
     Route::get('addEmployeeForm/{id}', 'UserController@addEmployeeForm');
     Route::get('editEmployeeForm/{company_id}/{user_id}', 'UserController@editEmployeeForm');
     Route::get('editEmployeePermissionsForm/{company_id}/{user_id}', 'UserController@editEmployeePermissionsForm');
@@ -223,9 +244,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('editEmployee', 'UserController@editEmployee');
     Route::post('removeEmployeeFromCompany', 'UserController@removeEmployeeFromCompany');
     Route::post('saveEmployeeNotes', 'UserController@saveEmployeeNotes');
-    
-        
-    
+
+
+
     /*
      * Positions
      */
@@ -235,19 +256,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('editPositionForm/{id}', 'RoleController@editPositionForm');
     Route::post('editPosition', 'RoleController@editPosition');
     Route::post('deletePosition', 'RoleController@deletePosition');
-    Route::post('assignPositionPermission','RoleController@assignPositionPermission');
-    Route::post('unassignPositionPermission','RoleController@unassignPositionPermission');
-    Route::post('assignEmployeePermission','RoleController@assignEmployeePermission');
-    Route::post('unassignEmployeePermission','RoleController@unassignEmployeePermission');
-    
-    /* 
+    Route::post('assignPositionPermission', 'RoleController@assignPositionPermission');
+    Route::post('unassignPositionPermission', 'RoleController@unassignPositionPermission');
+    Route::post('assignEmployeePermission', 'RoleController@assignEmployeePermission');
+    Route::post('unassignEmployeePermission', 'RoleController@unassignEmployeePermission');
+
+    /*
      * Assigning 
-     **/
-    Route::get('assignProjects/{id}','AssignController@assignProjects');
-    Route::get('assignTests/{id}','AssignController@assignTests');
-    Route::get('assignAuthorityLevels/{id}','AssignController@assignAuthorityLevels');
-    Route::get('assignJobs/{id}','AssignController@assignJobs');
-    
+     * */
+    Route::get('assignProjects/{id}', 'AssignController@assignProjects');
+    Route::get('assignTests/{id}', 'AssignController@assignTests');
+    Route::get('assignAuthorityLevels/{id}', 'AssignController@assignAuthorityLevels');
+    Route::get('assignJobs/{id}', 'AssignController@assignJobs');
+
     /**
      * Task List
      */
@@ -270,7 +291,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('saveTaskCheckListHeader', 'TaskController@saveTaskCheckListHeader');
     Route::post('saveTaskCheckList', 'TaskController@saveTaskCheckList');
     Route::post('cancelAddNewTask', 'TaskController@cancelAddNewTask');
-    Route::get('getTaskChecklistItem/{task_check_list_id}/{company_id}', 'TaskController@getTaskChecklistItem');
+    Route::get('getTaskChecklistItem/{task_check_list_id}/{company_id}/{task_list_id}', 'TaskController@getTaskChecklistItem');
     Route::post('autoSaveEditChecklist', 'TaskController@autoSaveEditChecklist');
 
     Route::get('/data/{cacheKey}', 'CacheDataController@getCache');
@@ -333,6 +354,25 @@ Route::group(['middleware' => 'auth'], function () {
      */
     Route::resource('payroll', 'PayrollController');
     Route::get('payrollJson', 'PayrollController@payrollJson');
+
+    /*
+     * Search 
+     * */
+    Route::get('/search/{type}','SearchController@search');
+    Route::get('/bulkIndex/{type}','SearchController@bulkIndex');
+    
+    /*Search in Assign Projects*/
+    Route::post('searchProjects','SearchController@searchProjects');
+    Route::post('searchEmployees','SearchController@searchEmployees');
+    Route::post('searchCompanies','SearchController@searchCompanies');
+    Route::post('searchTests','SearchController@searchTests');
+    
+    /*Search in Assign Jobs*/
+    Route::post('searchJobs','SearchController@searchJobs');
+    
+    /*Search in Assign Tests*/
+    Route::post('searchApplicants','SearchController@searchApplicants');
+    
 });
 
 Route::group(['prefix' => 'api'], function () {

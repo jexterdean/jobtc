@@ -7,7 +7,7 @@
                         <div class="box-header">
                             <h3 class="box-title">{{ $tests_info->title }}</h3>
                             <div class="pull-right" style="margin-right: 10px;">
-                                <a href="{{ url('quiz') }}" class="tc-icons">
+                                <a href="{{ url($company_id ? 'quizPerCompany/' . $company_id : 'quiz') }}" class="tc-icons">
                                     <i class="fa fa-times" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -258,13 +258,12 @@
                 .closest('.slider-div')
                 .next('.slider-div')
                 .find('.btn-next');
-
             var quiz_video = $(this)
                 .closest('.slider-div')
                 .next('.slider-div')
                 .find('.quiz-video');
             if(quiz_video.length != 0){
-                createRoom("quiz", function (room_id) {
+                createRoom("quiz-{{ Auth::user('user')->user_id }}", function (room_id) {
                     createToken(room_id, "user", "presenter", function (token) {
                         room = Erizo.Room({ token: token });
 

@@ -47,8 +47,7 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
 $('#my_projects').on('click', '.toggle-subprojects', function () {
     //var project_id = $(this).attr('id').split('-').pop();
     var project_id = $(this).find('.project_id').val();
-    //var company_id = $(this).find('.company_id').val();
-    var company_id = window.location.pathname.split('/').pop();
+    var company_id = $(this).find('.company_id').val();
 
     var url = public_path + 'getSubprojects/' + project_id + '/' + company_id;
 

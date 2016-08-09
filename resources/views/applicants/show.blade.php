@@ -85,6 +85,9 @@
                     @endif
                     @if(Auth::check() && Auth::user()->level() === 1)
                     <li role="presentation">
+                        <a href="#criteria-tab" aria-controls="profile" role="tab" data-toggle="tab">Criteria</a>
+                    </li>
+                    <li role="presentation">
                         <a href="#notes-tab" aria-controls="profile" role="tab" data-toggle="tab">Notes</a>
                     </li>
                     @endif
@@ -124,6 +127,45 @@
                                     <audio controls class="download-complete-sound" src="{{url('assets/sounds/download_complete.wav')}}"></audio>
                                 </div>
                             </div>
+                            @if(count($video_questions) > 0)
+                            <div class="row question-videos">
+                                @foreach($video_questions as $v)
+                                <div class="tests-container">
+                                    <div class="box box-default">
+                                        <div class="box-container">
+                                            <div class="box-header" id="question-{{ $v->id }}" data-toggle="collapse" data-target="#question-collapse-{{ $v->id }}">
+                                                <h3 class="box-title">
+                                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;<?php
+                                                    $v->question = preg_replace("/<\/*[a-z0-9\s\"'.=;:-]*>/i", "", $v->question);
+                                                    echo $v->question;
+                                                    ?>
+                                                </h3>
+                                                <div class="pull-right" style="margin-right: 10px;">
+                                                    <strong>Time:</strong> {{ date('i:s', strtotime($v->length)) }}
+                                                </div>
+                                            </div>
+                                            <div class="box-body">
+                                                <div {{ Auth::check('applicant') ? '' : ('id=question-collapse-' . $v->id) }} class="box-content collapse">
+                                                    {!! $v->note !!}
+                                                    <div class="form-inline">
+                                                        <button type="button" class="btn btn-shadow btn-timer time-limit-conference" data-length="{{ $v->length ? $v->length : '' }}">
+                                                            <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
+                                                            <span class="glyphicon glyphicon-time"></span>
+                                                        </button>
+                                                        <div class="input-group">
+                                                            <input type="number" name="video-conference-points" id="{{ $v->result_id }}" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control video-conference-points" style="width: 70px;">
+                                                            <div class="input-group-addon">/{{ $v->max_point }}</div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-shadow btn-submit btn-video hidden" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Start</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endif
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="preview-video text-center">
@@ -158,10 +200,34 @@
                                 </div>
                             </div>
                             @endforeach
+
+                            @foreach($quiz_videos as $video)
+                            <div class="video-element-holder">
+                                <div class="row">
+                                    <div class="col-xs-10">
+                                        <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls="controls"  preload="metadata" src="https://laravel.software/recordings/{{ $video->record_id }}.webm">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <button class="btn btn-danger btn-shadow pull-right delete-quiz-video"><i class="fa fa-times"></i></button>
+                                        <input class="video_id" type="hidden" value="{{$video->id}}"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label>Points:</label>&nbsp;{{ $video->points }}
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="tests-tab">
                         @include('applicants.partials._quizlist')
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="criteria-tab">
+                        <textarea id="assessment-instruction" data-job-id="{{ $job->id }}">{{$job->criteria}}</textarea>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="notes-tab">
                         <textarea id="applicant-notes">{{$applicant->notes}}</textarea>

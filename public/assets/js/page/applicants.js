@@ -91,12 +91,43 @@ $(".submit-comment").click(function (e) {
     }
 });
 
+//For Applicant Criteria
+var assessment_instruction = CKEDITOR.replace('assessment-instruction', {
+    height: '200px'
+});
+assessment_instruction.on('change', function (evt) {
+    //var ajaxUrl = public_path + 'saveApplicantCriteria';
+    //var applicant_id = window.location.href.split("/").pop();
+    var ajaxUrl = public_path + 'saveJobCriteria';
+    var job_id = $('#assessment-instruction').data('job-id');
+
+    var formData = new FormData();
+    //formData.append('applicant_id', applicant_id);
+    formData.append('job_id', job_id);
+    formData.append('criteria', evt.editor.getData());
+
+    $.ajax({
+        url: ajaxUrl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+        },
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+
+});
 
 //For Applicant Notes
 var applicant_notes = CKEDITOR.replace('applicant-notes', {
     height: '200px'
 });
-
 applicant_notes.on('change', function (evt) {
 
     var ajaxurl = public_path + 'saveApplicantNotes';
@@ -122,6 +153,13 @@ applicant_notes.on('change', function (evt) {
         }
     }); //ajax
 
+});
+
+//For Written Question
+$('.written_editor').each(function(e){
+    CKEDITOR.replace(this.id, {
+        height: '200px'
+    });
 });
 
 $('.edit-applicant').on('click', function (e) {

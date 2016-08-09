@@ -18,12 +18,36 @@ class ModuleTableSeeder extends Seeder {
             $project_module->name = 'Projects';
             $project_module->save();
         }
+        
+        //For Briefcases Module
+        $briefcase_module_count = Module::where('name', 'Briefcases')->count();
+        if ($briefcase_module_count === 0) {
+            $briefcase_module_count = new Module();
+            $briefcase_module_count->name = 'Briefcases';
+            $briefcase_module_count->save();
+        }
+        
+        //For Task Items Module
+        $task_items_module_count = Module::where('name', 'Task Items')->count();
+        if ($task_items_module_count === 0) {
+            $task_items_module_count = new Module();
+            $task_items_module_count->name = 'Task Items';
+            $task_items_module_count->save();
+        }
+        
         //For Jobs Module
         $jobs_module_count = Module::where('name', 'Jobs')->count();
         if ($jobs_module_count === 0) {
             $jobs_module = new Module();
             $jobs_module->name = 'Jobs';
             $jobs_module->save();
+        }
+        //For Applicants Module
+        $applicants_module_count = Module::where('name', 'Applicants')->count();
+        if ($applicants_module_count === 0) {
+            $applicants_module = new Module();
+            $applicants_module->name = 'Applicants';
+            $applicants_module->save();
         }
 
         //For Employees Module
@@ -57,6 +81,8 @@ class ModuleTableSeeder extends Seeder {
             $tickets_module->name = 'Tickets';
             $tickets_module->save();
         }
+        
+        
     }
 
 }

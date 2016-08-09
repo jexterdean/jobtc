@@ -28,6 +28,7 @@ use \View;
 use \Validator;
 use \Input;
 use \Redirect;
+use Elasticsearch\ClientBuilder as ES;
 
 class ProjectController extends BaseController {
 
@@ -116,6 +117,19 @@ class ProjectController extends BaseController {
         $update_project_ref->ref_no = $project->project_id;
         $update_project_ref->save();
 
+        //Create an index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'project_title' => $project->project_title,
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['id'] = $project->project_id;
+        $results = $client->index($params);       //using Index() function to inject the data
+
         return redirect()->route('project.show', $project->project_id);
     }
 
@@ -182,7 +196,7 @@ class ProjectController extends BaseController {
         //Get Team Member projects
         $team_members = TeamMember::where('user_id', $user_id)->get();
 
-         $permissions_list = [];
+        $permissions_list = [];
 
         $permissions_user = PermissionUser::with('permission')
                 ->where('company_id', $project->company_id)
@@ -194,8 +208,10 @@ class ProjectController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
-        $assets = ['projects','datepicker','real-time'];
+
+        $project_owner = $project->user_id;
+
+        $assets = ['projects', 'datepicker', 'real-time'];
 
         return view('project.show', [
             'project' => $project,
@@ -210,7 +226,8 @@ class ProjectController extends BaseController {
             'assignedUsers' => $assignedUser,
             'assign_username' => $assign_username,
             'module_permissions' => $module_permissions,
-            'assets' => $assets
+            'assets' => $assets,
+            'project_owner' => $project_owner
         ]);
     }
 
@@ -259,9 +276,24 @@ class ProjectController extends BaseController {
         $project->rate_value = $request->input('rate_value');
         $project->save();
 
+        //Update the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'doc' => [
+                'project_title' => $project->project_title
+            ]
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['id'] = $project->project_id;
+        $results = $client->update($params);       //using Index() function to inject the data
+
         return $project->project_title;
     }
-  
+
     /**
      * Remove the specified resource from storage.
      *
@@ -355,10 +387,25 @@ class ProjectController extends BaseController {
             $team_companies = TeamCompany::where('project_id', $project_id);
             $team_companies->delete();
         }
-        //Then finally delete the project
+        
         $project = Project::where('project_id', $project_id);
+        
+         //Delete the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['id'] = $project->pluck('project_id');
+        $results = $client->delete($params);       //using Index() function to inject the data
+        
+        //Then finally delete the project
         $project->delete();
 
+      
+        
         return "true";
     }
 
@@ -454,17 +501,17 @@ class ProjectController extends BaseController {
 
         return redirect()->back();
     }
-    
-    public function addProjectForm(){
+
+    public function addProjectForm() {
         return view('forms.addProjectForm');
     }
-    
-    public function addProject(Request $request){
-        
+
+    public function addProject(Request $request) {
+
         $user_id = Auth::user('user')->user_id;
         $company_id = $request->input('company_id');
         $project_title = $request->input('project_title');
-        
+
         $project = new Project();
         $project->project_title = $project_title;
         $project->account = '';
@@ -480,10 +527,36 @@ class ProjectController extends BaseController {
         $update_project_ref = Project::find($project->project_id);
         $update_project_ref->ref_no = $project->project_id;
         $update_project_ref->save();
-        
-        return view('project.partials._newproject',[
+
+        //Create an index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'project_title' => $project_title
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'project';
+        $params['id'] = $project->project_id;
+        $results = $client->index($params);       //using Index() function to inject the data
+
+        return view('project.partials._newproject', [
             'project' => $project,
             'company_id' => $company_id
         ]);
     }
+
+    public function getCompanyProjects($company_id) {
+
+        $projects = Project::where('company_id', $company_id)->get();
+        $assets = ['projects'];
+
+        return view('project.index', [
+            'projects' => $projects,
+            'assets' => $assets,
+            'company_id' => $company_id
+        ]);
+    }
+
 }

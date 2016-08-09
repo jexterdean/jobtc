@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\BaseController;
 use App\Models\TestPerApplicant;
 use App\Models\TestPerJob;
@@ -24,6 +25,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Elasticsearch\ClientBuilder as ES;
 use PhanAn\Remote\Remote;
+use App\Models\Profile;
+use App\Models\PermissionUser;
 
 class QuizController extends BaseController {
 
@@ -35,17 +38,18 @@ class QuizController extends BaseController {
     public function index() {
         $data = [
             'assets' => ['input-mask', 'waiting', 'select', 'tags'],
-            'page' => 'quiz'
+            'page' => 'quiz',
+            'test_permissions' => []
         ];
         $this->setData($data);
 
         return View::make('quiz.default', $data);
     }
 
-    private function setData(&$data) {
+    private function setData(&$data, $company_id = '') {
         $t = DB::table('question_type')
-                ->select('id', 'type')
-                ->get();
+            ->select('id', 'type')
+            ->get();
         $question_type = array_pluck($t, 'type', 'id');
         $data['question_type'] = $question_type;
         $result = DB::table('test_result')
@@ -57,7 +61,7 @@ class QuizController extends BaseController {
                     IF(
                         fp_test_result.result = 1,
                         IF(
-                            fp_question.question_type_id = 3,
+                            fp_question.question_type_id IN (3,4),
                             fp_test_result.points,
                             fp_question.points
                         ),
@@ -66,7 +70,7 @@ class QuizController extends BaseController {
                 ) as score,
                 SUM(
                     IF(
-                        fp_question.question_type_id = 3,
+                        fp_question.question_type_id IN (3,4),
                         fp_question.max_point,
                         fp_question.points
                     )
@@ -82,7 +86,7 @@ class QuizController extends BaseController {
             ->get();
         $data['result'] = $result;
 
-        $test = DB::table('test_personal')
+        $testQuery = DB::table('test_personal')
             ->select(DB::raw('
                 fp_test.*,
                 (
@@ -103,8 +107,11 @@ class QuizController extends BaseController {
             ->orderBy('test_personal.order', 'asc')
             ->whereNotNull('test_personal.test_id')
             ->whereNotNull('test.id')
-            ->where('test_personal.user_id', '=', Auth::user('user')->user_id)
-            ->get();
+            ->where('test_personal.user_id', '=', Auth::user('user')->user_id);
+        if($company_id){
+            $testQuery->where('test.company_id', '=', $company_id);
+        }
+        $test = $testQuery->get();
         if (count($test) > 0) {
             foreach ($test as $t) {
                 $t->total_time = 0;
@@ -152,6 +159,8 @@ class QuizController extends BaseController {
         $data['triggerTest'] = $trigger;
 
         $data['test_limit'] = 6;
+
+        $this->getTestPermission($data, $company_id);
     }
 
     private function getTestCommunity($id = [], $result = []){
@@ -219,6 +228,32 @@ class QuizController extends BaseController {
         return $test_community;
     }
 
+    private function getTestPermission(&$data, $company_id){
+        $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : $company_id;
+        $data['company_id'] = $company_id;
+
+        $user_id = Auth::user('user_id')->user_id;
+        $test_permissions = DB::table('permission_user')
+            ->leftJoin('permissions', 'permissions.id', '=', 'permission_user.permission_id')
+            ->select('permissions.slug')
+            ->where('permission_user.company_id', $company_id)
+            ->where('permission_user.user_id', $user_id)
+            ->whereIn('permissions.description', array('Tests', 'Questions'))
+            ->groupBy('permissions.id')
+            ->lists('slug');
+        $data['test_permissions'] = $test_permissions;
+    }
+
+    public function quizPerCompany($id) {
+        $data = [
+            'assets' => ['input-mask', 'waiting', 'select', 'tags'],
+            'page' => 'quiz'
+        ];
+        $this->setData($data, $id);
+
+        return View::make('quiz.default', $data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -262,6 +297,8 @@ class QuizController extends BaseController {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
         $id = isset($_GET['id']) ? $_GET['id'] : '';
         $trigger = isset($_GET['trigger']) ? $_GET['trigger'] : 0;
+        $isStay = isset($_GET['stay']) ? $_GET['stay'] : 0;
+        $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : '';
         $label = '';
 
         $validation = '';
@@ -273,7 +310,8 @@ class QuizController extends BaseController {
                         'start_message' => 'required',
                         'completion_message' => 'required'
             ]);
-        } else if ($page == "question") {
+        }
+        else if ($page == "question") {
             $label = 'Question';
             $required = [
                 'question_type_id' => 'required',
@@ -284,7 +322,8 @@ class QuizController extends BaseController {
             }
 
             $validation = Validator::make($request->all(), $required);
-        } else if ($page == "exam") {
+        }
+        else if ($page == "exam") {
             $label = 'Exam';
             $validation = Validator::make($request->all(), [
             ]);
@@ -302,6 +341,9 @@ class QuizController extends BaseController {
             if ($page == "test") {
                 $test = new Test();
                 $test->user_id = Auth::user()->user_id;
+                if($company_id){
+                    $test->company_id = $company_id;
+                }
                 $test->title = Input::get('title');
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
@@ -378,7 +420,9 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
-                $question->note = Input::get('note');
+                if(Input::get('note')) {
+                    $question->note = Input::get('note');
+                }
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
@@ -410,49 +454,99 @@ class QuizController extends BaseController {
                 $q = Question::where('id', Input::get('question_id'))
                         ->first();
 
-                $r = $q->question_type_id == 3 ?
-                    0 :
+                $r = in_array($q->question_type_id, array(3,4)) ?
+                    (Input::get('result') ? Input::get('result') : 0) :
                     (
-                    $q->question_type_id == 1 ?
+                        $q->question_type_id == 1 ?
                         ($q->question_answer == Input::get('answer') ? 1 : 0) :
                         (strtolower($q->question_answer) == strtolower(Input::get('answer')) ? 1 : 0)
                     );
 
-                $unique_id = Auth::check('user') ?
-                    Auth::user('user')->user_id :
-                    (Auth::check('applicant') ? Auth::user('applicant')->id : '');
+                $unique_id =
+                    Input::get('unique_id') ?
+                    Input::get('unique_id') :
+                    (
+                        Auth::check('user') ?
+                        Auth::user('user')->user_id :
+                        (Auth::check('applicant') ? Auth::user('applicant')->id : '')
+                    );
 
-                $resultExist = $unique_id ?
-                    TestResultModel::where('question_id', Input::get('question_id'))
-                    ->where('unique_id', $unique_id)
-                    ->count() > 1 : 1;
-                if(!$resultExist) {
+                if(Input::get('video_conference')){
                     $result = new TestResultModel();
                     $result->test_id = $id;
                     $result->question_id = Input::get('question_id');
 
-                    if (Auth::check('user')) {
-                        $result->unique_id = Auth::user('user')->user_id;
-                        $result->belongs_to = 'employee';
-                    }
-
-                    if (Auth::check('applicant')) {
-                        $result->unique_id = Auth::user('applicant')->id;
+                    if (Input::get('unique_id')) {
+                        $result->unique_id = Input::get('unique_id');
                         $result->belongs_to = 'applicant';
+                    }
+                    else {
+                        if (Auth::check('user')) {
+                            $result->unique_id = Auth::user('user')->user_id;
+                            $result->belongs_to = 'employee';
+                        }
+                        if (Auth::check('applicant')) {
+                            $result->unique_id = Auth::user('applicant')->id;
+                            $result->belongs_to = 'applicant';
+                        }
                     }
 
                     $result->answer = Input::get('answer');
-                    if(Input::get('record_id')) {
+                    if (Input::get('record_id')) {
                         $result->record_id = Input::get('record_id');
+                    }
+                    if (Input::get('local_record_id')) {
+                        $result->local_record_id = Input::get('local_record_id');
+                    }
+                    if (Input::get('points')) {
+                        $result->points = Input::get('points');
                     }
                     $result->result = $r;
                     $result->save();
+                }
+                else {
+                    $resultExist = $unique_id ?
+                        TestResultModel::where('question_id', Input::get('question_id'))
+                            ->where('unique_id', $unique_id)
+                            ->count() > 1 : 1;
+                    if (!$resultExist) {
+                        $result = new TestResultModel();
+                        $result->test_id = $id;
+                        $result->question_id = Input::get('question_id');
+
+                        if (Input::get('unique_id')) {
+                            $result->unique_id = Input::get('unique_id');
+                            $result->belongs_to = 'applicant';
+                        } else {
+                            if (Auth::check('user')) {
+                                $result->unique_id = Auth::user('user')->user_id;
+                                $result->belongs_to = 'employee';
+                            }
+
+                            if (Auth::check('applicant')) {
+                                $result->unique_id = Auth::user('applicant')->id;
+                                $result->belongs_to = 'applicant';
+                            }
+                        }
+
+                        $result->answer = Input::get('answer');
+                        if (Input::get('record_id')) {
+                            $result->record_id = Input::get('record_id');
+                        }
+                        if (Input::get('points')) {
+                            $result->points = Input::get('points');
+                        }
+                        $result->result = $r;
+                        $result->save();
+                    }
                 }
             }
 
             DB::commit();
 
-            $url = 'quiz' . ($trigger ? '?trigger=' . $id : '');
+            $url = $company_id ?
+                'quizPerCompany/' . $company_id . ($trigger ? '?trigger=' . $id : '') :
+                'quiz' . ($trigger ? '?trigger=' . $id : '');
             return Redirect::to($url)
                 ->withSuccess($label . " added successfully!");
         } catch (\Exception $e) {
@@ -600,6 +694,7 @@ class QuizController extends BaseController {
      */
     public function update(Request $request, $id) {
         $page = isset($_GET['p']) ? $_GET['p'] : 'test';
+        $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : '';
 
         $validation = '';
         if ($page == "test") {
@@ -634,6 +729,9 @@ class QuizController extends BaseController {
         try {
             if ($page == "test") {
                 $test = Test::find($id);
+                if($company_id){
+                    $test->company_id = $company_id;
+                }
                 $test->title = Input::get('title');
                 $test->description = Input::get('description');
                 $test->start_message = Input::get('start_message');
@@ -715,7 +813,9 @@ class QuizController extends BaseController {
                     $question->points = Input::get('points');
                 }
                 $question->explanation = Input::get('explanation');
-                $question->note = Input::get('note');
+                if(Input::get('note')) {
+                    $question->note = Input::get('note');
+                }
                 if(Input::get('marking_criteria')) {
                     $question->marking_criteria = Input::get('marking_criteria');
                 }
@@ -760,7 +860,10 @@ class QuizController extends BaseController {
             if($page == "exam"){
                 return 1;
             }
-            return Redirect::to('quiz')
+            $url = $company_id ?
+                'quizPerCompany/' . $company_id :
+                'quiz';
+            return Redirect::to($url)
                 ->withSuccess(($page == "test" ? "Test" : "Question") . " updated successfully!");
         }
         catch (\Exception $e) {
@@ -895,14 +998,14 @@ class QuizController extends BaseController {
                     iF(
                         fp_test_result.result = 1,
                         IF(
-                            fp_question.question_type_id = 3,
+                            fp_question.question_type_id IN (3,4),
                             fp_test_result.points,
                             fp_question.points
                         ),
                         0
                     )
                 ) as total_score,
-                SUM(IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)) as total_points
+                SUM(IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)) as total_points
             '))
             ->groupBy('test_result.unique_id')
             ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
@@ -927,7 +1030,7 @@ class QuizController extends BaseController {
 
                 $result = DB::table('test_result')
                     ->select(DB::raw('
-                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
+                        IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points) as points,
                         fp_question.question_tags
                     '))
                     ->leftJoin('question', 'question.id', '=', 'test_result.question_id')
@@ -993,7 +1096,7 @@ class QuizController extends BaseController {
         $total_score = DB::table('question')
             ->select(DB::raw('SUM(
                 IF(
-                    fp_question.question_type_id = 3,
+                    fp_question.question_type_id IN (3,4),
                     fp_question.max_point,
                     fp_question.points
                 )
@@ -1005,7 +1108,7 @@ class QuizController extends BaseController {
                 fp_user.name,
                 SUM(
                     IF(
-                        fp_question.question_type_id = 3,
+                        fp_question.question_type_id IN (3,4),
                         fp_question.max_point,
                         fp_question.points
                     )
@@ -1054,6 +1157,9 @@ class QuizController extends BaseController {
             $personal = Test::find(Input::get('id'));
             $newPersonal = $personal->replicate();
             $newPersonal->user_id = Auth::user()->user_id;
+            if(Input::get('company_id')){
+                $newPersonal->company_id = Input::get('company_id');
+            }
             $newPersonal->save();
             $test_id = $newPersonal->id;
 
@@ -1155,10 +1261,14 @@ class QuizController extends BaseController {
             }
         }
 
-        return View::make('quiz.community', [
+        $data = [
             'test_community' => $r,
             'test_limit' => 6
-        ]);
+        ];
+        $company_id = Input::get('company_id') ? Input::get('company_id') : '';
+        $this->getTestPermission($data, $company_id);
+
+        return View::make('quiz.community', $data);
     }
     public function quizElasticSearchView(){
         $client = ES::create()
@@ -1316,12 +1426,12 @@ class QuizController extends BaseController {
                         SUM(
                             IF(
                                 fp_test_result.result = 1,
-                                IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                                IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points),
                                 0
                             )
                         ) as score,
                         SUM(
-                            IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                            IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                         ) as total
                     '))
                     ->where('test_result.unique_id', '=', $v->user_id)
@@ -1393,7 +1503,7 @@ class QuizController extends BaseController {
             ->select(DB::raw('
                 IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
                 SUM(
-                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                    IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                 ) as max_points
             '))
             ->whereIn('test.id', $test_id)
@@ -1446,5 +1556,20 @@ class QuizController extends BaseController {
         //delete webm
         $delete_steam = 'rm -rf /var/www/recordings/' . $id . '.webm';
         $remote_connection->exec($delete_steam);
+    }
+
+    public function quizDeleteResult(Request $request){
+        try{
+            if($request->input('result_id')) {
+                $r = TestResultModel::find($request->input('result_id'));
+                if ($r->record_id) {
+                    $this->quizDeleteVideo($r->record_id);
+                }
+                $r->delete();
+            }
+        }
+        catch (\Exception $e) {
+            print_r($e);
+        }
     }
 }

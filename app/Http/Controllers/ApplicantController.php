@@ -102,18 +102,23 @@ class ApplicantController extends Controller {
 
             $rating = ApplicantRating::where('applicant_id', $id)->first();
 
-            $videos = Video::with(['tags' => function($query) {
-                            $query->where('tag_type', 'video')->first();
-                        }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();
+            $quiz_videos = \DB::table('test_result')
+                ->where('unique_id', $id)
+                ->where('belongs_to', 'applicant')
+                ->orderBy('id', 'desc')
+                ->get();
 
+            $videos = Video::with(['tags' => function($query) {
+                $query->where('tag_type', 'video')->first();
+            }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();
             //Get the test permissions
 
             $test_ids = [];
             $test_jobs = TestPerJob::where('job_id', $applicant->job_id)->get();
             $test_applicants = TestPerApplicant::where('applicant_id', $applicant->id)->get();
             $tests_completed = TestCompleted::where('unique_id', $applicant->id)
-                    ->where('belongs_to', 'applicant')
-                    ->get();
+                ->where('belongs_to', 'applicant')
+                ->get();
 
 
             foreach ($test_jobs as $test_job) {
@@ -124,10 +129,11 @@ class ApplicantController extends Controller {
                 array_push($test_ids, $test_applicant->test_id);
             }
 
+            //$test_ids = [21];
             $tests = Test::whereIn('id', array_unique($test_ids))->get();
             $slide_setting = \DB::table('test_slider')
-                    ->where('job_id', '=', $applicant->job_id)
-                    ->pluck('slider_setting');
+                ->where('job_id', '=', $applicant->job_id)
+                ->pluck('slider_setting');
             if ($slide_setting) {
                 $slide_setting = json_decode($slide_setting);
             }
@@ -153,19 +159,19 @@ class ApplicantController extends Controller {
                     }
 
                     $result = \DB::table('test_result')
-                            ->select(\DB::raw('
-                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points) as points,
-                            IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points) as score,
+                        ->select(\DB::raw('
+                            IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points) as points,
+                            IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points) as score,
                             fp_test_result.result
                         '))
-                            ->leftJoin('question', function($join) {
-                                $join->on('question.id', '=', 'test_result.question_id')
-                                ->on('question.test_id', '=', 'test_result.test_id');
-                            })
-                            ->where('test_result.test_id', '=', $v->id)
-                            ->where('test_result.unique_id', '=', $applicant->id)
-                            ->whereNotNull('question.id')
-                            ->get();
+                        ->leftJoin('question', function($join) {
+                            $join->on('question.id', '=', 'test_result.question_id')
+                            ->on('question.test_id', '=', 'test_result.test_id');
+                        })
+                        ->where('test_result.test_id', '=', $v->id)
+                        ->where('test_result.unique_id', '=', $applicant->id)
+                        ->whereNotNull('question.id')
+                        ->get();
                     if (count($result) > 0) {
                         foreach ($result as $r) {
                             $v->total_points += $r->score;
@@ -193,13 +199,37 @@ class ApplicantController extends Controller {
                 }
             }
 
-            $questions = Question::whereIn('test_id', array_unique($test_ids))
-                    ->orderBy('order', 'ASC')
-                    ->get();
+            $questions = Question::whereIn('question.test_id', array_unique($test_ids))
+                ->orderBy('order', 'ASC')
+                ->get();
 
+            $video_questions = [];
             if (count($questions) > 0) {
                 foreach ($questions as $v) {
                     $v->question_choices = json_decode($v->question_choices);
+
+                    $test_result = \DB::table('test_result')
+                        ->select(\DB::raw(
+                            'fp_test_result.id as result_id,
+                            fp_test_result.answer as result_answer,
+                            fp_test_result.result,
+                            fp_test_result.record_id,
+                            fp_test_result.points as result_points'
+                        ))
+                        ->where('question_id', $v->id)
+                        ->where('unique_id', $applicant->id)
+                        ->get();
+                    if(count($test_result)> 0){
+                        foreach($test_result as $r){
+                            foreach($r as $field=>$value){
+                                $v->$field = $value;
+                            }
+                        }
+                    }
+
+                    if($v->question_type_id == 4){
+                        $video_questions[] = $v;
+                    }
                 }
             }
 
@@ -230,6 +260,8 @@ class ApplicantController extends Controller {
                 'tests_completed' => $tests_completed,
                 'review_result' => $review_result,
                 'questions' => $questions,
+                'video_questions' => $video_questions,
+                'quiz_videos' => $quiz_videos,
                 'previous_applicant' => $prevApplicant,
                 'next_applicant' => $nextApplicant,
                 'rating' => $rating,
@@ -496,6 +528,18 @@ class ApplicantController extends Controller {
         $applicant = Applicant::where('id', $applicant_id);
         $applicant->update([
             'notes' => $notes
+        ]);
+
+        return "true";
+    }
+
+    public function saveApplicantCriteria(Request $request) {
+        $applicant_id = $request->input('applicant_id');
+        $criteria = $request->input('criteria');
+
+        $applicant = Applicant::where('id', $applicant_id);
+        $applicant->update([
+            'criteria' => $criteria
         ]);
 
         return "true";

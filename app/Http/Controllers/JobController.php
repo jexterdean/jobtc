@@ -17,6 +17,7 @@ use App\Models\PermissionRole;
 use App\Models\ShareJob;
 use Auth;
 use Redirect;
+use Elasticsearch\ClientBuilder as ES;
 
 class JobController extends Controller {
 
@@ -78,7 +79,20 @@ class JobController extends Controller {
         $job->photo = $photo_path;
         $job->save();
 
-        return Redirect::to('job/' . $job->id)->withSuccess('Job added successfully!!');
+        //Create an index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'title' => $job->title
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'job';
+        $params['id'] = $job->id;
+        $results = $client->index($params);       //using Index() function to inject the data
+
+        return Redirect::to('job/' . $job->id);
     }
 
     /**
@@ -153,55 +167,55 @@ class JobController extends Controller {
             ]);
         }
     }
-    private function getApplicantsInfo($id){
+
+    private function getApplicantsInfo($id) {
         $applicants = Applicant::with(['tags' => function ($query) {
-                $query->orderBy('created_at', 'desc');
-            }])
-            ->select(\DB::raw('
+                        $query->orderBy('created_at', 'desc');
+                    }])
+                ->select(\DB::raw('
                 fp_applicants.*,
                 IF(fp_test.default_tags != "", LOWER(fp_test.default_tags), "general") as default_tags,
                 SUM(
                     IF(
                         fp_test_result.result = 1,
-                        IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                        IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points),
                         0
                     )
                 ) as total_score,
                 SUM(
-                    IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                    IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                 ) as max_points,
                 (ROUND(
                     SUM(
                         IF(
                             fp_test_result.result = 1,
-                            IF(fp_question.question_type_id = 3, fp_test_result.points, fp_question.points),
+                            IF(fp_question.question_type_id IN (3,4), fp_test_result.points, fp_question.points),
                             0
                         )
                     )/SUM(
-                        IF(fp_question.question_type_id = 3, fp_question.max_point, fp_question.points)
+                        IF(fp_question.question_type_id IN (3,4), fp_question.max_point, fp_question.points)
                     ),
                     4
                 ) * 100) as average
             '))
-            ->leftJoin('test_result', function($join){
-                $join->on('test_result.unique_id', '=', 'applicants.id');
-            })
-            ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
-            ->leftJoin('question', function($join){
-                $join->on('question.id', '=', 'test_result.question_id')
+                ->leftJoin('test_result', function($join) {
+                    $join->on('test_result.unique_id', '=', 'applicants.id');
+                })
+                ->leftJoin('test', 'test.id', '=', 'test_result.test_id')
+                ->leftJoin('question', function($join) {
+                    $join->on('question.id', '=', 'test_result.question_id')
                     ->on('question.test_id', '=', 'test.id');
-            })
-            ->where('applicants.job_id', $id)
-            ->orderBy('average', 'desc')
-            ->orderBy('applicants.created_at', 'desc')
-            ->groupBy('applicants.id')
-            ->paginate(5);
-        if(count($applicants) > 0){
-            foreach($applicants as $v){
+                })
+                ->where('applicants.job_id', $id)
+                ->orderBy('average', 'desc')
+                ->orderBy('applicants.created_at', 'desc')
+                ->groupBy('applicants.id')
+                ->paginate(5);
+        if (count($applicants) > 0) {
+            foreach ($applicants as $v) {
                 $v->average = $v->average ? $v->average : 0;
             }
         }
-        //exit;
 
         return $applicants;
     }
@@ -245,6 +259,22 @@ class JobController extends Controller {
         $job->photo = $photo_path;
         $job->save();
 
+        //Update the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+        $params['body'] = array(
+            'doc' => [
+                'title' => $job->title
+            ]
+        );
+        $params['index'] = 'default';
+        $params['type'] = 'job';
+        $params['id'] = $job->id;
+        $results = $client->update($params);       //using Index() function to inject the data
+
+
         $message = 'Job Updated';
         return $message;
     }
@@ -280,9 +310,21 @@ class JobController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        $user_id = Auth::user()->user_id;
+        $user_id = Auth::user('user')->user_id;
 
         $job = Job::find($id);
+
+        //Delete the index for searching
+        $client = ES::create()
+                ->setHosts(\Config::get('elasticsearch.host'))
+                ->build();
+        $params = array();
+
+        $params['index'] = 'default';
+        $params['type'] = 'job';
+        $params['id'] = $job->pluck('id');
+        $results = $client->delete($params);       //using Index() function to inject the data
+
         $job->delete();
 
         $message = "Job Deleted";
@@ -469,6 +511,20 @@ class JobController extends Controller {
             $applicant->save();
             $message = "Application Submitted";
 
+            //Create an index for searching
+            $client = ES::create()
+                    ->setHosts(\Config::get('elasticsearch.host'))
+                    ->build();
+            $params = array();
+            $params['body'] = array(
+                'name' => $applicant->name
+            );
+            $params['index'] = 'default';
+            $params['type'] = 'applicant';
+            $params['id'] = $applicant->id;
+            $results = $client->index($params);       //using Index() function to inject the data
+
+
             Auth::loginUsingId("applicant", $applicant->id);
         } else {
             $message = "Application Denied";
@@ -595,6 +651,18 @@ class JobController extends Controller {
         return "true";
     }
 
+    public function saveJobCriteria(Request $request) {
+        $job_id = $request->input('job_id');
+        $criteria = $request->input('criteria');
+
+        $job = Job::where('id', $job_id);
+        $job->update([
+            'criteria' => $criteria
+        ]);
+
+        return "true";
+    }
+
     public function checkApplicantDuplicateEmail(Request $request) {
 
         $email = $request->input('email');
@@ -630,6 +698,17 @@ class JobController extends Controller {
 
         return view('jobs.partials._newjob', [
             'job' => $job,
+            'company_id' => $company_id
+        ]);
+    }
+
+    public function getCompanyJobs(Request $request, $company_id) {
+        $jobs = Job::where('company_id', $company_id)->get();
+        $assets = ['jobs'];
+
+        return view('jobs.index', [
+            'jobs' => $jobs,
+            'assets' => $assets,
             'company_id' => $company_id
         ]);
     }

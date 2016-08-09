@@ -23,7 +23,7 @@
                     <div class="input-group">
                         <!--label for="login_email">Email</label><br/-->
                         <span class="input-group-addon" id="email-span"><i class="fa fa-envelope"></i></span>
-                        <input type="text" class="form-control text required" aria-describedby="email-span" placeholder="Email" name="email" tabindex="1" id="login_email" value="{{ old('email') }}" />
+                        <input type="text" class="form-control text required" aria-describedby="email-span" placeholder="Email" name="email" tabindex="1" id="login_email" value="{{ Request::old('email') }}" />
                     </div>
                     <br />
                     <div class="input-group">

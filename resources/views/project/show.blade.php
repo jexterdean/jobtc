@@ -119,9 +119,27 @@
                 @endif
                 <br/>
             </div>
-            <div class="row">
-                @if($module_permissions->where('slug','create.briefcases')->count() === 1)
+            <div class="project-options row">
+                @if($module_permissions->where('slug','create.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <button class="btn btn-shadow btn-default" data-toggle="modal" data-target="#add_task"><i class="fa fa-plus"></i> <strong>New Briefcase</strong></button>
+                @endif
+                @if($project_owner === Auth::user('user_id')->user_id)
+                <div class="pull-right">
+                    @if($module_permissions->where('slug','delete.projects')->count() === 1 || $project_owner === Auth::user('user')->user_id)
+                    <a href="#" class="btn-delete btn-shadow btn delete-project">
+                        <i class="fa fa-times"></i> 
+                        Delete
+                    </a>
+                    @endif
+                    @if($module_permissions->where('slug','edit.projects')->count() === 1 || $project_owner === Auth::user('user')->user_id)
+                    <a href="{{url('project/'.$project->project_id.'/edit')}}" class="btn-edit btn-shadow btn edit-project" data-toggle="modal" data-target="#edit_project_form">
+                        <i class="fa fa-pencil" aria-hidden="true"></i> 
+                        Edit
+                    </a>
+                    @endif
+                    <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
+                    <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
+                </div>
                 @endif
             </div>
         </div>
@@ -180,12 +198,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="{{ route('project.destroy',$project->project_id) }}" class="alert_delete"><i class='fa-2x fa fa-trash-o'></i></a>&nbsp;&nbsp;&nbsp;
-                                            <a href="{{ route('project.edit',$project->project_id) }}" class="show_edit_form" data-toggle='modal' data-target='#ajax'><i class='fa-2x fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -193,6 +205,12 @@
                 </div><!--End Project Details-->
                 @include('common.employeeList')
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade edit-modal" id="edit_project_form" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
         </div>
     </div>
 </div>

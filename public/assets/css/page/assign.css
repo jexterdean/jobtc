@@ -47,7 +47,7 @@
 }
 
 .fa-chevron-down {
-    color: graytext;
+    color: #3c8dbc;
 }
 
 .profile-container .list-group-item {
@@ -220,4 +220,19 @@
 .employee-details {
     position: relative;
     left: 5px;
+}
+
+.box-project .box-header, 
+.box-employees .box-header, 
+.box-companies .box-header {
+    color: #fff !important;
+    background-color: #5af;
+}
+
+.box-project .box-body .box-content, 
+.box-employees .box-body .box-content, 
+.box-companies .box-body .box-content {
+    padding: 10px;
+    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
+    border: 5px solid #5af;
 }
