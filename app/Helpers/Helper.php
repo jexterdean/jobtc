@@ -426,7 +426,7 @@ class Helper {
             //array_push($breadcrumb, 'Personal Dashboard');
 
             $breadcrumb = array(
-                'Personal Dashboard' => $url
+                'Personal Dashboard' => '/dashboard'
             );
         }
         //Breadcrumbs for Company Dashboard
