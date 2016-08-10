@@ -646,10 +646,10 @@ class Helper {
                 if (strpos($url, '/company/') && strpos($url, '/projects')) {
                     $company_id = end($url_array);
 
-                    $company_name = Company::where('id', $company_id)->pluck('name');
+                    $company = Company::where('id', $company_id)->first();
 
                     $breadcrumb = array(
-                        $company_name => '/company/' . $company->id,
+                        $company->name => '/company/' . $company->id,
                         'All Projects' => '/company/' .$company->id.'/projects'
                     );
                     
@@ -659,10 +659,10 @@ class Helper {
                     
                     $company_id = end($url_array);
 
-                    $company_name = Company::where('id', $company_id)->pluck('name');
+                    $company = Company::where('id', $company_id)->first();
 
                     $breadcrumb = array(
-                        $company_name => '/company/' . $company->id,
+                        $company->name => '/company/' . $company->id,
                         'All Jobs' => '/company/' .$company->id.'/jobs'
                     );
                     
