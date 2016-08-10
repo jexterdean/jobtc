@@ -17,6 +17,7 @@ use Bican\Roles\Models\Role;
 use App\Models\Module;
 use App\Models\ProfileLevel;
 use Illuminate\Support\Facades\Storage;
+use Elasticsearch\ClientBuilder as ES;
 use DB;
 use Illuminate\Http\Request;
 use Validator;
@@ -427,7 +428,7 @@ class UserController extends BaseController {
                     ->build();
             $params = array();
             $params['body'] = array(
-                'name' => $user->name
+                'name' => $request->input('name')
             );
             $params['index'] = 'default';
             $params['type'] = 'employee';
@@ -589,12 +590,12 @@ class UserController extends BaseController {
         $params = array();
         $params['body'] = array(
             'doc' => [
-                'name' => $user->name
+                'name' => $request->input('name')
             ]
         );
         $params['index'] = 'default';
         $params['type'] = 'employee';
-        $params['id'] = $user->user_id;
+        $params['id'] = $user_id;
         $results = $client->update($params);       //using Index() function to inject the data
 
         $data = array('photo' => $photo_path);
