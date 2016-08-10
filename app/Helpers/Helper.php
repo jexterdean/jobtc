@@ -644,8 +644,16 @@ class Helper {
                 }
 
                 if (strpos($url, '/company/') && strpos($url, '/projects')) {
-                    $company_id = end($url_array);
-
+                    //$company_id = end($url_array);
+                     for ($i = 0; $i < count($url_array); $i++) {
+                        if ($url_array[$i] === 'company') {
+                            $index = $i + 1;
+                            $company_id = $url_array[$index];
+                            break;
+                        }
+                    }
+                    
+                    
                     $company = Company::where('id', $company_id)->first();
 
                     $breadcrumb = array(
@@ -657,7 +665,14 @@ class Helper {
 
                 if (strpos($url, '/company/') && strpos($url, '/jobs')) {
                     
-                    $company_id = end($url_array);
+                    //$company_id = end($url_array);
+                    for ($i = 0; $i < count($url_array); $i++) {
+                        if ($url_array[$i] === 'company') {
+                            $index = $i + 1;
+                            $company_id = $url_array[$index];
+                            break;
+                        }
+                    }
 
                     $company = Company::where('id', $company_id)->first();
 
