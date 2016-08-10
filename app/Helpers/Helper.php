@@ -616,7 +616,7 @@ class Helper {
 
                     $breadcrumb = array(
                         $company->name => '/company/' . $company->id,
-                        'Positions' => $url
+                        'Positions' => '/positions/'. $company->id
                     );
                 }
 
@@ -624,7 +624,7 @@ class Helper {
                     array_push($breadcrumb, 'Tickets');
 
                     $breadcrumb = array(
-                        'Tickets' => $url
+                        'Tickets' => '/tickets-admin/'
                     );
                 }
 
@@ -648,11 +648,23 @@ class Helper {
 
                     $company_name = Company::where('id', $company_id)->pluck('name');
 
-                    array_push($breadcrumb, $company_name);
-                    array_push($breadcrumb, 'Projects');
+                    $breadcrumb = array(
+                        $company_name => '/company/' . $company->id,
+                        'All Projects' => '/company/' .$company->id.'/projects'
+                    );
+                    
                 }
 
                 if (strpos($url, '/company/') && strpos($url, '/jobs')) {
+                    
+                    $company_id = end($url_array);
+
+                    $company_name = Company::where('id', $company_id)->pluck('name');
+
+                    $breadcrumb = array(
+                        $company_name => '/company/' . $company->id,
+                        'All Jobs' => '/company/' .$company->id.'/jobs'
+                    );
                     
                 }
 
