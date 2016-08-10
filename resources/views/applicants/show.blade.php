@@ -148,15 +148,15 @@
                                                 <div {{ Auth::check('applicant') ? '' : ('id=question-collapse-' . $v->id) }} class="box-content collapse">
                                                     {!! $v->note !!}
                                                     <div class="form-inline">
-                                                        <button type="button" class="btn btn-shadow btn-timer time-limit-conference" data-length="{{ $v->length ? $v->length : '' }}">
-                                                            <span class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</span>
-                                                            <span class="glyphicon glyphicon-time"></span>
-                                                        </button>
+                                                        <label>Applicant Score</label>
                                                         <div class="input-group">
                                                             <input type="number" name="video-conference-points" id="{{ $v->result_id }}" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control video-conference-points" style="width: 70px;">
                                                             <div class="input-group-addon">/{{ $v->max_point }}</div>
                                                         </div>
-                                                        <button type="button" class="btn btn-shadow btn-submit btn-video hidden" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Start</button>
+                                                        <button type="button" class="btn btn-shadow btn-submit btn-video hidden" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Record Answer</button>
+                                                        <span class="time-limit-conference" data-length="{{ $v->length ? $v->length : '' }}">
+                                                            <strong class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</strong>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -204,8 +204,13 @@
                             @foreach($quiz_videos as $video)
                             <div class="video-element-holder">
                                 <div class="row">
-                                    <div class="col-xs-10">
-                                        <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls="controls"  preload="metadata" src="https://laravel.software/recordings/{{ $video->record_id }}.webm">
+                                    <div class="col-xs-5">
+                                        <video id="video-archive-remote-item-{{$video->id}}" class="video-archive-item" controls="controls"  preload="metadata" src="https://laravel.software/recordings/{{ $video->record_id }}.webm">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <video id="video-archive--local-item-{{$video->id}}" class="video-archive-item" controls="controls"  preload="metadata" src="https://laravel.software/recordings/{{ $video->local_record_id }}.webm">
                                             Your browser does not support the video tag.
                                         </video>
                                     </div>
@@ -216,7 +221,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <label>Points:</label>&nbsp;{{ $video->points }}
+                                        <label>Applicant Score:</label>&nbsp;{{ $video->points }}
                                     </div>
                                 </div>
                             </div>
