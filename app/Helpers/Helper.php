@@ -447,9 +447,6 @@ class Helper {
 
             $project = Project::with('company')->where('project_id', $project_id)->first();
 
-            //array_push($breadcrumb, $project->company->name);
-            //array_push($breadcrumb, $project->project_title);
-
             $breadcrumb = array(
                 $project->company->name => '/company/' . $project->company->id,
                 $project->project_title => '/project/' . $project->project_id
@@ -593,7 +590,7 @@ class Helper {
 
                     $breadcrumb = array(
                         $job->company->name => '/company/' . $job->company->id,
-                        $job->title => $url
+                        $job->title => '/job/'.$job->id
                     );
                 }
 
@@ -607,7 +604,7 @@ class Helper {
                     $breadcrumb = array(
                         $applicant->job->company->name => '/company/' . $applicant->job->company->id,
                         $applicant->job->title => '/job/' . $applicant->job->id,
-                        $applicant->name => $url
+                        $applicant->name => '/a/' .$applicant->id
                     );
                 }
 
