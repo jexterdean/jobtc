@@ -495,7 +495,7 @@ class Helper {
                     array_push($breadcrumb, $company_name . ' Employees');
 
                     $breadcrumb = array(
-                        $company_name . ' Employees' => $url
+                        $company_name . ' Employees' => '/employees/'.$company_id
                     );
                 }
 
