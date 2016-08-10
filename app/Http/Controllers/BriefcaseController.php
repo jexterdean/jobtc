@@ -117,7 +117,7 @@ class BriefcaseController extends Controller
         $links = Link::select(
                     'links.id', 'title',
                     'url', 'descriptions',
-                    'tags', 'comments',
+                    'tags', 'comments','task_id',
                     'task_item_id', 'user_id',
                     'link_categories.name as category_name'
                 )

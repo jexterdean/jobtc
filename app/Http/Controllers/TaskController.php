@@ -123,7 +123,7 @@ class TaskController extends BaseController {
                     'links.id', 'title',
                     'url', 'descriptions',
                     'tags', 'comments',
-                    'task_item_id', 'user_id',
+                    'task_item_id', 'user_id','task_id',
                     'link_categories.name as category_name'
                 )
             ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')

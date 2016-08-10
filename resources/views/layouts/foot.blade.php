@@ -120,7 +120,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 
 @if(in_array('calendar',$assets))
 {!!  HTML::script('assets/js/fullcalendar.min.js')  !!}
-{!! HTML::script('assets/js/bootstrap-datetimepicker.min.js') !!}
+{!! HTML::script('assets/js/bootstrap-datetimepicker.js') !!}
 @endif
 
 @if(in_array('select',$assets))

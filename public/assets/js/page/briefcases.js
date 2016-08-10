@@ -910,11 +910,42 @@ $('.category-name')
             $(this).val('');
         });
 
-$('.check-list-container').on('click', '.remove-link', function (e) {
-    e.preventDefault();
-    $.post($(this).attr('href'));
-    $('#link-' + this.id + ',.link-' + this.id).remove();
-});
+$('.content')
+    .on('click', '.remove-link', function (e) {
+        e.preventDefault();
+        $.post($(this).attr('href'));
+        $('#link-' + this.id + ',.link-' + this.id).remove();
+    })
+    .on('click', '.add-link-btn', function (e) {
+        e.preventDefault();
+        var _this = $(this);
+        var _link_modal = _this.parents('.add_link_modal');
+        var _form = _this.parents('.add_link_modal').find('form');
+        var _user_id = _form.find('input[name="user_id"]').val();
+        var _data = _form.serializeArray();
+        $.post(_form.attr('action'), _data, function (res) {
+            var _return_data = jQuery.parseJSON(res);
+            console.log(_return_data);
+            console.log(_user_id);
+            $.each(_return_data, function (key, val) {
+                var ele = '<div class="col-md-12" id="link-' + val.id + '">';
+                ele += '<div class="col-md-4">';
+                ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                ele += '</div>';
+                ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                ele += '<div class="col-md-3 text-right">' + val.category_name + '&nbsp;&nbsp;&nbsp;';
+                ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
+                ele += '</div>';
+                ele += '<hr/>';
+                ele += '</div>';
+                ele += '<hr/>';
+                var _link_column = $('#collapse-' + val.task_id).find('.link-column');
+                _link_column.append(ele);
+            });
+
+            _link_modal.modal('hide');
+        });
+    });
 //endregion
 $('.check-list-container').on('click', '.toggle-tasklistitem', function () {
 
