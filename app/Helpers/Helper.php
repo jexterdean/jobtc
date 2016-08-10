@@ -20,6 +20,7 @@ use App\Models\TeamProject;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\PermissionUser;
+use App\Models\TaskCheckListPermission;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\Module;
@@ -308,6 +309,16 @@ class Helper {
         return $shared_projects;
     }
 
+    public static function getBriefcasePermission($project_id){
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $task_permissions = TaskCheckListPermission::where('project_id', $project_id)->where('user_id', $user_id)->get();
+        
+        
+        return $task_permissions;
+    }
+    
     public static function getSubordinateProjects($company_id) {
 
         $user_id = Auth::user('user')->user_id;

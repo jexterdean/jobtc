@@ -231,6 +231,7 @@
   .portlet {
     margin: 0 1em 1em 0;
     padding: 0.3em;
+    background-color: #F3F3F3 !important;
   }
   .portlet-header {
     padding: 0.2em 0.3em;

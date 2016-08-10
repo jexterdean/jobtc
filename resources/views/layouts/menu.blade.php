@@ -94,6 +94,7 @@
                                         {{--*/ $shared_projects = \App\Helpers\Helper::getSharedProjects($company->company->id) /*--}}
                                         @if(count($shared_projects) > 0)
                                         @foreach($shared_projects as $val)
+                                        {{--*/ $task_permissions = \App\Helpers\Helper::getBriefcasePermission($val->project_id) /*--}}
                                         <li class="{{ count($val->task) > 0 ? 'dropdown' : '' }}">
                                             <a href="{{ url('project/' . $val->project_id ) }}">
                                                 <i class="fa fa-briefcase" aria-hidden="true"></i> <span>{{ $val->project_title }}</span>
@@ -101,25 +102,30 @@
                                             @if(count($val->task) > 0)
                                             <ul class="dropdown-menu">
                                                 @foreach($val->task as $briefcase)
+                                                @if($task_permissions->contains('task_id',$briefcase->task_id))
                                                 <li class="dropdown">
                                                     <a href="{{ url('briefcase/' .$briefcase->task_id) }}"><i class="fa fa-bars" aria-hidden="true"></i> {{ $briefcase->task_title }}</a>
                                                     @if(count($briefcase->task_list_items) > 0)
                                                     <ul class="dropdown-menu">
                                                         @foreach($briefcase->task_list_items as $task_list_item)
+                                                        
                                                         <li class="dropdown">
                                                             <a href="{{url('taskitem/'.$task_list_item->id)}}">
                                                                 <i class="fa fa-file-text-o" aria-hidden="true"></i>
                                                                 {{$task_list_item->checklist_header}}
                                                             </a>
                                                         </li>
+                                                        
                                                         @endforeach
                                                     </ul>
                                                     @endif
                                                 </li>
+                                                @endif
                                                 @endforeach
                                             </ul>
                                             @endif
                                         </li>
+                                        
                                         @endforeach
                                         @endif
                                     </ul>
