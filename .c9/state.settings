@@ -17,8 +17,8 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab1",
-                    "tab0"
+                    "tab0",
+                    "tab1"
                 ]
             },
             "name": "pane1",
@@ -118,7 +118,7 @@
             "@menuitem": 13,
             "@pane": 2,
             "@session": 4,
-            "@tab": 5,
+            "@tab": 4,
             "@undoManager": 5
         }
     },
@@ -137,7 +137,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab4",
+            "tab3",
             "tab0"
         ]
     },
@@ -173,7 +173,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 170,
+        "@scrollpos": -10,
         "@showfs": true,
         "expanded": {
             "json()": [
@@ -207,51 +207,30 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/app/Models/Task.php",
+            "focus": "/app/Http/Controllers/CompanyController.php",
             "meta": {
                 "accessList": [
-                    "tab4",
-                    "tab2",
-                    "tab3"
+                    "tab3",
+                    "tab2"
                 ]
             },
             "name": "pane0",
             "nodes": [
                 {
                     "type": "tab",
-                    "name": "tab3",
-                    "path": "/resources/views/layouts/menu.blade.php",
-                    "className": [
-                        "tab3"
-                    ],
-                    "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1469526746605
-                        },
-                        "filter": true,
-                        "title": "menu.blade.php",
-                        "tooltip": "/resources/views/layouts/menu.blade.php",
-                        "ace": {}
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
                     "name": "tab2",
-                    "path": "/app/Helpers/Helper.php",
+                    "path": "/public/assets/css/page/companies.css",
                     "className": [
                         "tab2"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1469527008842
+                            "timestamp": 1470759216608
                         },
                         "filter": true,
-                        "title": "Helper.php",
-                        "tooltip": "/app/Helpers/Helper.php",
+                        "title": "companies.css",
+                        "tooltip": "/public/assets/css/page/companies.css",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -259,18 +238,20 @@
                 },
                 {
                     "type": "tab",
-                    "name": "tab4",
-                    "path": "/app/Models/Task.php",
+                    "name": "tab3",
+                    "path": "/app/Http/Controllers/CompanyController.php",
                     "className": [
-                        "tab4",
+                        "tab3",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
-                        "meta": {},
+                        "meta": {
+                            "timestamp": 1470759090524
+                        },
                         "filter": true,
-                        "title": "Task.php",
-                        "tooltip": "/app/Models/Task.php",
+                        "title": "CompanyController.php",
+                        "tooltip": "/app/Http/Controllers/CompanyController.php",
                         "ace": {}
                     },
                     "editorType": "ace",
