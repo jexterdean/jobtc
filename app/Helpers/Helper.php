@@ -20,6 +20,7 @@ use App\Models\TeamProject;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\PermissionUser;
+use App\Models\TaskCheckListPermission;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\Module;
@@ -308,6 +309,16 @@ class Helper {
         return $shared_projects;
     }
 
+    public static function getBriefcasePermission($project_id){
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $task_permissions = TaskCheckListPermission::where('project_id', $project_id)->where('user_id', $user_id)->get();
+        
+        
+        return $task_permissions;
+    }
+    
     public static function getSubordinateProjects($company_id) {
 
         $user_id = Auth::user('user')->user_id;
@@ -415,7 +426,7 @@ class Helper {
             //array_push($breadcrumb, 'Personal Dashboard');
 
             $breadcrumb = array(
-                'Personal Dashboard' => $url
+                'Personal Dashboard' => '/dashboard'
             );
         }
         //Breadcrumbs for Company Dashboard
@@ -435,9 +446,6 @@ class Helper {
             $project_id = end($url_array);
 
             $project = Project::with('company')->where('project_id', $project_id)->first();
-
-            //array_push($breadcrumb, $project->company->name);
-            //array_push($breadcrumb, $project->project_title);
 
             $breadcrumb = array(
                 $project->company->name => '/company/' . $project->company->id,
@@ -487,7 +495,7 @@ class Helper {
                     array_push($breadcrumb, $company_name . ' Employees');
 
                     $breadcrumb = array(
-                        $company_name . ' Employees' => $url
+                        $company_name . ' Employees' => '/employees/'.$company_id
                     );
                 }
 
@@ -582,7 +590,7 @@ class Helper {
 
                     $breadcrumb = array(
                         $job->company->name => '/company/' . $job->company->id,
-                        $job->title => $url
+                        $job->title => '/job/'.$job->id
                     );
                 }
 
@@ -596,7 +604,7 @@ class Helper {
                     $breadcrumb = array(
                         $applicant->job->company->name => '/company/' . $applicant->job->company->id,
                         $applicant->job->title => '/job/' . $applicant->job->id,
-                        $applicant->name => $url
+                        $applicant->name => '/a/' .$applicant->id
                     );
                 }
 
@@ -608,7 +616,7 @@ class Helper {
 
                     $breadcrumb = array(
                         $company->name => '/company/' . $company->id,
-                        'Positions' => $url
+                        'Positions' => '/positions/'. $company->id
                     );
                 }
 
@@ -616,7 +624,7 @@ class Helper {
                     array_push($breadcrumb, 'Tickets');
 
                     $breadcrumb = array(
-                        'Tickets' => $url
+                        'Tickets' => '/tickets-admin/'
                     );
                 }
 
@@ -636,15 +644,42 @@ class Helper {
                 }
 
                 if (strpos($url, '/company/') && strpos($url, '/projects')) {
-                    $company_id = end($url_array);
+                    //$company_id = end($url_array);
+                     for ($i = 0; $i < count($url_array); $i++) {
+                        if ($url_array[$i] === 'company') {
+                            $index = $i + 1;
+                            $company_id = $url_array[$index];
+                            break;
+                        }
+                    }
+                    
+                    
+                    $company = Company::where('id', $company_id)->first();
 
-                    $company_name = Company::where('id', $company_id)->pluck('name');
-
-                    array_push($breadcrumb, $company_name);
-                    array_push($breadcrumb, 'Projects');
+                    $breadcrumb = array(
+                        $company->name => '/company/' . $company->id,
+                        'All Projects' => '/company/' .$company->id.'/projects'
+                    );
+                    
                 }
 
                 if (strpos($url, '/company/') && strpos($url, '/jobs')) {
+                    
+                    //$company_id = end($url_array);
+                    for ($i = 0; $i < count($url_array); $i++) {
+                        if ($url_array[$i] === 'company') {
+                            $index = $i + 1;
+                            $company_id = $url_array[$index];
+                            break;
+                        }
+                    }
+
+                    $company = Company::where('id', $company_id)->first();
+
+                    $breadcrumb = array(
+                        $company->name => '/company/' . $company->id,
+                        'All Jobs' => '/company/' .$company->id.'/jobs'
+                    );
                     
                 }
 
