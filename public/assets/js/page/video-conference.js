@@ -213,10 +213,10 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
 }
 
 //Toggle the button to start the video conference
-$('#localVideo').css({
+/*$('#localVideo').css({
     height: '100%',
     width: '772px'
-});
+});*/
 $('.interview-applicant').clickToggle(function () {
     //var room_name_tmp = $('title').text();
     var room_name_tmp = window.location.pathname;
@@ -224,7 +224,7 @@ $('.interview-applicant').clickToggle(function () {
 
     // Select tab by name
     $('.nav-tabs a[href="#video-tab"]').tab('show');
-    var config = {audio: true, video: true, data: true};
+    var config = {audio: true, video: true, data: true,minVideoBW : 2000,maxVideoBW: 100000,minAudioBW: 64,maxAudioBW: 64};
     localStream = Erizo.Stream(config);
 
     getRoom(room_name, function (res) {
@@ -242,11 +242,11 @@ $('.interview-applicant').clickToggle(function () {
 
                         room.addEventListener("room-connected", function (roomEvent) {
                             console.log('Connected to the room OK');
-                            room.publish(localStream, {maxVideoBW: 3000});
+                            room.publish(localStream);
                         });
 
                         room.addEventListener("room-disconnected", function (roomEvent) {
-                            room.unpublish(localStream, {maxVideoBW: 3000});
+                            room.unpublish(localStream);
                         });
 
                         room.addEventListener("room-error", function (roomEvent) {
@@ -309,11 +309,11 @@ $('.interview-applicant').clickToggle(function () {
                     console.log('Mic and Cam OK');
                     room.addEventListener("room-connected", function (roomEvent) {
                         console.log('Connected to the room OK');
-                        room.publish(localStream, {maxVideoBW: 3000});
+                        room.publish(localStream);
                     });
 
                     room.addEventListener("room-disconnected", function (roomEvent) {
-                        room.unpublish(localStream, {maxVideoBW: 3000});
+                        room.unpublish(localStream);
                     });
 
                     room.addEventListener("room-error", function (roomEvent) {

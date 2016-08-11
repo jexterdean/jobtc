@@ -69,22 +69,22 @@ class CompanyController extends BaseController {
 
     public function show($company_id) {
 
-        $projects = Project::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(5)->get();
+        $projects = Project::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(10)->get();
 
-        $jobs = Job::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(5)->get();
+        $jobs = Job::where('company_id',$company_id)->orderBy('created_at', 'desc')->take(10)->get();
         
-        $employees = Profile::with('user')->where('company_id',$company_id)->take(5)->get();
+        $employees = Profile::with('user')->where('company_id',$company_id)->take(10)->get();
         
         $job_list = Job::where('company_id',$company_id)->lists('id');
         
-        $applicants = Applicant::whereIn('job_id',$job_list)->orderBy('created_at','desc')->take(5)->get();
+        $applicants = Applicant::whereIn('job_id',$job_list)->orderBy('created_at','desc')->take(10)->get();
         
         $applicant_list = Applicant::whereIn('job_id',$job_list)->lists('id');
         
         $comments = Comment::with('applicant')->whereIn('unique_id',$applicant_list)
                 ->where('belongs_to','applicant')
                 ->orderBy('created_at','desc')
-                ->take(5)
+                ->take(10)
                 ->get();
         
         $assets = ['companies', 'real-time'];
