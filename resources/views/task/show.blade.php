@@ -352,7 +352,9 @@
             e.stopImmediatePropagation();
 
             var index = $(this).parent().parent().parent().index();
-            var id = $(this).parent().siblings().find('.task_list_item_id').val();
+            var id = $(this).siblings('.task_list_item_id').val();
+
+            console.log(id);
 
             /*From Default, Change to ongoing*/
             if ($(this).hasClass('bg-gray')) {
