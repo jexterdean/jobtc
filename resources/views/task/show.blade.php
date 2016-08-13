@@ -90,7 +90,6 @@
                                                 <div class="col-md-12">
                                                     <div class="pull-right" style="margin-right: 5px;">
                                                         <a target="_blank" href="{{url('taskitem/'.$list_item->id)}}" class="btn-edit btn-shadow btn"><i class="fa fa-external-link"></i> View</a>&nbsp;&nbsp;&nbsp;
-                                                        <a href="#" class="btn-edit btn-shadow btn add-link-modal" data-toggle="modal" data-target="#add_link_{{ $task->task_id . '-' . $list_item->id }}" id="{{$list_item->id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;&nbsp;
                                                         @if($module_permissions->where('slug','edit.tasks')->count() === 1)
                                                         <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>&nbsp;&nbsp;&nbsp;
                                                         @endif
@@ -104,27 +103,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{--region Briefcase Item Add Link--}}
-                                    <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id . '-' . $list_item->id }}" tabindex="-1" role="basic" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                                    <h4 class="modal-title">Add Link</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                                                    {!! Form::hidden('task_id',$list_item->task_id) !!}
-                                                    {!! Form::hidden('task_item_id',$list_item->id) !!}
-                                                    {!! Form::hidden('user_id',$user_id) !!}
-                                                    {!! Form::hidden('company_id',$company_id) !!}
-                                                    @include('links/partials/_add_form')
-                                                    {!! Form::close()  !!}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{--endregion--}}
                                 </li>
                                 @endforeach
                                 @else
@@ -139,12 +117,36 @@
                 </div>
             </div>
         </div>
+        <div class="link-column">
+            @foreach($links as $link)
+            @if($link->task_id == $task->task_id)
+            <div class="col-md-12" id="link-{{$link->id}}">
+                <div class="col-sm-4">
+                    {{--*/ $parse_url = parse_url($link->url) /*--}}
+                    @if(empty($parse_url['scheme']))
+                    <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                    @else
+                    <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                    @endif
+                </div>
+                <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
+                <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
+                    @if($user_id == $link->user_id)
+                    <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+                    @endif
+                </div>
+                <hr />
+            </div>
+            @endif
+            @endforeach
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
                 @endif
+                <a href="#" class="btn-edit btn-shadow btn-sm btn add-link-modal" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" id="{{$task->task_id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                 @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                 @endif
@@ -158,6 +160,26 @@
         </div>
     </div>
 </div>
+{{--region Briefcase Item Add Link--}}
+<div class="modal fade add_link_modal" id="add_link_{{ $task->task_id }}" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Add Link</h4>
+            </div>
+            <div class="modal-body">
+                {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
+                {!! Form::hidden('task_id',$list_item->task_id) !!}
+                {!! Form::hidden('user_id',$user_id) !!}
+                {!! Form::hidden('company_id',$company_id) !!}
+                @include('links/partials/_add_form')
+                {!! Form::close()  !!}
+            </div>
+        </div>
+    </div>
+</div>
+{{--endregion--}}
 <div class="modal fade" id="ajax" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1105,7 +1127,8 @@
                     $(this).val('');
                 });
 
-        $('.check-list-container')
+
+        $('.load-task-assign')
                 .on('click', '.remove-link', function (e) {
                     e.preventDefault();
                     $.post($(this).attr('href'));
@@ -1124,24 +1147,25 @@
                         console.log(_user_id);
                         $.each(_return_data, function (key, val) {
                             var ele = '<div class="col-md-12" id="link-' + val.id + '">';
-                            ele += '<div class="col-md-3">';
+                            ele += '<div class="col-md-4">';
                             ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
                             ele += '</div>';
-                            ele += '<div class="col-md-6" style="text-align: justify">' + val.descriptions + '</div>';
+                            ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
                             ele += '<div class="col-md-3 text-right">' + val.category_name + '&nbsp;&nbsp;&nbsp;';
                             ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
                             ele += '</div>';
                             ele += '<hr/>';
                             ele += '</div>';
                             ele += '<hr/>';
-                            var _link_column = $('#task-item-collapse-' + val.task_item_id).find('.link-column');
+                            var _link_column = $('#collapse-' + val.task_id).find('.link-column');
                             _link_column.append(ele);
                         });
 
                         _link_modal.modal('hide');
                     });
-                })
-                .on('click', '.toggle-tasklistitem', function () {
+                });
+        $('.check-list-container')
+            .on('click', '.toggle-tasklistitem', function () {
 
                     var task_list_item_id = $(this).siblings('.task_list_item_id').val();
                     var company_id = $(this).siblings('.company_id').val();

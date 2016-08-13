@@ -8,7 +8,11 @@
             <ul class='list-group'>
                 @foreach($projects as $project)
                 <li class='list-group-item'>
+                    @if(strlen($project->project_title) > 23)
+                    <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$project->project_title}}" href="{{url('project/'.$project->project_id)}}">{{$project->project_title}}</a>
+                    @else
                     <a target="_blank" href="{{url('project/'.$project->project_id)}}">{{$project->project_title}}</a>
+                    @endif
                 </li>
                 @endforeach
             </ul>
@@ -20,7 +24,11 @@
         <div class="portlet-content">
             @foreach($jobs as $job)
             <li class='list-group-item'>
+                @if(strlen($job->title) > 23)
+                <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$job->title}}" href="{{url('job/'.$job->id)}}">{{$job->title}}</a>
+                @else
                 <a target="_blank" href="{{url('job/'.$job->id)}}">{{$job->title}}</a>
+                @endif
             </li>
             @endforeach
         </div>
@@ -34,7 +42,12 @@
         <div class="portlet-content">
             @foreach($employees as $employee)
             <li class='list-group-item'>
+                @if(strlen($employee->user->name) > 23)
+                <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$employee->user->name}}" href="{{url('user/'.$employee->user_id.'/company/'.$employee->company_id)}}">{{$employee->user->name}}</a>
+                @else
                 <a target="_blank" href="{{url('user/'.$employee->user_id.'/company/'.$employee->company_id)}}">{{$employee->user->name}}</a>
+                @endif
+
             </li>
             @endforeach
         </div>
@@ -47,7 +60,11 @@
         <div class="portlet-content">
             @foreach($applicants as $applicant)
             <li class='list-group-item'>
+                @if(strlen($applicant->name) > 23)
+                <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$applicant->name}}" href="{{url('applicant/'.$applicant->id)}}">{{$applicant->name}}</a>
+                @else
                 <a target="_blank" href="{{url('applicant/'.$applicant->id)}}">{{$applicant->name}}</a>
+                @endif
             </li>
             @endforeach
         </div>
@@ -59,7 +76,11 @@
         <div class="portlet-content">
             @foreach($comments as $comment)
             <li class='list-group-item'>
-                <a target="_blank" data-toggle="tooltip" data-placement="right" title="{{$comment->comment}}" href="{{url('applicant/'.$comment->applicant->id)}}">{{$comment->comment}}</a>
+                @if(strlen($comment->comment) > 23)
+                <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$comment->comment}}" href="{{url('applicant/'.$comment->applicant->id)}}">{{$comment->comment}}</a>
+                @else
+                <a target="_blank" href="{{url('applicant/'.$comment->applicant->id)}}">{{$comment->comment}}</a>
+                @endif
             </li>
             @endforeach
         </div>

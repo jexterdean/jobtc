@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-body">
-        <div id="meeting_calendar"></div>
+        <div id="meeting_calendar" style="width: 98%;margin: 0 auto;padding: 15px 0;"></div>
     </div>
 </div>
 

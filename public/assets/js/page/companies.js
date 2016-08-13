@@ -1696,3 +1696,9 @@ $('.permission-list-group').on('click', '.position-permission', function (e) {
       icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
       icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
     });
+
+$('.remove-link').on('click', function (e) {
+    e.preventDefault();
+    $.post($(this).attr('href'));
+    $('.link-' + this.id).remove();
+});

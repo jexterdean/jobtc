@@ -64,9 +64,9 @@ class TeamBuilderController extends BaseController
         header("Content-type: application/json");
 
         $t = DB::table('team')
-            ->select('id', 'title')
+            ->select('id')
             ->get();
-        $team = array(array('id' => 0, 'title' => ''));
+        $team = array(array('id' => 0));
         $team = array_merge($team, $t);
 
         return response()->json($team);

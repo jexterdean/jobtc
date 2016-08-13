@@ -89,7 +89,7 @@ class MeetingController extends BaseController
                 if($v->attendees_id) {
                     $attendees = json_decode($v->attendees_id);
                     $u = DB::table('user')
-                        ->select(DB::raw('GROUP_CONCAT(username separator ", ") as attendees'))
+                        ->select(DB::raw('GROUP_CONCAT(name separator ", ") as attendees'))
                         ->whereIn('user_id', $attendees)
                         ->first('attendees');
                     $v->attendees = $u->attendees;
@@ -138,9 +138,9 @@ class MeetingController extends BaseController
         $data['meeting_priority'] = array_pluck($meeting_priority, 'priority', 'id');
 
         $user = DB::table('user')
-            ->select('user_id', 'username')
+            ->select('user_id', 'name')
             ->get();
-        $data['user'] = array_pluck($user, 'username', 'user_id');
+        $data['user'] = array_pluck($user, 'name', 'user_id');
 
         $team_member = DB::table('team_project')
             ->leftJoin('team_member', 'team_member.team_id', '=', 'team_project.team_id')

@@ -231,9 +231,9 @@
 .portlet {
     margin: 0 1em 1em 0;
     padding: 0.3em;
-    background-color: #F3F3F3 !important;
-}
-.portlet-header {
+    background-color:#F3F3F3 !important;
+  }
+  .portlet-header {
     padding: 0.2em 0.3em;
     margin-bottom: 0.5em;
     position: relative;
@@ -262,7 +262,7 @@
     overflow: hidden;
     font-size: 14px;
     font-weight: bold;
-}
+  }
 /*portlet*/
 @media (max-width: 900px) and (min-width:550px){
     .column {
