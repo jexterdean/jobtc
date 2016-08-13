@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
 
-use App\Models\Client;
+use App\Models\Company;
 use App\Models\Billing;
 use App\Models\Setting;
 use App\Helpers\Helper;
@@ -27,14 +27,14 @@ class BillingController extends BaseController
     {
         $data['billing_type'] = $billing_type;
 
-        $client_options = Client::orderBy('company_name', 'asc')
+        $client_options = Company::orderBy('company_name', 'asc')
             ->lists('company_name', 'client_id')
             ->toArray();
 
         if (parent::hasRole('Admin')) {
             $billing = Billing::where('billing_type', '=', $billing_type)
                 ->get();
-        } elseif (parent::hasRole('Client')) {
+        } elseif (parent::hasRole('Company')) {
             $billing = DB::table('billing')
                 ->join('user', 'user.client_id', '=', 'billing.client_id')
                 ->where('billing_type', '=', $billing_type)
@@ -63,7 +63,7 @@ class BillingController extends BaseController
             ->where('billing_type', '=', $billing_type)
             ->first();
 
-        $client = Client::where('client_id', '=', $billing->client_id)
+        $client = Company::where('client_id', '=', $billing->client_id)
             ->first();
 
         $item = Item::where('billing_id', '=', $billing_id)
@@ -108,7 +108,7 @@ class BillingController extends BaseController
             $billing = Billing::where('billing_id', '=', $billing_id)
                 ->where('billing_type', '=', $billing_type)
                 ->first();
-        } elseif (parent::hasRole('Client')) {
+        } elseif (parent::hasRole('Company')) {
             $billing = Billing::where('billing_id', '=', $billing_id)
                 ->join('user', 'user.client_id', '=', 'billing.client_id')
                 ->where('billing_type', '=', $billing_type)
@@ -116,7 +116,7 @@ class BillingController extends BaseController
                 ->first();
         }
 
-        $client = Client::where('client_id', '=', $billing->client_id)
+        $client = Company::where('client_id', '=', $billing->client_id)
             ->first();
 
         $item = Item::where('billing_id', '=', $billing_id)
@@ -180,7 +180,7 @@ class BillingController extends BaseController
         $data['billing_type'] = $billing_type;
         $data['billing_id'] = $billing_id;
 
-        $client_options = Client::orderBy('company_name', 'asc')
+        $client_options = Company::orderBy('company_name', 'asc')
             ->lists('company_name', 'client_id');
 
         $billing = Billing::where('billing_id', '=', $billing_id)

@@ -32,8 +32,17 @@
   &.fade .modal-dialog {
     .translate(0, -25%);
     .transition-transform(~"0.3s ease-out");
+    /*-moz-transform: scale(0.2);
+    -webkit-transform: scale(0.2);
+    transform: scale(0.2);*/
   }
-  &.in .modal-dialog { .translate(0, 0) }
+  &.in .modal-dialog {
+    .translate(0, 0);
+    /*-moz-transform: scale(1);
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    transition: all 1s ease-in-out;*/
+  }
   &-success{
     .modal(@brand-success);
   }
@@ -53,6 +62,7 @@
 .modal-open .modal {
   overflow-x: hidden;
   overflow-y: auto;
+  background: rgba(15,15,15,0.4)
 }
 
 // Shell div to position the modal with bottom padding
@@ -65,11 +75,12 @@
 // Actual modal
 .modal-content {
   position: relative;
-  background-color: @modal-content-bg;
+  background-color: @brand-default;//@modal-content-bg;
   border: 1px solid @modal-content-fallback-border-color; //old browsers fallback (ie8 etc)
   border: 1px solid @modal-content-border-color;
   border-radius: @border-radius-large;
-  .box-shadow(0 3px 9px rgba(0,0,0,.5));
+  //.box-shadow(0 3px 9px rgba(0,0,0,.5));
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4),0px 0px 15px 15px rgba(225, 225, 225, 0.2) !important;
   background-clip: padding-box;
   // Remove focus outline from opened modal
   outline: 0;
@@ -91,9 +102,12 @@
 
 // Modal header
 // Top section of the modal w/ title and dismiss
-.modal-header {
+.modal-header{
   padding: @modal-title-padding;
   border-bottom: 1px solid @modal-header-border-color;
+  background: @navbar-color!important;
+  color: #ffffff!important;
+  .inset-text();
   &:extend(.clearfix all);
 }
 // Close icon
@@ -102,7 +116,7 @@
 }
 
 // Title text within header
-.modal-title {
+.modal-title{
   margin: 0;
   line-height: @modal-title-line-height;
 }
@@ -152,9 +166,9 @@
     width: @modal-md;
     margin: 30px auto;
   }
-  .modal-content {
+  /*.modal-content {
     .box-shadow(0 5px 15px rgba(0,0,0,.5));
-  }
+  }*/
 
   // Modal sizes
   .modal-sm { width: @modal-sm; }

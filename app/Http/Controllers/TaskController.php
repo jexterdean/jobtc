@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use Bican\Roles\Exceptions\RoleDeniedException;
 use Illuminate\Http\Request;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\TaskTimer;
 use App\Models\TaskChecklist;
+use App\Models\TaskChecklistOrder;
+use App\Models\TaskCheckListPermission;
 use App\Models\Link;
 use App\Models\LinkCategory;
+use App\Models\Profile;
+use App\Models\Permission;
+use App\Models\PermissionRole;
+use App\Models\PermissionUser;
 use View;
 use Auth;
 use Redirect;
@@ -23,7 +30,7 @@ class TaskController extends BaseController {
     function __construct() {
         //Only staff and admin can access
         if (parent::hasRole('client')) {
-            throw new RoleDeniedException('Client or Admin');
+            throw new RoleDeniedException('Company or Admin');
         }
     }
 
@@ -32,29 +39,25 @@ class TaskController extends BaseController {
      */
     public function index() {
 
-        $user_type = Auth::user('user')->user_type;
-        //if (parent::hasRole('staff')) {
-        if ($user_type === 4) {
+        if (parent::hasRole('staff')) {
 
-            $tasks = Task::where('username', '=', Auth::user('user')->email)
-                    ->orderBy('created_at', 'desc')
+            $tasks = Task::orderBy('created_at', 'desc')
                     ->get();
         } else {
-            /*$tasks = Task::orderBy('created_at', 'desc')
-                    ->join('user', 'task.user_id', '=', 'users.id')
-                    ->select(
-                            'task.*', 'users.first_name', 'user.email'
-                    )
-                    ->get();*/
-            $tasks = Task::where('username', '=', Auth::user('user')->email)
+            /* $tasks = Task::orderBy('created_at', 'desc')
+              ->join('user', 'task.user_id', '=', 'users.id')
+              ->select(
+              'task.*', 'users.first_name', 'user.email'
+              )->get(); */
+            $tasks = Task::where('user_id', '=', Auth::user()->user_id)
                     ->orderBy('created_at', 'desc')
                     ->get();
         }
 
         $belongsTo = 'task';
 
-        $assign_username = User::orderBy('first_name', 'asc')
-                ->lists('email', 'email');
+        $assign_username = User::orderBy('name')
+                ->lists('name', 'user_id');
 
         $assets = ['calendar', 'table'];
 
@@ -62,37 +65,27 @@ class TaskController extends BaseController {
                     'assets' => $assets,
                     'tasks' => $tasks,
                     'belongs_to' => $belongsTo,
-                    'isClient' => parent::hasRole('client'),
+                    'isCompany' => parent::hasRole('client'),
                     'assign_username' => $assign_username
         ]);
     }
 
     public function show($id) {
-        //
+
+        $user_id = Auth::user('user')->user_id;
+        $user = User::find($user_id);
+
         $task = [];
-        //if (parent::userHasRole('Admin')) {
-        if ($user_type === 1 || $user_type === 2 || $user_type === 3) { 
+        if ($user->level() === 1) {
             $task = Task::find($id);
-        } elseif (parent::userHasRole('Client')) {
-            $task = DB::table('task')
-                    //->join('user', 'user.client_id', '=', 'task.client_id')
-                    ->where('user_id', '=', Auth::user('user')->id)
-                    ->where('task_id', '=', $id)
-                    ->first();
-        //} elseif (parent::userHasRole('Staff')) {
-        } elseif ($user_type === 4) {
-            $task = DB::table('task')
-                    ->join('assigned_user', 'assigned_user.unique_id', '=', 'project.project_id')
-                    ->where('belongs_to', '=', 'project')
-                    ->where('username', '=', Auth::user('user')->email)
-                    ->where('project_id', '=', $id)
-                    ->first();
+        } elseif ($user->level() > 1) {
+            $task = Task::find($id);
         }
         $task_timer = DB::table('task_timer')
-                ->leftJoin('user', 'task_timer.user_id', '=', 'user.id')
+                ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
-                        'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
+                        'task_timer.*', 'user.name', 'task.task_title', DB::raw(
                                 'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
                         ), DB::raw(
                                 'TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, now()) as _time'
@@ -112,19 +105,56 @@ class TaskController extends BaseController {
                 ->where('task_timer.end_time', '=', '0000-00-00 00:00:00')
                 ->first();
 
-        $checkList = TaskChecklist::where('task_id', '=', $id)->get();
-        $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
-        $finish_checklist = TaskChecklist::where('is_finished', '=', 1)->count();
-        $percentage = ($finish_checklist / $total_checklist) * 100;
+        //Check if there is an entry in the taskchecklist order table
+        $task_order_count = TaskChecklistOrder::where('task_id', $id)->count();
 
-        $links = Link::select('links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'link_categories.name as category_name')
-                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-                ->where('task_id', '=', $id)
-                ->get();
+        if ($task_order_count > 0) {
+            $task_order = TaskChecklistOrder::where('task_id', $id)->first();
+            $checkList = TaskChecklist::where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
+        } else {
+            $task_order = TaskChecklistOrder::where('task_id', $id)->first();
+            $checkList = TaskChecklist::where('task_id', '=', $id)->get();
+        }
+
+        $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
+        $finish_checklist = TaskChecklist::where('status', '=', 'Completed')->where('task_id', '=', $id)->count();
+        $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
+        $links = Link::select(
+                    'links.id', 'title',
+                    'url', 'descriptions',
+                    'tags', 'comments',
+                    'task_item_id', 'user_id','task_id',
+                    'link_categories.name as category_name'
+                )
+            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+            ->where('task_id', '=', $id)
+            ->get();
 
         $categories = LinkCategory::all()
                 ->lists('name', 'id')
                 ->toArray();
+
+
+        $company_id = Project::where('project_id', $task->project_id)->pluck('company_id');
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        $project_owner = Project::where('project_id',$task->project_id)->pluck('user_id');
 
         $assets = ['calendar'];
 
@@ -134,9 +164,13 @@ class TaskController extends BaseController {
             'task_timer' => $task_timer,
             'checkList' => $checkList,
             'current_time' => $current_time,
-            'percentage' => number_format($percentage, 2),
+            'percentage' => number_format($percentage, 0),
             'links' => $links,
-            'categories' => $categories
+            'user_id' => $user_id,
+            'categories' => $categories,
+            'module_permissions' => $module_permissions,
+            'company_id' => $company_id,
+            'project_owner' => $project_owner
         ]);
     }
 
@@ -147,14 +181,13 @@ class TaskController extends BaseController {
     public function edit($id) {
         $task = Task::find($id);
 
-        $assign_username = User::orderBy('first_name', 'asc')
-                ->lists('email', 'email');
+        $assign_username = User::orderBy('name')
+                ->lists('name', 'user_id');
 
         if (count($task) > 0) {
-
             return view('task.edit', [
                 'task' => $task,
-                'isClient' => parent::hasRole('client'),
+                'isCompany' => parent::hasRole('client'),
                 'assign_username' => $assign_username
             ]);
         }
@@ -165,24 +198,24 @@ class TaskController extends BaseController {
         $validation = Validator::make($request->all(), [
                     'task_title' => 'required',
                     'belongs_to' => 'required',
-                    'unique_id' => 'required',
-                    'is_visible' => 'required|in:yes,no'
+                    'unique_id' => 'required'
         ]);
 
         if ($validation->fails()) {
-            return Redirect::back()->withInput()->withErrors($validation->messages());
+            return Redirect::back();
         }
 
         $task = new Task;
         $data = Input::all();
         $data['task_status'] = 'pending';
         $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
-        $data['user_id'] = Input::get('user_id', 'Open');
+
+        $data['user_id'] = Auth::user()->user_id;
 
         $task->fill($data);
         $task->save();
 
-        return Redirect::back()->withSuccess('Successfully added!!');
+        return Redirect::back();
     }
 
     public function updateTaskStatus() {
@@ -202,7 +235,7 @@ class TaskController extends BaseController {
         $task->task_status = Input::get('task_status');
         $task->save();
 
-        return Redirect::back()->withSuccess('Saved!!');
+        return Redirect::back();
     }
 
     public function update(Request $request, $id) {
@@ -214,33 +247,50 @@ class TaskController extends BaseController {
 
         $task->update($data);
 
-        return redirect()->route('task.show', $id);
+        return Redirect::back();
     }
 
     public function destroy($task_id) {
-        $task = Task::find($task_id);
+        $task = Task::where('task_id', $task_id);
         if (!$task) {
             return Redirect::back()->withErrors('This is not a valid link!!');
         }
         $task->delete($task_id);
 
-        return Redirect::back()->withSuccess('Deleted successfully!!');
+        return Redirect::back();
+    }
+
+    public function delete(Request $request, $id) {
+        $task = Task::where('task_id', $id)->delete();
+
+        //Check if the task exists in the task checklist permission table and delete it
+        $task_check_list_permission_count = TaskCheckListPermission::where('task_id', $id)->count();
+
+        if ($task_check_list_permission_count > 0) {
+            $task_check_list_permission = TaskCheckListPermission::where('task_id', $id);
+            $task_check_list_permission->delete();
+        }
+
+        return json_encode($task);
     }
 
     public function taskTimer(Request $request, $id) {
-        $taskTimer = new TaskTimer($request->all());
+        $input = $request->except(['is_finished']);
+        $taskTimer = new TaskTimer($input);
         $taskTimer->save();
+
         $data['table'] = DB::table('task_timer')
-                ->leftJoin('user', 'task_timer.user_id', '=', 'user.id')
+                ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
-                        'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
+                        'task_timer.*', 'user.name', 'task.task_title', DB::raw(
                                 'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
                         )
                 )
                 ->where('task_timer.task_id', '=', $id)
                 ->orderBy('start_time', 'desc')
                 ->get();
+
         $data['return_task_timer'] = $taskTimer->id;
         return json_encode($data);
     }
@@ -253,7 +303,7 @@ class TaskController extends BaseController {
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
                 ->select(
-                        'task_timer.*', 'user.name', 'user.username', 'task.task_title', DB::raw(
+                        'task_timer.*', 'user.name', 'task.task_title', DB::raw(
                                 'FORMAT(TIMESTAMPDIFF(SECOND, fp_task_timer.start_time, fp_task_timer.end_time) / 3600, 2) as time'
                         )
                 )
@@ -268,22 +318,73 @@ class TaskController extends BaseController {
         $task = TaskTimer::find($id);
         $task->delete($id);
 
-        return Redirect::back()->withSuccess('Deleted successfully!!');
+        return Redirect::back();
+    }
+
+    public function getChecklist(Request $request) {
+        $tasklist = TaskChecklist::where('task_id', $request->task_id)->get();
+
+        return json_encode($tasklist);
     }
 
     public function checkList(Request $request) {
-        $taskCheckList = new TaskChecklist($request->all());
-        $taskCheckList->save();
-        $data = TaskChecklist::where('task_id', '=', $request->task_id)
-                ->get();
+        //Save the task list item immediately
+        //$taskCheckList = new TaskChecklist($request->all());
+        //$taskCheckList->save();
+        $task_check_list_id = $request->input('task_check_list_id');
+        $task_id = $request->input('task_id');
+        $taskCheckList = TaskChecklist::where('id', $task_check_list_id)->first();
+
+        $has_order_list = TaskChecklistOrder::where('task_id', '=', $task_id)->count();
+
+        if ($has_order_list > 0) {
+            //then get the new task list item id and append it as the last item on the order
+            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $task_id)->pluck('task_id_order');
+            $task_list_id_array = $taskCheckListOrderString . ',' . $taskCheckList->id;
+            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $task_id)->update([
+                'task_id_order' => $task_list_id_array
+            ]);
+
+            //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+            $data = TaskChecklist::where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+        } else {
+            $data = TaskChecklist::where('task_id', '=', $task_id)->get();
+        }
 
         return json_encode($data);
+    }
+
+    public function sortCheckList(Request $request, $id) {
+
+        $taskCheckListOrder = new TaskChecklistOrder();
+
+        //Check if the task id has an ordering list
+        $task_list_id_count = TaskChecklistOrder::where('task_id', $id)->count();
+
+        //Turn list of task item ids into a string
+        $task_list_id_array = implode(",", str_replace("\"", '', $request->get('task_item')));
+
+        if ($task_list_id_count > 0) {
+
+            $taskCheckListOrder->where('task_id', $id)->delete();
+
+            $taskCheckListOrder->task_id = $id;
+            $taskCheckListOrder->task_id_order = $task_list_id_array;
+            $taskCheckListOrder->save();
+        } else {
+
+            $taskCheckListOrder->task_id = $id;
+            $taskCheckListOrder->task_id_order = $task_list_id_array;
+            $taskCheckListOrder->save();
+        }
+
+        return json_encode($task_list_id_array);
     }
 
     public function updateCheckList(Request $request, $id) {
         $taskCheckList = TaskChecklist::find($id);
         $data = $request->all();
-        $data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
+        //$data['is_finished'] = Input::get('is_finished') != 0 ? 1 : 0;
 
         $taskCheckList->update($data);
 
@@ -291,12 +392,327 @@ class TaskController extends BaseController {
     }
 
     public function deleteCheckList($id) {
+        //Find the task item to delete 
         $checkList = TaskChecklist::find($id);
+
+        //Delete the task item from the task order
+        $task_order = explode(",", TaskChecklistOrder::where('task_id', '=', $checkList->task_id)->pluck('task_id_order'));
+
+        $new_task_order = [];
+        foreach ($task_order as $order) {
+            if (str_replace('"', '', $order) !== $id) {
+                array_push($new_task_order, $order);
+            }
+        }
+        $task_order_update = TaskChecklistOrder::where('task_id', '=', $checkList->task_id)->update([
+            'task_id_order' => implode(',', $new_task_order)
+        ]);
+
+        //Delete the task item
         $checkList->delete($id);
 
-        return Redirect::back()->withSuccess('Deleted successfully!!');
+        //If Checklist item was the last item in the list, delete the task order
+        $task_list_count = TaskChecklist::where('task_id', $checkList->task_id)->count();
+
+        if (!$task_list_count > 0) {
+
+            $delete_task_order = TaskChecklistOrder::where('task_id', $checkList->task_id)->delete();
+        }
+
+        return $checkList;
     }
 
+    public function changeCheckList(Request $request, $task_id, $task_list_item_id) {
+
+        $taskCheckList = TaskCheckList::where('id', $task_list_item_id)
+                ->update([
+            'task_id' => $task_id
+        ]);
+
+
+        $taskCheckListOrder = new TaskChecklistOrder();
+
+        //Check if the task id has an ordering list
+        $task_list_id_count = TaskChecklistOrder::where('task_id', $task_id)->count();
+
+        //Turn list of task item ids into a string
+        $task_list_id_array = implode(",", str_replace("\"", '', $request->get('task_item')));
+
+        if ($task_list_id_count > 0) {
+
+            $taskCheckListOrder->where('task_id', $task_id)->delete();
+
+            $taskCheckListOrder->task_id = $task_id;
+            $taskCheckListOrder->task_id_order = $task_list_id_array;
+            $taskCheckListOrder->save();
+        } else {
+
+            $taskCheckListOrder->task_id = $task_id;
+            $taskCheckListOrder->task_id_order = $task_list_id_array;
+            $taskCheckListOrder->save();
+        }
+
+        return json_encode($task_list_id_array);
+    }
+
+    //For CKEditor Image uploads
+    public function saveImage(Request $request) {
+
+        $file_name = $request->file('upload');
+
+        if (file_exists(public_path('assets/ckeditor_uploaded_images/' . $file_name->getClientOriginalName()))) {
+            $uploaded_file_name = $file_name->getClientOriginalName();
+        } else {
+            $file_name->move(
+                    'assets/ckeditor_uploaded_images/', $file_name->getClientOriginalName()
+            );
+            $uploaded_file_name = $file_name->getClientOriginalName();
+        }
+
+        $data = array(
+            "uploaded" => 1,
+            "fileName" => $uploaded_file_name,
+            "url" => 'https://job.tc/pm/assets/ckeditor_uploaded_images/' . $uploaded_file_name
+                //"url" => 'http://localhost:8000/assets/ckeditor_uploaded_images/' . $uploaded_file_name
+        );
+
+        return json_encode($data);
+    }
+
+    //For initial save of task item in Task Checklist table
+    public function addNewTask(Request $request) {
+
+        $user_id = $request->input('user_id');
+        $task_id = $request->input('task_id');
+
+        $task_check_list = new TaskChecklist();
+        $task_check_list->user_id = $user_id;
+        $task_check_list->task_id = $task_id;
+        $task_check_list->checklist_header = '<div style=\"color:red\">No Title</div>';
+        $task_check_list->checklist = '';
+        $task_check_list->save();
+
+
+        $has_order_list = TaskChecklistOrder::where('task_id', '=', $task_check_list->task_id)->count();
+
+        if ($has_order_list > 0) {
+            //then get the new task list item id and append it as the last item on the order
+            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $task_check_list->task_id)->pluck('task_id_order');
+            $task_list_id_array = $taskCheckListOrderString . ',' . $task_check_list->id;
+            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $task_check_list->task_id)->update([
+                'task_id_order' => $task_list_id_array
+            ]);
+
+            //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+            $data = TaskChecklist::where('task_id', '=', $task_check_list->task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+        } else {
+            $data = TaskChecklist::where('task_id', '=', $task_check_list->task_id)->get();
+        }
+
+        return $task_check_list->id;
+    }
+
+    public function saveTaskCheckListHeader(Request $request) {
+        $task_checklist_id = $request->input('task_check_list_id');
+        $checklist_header = $request->input('checklist_header');
+
+        if ($checklist_header === '') {
+            $checklist_header = 'No Title';
+        }
+
+        $task_check_list = TaskChecklist::where('id', $task_checklist_id);
+        $task_check_list->update([
+            'checklist_header' => $checklist_header
+        ]);
+
+        return "true";
+    }
+
+    public function saveTaskCheckList(Request $request) {
+        $task_checklist_id = $request->input('task_check_list_id');
+        $checklist_content = $request->input('checklist_content');
+
+        $task_check_list = TaskChecklist::where('id', $task_checklist_id);
+        $task_check_list->update([
+            'checklist' => $checklist_content
+        ]);
+
+        return "true";
+    }
+
+    public function cancelAddNewTask(Request $request) {
+        $task_checklist_id = $request->input('task_check_list_id');
+        $task_check_list = TaskChecklist::where('id', $task_checklist_id);
+        $task_check_list->delete();
+
+        return "true";
+    }
+
+    public function getTaskChecklistItem(Request $request, $task_check_list_id, $company_id,$task_list_id) {
+        //$task_check_list_id = $request->input('task_check_list_id');
+
+        //$data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
+
+        //return json_encode($data);
+        
+        $user_id = Auth::user('user')->user_id;
+        
+        $list_item = TaskChecklist::where('id',$task_check_list_id)->first();
+       
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
+        $links = Link::select(
+                'links.id', 'title',
+                'url', 'descriptions',
+                'tags', 'comments','task_id',
+                'task_item_id', 'user_id',
+                'link_categories.name as category_name'
+            )
+            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+            ->where('task_id', '=', $task_list_id)
+            ->get();
+
+        $categories = LinkCategory::all()
+            ->lists('name', 'id')
+            ->toArray();
+
+        return view('task.partials._taskchecklistitem',[
+            'list_item' => $list_item,
+            'module_permissions' => $module_permissions,
+            'links' => $links,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'categories' => $categories
+        ]);
+        
+    }
+
+    public function saveSpreadsheet(Request $request) {
+        //$taskCheckList = new TaskChecklist($request->all());
+        //$taskCheckList->save();
+        $task_id = $request->input('task_id');
+        $task_check_list_id = $request->input('task_check_list_id');
+        $checklist_header = $request->input('checklist_header');
+        $checklist = $request->input('checklist');
+
+        $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
+
+        $taskCheckList->update([
+            'checklist_header' => $checklist_header,
+            'checklist' => $checklist,
+        ]);
+
+        $has_order_list = TaskChecklistOrder::where('task_id', '=', $task_id)->count();
+
+        if ($has_order_list > 0) {
+            //then get the new task list item id and append it as the last item on the order
+            $taskCheckListOrderString = TaskChecklistOrder::where('task_id', '=', $task_id)->pluck('task_id_order');
+            $task_list_id_array = $taskCheckListOrderString . ',' . $task_id;
+            $taskCheckListOrderUpdate = TaskChecklistOrder::where('task_id', $task_id)->update([
+                'task_id_order' => $task_list_id_array
+            ]);
+
+            //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
+            $data = TaskChecklist::where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+        } else {
+            $data = TaskChecklist::where('task_id', '=', $task_id)->get();
+        }
+
+        return json_encode($data);
+    }
+
+    public function addBriefcaseForm() {
+        return view('forms.addBriefcaseForm');
+    }
+
+    public function addBriefcase(Request $request) {
+
+        $user_id = Auth::user('user')->user_id;
+        $project_id = $request->input('project_id');
+        $title = $request->input('title');
+
+        $project = Project::where('project_id', $project_id)->first();
+
+        $task = new Task;
+        $task->belongs_to = 'project';
+        $task->unique_id = $project_id;
+        $task->task_title = $title;
+        $task->task_description = '';
+        $task->is_visible = 'yes';
+        $task->task_status = 'pending';
+        $task->user_id = $user_id;
+        $task->project_id = $project_id;
+        $task->save();
+
+        //If the one who added the briefcase isn't the project owner,
+        // Give permissions to them automatically
+        if ($project->user_id !== $user_id) {
+            $task_check_list_permission = new TaskCheckListPermission();
+            $task_check_list_permission->task_id = $task->task_id;
+            $task_check_list_permission->user_id = $user_id;
+            $task_check_list_permission->project_id = $project_id;
+            $task_check_list_permission->company_id = $project->company_id;
+            $task_check_list_permission->save();
+        }
+
+        return view('task.partials._briefcase', [
+            'task' => $task
+        ]);
+    }
+
+    public function autoSaveEditChecklist(Request $request) {
+        $task_check_list_id = $request->input('task_check_list_id');
+        $checklist = $request->input('checklist');
+
+        $taskCheckList = TaskChecklist::where('id', $task_check_list_id);
+
+        $taskCheckList->update([
+            'checklist' => $checklist
+        ]);
+
+        return "true";
+    }
+
+    public function getTaskListItem(Request $request, $id) {
+        
+        $user_id = Auth::user('user')->user_id;
+        $company_id = $request->input('company_id');
+        
+        $list_item = TaskChecklist::where('id',$id)->first();
+        
+        $user_profile_role = Profile::where('user_id', $user_id)
+                ->where('company_id', $company_id)
+                ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+        
+        return view('task._partials._taskchecklistitem',[
+            'list_item' => $list_item,
+            'module_permissions' => $module_permissions
+        ]);
+    }
 }
 
 ?>

@@ -12,6 +12,7 @@ class CreateMeetingTable extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable('meeting')) {
         Schema::create('meeting',function(Blueprint $table){
             $table->increments('id')->unsigned();
             $table->integer('project_id');
@@ -27,6 +28,7 @@ class CreateMeetingTable extends Migration
 
             $table->timestamps();
         });
+        }
     }
 
     /**

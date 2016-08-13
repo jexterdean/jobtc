@@ -17,6 +17,7 @@ class NoteController extends BaseController
 
     public function show()
     {
+
     }
 
     public function create()
@@ -32,7 +33,7 @@ class NoteController extends BaseController
 
         $note = Note::findOrNew($note_id);
         $data = Input::all();
-        $data['username'] = Auth::user()->username;
+        $data['user_id'] = Auth::user()->id;
         $note->fill($data);
         $note->save();
 
@@ -44,7 +45,7 @@ class NoteController extends BaseController
 
         $note = new Note;
         $data = Input::all();
-        $data['username'] = Auth::user()->username;
+        $data['user_id'] = Auth::user()->id;
         $note->fill($data);
         $note->save();
 

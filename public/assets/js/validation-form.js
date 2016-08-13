@@ -6,19 +6,19 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                user_role: {
-	                    required: true,
+	                    required: true
 	                },
 	                username: {
-	                    required: true,
+	                    required: true
 	                },
 	                password: {
-	                    required: true,
+	                    required: true
 	                },
 	                email: {
-	                    required: true,
+	                    required: true
 	                },
 	                name: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -36,7 +36,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}	
+	};
 	var handleProject = function() {
 
    		$('.project-form').validate({
@@ -45,25 +45,25 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                project_title: {
-	                    required: true,
+	                    required: true
 	                },
 	                client_id: {
-	                    required: true,
+	                    required: true
 	                },
 	                ref_no: {
-	                    required: true,
+	                    required: true
 	                },
 	                start_date: {
-	                    required: true,
+	                    required: true
 	                },
 	                deadline: {
-	                    required: true,
+	                    required: true
 	                },
 	                rate_type: {
-	                    required: true,
+	                    required: true
 	                },
 	                rate_value: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -90,29 +90,29 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                ref_no: {
-	                    required: true,
+	                    required: true
 	                },
 	                client_id: {
-	                    required: true,
+	                    required: true
 	                },
 	                issue_date: {
-	                    required: true,
+	                    required: true
 	                },
 	                due_date: {
-	                    required: true,
+	                    required: true
 	                },
 	                valid_date: {
-	                    required: true,
+	                    required: true
 	                },
 	                tax: {
 	                    required: true,
-	                    number: true,
+	                    number: true
 	                },
 	                discount: {
-	                    number: true,
+	                    number: true
 	                },
 	                currency: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -130,7 +130,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}	
+	};
 	var handleItem = function() {
 
    		$('.item-form').validate({
@@ -139,7 +139,7 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                item_name: {
-	                    required: true,
+	                    required: true
 	                },
 	                item_quantity: {
 	                    required: true,
@@ -165,7 +165,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}	
+	};
 	var handleBug = function() {
 
    		$('.bug-form').validate({
@@ -174,19 +174,19 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                project_id: {
-	                    required: true,
+	                    required: true
 	                },
 	                ref_no: {
-	                    required: true,
+	                    required: true
 	                },
 	                reported_on: {
-	                    required: true,
+	                    required: true
 	                },
 	                bug_priority: {
-	                    required: true,
+	                    required: true
 	                },
 	                bug_status: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -204,7 +204,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}	
+	};
 	var handleClient = function() {
 
    		$('.client-form').validate({
@@ -213,16 +213,16 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                company_name: {
-	                    required: true,
+	                    required: true
 	                },
 	                contact_person: {
-	                    required: true,
+	                    required: true
 	                },
 	                email: {
-	                    required: true,
+	                    required: true
 	                },
 	                country_id: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -240,7 +240,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}	
+	};
 	var handleChangePassword = function() {
 
    		$('.change-password-form').validate({
@@ -249,15 +249,15 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                password: {
-	                    required: true,
+	                    required: true
 	                },
 	                new_password: {
-	                    required: true,
+	                    required: true
 	                },
 	                new_password_confirmation: {
 	                    required: true,
 	                    equalTo: "#new_password"
-	                },
+	                }
 	            },
 
 	            highlight: function (element) {
@@ -274,7 +274,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}	
+	};
 	var handleProfile = function() {
 
    		$('.profile-form').validate({
@@ -283,7 +283,7 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                name: {
-	                    required: true,
+	                    required: true
 	                },
 	                email: {
 	                    required: true,
@@ -305,7 +305,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleComment = function() {
 
    		$('.comment-form').validate({
@@ -314,7 +314,7 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                comment: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -332,7 +332,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleAttachment = function() {
    		$('.attachment-form').validate({
 	            errorElement: 'span',
@@ -340,13 +340,13 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                attachment_title: {
-	                    required: true,
+	                    required: true
 	                },
 	                attachment_description: {
-	                    required: true,
+	                    required: true
 	                },
 	                file: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -364,7 +364,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleMessage = function() {
    		$('.message-form').validate({
 	            errorElement: 'span',
@@ -372,13 +372,13 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                message_subject: {
-	                    required: true,
+	                    required: true
 	                },
 	                message_content: {
-	                    required: true,
+	                    required: true
 	                },
 	                to_username: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -396,7 +396,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleTaks = function() {
    		$('.task-form').validate({
 	            errorElement: 'span',
@@ -404,10 +404,10 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                task_title: {
-	                    required: true,
+	                    required: true
 	                },
 	                due_date: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -425,7 +425,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleTicket = function() {
 
    		$('.ticket-form').validate({
@@ -458,7 +458,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleAssignUser = function() {
 
    		$('.assign-user-form').validate({
@@ -485,7 +485,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleInstall = function() {
 
    		$('.install-form').validate({
@@ -521,7 +521,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handlePayment = function() {
 
    		$('.payment-form').validate({
@@ -557,7 +557,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleGeneralSetting = function() {
 
    		$('.general-setting-form').validate({
@@ -566,28 +566,28 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                company_name: {
-	                    required: true,
+	                    required: true
 	                },
 	                contact_person: {
-	                    required: true,
+	                    required: true
 	                },
 	                address: {
-	                    required: true,
+	                    required: true
 	                },
 	                city: {
-	                    required: true,
+	                    required: true
 	                },
 	                country: {
-	                    required: true,
+	                    required: true
 	                },
 	                zipcode: {
-	                    required: true,
+	                    required: true
 	                },
 	                email: {
-	                    required: true,
+	                    required: true
 	                },
 	                phone: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -605,7 +605,7 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
 	var handleSystemSetting = function() {
 
    		$('.system-setting-form').validate({
@@ -614,19 +614,19 @@ var Validate = function () {
 	            focusInvalid: true,
 	            rules: {
 	                allowed_upload_file: {
-	                    required: true,
+	                    required: true
 	                },
 	                allowed_upload_max_size: {
-	                    required: true,
+	                    required: true
 	                },
 	                default_currency: {
-	                    required: true,
+	                    required: true
 	                },
 	                default_tax: {
-	                    required: true,
+	                    required: true
 	                },
 	                default_discount: {
-	                    required: true,
+	                    required: true
 	                }
 	            },
 
@@ -644,19 +644,19 @@ var Validate = function () {
 	                form.submit();
 	            }
 	        });
-	}
+	};
     var handleDatePickers = function () {
 
         if (jQuery().datepicker) {
             $('.date-picker').datepicker({
             	format: 'dd-mm-yyyy',
-                rtl: Metronic.isRTL(),
+                /*rtl: Metronic.isRTL(),*/
                 orientation: "left",
                 autoclose: true
             });
             $('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
         }
-    }
+    };
 
     // var handleSlider = function () {
     //     jQuery("#slider-snap-inc").slider({
@@ -692,7 +692,7 @@ var Validate = function () {
             handleUser();
             handleChangePassword();
             handleProfile();
-            handleProject();
+            //handleProject();
             handleDatePickers();
             handleBug();
             handleItem();
@@ -702,7 +702,7 @@ var Validate = function () {
             handleAttachment();
             handleTicket();
             handleMessage();
-            handleTaks();
+            //handleTaks();
             handleBilling();
             handleInstall();
             handlePayment();

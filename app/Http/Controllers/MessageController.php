@@ -19,16 +19,16 @@ class MessageController extends BaseController
     public function index()
     {
 
-        $user_options = User::where('id', '!=', Auth::user('user')->id)
-            ->orderBy('first_name', 'asc')
-            ->lists('first_name', 'email')
+        $user_options = User::where('username', '!=', Auth::user()->username)
+            ->orderBy('name', 'asc')
+            ->lists('name', 'username')
             ->toArray();
 
-        $inbox = Message::where('to_username', '=', Auth::user('user')->email)
+        $inbox = Message::where('to_username', '=', Auth::user()->username)
             ->orderBy('created_at', 'asc')
             ->get();
 
-        $sent = Message::where('from_username', '=', Auth::user('user')->email)
+        $sent = Message::where('from_username', '=', Auth::user()->username)
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -82,7 +82,7 @@ class MessageController extends BaseController
         } else
             $data['file'] = '';
 
-        $data['from_username'] = Auth::user('user')->email;
+        $data['from_username'] = Auth::user()->username;
         $message->fill($data);
         $message->save();
         return Redirect::back()->withSuccess('Successfully sent!!');

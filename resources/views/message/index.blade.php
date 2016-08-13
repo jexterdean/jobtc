@@ -122,18 +122,18 @@
                     </div>
                     <div class="form-group">
                         {!!  Form::input('text','message_subject','',['class' => 'form-control', 'placeholder' =>
-                        'Enter Subject', 'tabindex' => '2']) !!}
+                        'Subject', 'tabindex' => '2']) !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::textarea('message_content','',['size' => '30x8', 'class' => 'form-control textarea',
-                        'placeholder' => 'Enter Message Content', 'tabindex' => '3']) !!}
+                        'placeholder' => 'Message Content', 'tabindex' => '3']) !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::input('file','file','') !!}
                     </div>
                 </div>
                 <div class="box-footer">
-                    {!!  Form::submit('Send',['class' => 'btn btn-primary', 'tabindex' => '20'])  !!}
+                    {!!  Form::submit('Send',['class' => 'btn btn-edit btn-shadow', 'tabindex' => '20'])  !!}
                 </div>
                 {!!  Form::close()  !!}
             </div>

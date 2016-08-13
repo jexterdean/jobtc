@@ -12,11 +12,12 @@
 */
 html,
 body {
-  overflow-x: hidden!important;
+  /*overflow-x: hidden!important;*/
   font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
-  background: #A9B7C4;
+  /*background: #1933c4;*//*#A9B7C4;*/
+  font-size: 18px; //Don't remove this font
 }
 a {
   color: #3c8dbc;
@@ -109,10 +110,10 @@ body.fixed .wrapper {
   margin-top: 50px;
 }
 /* Content */
-.content {
+/*.content {
   padding: 20px 15px;
   background: #A9B7C4;
-}
+}*/
 /* Utility */
 /* H1 - H6 font */
 h1,
@@ -141,7 +142,7 @@ h6,
 }
 /* All images should be responsive */
 img {
-  max-width: 100% !important;
+  //max-width: 100% !important;
 }
 .sort-highlight {
   background: #f4f4f4;

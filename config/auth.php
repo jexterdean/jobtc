@@ -42,7 +42,18 @@ return [
      */
 
     //'table' => 'user',
-
+    'multi' => [
+        'user' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+            'table' => 'users'
+        ],
+        'applicant' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Applicant::class,
+            'table' => 'applicants'
+        ]
+    ],
     /*
       |--------------------------------------------------------------------------
       | Password Reset Settings
@@ -57,18 +68,6 @@ return [
       | they have less time to be guessed. You may change this as needed.
       |
      */
-    'multi' => [
-        'user' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-            'table' => 'users'
-        ],
-        'client' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Client::class,
-            'table' => 'clients'
-        ]
-    ],
     'password' => [
         'email' => 'emails.password',
         'table' => 'password_resets',

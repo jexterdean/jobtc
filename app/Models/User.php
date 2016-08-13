@@ -19,23 +19,40 @@ class User extends Model implements
 {
 
     use Authenticatable,  CanResetPassword,HasRoleAndPermission;
-    
-    protected $connection = 'mysql_jobtc';
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['email','user_type','first_name','last_name' , 'password'];
-    
-    /*protected $fillable = ['username', 'password', 'client_id', 'name',
-        'email', 'phone', 'user_status', 'user_status_detail', 'user_avatar'];*/
 
-    //protected $primaryKey = 'user_id';
-    //protected $table = 'user';
-    protected $table = 'users';
+    protected $fillable = ['email', 
+        'password' ,
+        'name',
+        'phone', 
+        'photo' ,
+        'resume',
+        'address_1',
+        'address_2',
+        'zipcode',
+        'country_id',
+        'user_status',
+        'notes',
+        'skype',
+        'facebook',
+        'linkedin',
+        'timezone_id',
+        'ticketit_admin',
+        'ticketit_agent',];
+    
+    protected $primaryKey = 'user_id';
+    protected $table = 'user';
 
     protected $hidden = array('password', 'remember_token');
-
+    
+    public function profile() {
+        return $this->hasMany('App\Models\Profile');
+    }
+    
+    public function team_member() {
+        return $this->hasMany('App\Models\TeamMember');
+    }
+    
+    public function role_user() {
+        return $this->hasOne('App\Models\RoleUser');
+    }
 }

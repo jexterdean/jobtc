@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -114,7 +114,8 @@ return [
          * Laravel Framework Service Providers...
          */
         Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
-        Illuminate\Auth\AuthServiceProvider::class,
+        //Illuminate\Auth\AuthServiceProvider::class,
+        Sarav\Multiauth\MultiauthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
@@ -147,8 +148,9 @@ return [
 
         Bican\Roles\RolesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Sarav\Multiauth\MultiauthServiceProvider::class
+        Kordy\Ticketit\TicketitServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
+        PhanAn\Remote\RemoteServiceProvider::class,
     ],
 
     /*
@@ -201,6 +203,8 @@ return [
         'HTML' => Collective\Html\HtmlFacade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
     ],
 
 ];

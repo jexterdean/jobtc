@@ -1,13 +1,10 @@
 @extends('layouts.default')
 @section('content')
-
-
-
     <div class="modal fade" id="add_link" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
                     <h4 class="modal-title">Add Task</h4>
                 </div>
                 <div class="modal-body">
@@ -18,16 +15,12 @@
             </div>
         </div>
     </div>
-
-
     <div class="modal fade" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             </div>
         </div>
     </div>
-
-
     <div class="col-md-12">
         <div class="box box-default">
             <div class="box-header">
@@ -36,8 +29,7 @@
                     <a data-toggle="modal" href="#add_link">
                         <button class="btn btn-sm btn-success btn-shadow"><i class="fa fa-plus-circle"></i> Add New Task</button>
                     </a>
-                    <button class="btn btn-sm btn-warning" data-widget="collapse"><i
-                                class="fa fa-minus"></i></button>
+                    <button class="btn btn-sm btn-transparent" data-widget="collapse"><i class="fa fa-chevron-up"></i></button>
                 </div>
             </div>
             <div class="box-body">

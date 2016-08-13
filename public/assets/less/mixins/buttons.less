@@ -6,7 +6,8 @@
 .button-variant(@color; @background; @border) {
   color: @color!important;
   background-color: @background;
-  border-color: @border;
+  border-color: @border!important;
+  margin-bottom: 5px;
 
   &:focus,
   &.focus {

@@ -19,7 +19,7 @@ class EventsController extends BaseController
 
     public function index()
     {
-        $events = Events::where('username', '=', Auth::user('user')->email)
+        $events = Events::where('user_id', '=', Auth::user()->id)
             ->orWhere('public', '=', '1')
             ->get();
 
@@ -44,7 +44,7 @@ class EventsController extends BaseController
     {
 
         $event = Events::where('event_id', '=', $event_id)
-            ->where('username', '=', Auth::user('user')->email)
+            ->where('user_id', '=', Auth::user()->id)
             ->first();
 
         if (count($event))
@@ -78,7 +78,7 @@ class EventsController extends BaseController
         $event->event_description = Helper::mynl2br(Input::get('event_description'));
         $event->start_date = date("Y-m-d H:i:s", strtotime(Input::get('start_date')));
         $event->end_date = date("Y-m-d H:i:s", strtotime(Input::get('end_date')));
-        $event->username = Auth::user('user')->email;
+        $event->user_id = Auth::user()->id;
         $event->public = $public;
         $event->save();
 
@@ -121,7 +121,7 @@ class EventsController extends BaseController
     {
         $event = Events::find($event_id);
 
-        if (!$event && ($event->username != Auth::user('user')->email|| !parent::hasRole('Admin')))
+        if (!$event && ($event->user_id != Auth::user()->id|| !parent::hasRole('Admin')))
             return Redirect::back()->withErrors('This is not a valid link!!');
 
         $event->delete();

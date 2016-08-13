@@ -44,7 +44,7 @@ $(function() {
     /*     
      * Add collapse and remove events to boxes
      */
-    $("[data-widget='collapse']").click(function() {
+    $("body").on('click','[data-widget="collapse"]',function() {
         //Find the box parent        
         var box = $(this).parents(".box").first();
         //Find the body and the footer
@@ -133,10 +133,10 @@ $(function() {
      * iCheck plugin in.
      * You can find the documentation at http://fronteed.com/iCheck/
      */
-    $("input[type='checkbox']:not(.simple), input[type='radio']:not(.simple)").iCheck({
+    /*$("input[type='checkbox']:not(.simple), input[type='radio']:not(.simple)").iCheck({
         checkboxClass: 'icheckbox_minimal',
         radioClass: 'iradio_minimal'
-    });
+    });*/
 
 });
 function fix_sidebar() {

@@ -13,6 +13,7 @@ use \Auth;
 use \Validator;
 use App\Models\User;
 use App\Models\Team;
+use App\Models\TeamProject;
 use \Mail;
 use Hash;
 
@@ -32,17 +33,23 @@ class TeamBuilderController extends BaseController
     {
         $assets = ['calendar', 'magicSuggest', 'waiting'];
 
-        $team = DB::table('project')
+        $team = DB::table('team')
             ->get();
         if(count($team) > 0){
             foreach($team as $v){
                 $v->member = TeamMember::select(DB::raw(
-                        'fp_team_member.*,
-                        IF(fp_user.name IS NULL, fp_user.username, fp_user.name) as name,
-                        fp_user.email'
-                    ))
-                    ->leftJoin('user', 'user.user_id', '=', 'team_member.user_id')
-                    ->where('team_member.project_id', '=', $v->id)
+                    'fp_team_member.id,
+                    fp_team_member.user_id,
+                    fp_user.name as name,
+                    fp_user.email'
+                ))
+                ->leftJoin('user', 'user.user_id', '=', 'team_member.user_id')
+                ->where('team_member.team_id', '=', $v->id)
+                ->get();
+
+                $v->projects = TeamProject::select(DB::raw('fp_project.project_id, fp_project.project_title'))
+                    ->leftJoin('project', 'project.project_id', '=', 'team_project.project_id')
+                    ->where('team_project.team_id', '=', $v->id)
                     ->get();
             }
         }
@@ -56,10 +63,10 @@ class TeamBuilderController extends BaseController
     public function teamBuilderJson(){
         header("Content-type: application/json");
 
-        $t = DB::table('project')
-            ->select('project_id', 'project_title')
+        $t = DB::table('team')
+            ->select('id')
             ->get();
-        $team = array(array('project_id' => 0, 'project_title' => ''));
+        $team = array(array('id' => 0));
         $team = array_merge($team, $t);
 
         return response()->json($team);
@@ -68,11 +75,11 @@ class TeamBuilderController extends BaseController
     public function teamBuilderUserJson(){
         //header("Content-type: application/json");
 
-        $project_id = isset($_GET['t']) ? $_GET['t'] : '';
+        $team_id = isset($_GET['t']) ? $_GET['t'] : '';
         $existing_user = array();
-        if($project_id){
+        if($team_id){
             $e = TeamMember::select('user_id')
-                ->where('project_id', '=', $project_id)
+                ->where('team_id', '=', $team_id)
                 ->get();
             $existing_user = array_pluck($e, 'user_id');
         }
@@ -80,7 +87,7 @@ class TeamBuilderController extends BaseController
         $r = DB::table('user')
             ->select(DB::raw(
                 'user_id as id,
-                IF(name IS NULL, username, name) as name,
+                name,
                 email,
                 user_avatar'
             ))
@@ -95,11 +102,11 @@ class TeamBuilderController extends BaseController
     public function teamBuilderExistingUserJson(){
         header("Content-type: application/json");
 
-        $project_id = isset($_GET['t']) ? $_GET['t'] : '';
+        $team_id = isset($_GET['t']) ? $_GET['t'] : '';
         $existing_user = array();
-        if($project_id){
+        if($team_id){
             $e = TeamMember::select('user_id')
-                ->where('project_id', '=', $project_id)
+                ->where('team_id', '=', $team_id)
                 ->get();
             $existing_user = array_pluck($e, 'user_id');
         }
@@ -131,13 +138,10 @@ class TeamBuilderController extends BaseController
         $account = array();
 
         $page = isset($_GET['p']) ? $_GET['p'] : 'member';
-        $project_id = isset($_GET['id']) ? $_GET['id'] : '';
+        $team_id = isset($_GET['id']) ? $_GET['id'] : '';
 
         if($page == 'team'){
-            $p = DB::table('project')
-                ->select('project_id', 'project_title')
-                ->get();
-            $project = array_pluck($p, 'project_title', 'project_id');
+
         }
         else if($page == 'member'){
             $r = DB::table('roles')
@@ -145,17 +149,17 @@ class TeamBuilderController extends BaseController
                 ->get();
             $role = array_pluck($r, 'name', 'id');
 
-            $t = DB::table('project')
-                ->select('project_id', 'project_title')
-                ->where('project_id', '!=', $project_id)
+            $t = DB::table('team')
+                ->select('id', 'title')
+                ->where('id', '!=', $team_id)
                 ->where(DB::raw('(
                     SELECT count(fp_team_member.id)
                     FROM fp_team_member
                     WHERE
-                        fp_team_member.project_id = fp_project.project_id
+                        fp_team_member.team_id = fp_team.id
                 )'), '!=', 0)
                 ->get();
-            $team = array_pluck($t, 'project_title', 'project_id');
+            $team = array_pluck($t, 'title', 'id');
 
             $c = DB::table('client')
                 ->select('client_id', 'company_name')
@@ -169,13 +173,25 @@ class TeamBuilderController extends BaseController
             $account = array('' => 'Select Account');
             $account += array_pluck($a, 'account_name', 'id');
         }
+        else if($page == 'project'){
+            $e = DB::table('team_project')
+                ->select('project_id')
+                ->get();
+            $existing_project = array_pluck($e, 'project_id');
+
+            $project = DB::table('project')
+                ->select('project_id', 'project_title')
+                ->whereNotIn('project_id', $existing_project)
+                ->get();
+            $project = array_pluck($project, 'project_title', 'project_id');
+        }
 
         return View::make('teamBuilder.' . $page . '.create', [
             'assets' => $assets,
             'project' => $project,
             'role' => $role,
             'team' => $team,
-            'project_id' => $project_id,
+            'team_id' => $team_id,
             'company' => $company,
             'account' => $account
         ]);
@@ -193,19 +209,17 @@ class TeamBuilderController extends BaseController
 
         if($page == 'team') {
             $validation = Validator::make($request->all(), [
-                'title' => 'required',
-                'project_id' => 'required'
+                'title' => 'required'
             ]);
 
             if ($validation->fails()) {
-                return Redirect::to('meeting')
+                return Redirect::to('teamBuilder')
                     ->withInput()
                     ->withErrors($validation->messages());
             }
 
             $meeting = new Team();
-            $meeting->project_id = Input::get('project_id');
-            $meeting->user_id = Auth::user()->user_id;
+            $meeting->author_id = Auth::user()->user_id;
             $meeting->title = Input::get('title');
             $meeting->save();
 
@@ -221,7 +235,7 @@ class TeamBuilderController extends BaseController
                     foreach($userId as $v){
                         $meeting = new TeamMember();
                         $meeting->created_by = Auth::user()->user_id;
-                        $meeting->project_id = Input::get('project_id');
+                        $meeting->team_id = Input::get('team_id');
                         $meeting->user_id = $v;
                         $meeting->save();
                     }
@@ -236,14 +250,14 @@ class TeamBuilderController extends BaseController
                 if(count($t) > 0){
                     foreach($t as $v){
                         $team_member = DB::table('team_member')
-                            ->where('project_id', '=', Input::get('project_id'))
+                            ->where('team_id', '=', Input::get('team_id'))
                             ->where('user_id', '=', $v->user_id)
                             ->first();
 
                         if (is_null($team_member)) {
                             $meeting = new TeamMember();
                             $meeting->created_by = Auth::user()->user_id;
-                            $meeting->project_id = Input::get('project_id');
+                            $meeting->team_id = Input::get('team_id');
                             $meeting->user_id = $v->user_id;
                             $meeting->save();
                         }
@@ -254,7 +268,7 @@ class TeamBuilderController extends BaseController
                 $validation = Validator::make($request->all(), [
                     'role_id' => 'required',
                     'name' => 'required',
-                    'email' => 'required',
+                    'email' => 'email|required',
                     'username' => 'required',
                     'password' => 'required'
                 ]);
@@ -279,7 +293,7 @@ class TeamBuilderController extends BaseController
 
                 $meeting = new TeamMember();
                 $meeting->created_by = Auth::user()->user_id;
-                $meeting->project_id = Input::get('project_id');
+                $meeting->team_id = Input::get('team_id');
                 $meeting->user_id = $user->user_id;
                 $meeting->save();
 
@@ -312,6 +326,27 @@ class TeamBuilderController extends BaseController
                 );
             }
         }
+        else if($page == 'project'){
+            $team_id = isset($_GET['t']) ? $_GET['t'] : '';
+
+            $validation = Validator::make($request->all(), [
+                'project_id' => 'required'
+            ]);
+
+            if ($validation->fails()) {
+                return Redirect::to('teamBuilder')
+                    ->withInput()
+                    ->withErrors($validation->messages());
+            }
+
+            $meeting = new TeamProject();
+            $meeting->team_id = $team_id;
+            $meeting->project_id = Input::get('project_id');
+            $meeting->save();
+
+            return Redirect::to('teamBuilder')
+                ->withSuccess("Project added successfully!!");
+        }
     }
 
     /**
@@ -333,7 +368,26 @@ class TeamBuilderController extends BaseController
      */
     public function edit($id)
     {
-        //
+        $assets = [];
+        $team = array();
+        $page = isset($_GET['p']) ? $_GET['p'] : 'member';
+
+        if($page == 'team'){
+            $team = Team::find($id)
+                ->first();
+        }
+        else if($page == 'member'){
+
+        }
+        else if($page == 'project'){
+
+        }
+
+        return View::make('teamBuilder.' . $page . '.edit', [
+            'assets' => $assets,
+            'team_id' => $id,
+            'team' => $team,
+        ]);
     }
 
     /**
@@ -345,7 +399,26 @@ class TeamBuilderController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $page = isset($_GET['p']) ? $_GET['p'] : 'member';
+
+        if($page == 'team') {
+            $validation = Validator::make($request->all(), [
+                'title' => 'required'
+            ]);
+
+            if ($validation->fails()) {
+                return Redirect::to('teamBuilder')
+                    ->withInput()
+                    ->withErrors($validation->messages());
+            }
+
+            $meeting = Team::find($id);
+            $meeting->title = Input::get('title');
+            $meeting->save();
+
+            return Redirect::to('teamBuilder')
+                ->withSuccess("Team updated successfully!!");
+        }
     }
 
     /**
@@ -356,6 +429,28 @@ class TeamBuilderController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $page = isset($_GET['p']) ? $_GET['p'] : 'member';
+
+        if($page == 'team') {
+            DB::table('team')
+                ->where('id', '=', $id)
+                ->delete();
+            DB::table('team_member')
+                ->where('team_id', '=', $id)
+                ->delete();
+            DB::table('team_project')
+                ->where('team_id', '=', $id)
+                ->delete();
+        }
+        else if($page == 'member') {
+            DB::table('team_member')
+                ->where('id', '=', $id)
+                ->delete();
+        }
+        else if($page == 'project') {
+            DB::table('team_project')
+                ->where('id', '=', $id)
+                ->delete();
+        }
     }
 }
