@@ -97,7 +97,7 @@
                                                         <a href="#" class="btn-delete btn-shadow btn alert_delete view-btn-delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
                                                         @endif
                                                         <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                                        <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />
+                                                        <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -351,7 +351,8 @@
             e.stopImmediatePropagation();
 
             var index = $(this).parent().parent().parent().index();
-            var id = $(this).parent().siblings().find('.task_list_item_id').val();
+            //var id = $(this).parent().siblings().find('.task_list_item_id').val();
+            var id = $(this).siblings('.task_list_item_id').val();
 
             /*From Default, Change to ongoing*/
             if ($(this).hasClass('bg-gray')) {
