@@ -214,9 +214,9 @@ var saveRecordingsToDatabase = function (localStreamId, remoteStreamId, video_ty
 
 //Toggle the button to start the video conference
 /*$('#localVideo').css({
-    height: '100%',
-    width: '772px'
-});*/
+ height: '100%',
+ width: '772px'
+ });*/
 $('.interview-applicant').clickToggle(function () {
     //var room_name_tmp = $('title').text();
     var room_name_tmp = window.location.pathname;
@@ -224,9 +224,19 @@ $('.interview-applicant').clickToggle(function () {
 
     // Select tab by name
     $('.nav-tabs a[href="#video-tab"]').tab('show');
-    var config = {audio: true, video: true, data: true,minVideoBW : 2000,maxVideoBW: 100000,minAudioBW: 64,maxAudioBW: 64};
-    localStream = Erizo.Stream(config);
+    
+    var bandwidth = 1000;
+    var video_constraints = {
+        mandatory: {
+            minFrameRate: 30
+        },
+        optional: [bandwidth]
+    };
 
+
+    var config = {audio: true, video: true, data: true, maxVideoBW:100000, minVideoBW: 100,videoSize: [320, 240, 1280, 720]};
+    localStream = Erizo.Stream(config);
+    
     getRoom(room_name, function (res) {
         console.log(res);
         if (res === "no-room") {
@@ -242,7 +252,9 @@ $('.interview-applicant').clickToggle(function () {
 
                         room.addEventListener("room-connected", function (roomEvent) {
                             console.log('Connected to the room OK');
-                            room.publish(localStream);
+
+                            room.publish(localStream,{scheme:"notify-break"});
+
                         });
 
                         room.addEventListener("room-disconnected", function (roomEvent) {
@@ -443,12 +455,12 @@ $('.record-button').clickToggle(function () {
 });
 
 var quizVideoRecordId, quizLocalVideoRecordId;
-$('body').on('click','.btn-video',function (e) {
+$('body').on('click', '.btn-video', function (e) {
     var video_btn = $(this);
     var time_limit = $(this).parent().find('.time-limit-conference');
     var question_point = $(this).parent().find('.video-conference-points');
 
-    if($(this).data('status') == 1) {
+    if ($(this).data('status') == 1) {
         var remote_streams = room.remoteStreams;
         console.log(remote_streams);
         for (var i in remote_streams) {
@@ -472,7 +484,7 @@ $('body').on('click','.btn-video',function (e) {
 
         }
     }
-    else if($(this).data('status') == 2) {
+    else if ($(this).data('status') == 2) {
         var file_extension = '.webm', video_url, ajaxUrl, formData;
         if (quizLocalVideoRecordId !== undefined) {
             room.stopRecording(quizLocalVideoRecordId);
@@ -569,7 +581,7 @@ $('.delete-quiz-video').click(function () {
     var video_id = $(this).siblings('.video_id').val();
 
     var ajaxUrl = public_path + 'quizDeleteResult';
-    $.post(ajaxUrl, { result_id: video_id }, function (data) {
+    $.post(ajaxUrl, {result_id: video_id}, function (data) {
         console.log(data);
         video_element.remove();
     });
@@ -629,7 +641,7 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
         autocomplete: {
             delay: 0, // show suggestions immediately
             position: {collision: 'flip'}, // automatic menu position up/down
-            source: public_path + 'getTags/' + $(this).siblings('.video_id') + '/video' 
+            source: public_path + 'getTags/' + $(this).siblings('.video_id') + '/video'
         },
         onChange: function (field, editor, tags) {
             var ajaxurl = public_path + 'addNewTag';
