@@ -16,20 +16,20 @@
             <div class="col-xs-12">
                 <div class="space"></div>
 
-                <form action="{{url('login')}}" method="post" class="account_form" id="login-form">
+                <form action="{{url('login')}}" method="post" class="account_form" id="login">
 
                     {!! csrf_field() !!}
 
                     <div class="input-group">
                         <!--label for="login_email">Email</label><br/-->
                         <span class="input-group-addon" id="email-span"><i class="fa fa-envelope"></i></span>
-                        <input type="text" class="form-control text required" aria-describedby="email-span" placeholder="Email" name="email" tabindex="1" id="login_email" value="{{ Request::old('email') }}" />
+                        <input type="text"  data-validation="email" class="form-control text" aria-describedby="email-span" placeholder="Email" name="email" tabindex="1" id="login_email" value="{{ Request::old('email') }}" />
                     </div>
                     <br />
                     <div class="input-group">
                         <!--label for="login_password">Password</label><br/-->
                         <span class="input-group-addon" id="password-span"><i class="fa fa-lock"></i></span>
-                        <input type="password" class="form-control text required" aria-describedby="password-span" placeholder="Password" name="password" tabindex="2" id="login_password" value="" />
+                        <input type="password" data-validation="required" class="form-control" aria-describedby="password-span" placeholder="Password" name="password" tabindex="2" id="login_password" value="" />
                     </div>
                     <div class="input-group">
                         <div class="checkbox">
@@ -48,3 +48,24 @@
     </div>
 </div>
 @stop
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.36/jquery.form-validator.min.js"></script>
+
+<script>
+    // default vaidation from jquery.form-validator
+    $(function(){
+        
+        var jQuery_1_7_0 = $.noConflict(true); 
+
+            $.validate({
+                     
+        });
+
+    });
+</script>
+
