@@ -29,7 +29,7 @@
                     <div class="input-group">
                         <!--label for="login_password">Password</label><br/-->
                         <span class="input-group-addon" id="password-span"><i class="fa fa-lock"></i></span>
-                        <input type="password" data-validation="required" class="form-control" aria-describedby="password-span" placeholder="Password" name="password" tabindex="2" id="login_password" value="" />
+                        <input type="password" class="form-control" aria-describedby="password-span" placeholder="Password" required="" name="password" tabindex="2" id="login_password" value="" />
                     </div>
                     <div class="input-group">
                         <div class="checkbox">
@@ -51,21 +51,4 @@
 
 
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.36/jquery.form-validator.min.js"></script>
-
-<script>
-    // default vaidation from jquery.form-validator
-    $(function(){
-
-        var jQuery_1_7_0 = $.noConflict(true); 
-
-            $.validate({
-                     
-        });
-
-    });
-</script>
 
