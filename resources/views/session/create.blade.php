@@ -23,7 +23,7 @@
                     <div class="input-group">
                         <!--label for="login_email">Email</label><br/-->
                         <span class="input-group-addon" id="email-span"><i class="fa fa-envelope"></i></span>
-                        <input type="text"  data-validation="email" class="form-control text" aria-describedby="email-span" placeholder="Email" name="email" tabindex="1" id="login_email" value="{{ Request::old('email') }}" />
+                        <input type="email" class="form-control" aria-describedby="email-span" placeholder="Email" required="" autofocus="" name="email" tabindex="1" id="login_email" value="{{ Request::old('email') }}" />
                     </div>
                     <br />
                     <div class="input-group">
@@ -59,7 +59,7 @@
 <script>
     // default vaidation from jquery.form-validator
     $(function(){
-        
+
         var jQuery_1_7_0 = $.noConflict(true); 
 
             $.validate({
