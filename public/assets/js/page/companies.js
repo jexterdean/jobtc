@@ -1400,6 +1400,7 @@ $('#employees').on('click', '.edit-employee', function (e) {
                     formData.append('company_id', company_id);
                     
                     var photo = $(form).find('input[name="photo"]')[0].files[0];
+                    var resume = $(form).find('input[name="resume"]')[0].files[0];
                     var name = $(form).find('input[name="name"]').val();
                     var email = $(form).find('input[name="email"]').val();
                     var phone = $(form).find('input[name="phone"]').val();
@@ -1426,6 +1427,7 @@ $('#employees').on('click', '.edit-employee', function (e) {
                     formData.append('zipcode', zipcode);
                     formData.append('country_id', country_id);
                     formData.append('photo',photo);
+                    formData.append('resume',resume);
                     formData.append('authority',authority);
                     console.log(authority);
 
