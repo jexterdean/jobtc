@@ -5,7 +5,7 @@ $('#accordion').on('click', '.toggle-briefcase', function () {
     //var company_id = $(this).find('.company_id').val();
     var company_id = $(this).find('.company_id').val();
 
-    var task_url = public_path + '/task/' + task_id;
+    var task_url = public_path + 'task/' + task_id;
 
     $('#load-task-assign-' + task_id).load(task_url, function () {
         $('#task-' + task_id).removeClass('toggle-briefcase');

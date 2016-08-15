@@ -223,12 +223,12 @@
 }
 
 
-  .column {
+.column {
     width: 25%;
     float: left;
     padding-bottom: 100px;
-  }
-  .portlet {
+}
+.portlet {
     margin: 0 1em 1em 0;
     padding: 0.3em;
     background-color:#F3F3F3 !important;
@@ -237,25 +237,25 @@
     padding: 0.2em 0.3em;
     margin-bottom: 0.5em;
     position: relative;
-  }
-  .portlet-toggle {
+}
+.portlet-toggle {
     position: absolute;
     top: 50%;
     right: 0;
     margin-top: -8px;
-  }
-  .portlet-content {
+}
+.portlet-content {
     padding: 0.4em;
-  }
-  .portlet-placeholder {
+}
+.portlet-placeholder {
     border: 1px dotted black;
     margin: 0 1em 1em 0;
     height: 50px;
-  }
-  .fa-chevron-down{
-      color: #3c8dbc!important;
-  }
-  .portlet .portlet-content .list-group-item a{
+}
+.fa-chevron-down{
+    color: #3c8dbc!important;
+}
+.portlet .portlet-content .list-group-item a{
     display: block;
     white-space: nowrap;
     text-overflow: ellipsis;
