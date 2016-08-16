@@ -171,7 +171,7 @@
             </div>
             <div class="modal-body">
                 {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                {!! Form::hidden('task_id',$list_item->task_id) !!}
+                {!! Form::hidden('task_id',$task->task_id) !!}
                 {!! Form::hidden('user_id',$user_id) !!}
                 {!! Form::hidden('company_id',$company_id) !!}
                 @include('links/partials/_add_form')
@@ -352,8 +352,14 @@
             e.stopImmediatePropagation();
 
             var index = $(this).parent().parent().parent().index();
+<<<<<<< HEAD
             //var id = $(this).parent().siblings().find('.task_list_item_id').val();
             var id = $(this).siblings('.task_list_item_id').val();
+=======
+            var id = $(this).siblings('.task_list_item_id').val();
+
+            console.log(id);
+>>>>>>> 944443208e3546ca77fccdfb244157748bb5132e
 
             /*From Default, Change to ongoing*/
             if ($(this).hasClass('bg-gray')) {
@@ -593,7 +599,7 @@
                     });
 
                     console.log(_body.find('input[class="project_id"]').val());
-                    socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_check_list_id': task_check_list_id});
+                    //socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_check_list_id': task_check_list_id});
 
 
 

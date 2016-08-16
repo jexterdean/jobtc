@@ -211,7 +211,7 @@ class ProjectController extends BaseController {
 
         $project_owner = $project->user_id;
 
-        $assets = ['projects', 'datepicker', 'real-time'];
+        $assets = ['projects', 'datepicker'];
 
         return view('project.show', [
             'project' => $project,

@@ -104,9 +104,12 @@ class ApplicantController extends Controller {
             $rating = ApplicantRating::where('applicant_id', $id)->first();
 
             $quiz_videos = \DB::table('test_result')
-                    ->where('unique_id', $id)
-                    ->where('belongs_to', 'applicant')
-                    ->orderBy('id', 'desc')
+                    ->select('test_result.*')
+                    ->leftJoin('question', 'question.id', '=', 'test_result.question_id')
+                    ->where('question.question_type_id', 4)
+                    ->where('test_result.unique_id', $id)
+                    ->where('test_result.belongs_to', 'applicant')
+                    ->orderBy('test_result.id', 'desc')
                     ->get();
 
             $videos = Video::with(['tags' => function($query) {
