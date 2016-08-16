@@ -97,7 +97,7 @@
                                                         <a href="#" class="btn-delete btn-shadow btn alert_delete view-btn-delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
                                                         @endif
                                                         <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                                        
+
                                                         <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                                     </div>
                                                 </div>
@@ -352,7 +352,8 @@
             e.stopImmediatePropagation();
 
             var index = $(this).parent().parent().parent().index();
-            var id = $(this).parent().siblings().find('.task_list_item_id').val();
+            //var id = $(this).parent().siblings().find('.task_list_item_id').val();
+            var id = $(this).siblings('.task_list_item_id').val();
 
             /*From Default, Change to ongoing*/
             if ($(this).hasClass('bg-gray')) {
@@ -1142,6 +1143,7 @@
                     var _form = _this.parents('.add_link_modal').find('form');
                     var _user_id = _form.find('input[name="user_id"]').val();
                     var _data = _form.serializeArray();
+                    _this.attr('disabled','disabled');
                     $.post(_form.attr('action'), _data, function (res) {
                         var _return_data = jQuery.parseJSON(res);
                         console.log(_return_data);

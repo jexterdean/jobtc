@@ -118,7 +118,7 @@
             "@menuitem": 13,
             "@pane": 2,
             "@session": 4,
-            "@tab": 4,
+            "@tab": 5,
             "@undoManager": 5
         }
     },
@@ -137,7 +137,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab3",
+            "tab4",
             "tab0"
         ]
     },
@@ -173,7 +173,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": -10,
+        "@scrollpos": 2031,
         "@showfs": true,
         "expanded": {
             "json()": [
@@ -187,7 +187,8 @@
                 "/app",
                 "/app/Helpers",
                 "/resources/views/layouts",
-                "/app/Models"
+                "/app/Models",
+                "/resources/views/task"
             ]
         }
     },
@@ -197,6 +198,7 @@
     "search-history": {
         "search": {
             "json()": [
+                "checklist-status",
                 "getTaskCheckList",
                 "getMyProjects",
                 "getSharedProjects",
@@ -207,11 +209,12 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/app/Http/Controllers/CompanyController.php",
+            "focus": "tab0",
             "meta": {
                 "accessList": [
-                    "tab3",
-                    "tab2"
+                    "tab2",
+                    "tab4",
+                    "tab3"
                 ]
             },
             "name": "pane0",
@@ -226,7 +229,7 @@
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1470759216608
+                            "timestamp": 1470880213718
                         },
                         "filter": true,
                         "title": "companies.css",
@@ -241,17 +244,62 @@
                     "name": "tab3",
                     "path": "/app/Http/Controllers/CompanyController.php",
                     "className": [
-                        "tab3",
-                        "focus"
+                        "tab3"
+                    ],
+                    "document": {
+                        "filter": true,
+                        "title": "CompanyController.php",
+                        "tooltip": "/app/Http/Controllers/CompanyController.php",
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 844,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 87,
+                                    "column": 24
+                                },
+                                "end": {
+                                    "row": 87,
+                                    "column": 24
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": {
+                                "row": 219,
+                                "state": "php-start",
+                                "mode": "ace/mode/php"
+                            }
+                        },
+                        "hash": "5ff1143df45eb17e5cccdcfb4201bb5369ce9683",
+                        "meta": {
+                            "timestamp": 1470880213714
+                        },
+                        "changed": false
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab4",
+                    "path": "/resources/views/task/show.blade.php",
+                    "className": [
+                        "tab4"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1470759090524
+                            "timestamp": 1471074050809
                         },
                         "filter": true,
-                        "title": "CompanyController.php",
-                        "tooltip": "/app/Http/Controllers/CompanyController.php",
+                        "title": "show.blade.php",
+                        "tooltip": "/resources/views/task/show.blade.php",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -265,7 +313,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/app/Models/Task.php"
+            "/resources/views/task/show.blade.php"
         ]
     }
 }
