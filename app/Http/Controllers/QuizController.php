@@ -1565,6 +1565,9 @@ class QuizController extends BaseController {
                 if ($r->record_id) {
                     $this->quizDeleteVideo($r->record_id);
                 }
+                if ($r->local_record_id) {
+                    $this->quizDeleteVideo($r->local_record_id);
+                }
                 $r->delete();
             }
         }
