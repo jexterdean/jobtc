@@ -7,7 +7,7 @@
 //var serverUrl = "https://hirefit.co:3333/";
 var recordingUrl = "https://laravel.software/recordings/";
 var serverUrl = "https://laravel.software:3333/";
-var localStream, remoteStream, room, recording, localRecordingId, remoteRecordingId;
+var localStream,localShareScreenStream, remoteStream, room, recording, localRecordingId, remoteRecordingId;
 var room_id;
 var room;
 var recordingId;
@@ -224,19 +224,11 @@ $('.interview-applicant').clickToggle(function () {
 
     // Select tab by name
     $('.nav-tabs a[href="#video-tab"]').tab('show');
-    
-    var bandwidth = 1000;
-    var video_constraints = {
-        mandatory: {
-            minFrameRate: 30
-        },
-        optional: [bandwidth]
-    };
 
-
-    var config = {audio: true, video: true, data: true, maxVideoBW:100000, minVideoBW: 100,videoSize: [320, 240, 1280, 720]};
+    var config = {audio: true, video: true, data: true, maxVideoBW: 100000, minVideoBW: 100, videoSize: [320, 240, 1280, 720]};
+    //var config = {screen: true, data: true, maxVideoBW:100000, minVideoBW: 100,videoSize: [320, 240, 1280, 720]};
     localStream = Erizo.Stream(config);
-    
+
     getRoom(room_name, function (res) {
         console.log(res);
         if (res === "no-room") {
@@ -253,7 +245,7 @@ $('.interview-applicant').clickToggle(function () {
                         room.addEventListener("room-connected", function (roomEvent) {
                             console.log('Connected to the room OK');
 
-                            room.publish(localStream,{scheme:"notify-break"});
+                            room.publish(localStream, {scheme: "notify-break"});
 
                         });
 
@@ -452,6 +444,76 @@ $('.record-button').clickToggle(function () {
     recording = false;
 
     $('.save-progress').text("Saving");
+});
+
+
+//Screen Sharing
+$('.screen-share').clickToggle(function () {
+    
+    localShareScreenStream = Erizo.Stream({screen: true, data: true});
+    
+    createToken(room_id, "user", "presenter", function (response) {
+        var token = response;
+        console.log(token);
+        localShareScreenStream.addEventListener("access-accepted", function () {
+            console.log('Mic and Cam OK');
+            room.addEventListener("room-connected", function (roomEvent) {
+                console.log('Connected to the room OK');
+                room.publish(localShareScreenStream);
+            });
+
+            room.addEventListener("room-disconnected", function (roomEvent) {
+                room.unpublish(localShareScreenStream);
+            });
+
+            room.addEventListener("room-error", function (roomEvent) {
+                console.log('Room Error videoconf.js');
+            });
+
+            room.addEventListener("stream-subscribed", function (streamEvent) {
+                console.log('Subscribed to your local stream OK');
+                var stream = streamEvent.stream;
+                stream.play("remoteVideo");
+
+                $('.btn-video').removeClass('hidden');
+            });
+
+            room.addEventListener("stream-added", function (streamEvent) {
+                console.log('Local stream published OK');
+                //var streams = [];
+                console.log("is local? :" + streamEvent.stream.local);
+                streams.push(streamEvent.stream);
+                subscribeToStreams(streams);
+            });
+
+            room.addEventListener("stream-removed", function (streamEvent) {
+                // Remove stream from DOM
+                var stream = streamEvent.stream;
+                if (stream.elementID !== undefined) {
+                    var element = document.getElementById(stream.elementID);
+                    //document.body.removeChild(element);
+                    $(stream.elementID).remove();
+                }
+                room.disconnect();
+            });
+
+            room.addEventListener("stream-failed", function (streamEvent) {
+                console.log("STREAM FAILED, DISCONNECTION");
+                //room.disconnect();
+                streams.push(streamEvent.stream);
+                subscribeToStreams(streams);
+            });
+
+            room.connect();
+
+            localShareScreenStream.play("localScreenShareContainer");
+
+        });
+        localShareScreenStream.init();
+    });
+
+}, function () {
+
 });
 
 var quizVideoRecordId, quizLocalVideoRecordId;
