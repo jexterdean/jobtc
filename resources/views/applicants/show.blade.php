@@ -112,9 +112,17 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
+                                    <div id="localScreenShareContainer">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
                                     <div class="video-options text-center">
                                         <button class="btn btn-default btn-shadow mute-button"><i class="fa fa-microphone"></i>&nbsp;<span>Mute</span></button>
                                         <button class="btn btn-default btn-shadow show-video-button"><i class="fa fa-eye"></i>&nbsp;<span>Stop Video</span></button>
+                                        <button class="btn btn-default btn-shadow screen-share"><i class="fa fa-video-camera" aria-hidden="true"></i>&nbsp;<span>Share Screen</span></button>
                                         @if(Auth::user('user'))
                                         <button class="btn btn-default btn-shadow record-button"><i class="fa fa-circle"></i>&nbsp;<span>Start Recording</span></button>
                                         @endif

@@ -601,8 +601,6 @@
                     console.log(_body.find('input[class="project_id"]').val());
                     //socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_check_list_id': task_check_list_id});
 
-
-
                     //Remove Text area
                     $('#add-new-task').remove();
                     check_list_container.children('li:contains("No data was found.")').remove();
