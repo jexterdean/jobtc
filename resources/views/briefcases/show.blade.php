@@ -31,7 +31,7 @@
                                                         <h4 class="modal-title">Add Link</h4>
                                                     </div>
                                                     <div class="modal-body">
-                                                        {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
+                                                        {!! Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
                                                         {!! Form::hidden('task_id',$task->task_id) !!}
                                                         {!! Form::hidden('task_item_id',$list_item->id) !!}
                                                         {!! Form::hidden('user_id',$user_id) !!}
@@ -136,6 +136,7 @@
                     @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                     <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                     <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
+                    <a href="#" class="btn btn-submit btn-shadow btn-sm task-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Task List </a>&nbsp;&nbsp;
                     @endif
                     @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                     <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
@@ -183,7 +184,7 @@
                     <h4 class="modal-title">Add Link</h4>
                 </div>
                 <div class="modal-body">
-                    {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
+                    {!! Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
                     {!! Form::hidden('task_id',$task->task_id) !!}
                     @include('links/partials/_form')
                     {!! Form::close()  !!}

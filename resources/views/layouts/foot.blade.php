@@ -399,6 +399,5 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @section('js_footer')
 @show
 
-
 </body>
 </html>

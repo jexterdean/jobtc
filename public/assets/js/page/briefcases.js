@@ -939,3 +939,174 @@ function makeid()
 
     return text;
 }
+
+//region Create Task List
+_body.on('click', '.task-list-btn', function () {
+    var text_area_ele = '<li id="create-task-list" class="list-group-item text-area-content area-content">';
+    text_area_ele += '<input class="form-control" name="tasklist_title" placeholder="Task List Title" value="">';
+    text_area_ele += '<input class="form-control" name="tasklist_tags" placeholder="Enter tags separated by comma"><br/>';
+    text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-tasklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
+    text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-tasklist" type="button">Cancel</button>';
+    text_area_ele += '</li>';
+
+    var _this = $(this);
+    var check_list_container = $('#list_group_' + this.id);
+    _this.addClass('disabled');
+    check_list_container.append(text_area_ele);
+
+    //Immediately add an entry into the database
+    var task_list_id;
+    var new_list_url = public_path + 'createTaskList';
+    var blank_list = new FormData();
+    blank_list.append('_token', _body.find('input[name="_token"]').val());
+    blank_list.append('list_id', _body.find('input[name="list_id"]').val());
+    blank_list.append('user_id', _body.find('input[name="user_id"]').val());
+
+    $.ajax({
+        url: new_list_url,
+        type: "POST",
+        data: blank_list,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            task_list_id = data;
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+
+    _body.find('input[name="tasklist_title"]').on('change', function () {
+        var ajaxurl = public_path + 'saveTaskListTitle';
+
+        var formData = new FormData();
+        formData.append('task_list_id', task_list_id);
+        formData.append('tasklist_title', $(this).val());
+
+        $.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: formData,
+            // THIS MUST BE DONE FOR FILE UPLOADING
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+            },
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+
+            }
+        }); //ajax
+    });
+
+    check_list_container.on('click', '.submit-tasklist', function (e) {
+        _this.removeClass('disabled');
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var data = [];
+        /*data.push(
+            {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+            {'name': 'task_list_id', 'value': task_list_id},
+            {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
+            {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+            {'name': 'tasklist_title', 'value': _body.find('input[name="tasklist_title"]').val()},
+        );*/
+
+        $.post(public_path + 'checkList', data, function (d) {
+            var _return_data = jQuery.parseJSON(d);
+
+            var ele = '';
+            $.each(_return_data, function (index, val) {
+                var status = val.status;
+                var statusClass;
+
+                switch (status) {
+                    case 'Default':
+                        statusClass = 'bg-gray'
+                        break;
+                    case 'Ongoing':
+                        statusClass = 'bg-orange'
+                        break;
+                    case 'Completed':
+                        statusClass = 'bg-green'
+                        break;
+                    case 'Urgent':
+                        statusClass = 'bg-red'
+                        break;
+                }
+
+                ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
+                ele += '<div class="row task-list-details">';
+                ele += '<div class="col-md-7">';
+                ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="tasklist-title">' + val.tasklist_title + '</a>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '</div>';
+                ele += '<div class="pull-right">';
+                ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
+                ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '<div class="row">';
+                ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
+                ele += '<div class="checklist-item">' + val.checklist + '</div>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '<hr/>';
+                ele += '<div class="row">';
+                ele += '<div class="col-md-12">';
+                ele += '<div class="pull-right" style="margin-right: 5px">';
+                ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;';
+                ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</li>';
+            });
+
+            console.log(_body.find('input[class="project_id"]').val());
+            socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_list_id': task_list_id});
+
+            //Remove Section
+            $('#create-task-list').remove();
+            check_list_container.children('li:contains("No data was found.")').remove();
+            check_list_container.html(ele);
+            _this.removeAttr('disabled');
+        });
+    }).on('click', '.cancel-tasklist', function () {
+        _this.removeClass('disabled');
+        $('#create-task-list').remove();
+
+        var delete_new_list = public_path + 'cancelCreateTaskList';
+        var delete_list = new FormData();
+        delete_list.append('task_list_id', task_list_id);
+
+        $.ajax({
+            url: delete_new_list,
+            type: "POST",
+            data: delete_list,
+            // THIS MUST BE DONE FOR FILE UPLOADING
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+            },
+            success: function (data) {
+            },
+            error: function (xhr, status, error) {
+
+            }
+        }); //ajax
+    });
+});
+//endregion

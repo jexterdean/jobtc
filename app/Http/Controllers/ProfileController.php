@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Applicant;
 use App\Models\Country;
+use App\Models\PasswordReset;
 use Hash;
 use \DB;
 use \Auth;
@@ -13,6 +15,7 @@ use \View;
 use \Validator;
 use \Input;
 use \Redirect;
+use Mail;
 
 class ProfileController extends BaseController {
 
@@ -172,27 +175,70 @@ class ProfileController extends BaseController {
     }
 
     public function forgotPassword() {
-        $user = User::where('email', '=', Input::get('email'))->where('username', '=', Input::get('username'))->first();
+        //$user = User::where('email', '=', Input::get('email'))->where('username', '=', Input::get('username'))->first();
+        //projectmanager@hdenergy.ca
+        $email = Input::get('email');
+        $usertype = Input::get('usertype');
+        if($usertype == 'employee') {
+            $user = User::where('email', '=', $email)->first();
+        } else {
+            $user = Applicant::where('email', '=', $email)->first();
+        }
 
         $rules = array(
-            'username' => 'required',
+            //'username' => 'required',
             'email' => 'required|email'
         );
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
-        elseif (!$user)
-            return Redirect::back()->withErrors('Username or email-id is wrong!!');
-        else {
-            $new_password = rand(1000000, 999999);
-            $user->password = Hash::make($new_password);
-            $user->save();
+        } elseif (!$user) {
+            return Redirect::back()->withErrors('Email address does not exist!');
+        } else {
+            $token_str = substr(md5(rand(1000000, 9999999)),0,5);
+            $token = New PasswordReset();
+            $token->email = $email;
+            $token->token = $token_str;
+            $token->usertype = $usertype;
+            $token->save();
+
             //Mail::send('user.forgetPassword', array('username' => Input::get('username') , 'password' => $new_password), function($message){
             //	$message->to(Input::get('email'), 'Forget Password')->subject('Forget Password!');
             //});
-            return Redirect::back()->withSuccess('Password sent to your mail!!');
+            /*Mail::send('user.forgotPassword', array('email' => Input::get('email') , 'password' => $token_str), function($message) {
+                $message->to(Input::get('email'), 'Forgot Password')->subject('Forgot Password Reset Link');
+            });*/
+            echo '<a href="http://localhost:8000/resetPassword/?token='.$token_str.'&usertype='.$usertype.'">Reset Password</a>';
+            //return Redirect::back()->withSuccess('Password has been sent to your email!');
+        }
+    }
+
+    public function resetPassword() {
+        $email = Input::get('email');
+        $token = Input::get('token');
+        $usertype = Input::get('usertype');
+        $password = Input::get('password');
+        $password2 = Input::get('password2');
+
+        $reset = PasswordReset::where('email', '=', $email)->where('token', '=', $token)->where('usertype', '=', $usertype)->first();
+        if($reset) {
+            $rules = array(
+                'password' => 'required|min:8|confirmed',
+                //'password_confirm' => 'required|same:password',
+            );
+            $validator = Validator::make(Input::all(), $rules);
+            if ($validator->fails()) {
+                return Redirect::back()->withErrors($validator);
+            } else {
+                $user = User::where('email', '=', $email)->first();
+                $user->password = Hash::make($password2);
+                $user->save();
+                return Redirect::back()->withSuccess('Password has been changed successfully!');
+            }
+        } else {
+            return Redirect::back()->withErrors('Invalid reset password token!');
         }
     }
 
