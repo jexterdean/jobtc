@@ -28,13 +28,13 @@
 
 .breadcrumb li {
     float: left;
-    background-color: #5af;/*#4285F4;*/
+    background-color: transparent;/*#4285F4;*/
     padding: 0 5px;
     display: inline-flex;
 }
 
 .breadcrumb li a {
-    color: white;
+    color: #000;
     text-align: center;
     /*padding: 16px;*/
     text-decoration: none;
@@ -42,7 +42,7 @@
     white-space: nowrap;
     overflow: hidden!important;
     text-overflow: ellipsis!important;
-    max-width: 80px!important;
+    /*max-width: 80px!important;*/
 }
 
 .breadcrumb li a:hover {
