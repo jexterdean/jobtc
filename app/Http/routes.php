@@ -108,12 +108,7 @@ Route::group(['middleware' => 'guest'], function () {
         return view('session.forgotPassword');
     });
     Route::post('forgotPassword', 'ProfileController@forgotPassword');
-
-    Route::get('resetPassword', function () {
-        $token = Input::get('token');
-        $usertype = Input::get('usertype');
-        return view('session.resetPassword', ['token' => $token, 'usertype' => $usertype]);
-    });
+    Route::get('resetPassword/{token}/{usertype}','ProfileController@resetPassword');
     Route::post('resetPassword', 'ProfileController@resetPassword');
 });
 
