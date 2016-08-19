@@ -108,7 +108,7 @@ Route::group(['middleware' => 'guest'], function () {
         return view('session.forgotPassword');
     });
     Route::post('forgotPassword', 'ProfileController@forgotPassword');
-    Route::get('resetPassword/{token}/{usertype}','ProfileController@resetPassword');
+    Route::get('resetPassword/{token}/{usertype}','ProfileController@resetPasswordForm');
     Route::post('resetPassword', 'ProfileController@resetPassword');
 });
 
