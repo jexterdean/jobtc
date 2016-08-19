@@ -223,7 +223,7 @@ class ProfileController extends BaseController {
     }
 
     public function resetPasswordForm(Request $request,$token,$usertype) {
-        return view('session.resetPassword');
+        return view('session.resetPassword',['token' => $token, 'usertype' => $usertype]);
     }
     
     
