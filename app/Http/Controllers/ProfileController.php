@@ -215,8 +215,8 @@ class ProfileController extends BaseController {
                 $message->subject('Forgot Password Reset Link');
             });
 
-            echo '<a href="http://localhost:8000/resetPassword/?token=' . $token_str . '&usertype=' . $usertype . '">Reset Password</a>';
-            //return Redirect::back()->withSuccess('Password has been sent to your email!');
+            //echo '<a href="http://localhost:8000/resetPassword/?token=' . $token_str . '&usertype=' . $usertype . '">Reset Password</a>';
+            return Redirect::back()->withSuccess('Password has been sent to your email!');
         }
     }
 
