@@ -209,14 +209,16 @@ class ProfileController extends BaseController {
               $message->to(Input::get('email'), 'Forgot Password')->subject('Forgot Password Reset Link');
               }); */
 
-            Mail::queue('user.forgotPassword', ['email' => Input::get('email'), 'password' => $token_str], function ($message) {
+            $url = 'job.tc/pm';
+            
+            Mail::queue('user.forgotPassword', ['email' => Input::get('email'), 'password' => $token_str,'url' => $url], function ($message) {
                 $message->from('support@job.tc','Job.tc');
                 $message->to(Input::get('email'), 'Forgot Password');
                 $message->subject('Forgot Password Reset Link');
             });
 
             //echo '<a href="http://localhost:8000/resetPassword/?token=' . $token_str . '&usertype=' . $usertype . '">Reset Password</a>';
-            return Redirect::back()->withSuccess('Password has been sent to your email!');
+            return Redirect::back()->withSuccess('Change Password Link has been sent to your email!');
         }
     }
 
