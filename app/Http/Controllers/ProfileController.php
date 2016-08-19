@@ -227,7 +227,7 @@ class ProfileController extends BaseController {
     }
     
     
-    public function resetPassword(Request $request,$token,$usertype) {
+    public function resetPassword(Request $request) {
         $email = $request->input('email');
         $token = $request->input('token');
         $usertype = $request->input('usertype');
