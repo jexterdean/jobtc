@@ -27,7 +27,7 @@ class ProfileController extends BaseController {
 
         return view('user.profile', ['assets' => $assets, 'countries' => $countries_option]);
     }
-    
+
     public function show(Request $request, $id) {
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
@@ -38,44 +38,43 @@ class ProfileController extends BaseController {
     }
 
     public function changePassword(Request $request) {
-        /*$user = Auth::user();
-        $rules = array(
-            'password' => 'required|alphaNum|between:5,16',
-            'new_password' => 'required|alphaNum|between:5,16|confirmed'
-        );
+        /* $user = Auth::user();
+          $rules = array(
+          'password' => 'required|alphaNum|between:5,16',
+          'new_password' => 'required|alphaNum|between:5,16|confirmed'
+          );
 
-        $validator = Validator::make(Input::all(), $rules);
+          $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-            return Redirect::back()->withErrors($validator);
-        else {
-            if (!Hash::check(Input::get('password'), $user->password))
-                return Redirect::back()->withErrors('Your old password does not match!!');
-            else {
-                $user->password = Hash::make(Input::get('new_password'));
-                $user->save();
-                return Redirect::back()->withSuccess("Password have been changed!!");
-            }
-        }*/
+          if ($validator->fails())
+          return Redirect::back()->withErrors($validator);
+          else {
+          if (!Hash::check(Input::get('password'), $user->password))
+          return Redirect::back()->withErrors('Your old password does not match!!');
+          else {
+          $user->password = Hash::make(Input::get('new_password'));
+          $user->save();
+          return Redirect::back()->withSuccess("Password have been changed!!");
+          }
+          } */
         $user_id = Auth::user('user')->user_id;
-        
+
         $user = User::where('user_id', $user_id);
-        
+
         $user->update([
-                'password' => bcrypt($request->input('password'))
-            ]);
-        
+            'password' => bcrypt($request->input('password'))
+        ]);
+
         return "Profile Updated";
-        
     }
-    
+
     public function checkPassword(Request $request) {
-        
+
         $user_id = Auth::user('user')->user_id;
         $current_password = $request->input('password');
-        
+
         $user_password = User::where('user_id', $user_id)->first();
-        
+
         if (Hash::check($current_password, $user_password->password)) {
             return "true";
         } else {
@@ -141,7 +140,6 @@ class ProfileController extends BaseController {
         }
 
         return $photo_path;
-
     }
 
     public function updateMyProfile(Request $request) {
@@ -170,7 +168,7 @@ class ProfileController extends BaseController {
             'facebook' => $request->input('facebook'),
             'linkedin' => $request->input('linkedin'),
         ]);
-        
+
         return $photo_path;
     }
 
@@ -179,7 +177,7 @@ class ProfileController extends BaseController {
         //projectmanager@hdenergy.ca
         $email = Input::get('email');
         $usertype = Input::get('usertype');
-        if($usertype == 'employee') {
+        if ($usertype == 'employee') {
             $user = User::where('email', '=', $email)->first();
         } else {
             $user = Applicant::where('email', '=', $email)->first();
@@ -197,7 +195,7 @@ class ProfileController extends BaseController {
         } elseif (!$user) {
             return Redirect::back()->withErrors('Email address does not exist!');
         } else {
-            $token_str = substr(md5(rand(1000000, 9999999)),0,5);
+            $token_str = substr(md5(rand(1000000, 9999999)), 0, 5);
             $token = New PasswordReset();
             $token->email = $email;
             $token->token = $token_str;
@@ -207,34 +205,40 @@ class ProfileController extends BaseController {
             //Mail::send('user.forgetPassword', array('username' => Input::get('username') , 'password' => $new_password), function($message){
             //	$message->to(Input::get('email'), 'Forget Password')->subject('Forget Password!');
             //});
-            /*Mail::send('user.forgotPassword', array('email' => Input::get('email') , 'password' => $token_str), function($message) {
+            /* Mail::send('user.forgotPassword', array('email' => Input::get('email') , 'password' => $token_str), function($message) {
+              $message->to(Input::get('email'), 'Forgot Password')->subject('Forgot Password Reset Link');
+              }); */
+            
+            Mail::queue('user.forgotPassword', ['email' => Input::get('email'), 'password' => $token_str], function ($message) {
                 $message->to(Input::get('email'), 'Forgot Password')->subject('Forgot Password Reset Link');
-            });*/
-            echo '<a href="http://localhost:8000/resetPassword/?token='.$token_str.'&usertype='.$usertype.'">Reset Password</a>';
+            });
+
+            echo '<a href="http://localhost:8000/resetPassword/?token=' . $token_str . '&usertype=' . $usertype . '">Reset Password</a>';
             //return Redirect::back()->withSuccess('Password has been sent to your email!');
         }
     }
 
-    public function resetPassword() {
-        $email = Input::get('email');
-        $token = Input::get('token');
-        $usertype = Input::get('usertype');
-        $password = Input::get('password');
-        $password2 = Input::get('password2');
-
+    public function resetPassword(Request $request) {
+        $email = $request->input('email');
+        $token = $request->input('token');
+        $usertype = $request->input('usertype');
+        $password = $request->input('password');
+        $password_confirmation = $request->input('password_confirmation');
+        
+        
         $reset = PasswordReset::where('email', '=', $email)->where('token', '=', $token)->where('usertype', '=', $usertype)->first();
-        if($reset) {
+        if ($reset) {
             $rules = array(
                 'password' => 'required|min:8|confirmed',
-                //'password_confirm' => 'required|same:password',
+                    //'password_confirm' => 'required|same:password',
             );
             $validator = Validator::make(Input::all(), $rules);
             if ($validator->fails()) {
                 return Redirect::back()->withErrors($validator);
             } else {
-                $user = User::where('email', '=', $email)->first();
-                $user->password = Hash::make($password2);
-                $user->save();
+                $user = User::where('email', '=', $email)->update([
+                    'password' => bcrypt($password_confirmation)
+                ]);
                 return Redirect::back()->withSuccess('Password has been changed successfully!');
             }
         } else {
