@@ -208,9 +208,11 @@ class ProfileController extends BaseController {
             /* Mail::send('user.forgotPassword', array('email' => Input::get('email') , 'password' => $token_str), function($message) {
               $message->to(Input::get('email'), 'Forgot Password')->subject('Forgot Password Reset Link');
               }); */
-            
+
             Mail::queue('user.forgotPassword', ['email' => Input::get('email'), 'password' => $token_str], function ($message) {
-                $message->to(Input::get('email'), 'Forgot Password')->subject('Forgot Password Reset Link');
+                $message->from('Job.tc', 'support@job.tc');
+                $message->to(Input::get('email'), 'Forgot Password');
+                $message->subject('Forgot Password Reset Link');
             });
 
             echo '<a href="http://localhost:8000/resetPassword/?token=' . $token_str . '&usertype=' . $usertype . '">Reset Password</a>';
@@ -224,8 +226,8 @@ class ProfileController extends BaseController {
         $usertype = $request->input('usertype');
         $password = $request->input('password');
         $password_confirmation = $request->input('password_confirmation');
-        
-        
+
+
         $reset = PasswordReset::where('email', '=', $email)->where('token', '=', $token)->where('usertype', '=', $usertype)->first();
         if ($reset) {
             $rules = array(
