@@ -210,7 +210,7 @@ class ProfileController extends BaseController {
               }); */
 
             Mail::queue('user.forgotPassword', ['email' => Input::get('email'), 'password' => $token_str], function ($message) {
-                $message->from('Job.tc', 'support@job.tc');
+                $message->from('support@job.tc','Job.tc');
                 $message->to(Input::get('email'), 'Forgot Password');
                 $message->subject('Forgot Password Reset Link');
             });
