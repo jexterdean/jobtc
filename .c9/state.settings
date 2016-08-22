@@ -320,7 +320,9 @@
                     ],
                     "document": {
                         "changed": false,
-                        "meta": {},
+                        "meta": {
+                            "timestamp": 1471617207912
+                        },
                         "filter": true,
                         "title": "forgotPassword.blade.php",
                         "tooltip": "/resources/views/user/forgotPassword.blade.php",
