@@ -200,7 +200,7 @@ class AssignController extends Controller {
             array_push($company_user_ids, $company_user->user_id);
         }
 
-        $tests = Test::whereIn('user_id', $company_user_ids)->paginate(5);
+        $tests = Test::whereIn('user_id', $company_user_ids)->paginate(13);
 
         $authority_levels = Role::where('company_id', $id)->orderBy('level', 'asc')->get();
 

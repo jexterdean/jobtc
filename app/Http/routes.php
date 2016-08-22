@@ -104,11 +104,12 @@ Route::post('addJobFromCrawler', 'CrawlerController@addJobFromCrawler');
 Route::post('addApplicantFromCrawler', 'CrawlerController@addApplicantFromCrawler');
 
 Route::group(['middleware' => 'guest'], function () {
-
     Route::get('forgotPassword', function () {
         return view('session.forgotPassword');
     });
     Route::post('forgotPassword', 'ProfileController@forgotPassword');
+    Route::get('resetPassword/{token}/{usertype}','ProfileController@resetPasswordForm');
+    Route::post('resetPassword', 'ProfileController@resetPassword');
 });
 
 
