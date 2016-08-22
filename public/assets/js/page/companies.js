@@ -1704,3 +1704,27 @@ $('.remove-link').on('click', function (e) {
     $.post($(this).attr('href'));
     $('.link-' + this.id).remove();
 });
+
+$('.edit-link').on('click', function (e) {
+    e.preventDefault();
+    var _id = this.id;
+    var _href = $(this).attr('href');
+    var edit_link_modal = $('.edit-link-modal');
+    var _modal_dialog = edit_link_modal.find('.modal-content');
+    _modal_dialog.html('');
+    _modal_dialog.load(_href);
+    edit_link_modal.modal('show');
+
+    edit_link_modal.on('click','.update-link-btn',function(e){
+        e.preventDefault();
+        var _this = $(this);
+        var _link_modal = _this.parents('.edit-link-modal');
+        var _form = _this.parents('.edit-link-modal').find('form');
+        var _data = _form.serializeArray();
+        _this.attr('disabled','disabled');
+        $.post(_form.attr('action'), _data, function (res) {
+            location.reload();
+            _link_modal.modal('hide');
+        });
+    });
+});

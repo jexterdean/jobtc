@@ -57,53 +57,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div id="task-item-collapse-{{$list_item->id}}" class="task-item-collapse collapse">
-                                            <div class="checklist-item">{!! $list_item->checklist !!}</div>
-                                            <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                            <div class="link-column">
-                                                @foreach($links as $link)
-                                                @if($link->task_item_id == $list_item->id)
-                                                <div class="col-md-12" id="link-{{$link->id}}">
-                                                    <div class="col-md-3">
-                                                        {{--*/ $parse_url = parse_url($link->url) /*--}}
-                                                        @if(empty($parse_url['scheme']))
-                                                        <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                                                        @else
-                                                        <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                                                        @endif
-                                                    </div>
-                                                    <div class="col-md-6" style="text-align: justify">{{ $link->descriptions }}</div>
-                                                    <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                                                        @if($user_id == $link->user_id)
-                                                        <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
-                                                        @endif
-                                                    </div>
-                                                    <hr/>
-                                                </div>
-                                                @endif
-                                                @endforeach
-                                            </div>
-                                            <hr/>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="pull-right" style="margin-right: 5px;">
-                                                        <a target="_blank" href="{{url('taskitem/'.$list_item->id)}}" class="btn-edit btn-shadow btn"><i class="fa fa-external-link"></i> View</a>&nbsp;&nbsp;&nbsp;
-                                                        @if($module_permissions->where('slug','edit.tasks')->count() === 1)
-                                                        <a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>&nbsp;&nbsp;&nbsp;
-                                                        @endif
-                                                        @if($module_permissions->where('slug','delete.tasks')->count() === 1)
-                                                        <a href="#" class="btn-delete btn-shadow btn alert_delete view-btn-delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>
-                                                        @endif
-                                                        <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-
-                                                        <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </li>
                                 @endforeach
                                 @else
@@ -132,8 +85,11 @@
                 </div>
                 <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
                 <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                    @if($user_id == $link->user_id)
+                    @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
                     <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+                    @endif
+                    @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                    <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
                     @endif
                 </div>
                 <hr />
@@ -177,6 +133,12 @@
                 @include('links/partials/_add_form')
                 {!! Form::close()  !!}
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade edit-link-modal" id="edit_link" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
         </div>
     </div>
 </div>
@@ -352,14 +314,9 @@
             e.stopImmediatePropagation();
 
             var index = $(this).parent().parent().parent().index();
-<<<<<<< HEAD
-            //var id = $(this).parent().siblings().find('.task_list_item_id').val();
-            var id = $(this).siblings('.task_list_item_id').val();
-=======
             var id = $(this).siblings('.task_list_item_id').val();
 
             console.log(id);
->>>>>>> 944443208e3546ca77fccdfb244157748bb5132e
 
             /*From Default, Change to ongoing*/
             if ($(this).hasClass('bg-gray')) {
@@ -1101,76 +1058,111 @@
         //region Auto Change and Select Category Name
         var _category_name = '';
         $('.category-name')
-                .bind('keyup keypress blur', function () {
-                    _category_name = $(this).val();
-                    var myStr = $(this).val();
-                    myStr = myStr.toLowerCase();
-                    myStr = myStr.replace(/\s+/g, "-");
-                    $(this).val(myStr);
-                })
-                .focusout(function () {
-                    var cat_form = $('.category-form');
-                    var form_data = [];
-                    var url = public_path + 'linkCategory';
-                    var cat_value = $(this).val();
-                    if ($(this).val()) {
-                        form_data.push(
-                                {name: 'slug', value: $(this).val()},
-                        {name: 'name', value: _category_name},
-                        {name: 'request_from_link_page', value: '1'}
-                        );
-                        $.post(url, form_data, function (data) {
-                            var _return_data = jQuery.parseJSON(data);
-                            var option_ele = '<option value>Select Category</option>';
-                            $.each(_return_data, function (key, val) {
-                                var is_selected = cat_value == val.name ? 'selected' : '';
-                                option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
-                            });
-                            $('select.category').html(option_ele);
+            .bind('keyup keypress blur', function () {
+                _category_name = $(this).val();
+                var myStr = $(this).val();
+                myStr = myStr.toLowerCase();
+                myStr = myStr.replace(/\s+/g, "-");
+                $(this).val(myStr);
+            })
+            .focusout(function () {
+                var cat_form = $('.category-form');
+                var form_data = [];
+                var url = public_path + 'linkCategory';
+                var cat_value = $(this).val();
+                if ($(this).val()) {
+                    form_data.push(
+                            {name: 'slug', value: $(this).val()},
+                    {name: 'name', value: _category_name},
+                    {name: 'request_from_link_page', value: '1'}
+                    );
+                    $.post(url, form_data, function (data) {
+                        var _return_data = jQuery.parseJSON(data);
+                        var option_ele = '<option value>Select Category</option>';
+                        $.each(_return_data, function (key, val) {
+                            var is_selected = cat_value == val.name ? 'selected' : '';
+                            option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
                         });
-                    }
+                        $('select.category').html(option_ele);
+                    });
+                }
 
-                    $(this).val('');
-                });
+                $(this).val('');
+            });
 
 
         $('.load-task-assign')
-                .on('click', '.remove-link', function (e) {
-                    e.preventDefault();
-                    $.post($(this).attr('href'));
-                    $('#link-' + this.id + ',.link-' + this.id).remove();
-                })
-                .on('click', '.add-link-btn', function (e) {
+            .on('click', '.remove-link', function (e) {
+                e.preventDefault();
+                $.post($(this).attr('href'));
+                $('#link-' + this.id + ',.link-' + this.id).remove();
+            })
+            .on('click', '.edit-link', function (e) {
+                e.preventDefault();
+                var _id = this.id;
+                var _href = $(this).attr('href');
+                var edit_link_modal = $('.edit-link-modal');
+                var _modal_dialog = edit_link_modal.find('.modal-content');
+                _modal_dialog.html('');
+                _modal_dialog.load(_href);
+                edit_link_modal.modal('show');
+
+                edit_link_modal.on('click','.update-link-btn',function(e){
                     e.preventDefault();
                     var _this = $(this);
-                    var _link_modal = _this.parents('.add_link_modal');
-                    var _form = _this.parents('.add_link_modal').find('form');
-                    var _user_id = _form.find('input[name="user_id"]').val();
+                    var _link_modal = _this.parents('.edit-link-modal');
+                    var _form = _this.parents('.edit-link-modal').find('form');
                     var _data = _form.serializeArray();
                     _this.attr('disabled','disabled');
                     $.post(_form.attr('action'), _data, function (res) {
                         var _return_data = jQuery.parseJSON(res);
-                        console.log(_return_data);
-                        console.log(_user_id);
                         $.each(_return_data, function (key, val) {
-                            var ele = '<div class="col-md-12" id="link-' + val.id + '">';
-                            ele += '<div class="col-md-4">';
+                            var url = isUrlValid(val.url) ?  val.url :  'http://' + val.url;
+                            var ele =  '<div class="col-md-4">';
                             ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
                             ele += '</div>';
                             ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                            ele += '<div class="col-md-3 text-right">' + val.category_name + '&nbsp;&nbsp;&nbsp;';
+                            ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
                             ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
+                            ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
                             ele += '</div>';
                             ele += '<hr/>';
-                            ele += '</div>';
-                            ele += '<hr/>';
-                            var _link_column = $('#collapse-' + val.task_id).find('.link-column');
-                            _link_column.append(ele);
+                            var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
+                            _link_column.html(ele);
                         });
 
                         _link_modal.modal('hide');
                     });
                 });
+            })
+            .on('click', '.add-link-btn', function (e) {
+                 e.preventDefault();
+                 var _this = $(this);
+                 var _link_modal = _this.parents('.add_link_modal');
+                 var _form = _this.parents('.add_link_modal').find('form');
+                 var _data = _form.serializeArray();
+                 _this.attr('disabled','disabled');
+                 $.post(_form.attr('action'), _data, function (res) {
+                     var _return_data = jQuery.parseJSON(res);
+                     $.each(_return_data, function (key, val) {
+                         var ele = '<div class="col-md-12" id="link-' + val.id + '">';
+                         ele += '<div class="col-md-4">';
+                         ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                         ele += '</div>';
+                         ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                         ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                         ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
+                         ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                         ele += '</div>';
+                         ele += '<hr/>';
+                         ele += '</div>';
+                         var _link_column = $('#collapse-' + val.task_id).find('.link-column');
+                         _link_column.prepend(ele);
+                     });
+
+                     _link_modal.modal('hide');
+                 });
+             });
         $('.check-list-container')
             .on('click', '.toggle-tasklistitem', function () {
 
@@ -1194,6 +1186,10 @@
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
 
             return text;
+        }
+
+        function isUrlValid(url) {
+            return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
         }
     });
 </script>

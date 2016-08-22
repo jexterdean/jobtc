@@ -337,6 +337,27 @@ class PermissionsTableSeeder extends Seeder {
                         'model' => 'App\Models\Ticket'
             ]);
         }
+
+        //Permissions for Company Links
+        $deleteLinksPermissionCount = Permission::where('slug', 'delete.links')->count();
+        if ($deleteLinksPermissionCount === 0) {
+            $deleteLinksPermissionCount = Permission::create([
+                        'name' => 'Delete Link',
+                        'slug' => 'delete.links',
+                        'description' => 'Links', // optional
+                        'model' => 'App\Models\Link'
+            ]);
+        }
+
+        $editLinksPermissionCount = Permission::where('slug', 'edit.links')->count();
+        if ($editLinksPermissionCount === 0) {
+            $editLinksPermissionCount = Permission::create([
+                        'name' => 'Edit Links',
+                        'slug' => 'edit.links',
+                        'description' => 'Links', // optional
+                        'model' => 'App\Models\Link'
+            ]);
+        }
     }
 
 }

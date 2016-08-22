@@ -14,8 +14,8 @@
             {!! Form::open(array('url' => 'meeting')) !!}
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="submit" name="addEventBtn" class="btn btn-submit addEventBtn">Add</button>
-                    <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
+                    <button type="submit" name="addEventBtn" class="btn btn-submit btn-shadow addEventBtn">Add</button>
+                    <button type="button" class="btn btn-delete btn-shadow" data-dismiss="modal">Close</button>
                 </div>
             {!! Form::close() !!}
         </div>
@@ -31,8 +31,8 @@
             {!! Form::open(array('url' => 'meeting', 'method' => 'PATCH', 'class' => 'editMeetingForm')) !!}
                 <div class="modal-body"></div>
                 <div class="modal-footer">
-                    <button type="submit" name="editEventBtn" class="btn btn-submit editEventBtn">Edit</button>
-                    <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
+                    <button type="submit" name="editEventBtn" class="btn btn-submit editEventBtn btn-shadow">Edit</button>
+                    <button type="button" class="btn btn-delete btn-shadow" data-dismiss="modal">Close</button>
                 </div>
             {!! Form::close() !!}
         </div>
@@ -179,7 +179,7 @@
                             '<span class="form-inline teamArea" style="margin-left: 10px;">' +
                                 '<select class="team-selector form-control" title="Group Meeting" style="font-size: 18px;"></select>&nbsp;' +
                                 '<select class="user-selector form-control hidden" title="Add User" style="width: 130px;font-size: 12px;"></select>&nbsp;' +
-                                '<button class="btn btn-sm addMemberBtn hidden"><i class="fa fa-plus-circle"></i> Add</button>' +
+                                '<button type="button" class="btn btn-sm btn-submit btn-shadow addMemberBtn hidden" style="font-size: 18px;"><i class="fa fa-plus-circle"></i> Add</button>' +
                              '</span>';
                         header_left.append(teamStr);
 

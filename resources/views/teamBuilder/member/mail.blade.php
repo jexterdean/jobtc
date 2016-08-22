@@ -13,10 +13,6 @@ Below are you credintials:<br />
         <td>{{ $email }}</td>
     </tr>
     <tr>
-        <td><strong>Username</strong>:</td>
-        <td>{{ $username }}</td>
-    </tr>
-    <tr>
         <td><strong>Password</strong>:</td>
         <td>{{ $password }}</td>
     </tr>

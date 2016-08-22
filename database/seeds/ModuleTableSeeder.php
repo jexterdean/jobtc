@@ -81,7 +81,15 @@ class ModuleTableSeeder extends Seeder {
             $tickets_module->name = 'Tickets';
             $tickets_module->save();
         }
-        
+
+        //For Links Module
+        $links_module_count = Module::where('name', 'Links')->count();
+        if ($links_module_count === 0) {
+            $links_module_count = new Module();
+            $links_module_count->name = 'Links';
+            $links_module_count->save();
+        }
+
         
     }
 
