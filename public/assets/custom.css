@@ -465,3 +465,6 @@ select{
 .dl-menu .dropdown:hover > .dropdown-menu{
     display: block!important;
 }
+.content{
+    padding: 15px!important;
+}

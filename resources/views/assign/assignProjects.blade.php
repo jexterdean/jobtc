@@ -8,15 +8,15 @@
 </div>
 <div class="mini-space"></div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="box box-default">
             <div class="box-container">
                 <div class="box-header">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <h3 class="box-title">Projects</h3>
                         </div>
-                        <div class="col-md-10">
+                        <div class="col-md-9">
                             <input id="search-field-projects" name="search-project" type="text" class="form-control" placeholder="Search Projects">
                             <input type="hidden" class="company_id" value="{{$company_id}}"/>
                         </div>
@@ -224,7 +224,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="box box-default">
             <div class="box-container">
                 <div class="box-header">
@@ -276,7 +276,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="box box-default">
             <div class="box-container">
                 <div class="box-header">
