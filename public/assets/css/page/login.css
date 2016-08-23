@@ -6,8 +6,11 @@ Login CSS
 a{
     color: #074c90!important;
 }
+#forgotPassword-form .radio input[type="radio"] {
+  margin: 7px 0 0 0;
+}
 .space {
-  padding: 15px;
+  padding: 10px;
 }
 .login-body {
   background-color: #14406A!important;/*#144371!important;*/
@@ -17,7 +20,7 @@ a{
 
 .login-container {
   margin: 0 auto;
-  height: 250px;
+  height: auto;
   width: 335px;
   padding: 10px;
   background-color: #ffffff;
@@ -31,6 +34,7 @@ a{
   box-shadow: inset 0 0 15px rgba(0,0,0,.9),-1px 6px 15px -2px #bbbbbb;
   background-image: url('login-bg.jpg');
   -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(20%, transparent), to(rgba(255, 255, 255, 0.2)));
+  overflow: hidden;
 }
 .login-container .container-icon {
   font-size: 40px;

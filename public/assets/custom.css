@@ -312,7 +312,7 @@ input[type=radio].radio,input[type=checkbox].checkbox {
     border:0;
 }
 input[type=text],input[type=email],input[type=tel],textarea,input[type=password],input[type=number]{
-    box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4)!important;
+    box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4);
 }
 textarea:focus{
 

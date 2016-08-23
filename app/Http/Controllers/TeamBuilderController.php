@@ -64,9 +64,9 @@ class TeamBuilderController extends BaseController
         header("Content-type: application/json");
 
         $t = DB::table('team')
-            ->select('id')
+            ->select('id','title')
             ->get();
-        $team = array(array('id' => 0));
+        $team = array(array('id' => 0,'title' => ''));
         $team = array_merge($team, $t);
 
         return response()->json($team);
@@ -89,11 +89,11 @@ class TeamBuilderController extends BaseController
                 'user_id as id,
                 name,
                 email,
-                user_avatar'
+                photo'
             ))
             ->whereIn('user_id', $existing_user)
             ->get();
-        $user = array(array('id' => 0, 'name' => '','email' => '', 'user_avatar' => ''));
+        $user = array(array('id' => 0, 'name' => '','email' => '', 'photo' => ''));
         $user = array_merge($user, $r);
 
         return response()->json($user);
@@ -113,9 +113,9 @@ class TeamBuilderController extends BaseController
 
         $r = User::select(DB::raw(
                 'user_id as id,
-                    IF(name IS NULL, username, name) as name,
+                    name,
                     email,
-                    user_avatar'
+                    photo'
             ))
             ->whereNotIn('user_id', $existing_user)
             ->get();
@@ -269,7 +269,7 @@ class TeamBuilderController extends BaseController
                     'role_id' => 'required',
                     'name' => 'required',
                     'email' => 'email|required',
-                    'username' => 'required',
+                    //'username' => 'required',
                     'password' => 'required'
                 ]);
 
@@ -283,10 +283,11 @@ class TeamBuilderController extends BaseController
                 $user->name = Input::get('name');
                 $user->email = Input::get('email');
                 $user->phone = Input::get('phone');
-                $user->username = Input::get('username');
+                $user->user_status = 'Active';
+                //$user->username = Input::get('username');
                 $user->password = Hash::make(Input::get('password'));
-                $user->client_id = Input::get('company_id') ? Input::get('company_id') : null;
-                $user->accounts_id = Input::get('account_id') ? Input::get('account_id') : null;
+                //$user->client_id = Input::get('company_id') ? Input::get('company_id') : null;
+                //$user->accounts_id = Input::get('account_id') ? Input::get('account_id') : null;
                 $user->save();
 
                 $user->attachRole(Input::get('role_id'));
@@ -313,7 +314,7 @@ class TeamBuilderController extends BaseController
                         'role' => $role,
                         'name' => Input::get('name'),
                         'email' => Input::get('email'),
-                        'username' => Input::get('username'),
+                        //'username' => Input::get('username'),
                         'password' => Input::get('password'),
                         'phone' => Input::get('phone'),
                         'company' => $company,

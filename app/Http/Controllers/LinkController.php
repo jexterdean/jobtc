@@ -123,7 +123,18 @@ class LinkController extends BaseController
 
         $link->update($request->all());
 
-         return redirect()->route('links.index');
+        $links = Link::select(
+            'links.id', 'title',
+            'url', 'descriptions',
+            'tags', 'comments','task_id',
+            'task_item_id', 'user_id',
+            'link_categories.name as category_name'
+        )
+            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+            ->where('links.id', '=', $id)
+            ->get();
+
+        return json_encode($links);
 
     }
 

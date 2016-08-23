@@ -15,8 +15,7 @@
         <div class="login-container">
             <div class="col-xs-12">
                 <div class="space"></div>
-
-                <form action="{{url('login')}}" method="post" class="account_form" id="login">
+                <form action="{{url('login')}}" method="post" class="account_form" id="login-form">
 
                     {!! csrf_field() !!}
 
@@ -42,7 +41,7 @@
                         <a href="{{ url('forgotPassword') }}" class="lostpass space" href="" title="Password Lost and Found">Lost your password?</a>
                     </div>
                 </form>
-
+                <div class="space"></div>
             </div>
         </div><!-- end section_header -->
     </div>

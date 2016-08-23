@@ -33,38 +33,32 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Username:</label>
-                        <input type="text" name="username" class="form-control create-form" />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Password:</label>
-                        <input type="text" name="password" max="4" class="form-control create-form" value="{!! str_random(4) !!}" />
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
                         <label>Email:</label>
                         <input type="email" name="email" class="form-control create-form" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Phone:</label>
-                        <input type="text" name="phone" class="form-control create-form" />
+                        <label>Password:</label>
+                        <input type="text" name="password" max="6" class="form-control create-form" value="{!! str_random(6) !!}" />
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="text" name="phone" class="form-control create-form" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
                         <label>Company:</label>
                         {!! Form::select('company_id', $company, '', array('class' => 'form-control create-form')) !!}
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Account:</label>
@@ -77,8 +71,8 @@
     <br />
 
     <div class="form-group pull-right">
-        <button type="button" name="submitMemberBtn" class="btn btn-submit submitMemberBtn">Add</button>
-        <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
+        <button type="button" name="submitMemberBtn" class="btn btn-submit btn-shadow submitMemberBtn">Add</button>
+        <button type="button" class="btn btn-delete btn-shadow" data-dismiss="modal">Close</button>
     </div>
     <br style="clear: both;" />
 </div>

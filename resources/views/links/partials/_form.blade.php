@@ -36,7 +36,7 @@
     </div>
     <div class="row">
         <div class="pull-right">
-            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Link'),['class' => 'btn btn-submit btn-shadow', 'tabindex' =>
+            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Link'),['class' => 'btn btn-submit btn-shadow ' . (isset($buttonClass) ? $buttonClass : '') , 'tabindex' =>
             '9'])  !!}
         </div>
     </div>

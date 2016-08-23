@@ -17,8 +17,8 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab0",
-                    "tab1"
+                    "tab1",
+                    "tab0"
                 ]
             },
             "name": "pane1",
@@ -41,7 +41,7 @@
                         "terminal": {
                             "id": "devel_819",
                             "cwd": "",
-                            "width": 1648,
+                            "width": 1517,
                             "height": 127
                         }
                     },
@@ -112,14 +112,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 5,
+            "@document": 6,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 4,
-            "@tab": 4,
-            "@undoManager": 5
+            "@session": 5,
+            "@tab": 6,
+            "@undoManager": 6
         }
     },
     "findinfiles": {
@@ -137,12 +137,13 @@
     },
     "panecycle": {
         "json()": [
-            "tab3",
+            "tab5",
             "tab0"
         ]
     },
     "panels": {
         "@active-left": "tree",
+        "@width-left": 331,
         "collab": {
             "@enabled": "true",
             "@name": "collab"
@@ -173,7 +174,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": -10,
+        "@scrollpos": 3120,
         "@showfs": true,
         "expanded": {
             "json()": [
@@ -187,7 +188,10 @@
                 "/app",
                 "/app/Helpers",
                 "/resources/views/layouts",
-                "/app/Models"
+                "/app/Models",
+                "/app/Http",
+                "/app/Http/Controllers",
+                "/resources/views/user"
             ]
         }
     },
@@ -197,6 +201,7 @@
     "search-history": {
         "search": {
             "json()": [
+                "checklist-status",
                 "getTaskCheckList",
                 "getMyProjects",
                 "getSharedProjects",
@@ -207,9 +212,11 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/app/Http/Controllers/CompanyController.php",
+            "focus": "/resources/views/user/forgotPassword.blade.php",
             "meta": {
                 "accessList": [
+                    "tab5",
+                    "tab4",
                     "tab3",
                     "tab2"
                 ]
@@ -224,14 +231,41 @@
                         "tab2"
                     ],
                     "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1470759216608
-                        },
                         "filter": true,
                         "title": "companies.css",
                         "tooltip": "/public/assets/css/page/companies.css",
-                        "ace": {}
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 3090,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 248,
+                                    "column": 3
+                                },
+                                "end": {
+                                    "row": 248,
+                                    "column": 3
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": {
+                                "row": 59,
+                                "state": "ruleset",
+                                "mode": "ace/mode/css"
+                            },
+                            "cleansed": true
+                        },
+                        "hash": "9b0b7bc248d024ecd0b3f4371649fdb9e62ffe9e",
+                        "meta": {
+                            "timestamp": 1471265892673
+                        },
+                        "changed": false
                     },
                     "editorType": "ace",
                     "active": false
@@ -241,17 +275,57 @@
                     "name": "tab3",
                     "path": "/app/Http/Controllers/CompanyController.php",
                     "className": [
-                        "tab3",
+                        "tab3"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1470880213714
+                        },
+                        "filter": true,
+                        "title": "show.blade.php",
+                        "tooltip": "/resources/views/task/show.blade.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab4",
+                    "path": "/app/Http/Controllers/ProfileController.php",
+                    "className": [
+                        "tab4"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1471617145985
+                        },
+                        "filter": true,
+                        "title": "ProfileController.php",
+                        "tooltip": "/app/Http/Controllers/ProfileController.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab5",
+                    "path": "/resources/views/user/forgotPassword.blade.php",
+                    "className": [
+                        "tab5",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1470759090524
+                            "timestamp": 1471617207912
                         },
                         "filter": true,
-                        "title": "CompanyController.php",
-                        "tooltip": "/app/Http/Controllers/CompanyController.php",
+                        "title": "forgotPassword.blade.php",
+                        "tooltip": "/resources/views/user/forgotPassword.blade.php",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -264,8 +338,7 @@
         }
     },
     "tree_selection": {
-        "json()": [
-            "/app/Models/Task.php"
+            "/resources/views/user/forgotPassword.blade.php"
         ]
     }
 }

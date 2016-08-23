@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
+use App\Models\LinkCategory;
 use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\Company;
@@ -1240,30 +1241,46 @@ class CompanyController extends BaseController {
     }
 
     public function companyLinks($company_id){
+        $user_id = Auth::user('user')->user_id;
+        $user = User::find($user_id);
+
         $links = Link::where('company_id',$company_id)
-            ->leftJoin('link_categories', function($join){
-                $join->on('links.category_id', '=', 'link_categories.id');
-            })
-            ->select(
-                'links.id', 'title',
-                'url', 'descriptions',
-                'tags', 'comments','task_id',
-                'task_item_id', 'user_id',
-                'link_categories.name'
-            )
-            ->orderBy('link_categories.name')
             ->get();
+        $category = LinkCategory::all()
+            ->lists('name', 'id')
+            ->toArray();
         $_links = [];
+
         foreach($links as $link){
-            $_links[$link->name][] = (Object)$link;
+            $category_name = $link->category_id ? $category[$link->category_id] : 'No Category';
+            $_links[$category_name][] = (Object)$link;
         }
+        ksort($_links);
+
+        $user_profile_role = Profile::where('user_id', $user_id)
+            ->where('company_id', $company_id)
+            ->first();
+
+        $permissions_list = [];
+
+        $permissions_user = PermissionUser::with('permission')
+            ->where('company_id', $company_id)
+            ->where('user_id', $user_id)
+            ->get();
+
+        foreach ($permissions_user as $role) {
+            array_push($permissions_list, $role->permission_id);
+        }
+
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         $assets = ['companies', 'real-time'];
 
         return view(
             'company.partials._companylinks',[
                 'links' => $_links,
-                'assets' => $assets
+                'assets' => $assets,
+                'module_permissions' => $module_permissions
             ]);
     }
 }

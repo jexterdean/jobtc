@@ -128,6 +128,7 @@ class TaskController extends BaseController {
                 )
             ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
             ->where('task_id', '=', $id)
+            ->orderBy('id','DESC')
             ->get();
 
         $categories = LinkCategory::all()

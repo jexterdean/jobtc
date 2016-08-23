@@ -4,8 +4,8 @@
     <input type="text" name="title" class="form-control" value="{{ $team->title }}" />
 </div>
 <div class="form-group pull-right">
-    <button type="submit" name="submit" class="btn btn-edit">Edit</button>
-    <button type="button" class="btn btn-delete" data-dismiss="modal">Close</button>
+    <button type="submit" name="submit" class="btn btn-edit btn-shadow">Edit</button>
+    <button type="button" class="btn btn-delete btn-shadow" data-dismiss="modal">Close</button>
 </div>
 <br style="clear: both;" />
 {!! Form::close() !!}
