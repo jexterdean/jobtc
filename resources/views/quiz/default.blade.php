@@ -169,7 +169,7 @@
         });
 
         @if($triggerTest)
-        var $thisTest = $('.test-list[data-id="{!! $triggerTest !!}"]');
+        var $thisTest = $('.test-list-1[data-id="{!! $triggerTest !!}"]');
         $thisTest.find('.panel-heading').trigger('click');
         $thisTest.find('.trigger-add-btn').trigger('click');
         @endif
