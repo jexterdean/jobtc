@@ -1191,8 +1191,10 @@
                  _this.attr('disabled','disabled');
                  $.post(_form.attr('action'), _data, function (res) {
                      var _return_data = jQuery.parseJSON(res);
+                     var _task_id = '';
+                     var ele = '';
                      $.each(_return_data, function (key, val) {
-                         var ele = '<div class="col-md-12" id="link-' + val.id + '">';
+                         ele = '<div class="col-md-12" id="link-' + val.id + '">';
                          ele += '<div class="col-md-4">';
                          ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
                          ele += '</div>';
@@ -1203,10 +1205,10 @@
                          ele += '</div>';
                          ele += '<hr/>';
                          ele += '</div>';
-                         var _link_column = $('#collapse-' + val.task_id).find('.link-column');
-                         _link_column.prepend(ele);
+                         _task_id = val.task_id;
                      });
-
+                     var _link_column = $('#collapse-' + _task_id).find('.link-column');
+                     _link_column.prepend(ele);
                      _link_modal.modal('hide');
                  });
              });
