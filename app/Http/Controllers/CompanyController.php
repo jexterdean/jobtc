@@ -87,7 +87,28 @@ class CompanyController extends BaseController {
                 ->orderBy('created_at','desc')
                 ->take(10)
                 ->get();
-        
+
+        $links = Link::where('company_id',$company_id)
+                ->orderBy('created_at','desc')
+                ->take(10)->get();
+
+        $briefcases = Task::select(
+                    'task.*','project.company_id'
+                )
+                ->leftJoin('project', 'task.project_id', '=', 'project.project_id')
+                ->where('project.company_id',$company_id)
+                ->orderBy('created_at','desc')
+                ->take(10)->get();
+
+        $items = TaskChecklist::select(
+                    'task_check_list.*'
+                )
+                ->leftJoin('task', 'task_check_list.task_id', '=', 'task.task_id')
+                ->leftJoin('project', 'task.project_id', '=', 'project.project_id')
+                ->where('project.company_id',$company_id)
+                ->orderBy('created_at','desc')
+                ->take(10)->get();
+
         $assets = ['companies', 'real-time'];
 
         return View::make('company.show', [
@@ -96,6 +117,9 @@ class CompanyController extends BaseController {
                     'employees' => $employees,
                     'applicants' => $applicants,
                     'comments' => $comments,
+                    'links' => $links,
+                    'briefcases' => $briefcases,
+                    'items' => $items,
                     'assets' => $assets
         ]);
     }
