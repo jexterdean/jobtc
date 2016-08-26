@@ -35,6 +35,12 @@ var mystream = null;
 
 var feeds = [];
 var bitrateTimer = [];
+var bandwidth = 1024 * 1024;
+
+var display_name = $('.add-comment-form media-heading').text();
+
+var room_name_tmp = window.location.pathname;
+var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
 
 $(document).ready(function () {
     // Initialize the library (all console debuggers enabled)
@@ -67,9 +73,16 @@ $(document).ready(function () {
                                                 sfutest = pluginHandle;
                                                 Janus.log("Plugin attached! (" + sfutest.getPlugin() + ", id=" + sfutest.getId() + ")");
                                                 Janus.log("  -- This is a publisher/manager");
-
-                                                var register = {"request": "join", "room": 1234, "ptype": "publisher", "display": 'test'};
-                                                myusername = 'test';
+                                                var createRoom = {
+                                                    "request": "create",
+                                                    "record": false,
+                                                    "publishers": 2,
+                                                    "room": room_name,
+                                                    "bitrate": bandwidth,
+                                                };
+                                                sfutest.send({"message": createRoom});
+                                                var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": display_name};
+                                                myusername = display_name;
                                                 sfutest.send({"message": register});
 
                                             },
@@ -228,6 +241,13 @@ $(document).ready(function () {
                 started = false;
             });
         }});
+    
+    
+    $('.record-button').clickToggle(function(){
+        
+    },function(){
+        
+    });
 });
 
 function checkEnter(field, event) {
@@ -266,7 +286,7 @@ function registerUsername() {
             $('#register').removeAttr('disabled').click(registerUsername);
             return;
         }
-        var register = {"request": "join", "room": 1234, "ptype": "publisher", "display": username};
+        var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": username};
         myusername = username;
         sfutest.send({"message": register});
     }
@@ -332,7 +352,7 @@ function newRemoteFeed(id, display) {
                     Janus.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
                     Janus.log("  -- This is a subscriber");
                     // We wait for the plugin to send us an offer
-                    var listen = {"request": "join", "room": 1234, "ptype": "listener", "feed": id};
+                    var listen = {"request": "join", "room": room_name, "ptype": "listener", "feed": id};
                     remoteFeed.send({"message": listen});
                 },
                 error: function (error) {
@@ -375,7 +395,7 @@ function newRemoteFeed(id, display) {
                                     success: function (jsep) {
                                         Janus.debug("Got SDP!");
                                         Janus.debug(jsep);
-                                        var body = {"request": "start", "room": 1234};
+                                        var body = {"request": "start", "room": room_name};
                                         remoteFeed.send({"message": body, "jsep": jsep});
                                     },
                                     error: function (error) {
@@ -404,4 +424,8 @@ function newRemoteFeed(id, display) {
                     Janus.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
                 }
             });
+}
+
+function startRecording() {
+    
 }
