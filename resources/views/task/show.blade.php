@@ -150,7 +150,7 @@
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
                 @endif
-                <a href="#" class="btn-edit btn-shadow btn-sm btn add-link-modal" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" id="{{$task->task_id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
+                <a href="#" class="btn-submit btn-shadow btn-sm btn add-link-modal" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" id="{{$task->task_id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                 @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                 <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                 @endif
