@@ -19,7 +19,7 @@ use App\Models\TeamMember;
 use App\Models\TeamProject;
 use App\Models\TeamCompany;
 use App\Models\Task;
-use App\Models\TaskCheckList;
+use App\Models\TaskChecklist;
 use App\Models\TaskCheckListOrder;
 use App\Models\TaskCheckListPermission;
 use App\Models\TestPerApplicant;
