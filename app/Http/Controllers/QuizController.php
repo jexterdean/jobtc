@@ -446,7 +446,7 @@ class QuizController extends BaseController {
                     Input::file('question_photo')->move($photo_dir, $fileName);
 
                     DB::table('question')
-                        ->where('id', '=', $id)
+                        ->where('id', '=', $question->id)
                         ->update(['question_photo' => $fileName]);
                 }
             }
