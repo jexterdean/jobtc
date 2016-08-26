@@ -190,6 +190,9 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/applicants.js')  !!}
 {!!  HTML::script('assets/js/erizo.js')  !!}
 {!!  HTML::script('assets/js/page/video-conference.js')  !!}
+{{--  HTML::script('assets/js/adapter.js')  --}}
+{{--  HTML::script('assets/js/janus.js')  --}}
+{{--  HTML::script('assets/js/page/video-conference-janus.js')  --}}
 @endif
 
 @if(in_array('users',$assets))
