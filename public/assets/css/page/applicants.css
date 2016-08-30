@@ -147,12 +147,12 @@ body {
   width: 100%;
 }
 .video-conference-container #remoteVideo{
-  height: 600px;
+  //height: 600px;
   width: 100%;
 }
 
 .video-conference-container #remoteVideo video {
-  height: 600px;
+  //height: 600px;
   width: 100%;
 }
 
@@ -166,6 +166,8 @@ body {
 }
 .video-conference-container .video-options {
   background-color: #c0c0c0;
+  position: relative;
+  top: 106px;
 }
 .video-conference-container .connectionstate {
   position: relative;
@@ -181,6 +183,7 @@ body {
   width: 100%;
 }
 #video-tab {
+  height: 750px;  
   border-style: inset;
   background-color: #D1D1D1;
 }

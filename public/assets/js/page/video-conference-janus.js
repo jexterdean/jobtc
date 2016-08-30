@@ -120,26 +120,26 @@ var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
 
 
-jQuery.janusApiMedia = function(k){
+jQuery.janusApiMedia = function (k) {
     var thisOption = janusVideoResolutionList[k];
     var constraint = {
         audio: false,
         video: {
             deviceId: undefined,
-            width: { exact: thisOption.width },
-            height: { exact: thisOption.height }
+            width: {exact: thisOption.width},
+            height: {exact: thisOption.height}
         }
     };
     navigator
-        .mediaDevices
-        .getUserMedia(constraint)
-        .then(function(mediaStream){
-            console.log('success');
-        })
-        .catch(function (error) {
-            delete janusVideoResolutionList[k];
-            console.log('failed');
-        });
+            .mediaDevices
+            .getUserMedia(constraint)
+            .then(function (mediaStream) {
+                console.log('success');
+            })
+            .catch(function (error) {
+                delete janusVideoResolutionList[k];
+                console.log('failed');
+            });
     //https://webrtchacks.github.io/WebRTC-Camera-Resolution/
 };
 
@@ -567,7 +567,7 @@ function newRemoteFeed(id, display) {
                     Janus.debug("Remote feed #" + remoteFeed.rfindex);
                     Janus.debug(JSON.stringify(stream));
                     console.log('Here appending the remote stream');
-                    $('#remoteVideo').append('<video class="rounded centered" id="remote-' + remoteFeed.rfindex + '" width="100%" height="100%" autoplay/>');
+                    $('#remoteVideo').append('<video class="rounded centered" id="remote-' + remoteFeed.rfindex + '" width="100%" autoplay/>');
                     attachMediaStream($('#remote-' + remoteFeed.rfindex).get(0), stream);
                     var videoTracks = stream.getVideoTracks();
 
@@ -589,6 +589,18 @@ function startRecording() {
             "filename": "/var/www/html/recordings/" + sfutest.getId()
         }
     });
+
+    //Check if there is a remote stream and record
+    if (remoteFeed != null) {
+        remoteFeed.send({
+            'message': {
+                "request": "configure",
+                "room": room_name,
+                "record": true,
+                "filename": "/var/www/html/recordings/" + remoteFeed.getId()
+            }
+        });
+    }
 }
 
 function stopRecording() {
@@ -600,6 +612,18 @@ function stopRecording() {
             "filename": "/var/www/html/recordings/" + sfutest.getId()
         }
     });
+    
+     //Check if there is a remote stream and record
+    if (remoteFeed != null) {
+        remoteFeed.send({
+            'message': {
+                "request": "configure",
+                "room": room_name,
+                "record": false,
+                "filename": "/var/www/html/recordings/" + remoteFeed.getId()
+            }
+        });
+    }
 }
 
 function shareScreen() {
@@ -996,8 +1020,8 @@ function randomString(len, charSet) {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var randomString = '';
     for (var i = 0; i < len; i++) {
-    	var randomPoz = Math.floor(Math.random() * charSet.length);
-    	randomString += charSet.substring(randomPoz,randomPoz+1);
+        var randomPoz = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPoz, randomPoz + 1);
     }
     return randomString;
 }
