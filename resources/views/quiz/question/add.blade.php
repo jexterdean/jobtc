@@ -6,7 +6,7 @@
             <?php
             echo Form::select(
                 'question_type_id',
-                $question_type, '',
+                $question_type, $test_info->default_question_type_id,
                 array('class' => 'q-form question-type-dp form-control')
             );
             ?>

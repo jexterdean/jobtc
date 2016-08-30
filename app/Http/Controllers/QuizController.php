@@ -353,6 +353,7 @@ class QuizController extends BaseController {
                 $test->completion_sound = Input::get('completion_sound');
                 $test->default_tags = Input::get('default_tags');
                 $test->default_points = Input::get('default_points');
+                $test->default_question_type_id = Input::get('default_question_type_id');
                 $test->save();
 
                 if($test->id) {
@@ -741,6 +742,7 @@ class QuizController extends BaseController {
                 $test->completion_sound = Input::get('completion_sound');
                 $test->default_tags = Input::get('default_tags');
                 $test->default_points = Input::get('default_points');
+                $test->default_question_type_id = Input::get('default_question_type_id');
                 $test->save();
 
                 //update to elastic search
