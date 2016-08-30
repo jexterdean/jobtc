@@ -486,6 +486,7 @@ function unpublishOwnFeed() {
     // Unpublish our stream
     var unpublish = {"request": "unpublish"};
     sfutest.send({"message": unpublish});
+    sfutest.detach();
 }
 
 function removeRemoteFeed() {
