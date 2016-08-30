@@ -30,7 +30,7 @@
                                             </div>
                                             {!! $v->question_photo ?
                                                 '<div class="form-group text-center">' .
-                                                HTML::image('/assets/img/question/' . $v->question_photo, '', array('style' => 'width: 100%;')) .
+                                                HTML::image('/assets/img/question/' . $v->question_photo, '') .
                                                 '</div>' :
                                                 ''
                                             !!}

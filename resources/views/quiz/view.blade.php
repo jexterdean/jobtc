@@ -66,7 +66,7 @@
                                         <div class="slider-body">
                                             <span style="font-size: 23px;">{!! $tests_info->completion_message !!}</span>
                                             @if($tests_info->completion_image)
-                                                {!! HTML::image('/assets/shared-files/image/' . $tests_info->completion_image, '', array('style' => 'width: 100%;')) !!}
+                                                {!! HTML::image('/assets/shared-files/image/' . $tests_info->completion_image, '') !!}
                                             @endif
                                             @if($tests_info->completion_sound)
                                                 @if(\App\Helpers\Helper::checkFileIsAudio($tests_info->completion_sound))

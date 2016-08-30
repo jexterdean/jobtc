@@ -69,7 +69,7 @@ if(count($test_community) > 0){
                                             <span style="font-size: 22px;">{{ $q->question }}</span>
                                             {!! $q->question_photo ?
                                                 '<div class="form-group">' .
-                                                HTML::image('/assets/img/question/' . $q->question_photo, '', array('style' => 'width: 100%;')) .
+                                                HTML::image('/assets/img/question/' . $q->question_photo, '') .
                                                 '</div>' :
                                                 ''
                                             !!}
