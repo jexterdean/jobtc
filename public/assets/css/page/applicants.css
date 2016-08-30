@@ -298,3 +298,10 @@ body {
 .media-heading{
     white-space: nowrap;
 }
+#job-title{
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+}

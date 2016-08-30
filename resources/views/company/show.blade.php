@@ -52,6 +52,22 @@
             @endforeach
         </div>
     </div>
+    <div class="portlet">
+            <div class="portlet-header">Links</div>
+            <div class="portlet-content">
+                @foreach($links as $link)
+                <li class='list-group-item'>
+                    {{--*/ $parse_url = parse_url($link->url) /*--}}
+                    {{--*/ $url = empty($parse_url['scheme']) ? 'http://' . $link->url :  $link->url /*--}}
+                    @if(strlen($link->title) > 23)
+                    <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$link->title}}" href="{{$url}}">{{$link->title}}</a>
+                    @else
+                    <a target="_blank" href="{{$url}}">{{$link->title}}</a>
+                    @endif
+                </li>
+                @endforeach
+            </div>
+        </div>
 </div>
 
 <div class="column">
@@ -69,6 +85,20 @@
             @endforeach
         </div>
     </div>
+    <div class="portlet">
+        <div class="portlet-header">Items</div>
+        <div class="portlet-content">
+            @foreach($items as $item)
+            <li class='list-group-item'>
+                @if(strlen($item->checklist_header) > 23)
+                <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$item->checklist_header}}" href="{{url('taskitem/'.$item->id)}}">{{$item->checklist_header}}</a>
+                @else
+                <a target="_blank" href="{{url('taskitem/'.$item->id)}}">{{$item->checklist_header}}</a>
+                @endif
+            </li>
+            @endforeach
+        </div>
+    </div>
 </div>
 <div class="column">
     <div class="portlet">
@@ -80,6 +110,20 @@
                 <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$comment->comment}}" href="{{url('applicant/'.$comment->applicant->id)}}">{{$comment->comment}}</a>
                 @else
                 <a target="_blank" href="{{url('applicant/'.$comment->applicant->id)}}">{{$comment->comment}}</a>
+                @endif
+            </li>
+            @endforeach
+        </div>
+    </div>
+    <div class="portlet">
+        <div class="portlet-header">Briefcase</div>
+        <div class="portlet-content">
+            @foreach($briefcases as $briefcase)
+            <li class='list-group-item'>
+                @if(strlen($briefcase->task_title) > 23)
+                <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$briefcase->task_title}}" href="{{url('briefcase/'.$briefcase->task_id)}}">{{$briefcase->task_title}}</a>
+                @else
+                <a target="_blank" href="{{url('briefcase/'.$briefcase->task_id)}}">{{$briefcase->task_title}}</a>
                 @endif
             </li>
             @endforeach

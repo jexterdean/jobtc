@@ -33,7 +33,10 @@
                 {!!  Form::input('text','phone',$applicant->phone,['class' => 'form-control', 'placeholder'
                 => 'Phone']) !!}
             </div>
-
+            <div class="form-group">
+                {!!  Form::input('text','skype',$applicant->skype,['class' => 'form-control', 'placeholder'
+                => 'Skype']) !!}
+            </div>
             <div class="form-group">
                 {!! Form::label('Resume') !!}
                 {!!  Form::input('file','resume','') !!}    

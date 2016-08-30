@@ -1,6 +1,6 @@
 <div id="employee-{{$profile->user_id}}" class="col-md-6 employee-column">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-10">
             <i class="pull-left" aria-hidden="true">
                 @if($profile->user->photo === '' || $profile->user->photo === NULL)
                 <img class="employee-photo" src="{{url('assets/user/default-avatar.jpg')}}" />
