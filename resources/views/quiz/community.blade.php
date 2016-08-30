@@ -42,7 +42,7 @@ if(count($test_community) > 0){
                                     <div class="col-md-8">
                                         <a href="#question-collapse-2-{{ $val->version . '-' . $q->id }}" class="question-header checklist-header" style="font-size: 22px;">
                                             <?php
-                                            $q->question = preg_replace("/<\/*[a-z0-9\s\"'.=;:-]*>/i", "", $q->question);
+                                            $q->question = preg_replace("/<\/*[A-Za-z0-9\s\",'.=;:-]*>/i", "", html_entity_decode($q->question));
                                             ?>
                                             {{ substr($q->question, 0, 50) . (strlen($q->question) > 50 ? '...' : '') }}
                                         </a>
@@ -66,7 +66,7 @@ if(count($test_community) > 0){
                                 <div class="row">
                                     <div id="question-collapse-2-{{ $val->version . '-' . $q->id }}" class="question-collapse collapse">
                                         <div class="checklist-item">
-                                            <span style="font-size: 22px;">{{ $q->question }}</span>
+                                            <span style="font-size: 22px;">{!! $q->question !!}</span>
                                             {!! $q->question_photo ?
                                                 '<div class="form-group">' .
                                                 HTML::image('/assets/img/question/' . $q->question_photo, '') .
