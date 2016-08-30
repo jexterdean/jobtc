@@ -108,6 +108,7 @@ var started = false;
 var myusername = null;
 var myid = null;
 var mystream = null;
+var remotestreams = [];
 var screentest = null;
 
 var feeds = [];
@@ -503,6 +504,7 @@ function newRemoteFeed(id, display) {
                     remoteFeed = pluginHandle;
                     Janus.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
                     Janus.log("  -- This is a subscriber");
+                    remotestreams.push(remoteFeed);
                     // We wait for the plugin to send us an offer
                     var listen = {"request": "join", "room": room_name, "ptype": "listener", "feed": id};
                     remoteFeed.send({"message": listen});
@@ -566,6 +568,7 @@ function newRemoteFeed(id, display) {
                 onremotestream: function (stream) {
                     Janus.debug("Remote feed #" + remoteFeed.rfindex);
                     Janus.debug(JSON.stringify(stream));
+
                     console.log('Here appending the remote stream');
                     $('#remoteVideo').append('<video class="rounded centered" id="remote-' + remoteFeed.rfindex + '" width="100%" autoplay/>');
                     attachMediaStream($('#remote-' + remoteFeed.rfindex).get(0), stream);
@@ -591,15 +594,17 @@ function startRecording() {
     });
 
     //Check if there is a remote stream and record
-    if (remoteFeed != null) {
-        remoteFeed.send({
-            'message': {
-                "request": "configure",
-                "room": room_name,
-                "record": true,
-                "filename": "/var/www/html/recordings/" + remoteFeed.getId()
-            }
-        });
+    if (remotestreams.length != 0) {
+        for (var i = 0; remotestreams.length; i++) {
+            remotestreams[i].send({
+                'message': {
+                    "request": "configure",
+                    "room": room_name,
+                    "record": true,
+                    "filename": "/var/www/html/recordings/" + remotestreams[i].getId()
+                }
+            });
+        }
     }
 }
 
@@ -612,17 +617,19 @@ function stopRecording() {
             "filename": "/var/www/html/recordings/" + sfutest.getId()
         }
     });
-    
-     //Check if there is a remote stream and record
-    if (remoteFeed != null) {
-        remoteFeed.send({
-            'message': {
-                "request": "configure",
-                "room": room_name,
-                "record": false,
-                "filename": "/var/www/html/recordings/" + remoteFeed.getId()
-            }
-        });
+
+    //Check if there is a remote stream and record
+     if (remotestreams.length != 0) {
+        for (var i = 0; remotestreams.length; i++) {
+            remotestreams[i].send({
+                'message': {
+                    "request": "configure",
+                    "room": room_name,
+                    "record": false,
+                    "filename": "/var/www/html/recordings/" + remotestreams[i].getId()
+                }
+            });
+        }
     }
 }
 
