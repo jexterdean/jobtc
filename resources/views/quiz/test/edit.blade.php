@@ -96,6 +96,20 @@
 </div>
 <div class="form-group">
     <div class="row">
+        <label class="col-sm-3 text-right">Default Question Type:</label>
+        <div class="col-md-9">
+            <?php
+            echo Form::select(
+                'default_question_type_id',
+                $question_type, $tests_info->default_question_type_id,
+                array('class' => 'q-form question-type-dp form-control')
+            );
+            ?>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
         <label class="col-sm-3 text-right">Default Score Tag</label>
         <div class="col-md-9">
             <input type="text" name="default_tags" class="tag-input form-control" value="{{ $tests_info->default_tags }}" data-role="tagsinput" style="width: 100%;" />

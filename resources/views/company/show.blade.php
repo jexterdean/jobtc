@@ -34,6 +34,20 @@
         </div>
     </div>
 
+    <div class="portlet">
+        <div class="portlet-header">Tests</div>
+        <div class="portlet-content">
+            @foreach($tests as $test)
+            <li class='list-group-item'>
+                @if(strlen($test->title) > 23)
+                <a target="_blank" data-toggle="tooltip" data-placement="top" title="{{$test->title}}" href="{{url('quiz/'. $test->id .'?p=review&company_id='.$test->company_id)}}">{{$test->title}}</a>
+                @else
+                <a target="_blank" href="{{url('quiz/'. $test->id .'?p=review&company_id='.$test->company_id)}}">{{$test->title}}</a>
+                @endif
+            </li>
+            @endforeach
+        </div>
+    </div>
 </div>
 
 <div class="column">
@@ -86,7 +100,7 @@
         </div>
     </div>
     <div class="portlet">
-        <div class="portlet-header">Items</div>
+        <div class="portlet-header">Briefcase Items</div>
         <div class="portlet-content">
             @foreach($items as $item)
             <li class='list-group-item'>

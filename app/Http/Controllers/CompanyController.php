@@ -109,6 +109,10 @@ class CompanyController extends BaseController {
                 ->orderBy('created_at','desc')
                 ->take(10)->get();
 
+        $tests = Test::where('test.company_id',$company_id)
+                ->orderBy('created_at','desc')
+                ->take(10)->get();
+
         $assets = ['companies', 'real-time'];
 
         return View::make('company.show', [
@@ -120,6 +124,7 @@ class CompanyController extends BaseController {
                     'links' => $links,
                     'briefcases' => $briefcases,
                     'items' => $items,
+                    'tests' => $tests,
                     'assets' => $assets
         ]);
     }

@@ -22,7 +22,8 @@ class Test extends Model
         'completion_sound',
         'default_tags',
         'default_points',
-        'default_time'
+        'default_time',
+        'default_question_type_id'
     ];
     protected $primaryKey = 'id';
     protected $table = 'test';
