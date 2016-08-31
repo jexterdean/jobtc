@@ -403,7 +403,7 @@
                 @endif
                 <li class="divider"></li>
                 <li>
-                    <a href="https://laravel.software/jangouts/dist/#/rooms/1234?user={{Auth::user('user')->name}}"><i class="fa fa-bars" aria-hidden="true"></i> Meeting Room</a>
+                    <a href="https://laravel.software/jangouts/dist/#/rooms/1234?user={{Auth::user('user')->name}}"><i class="fa fa-th-large" aria-hidden="true"></i> Meeting Room</a>
                 </li>
                 <li>
                     <a target="_blank" href="{{ url('/dashboard') }}"><i class="fa fa-bars" aria-hidden="true"></i> My Dashboard</a>
