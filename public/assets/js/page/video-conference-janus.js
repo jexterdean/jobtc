@@ -193,6 +193,7 @@ $(document).ready(function () {
                 janus = new Janus(
                         {
                             server: server,
+                            iceServers: [{'url': 'stun:stun.l.google.com:19302'}, {'username': 'turn.job.tc', 'credential': 'radio5', 'url': 'turn:159.203.91.188'}],
                             success: function () {
                                 // Attach to video room test plugin
                                 janus.attach(
@@ -490,9 +491,7 @@ function unpublishOwnFeed() {
 }
 
 function removeRemoteFeed() {
-
     $('#remoteVideo').children().remove();
-
 }
 
 function newRemoteFeed(id, display) {
@@ -501,6 +500,7 @@ function newRemoteFeed(id, display) {
     janus.attach(
             {
                 plugin: "janus.plugin.videoroom",
+                iceServers: [{'url': 'stun:stun.l.google.com:19302'}, {'username': 'turn.job.tc', 'credential': 'radio5', 'url': 'turn:159.203.91.188'}],
                 success: function (pluginHandle) {
                     remoteFeed = pluginHandle;
                     Janus.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
@@ -620,7 +620,7 @@ function stopRecording() {
     });
 
     //Check if there is a remote stream and record
-     if (remotestreams.length != 0) {
+    if (remotestreams.length != 0) {
         for (var i = 0; remotestreams.length; i++) {
             remotestreams[i].send({
                 'message': {
