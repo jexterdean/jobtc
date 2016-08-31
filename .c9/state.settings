@@ -1,4 +1,15 @@
 {
+    "ace": {
+        "search": {
+            "@backwards": "false",
+            "@highlightmatches": "true",
+            "@matchcase": "false",
+            "@preservecase": "false",
+            "@regex": "false",
+            "@wholeword": "false",
+            "@wraparound": "true"
+        }
+    },
     "console": {
         "@expanded": true,
         "@height": "153",
@@ -17,8 +28,7 @@
                     "name": "tab0",
                     "path": "",
                     "className": [
-                        "tab0",
-                        "focus"
+                        "tab0"
                     ],
                     "document": {
                         "changed": false,
@@ -31,7 +41,7 @@
                         "terminal": {
                             "id": "devel_58",
                             "cwd": "",
-                            "width": 1094,
+                            "width": 1648,
                             "height": 127
                         }
                     },
@@ -102,14 +112,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 3,
+            "@document": 5,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 2,
-            "@tab": 3,
-            "@undoManager": 3
+            "@session": 4,
+            "@tab": 5,
+            "@undoManager": 5
         }
     },
     "findinfiles": {
@@ -127,8 +137,8 @@
     },
     "panecycle": {
         "json()": [
-            "tab0",
-            "tab2"
+            "tab4",
+            "tab0"
         ]
     },
     "panels": {
@@ -163,7 +173,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 110,
+        "@scrollpos": -10,
         "@showfs": true,
         "expanded": {
             "json()": [
@@ -177,9 +187,11 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/app/Http/Controllers/CompanyController.php",
+            "focus": "/resources/views/layouts/menu.blade.php",
             "meta": {
                 "accessList": [
+                    "tab4",
+                    "tab3",
                     "tab2"
                 ]
             },
@@ -190,17 +202,57 @@
                     "name": "tab2",
                     "path": "/app/Http/Controllers/CompanyController.php",
                     "className": [
-                        "tab2",
+                        "tab2"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1472564599560
+                        },
+                        "filter": true,
+                        "title": "CompanyController.php",
+                        "tooltip": "/app/Http/Controllers/CompanyController.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab3",
+                    "path": "/public/assets/css/page/applicants.css",
+                    "className": [
+                        "tab3"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1472567937078
+                        },
+                        "filter": true,
+                        "title": "applicants.css",
+                        "tooltip": "/public/assets/css/page/applicants.css",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab4",
+                    "path": "/resources/views/layouts/menu.blade.php",
+                    "className": [
+                        "tab4",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1470880213714
+                            "timestamp": 1472568776669
                         },
                         "filter": true,
-                        "title": "CompanyController.php",
-                        "tooltip": "/app/Http/Controllers/CompanyController.php",
+                        "title": "menu.blade.php",
+                        "tooltip": "/resources/views/layouts/menu.blade.php",
                         "ace": {}
                     },
                     "editorType": "ace",
