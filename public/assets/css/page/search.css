@@ -48,6 +48,7 @@
 .breadcrumb li a:hover {
     /*background-color: #4285F4;*/
     text-decoration: underline;
+    text-shadow: 1px 1px 1px #4288f7, 0 0 0 #4288f7, 1px 1px 1px #4288f7;
 }
 .search-container {
     position: relative;

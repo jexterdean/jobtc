@@ -403,7 +403,6 @@ select{
 .dropdown-submenu > .dropdown-menu {
     top: 0;
     left: 100%;
-    margin-top: -6px;
     margin-left: 0;
     display: none!important;
     background: #4285F4;
@@ -456,7 +455,6 @@ select{
 .dl-menu .dropdown > .dropdown-menu{
     top: 0;
     left: 100%;
-    margin-top: -6px;
     margin-left: 0;
     border-radius: 0;
     padding: 0;
