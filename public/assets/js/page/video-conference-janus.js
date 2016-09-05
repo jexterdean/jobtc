@@ -113,7 +113,8 @@ var screentest = null;
 
 var feeds = [];
 var bitrateTimer = [];
-var bandwidth = 1024 * 1024;
+//var bandwidth = 1024 * 1024;
+var bandwidth = 0;
 
 var display_name = $('.add-comment-form .media-heading').text();
 console.log(display_name);
@@ -206,7 +207,7 @@ $(document).ready(function () {
                                                 var createRoom = {
                                                     "request": "create",
                                                     "record": false,
-                                                    "publishers": 2,
+                                                    "publishers": 10,
                                                     "room": room_name,
                                                     "bitrate": bandwidth,
                                                 };
