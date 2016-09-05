@@ -210,7 +210,7 @@ $(document).ready(function () {
                                                     "room": room_name,
                                                     "bitrate": bandwidth,
                                                 };
-                                                //sfutest.send({"message": createRoom});
+                                                sfutest.send({"message": createRoom});
                                                 var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": display_name};
                                                 myusername = display_name;
                                                 sfutest.send({"message": register});
