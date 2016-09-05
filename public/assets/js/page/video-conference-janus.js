@@ -206,7 +206,7 @@ $(document).ready(function () {
                                                 Janus.log("  -- This is a publisher/manager");
                                                 var createRoom = {
                                                     "request": "create",
-                                                    "record": true,
+                                                    "record": false,
                                                     "publishers": 2,
                                                     "room": room_name,
                                                     "bitrate": bandwidth,
@@ -368,7 +368,7 @@ $(document).ready(function () {
                 $('#myvideo').remove();
                 unpublishOwnFeed();
                 removeRemoteFeed();
-                janus.destroy();
+                //janus.destroy();
                 started = false;
             });
         }});
