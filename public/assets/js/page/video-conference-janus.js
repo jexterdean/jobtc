@@ -193,7 +193,6 @@ $(document).ready(function () {
                 janus = new Janus(
                         {
                             server: server,
-                            iceServers: [{'url': 'stun:stun.l.google.com:19302'}, {'username': 'turn.job.tc', 'credential': 'radio5', 'url': 'turn:159.203.91.188'}],
                             success: function () {
                                 // Attach to video room test plugin
                                 janus.attach(
@@ -206,12 +205,12 @@ $(document).ready(function () {
                                                 Janus.log("  -- This is a publisher/manager");
                                                 var createRoom = {
                                                     "request": "create",
-                                                    "record": true,
+                                                    "record": false,
                                                     "publishers": 2,
                                                     "room": room_name,
                                                     "bitrate": bandwidth,
                                                 };
-                                                sfutest.send({"message": createRoom});
+                                                //sfutest.send({"message": createRoom});
                                                 var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": display_name};
                                                 myusername = display_name;
                                                 sfutest.send({"message": register});
@@ -368,7 +367,7 @@ $(document).ready(function () {
                 $('#myvideo').remove();
                 unpublishOwnFeed();
                 removeRemoteFeed();
-                janus.destroy();
+                //janus.destroy();
                 started = false;
             });
         }});
@@ -462,7 +461,7 @@ function publishOwnFeed(useAudio) {
     $('#publish').attr('disabled', true).unbind('click');
     sfutest.createOffer(
             {
-                media: {audioRecv: false, videoRecv: false, audioSend: useAudio, videoSend: true, video: 'stdres'}, // Publishers are sendonly
+                media: {audioRecv: true, videoRecv: true, audioSend: useAudio}, // Publishers are sendonly
                 success: function (jsep) {
                     Janus.debug("Got publisher SDP!");
                     Janus.debug(jsep);
@@ -485,9 +484,9 @@ function publishOwnFeed(useAudio) {
 
 function unpublishOwnFeed() {
     // Unpublish our stream
+    sfutest.detach();
     var unpublish = {"request": "unpublish"};
     sfutest.send({"message": unpublish});
-    sfutest.detach();
 }
 
 function removeRemoteFeed() {
@@ -500,7 +499,7 @@ function newRemoteFeed(id, display) {
     janus.attach(
             {
                 plugin: "janus.plugin.videoroom",
-                iceServers: [{'url': 'stun:stun.l.google.com:19302'}, {'username': 'turn.job.tc', 'credential': 'radio5', 'url': 'turn:159.203.91.188'}],
+                //iceServers: [{'username': 'turn.job.tc', 'credential': 'radio5', 'url': 'turn:159.203.91.188'}],
                 success: function (pluginHandle) {
                     remoteFeed = pluginHandle;
                     Janus.log("Plugin attached! (" + remoteFeed.getPlugin() + ", id=" + remoteFeed.getId() + ")");
@@ -532,7 +531,7 @@ function newRemoteFeed(id, display) {
                             remoteFeed.rfdisplay = msg["display"];
                             var target = document.getElementById('remoteVideo');
                             Janus.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
-                            $('#remote' + remoteFeed.rfindex).removeClass('hide').html(remoteFeed.rfdisplay).show();
+                            $('#remote' + remoteFeed.rfindex).html(target);
                         } else if (msg["error"] !== undefined && msg["error"] !== null) {
                             bootbox.alert(msg["error"]);
                         } else {
