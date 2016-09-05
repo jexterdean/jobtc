@@ -312,3 +312,7 @@ body {
       position: relative;
       top: 118px;
 }
+.edit-applicant-photo{
+    height: 150px;
+    width: 150px;
+}
