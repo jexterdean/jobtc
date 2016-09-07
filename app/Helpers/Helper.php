@@ -437,7 +437,7 @@ class Helper {
             $company_name = Company::where('id', $company_id)->pluck('name');
             //array_push($breadcrumb, $company_name . ' Dashboard');
             $breadcrumb = array(
-                $company_name . ' Dashboard' => $url
+                $company_name . ' Dashboard' => '/company/'.$company_id
             );
         }
         //Breadcrumbs for Projects
@@ -520,11 +520,11 @@ class Helper {
                 }
 
                 if (strpos($url, '/quiz')) {
-
+                    $company_id = end($url_array);
                     //array_push($breadcrumb, 'Quizzes');
 
                     $breadcrumb = array(
-                        'Quizzes' => $url
+                        'Quizzes' => '/quizPerCompany/'.$company_id
                     );
                 }
 
@@ -579,7 +579,7 @@ class Helper {
                 if (strpos($url, '/profile')) {
 
                     $breadcrumb = array(
-                        'Profile' => $url
+                        'Profile' => '/profile/'
                     );
                 }
 

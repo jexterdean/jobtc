@@ -17,8 +17,8 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab0",
-                    "tab1"
+                    "tab1",
+                    "tab0"
                 ]
             },
             "name": "pane1",
@@ -112,14 +112,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 5,
+            "@document": 6,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 4,
-            "@tab": 5,
-            "@undoManager": 5
+            "@session": 5,
+            "@tab": 6,
+            "@undoManager": 6
         }
     },
     "findinfiles": {
@@ -137,7 +137,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab4",
+            "tab5",
             "tab0"
         ]
     },
@@ -181,15 +181,27 @@
                 "/app/Models",
                 "/app",
                 "/app/Http",
-                "/app/Http/Controllers"
+                "/app/Http/Controllers",
+                "/app/Helpers"
+            ]
+        }
+    },
+    "recentfiles": {
+        "json()": []
+    },
+    "search-history": {
+        "search": {
+            "json()": [
+                "getBreadCrumbs"
             ]
         }
     },
     "tabs": {
         "json()": {
-            "focus": "/resources/views/layouts/menu.blade.php",
+            "focus": "/app/Helpers/Helper.php",
             "meta": {
                 "accessList": [
+                    "tab5",
                     "tab4",
                     "tab3",
                     "tab2"
@@ -205,14 +217,36 @@
                         "tab2"
                     ],
                     "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1472564599560
-                        },
                         "filter": true,
                         "title": "CompanyController.php",
                         "tooltip": "/app/Http/Controllers/CompanyController.php",
-                        "ace": {}
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 4,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 23,
+                                    "column": 39
+                                },
+                                "end": {
+                                    "row": 23,
+                                    "column": 39
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": 0
+                        },
+                        "hash": "b4333bd5539ce9e53861911188f93264f7d0ea7c",
+                        "meta": {
+                            "timestamp": 1472564599560
+                        },
+                        "changed": false
                     },
                     "editorType": "ace",
                     "active": false
@@ -220,18 +254,18 @@
                 {
                     "type": "tab",
                     "name": "tab3",
-                    "path": "/public/assets/css/page/applicants.css",
+                    "path": "/public/assets/js/page/video-conference-janus.js",
                     "className": [
                         "tab3"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1472567937078
+                            "timestamp": 1472654303845
                         },
                         "filter": true,
-                        "title": "applicants.css",
-                        "tooltip": "/public/assets/css/page/applicants.css",
+                        "title": "video-conference-janus.js",
+                        "tooltip": "/public/assets/js/page/video-conference-janus.js",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -242,17 +276,37 @@
                     "name": "tab4",
                     "path": "/resources/views/layouts/menu.blade.php",
                     "className": [
-                        "tab4",
+                        "tab4"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1472568776685
+                        },
+                        "filter": true,
+                        "title": "menu.blade.php",
+                        "tooltip": "/resources/views/layouts/menu.blade.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab5",
+                    "path": "/app/Helpers/Helper.php",
+                    "className": [
+                        "tab5",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1472568776669
+                            "timestamp": 1472663463237
                         },
                         "filter": true,
-                        "title": "menu.blade.php",
-                        "tooltip": "/resources/views/layouts/menu.blade.php",
+                        "title": "Helper.php",
+                        "tooltip": "/app/Helpers/Helper.php",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -266,7 +320,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/app/Http/Controllers/CompanyController.php"
+            "/app/Helpers/Helper.php"
         ]
     }
 }
