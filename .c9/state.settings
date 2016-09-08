@@ -17,8 +17,8 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab0",
-                    "tab1"
+                    "tab1",
+                    "tab0"
                 ]
             },
             "name": "pane1",
@@ -112,14 +112,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 5,
+            "@document": 6,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 4,
-            "@tab": 5,
-            "@undoManager": 5
+            "@session": 5,
+            "@tab": 6,
+            "@undoManager": 6
         }
     },
     "findinfiles": {
@@ -137,7 +137,7 @@
     },
     "panecycle": {
         "json()": [
-            "tab4",
+            "tab5",
             "tab0"
         ]
     },
@@ -185,13 +185,21 @@
             ]
         }
     },
+    "search-history": {
+        "search": {
+            "json()": [
+                "media"
+            ]
+        }
+    },
     "tabs": {
         "json()": {
-            "focus": "/resources/views/layouts/menu.blade.php",
+            "focus": "/public/assets/js/page/video-conference-janus.js",
             "meta": {
                 "accessList": [
-                    "tab4",
+                    "tab5",
                     "tab3",
+                    "tab4",
                     "tab2"
                 ]
             },
@@ -227,7 +235,7 @@
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1472567937078
+                            "timestamp": 1472721768041
                         },
                         "filter": true,
                         "title": "applicants.css",
@@ -243,16 +251,37 @@
                     "path": "/resources/views/layouts/menu.blade.php",
                     "className": [
                         "tab4",
+                        "changed"
+                    ],
+                    "document": {
+                        "changed": true,
+                        "meta": {
+                            "timestamp": 1472568776685
+                        },
+                        "filter": true,
+                        "title": "menu.blade.php",
+                        "tooltip": "/resources/views/layouts/menu.blade.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab5",
+                    "path": "/public/assets/js/page/video-conference-janus.js",
+                    "className": [
+                        "tab5",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1472568776669
+                            "timestamp": 1473349414241
                         },
                         "filter": true,
-                        "title": "menu.blade.php",
-                        "tooltip": "/resources/views/layouts/menu.blade.php",
+                        "title": "video-conference-janus.js",
+                        "tooltip": "/public/assets/js/page/video-conference-janus.js",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -266,7 +295,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/app/Http/Controllers/CompanyController.php"
+            "/app/Exceptions"
         ]
     }
 }
