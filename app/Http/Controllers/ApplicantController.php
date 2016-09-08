@@ -14,6 +14,7 @@ use App\Models\Tag;
 use App\Models\ApplicantRating;
 use App\Models\Comment;
 use App\Models\Video;
+use App\Models\VideoRoom;
 use App\Models\VideoTag;
 use App\Models\Test;
 use App\Models\TestPerApplicant;
@@ -112,9 +113,12 @@ class ApplicantController extends Controller {
                     ->orderBy('test_result.id', 'desc')
                     ->get();
 
-            $videos = Video::with(['tags' => function($query) {
+            /*$videos = Video::with(['tags' => function($query) {
                             $query->where('tag_type', 'video')->first();
-                        }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();
+                        }])->where('unique_id', $id)->where('user_type', 'applicant')->orderBy('id', 'desc')->get();*/
+            $videos = VideoRoom::with(['tags' => function($query){
+                $query->where('tag_type', 'video')->first();
+            }])->where('room_name', $id)->where('room_type', 'applicant')->orderBy('id', 'desc')->get();
             //Get the test permissions
 
             $test_ids = [];
@@ -249,7 +253,7 @@ class ApplicantController extends Controller {
                 }
             }
 
-            $assets = ['applicants', 'quizzes', 'real-time'];
+            $assets = ['applicants', 'real-time'];
 
             return view('applicants.show', [
                 'applicant' => $applicant,
