@@ -98,10 +98,13 @@ $.fn.clickToggle = function (func1, func2) {
     return this;
 };
 
-//var server = "https://ubuntu-server.com:8089/janus";
-var server = "https://laravel.software:8089/janus";
-//var media_server_url = "ubuntu-server.com";
-var media_server_url = "laravel.software";
+var server = "https://ubuntu-server.com:8089/janus";
+var media_server_url = "ubuntu-server.com";
+var recording_repo = 'https://ubuntu-server.com/recordings';
+
+//var server = "https://laravel.software:8089/janus";
+//var media_server_url = "laravel.software";
+//var recording_repo = 'https://laravel.software/recordings';
 
 var janus = null;
 var sfutest = null;
@@ -122,8 +125,7 @@ var display_name = $('.add-comment-form .media-heading').text();
 console.log(display_name);
 var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
-//var recording_repo = 'https://ubuntu-server.com/recordings';
-var recording_repo = 'https://laravel.software/recordings';
+
 
 jQuery.janusApiMedia = function (k) {
     var thisOption = janusVideoResolutionList[k];

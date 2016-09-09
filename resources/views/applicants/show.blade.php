@@ -367,7 +367,7 @@
                                         <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
                                             Your browser does not support the video tag.
                                             <!--source src="{{url($video->video_url)}}"-->
-                                            <source src="https://laravel.software/recordings/{{$video->streams}}-final.webm" type="video/webm">
+                                            <source src="https://ubuntu-server.com/recordings/{{$video->streams}}-final.webm" type="video/webm">
                                         </video>
                                     </div>
                                     <div class="col-xs-2">
