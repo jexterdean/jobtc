@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Video;
+use App\Models\VideoRoom;
 use App\Models\VideoTag;
 use PhanAn\Remote\Remote;
 use Auth;
@@ -81,7 +82,7 @@ class VideoController extends Controller {
         //
     }
 
-    public function saveVideo(Request $request) {
+    /*public function saveVideo(Request $request) {
 
         $page_type = $request->input('page_type');
 
@@ -182,8 +183,57 @@ class VideoController extends Controller {
 
 
         return $video_details;
-    }
+    }*/
+    
+    
+    public function saveVideo(Request $request) {
+        
+        $media_server = "laravel.software";
+        //$media_server = "ubuntu-server.com";
 
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+        
+        $room_type = $request->input('room_type');
+        $room_name = $request->input('room_name');
+        $stream = $request->input('stream');
+        $recording_repo = $request->input('recording_repo');
+        
+        $video_extension = '.webm';
+        $audio_extension = '.ogg';
+        
+        $video_url = $recording_repo.'/'.$stream.'-final'.$video_extension;
+        $audio_url = $recording_repo.'/'.$stream.$audio_extension;
+        
+        $video_room = new VideoRoom([
+            'room_name' => $room_name,
+            'room_type' => $room_type,
+            'streams' => $stream
+        ]);
+        $video_room->save();
+        
+        $video_id = $video_room->id;
+        
+        $video_details = json_encode(array('video_id' => $video_id, 'video' => $video_url, 'audio' => $audio_url), JSON_FORCE_OBJECT);
+        
+        $convert_to_webm_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/'.$stream.'-video.mjr /var/www/html/recordings/'.$stream.'.webm';
+        $convert_to_ogg_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/'.$stream.'-audio.mjr /var/www/html/recordings/'.$stream.'.ogg';        
+        //$merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.ogg -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $stream . '-final.webm';
+        $merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.ogg -c:v copy -shortest /var/www/html/recordings/' . $stream . '-final.webm';
+        
+        $remote_connection->exec($convert_to_webm_command.';'.$convert_to_ogg_command);
+        
+       
+        $remote_connection->exec($merge_webm_and_ogg_command);
+        
+        return $video_details;
+    }
+    
     public function deleteVideo(Request $request) {
         $video_id = $request->input('video_id');
 
@@ -247,5 +297,5 @@ class VideoController extends Controller {
 
         return $tags;
     }
-
+     
 }

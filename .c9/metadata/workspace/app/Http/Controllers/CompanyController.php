@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"filter":false,"title":"CompanyController.php","tooltip":"/app/Http/Controllers/CompanyController.php","undoManager":{"mark":-1,"position":-1,"stack":[]},"ace":{"folds":[],"scrolltop":4,"scrollleft":0,"selection":{"start":{"row":23,"column":39},"end":{"row":23,"column":39},"isBackwards":false},"options":{"guessTabSize":true,"useWrapMode":false,"wrapToView":true},"firstLineState":0},"timestamp":1472564599560,"hash":"b4333bd5539ce9e53861911188f93264f7d0ea7c"}
+=======
+{"filter":false,"title":"CompanyController.php","tooltip":"/app/Http/Controllers/CompanyController.php","undoManager":{"mark":-1,"position":-1,"stack":[]},"ace":{"folds":[],"scrolltop":64,"scrollleft":0,"selection":{"start":{"row":17,"column":26},"end":{"row":17,"column":26},"isBackwards":false},"options":{"guessTabSize":true,"useWrapMode":false,"wrapToView":true},"firstLineState":{"row":263,"state":"php-start","mode":"ace/mode/php"}},"timestamp":1472564599560,"hash":"b4333bd5539ce9e53861911188f93264f7d0ea7c"}
+>>>>>>> server/jex-09-08-2016v1
