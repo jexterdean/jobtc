@@ -205,21 +205,13 @@
     },
     "tabs": {
         "json()": {
-<<<<<<< HEAD
-            "focus": "/app/Helpers/Helper.php",
-            "meta": {
-                "accessList": [
-                    "tab5",
-                    "tab4",
-=======
             "focus": "/public/assets/js/page/video-conference-janus.js",
             "meta": {
                 "accessList": [
                     "tab5",
->>>>>>> server/jex-09-08-2016v1
+                    "tab2",
                     "tab3",
-                    "tab4",
-                    "tab2"
+                    "tab4"
                 ]
             },
             "name": "pane0",
@@ -276,11 +268,7 @@
                     "document": {
                         "changed": false,
                         "meta": {
-<<<<<<< HEAD
-                            "timestamp": 1472654303845
-=======
                             "timestamp": 1472721768041
->>>>>>> server/jex-09-08-2016v1
                         },
                         "filter": true,
                         "title": "video-conference-janus.js",
@@ -295,12 +283,8 @@
                     "name": "tab4",
                     "path": "/resources/views/layouts/menu.blade.php",
                     "className": [
-<<<<<<< HEAD
-                        "tab4"
-=======
                         "tab4",
                         "changed"
->>>>>>> server/jex-09-08-2016v1
                     ],
                     "document": {
                         "changed": true,
@@ -318,11 +302,7 @@
                 {
                     "type": "tab",
                     "name": "tab5",
-<<<<<<< HEAD
-                    "path": "/app/Helpers/Helper.php",
-=======
                     "path": "/public/assets/js/page/video-conference-janus.js",
->>>>>>> server/jex-09-08-2016v1
                     "className": [
                         "tab5",
                         "focus"
@@ -330,19 +310,11 @@
                     "document": {
                         "changed": false,
                         "meta": {
-<<<<<<< HEAD
-                            "timestamp": 1472663463237
-                        },
-                        "filter": true,
-                        "title": "Helper.php",
-                        "tooltip": "/app/Helpers/Helper.php",
-=======
-                            "timestamp": 1473349414241
+                            "timestamp": 1473349637300
                         },
                         "filter": true,
                         "title": "video-conference-janus.js",
                         "tooltip": "/public/assets/js/page/video-conference-janus.js",
->>>>>>> server/jex-09-08-2016v1
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -356,11 +328,7 @@
     },
     "tree_selection": {
         "json()": [
-<<<<<<< HEAD
-            "/app/Helpers/Helper.php"
-=======
             "/app/Exceptions"
->>>>>>> server/jex-09-08-2016v1
         ]
     }
 }
