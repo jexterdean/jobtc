@@ -367,8 +367,9 @@
                                         <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
                                             Your browser does not support the video tag.
                                             <!--source src="{{url($video->video_url)}}"-->
-                                            <source src="https://ubuntu-server.com/recordings/{{$video->streams}}-final.webm" type="video/webm">
+                                            <source src="{{$video->rec_dir.'/'.$video->streams}}-final.webm" type="video/webm">
                                         </video>
+                                        <input class="stream_id" type="hidden" value="{{$video->streams}}"/>
                                     </div>
                                     <div class="col-xs-2">
                                         <button class="btn btn-danger btn-shadow pull-right delete-video"><i class="fa fa-times"></i></button>

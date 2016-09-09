@@ -188,8 +188,8 @@ class VideoController extends Controller {
     
     public function saveVideo(Request $request) {
         
-        //$media_server = "laravel.software";
-        $media_server = "ubuntu-server.com";
+        $media_server = "laravel.software";
+        //$media_server = "ubuntu-server.com";
 
         //Connect to the media server
         $remote_connection = new Remote([
@@ -202,18 +202,19 @@ class VideoController extends Controller {
         $room_type = $request->input('room_type');
         $room_name = $request->input('room_name');
         $stream = $request->input('stream');
-        $recording_repo = $request->input('recording_repo');
+        $rec_dir = $request->input('rec_dir');
         
         $video_extension = '.webm';
         $audio_extension = '.ogg';
         
-        $video_url = $recording_repo.'/'.$stream.'-final'.$video_extension;
-        $audio_url = $recording_repo.'/'.$stream.$audio_extension;
+        $video_url = $rec_dir.'/'.$stream.'-final'.$video_extension;
+        $audio_url = $rec_dir.'/'.$stream.$audio_extension;
         
         $video_room = new VideoRoom([
             'room_name' => $room_name,
             'room_type' => $room_type,
-            'streams' => $stream
+            'streams' => $stream,
+            'rec_dir' => $rec_dir
         ]);
         $video_room->save();
         

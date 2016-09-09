@@ -98,13 +98,13 @@ $.fn.clickToggle = function (func1, func2) {
     return this;
 };
 
-var server = "https://ubuntu-server.com:8089/janus";
-var media_server_url = "ubuntu-server.com";
-var recording_repo = 'https://ubuntu-server.com/recordings';
+//var server = "https://ubuntu-server.com:8089/janus";
+//var media_server_url = "ubuntu-server.com";
+//var rec_dir = 'https://ubuntu-server.com/recordings';
 
-//var server = "https://laravel.software:8089/janus";
-//var media_server_url = "laravel.software";
-//var recording_repo = 'https://laravel.software/recordings';
+var server = "https://laravel.software:8089/janus";
+var media_server_url = "laravel.software";
+var rec_dir = 'https://laravel.software/recordings';
 
 var janus = null;
 var sfutest = null;
@@ -258,6 +258,7 @@ $(document).ready(function () {
                                                                 var display = list[f]["display"];
                                                                 Janus.debug("  >> [" + id + "] " + display);
                                                                 newRemoteFeed(id, display)
+                                                                
                                                             }
                                                         }
                                                     } else if (event === "destroyed") {
@@ -276,7 +277,8 @@ $(document).ready(function () {
                                                                 var id = list[f]["id"];
                                                                 var display = list[f]["display"];
                                                                 Janus.debug("  >> [" + id + "] " + display);
-                                                                newRemoteFeed(id, display);
+                                                                newRemoteFeed(id, display)
+                                                                
                                                             }
                                                         } else if (msg["leaving"] !== undefined && msg["leaving"] !== null) {
                                                             // One of the publishers has gone away?
@@ -540,6 +542,7 @@ function newRemoteFeed(id, display) {
                             var target = document.getElementById('remoteVideo');
                             Janus.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
                             $('#remote' + remoteFeed.rfindex).html(target);
+                            
                         } else if (msg["error"] !== undefined && msg["error"] !== null) {
                             bootbox.alert(msg["error"]);
                         } else {
@@ -657,7 +660,7 @@ function shareScreen() {
                 room = result["room"];
                 Janus.log("Screen sharing session created: " + room);
                 myusername = randomString(12);
-                var register = {"request": "join", "room": room, "ptype": "publisher", "display": myusername};
+                var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": 'screenshare'};
                 screentest.send({"message": register});
             }
         }});
@@ -852,23 +855,9 @@ function preShareScreen() {
 
 function joinScreen() {
     // Join an existing screen sharing session
-    $('#desc').attr('disabled', true);
-    $('#create').attr('disabled', true).unbind('click');
-    $('#roomid').attr('disabled', true);
-    $('#join').attr('disabled', true).unbind('click');
-    var roomid = $('#roomid').val();
-    if (isNaN(roomid)) {
-        bootbox.alert("Session identifiers are numeric only");
-        $('#desc').removeAttr('disabled', true);
-        $('#create').removeAttr('disabled', true).click(preShareScreen);
-        $('#roomid').removeAttr('disabled', true);
-        $('#join').removeAttr('disabled', true).click(joinScreen);
-        return;
-    }
-    room = parseInt(roomid);
     role = "listener";
     myusername = randomString(12);
-    var register = {"request": "join", "room": room, "ptype": "publisher", "display": myusername};
+    var register = {"request": "join", "room": room_name, "ptype": role, "display": myusername};
     screentest.send({"message": register});
 }
 
@@ -1003,6 +992,7 @@ function stopScreenShare() {
     // Unpublish screensharing
     var unpublish = {"request": "unpublish"};
     screentest.send({"message": unpublish});
+    //screentest.detach();
     $('#myscreenshare').remove();
 }
 
@@ -1027,8 +1017,8 @@ function saveVideo() {
     formData.append('room_name', room_name);
     formData.append('room_type', room_type);
     formData.append('stream', sfutest.getId());
-    formData.append('recording_repo', recording_repo);
-    
+    formData.append('rec_dir', rec_dir);
+
     $.ajax({
         url: ajaxurl,
         type: "POST",
@@ -1056,6 +1046,129 @@ function saveVideo() {
     }); //ajax
 }
 
+function replayVideo(stream) {
+    janus = new Janus({
+        server: server,
+        success: function () {
+            // Attach to echo test plugin
+            janus.attach({
+                plugin: "janus.plugin.recordplay",
+                success: function (pluginHandle) {
+                    janusReplay = pluginHandle;
+                    Janus.log("Plugin attached! (" + janusReplay.getPlugin() + ", id=" + janusReplay.getId() + ")");
+
+                    btnReplay
+                            .stop()
+                            .on(janusOptions.btnTriggerEvent, function (e) {
+                                if (janusOptions.replayInput) {
+                                    if (replayInput.val()) {
+                                        //update list first so that the record will be seen
+                                        janusReplay.send({"message": {"request": "update"}});
+
+                                        janusReplay.send({"message": {
+                                                "request": "play",
+                                                "id": parseInt(replayInput.val()),
+                                                "video": janusOptions.resolution
+                                            }});
+                                    }
+                                }
+                                else {
+                                    if (sfuLocalTest) {
+                                        //update list first so that the record will be seen
+                                        janusReplay.send({"message": {"request": "update"}});
+
+                                        janusReplay.send({
+                                            "message": {
+                                                "request": "play",
+                                                "id": parseInt(sfuLocalTest.getId()),
+                                                "video": janusOptions.resolution
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                },
+                error: function (error) {
+                    Janus.error("  -- Error attaching plugin...", error);
+                    bootbox.alert("  -- Error attaching plugin... " + error);
+                },
+                consentDialog: function (on) {
+                    Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
+                },
+                webrtcState: function (on) {
+                    Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+                },
+                onmessage: function (msg, jsep) {
+                    Janus.debug(" ::: Got a message :::");
+                    Janus.debug(JSON.stringify(msg));
+                    var result = msg["result"];
+                    if (result !== null && result !== undefined) {
+                        if (result["status"] !== undefined &&
+                                result["status"] !== null) {
+                            var event = result["status"];
+                            console.log(event);
+                            if (event === 'preparing') {
+                                Janus.log("Preparing the recording playout");
+                                janusReplay.createAnswer({
+                                    jsep: jsep,
+                                    media: {audioSend: false, videoSend: false}, // We want recvonly audio/video
+                                    success: function (jsep) {
+                                        Janus.debug("Got SDP!");
+                                        Janus.debug(jsep);
+                                        var body = {"request": "start"};
+                                        janusReplay.send({"message": body, "jsep": jsep});
+                                    },
+                                    error: function (error) {
+                                        Janus.error("WebRTC error:", error);
+                                        bootbox.alert("WebRTC error... " + JSON.stringify(error));
+                                    }
+                                });
+                                if (result["warning"]) {
+                                    bootbox.alert(result["warning"]);
+                                }
+                            }
+                            else if (event === 'playing') {
+                                Janus.log("Playout has started!");
+                            }
+                            else if (event === 'stopped') {
+                                Janus.log("Session has stopped!");
+                            }
+                        }
+                    }
+                    else {
+                        // FIXME Error?
+                        var error = msg["error"];
+                        bootbox.alert(error);
+                    }
+                },
+                onlocalstream: function (stream) {
+
+                },
+                onremotestream: function (stream) {
+                    Janus.debug(" ::: Got a remote stream :::");
+                    Janus.debug(JSON.stringify(stream));
+
+                    replayVideo.append('<video id="replayVideo" width="100%" height="100%" autoplay />');
+                    attachMediaStream($('#replayVideo').get(0), stream);
+                },
+                oncleanup: function () {
+                    Janus.log(" ::: Got a cleanup notification :::");
+
+                }
+            });
+        },
+        error: function (error) {
+            Janus.error(error);
+            bootbox.alert(error, function () {
+                location.reload();
+            });
+        },
+        destroyed: function () {
+            location.reload();
+        }
+    });
+}
+
 
 /*When video is successfully recorded, place it on the video archive*/
 socket.on('add-video', function (data) {
@@ -1063,33 +1176,33 @@ socket.on('add-video', function (data) {
     var json_data = JSON.parse(data);
 
     /*var element = '<div class="video-element-holder">' +
-            '<div class="row">' +
-            '<div class="col-xs-10">' +
-            '<video id="video-archive-item-' + json_data.video_id + '" class="video-archive-item" controls="controls"  preload="metadata" src="' + json_data.video_url + '">' +
-            'Your browser does not support the video tag.' +
-            '</video>' +
-            '</div>' +
-            '<div class="col-xs-2">' +
-            '<button class="btn btn-danger pull-right delete-video"><i class="fa fa-times"></i></button>' +
-            '<input class="video_id" type="hidden" value="' + json_data.video_id + '"/>' +
-            '</div>' +
-            '</div>' +
-            '<div class="row">' +
-            '<div class="col-xs-12">' +
-            '<textarea class="video-status-container">' +
-            '</textarea>' +
-            '<input class="video_id" type="hidden" value="' + json_data.video_id + '"/>' +
-            '</div>' +
-            '</div>' +
-            '</div>';*/
-    
-    
+     '<div class="row">' +
+     '<div class="col-xs-10">' +
+     '<video id="video-archive-item-' + json_data.video_id + '" class="video-archive-item" controls="controls"  preload="metadata" src="' + json_data.video_url + '">' +
+     'Your browser does not support the video tag.' +
+     '</video>' +
+     '</div>' +
+     '<div class="col-xs-2">' +
+     '<button class="btn btn-danger pull-right delete-video"><i class="fa fa-times"></i></button>' +
+     '<input class="video_id" type="hidden" value="' + json_data.video_id + '"/>' +
+     '</div>' +
+     '</div>' +
+     '<div class="row">' +
+     '<div class="col-xs-12">' +
+     '<textarea class="video-status-container">' +
+     '</textarea>' +
+     '<input class="video_id" type="hidden" value="' + json_data.video_id + '"/>' +
+     '</div>' +
+     '</div>' +
+     '</div>';*/
+
+
     var element = '<div class="video-element-holder">' +
             '<div class="row">' +
             '<div class="col-xs-10">' +
             '<video id="video-archive-item-' + json_data.video_id + '" class="video-archive-item" controls="controls"  preload="metadata">' +
             'Your browser does not support the video tag.' +
-            '<source src="'+json_data.video+'" type="video/webm">' +
+            '<source src="' + json_data.video + '" type="video/webm">' +
             '</video>' +
             '</div>' +
             '<div class="col-xs-2">' +
