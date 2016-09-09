@@ -195,6 +195,13 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/video-conference-janus.js')  !!}
 @endif
 
+@if(in_array('janus', $assets))
+{!! HTML::script('assets/js/adapter.js') !!}
+{!! HTML::script('assets/js/janus.js') !!}
+{!! HTML::script('assets/js/spin.min.js') !!}
+{!! HTML::script('assets/js/janus-api.js') !!}
+@endif
+
 @if(in_array('users',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/jquery-tagEditor/jquery.caret.min.js')  !!}
