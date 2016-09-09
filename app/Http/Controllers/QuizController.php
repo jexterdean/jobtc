@@ -1519,7 +1519,7 @@ class QuizController extends BaseController {
 
     public function quizVideo(){
         $data = [
-            'assets' => []
+            'assets' => ['janus']
         ];
 
         return View::make('quiz.video', $data);

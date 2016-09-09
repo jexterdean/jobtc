@@ -4,27 +4,54 @@
 <div class="row">
     <div class="col-xs-8 align-center">
         <div class="row">
-            <div class="col-md-12" id="quiz-video"></div>
-            <video class="hidden" id="quiz-video-play" controls="controls" preload="metadata" src="">
-                Your browser does not support the video tag.
-            </video>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Video Conference</div>
+                    <div class="panel-body">
+                        <div class="col-md-6" id="local-video"></div>
+                        <div class="col-md-6" id="remote-video">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12 text-center">
+                <input type="text" name="username" id="username" />
+                <button class="btn btn-default btn-shadow publish-btn">
+                    <i class="fa fa-play"></i>&nbsp;
+                    <span>Publish</span>
+                </button>
                 <button class="btn btn-default btn-shadow record-btn">
                     <i class="fa fa-circle"></i>&nbsp;
-                    <span>Recording</span>
+                    <span>Record</span>
                 </button>
-                <button class="btn btn-default btn-shadow stop-btn">
+                <button class="btn btn-default btn-shadow save-btn">
                     <i class="fa fa-square"></i>&nbsp;
-                    <span>Stop</span>
+                    <span>Save</span>
                 </button>
-                <button class="btn btn-default btn-shadow play-btn">
-                    <i class="fa fa-play"></i>&nbsp;
-                    <span>Play</span>
+                <button class="btn btn-default btn-shadow replay-save-btn">
+                    <i class="fa fa-square"></i>&nbsp;
+                    <span>Replay</span>
                 </button>
             </div>
         </div>
+    </div>
+    <div class="col-xs-4 align-center">
+        <div class="panel panel-default">
+            <div class="panel-heading">Video Replay</div>
+            <div class="panel-body">
+                <video id="replay-video" width="100%" controls="controls" autoplay="true">
+                    Your browser does not support the video tag.
+                </video>
+                <div id="replay-janus-video"></div>
+            </div>
+        </div>
+        <input type="text" name="video" value="101143085728269" id="video" />
+        <button class="btn btn-default btn-shadow replay-btn">
+            <i class="fa fa-play"></i>&nbsp;
+            <span>Load</span>
+        </button>
     </div>
 </div>
 @stop
@@ -40,162 +67,19 @@
     }
 </style>
 
-{!!  HTML::script('assets/js/erizo.js')  !!}
 <script>
     $(function(e){
-        var recordingUrl = "https://laravel.software/recordings/";
-        var serverUrl = "https://laravel.software:3333/";
-        var record = $('.record-btn');
-        var stop = $('.stop-btn');
-        var play = $('.play-btn');
-        var quiz_video = $('#quiz-video');
-        var quiz_video_play = $('#quiz-video-play');
-
-        var createToken = function (room_id, username, role, callback) {
-            var req = new XMLHttpRequest();
-            var url = serverUrl + 'createToken/';
-            var body = {room_id: room_id, username: 'user', role: 'presenter'};
-            req.onreadystatechange = function () {
-                if (req.readyState === 4) {
-                    callback(req.responseText);
-                }
-            };
-            req.open('POST', url, true);
-            req.setRequestHeader('Content-Type', 'application/json');
-            req.send(JSON.stringify(body));
-        };
-        var createRoom = function (room_name, callback) {
-            var req = new XMLHttpRequest();
-            var url = serverUrl + 'createRoom/';
-            var body = {room_name: room_name};
-            req.onreadystatechange = function () {
-                if (req.readyState === 4) {
-                    callback(req.responseText);
-                }
-            };
-            req.open('POST', url, true);
-            req.setRequestHeader('Content-Type', 'application/json');
-            req.send(JSON.stringify(body));
-        };
-        var saveVideo = function(localStreamId){
-            var file_extension = '.webm';
-            var video_url = recordingUrl + localStreamId + file_extension;
-
-            var ajaxurl = public_path + 'quizSaveVideo';
-            var formData = new FormData();
-            formData.append('stream_id', localStreamId);
-            $.ajax({
-                url: ajaxurl,
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-
-                },
-                success: function (data) {
-                    console.log('save video');
-                },
-                complete: function () {
-
-                },
-                error: function (xhr, status, error) {
-                    console.log('Error: retrying');
-                }
-            }); //ajax
-        };
-
-        createRoom("quiz", function (room_id) {
-            createToken(room_id, "user", "presenter", function (token) {
-                var room = Erizo.Room({ token: token });
-
-                //region Record and Save Video
-                var localStream = Erizo.Stream({ audio: true, video: true, data: true });
-                localStream.addEventListener("access-accepted", function () {
-                    var subscribeToStreams = function (streams) {
-                        for (var index in streams) {
-                            var stream = streams[index];
-                            if (localStream.getID() !== stream.getID()) {
-                                room.subscribe(stream);
-                            }
-                        }
-                    };
-
-                    room.addEventListener("room-connected", function (roomEvent) {
-                        room.publish(localStream);
-                        subscribeToStreams(roomEvent.streams);
-                    });
-
-                    room.addEventListener("stream-subscribed", function(streamEvent) {
-                        var stream = streamEvent.stream;
-                        var div = document.createElement('div');
-                        div.setAttribute("style", "width: 320px; height: 240px;");
-                        div.setAttribute("id", "test" + stream.getID());
-
-                        document.body.appendChild(div);
-                        stream.play("test" + stream.getID());
-                    });
-
-                    room.addEventListener("stream-added", function (streamEvent) {
-                        var streams = [];
-                        streams.push(streamEvent.stream);
-                        subscribeToStreams(streams);
-                    });
-
-                    room.addEventListener("stream-removed", function (streamEvent) {
-                        // Remove stream from DOM
-                        var stream = streamEvent.stream;
-                        if (stream.elementID !== undefined) {
-                            var element = document.getElementById(stream.elementID);
-                            document.body.removeChild(element);
-                        }
-                    });
-
-                    room.connect();
-                    localStream.play("quiz-video");
-                });
-                localStream.init();
-
-                var rId = '';
-                record.click(function(e){
-                    room.startRecording(localStream, function(recordingId, error) {
-                        if (recordingId === undefined){
-                            console.log("Error", error);
-                        } else {
-                            rId = recordingId;
-                            console.log("Recording started, the id of the recording is ", recordingId);
-                        }
-                    });
-                });
-                stop.click(function(e){
-                    if(rId){
-                        room.stopRecording(rId, function(result, error){
-                            if (result === undefined){
-                                console.log("Error", error);
-                            } else {
-                                saveVideo(rId);
-                            }
-                        });
-                    }
-                    else{
-                        localStream.close();
-                    }
-                });
-                //endregion
-
-                play.click(function(e){
-                    if(rId){
-                        quiz_video.addClass('hidden');
-                        quiz_video_play
-                            .attr('src', recordingUrl + rId + '.webm')
-                            .removeClass('hidden')
-                            .get(0).play();
-                    }
-                    else{
-                        localStream.play("quiz-video");
-                    }
-                });
-            });
+        $.janusApi({
+            btnPublish: $('.publish-btn'),
+            btnRecord: $('.record-btn'),
+            btnSave: $('.save-btn'),
+            btnReplay: $('.replay-save-btn'),
+            btnStop: $('.stop-btn'),
+            userNameInput: $('#username'),
+            replayVideo: $('#replay-janus-video'),
+            //replayInput: $('#video'),
+            roomId: 8888,
+            roomPin: "8888"
         });
     });
 </script>

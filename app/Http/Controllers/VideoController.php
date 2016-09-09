@@ -297,5 +297,67 @@ class VideoController extends Controller {
 
         return $tags;
     }
-     
+
+    //janus API
+    public function saveNfoJanus(Request $request){
+        if($request->input('local')) {
+            $this->saveThisNfoJanus($request->input('local'));
+        }
+        if($request->input('remote')) {
+            $this->saveThisNfoJanus($request->input('remote'));
+        }
+    }
+    private function saveThisNfoJanus($id){
+        $media_server = "laravel.software";
+        //$media_server = "linux.me";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        $nfo = "echo '[" . $id . "]\nname = " . $id . "\n" .
+            "date = " . date('Y-m-d H:i:s') . "\n" .
+            "audio = " . $id . "-audio.mjr\n" .
+            "video = " . $id . "-video.mjr' > /var/www/html/recordings/" . $id . ".nfo";
+        $remote_connection->exec($nfo);
+    }
+
+    public function convertJanusVideo(Request $request){
+        if($request->input('local')){
+            $this->convertThisJanusVideo($request->input('local'));
+        }
+        if($request->input('remote')){
+            $this->convertThisJanusVideo($request->input('remote'));
+        }
+    }
+    private function convertThisJanusVideo($id){
+        $media_server = "laravel.software";
+        //$media_server = "linux.me";
+
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)',
+        ]);
+
+        //convert to opus and webm
+        $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $id . '-audio.mjr /var/www/html/recordings/' . $id . '-audio.opus';
+        $remote_connection->exec($convert_to_audio);
+        $convert_to_webm = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $id . '-video.mjr /var/www/html/recordings/' . $id . '-video.webm';
+        $remote_connection->exec($convert_to_webm);
+
+        $sync_audio_video = 'ffmpeg -i /var/www/html/recordings/' . $id . '-video.webm -i /var/www/html/recordings/' . $id . '-audio.opus -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $id . '.webm';
+        $remote_connection->exec($sync_audio_video);
+
+        $delete_opus = 'rm -rf /var/www/html/recordings/' . $id . '-audio.opus';
+        $remote_connection->exec($delete_opus);
+        $delete_webm = 'rm -rf /var/www/html/recordings/' . $id . '-video.webm';
+        $remote_connection->exec($delete_webm);
+    }
 }
