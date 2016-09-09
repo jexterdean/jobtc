@@ -15,6 +15,7 @@ use App\Models\MailBoxAlias;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\ShareJob;
+use App\Models\Project;
 use Auth;
 use Redirect;
 use Elasticsearch\ClientBuilder as ES;
@@ -142,6 +143,11 @@ class JobController extends Controller {
                 $module_permissions = Permission::where('slug', 'view.jobs')->get();
             }
 
+            $jobs = Job::find($id);
+            $projects = Project::where('company_id',$jobs->company_id)
+                ->lists('project_title', 'project_id')
+                ->toArray();
+
             $assets = ['jobs', 'slider'];
 
             return view('jobs.show', [
@@ -149,7 +155,8 @@ class JobController extends Controller {
                 'applicants' => $applicants,
                 'module_permissions' => $module_permissions,
                 'assets' => $assets,
-                'count' => 0
+                'count' => 0,
+                'projects' => $projects
             ]);
         } else {
 
@@ -157,13 +164,19 @@ class JobController extends Controller {
 
             $applicants = $this->getApplicantsInfo($id);
 
+            $jobs = Job::find($id);
+            $projects = Project::where('company_id',$jobs->company_id)
+                ->lists('project_title', 'project_id')
+                ->toArray();
+
             $assets = ['jobs', 'slider'];
 
             return view('jobs.show', [
                 'job' => $job,
                 'applicants' => $applicants,
                 'assets' => $assets,
-                'count' => 0
+                'count' => 0,
+                'projects' => $projects
             ]);
         }
     }

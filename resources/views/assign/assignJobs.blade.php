@@ -33,7 +33,6 @@
                                                     <li id="job-{{$job->id}}" class="list-group-item">
                                                         <div class="row">
                                                             <div class="col-md-9">
-                                                                <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                                                 {{$job->title}}
                                                             </div>
                                                             <div class="pull-right">
@@ -92,7 +91,6 @@
                                                     <div class="row">
                                                         <div class="col-md-9">
                                                             <a id="shared-company-item-{{$shared_job_company->id}}" class="toggle-employees" data-toggle="collapse" href="#employee-collapse-{{$shared_job_company->id}}">
-                                                                <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                                                 {{$job->title}}
                                                             </a>
                                                         </div>

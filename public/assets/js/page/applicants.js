@@ -317,8 +317,8 @@ $('.edit-applicant-password').on('click', function (e) {
     });
 });
 
-$('.hire').click(function () {
-
+$('.hire').click(function (e) {
+    e.preventDefault();
     var applicant_id = $(this).parent().find('.applicant_id').val();
     var company_id = $(this).parent().find('.company_id').val();
 
@@ -328,11 +328,13 @@ $('.hire').click(function () {
             $(this).html('<i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired');
             hire_applicant(applicant_id, company_id);
         });
+        $(this).parent().parent().find('.move-btn').css({'display':'inline'});
     } else if ($(this).hasClass('bg-green')) {
         $(this).switchClass('bg-green', 'bg-light-blue-gradient', function () {
             $(this).html('Hire');
             fire_applicant(applicant_id, company_id);
         });
+        $(this).parent().parent().find('.move-btn').css({'display':'none'});
     }
 
 });

@@ -105,6 +105,7 @@
                                 @endif
                             </div>
                             <div class="media-body media-right">
+                                {{--*/ $display_move_btn = $applicant->hired === 'Yes' ? 'display:inline;' : 'display:none;' /*--}}
                                 @if(Auth::user('user'))
                                 <text class="media-heading">
                                 {{$applicant->name}}&nbsp;
@@ -150,7 +151,43 @@
                                         @endif    
                                 </textarea>
                                 @endif
+                                <a href="#move_applicant_{{ $applicant->id }}" class="pull-right move-btn btn btn-shadow btn-edit" style="{{ $display_move_btn }}" data-toggle="modal">Move</a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                {{--region Move Applicant Modal--}}
+                <div class="modal fade" id="move_applicant_{{ $applicant->id }}" tabindex="-1" role="basic" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                <h4 class="modal-title">Move to Briefcase</h4>
+                            </div>
+                            {!!  Form::open(['method' => 'POST','route' => ['task.store'],'class' => 'task-form'])  !!}
+                            <div class="modal-body">
+                                {!!  Form::hidden('belongs_to','project')  !!}
+                                <div class="form-group">
+                                    {!!  Form::select('unique_id',$projects, '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Project Name', 'tabindex' => '7'] )  !!}
+                                </div>
+                                <div class="form-group">
+                                    {!!  Form::input('text','task_title', $applicant->name,['class' => 'form-control', 'placeholder' => 'Title', 'tabindex' => '1']) !!}
+                                </div>
+                                <div class="form-group">
+                                    {!!  Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control',
+                                    'placeholder' => 'Description', 'tabindex' => '2']) !!}
+                                </div>
+                                <div class="form-group">
+                                    {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
+                                    input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="form-group">
+                                    {!!  Form::submit('Add',['class' => 'btn btn-shadow btn-edit', 'tabindex' => '5'])  !!}
+                                </div>
+                            </div>
+                            {!!  Form::close() !!}
                         </div>
                     </div>
                 </div>

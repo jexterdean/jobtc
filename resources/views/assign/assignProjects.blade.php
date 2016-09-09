@@ -83,9 +83,9 @@
                                         @foreach($team->team_member as $team_members)
                                         <li class="list-group-item">
                                             <div class="row ">
-                                                <div class="col-md-10">
+                                                <div class="col-sm-9">
                                                     <a class="team-member name" data-toggle="collapse" href="#team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}">
-                                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                                        <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
                                                         {{$team_members->user->name}}
                                                     </a>
                                                 </div>
@@ -103,11 +103,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if($project->user_id === Auth::user()->user_id && intval($project->company_id) === intval($company_id))
+                                            @if(intval($project->company_id) === intval($company_id))
                                             <div class="row">
                                                 <div id="team-member-collapse-{{$team_members->user->user_id}}-{{$project->project_id}}" class="collapse">
                                                     <div class="task-list-container">
-                                                        <label class='center-block taskgroup-title'>Available Briefcases</label>
+                                                        <hr/>
+                                                        <label class='text-center taskgroup-title' style="width: 100%!important;">Available Briefcases</label>
                                                         <ul class="taskgroup-list list-group">
                                                             @foreach($project->task as $task)
                                                             <li class="list-group-item">
@@ -245,9 +246,8 @@
                             @foreach($profiles as $profile)
                             <li id="profile-{{$profile->user->user_id}}" class="list-group-item">
                                 <div class="row">
-                                    <div class="col-md-9">
-                                        <a class="employee-toggle" data-toggle="collapse">
-                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                    <div class="col-sm-9">
+                                        <a target="_blank" class="employee-toggle" href="{{ url('user/' . $profile->user->user_id . '/company/' . $company_id) }}">
                                             <div class="name">{{$profile->user->name}}</div>
                                         </a>
                                     </div>
@@ -300,8 +300,7 @@
                             <li id="company-{{$user_company->id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <a id="employee-toggle-{{$user_company->id}}" class="toggle-employees" data-toggle="collapse" href="#employee-toggle-collapse-{{$user_company->id}}">
-                                            <i class="pull-left fa fa-chevron-down" aria-hidden="true"></i>
+                                        <a id="employee-toggle-{{$user_company->id}}" class="toggle-employees" target="_blank" href="{{ url('company/' . $user_company->id) }}">
                                             {{$user_company->name}}
                                         </a>
                                     </div>

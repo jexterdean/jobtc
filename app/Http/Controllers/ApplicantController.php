@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -249,6 +250,11 @@ class ApplicantController extends Controller {
                 }
             }
 
+            $projects = Project::where('company_id',$job->company_id)
+                ->lists('project_title', 'project_id')
+                ->toArray();
+
+            $projects = [];
             $assets = ['applicants', 'quizzes', 'real-time'];
 
             return view('applicants.show', [
@@ -271,7 +277,8 @@ class ApplicantController extends Controller {
                 'rating' => $rating,
                 'videos' => $videos,
                 'assets' => $assets,
-                'count' => 0]);
+                'count' => 0,
+                'projects' => $projects]);
         }
     }
 

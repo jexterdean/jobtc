@@ -209,6 +209,7 @@ class TaskController extends BaseController {
         $task = new Task;
         $data = Input::all();
         $data['task_status'] = 'pending';
+        $data['project_id'] = $data['unique_id'];
         $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
 
         $data['user_id'] = Auth::user()->user_id;
