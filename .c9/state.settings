@@ -181,45 +181,27 @@
                 "/app/Models",
                 "/app",
                 "/app/Http",
-                "/app/Http/Controllers",
-                "/app/Helpers"
-            ]
-        }
-    },
-    "recentfiles": {
-        "json()": []
-    },
-    "search-history": {
-        "search": {
-            "json()": [
-                "getBreadCrumbs"
+                "/app/Http/Controllers"
             ]
         }
     },
     "search-history": {
         "search": {
             "json()": [
+                "joinScreen",
                 "media"
             ]
         }
     },
     "tabs": {
         "json()": {
-<<<<<<< HEAD
-            "focus": "/app/Helpers/Helper.php",
-            "meta": {
-                "accessList": [
-                    "tab5",
-                    "tab4",
-=======
             "focus": "/public/assets/js/page/video-conference-janus.js",
             "meta": {
                 "accessList": [
                     "tab5",
->>>>>>> server/jex-09-08-2016v1
+                    "tab2",
                     "tab3",
-                    "tab4",
-                    "tab2"
+                    "tab4"
                 ]
             },
             "name": "pane0",
@@ -237,16 +219,16 @@
                         "tooltip": "/app/Http/Controllers/CompanyController.php",
                         "ace": {
                             "folds": [],
-                            "scrolltop": 4,
+                            "scrolltop": 64,
                             "scrollleft": 0,
                             "selection": {
                                 "start": {
-                                    "row": 23,
-                                    "column": 39
+                                    "row": 17,
+                                    "column": 26
                                 },
                                 "end": {
-                                    "row": 23,
-                                    "column": 39
+                                    "row": 17,
+                                    "column": 26
                                 },
                                 "isBackwards": false
                             },
@@ -255,7 +237,11 @@
                                 "useWrapMode": false,
                                 "wrapToView": true
                             },
-                            "firstLineState": 0
+                            "firstLineState": {
+                                "row": 263,
+                                "state": "php-start",
+                                "mode": "ace/mode/php"
+                            }
                         },
                         "hash": "b4333bd5539ce9e53861911188f93264f7d0ea7c",
                         "meta": {
@@ -269,23 +255,45 @@
                 {
                     "type": "tab",
                     "name": "tab3",
-                    "path": "/public/assets/js/page/video-conference-janus.js",
+                    "path": "/public/assets/css/page/applicants.css",
                     "className": [
                         "tab3"
                     ],
                     "document": {
-                        "changed": false,
-                        "meta": {
-<<<<<<< HEAD
-                            "timestamp": 1472654303845
-=======
-                            "timestamp": 1472721768041
->>>>>>> server/jex-09-08-2016v1
-                        },
                         "filter": true,
-                        "title": "video-conference-janus.js",
-                        "tooltip": "/public/assets/js/page/video-conference-janus.js",
-                        "ace": {}
+                        "title": "applicants.css",
+                        "tooltip": "/public/assets/css/page/applicants.css",
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 3704,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 312,
+                                    "column": 16
+                                },
+                                "end": {
+                                    "row": 312,
+                                    "column": 16
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": {
+                                "row": 263,
+                                "state": "start",
+                                "mode": "ace/mode/css"
+                            }
+                        },
+                        "hash": "b37ac335df0be727911da10b37b2c63b46c0d8c6",
+                        "meta": {
+                            "timestamp": 1472721768041
+                        },
+                        "changed": false
                     },
                     "editorType": "ace",
                     "active": false
@@ -295,22 +303,43 @@
                     "name": "tab4",
                     "path": "/resources/views/layouts/menu.blade.php",
                     "className": [
-<<<<<<< HEAD
-                        "tab4"
-=======
                         "tab4",
                         "changed"
->>>>>>> server/jex-09-08-2016v1
                     ],
                     "document": {
                         "changed": true,
-                        "meta": {
-                            "timestamp": 1472568776685
-                        },
                         "filter": true,
                         "title": "menu.blade.php",
                         "tooltip": "/resources/views/layouts/menu.blade.php",
-                        "ace": {}
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 4314,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 406,
+                                    "column": 20
+                                },
+                                "end": {
+                                    "row": 406,
+                                    "column": 20
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": {
+                                "row": 263,
+                                "state": "start",
+                                "mode": "ace/mode/php"
+                            }
+                        },
+                        "meta": {
+                            "timestamp": 1472568776685
+                        }
                     },
                     "editorType": "ace",
                     "active": false
@@ -318,11 +347,7 @@
                 {
                     "type": "tab",
                     "name": "tab5",
-<<<<<<< HEAD
-                    "path": "/app/Helpers/Helper.php",
-=======
                     "path": "/public/assets/js/page/video-conference-janus.js",
->>>>>>> server/jex-09-08-2016v1
                     "className": [
                         "tab5",
                         "focus"
@@ -330,19 +355,11 @@
                     "document": {
                         "changed": false,
                         "meta": {
-<<<<<<< HEAD
-                            "timestamp": 1472663463237
-                        },
-                        "filter": true,
-                        "title": "Helper.php",
-                        "tooltip": "/app/Helpers/Helper.php",
-=======
-                            "timestamp": 1473349414241
+                            "timestamp": 1473432831422
                         },
                         "filter": true,
                         "title": "video-conference-janus.js",
                         "tooltip": "/public/assets/js/page/video-conference-janus.js",
->>>>>>> server/jex-09-08-2016v1
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -356,11 +373,7 @@
     },
     "tree_selection": {
         "json()": [
-<<<<<<< HEAD
-            "/app/Helpers/Helper.php"
-=======
             "/app/Exceptions"
->>>>>>> server/jex-09-08-2016v1
         ]
     }
 }

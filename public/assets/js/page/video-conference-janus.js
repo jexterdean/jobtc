@@ -653,9 +653,9 @@ function shareScreen() {
             if (event != undefined && event != null) {
                 // Our own screen sharing session has been created, join it
                 room = result["room"];
-                Janus.log("Screen sharing session created: " + room);
+                Janus.log("Screen sharing session created: " + room_name);
                 myusername = randomString(12);
-                var register = {"request": "join", "room": room, "ptype": "publisher", "display": myusername};
+                var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": myusername};
                 screentest.send({"message": register});
             }
         }});
@@ -866,7 +866,7 @@ function joinScreen() {
     room = parseInt(roomid);
     role = "listener";
     myusername = randomString(12);
-    var register = {"request": "join", "room": room, "ptype": "publisher", "display": myusername};
+    var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": myusername};
     screentest.send({"message": register});
 }
 
