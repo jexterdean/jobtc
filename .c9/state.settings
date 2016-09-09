@@ -198,9 +198,9 @@
             "meta": {
                 "accessList": [
                     "tab5",
+                    "tab2",
                     "tab3",
-                    "tab4",
-                    "tab2"
+                    "tab4"
                 ]
             },
             "name": "pane0",
@@ -277,7 +277,7 @@
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1473349414241
+                            "timestamp": 1473349637300
                         },
                         "filter": true,
                         "title": "video-conference-janus.js",
