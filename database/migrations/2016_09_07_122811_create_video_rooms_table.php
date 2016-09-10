@@ -16,6 +16,7 @@ class CreateVideoRoomsTable extends Migration
             $table->string('room_name');
             $table->string('room_type');
             $table->string('streams');
+            $table->string('rec_dir');
             $table->timestamps();
         });
     }
