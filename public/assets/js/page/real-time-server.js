@@ -19,11 +19,11 @@ var io = require('socket.io');
 
 var options = {
     //Production
-    //key: fs.readFileSync("/var/www/html/hirefitnet/public/certs/apache.job.tc.key"),
-    //cert: fs.readFileSync("/var/www/html/hirefitnet/public/certs/apache.job.tc.crt")
+    key: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.key"),
+    cert: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.crt")
     //Local
-    key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
-    cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")
+    //key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
+    //cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")
 };
 
 var server = require(isUseHTTPs ? 'https' : 'http');
@@ -97,7 +97,22 @@ io.on('connection', function (socket) {
         console.log('calendar-drop-task: ' + JSON.stringify(task));
         io.emit('calendar-drop-task', task);
     });
-
+    
+    socket.on('start-recording',function(video){
+        console.log('starting recording in room: ' + room_name);
+        io.to(room_name).emit('start-recording', video);
+    });
+    
+    socket.on('stop-recording',function(video){
+        console.log('stopping recording in room: ' + room_name);
+        io.to(room_name).emit('stop-recording', video);
+    });
+    
+    socket.on('save-video', function (video) {
+        console.log('Saving video for Room: ' + room_name);
+        io.to(room_name).emit('save-video', video);
+    });
+    
     socket.on('add-video', function (video) {
         console.log('Adding video to Room: ' + room_name);
         io.to(room_name).emit('add-video', video);
