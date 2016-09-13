@@ -99,13 +99,13 @@ $.fn.clickToggle = function (func1, func2) {
 };
 
 //var server = "wss://ubuntu-server.com:8989/";
-//var server = "https://ubuntu-server.com:8089/janus";
-//var media_server_url = "ubuntu-server.com";
-//var rec_dir = 'https://ubuntu-server.com/recordings';
+var server = "https://ubuntu-server.com:8089/janus";
+var media_server_url = "ubuntu-server.com";
+var rec_dir = 'https://ubuntu-server.com/recordings';
 
-var server = "https://laravel.software:8089/janus";
-var media_server_url = "laravel.software";
-var rec_dir = 'https://laravel.software/recordings';
+//var server = "https://laravel.software:8089/janus";
+//var media_server_url = "laravel.software";
+//var rec_dir = 'https://laravel.software/recordings';
 
 var janus = null;
 var sfutest = null;
@@ -242,6 +242,7 @@ $(document).ready(function () {
                                                 Janus.debug(" ::: Got a message (publisher) :::");
                                                 Janus.debug(JSON.stringify(msg));
                                                 var event = msg["videoroom"];
+                                                var result = msg["result"];
                                                 Janus.debug("Event: " + event);
                                                 if (event != undefined && event != null) {
                                                     if (event === "joined") {
@@ -258,8 +259,9 @@ $(document).ready(function () {
                                                                 var id = list[f]["id"];
                                                                 var display = list[f]["display"];
                                                                 Janus.debug("  >> [" + id + "] " + display);
-                                                                newRemoteFeed(id, display)
-                                                                
+                                                                if (display !== 'screenshare-' + sfutest.getId()) {
+                                                                    newRemoteFeed(id, display)
+                                                                }
                                                             }
                                                         }
                                                     } else if (event === "destroyed") {
@@ -278,8 +280,10 @@ $(document).ready(function () {
                                                                 var id = list[f]["id"];
                                                                 var display = list[f]["display"];
                                                                 Janus.debug("  >> [" + id + "] " + display);
-                                                                newRemoteFeed(id, display)
-                                                                
+                                                                if (display !== 'screenshare-' + sfutest.getId()) {
+                                                                    newRemoteFeed(id, display)
+                                                                }
+
                                                             }
                                                         } else if (msg["leaving"] !== undefined && msg["leaving"] !== null) {
                                                             // One of the publishers has gone away?
@@ -324,6 +328,16 @@ $(document).ready(function () {
                                                         } else if (msg["error"] !== undefined && msg["error"] !== null) {
                                                             bootbox.alert(msg["error"]);
                                                         }
+                                                    } else if (event === 'slow_link') {
+                                                        // Janus detected issues when receiving our media, let's slow down
+                                                        //bandwidth = parseInt(bandwidth / 1.5);
+                                                        sfutest.send({
+                                                            'message': {
+                                                                'request': 'configure',
+                                                                'video-bitrate-max': 128, // Reduce the bitrate
+                                                                'video-keyframe-interval': 15000 // Keep the 15 seconds key frame interval
+                                                            }
+                                                        });
                                                     }
                                                 }
                                                 if (jsep !== undefined && jsep !== null) {
@@ -506,7 +520,7 @@ function removeRemoteFeed() {
 
 function newRemoteFeed(id, display) {
     // A new feed has been published, create a new plugin handle and attach to it as a listener
-    
+
     janus.attach(
             {
                 plugin: "janus.plugin.videoroom",
@@ -543,7 +557,7 @@ function newRemoteFeed(id, display) {
                             var target = document.getElementById('remoteVideo');
                             Janus.log("Successfully attached to feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") in room " + msg["room"]);
                             $('#remote' + remoteFeed.rfindex).html(target);
-                            
+
                         } else if (msg["error"] !== undefined && msg["error"] !== null) {
                             bootbox.alert(msg["error"]);
                         } else {
@@ -596,8 +610,8 @@ function newRemoteFeed(id, display) {
 function startRecording() {
     // bitrate and keyframe interval can be set at any time: 
     // before, after, during recording
-   socket.emit('start-recording', sfutest);
-    
+    socket.emit('start-recording', sfutest);
+
 }
 
 function stopRecording() {
@@ -617,7 +631,7 @@ function shareScreen() {
                 room = result["room"];
                 Janus.log("Screen sharing session created: " + room);
                 myusername = randomString(12);
-                var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": 'screenshare'};
+                var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": 'screenshare-' + sfutest.getId()};
                 screentest.send({"message": register});
             }
         }});
@@ -965,7 +979,7 @@ function randomString(len, charSet) {
 }
 
 function saveVideo() {
-   socket.emit('save-video', sfutest);
+    socket.emit('save-video', sfutest);
 }
 
 function replayVideo(stream) {
@@ -1100,9 +1114,20 @@ socket.on('start-recording', function (data) {
             "filename": "/var/www/html/recordings/" + sfutest.getId()
         }
     });
+
+    if (screentest !== null) {
+        screentest.send({
+            'message': {
+                "request": "configure",
+                "room": room_name,
+                "record": true,
+                "filename": "/var/www/html/recordings/screenshare-" + sfutest.getId()
+            }
+        });
+    }
 });
 
-socket.on('stop-recording', function (data) { 
+socket.on('stop-recording', function (data) {
     sfutest.send({
         'message': {
             "request": "configure",
@@ -1111,10 +1136,20 @@ socket.on('stop-recording', function (data) {
             "filename": "/var/www/html/recordings/" + sfutest.getId()
         }
     });
+    if (screentest !== null) {
+        screentest.send({
+            'message': {
+                "request": "configure",
+                "room": room_name,
+                "record": false,
+                "filename": "/var/www/html/recordings/screenshare-" + sfutest.getId()
+            }
+        });
+    }
 });
 
-socket.on('save-video', function(data) {
-     var ajaxurl = public_path + 'saveVideo';
+socket.on('save-video', function (data) {
+    var ajaxurl = public_path + 'saveVideo';
 
     //Get Page type to determine if it's a company employee or applicant
     var room_type = $('.page_type').val();
@@ -1156,28 +1191,6 @@ socket.on('save-video', function(data) {
 socket.on('add-video', function (data) {
     console.log(data);
     var json_data = JSON.parse(data);
-
-    /*var element = '<div class="video-element-holder">' +
-     '<div class="row">' +
-     '<div class="col-xs-10">' +
-     '<video id="video-archive-item-' + json_data.video_id + '" class="video-archive-item" controls="controls"  preload="metadata" src="' + json_data.video_url + '">' +
-     'Your browser does not support the video tag.' +
-     '</video>' +
-     '</div>' +
-     '<div class="col-xs-2">' +
-     '<button class="btn btn-danger pull-right delete-video"><i class="fa fa-times"></i></button>' +
-     '<input class="video_id" type="hidden" value="' + json_data.video_id + '"/>' +
-     '</div>' +
-     '</div>' +
-     '<div class="row">' +
-     '<div class="col-xs-12">' +
-     '<textarea class="video-status-container">' +
-     '</textarea>' +
-     '<input class="video_id" type="hidden" value="' + json_data.video_id + '"/>' +
-     '</div>' +
-     '</div>' +
-     '</div>';*/
-
 
     var element = '<div class="video-element-holder">' +
             '<div class="row">' +
