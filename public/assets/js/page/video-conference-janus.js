@@ -98,6 +98,7 @@ $.fn.clickToggle = function (func1, func2) {
     return this;
 };
 
+//var server = "wss://ubuntu-server.com:8989/";
 //var server = "https://ubuntu-server.com:8089/janus";
 //var media_server_url = "ubuntu-server.com";
 //var rec_dir = 'https://ubuntu-server.com/recordings';
@@ -113,6 +114,7 @@ var started = false;
 var myusername = null;
 var myid = null;
 var mystream = null;
+var remoteFeed = null;
 var remotestreams = [];
 var screentest = null;
 
@@ -220,7 +222,6 @@ $(document).ready(function () {
                                                 var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": display_name};
                                                 myusername = display_name;
                                                 sfutest.send({"message": register});
-
                                             },
                                             error: function (error) {
                                                 Janus.error("  -- Error attaching plugin...", error);
@@ -386,14 +387,14 @@ $(document).ready(function () {
         $(this).find('i').css('color', 'orange');
         $(this).children('span').text('Stop Recording');
         $('.save-progress').text("Recording");
-        startRecording();
+        startRecording(sfutest);
     }, function () {
         $(this).addClass('btn-default');
         $(this).removeClass('btn-danger');
         $(this).find('i').css('color', 'green');
         $(this).children('span').text('Start Recording');
         $('.save-progress').text("");
-        stopRecording();
+        stopRecording(sfutest);
         saveVideo();
     });
 
@@ -505,7 +506,7 @@ function removeRemoteFeed() {
 
 function newRemoteFeed(id, display) {
     // A new feed has been published, create a new plugin handle and attach to it as a listener
-    var remoteFeed = null;
+    
     janus.attach(
             {
                 plugin: "janus.plugin.videoroom",
@@ -595,56 +596,12 @@ function newRemoteFeed(id, display) {
 function startRecording() {
     // bitrate and keyframe interval can be set at any time: 
     // before, after, during recording
-    sfutest.send({
-        'message': {
-            "request": "configure",
-            "room": room_name,
-            "record": true,
-            "filename": "/var/www/html/recordings/" + sfutest.getId()
-        }
-    });
-
-    //Check if there is a remote stream and record
-    /*if (remotestreams.length != 0) {
-     for (var i = 0; remotestreams.length; i++) {
-     remotestreams[i].send({
-     'message': {
-     "request": "configure",
-     "room": room_name,
-     "record": true,
-     "filename": "/var/www/html/recordings/" + remotestreams[i].getId()
-     }
-     });
-     }
-     }*/
-
+   socket.emit('start-recording', sfutest);
+    
 }
 
 function stopRecording() {
-    sfutest.send({
-        'message': {
-            "request": "configure",
-            "room": room_name,
-            "record": false,
-            "filename": "/var/www/html/recordings/" + sfutest.getId()
-        }
-    });
-
-    //Save the streams from the room to the database;
-
-    //Check if there is a remote stream and record
-    /*if (remotestreams.length != 0) {
-     for (var i = 0; remotestreams.length; i++) {
-     remotestreams[i].send({
-     'message': {
-     "request": "configure",
-     "room": room_name,
-     "record": false,
-     "filename": "/var/www/html/recordings/" + remotestreams[i].getId()
-     }
-     });
-     }
-     }*/
+    socket.emit('stop-recording', sfutest);
 }
 
 function shareScreen() {
@@ -1008,42 +965,7 @@ function randomString(len, charSet) {
 }
 
 function saveVideo() {
-    var ajaxurl = public_path + 'saveVideo';
-
-    //Get Page type to determine if it's a company employee or applicant
-    var room_type = $('.page_type').val();
-
-    formData = new FormData();
-    formData.append('room_name', room_name);
-    formData.append('room_type', room_type);
-    formData.append('stream', sfutest.getId());
-    formData.append('rec_dir', rec_dir);
-
-    $.ajax({
-        url: ajaxurl,
-        type: "POST",
-        data: formData,
-        // THIS MUST BE DONE FOR FILE UPLOADING
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-
-        },
-        success: function (data) {
-            //$('.save-progress').text(data);
-            socket.emit('add-video', data);
-            $('.download-complete-sound').get(0).play();
-
-        },
-        complete: function () {
-
-        },
-        error: function (xhr, status, error) {
-            $('.save-progress').text('Recording failed');
-            console.log('Error: retrying');
-
-        }
-    }); //ajax
+   socket.emit('save-video', sfutest);
 }
 
 function replayVideo(stream) {
@@ -1147,7 +1069,6 @@ function replayVideo(stream) {
                 onremotestream: function (stream) {
                     Janus.debug(" ::: Got a remote stream :::");
                     Janus.debug(JSON.stringify(stream));
-
                     replayVideo.append('<video id="replayVideo" width="100%" height="100%" autoplay />');
                     attachMediaStream($('#replayVideo').get(0), stream);
                 },
@@ -1169,6 +1090,67 @@ function replayVideo(stream) {
     });
 }
 
+/*Start recording for all streams connected to this room*/
+socket.on('start-recording', function (data) {
+    sfutest.send({
+        'message': {
+            "request": "configure",
+            "room": room_name,
+            "record": true,
+            "filename": "/var/www/html/recordings/" + sfutest.getId()
+        }
+    });
+});
+
+socket.on('stop-recording', function (data) { 
+    sfutest.send({
+        'message': {
+            "request": "configure",
+            "room": room_name,
+            "record": false,
+            "filename": "/var/www/html/recordings/" + sfutest.getId()
+        }
+    });
+});
+
+socket.on('save-video', function(data) {
+     var ajaxurl = public_path + 'saveVideo';
+
+    //Get Page type to determine if it's a company employee or applicant
+    var room_type = $('.page_type').val();
+
+    formData = new FormData();
+    formData.append('room_name', room_name);
+    formData.append('room_type', room_type);
+    formData.append('stream', sfutest.getId());
+    formData.append('rec_dir', rec_dir);
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            //$('.save-progress').text(data);
+            socket.emit('add-video', data);
+            $('.download-complete-sound').get(0).play();
+
+        },
+        complete: function () {
+
+        },
+        error: function (xhr, status, error) {
+            $('.save-progress').text('Recording failed');
+            console.log('Error: retrying');
+
+        }
+    }); //ajax
+});
 
 /*When video is successfully recorded, place it on the video archive*/
 socket.on('add-video', function (data) {
