@@ -227,10 +227,13 @@ class VideoController extends Controller {
         //$merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.ogg -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $stream . '-final.webm';
         $merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.ogg -c:v copy -shortest /var/www/html/recordings/' . $stream . '-final.webm';
         
+        //$merge_videos = 'ffmpeg -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.webm -filter_complex "[0:v][1:v]hstack[top]; [2:v][3:v]hstack[bottom]; [top][bottom]vstack,format=yuv420p[v]; [0:a][1:a][2:a][3:a]amerge=inputs=4[a]" -map "[v]" -map "[a]" -ac 2 /var/www/html/recordings'.$stream.'-merged.webm';
+        
         $remote_connection->exec($convert_to_webm_command.';'.$convert_to_ogg_command);
         
-       
         $remote_connection->exec($merge_webm_and_ogg_command);
+        
+        //$remote_connection->exec($merge_videos);
         
         return $video_details;
     }
@@ -238,14 +241,43 @@ class VideoController extends Controller {
     public function deleteVideo(Request $request) {
         $video_id = $request->input('video_id');
 
-        $video = Video::where('id', $video_id)->pluck('video_url');
+        $media_server = "laravel.software";
+        //$media_server = "ubuntu-server.com";
+        
+        //Connect to the media server
+        $remote_connection = new Remote([
+            'host' => $media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)'
+        ]);
+        
+        $stream = VideoRoom::where('id', $video_id)->pluck('streams');
+        
+        $rec_dir = '/var/www/html/recordings/';
+        $video_extension = '.webm';
+        $audio_extension = '.ogg';
+        
+        $final_url = $rec_dir.$stream.'-final'.$video_extension;
+        $video_url = $rec_dir.$stream.$video_extension;
+        $audio_url = $rec_dir.$stream.$audio_extension;
+        $video_mjr_url = $rec_dir.$stream.'-video.mjr';
+        $audio_mjr_url = $rec_dir.$stream.'-audio.mjr';
+        
+        $delete_final = 'rm '.$final_url;
+        $delete_webm = 'rm '.$video_url;
+        $delete_ogg = 'rm '.$audio_url;
+        $delete_video_mjr = 'rm '.$video_mjr_url;
+        $delete_audio_mjr = 'rm '.$audio_mjr_url;
+        
+        $delete_video = VideoRoom::where('id', $video_id)->delete();
 
-        if (file_exists($video)) {
-            unlink($video);
-        }
-
-        $delete_video = Video::where('id', $video_id)->delete();
-
+        $remote_connection->exec($delete_final);
+        $remote_connection->exec($delete_webm);
+        $remote_connection->exec($delete_ogg);
+        $remote_connection->exec($delete_video_mjr);
+        $remote_connection->exec($delete_audio_mjr);
+        
         return $video_id;
     }
 
