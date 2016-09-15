@@ -11,9 +11,16 @@
             ['class' => 'form-control', 'placeholder' => 'Url', 'tabindex' => '1']) !!}
         </div>
     </div>
+    @if(isset($briefcase))
+    <div class="form-group">
+        <div class="col-md-12">
+            {!!  Form::select('task_id', $briefcase, '', ['class' => 'form-control input-xlarge select2me category', 'placeholder' => 'Select Briefcase', 'tabindex' =>'2'] )  !!}
+        </div>
+    </div>
+    @endif
     <div class="form-group">
         <div class="col-md-6">
-            {!!  Form::select('category_id', $categories, '', ['class' => 'form-control input-xlarge select2me category', 'placeholder' => 'Select Category', 'tabindex' =>'2'] )  !!}
+            {!!  Form::select('category_id', $categories, isset($category_id) ? $category_id : '', ['class' => 'form-control input-xlarge select2me category', 'placeholder' => 'Select Category', 'tabindex' =>'2'] )  !!}
         </div>
         <div class="col-sm-6">
             {!!  Form::input('text','new_category','',

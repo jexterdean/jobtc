@@ -11,6 +11,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseController;
 
+use Redirect;
+
 class LinkController extends BaseController
 {
     /**
@@ -57,6 +59,9 @@ class LinkController extends BaseController
      */
     public function store(Request $request)
     {
+        $from_dashboard = isset($request->is_dashboard) ? $request->is_dashboard : 0;
+        unset($request->is_dashboard);
+
         $link = new Link($request->all());
         $link->save();
 
@@ -73,7 +78,7 @@ class LinkController extends BaseController
             ->where('links.id', '=', $link->id)
             ->get();
         //return $request->task_id ? redirect()->route('project.show', $task->project_id) : redirect()->route('links.index');
-        return json_encode($links);
+        return $from_dashboard ? Redirect::back() : json_encode($links);
     }
 
     /**
@@ -165,4 +170,5 @@ class LinkController extends BaseController
 
         return redirect()->route('links.index');
     }
+
 }
