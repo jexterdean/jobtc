@@ -99,13 +99,13 @@ $.fn.clickToggle = function (func1, func2) {
 };
 
 //var server = "wss://ubuntu-server.com:8989/";
-var server = "https://ubuntu-server.com:8089/janus";
-var media_server_url = "ubuntu-server.com";
-var rec_dir = 'https://ubuntu-server.com/recordings';
+//var server = "https://ubuntu-server.com:8089/janus";
+//var media_server_url = "ubuntu-server.com";
+//var rec_dir = 'https://ubuntu-server.com/recordings';
 
-//var server = "https://laravel.software:8089/janus";
-//var media_server_url = "laravel.software";
-//var rec_dir = 'https://laravel.software/recordings';
+var server = "https://laravel.software:8089/janus";
+var media_server_url = "laravel.software";
+var rec_dir = 'https://laravel.software/recordings';
 
 var janus = null;
 var sfutest = null;
