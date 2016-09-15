@@ -17,8 +17,8 @@
         "json()": {
             "meta": {
                 "accessList": [
-                    "tab1",
-                    "tab0"
+                    "tab0",
+                    "tab1"
                 ]
             },
             "name": "pane1",
@@ -33,15 +33,15 @@
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1472201925419
+                            "timestamp": 1473487748627
                         },
                         "filter": true,
                         "title": "bash - \"job.tc\"",
                         "tooltip": "bash - \"job.tc\"",
                         "terminal": {
-                            "id": "devel_58",
+                            "id": "devel_270",
                             "cwd": "",
-                            "width": 1648,
+                            "width": 1848,
                             "height": 127
                         }
                     },
@@ -112,14 +112,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 6,
+            "@document": 4,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 5,
-            "@tab": 6,
-            "@undoManager": 6
+            "@session": 3,
+            "@tab": 3,
+            "@undoManager": 4
         }
     },
     "findinfiles": {
@@ -137,12 +137,12 @@
     },
     "panecycle": {
         "json()": [
-            "tab5",
+            "tab2",
             "tab0"
         ]
     },
     "panels": {
-        "@active-left": "tree",
+        "@active-left": "none",
         "collab": {
             "@enabled": "true",
             "@name": "collab"
@@ -173,35 +173,27 @@
         }
     },
     "projecttree": {
-        "@scrollpos": -10,
+        "@scrollpos": 168,
         "@showfs": true,
         "expanded": {
             "json()": [
                 "/",
-                "/app/Models",
-                "/app",
-                "/app/Http",
-                "/app/Http/Controllers"
+                "/database",
+                "/public",
+                "/public/assets",
+                "/public/assets/js"
             ]
         }
     },
-    "search-history": {
-        "search": {
-            "json()": [
-                "joinScreen",
-                "media"
-            ]
-        }
+    "recentfiles": {
+        "json()": []
     },
     "tabs": {
         "json()": {
-            "focus": "/public/assets/js/page/video-conference-janus.js",
+            "focus": "/public/assets/js/janus.js",
             "meta": {
                 "accessList": [
-                    "tab5",
-                    "tab2",
-                    "tab3",
-                    "tab4"
+                    "tab2"
                 ]
             },
             "name": "pane0",
@@ -209,157 +201,19 @@
                 {
                     "type": "tab",
                     "name": "tab2",
-                    "path": "/app/Http/Controllers/CompanyController.php",
+                    "path": "/public/assets/js/janus.js",
                     "className": [
-                        "tab2"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "CompanyController.php",
-                        "tooltip": "/app/Http/Controllers/CompanyController.php",
-                        "ace": {
-                            "folds": [],
-                            "scrolltop": 64,
-                            "scrollleft": 0,
-                            "selection": {
-                                "start": {
-                                    "row": 17,
-                                    "column": 26
-                                },
-                                "end": {
-                                    "row": 17,
-                                    "column": 26
-                                },
-                                "isBackwards": false
-                            },
-                            "options": {
-                                "guessTabSize": true,
-                                "useWrapMode": false,
-                                "wrapToView": true
-                            },
-                            "firstLineState": {
-                                "row": 263,
-                                "state": "php-start",
-                                "mode": "ace/mode/php"
-                            }
-                        },
-                        "hash": "b4333bd5539ce9e53861911188f93264f7d0ea7c",
-                        "meta": {
-                            "timestamp": 1472564599560
-                        },
-                        "changed": false
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab3",
-                    "path": "/public/assets/css/page/applicants.css",
-                    "className": [
-                        "tab3"
-                    ],
-                    "document": {
-                        "filter": true,
-                        "title": "applicants.css",
-                        "tooltip": "/public/assets/css/page/applicants.css",
-                        "ace": {
-                            "folds": [],
-                            "scrolltop": 3704,
-                            "scrollleft": 0,
-                            "selection": {
-                                "start": {
-                                    "row": 312,
-                                    "column": 16
-                                },
-                                "end": {
-                                    "row": 312,
-                                    "column": 16
-                                },
-                                "isBackwards": false
-                            },
-                            "options": {
-                                "guessTabSize": true,
-                                "useWrapMode": false,
-                                "wrapToView": true
-                            },
-                            "firstLineState": {
-                                "row": 263,
-                                "state": "start",
-                                "mode": "ace/mode/css"
-                            }
-                        },
-                        "hash": "b37ac335df0be727911da10b37b2c63b46c0d8c6",
-                        "meta": {
-                            "timestamp": 1472721768041
-                        },
-                        "changed": false
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab4",
-                    "path": "/resources/views/layouts/menu.blade.php",
-                    "className": [
-                        "tab4",
-                        "changed"
-                    ],
-                    "document": {
-                        "changed": true,
-                        "filter": true,
-                        "title": "menu.blade.php",
-                        "tooltip": "/resources/views/layouts/menu.blade.php",
-                        "ace": {
-                            "folds": [],
-                            "scrolltop": 4314,
-                            "scrollleft": 0,
-                            "selection": {
-                                "start": {
-                                    "row": 406,
-                                    "column": 20
-                                },
-                                "end": {
-                                    "row": 406,
-                                    "column": 20
-                                },
-                                "isBackwards": false
-                            },
-                            "options": {
-                                "guessTabSize": true,
-                                "useWrapMode": false,
-                                "wrapToView": true
-                            },
-                            "firstLineState": {
-                                "row": 263,
-                                "state": "start",
-                                "mode": "ace/mode/php"
-                            }
-                        },
-                        "meta": {
-                            "timestamp": 1472568776685
-                        }
-                    },
-                    "editorType": "ace",
-                    "active": false
-                },
-                {
-                    "type": "tab",
-                    "name": "tab5",
-                    "path": "/public/assets/js/page/video-conference-janus.js",
-                    "className": [
-                        "tab5",
+                        "tab2",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1473349637300
+                            "timestamp": 1473780464560
                         },
                         "filter": true,
-                        "title": "video-conference-janus.js",
-                        "tooltip": "/public/assets/js/page/video-conference-janus.js",
+                        "title": "janus.js",
+                        "tooltip": "/public/assets/js/janus.js",
                         "ace": {}
                     },
                     "editorType": "ace",
@@ -373,7 +227,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/app/Exceptions"
+            "/public/assets/js/janus-api.js"
         ]
     }
 }
