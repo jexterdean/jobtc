@@ -99,13 +99,13 @@ $.fn.clickToggle = function (func1, func2) {
 };
 
 //var server = "wss://ubuntu-server.com:8989/";
-//var server = "https://ubuntu-server.com:8089/janus";
-//var media_server_url = "ubuntu-server.com";
-//var rec_dir = 'https://ubuntu-server.com/recordings';
+var server = "https://ubuntu-server.com:8089/janus";
+var media_server_url = "ubuntu-server.com";
+var rec_dir = 'https://ubuntu-server.com/recordings';
 
-var server = "https://laravel.software:8089/janus";
-var media_server_url = "laravel.software";
-var rec_dir = 'https://laravel.software/recordings';
+//var server = "https://laravel.software:8089/janus";
+//var media_server_url = "laravel.software";
+//var rec_dir = 'https://laravel.software/recordings';
 
 var janus = null;
 var sfutest = null;
@@ -121,7 +121,7 @@ var screentest = null;
 var feeds = [];
 var bitrateTimer = [];
 //var bandwidth = 1024 * 1024;
-var bandwidth = 0; //0 is unlimited
+var bandwidth = 128000; //0 is unlimited
 
 var display_name = $('.add-comment-form .media-heading').text();
 console.log(display_name);
@@ -300,7 +300,7 @@ $(document).ready(function () {
                                                                 Janus.debug("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
                                                                 feeds[remoteFeed.rfindex] = null;
                                                                 remoteFeed.detach();
-                                                                $('#remoteVideo').children().remove();
+                                                                $('#remote-'+remoteFeed.rfindex).remove();
                                                             }
                                                         } else if (msg["unpublished"] !== undefined && msg["unpublished"] !== null) {
                                                             // One of the publishers has unpublished?
@@ -320,10 +320,9 @@ $(document).ready(function () {
                                                             }
                                                             if (remoteFeed != null) {
                                                                 Janus.debug("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
-                                                                Janus.debug("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
                                                                 feeds[remoteFeed.rfindex] = null;
                                                                 remoteFeed.detach();
-                                                                $('#remoteVideo').children().remove();
+                                                                $('#remote-'+remoteFeed.rfindex).remove();
                                                             }
                                                         } else if (msg["error"] !== undefined && msg["error"] !== null) {
                                                             bootbox.alert(msg["error"]);
@@ -334,8 +333,8 @@ $(document).ready(function () {
                                                         sfutest.send({
                                                             'message': {
                                                                 'request': 'configure',
-                                                                'video-bitrate-max': 128, // Reduce the bitrate
-                                                                'video-keyframe-interval': 15000 // Keep the 15 seconds key frame interval
+                                                                'video-bitrate-max': 128000, // Reduce the bitrate
+                                                                'video-keyframe-interval': 30000 // Keep the 15 seconds key frame interval
                                                             }
                                                         });
                                                     }
@@ -437,16 +436,6 @@ $(document).ready(function () {
     });
 });
 
-function checkEnter(field, event) {
-    var theCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-    if (theCode == 13) {
-        registerUsername();
-        return false;
-    } else {
-        return true;
-    }
-}
-
 function registerUsername() {
     if ($('#username').length === 0) {
         // Create fields to register
@@ -520,7 +509,6 @@ function removeRemoteFeed() {
 
 function newRemoteFeed(id, display) {
     // A new feed has been published, create a new plugin handle and attach to it as a listener
-
     janus.attach(
             {
                 plugin: "janus.plugin.videoroom",
@@ -1182,7 +1170,7 @@ socket.on('save-video', function (data) {
         error: function (xhr, status, error) {
             $('.save-progress').text('Recording failed');
             console.log('Error: retrying');
-
+            socket.emit('stop-recording', sfutest);
         }
     }); //ajax
 });

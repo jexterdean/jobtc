@@ -188,8 +188,8 @@ class VideoController extends Controller {
     
     public function saveVideo(Request $request) {
         
-        $media_server = "laravel.software";
-        //$media_server = "ubuntu-server.com";
+        //$media_server = "laravel.software";
+        $media_server = "ubuntu-server.com";
 
         //Connect to the media server
         $remote_connection = new Remote([
@@ -241,8 +241,8 @@ class VideoController extends Controller {
     public function deleteVideo(Request $request) {
         $video_id = $request->input('video_id');
 
-        $media_server = "laravel.software";
-        //$media_server = "ubuntu-server.com";
+        //$media_server = "laravel.software";
+        $media_server = "ubuntu-server.com";
         
         //Connect to the media server
         $remote_connection = new Remote([
