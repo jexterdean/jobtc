@@ -288,13 +288,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <div id="localScreenShareContainer">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
                                     <div class="video-options text-center">
                                         <button class="btn btn-default btn-shadow mute-button"><i class="fa fa-microphone"></i>&nbsp;<span>Mute</span></button>
                                         <button class="btn btn-default btn-shadow show-video-button"><i class="fa fa-eye"></i>&nbsp;<span>Stop Video</span></button>
@@ -364,12 +357,30 @@
                             <div class="video-element-holder">
                                 <div class="row">
                                     <div class="col-xs-10">
-                                        <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
-                                            Your browser does not support the video tag.
-                                            <!--source src="{{url($video->video_url)}}"-->
-                                            <source src="{{$video->rec_dir.'/'.$video->streams}}-final.webm" type="video/webm">
-                                        </video>
-                                        <input class="stream_id" type="hidden" value="{{$video->streams}}"/>
+                                        <div class="row">
+                                        @foreach(explode(",",$video->streams) as $stream)
+                                            <div class="col-xs-6">
+                                                <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
+                                                    Your browser does not support the video tag.
+                                                    <!--source src="{{url($video->video_url)}}"-->
+                                                    <source src="{{$video->rec_dir.'/'.$video->session.'-'.$stream}}-final.webm" type="video/webm">
+                                                </video>
+                                                <input class="stream_id" type="hidden" value="{{$stream}}"/>
+                                            </div>
+                                        @endforeach
+                                        </div>
+                                        <div class="row">
+                                        @foreach(explode(",",$video->streams) as $stream)
+                                            <div class="col-xs-6">
+                                                <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
+                                                    Your browser does not support the video tag.
+                                                    <!--source src="{{url($video->video_url)}}"-->
+                                                    <source src="{{$video->rec_dir.'/'.$video->session.'-screenshare-'.$stream}}-video.webm" type="video/webm">
+                                                </video>
+                                                <input class="stream_id" type="hidden" value="{{$stream}}"/>
+                                            </div>
+                                        @endforeach
+                                        </div>
                                     </div>
                                     <div class="col-xs-2">
                                         <button class="btn btn-danger btn-shadow pull-right delete-video"><i class="fa fa-times"></i></button>
@@ -433,4 +444,5 @@
 <input class="page_applicant_id" type="hidden" value="{{$applicant->id}}"/>
 <input class="job_id" type="hidden" value="{{$applicant->job_id}}"/>
 <input class="page_type" type="hidden" value="applicant"/>
+<input class="_token" type="hidden" value="{{csrf_token()}}"/>
 @stop

@@ -59,6 +59,7 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
         var formData = new FormData();
 
         formData.append('video_id', video_id);
+        formData.append('_token',csrf_token);
 
         $.ajax({
             url: ajaxurl,
@@ -110,6 +111,7 @@ var rec_dir = 'https://laravel.software/recordings';
 var janus = null;
 var sfutest = null;
 var started = false;
+var session = null;
 
 var myusername = null;
 var myid = null;
@@ -127,6 +129,7 @@ var display_name = $('.add-comment-form .media-heading').text();
 console.log(display_name);
 var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
+var csrf_token = $('._token').val();
 
 
 jQuery.janusApiMedia = function (k) {
@@ -300,7 +303,7 @@ $(document).ready(function () {
                                                                 Janus.debug("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
                                                                 feeds[remoteFeed.rfindex] = null;
                                                                 remoteFeed.detach();
-                                                                $('#remote-'+remoteFeed.rfindex).remove();
+                                                                $('#remote-' + remoteFeed.rfindex).remove();
                                                             }
                                                         } else if (msg["unpublished"] !== undefined && msg["unpublished"] !== null) {
                                                             // One of the publishers has unpublished?
@@ -322,7 +325,7 @@ $(document).ready(function () {
                                                                 Janus.debug("Feed " + remoteFeed.rfid + " (" + remoteFeed.rfdisplay + ") has left the room, detaching");
                                                                 feeds[remoteFeed.rfindex] = null;
                                                                 remoteFeed.detach();
-                                                                $('#remote-'+remoteFeed.rfindex).remove();
+                                                                $('#remote-' + remoteFeed.rfindex).remove();
                                                             }
                                                         } else if (msg["error"] !== undefined && msg["error"] !== null) {
                                                             bootbox.alert(msg["error"]);
@@ -400,14 +403,14 @@ $(document).ready(function () {
         $(this).find('i').css('color', 'orange');
         $(this).children('span').text('Stop Recording');
         $('.save-progress').text("Recording");
-        startRecording(sfutest);
+        startRecording(session);
     }, function () {
         $(this).addClass('btn-default');
         $(this).removeClass('btn-danger');
         $(this).find('i').css('color', 'green');
         $(this).children('span').text('Start Recording');
         $('.save-progress').text("");
-        stopRecording(sfutest);
+        stopRecording(session);
         saveVideo();
     });
 
@@ -435,38 +438,6 @@ $(document).ready(function () {
         stopScreenShare();
     });
 });
-
-function registerUsername() {
-    if ($('#username').length === 0) {
-        // Create fields to register
-        $('#register').click(registerUsername);
-        $('#username').focus();
-    } else {
-        // Try a registration
-        $('#username').attr('disabled', true);
-        $('#register').attr('disabled', true).unbind('click');
-        var username = $('#username').val();
-        if (username === "") {
-            $('#you')
-                    .removeClass().addClass('label label-warning')
-                    .html("Insert your display name (e.g., pippo)");
-            $('#username').removeAttr('disabled');
-            $('#register').removeAttr('disabled').click(registerUsername);
-            return;
-        }
-        if (/[^a-zA-Z0-9]/.test(username)) {
-            $('#you')
-                    .removeClass().addClass('label label-warning')
-                    .html('Input is not alphanumeric');
-            $('#username').removeAttr('disabled').val("");
-            $('#register').removeAttr('disabled').click(registerUsername);
-            return;
-        }
-        var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": username};
-        myusername = username;
-        sfutest.send({"message": register});
-    }
-}
 
 function publishOwnFeed(useAudio) {
     // Publish our stream
@@ -598,7 +569,8 @@ function newRemoteFeed(id, display) {
 function startRecording() {
     // bitrate and keyframe interval can be set at any time: 
     // before, after, during recording
-    socket.emit('start-recording', sfutest);
+    session = randomString(12);
+    socket.emit('start-recording', session);
 
 }
 
@@ -955,19 +927,8 @@ function stopScreenShare() {
     $('#myscreenshare').remove();
 }
 
-// Just an helper to generate random usernames
-function randomString(len, charSet) {
-    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-        var randomPoz = Math.floor(Math.random() * charSet.length);
-        randomString += charSet.substring(randomPoz, randomPoz + 1);
-    }
-    return randomString;
-}
-
 function saveVideo() {
-    socket.emit('save-video', sfutest);
+    socket.emit('save-video', session);
 }
 
 function replayVideo(stream) {
@@ -1092,6 +1053,18 @@ function replayVideo(stream) {
     });
 }
 
+// Just an helper to generate random usernames
+function randomString(len, charSet) {
+    charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+        var randomPoz = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPoz, randomPoz + 1);
+    }
+    return randomString;
+}
+
+
 /*Start recording for all streams connected to this room*/
 socket.on('start-recording', function (data) {
     sfutest.send({
@@ -1099,7 +1072,7 @@ socket.on('start-recording', function (data) {
             "request": "configure",
             "room": room_name,
             "record": true,
-            "filename": "/var/www/html/recordings/" + sfutest.getId()
+            "filename": "/var/www/html/recordings/" + data + '-' + sfutest.getId()
         }
     });
 
@@ -1109,10 +1082,48 @@ socket.on('start-recording', function (data) {
                 "request": "configure",
                 "room": room_name,
                 "record": true,
-                "filename": "/var/www/html/recordings/screenshare-" + sfutest.getId()
+                "filename": "/var/www/html/recordings/" + data + "-screenshare-" + sfutest.getId()
             }
         });
     }
+
+    //Get Page type to determine if it's a company employee or applicant
+    var room_type = $('.page_type').val();
+
+    formData = new FormData();
+    formData.append('session', data);
+    formData.append('room_name', room_name);
+    formData.append('room_type', room_type);
+    formData.append('stream', sfutest.getId());
+    formData.append('rec_dir', rec_dir);
+    formData.append('_token',csrf_token);
+
+    var ajaxurl = public_path + 'startRecording';
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            //$('.save-progress').text(data);
+            //socket.emit('add-video', data);
+            //$('.download-complete-sound').get(0).play();
+            console.log('Added Session Data to database, Starting Recording');
+        },
+        complete: function () {
+
+        },
+        error: function (xhr, status, error) {
+            $('.save-progress').text('Recording failed');
+        }
+    }); //ajax
+
 });
 
 socket.on('stop-recording', function (data) {
@@ -1121,7 +1132,7 @@ socket.on('stop-recording', function (data) {
             "request": "configure",
             "room": room_name,
             "record": false,
-            "filename": "/var/www/html/recordings/" + sfutest.getId()
+            "filename": "/var/www/html/recordings/" + data + '-' + sfutest.getId()
         }
     });
     if (screentest !== null) {
@@ -1130,7 +1141,7 @@ socket.on('stop-recording', function (data) {
                 "request": "configure",
                 "room": room_name,
                 "record": false,
-                "filename": "/var/www/html/recordings/screenshare-" + sfutest.getId()
+                "filename": "/var/www/html/recordings/" + data + "-screenshare-" + sfutest.getId()
             }
         });
     }
@@ -1143,10 +1154,12 @@ socket.on('save-video', function (data) {
     var room_type = $('.page_type').val();
 
     formData = new FormData();
+    formData.append('session', data);
     formData.append('room_name', room_name);
     formData.append('room_type', room_type);
     formData.append('stream', sfutest.getId());
     formData.append('rec_dir', rec_dir);
+    formData.append('_token',csrf_token);
 
     $.ajax({
         url: ajaxurl,
