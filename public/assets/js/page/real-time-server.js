@@ -24,6 +24,9 @@ var options = {
     //Local
     //key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
     //cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")
+    //linux.me
+    //key: fs.readFileSync("C://xampp/apache/conf/ssl.key/server.key"),
+    //cert: fs.readFileSync("C://xampp/apache/conf/ssl.crt/server.crt")
 };
 
 var server = require(isUseHTTPs ? 'https' : 'http');
@@ -122,4 +125,35 @@ io.on('connection', function (socket) {
         console.log('Deleting video to Room: ' + room_name);
         io.to(room_name).emit('delete-video', video);
     });
+
+    //region Interview Area
+    var remote_id;
+    socket.on('set-remote-id', function (data) {
+        console.log('Saving Remote ID: ' + data);
+        remote_id = data;
+    });
+    socket.on('start-interview', function (data) {
+        io.to(room_name).emit('start-interview', {
+            local: data,
+            remote: remote_id
+        });
+        console.log('Remote: ' + remote_id + ' Local: ' + data);
+    });
+    socket.on('stop-interview', function (data) {
+        io.to(room_name).emit('stop-interview', {
+            local: data,
+            remote: remote_id
+        });
+    });
+    socket.on('add-interview', function (video) {
+        io.to(room_name).emit('add-interview', video);
+    });
+    socket.on('generate-nfo', function (data) {
+        console.log('Generating NFO file for Room: ' + room_name);
+        io.to(room_name).emit('generate-nfo', {
+            local: data,
+            remote: remote_id
+        });
+    });
+    //endregion
 });

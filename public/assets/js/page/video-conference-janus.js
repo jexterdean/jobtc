@@ -105,8 +105,8 @@ $.fn.clickToggle = function (func1, func2) {
 //var rec_dir = 'https://ubuntu-server.com/recordings';
 
 var server = "https://laravel.software:8089/janus";
-var media_server_url = "laravel.software";
-var rec_dir = 'https://laravel.software/recordings';
+ var media_server_url = "laravel.software";
+ var rec_dir = 'https://laravel.software/recordings';
 
 var janus = null;
 var sfutest = null;
@@ -182,6 +182,36 @@ var janusVideoResolutionList = [
         "height": 180
     }
 ];
+
+var currentRecordData, currentRecordUrl, interval, isLocal = 0;
+$.fn.timerStart = function () {
+    var timer_btn = $(this);
+    if (timer_btn.find('.timer-area').length == 0) {
+        timer_btn.prepend('<span class="timer-area" />');
+    }
+    var timer = timer_btn.find('.timer-area');
+    var l = timer_btn.data('length');
+    var a = l.split(':'); // split it at the colons
+
+    var h = a[0];
+    var m = parseInt(a[1]);
+    var s = parseInt(a[2]);
+    // minutes are worth 60 seconds. Hours are worth 60 minutes.
+    var time_limit = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+    interval = setInterval(function (e) {
+        if (time_limit == 0) {
+            clearInterval(interval);
+            timer_btn.parent().find('.btn-next').trigger('click');
+            timer_btn.parent().find('.btn-video').trigger('click');
+        }
+
+        m = Math.floor(time_limit / 60); //Get remaining minutes
+        s = time_limit - (m * 60);
+        var time = (m < 10 ? '0' + m : m) + ":" + (s < 10 ? '0' + s : s);
+        timer.html(time);
+        time_limit--;
+    }, 1000);
+};
 
 $(document).ready(function () {
     // Initialize the library (all console debuggers enabled)
@@ -437,6 +467,47 @@ $(document).ready(function () {
         $(this).find('span').text('Share Screen');
         stopScreenShare();
     });
+
+    $('body').on('click', '.btn-video', function (e) {
+        var video_btn = $(this);
+        var time_limit = $(this).parent().find('.time-limit-conference');
+        var question_point = $(this).parent().find('.video-conference-points');
+
+        if ($(this).data('status') == 1) {
+            isLocal = 1;
+
+            socket.emit('set-remote-id', remoteFeed.getId());
+            socket.emit('start-interview', sfutest.getId());
+
+            time_limit.timerStart();
+            video_btn.data('status', 2);
+            video_btn.html('Score Answer');
+        }
+        else if ($(this).data('status') == 2) {
+            var test_id = $(this).data('test');
+            var unique_id = $(this).data('unique');
+            currentRecordUrl = public_path + 'quiz?id=' + test_id + '&p=exam';
+            currentRecordData = {
+                local_record_id: sfutest.getId(),
+                record_id: remoteFeed.getId(),
+                question_id: this.id,
+                answer: '',
+                result: 1,
+                unique_id: unique_id,
+                points: question_point.val(),
+                video_conference: 1
+            };
+
+            socket.emit('stop-interview', sfutest.getId());
+
+            //generate nfo file
+            socket.emit('generate-nfo', sfutest.getId());
+
+            clearInterval(interval);
+            $(this).html('Record Answer');
+            $(this).data('status', 1);
+        }
+    });
 });
 
 function publishOwnFeed(useAudio) {
@@ -471,11 +542,13 @@ function unpublishOwnFeed() {
     $('#localVideo').children().remove();
     var unpublish = {"request": "unpublish"};
     sfutest.send({"message": unpublish});
+    $('.btn-video').addClass('hidden');
 }
 
 function removeRemoteFeed() {
     //remoteFeed.detach();
     $('#remoteVideo').children().remove();
+    $('.btn-video').addClass('hidden');
 }
 
 function newRemoteFeed(id, display) {
@@ -559,9 +632,12 @@ function newRemoteFeed(id, display) {
                     attachMediaStream($('#remote-' + remoteFeed.rfindex).get(0), stream);
                     var videoTracks = stream.getVideoTracks();
 
+                    $('.btn-video').removeClass('hidden');
                 },
                 oncleanup: function () {
                     Janus.log(" ::: Got a cleanup notification (remote feed " + id + ") :::");
+
+                    $('.btn-video').removeClass('hidden');
                 }
             });
 }
@@ -575,7 +651,7 @@ function startRecording() {
 }
 
 function stopRecording() {
-    socket.emit('stop-recording', sfutest);
+    socket.emit('stop-recording', session);
 }
 
 function shareScreen() {
@@ -1220,3 +1296,107 @@ socket.on('add-video', function (data) {
     $('.save-progress').text("Video Recorded");
 
 });
+
+//region Interview Area
+socket.on('start-interview', function (data) {
+    sfutest.send({
+        'message': {
+            "request": "configure",
+            "room": room_name,
+            "record": true,
+            "filename": "/var/www/html/recordings/" + (isLocal ? data.local : data.remote)
+        }
+    });
+});
+socket.on('stop-interview', function (data) {
+    sfutest.send({
+        'message': {
+            "request": "configure",
+            "room": room_name,
+            "record": false,
+            "filename": "/var/www/html/recordings/" + (isLocal ? data.local : data.remote)
+        }
+    });
+});
+socket.on('generate-nfo', function (data) {
+    //after save NFO
+    if(isLocal) {
+        $.ajax({
+            url: public_path + 'convertJanusVideo',
+            data: data,
+            type: "POST",
+            beforeSend: function () {
+
+            },
+            success: function (e) {
+                console.log('Files Converted to webm');
+                $.ajax({
+                    url: currentRecordUrl,
+                    data: currentRecordData,
+                    method: "POST",
+                    success: function (doc) {
+                        socket.emit('add-interview', doc);
+                        $('.download-complete-sound').get(0).play();
+                    },
+                    error: function (a, b, c) {
+
+                    }
+                });
+            },
+            complete: function () {
+
+            },
+            error: function (xhr, status, error) {
+                console.log('Error: retrying');
+            }
+        });
+        $.ajax({
+            url: public_path + 'saveNfoJanus',
+            data: data,
+            type: "POST",
+            beforeSend: function () {
+
+            },
+            success: function (e) {
+                console.log(e);
+                console.log('NFO generated');
+            },
+            complete: function () {
+
+            },
+            error: function (xhr, status, error) {
+                console.log('Error: retrying');
+            }
+        });
+    }
+});
+socket.on('add-interview', function (data) {
+    var json_data = JSON.parse(data);
+
+    var element =
+        '<div class="video-element-holder">' +
+            '<div class="row">' +
+                '<div class="col-xs-5">' +
+                    '<video id="video-archive-remote-item-' + json_data.id + '" class="video-archive-item" controls="controls"  preload="metadata" src="' + rec_dir + '/' + json_data.record_id + '.webm">' +
+                        'Your browser does not support the video tag.' +
+                    '</video>' +
+                '</div>' +
+                '<div class="col-xs-5">' +
+                    '<video id="video-archive--local-item-' + json_data.id + '" class="video-archive-item" controls="controls"  preload="metadata" src="' + rec_dir + '/' + json_data.local_record_id + '.webm">' +
+                        'Your browser does not support the video tag.' +
+                    '</video>' +
+                '</div>' +
+                '<div class="col-xs-2">' +
+                    '<button class="btn btn-danger btn-shadow pull-right delete-quiz-video"><i class="fa fa-times"></i></button>' +
+                    '<input class="video_id" type="hidden" value="' + json_data.id + '"/>' +
+                '</div>' +
+            '</div>' +
+            '<div class="row">' +
+                '<div class="col-xs-12">' +
+                    '<label>Applicant Score:</label>&nbsp;' + json_data.points +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    $('.video-page-container').append(element);
+});
+//endregion

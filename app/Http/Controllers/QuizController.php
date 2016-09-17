@@ -300,6 +300,7 @@ class QuizController extends BaseController {
         $isStay = isset($_GET['stay']) ? $_GET['stay'] : 0;
         $company_id = isset($_GET['company_id']) ? $_GET['company_id'] : '';
         $label = '';
+        $video_details = array();
 
         $validation = '';
         if ($page == "test") {
@@ -504,6 +505,7 @@ class QuizController extends BaseController {
                     }
                     $result->result = $r;
                     $result->save();
+                    $video_details = $result;
                 }
                 else {
                     $resultExist = $unique_id ?
@@ -544,6 +546,12 @@ class QuizController extends BaseController {
             }
 
             DB::commit();
+
+            if ($page == "exam") {
+                if(Input::get('video_conference')){
+                    return $video_details;
+                }
+            }
 
             $url = $company_id ?
                 'quizPerCompany/' . $company_id . ($trigger ? '?trigger=' . $id : '') :
