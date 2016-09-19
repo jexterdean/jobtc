@@ -66,6 +66,7 @@ Route::get('getChartData/{id}', 'CompanyController@getChartData');
 Route::post('updateRole', 'CompanyController@updateRole');
 
 /* For Video */
+Route::post('startRecording', 'VideoController@startRecording');
 Route::post('saveVideo', 'VideoController@saveVideo');
 Route::post('deleteVideo', 'VideoController@deleteVideo');
 Route::post('saveNfoJanus', 'VideoController@saveNfoJanus');

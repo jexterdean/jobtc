@@ -336,7 +336,6 @@ jQuery.janusApiSessionSuccess = function() {
                         // One of the publishers has gone away?
                         var leaving = msg["leaving"];
                         Janus.log("Publisher left: " + leaving);
-                        var sfuRemoteTest = null;
                         for (var i = 1; i < 6; i++) {
                             if (janusFeed[i] != null && janusFeed[i] != undefined && janusFeed[i].rfid == leaving) {
                                 sfuRemoteTest = janusFeed[i];
@@ -359,7 +358,6 @@ jQuery.janusApiSessionSuccess = function() {
                             sfuLocalTest.hangup();
                             return;
                         }
-                        var sfuRemoteTest = null;
                         for (var i = 1; i < 6; i++) {
                             if (janusFeed[i] != null && janusFeed[i] != undefined && janusFeed[i].rfid == unpublished) {
                                 sfuRemoteTest = janusFeed[i];
@@ -616,27 +614,11 @@ jQuery.janusApiRecord = function(){
             "filename": "/var/www/html/recordings/" + sfuLocalTest.getId()
         }
     });
-
-    //Check if there is a remote stream and record
-    if (sfuRemoteTest != null) {
-        sfuRemoteTest.send({
-            'message': {
-                "request": "configure",
-                "room": janusOptions.roomId,
-                "pin": janusOptions.roomPin,
-                "record": true,
-                "filename": "/var/www/html/recordings/" + sfuRemoteTest.getId()
-            }
-        });
-    }
-
-    console.log('local id: ' + sfuLocalTest.getId() + ' remote id: ' + sfuRemoteTest.getId());
 };
 
 jQuery.janusApiSave = function(){
     var d = {
-        local: sfuLocalTest.getId(),
-        remote: ''
+        local: sfuLocalTest.getId()
     };
 
     sfuLocalTest.send({
@@ -648,20 +630,6 @@ jQuery.janusApiSave = function(){
             "filename": "/var/www/html/recordings/" + sfuLocalTest.getId()
         }
     });
-
-    //Check if there is a remote stream and record
-    if (sfuRemoteTest != null) {
-        sfuRemoteTest.send({
-            'message': {
-                "request": "configure",
-                "room": janusOptions.roomId,
-                "pin": janusOptions.roomPin,
-                "record": false,
-                "filename": "/var/www/html/recordings/" + sfuRemoteTest.getId()
-            }
-        });
-        d.remote = sfuRemoteTest.getId();
-    }
 
     //after save NFO
     $.ajax({

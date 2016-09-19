@@ -13,6 +13,7 @@ class CreateVideoRoomsTable extends Migration
     public function up() {
         Schema::create('video_rooms', function(Blueprint $table) {
             $table->increments('id');
+            $table->string('session');
             $table->string('room_name');
             $table->string('room_type');
             $table->string('streams');
