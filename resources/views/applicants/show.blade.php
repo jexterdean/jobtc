@@ -194,6 +194,27 @@
             </div>
             @if(Auth::check('user') || Auth::check('applicant'))
             <div class="mini-space"></div>
+            {{--*/ $collapse = $applicant->notes ? 'in' : '' /*--}}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div id="collapse-container-1" class="panel task-list">
+                            <div class="panel-heading task-header" id="notes-{{$applicant->id}}" data-toggle="collapse" data-target="#notes-collapse-{{ $applicant->id }}">
+                                <div class="row">
+                                    <h4 class="panel-title task-list-header">Notes</h4>
+                                </div>
+                            </div>
+                            <div id="notes-collapse-{{ $applicant->id }}" class="box-content collapse {{ $collapse }}">
+                                <div class="panel-body">
+                                    <div class="panel-content">
+                                        <textarea id="applicant-notes" class="">{{$applicant->notes}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="comment-list-{{$applicant->id}}" class="comment-list">
                 @unless($comments->count())
                 <div class="no-comment-notifier"></div>
@@ -262,9 +283,6 @@
                     @if(Auth::check() && Auth::user()->level() === 1)
                     <li role="presentation">
                         <a href="#criteria-tab" aria-controls="profile" role="tab" data-toggle="tab">Criteria</a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#notes-tab" aria-controls="profile" role="tab" data-toggle="tab">Notes</a>
                     </li>
                     @endif
                 </ul>
@@ -419,9 +437,6 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="criteria-tab">
                         <textarea id="assessment-instruction" data-job-id="{{ $job->id }}">{{$job->criteria}}</textarea>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="notes-tab">
-                        <textarea id="applicant-notes">{{$applicant->notes}}</textarea>
                     </div>
                 </div>
             </div>
