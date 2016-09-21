@@ -315,7 +315,7 @@ $('.screen-share').clickToggle(function () {
     webrtc.shareScreen(function (err) {
         if (err) {
             console.log("Screensharing error :" + err);
-            if (err == 'PERMISSION_DENIED: NavigatorUserMediaError') {
+            if (err == 'EXTENSION_UNAVAILABLE: NavigatorUserMediaError') {
                 $('.screen-share').click();
                 if (isChrome) {
                     if (hasExtension == false) {
