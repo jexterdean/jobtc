@@ -310,6 +310,7 @@
                                 <div class="col-xs-6">
                                     <div id="remotes">
                                         <div id="remoteVideo"></div>
+                                        <div id="remoteScreen"></div>
                                     </div>
                                 </div>
                             </div>

@@ -192,7 +192,9 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {{--  HTML::script('assets/js/page/video-conference.js')  --}}
 {!!  HTML::script('assets/js/adapter.js')  !!}
 {!!  HTML::script('assets/js/janus.js')  !!}
-{!!  HTML::script('assets/js/page/video-conference-janus.js') !!}
+<script src="https://simplewebrtc.com/latest-v2.js"></script> 
+{!!  HTML::script('assets/js/page/video-conference-webrtc.js') !!}
+{{--  HTML::script('assets/js/page/video-conference-janus.js') --}}
 {{--  HTML::script('assets/js/page/video-call-janus.js')  --}}
 @endif
 
