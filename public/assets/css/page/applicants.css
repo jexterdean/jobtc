@@ -164,6 +164,11 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.video-conference-container .localVideoContainer #localVideo #localScreen {
+  width: 480px;
+}
+
 .video-conference-container .video-options {
   background-color: #c0c0c0;
   position: relative;

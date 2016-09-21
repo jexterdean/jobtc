@@ -1372,7 +1372,6 @@ socket.on('generate-nfo', function (data) {
 });
 socket.on('add-interview', function (data) {
     var json_data = JSON.parse(data);
-
     var element =
         '<div class="video-element-holder">' +
             '<div class="row">' +
