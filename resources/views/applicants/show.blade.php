@@ -143,6 +143,15 @@
                                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                                 </div>
                                 @endif
+                                {{--Admin Option--}}
+                                @if($module_permissions->where('slug','edit.applicants')->count() === 1)
+                                <div class="applicant-options">
+                                    <a class="btn btn-edit btn-shadow bg-light-blue-gradient edit-applicant is-upload-document" href="#"><i class="fa fa-pencil" aria-hidden="true"></i>  Upload </a>
+                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                </div>
+                                @endif
+
                                 <br />
                                 @if(Auth::user('user'))
                                 <textarea class="status-container">

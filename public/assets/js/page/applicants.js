@@ -165,13 +165,14 @@ $('.written_editor').each(function(e){
 $('.edit-applicant').on('click', function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
+    var is_upload = $(this).hasClass('is-upload-document') ? 1 : 0;
     var applicant_id = $(this).siblings('.applicant_id').val();
     var company_id = $(this).siblings('.company_id').val();
-    var edit_applicant_form = public_path + 'a/' + applicant_id + '/edit';
+    var edit_applicant_form = is_upload ? public_path + 'a/' + applicant_id + '/edit' : public_path + 'a/' + applicant_id + '/edit?upload=1';
     var ajaxurl = public_path + 'a/' + applicant_id;
 
     BootstrapDialog.show({
-        title: 'Edit Profile <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        title:  (is_upload ? 'Upload File' : 'Edit Profile') + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
         size: 'size-normal',
         message: function (dialog) {
             var $message = $('<div></div>');
@@ -180,7 +181,7 @@ $('.edit-applicant').on('click', function (e) {
             return $message;
         },
         buttons: [{
-                label: 'Save',
+                label: (is_upload ? 'Upload' : 'Save'),
                 cssClass: 'btn-edit btn-shadow',
                 action: function (dialog) {
 
@@ -200,10 +201,12 @@ $('.edit-applicant').on('click', function (e) {
                     console.log('name:' + name);
                     console.log('email:' + email);
                     console.log('phone:' + phone);
+                    if(!is_upload){
+                        formData.append('name', name);
+                        formData.append('email', email);
+                        formData.append('phone', phone);
+                    }
 
-                    formData.append('name', name);
-                    formData.append('email', email);
-                    formData.append('phone', phone);
                     formData.append('photo', photo);
                     formData.append('resume',resume);
 

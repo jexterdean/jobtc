@@ -358,6 +358,17 @@ class PermissionsTableSeeder extends Seeder {
                         'model' => 'App\Models\Link'
             ]);
         }
+        //Permissions for Applicants Upload Resume and Photo
+        $editApplicantsPermissionCount = Permission::where('slug', 'edit.applicants')->count();
+        if ($editApplicantsPermissionCount === 0) {
+            $editApplicantsPermissionCount = Permission::create([
+                        'name' => 'Upload Applicants Photo and Resume',
+                        'slug' => 'edit.applicants',
+                        'description' => 'Applicants', // optional
+                        'model' => 'App\Models\Applicants'
+            ]);
+        }
+
     }
 
 }

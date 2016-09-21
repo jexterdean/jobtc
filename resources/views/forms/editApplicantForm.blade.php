@@ -21,6 +21,7 @@
                     </div>
                 </div>
             </div>
+            @if(!isset($is_upload))
             <div class="form-group">
                 {!!  Form::input('text','name',$applicant->name,['class' => 'form-control', 'placeholder' =>
                 'Name']) !!}
@@ -37,6 +38,7 @@
                 {!!  Form::input('text','skype',$applicant->skype,['class' => 'form-control', 'placeholder'
                 => 'Skype']) !!}
             </div>
+            @endif
             <div class="form-group">
                 {!! Form::label('Resume') !!}
                 {!!  Form::input('file','resume','') !!}    

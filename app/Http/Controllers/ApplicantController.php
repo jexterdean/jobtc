@@ -29,6 +29,8 @@ use App\Models\TeamProject;
 use App\Models\TaskCheckListPermission;
 use App\Models\TestResultModel;
 use App\Models\TestCompleted;
+use App\Models\PermissionUser;
+use App\Models\Permission;
 use Elasticsearch\ClientBuilder as ES;
 use Hash;
 use Auth;
@@ -258,6 +260,19 @@ class ApplicantController extends Controller {
                 ->lists('project_title', 'project_id')
                 ->toArray();
 
+            $permissions_list = [];
+
+            $permissions_user = PermissionUser::with('permission')
+                ->where('company_id', $job->company_id)
+                ->where('user_id', $user_id)
+                ->get();
+
+            foreach ($permissions_user as $role) {
+                array_push($permissions_list, $role->permission_id);
+            }
+
+            $module_permissions = Permission::whereIn('id', $permissions_list)->get();
+
             $assets = ['applicants', 'real-time'];
 
             return view('applicants.show', [
@@ -281,6 +296,7 @@ class ApplicantController extends Controller {
                 'videos' => $videos,
                 'assets' => $assets,
                 'count' => 0,
+                'module_permissions' => $module_permissions,
                 'projects' => $projects]);
         }
     }
@@ -295,8 +311,11 @@ class ApplicantController extends Controller {
 
         $applicant = Applicant::find($id);
 
+        $is_upload = isset($_GET['upload']) ? 1 : 0;
+
         return view('forms.editApplicantForm', [
-            'applicant' => $applicant
+            'applicant' => $applicant,
+            'is_upload' => $is_upload
         ]);
     }
 
