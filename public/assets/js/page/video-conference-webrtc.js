@@ -373,18 +373,6 @@ $('.record-button').clickToggle(function () {
     $('.save-progress').text("");
 });
 
-
-$('#getVideo').click(function () {
-    html2canvas($('#localVideo video'), {
-        onrendered: function (canvas) {
-            //$('#video_canvas').append(canvas);
-            var src = canvas.toDataURL();
-
-            $('#video_canvas').append('<img src="' + src + '" />');
-        }
-    });
-});
-
 //Check if we have the Job.tc chrome extension if it's chrome
 checkExtension();
 function checkExtension() {

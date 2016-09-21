@@ -467,12 +467,6 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-xs-12">
-        <div id="video_canvas"></div>
-    </div>
-</div>
-<button id="getVideo">Get Video</button>
 <div class="mini-space"></div>
 <input class="applicant_score" type="hidden" value="{{$rating->score or ''}}"/>
 <input class="page_applicant_id" type="hidden" value="{{$applicant->id}}"/>
