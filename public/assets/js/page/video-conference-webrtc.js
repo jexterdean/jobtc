@@ -64,6 +64,9 @@ $.fn.clickToggle = function (func1, func2) {
     return this;
 };
 
+var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+var hasExtension = false;
+
 var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
 var csrf_token = $('._token').val();
@@ -85,7 +88,7 @@ var webrtc = new SimpleWebRTC({
         video: {
             mandatory: {
                 maxFrameRate: 15,
-                maxWidth: 480,
+                maxWidth: 535,
                 maxHeight: 480
             }
         },
@@ -292,7 +295,9 @@ $('.interview-applicant').clickToggle(function () {
     //connection.open(room_name);
     //connection.join(room_name);
     webrtc.startLocalVideo();
-       
+
+
+
 }, function () {
     $(this).addClass('btn-success');
     $(this).removeClass('btn-warning');
@@ -304,13 +309,29 @@ $('.interview-applicant').clickToggle(function () {
     $('#localVideo video').remove();
 });
 
-
 $('.screen-share').clickToggle(function () {
     console.log('Starting Screensharing');
     $(this).find('span').text('Stop Screen Share');
     webrtc.shareScreen(function (err) {
         if (err) {
             console.log("Screensharing error :" + err);
+            if (err == 'PERMISSION_DENIED: NavigatorUserMediaError') {
+                $('.screen-share').click();
+                if (isChrome) {
+                    if (hasExtension == false) {
+                        BootstrapDialog.show({
+                            title: 'Extension not installed',
+                            message: 'Please install the plugin for screensharing. <a target="_blank" href="https://chrome.google.com/webstore/detail/jobtc-screensharing-exten/eciifjfhlbmnofcnnjhodcbjnfhjcelp/related">Install<a>',
+                            buttons: [{
+                                    label: 'Close',
+                                    action: function (dialog) {
+                                        dialog.close();
+                                    }
+                                }]
+                        });
+                    }
+                }
+            }
         } else {
             console.log("Screensharing active");
         }
@@ -338,16 +359,37 @@ $('.show-video-button').clickToggle(function () {
 });
 
 $('.record-button').clickToggle(function () {
-        $(this).addClass('btn-danger');
-        $(this).removeClass('btn-default');
-        $(this).find('i').css('color', 'orange');
-        $(this).children('span').text('Stop Recording');
-        $('.save-progress').text("Recording");
-        
-    }, function () {
-        $(this).addClass('btn-default');
-        $(this).removeClass('btn-danger');
-        $(this).find('i').css('color', 'green');
-        $(this).children('span').text('Start Recording');
-        $('.save-progress').text("");
+    $(this).addClass('btn-danger');
+    $(this).removeClass('btn-default');
+    $(this).find('i').css('color', 'orange');
+    $(this).children('span').text('Stop Recording');
+    $('.save-progress').text("Recording");
+
+}, function () {
+    $(this).addClass('btn-default');
+    $(this).removeClass('btn-danger');
+    $(this).find('i').css('color', 'green');
+    $(this).children('span').text('Start Recording');
+    $('.save-progress').text("");
+});
+
+
+$('#getVideo').click(function () {
+    html2canvas($('#localVideo video'), {
+        onrendered: function (canvas) {
+            //$('#video_canvas').append(canvas);
+            var src = canvas.toDataURL();
+
+            $('#video_canvas').append('<img src="' + src + '" />');
+        }
     });
+});
+
+//Check if we have the Job.tc chrome extension if it's chrome
+checkExtension();
+function checkExtension() {
+    if (typeof chrome !== "undefined" && typeof chrome.app !== "undefined" && chrome.app.isInstalled) {
+        console.log('Job.tc extension is installed');
+        hasExtension = true;
+    }
+}
