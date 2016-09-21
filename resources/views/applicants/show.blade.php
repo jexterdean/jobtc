@@ -332,6 +332,8 @@
                                     <audio controls class="download-complete-sound" src="{{url('assets/sounds/download_complete.wav')}}"></audio>
                                 </div>
                             </div>
+
+
                             @if(count($video_questions) > 0)
                             <div class="row question-videos">
                                 @foreach($video_questions as $v)
@@ -386,7 +388,7 @@
                                 <div class="row">
                                     <div class="col-xs-10">
                                         <div class="row">
-                                        @foreach(explode(",",$video->streams) as $stream)
+                                            @foreach(explode(",",$video->streams) as $stream)
                                             <div class="col-xs-6">
                                                 <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
                                                     Your browser does not support the video tag.
@@ -395,10 +397,10 @@
                                                 </video>
                                                 <input class="stream_id" type="hidden" value="{{$stream}}"/>
                                             </div>
-                                        @endforeach
+                                            @endforeach
                                         </div>
                                         <div class="row">
-                                        @foreach(explode(",",$video->streams) as $stream)
+                                            @foreach(explode(",",$video->streams) as $stream)
                                             <div class="col-xs-6">
                                                 <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
                                                     Your browser does not support the video tag.
@@ -407,7 +409,7 @@
                                                 </video>
                                                 <input class="stream_id" type="hidden" value="{{$stream}}"/>
                                             </div>
-                                        @endforeach
+                                            @endforeach
                                         </div>
                                     </div>
                                     <div class="col-xs-2">
@@ -460,8 +462,14 @@
                         <textarea id="assessment-instruction" data-job-id="{{ $job->id }}">{{$job->criteria}}</textarea>
                     </div>
                 </div>
+
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <canvas id="canvas"></canvas>
     </div>
 </div>
 <div class="mini-space"></div>

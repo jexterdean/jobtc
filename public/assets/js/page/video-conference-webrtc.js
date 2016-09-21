@@ -292,6 +292,7 @@ $('.interview-applicant').clickToggle(function () {
     //connection.open(room_name);
     //connection.join(room_name);
     webrtc.startLocalVideo();
+       
 }, function () {
     $(this).addClass('btn-success');
     $(this).removeClass('btn-warning');
@@ -319,3 +320,34 @@ $('.screen-share').clickToggle(function () {
     webrtc.stopScreenShare();
     $('#localScreen').remove();
 });
+
+$('.mute-button').clickToggle(function () {
+    $(this).find('span').text('Unmute');
+    webrtc.mute();
+}, function () {
+    $(this).find('span').text('Mute');
+    webrtc.unmute();
+});
+
+$('.show-video-button').clickToggle(function () {
+    $(this).find('span').text('Show Video');
+    webrtc.pauseVideo();
+}, function () {
+    $(this).find('span').text('Stop Video');
+    webrtc.resumeVideo();
+});
+
+$('.record-button').clickToggle(function () {
+        $(this).addClass('btn-danger');
+        $(this).removeClass('btn-default');
+        $(this).find('i').css('color', 'orange');
+        $(this).children('span').text('Stop Recording');
+        $('.save-progress').text("Recording");
+        
+    }, function () {
+        $(this).addClass('btn-default');
+        $(this).removeClass('btn-danger');
+        $(this).find('i').css('color', 'green');
+        $(this).children('span').text('Start Recording');
+        $('.save-progress').text("");
+    });
