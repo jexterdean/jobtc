@@ -316,7 +316,7 @@ $('.screen-share').clickToggle(function () {
         if (err) {
             console.log("Screensharing error :" + err);
             $('.screen-share').click();
-            if (err == 'EXTENSION_UNAVAILABLE: NavigatorUserMediaError') {
+            if (err == 'EXTENSION_UNAVAILABLE: NavigatorUserMediaError' || err == 'PERMISSION_DENIED: NavigatorUserMediaError') {
                 if (isChrome) {
                     if (hasExtension == false) {
                         BootstrapDialog.show({
