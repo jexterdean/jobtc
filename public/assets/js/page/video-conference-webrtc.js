@@ -315,8 +315,8 @@ $('.screen-share').clickToggle(function () {
     webrtc.shareScreen(function (err) {
         if (err) {
             console.log("Screensharing error :" + err);
+            $('.screen-share').click();
             if (err == 'EXTENSION_UNAVAILABLE: NavigatorUserMediaError') {
-                $('.screen-share').click();
                 if (isChrome) {
                     if (hasExtension == false) {
                         BootstrapDialog.show({
