@@ -298,7 +298,7 @@ function Janus(gatewayCallbacks) {
 			type: 'GET',
 			url: longpoll,
 			cache: false,
-			timeout: 60000,	// FIXME
+			timeout: 0,	// FIXME
 			success: handleEvent,
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				Janus.error(textStatus + ": " + errorThrown);
