@@ -27,7 +27,10 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-
+        <!--For Screensharing Extension-->
+        <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/eciifjfhlbmnofcnnjhodcbjnfhjcelp">
+        
+        
         @if(in_array('table',$assets))
         {!!  HTML::style('assets/css/datatables/dataTables.bootstrap.css')  !!}
         {!!  HTML::style('assets/css/datatables/dataTables.tableTools.css')  !!}
