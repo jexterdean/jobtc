@@ -160,12 +160,12 @@ body {
   height: 600px;
   width: 100%;
 }
-.video-conference-container .localVideoContainer #localVideo {
+.video-conference-container .localVideoContainer #localVideo #localScreen {
   height: 100%;
   width: 100%;
 }
 
-.video-conference-container .localVideoContainer #localVideo #localScreen {
+.video-conference-container .localVideoContainer video {
   width: 535px;
 }
 

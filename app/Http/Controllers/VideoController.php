@@ -12,6 +12,25 @@ use PhanAn\Remote\Remote;
 use Auth;
 
 class VideoController extends Controller {
+    var $media_server;
+    var $remote_connection;
+
+    public function __construct(){
+        $this->media_server = "laravel.software";
+        $this->remote_connection = new Remote([
+            'host' => $this->media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)'
+        ]);
+        /*$this->media_server = "linux.me";
+        $this->remote_connection = new Remote([
+            'host' => $this->media_server,
+            'port' => 22,
+            'username' => 'chimuel',
+            'password' => 'GChimuel111491'
+        ]);*/
+    }
 
     /**
      * Display a listing of the resource.
@@ -219,17 +238,8 @@ class VideoController extends Controller {
     }
 
     public function saveVideo(Request $request) {
-
-        $media_server = "laravel.software";
-        //$media_server = "ubuntu-server.com";
-
         //Connect to the media server
-        $remote_connection = new Remote([
-            'host' => $media_server,
-            'port' => 22,
-            'username' => 'root',
-            'password' => '(radio5)',
-        ]);
+        $remote_connection = $this->remote_connection;
 
         $session = $request->input('session');
         $room_type = $request->input('room_type');
@@ -280,16 +290,7 @@ class VideoController extends Controller {
     public function deleteVideo(Request $request) {
         $video_id = $request->input('video_id');
 
-        $media_server = "laravel.software";
-        //$media_server = "ubuntu-server.com";
-
-        //Connect to the media server
-        $remote_connection = new Remote([
-            'host' => $media_server,
-            'port' => 22,
-            'username' => 'root',
-            'password' => '(radio5)'
-        ]);
+        $remote_connection = $this->remote_connection;
 
         $streams = VideoRoom::where('id', $video_id)->pluck('streams');
         $session = VideoRoom::where('id', $video_id)->pluck('session');
@@ -387,15 +388,7 @@ class VideoController extends Controller {
     }
 
     private function saveThisNfoJanus($id) {
-        $media_server = "laravel.software";
-        //$media_server = "linux.me";
-        //Connect to the media server
-        $remote_connection = new Remote([
-            'host' => $media_server,
-            'port' => 22,
-            'username' => 'root',
-            'password' => '(radio5)',
-        ]);
+        $remote_connection = $this->remote_connection;
 
         $nfo = "echo '[" . $id . "]\nname = " . $id . "\n" .
                 "date = " . date('Y-m-d H:i:s') . "\n" .
@@ -405,36 +398,46 @@ class VideoController extends Controller {
     }
 
     public function convertJanusVideo(Request $request) {
+        $hasAudio = 1;
+        if ($request->input('audio')) {
+            $hasAudio = $request->input('audio') == "no" ? 0 : 1;
+            echo $hasAudio ? 'naa' : 'wla';
+        }
+        echo $request->input('local');
+
         if ($request->input('local')) {
-            $this->convertThisJanusVideo($request->input('local'));
+            $this->convertThisJanusVideo($request->input('local'), $hasAudio);
         }
         if ($request->input('remote')) {
-            $this->convertThisJanusVideo($request->input('remote'));
+            $this->convertThisJanusVideo($request->input('remote'), $hasAudio);
         }
     }
 
-    private function convertThisJanusVideo($id) {
-        $media_server = "laravel.software";
-        //$media_server = "linux.me";
-        //Connect to the media server
-        $remote_connection = new Remote([
-            'host' => $media_server,
-            'port' => 22,
-            'username' => 'root',
-            'password' => '(radio5)',
-        ]);
+    private function convertThisJanusVideo($id, $audio) {
+        $remote_connection = $this->remote_connection;
 
         //convert to opus and webm
-        $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $id . '-audio.mjr /var/www/html/recordings/' . $id . '-audio.opus';
-        $remote_connection->exec($convert_to_audio);
+        if($audio) {
+            $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $id . '-audio.mjr /var/www/html/recordings/' . $id . '-audio.opus';
+            $remote_connection->exec($convert_to_audio);
+        }
         $convert_to_webm = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $id . '-video.mjr /var/www/html/recordings/' . $id . '-video.webm';
         $remote_connection->exec($convert_to_webm);
 
-        $sync_audio_video = 'ffmpeg -i /var/www/html/recordings/' . $id . '-video.webm -i /var/www/html/recordings/' . $id . '-audio.opus -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $id . '.webm';
-        $remote_connection->exec($sync_audio_video);
+        if($audio) {
+            $sync_audio_video = 'ffmpeg -i /var/www/html/recordings/' . $id . '-video.webm -i /var/www/html/recordings/' . $id . '-audio.opus -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $id . '.webm';
+            $remote_connection->exec($sync_audio_video);
+        }
+        else{
+            $sync_audio_video = 'ffmpeg -i /var/www/html/recordings/' . $id . '-video.webm -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $id . '.webm';
+            $remote_connection->exec($sync_audio_video);
+        }
 
-        $delete_opus = 'rm -rf /var/www/html/recordings/' . $id . '-audio.opus';
-        $remote_connection->exec($delete_opus);
+
+        if($audio) {
+            $delete_opus = 'rm -rf /var/www/html/recordings/' . $id . '-audio.opus';
+            $remote_connection->exec($delete_opus);
+        }
         $delete_webm = 'rm -rf /var/www/html/recordings/' . $id . '-video.webm';
         $remote_connection->exec($delete_webm);
     }
