@@ -140,12 +140,14 @@ _body.on('click', '.checklist-status', function (e) {
 
     /*From Default, Change to ongoing*/
     if ($(this).hasClass('bg-gray')) {
+        $(this).html('&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;');
         $(this).switchClass('bg-gray', 'bg-orange', function () {
             update_checklist_status(id, 'Ongoing');
         });
     }
     /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
     if ($(this).hasClass('bg-orange')) {
+        $(this).html('&nbsp;<i class="glyphicon glyphicon-ok"></i>&nbsp;');
         $(this).switchClass('bg-orange', 'bg-green', function () {
             finish_checklist();
             update_checklist_status(id, 'Completed');
@@ -153,6 +155,7 @@ _body.on('click', '.checklist-status', function (e) {
     }
     /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
     if ($(this).hasClass('bg-green')) {
+        $(this).html('&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;');
         $(this).switchClass('bg-green', 'bg-red', function () {
             finish_checklist();
             update_checklist_status(id, 'Urgent');
@@ -160,6 +163,7 @@ _body.on('click', '.checklist-status', function (e) {
     }
     /*From Urgent, Change to back to Default*/
     if ($(this).hasClass('bg-red')) {
+        $(this).html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
         $(this).switchClass('bg-red', 'bg-gray', function () {
             update_checklist_status(id, 'Default');
         });
