@@ -279,3 +279,9 @@
         padding-bottom: 0!important;
     }
 }
+.fixed-portlet{
+    min-height: 500px!important;
+}
+.reduce-portlet-header{
+    font-size: 18px!important;
+}

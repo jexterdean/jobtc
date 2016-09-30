@@ -36,6 +36,7 @@ use App\Models\PermissionRole;
 use App\Models\Applicant;
 use App\Models\Comment;
 use App\Models\Link;
+use App\Models\Note;
 use Auth;
 use View;
 use Redirect;
@@ -113,6 +114,10 @@ class CompanyController extends BaseController {
                 ->orderBy('created_at','desc')
                 ->take(10)->get();
 
+        $note = Note::where('belongs_to', '=', 'company')
+            ->where('unique_id', '=', $company_id)
+            ->first();
+
         $assets = ['companies', 'real-time'];
 
         return View::make('company.show', [
@@ -125,6 +130,8 @@ class CompanyController extends BaseController {
                     'briefcases' => $briefcases,
                     'items' => $items,
                     'tests' => $tests,
+                    'note' => $note,
+                    'company_id' => $company_id,
                     'assets' => $assets
         ]);
     }

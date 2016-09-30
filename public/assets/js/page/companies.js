@@ -1728,3 +1728,7 @@ $('.edit-link').on('click', function (e) {
         });
     });
 });
+$('[data-toggle="tooltip"]').tooltip({
+    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="max-width: 500px!important;text-align: left!important;"></div></div>',
+    html: true
+});
