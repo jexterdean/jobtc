@@ -87,7 +87,7 @@ var webrtc = new SimpleWebRTC({
     media: {
         video: {
             mandatory: {
-                maxFrameRate: 15,
+                maxFrameRate: 60,
                 maxWidth: 535,
                 maxHeight: 480
             }
@@ -316,7 +316,7 @@ $('.screen-share').clickToggle(function () {
         if (err) {
             console.log("Screensharing error :" + err);
             $('.screen-share').click();
-            if (err == 'EXTENSION_UNAVAILABLE: NavigatorUserMediaError' || err == 'PERMISSION_DENIED: NavigatorUserMediaError') {
+            if (err == 'EXTENSION_UNAVAILABLE: NavigatorUserMediaError') {
                 if (isChrome) {
                     if (hasExtension == false) {
                         BootstrapDialog.show({
