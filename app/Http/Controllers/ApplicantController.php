@@ -87,6 +87,7 @@ class ApplicantController extends Controller {
 
                 $comments = Comment::with('user')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
             } elseif (Auth::check('applicant') || !Auth::check()) {
+                $user_id = $id;
 
                 $user_info = Applicant::where('id', $id)->first();
 

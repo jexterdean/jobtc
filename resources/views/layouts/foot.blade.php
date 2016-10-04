@@ -203,6 +203,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!! HTML::script('assets/js/adapter.js') !!}
 {!! HTML::script('assets/js/janus.js') !!}
 {!! HTML::script('assets/js/spin.min.js') !!}
+<script src="https://simplewebrtc.com/latest-v2.js"></script>
 {!! HTML::script('assets/js/janus-api.js') !!}
 @endif
 
