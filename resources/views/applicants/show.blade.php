@@ -305,6 +305,7 @@
                                 <div class="col-xs-6">
                                     <div class="localVideoContainer">
                                         <div id="localVideo"></div>
+                                        <div id="localScreen"></div>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
