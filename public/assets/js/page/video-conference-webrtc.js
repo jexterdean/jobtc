@@ -141,17 +141,17 @@ var hasShareScreen = 0;
 var janus_btn = $('.btn-video');
 var currentRecordData, currentRecordUrl, interval;
 
-//var server = "https://laravel.software:8089/janus";
-//var media_server_url = "laravel.software";
-//var rec_dir = 'https://laravel.software/recordings';
+var server = "https://laravel.software:8089/janus";
+var media_server_url = "laravel.software";
+var rec_dir = 'https://laravel.software/recordings';
 
 /*var server = "https://linux.me:8089/janus";
  var media_server_url = "linux.me";
  var rec_dir = 'https://linux.me/recordings';*/
 
-var server = "https://ubuntu-server.com:8089/janus";
-var media_server_url = "ubuntu-server.com";
-var rec_dir = 'https://ubuntu-server.com/recordings';
+//var server = "https://ubuntu-server.com:8089/janus";
+//var media_server_url = "ubuntu-server.com";
+//var rec_dir = 'https://ubuntu-server.com/recordings';
 
 
 
