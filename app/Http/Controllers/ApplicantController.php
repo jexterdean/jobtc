@@ -16,6 +16,7 @@ use App\Models\ApplicantRating;
 use App\Models\Comment;
 use App\Models\Video;
 use App\Models\VideoRoom;
+use App\Models\VideoSession;
 use App\Models\VideoTag;
 use App\Models\Test;
 use App\Models\TestPerApplicant;
@@ -124,7 +125,9 @@ class ApplicantController extends Controller {
                 $query->where('tag_type', 'video')->first();
             }])->where('room_name', $id)->where('room_type', 'applicant')->orderBy('id', 'desc')->get();
             //Get the test permissions
-
+            
+            $video_sessions = VideoSession::where('owner_type','applicant')->where('unique_id',$id)->where('is_recording','Yes')->first();
+            
             $test_ids = [];
             $test_jobs = TestPerJob::where('job_id', $applicant->job_id)->get();
             $test_applicants = TestPerApplicant::where('applicant_id', $applicant->id)->get();
@@ -295,6 +298,7 @@ class ApplicantController extends Controller {
                 'next_applicant' => $nextApplicant,
                 'rating' => $rating,
                 'videos' => $videos,
+                'video_sessions' => $video_sessions,
                 'assets' => $assets,
                 'count' => 0,
                 'module_permissions' => $module_permissions,

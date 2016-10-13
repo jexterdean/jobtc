@@ -50,6 +50,38 @@ $('.nav-tabs a[href="#video-archive-tab"]').click(function () {
     });
 });
 
+$('.delete-video').click(function () {
+    var video_element = $(this).parent().parent().parent();
+    var video_id = $(this).siblings('.video_id').val();
+
+    var ajaxurl = public_path + 'deleteVideo';
+    var formData = new FormData();
+
+    formData.append('video_id', video_id);
+    formData.append('_token', csrf_token);
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            socket.emit('delete-video', data);
+            video_element.remove();
+        },
+        complete: function () {
+
+        },
+        error: function (xhr, status, error) {
+        }
+
+    });
+});
 
 //Click Toggle Function
 $.fn.clickToggle = function (func1, func2) {
@@ -67,9 +99,13 @@ $.fn.clickToggle = function (func1, func2) {
 var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 var hasExtension = false;
 
+var display_name = $('.add-comment-form .media-heading').text();
 var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
 var csrf_token = $('._token').val();
+var playing = false;
+var recording = false;
+
 
 var webrtc = new SimpleWebRTC({
     // the id/element dom element that will hold "our" video
@@ -97,48 +133,31 @@ var webrtc = new SimpleWebRTC({
     url: 'https://laravel.software:8888'
 });
 
-var screenshare = new SimpleWebRTC({
-    // the id/element dom element that will hold "our" video
-    localVideoEl: 'localVideo',
-    // the id/element dom element that will hold remote videos
-    remoteVideosEl: '',
-    // immediately ask for camera access
-    autoRequestMedia: false,
-    debug: true,
-    localVideo: {
-        autoplay: true, // automatically play the video stream on the page
-        mirror: false, // flip the local video to mirror mode (for UX)
-        muted: true // mute local video stream to prevent echo
-    },
-    media: {
-        video: {
-            mandatory: {
-                chromeMediaSource: 'screen',
-                maxWidth: 480,
-                maxHeight: 480
-            }
-        },
-        audio: false
-    },
-    peerConnectionConfig: {
-        iceTransports: 'relay' //relay means it will rea
-    },
-    url: 'https://laravel.software:8888'
-});
+var localStream;
+var localScreenStream;
 
 var janus, sfutest, screentest, isLocal = 0, recordingId, session, formData;
 var hasShareScreen = 0;
 var janus_btn = $('.btn-video');
 var currentRecordData, currentRecordUrl, interval;
 
-var server = "https://laravel.software:8089/janus";
-var media_server_url = "laravel.software";
-var rec_dir = 'https://laravel.software/recordings';
-/*var server = "https://linux.me:8089/janus";
-var media_server_url = "linux.me";
-var rec_dir = 'https://linux.me/recordings';*/
+//var server = "https://laravel.software:8089/janus";
+//var media_server_url = "laravel.software";
+//var rec_dir = 'https://laravel.software/recordings';
 
-var bandwidth = 1024 * 1024;
+/*var server = "https://linux.me:8089/janus";
+ var media_server_url = "linux.me";
+ var rec_dir = 'https://linux.me/recordings';*/
+
+var server = "https://ubuntu-server.com:8089/janus";
+var media_server_url = "ubuntu-server.com";
+var rec_dir = 'https://ubuntu-server.com/recordings';
+
+
+
+//var bandwidth = 1024 * 1024;
+var bandwidth = 128 * 1024;
+//var bandwidth = 0;
 var janusConnected = 0, simpleRtcConnected = 0;
 $.fn.timerStart = function () {
     var timer_btn = $(this);
@@ -177,6 +196,11 @@ function randomString(len, charSet) {
     }
     return randomString;
 }
+
+webrtc.on('localStream', function (stream) {
+    console.log('this is the localstream : ' + stream);
+    localStream = stream;
+});
 
 /*For Video Sharing*/
 // a peer video has been added
@@ -220,7 +244,7 @@ webrtc.on('videoAdded', function (video, peer) {
                 case 'completed': // on caller side
                     connstate.innerText = 'Connection established.';
                     connstate.remove();
-                    if(janusConnected == 1) {
+                    if (janusConnected == 1) {
                         janus_btn.removeClass('hidden');
                         $('.janus-waiting').remove();
                     }
@@ -331,13 +355,17 @@ webrtc.on('unmute', function (data) { // hide muted symbol
 /*For Screensharing*/
 // local screen obtained
 webrtc.on('localScreenAdded', function (video) {
-    video.onclick = function () {
-        video.style.width = video.videoWidth + 'px';
-        video.style.height = video.videoHeight + 'px';
-    };
+    /*video.onclick = function () {
+     video.style.width = video.videoWidth + 'px';
+     video.style.height = video.videoHeight + 'px';
+     };*/
     //document.getElementById('localVideo').appendChil(video);
     //$('#localScreenContainer').show();
     video.id = '';
+    //Get the local screen media stream object
+    localScreenStream = webrtc.getLocalScreen();
+    console.log('This is the local screenshare stream: ' + localScreenStream);
+
     $('#localScreen').append(video);
     hasShareScreen = 1;
 });
@@ -349,244 +377,128 @@ webrtc.on('localScreenRemoved', function (video) {
     hasShareScreen = 0;
 });
 
+// we have to wait until it's ready
+webrtc.on('readyToCall', function () {
+    // you can name it anything
+    webrtc.joinRoom(room_name_tmp);
+    console.log("Ready to Join Conference");
+    //$('.interview-applicant').attr('disabled',false);
+});
+
 //region Recording Area
-$(document).ready(function() {
+$(document).ready(function () {
     // Initialize the library (all console debuggers enabled)
-    Janus.init({debug: "all", callback: function() {
-        if(!Janus.isWebrtcSupported()) {
-            bootbox.alert("No WebRTC support... ");
-            return;
-        }
-        janusConnected = 1;
-        // Create session for Local Video
-        janus = new Janus({
-            server: server,
-            success: function() {
-                //Local Video
-                janus.attach({
-                    plugin: "janus.plugin.recordplay",
-                    success: function(pluginHandle) {
-                        sfutest = pluginHandle;
-                        console.log('simpleRtcConnected: ' + simpleRtcConnected);
-                        if(simpleRtcConnected == 1) {
-                            janus_btn.removeClass('hidden');
-                            $('.janus-waiting').remove();
-                        }
-                        janusConnected = 1;
-                    },
-                    error: function(error) {
-                        Janus.error("  -- Error attaching plugin...", error);
-                        bootbox.alert("  -- Error attaching plugin... " + error);
-                    },
-                    consentDialog: function(on) {
-                        Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
-                    },
-                    webrtcState: function(on) {
-                        Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-                    },
-                    onmessage: function(msg, jsep) {
-                        Janus.debug(" ::: Got a message :::");
-                        Janus.debug(JSON.stringify(msg));
-                        var result = msg["result"];
-                        if(result !== null && result !== undefined) {
-                            if(result["status"] !== undefined && result["status"] !== null) {
-                                var event = result["status"];
-                                if(event === 'preparing') {
-                                    Janus.log("Preparing the recording playout");
-                                    sfutest.createAnswer({
-                                        jsep: jsep,
-                                        media: { audioSend: false, videoSend: false },	// We want recvonly audio/video
-                                        success: function(jsep) {
-                                            Janus.debug("Got SDP!");
-                                            Janus.debug(jsep);
-                                            var body = { "request": "start" };
-                                            sfutest.send({"message": body, "jsep": jsep});
-                                        },
-                                        error: function(error) {
-                                            Janus.error("WebRTC error:", error);
-                                            bootbox.alert("WebRTC error... " + JSON.stringify(error));
-                                        }
-                                    });
-                                    if(result["warning"])
-                                        bootbox.alert(result["warning"]);
-                                }
-                                else if(event === 'recording') {
-                                    // Got an ANSWER to our recording OFFER
-                                    if(jsep !== null && jsep !== undefined)
-                                        sfutest.handleRemoteJsep({jsep: jsep});
-                                    var id = result["id"];
-                                    if(id !== null && id !== undefined) {
-                                        Janus.log("The ID of the current recording is " + id);
-
-
-                                    }
-                                }
-                                else if(event === 'slow_link') {
-                                    var uplink = result["uplink"];
-                                    if(uplink !== 0) {
-                                        // Janus detected issues when receiving our media, let's slow down
-                                        bandwidth = parseInt(bandwidth / 1.5);
-                                        sfutest.send({
-                                            'message': {
-                                                'request': 'configure',
-                                                'video-bitrate-max': bandwidth, // Reduce the bitrate
-                                                'video-keyframe-interval': 15000 // Keep the 15 seconds key frame interval
-                                            }
-                                        });
-                                    }
-                                }
-                                else if(event === 'playing') {
-                                    Janus.log("Playout has started!");
-                                }
-                                else if(event === 'stopped') {
-                                    Janus.log("Session has stopped!");
-                                }
-                            }
-                        }
-                        else {
-                            // FIXME Error?
-                            var error = msg["error"];
-                            bootbox.alert(error);
-                        }
-                    },
-                    onlocalstream: function(stream) {
-                        Janus.debug(" ::: Got a local stream :::");
-                        Janus.debug(JSON.stringify(stream));
-
-                        attachMediaStream($('#localVideo').find('video').get(0), stream);
-                    },
-                    onremotestream: function(stream) {
-
-                    },
-                    oncleanup: function() {
-                        Janus.log(" ::: Got a cleanup notification :::");
-                    }
-                });
-            },
-            error: function(error) {
-                Janus.error(error);
-                bootbox.alert(error, function() {
-                    location.reload();
-                });
-            },
-            destroyed: function() {
-                location.reload();
+    Janus.init({debug: "all", callback: function () {
+            if (!Janus.isWebrtcSupported()) {
+                bootbox.alert("No WebRTC support... ");
+                return;
             }
-        });
-    }});
+            janusConnected = 1;
+            // Create session for Local Video
+            createJanusLocalStream();
+            createJanusLocalScreenShare();
+
+
+
+        }});
 });
 
 socket.on('start-interview', function (data) {
-    var n = $.now();
-    var f = (isLocal ? data.local : data.remote);
-    sfutest.send({
-        'message': {
-            'request': 'configure',
-            'video-bitrate-max': bandwidth, // a quarter megabit
-            'video-keyframe-interval': 15000 // 15 seconds
-        }
-    });
+    //var n = $.now();
+    //var f = (isLocal ? data.local : data.remote);
+    /*sfutest.send({
+     'message': {
+     'request': 'configure',
+     'video-bitrate-max': bandwidth, // a quarter megabit
+     'video-keyframe-interval': 15000 // 15 seconds
+     }
+     });*/
 
-    sfutest.createOffer({
-        // By default, it's sendrecv for audio and video..
-        success: function(jsep) {
-            Janus.debug(jsep);
-            var body = {
-                "request": "record",
-                "name": n.toString(),
-                "video": "stdres",
-                "filename": f.toString()
-            };
-            sfutest.send({"message": body, "jsep": jsep});
-        },
-        error: function(error) {
-            sfutest.hangup();
-        }
-    });
+    /*sfutest.createOffer({
+     // By default, it's sendrecv for audio and video..
+     success: function(jsep) {
+     Janus.debug(jsep);
+     var body = {
+     "request": "record",
+     "name": n.toString(),
+     "video": "stdres",
+     "filename": f.toString()
+     };
+     sfutest.send({"message": body, "jsep": jsep});
+     },
+     stream: localStream,
+     error: function(error) {
+     sfutest.hangup();
+     }
+     });*/
 });
 socket.on('stop-interview', function (data) {
-    var stop = { "request": "stop" };
-    sfutest.send({ "message": stop });
-
-    if(isLocal) {
-        $.ajax({
-            url: public_path + 'convertJanusVideo',
-            data: data,
-            type: "POST",
-            beforeSend: function () {
-
-            },
-            success: function (e) {
-                console.log('Files Converted to webm');
-                $.ajax({
-                    url: currentRecordUrl,
-                    data: currentRecordData,
-                    method: "POST",
-                    success: function (doc) {
-                        socket.emit('add-interview', doc);
-                        $('.download-complete-sound').get(0).play();
-                        $('.janus-waiting').remove();
-                    },
-                    error: function (a, b, c) {
-
-                    }
-                });
-            },
-            complete: function () {
-
-            },
-            error: function (xhr, status, error) {
-                console.log('Error: retrying');
-            }
-        });
-        $.ajax({
-            url: public_path + 'saveNfoJanus',
-            data: data,
-            type: "POST",
-            beforeSend: function () {
-
-            },
-            success: function (e) {
-                console.log(e);
-                console.log('NFO generated');
-            },
-            complete: function () {
-
-            },
-            error: function (xhr, status, error) {
-                console.log('Error: retrying');
-            }
-        });
-    }
+    /*var stop = { "request": "stop" };
+     sfutest.send({ "message": stop });
+     
+     if(isLocal) {
+     $.ajax({
+     url: public_path + 'convertJanusVideo',
+     data: data,
+     type: "POST",
+     beforeSend: function () {
+     
+     },
+     success: function (e) {
+     console.log('Files Converted to webm');
+     $.ajax({
+     url: currentRecordUrl,
+     data: currentRecordData,
+     method: "POST",
+     success: function (doc) {
+     socket.emit('add-interview', doc);
+     $('.download-complete-sound').get(0).play();
+     $('.janus-waiting').remove();
+     },
+     error: function (a, b, c) {
+     
+     }
+     });
+     },
+     complete: function () {
+     
+     },
+     error: function (xhr, status, error) {
+     console.log('Error: retrying');
+     }
+     });
+     $.ajax({
+     url: public_path + 'saveNfoJanus',
+     data: data,
+     type: "POST",
+     beforeSend: function () {
+     
+     },
+     success: function (e) {
+     console.log(e);
+     console.log('NFO generated');
+     },
+     complete: function () {
+     
+     },
+     error: function (xhr, status, error) {
+     console.log('Error: retrying');
+     }
+     });
+     }*/
 });
 
 socket.on('start-recording', function (data) {
-    var n = $.now();
-    recordingId = n + '-' + room_name;
-    var f = data + '-' + recordingId;
-    sfutest.send({
-        'message': {
-            'request': 'configure',
-            'video-bitrate-max': bandwidth, // a quarter megabit
-            'video-keyframe-interval': 15000 // 15 seconds
-        }
-    });
-    sfutest.createOffer({
-        // By default, it's sendrecv for audio and video..
-        success: function(jsep) {
-            Janus.debug(jsep);
-            var body = {
-                "request": "record",
-                "name": n.toString(),
-                "video": "stdres",
-                "filename": f.toString()
-            };
-            sfutest.send({"message": body, "jsep": jsep});
-        },
-        error: function(error) {
-            sfutest.hangup();
-        }
-    });
+
+    recording = true;
+
+    $('.is-recording').attr("value", "true");
+    $('.session_id').attr("value", data);
+
+    startRecordingLocalStream(data);
+    if (hasShareScreen === 1) {
+        startRecordingLocalScreenShare(data);
+    }
 
     //Get Page type to determine if it's a company employee or applicant
     var room_type = $('.page_type').val();
@@ -595,9 +507,9 @@ socket.on('start-recording', function (data) {
     formData.append('session', data);
     formData.append('room_name', room_name);
     formData.append('room_type', room_type);
-    formData.append('stream', recordingId);
+    formData.append('stream', sfutest.getId());
     formData.append('rec_dir', rec_dir);
-    formData.append('_token',csrf_token);
+    formData.append('_token', csrf_token);
 
     var ajaxurl = public_path + 'startRecording';
 
@@ -627,8 +539,46 @@ socket.on('start-recording', function (data) {
 
 });
 socket.on('stop-recording', function (data) {
-    var stop = { "request": "stop" };
-    sfutest.send({ "message": stop });
+
+    recording = false;
+
+    $('.is-recording').attr("value", "false");
+
+    var ajaxurl = public_path + 'stopRecording';
+
+    formData.append('session', data);
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            //$('.save-progress').text(data);
+            //socket.emit('add-video', data);
+            //$('.download-complete-sound').get(0).play();
+            console.log('Stopped Recording');
+        },
+        complete: function () {
+
+        },
+        error: function (xhr, status, error) {
+            $('.save-progress').text('Recording failed');
+        }
+    }); //ajax
+
+    var stop = {"request": "stop"};
+    sfutest.send({"message": stop});
+    screentest.send({"message": stop});
+    sfutest.detach();
+    screentest.detach();
+    createJanusLocalStream();
+    createJanusLocalScreenShare();
 });
 socket.on('save-video', function (data) {
     var ajaxurl = public_path + 'saveVideo';
@@ -636,13 +586,17 @@ socket.on('save-video', function (data) {
     //Get Page type to determine if it's a company employee or applicant
     var room_type = $('.page_type').val();
 
+    //Determine if it's a normal webcam video or a screenshare
+    var video_type;
+
     formData = new FormData();
     formData.append('session', data);
     formData.append('room_name', room_name);
     formData.append('room_type', room_type);
-    formData.append('stream', recordingId);
+    formData.append('stream', sfutest.getId());
     formData.append('rec_dir', rec_dir);
-    formData.append('_token',csrf_token);
+    formData.append('_token', csrf_token);
+    formData.append('video_type', video_type);
 
     $.ajax({
         url: ajaxurl,
@@ -658,6 +612,8 @@ socket.on('save-video', function (data) {
             //$('.save-progress').text(data);
             socket.emit('add-video', data);
             $('.download-complete-sound').get(0).play();
+
+
         },
         complete: function () {
 
@@ -669,26 +625,38 @@ socket.on('save-video', function (data) {
         }
     }); //ajax
 
-    $.ajax({
-        url: public_path + 'saveNfoJanus',
-        data: {
-            local: data + '-' + recordingId
-        },
-        type: "POST",
-        beforeSend: function () {
+    console.log("NFO id: " + sfutest.getId());
 
-        },
-        success: function (e) {
-            console.log(e);
-            console.log('NFO generated');
-        },
-        complete: function () {
+    /*$.ajax({
+     url: public_path + 'saveNfoJanus',
+     data: {
+     //local: data + '-' + sfutest.getId()
+     stream: sfutest.getId(),
+     session: data
+     },
+     type: "POST",
+     beforeSend: function () {
+     
+     },
+     success: function (e) {
+     console.log(e);
+     console.log('NFO generated');
+     
+     },
+     complete: function () {
+     
+     },
+     error: function (xhr, status, error) {
+     console.log('Error: retrying');
+     }
+     });*/
 
-        },
-        error: function (xhr, status, error) {
-            console.log('Error: retrying');
-        }
-    });
+    saveNfo();
+
+    if (hasShareScreen === 1) {
+        saveScreenShareNfo();
+    }
+
 });
 /*When video is successfully recorded, place it on the video archive*/
 socket.on('add-video', function (data) {
@@ -730,12 +698,18 @@ $('.interview-applicant').clickToggle(function () {
     $('.interview-applicant').removeClass('btn-success');
     $('.interview-applicant').children('span').text('Leave Conference');
     $('.interview-applicant').siblings('button').show();
-    webrtc.joinRoom(room_name_tmp);
+    //webrtc.joinRoom(room_name_tmp);
     //connection.open(room_name);
     //connection.join(room_name);
     webrtc.startLocalVideo();
 
-    $('.time-limit-conference').each(function(e){
+    /*if(recording === true) {
+     startRecordingLocalStream(session);
+     }*/
+    //Check if room is being recorded
+    isRecording();
+
+    $('.time-limit-conference').each(function (e) {
         $(this).after('<span class="janus-waiting" style="color: #f00;">Waiting for Remote...</span>');
     });
 }, function () {
@@ -746,8 +720,22 @@ $('.interview-applicant').clickToggle(function () {
     //$('#localVideo').children().remove();
     webrtc.leaveRoom(room_name_tmp);
     webrtc.stopLocalVideo();
+
+    //Stop Recording if conference is left
+    if (recording === true) {
+        stopRecording();
+    }
+
     $('#localVideo video').remove();
+    $('#localScreen video').remove();
     $('.janus-waiting').remove();
+});
+
+
+$('.play-record').click(function () {
+    playing = true;
+    var play = {"request": "play", "id": parseInt('6597723518788823')};
+    sfutest.send({"message": play});
 });
 
 $('.screen-share').clickToggle(function () {
@@ -775,6 +763,9 @@ $('.screen-share').clickToggle(function () {
             }
         } else {
             console.log("Screensharing active");
+            if (recording === true) {
+                startRecordingLocalScreenShare(session);
+            }
         }
     });
 }, function () {
@@ -821,6 +812,7 @@ function startRecording() {
     // before, after, during recording
     session = randomString(12);
     socket.emit('start-recording', session);
+
 }
 function stopRecording() {
     socket.emit('stop-recording', session);
@@ -860,9 +852,9 @@ $('body').on('click', '.btn-video', function (e) {
         };
 
         $(this)
-            .parent()
-            .find('.time-limit-conference')
-            .after('<span class="janus-waiting" style="color: #f00;">Please wait...</span>');
+                .parent()
+                .find('.time-limit-conference')
+                .after('<span class="janus-waiting" style="color: #f00;">Please wait...</span>');
 
         socket.emit('stop-interview', 'local-' + recordingId);
 
@@ -878,5 +870,463 @@ function checkExtension() {
     if (typeof chrome !== "undefined" && typeof chrome.app !== "undefined" && chrome.app.isInstalled) {
         console.log('Job.tc extension is installed');
         hasExtension = true;
+    }
+}
+
+function createJanusLocalStream() {
+    janus = new Janus({
+        server: server,
+        success: function () {
+            //Local Video
+            janus.attach({
+                plugin: "janus.plugin.recordplay",
+                success: function (pluginHandle) {
+                    sfutest = pluginHandle;
+                    console.log('simpleRtcConnected: ' + simpleRtcConnected);
+                    if (simpleRtcConnected == 1) {
+                        janus_btn.removeClass('hidden');
+                        $('.janus-waiting').remove();
+                    }
+                    janusConnected = 1;
+                    var createRoom = {
+                        "request": "create",
+                        "record": false,
+                        "publishers": 10,
+                        "room": room_name,
+                        "bitrate": bandwidth
+                    };
+                    sfutest.send({"message": createRoom});
+                    var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": display_name};
+                    sfutest.send({"message": register});
+                },
+                error: function (error) {
+                    Janus.error("  -- Error attaching plugin...", error);
+                    bootbox.alert("  -- Error attaching plugin... " + error);
+                },
+                consentDialog: function (on) {
+                    Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
+                },
+                webrtcState: function (on) {
+                    Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+                },
+                onmessage: function (msg, jsep) {
+                    Janus.debug(" ::: Got a message :::");
+                    Janus.debug(JSON.stringify(msg));
+                    var result = msg["result"];
+                    if (result !== null && result !== undefined) {
+                        if (result["status"] !== undefined && result["status"] !== null) {
+                            var event = result["status"];
+                            if (event === 'preparing') {
+                                Janus.log("Preparing the recording playout");
+                                sfutest.createAnswer({
+                                    jsep: jsep,
+                                    media: {audioSend: false, videoSend: false}, // We want recvonly audio/video
+                                    success: function (jsep) {
+                                        Janus.debug("Got SDP!");
+                                        Janus.debug(jsep);
+                                        var body = {"request": "start"};
+                                        sfutest.send({"message": body, "jsep": jsep});
+                                    },
+                                    error: function (error) {
+                                        Janus.error("WebRTC error:", error);
+                                        bootbox.alert("WebRTC error... " + JSON.stringify(error));
+                                    }
+                                });
+                                if (result["warning"])
+                                    bootbox.alert(result["warning"]);
+                            }
+                            else if (event === 'recording') {
+                                // Got an ANSWER to our recording OFFER
+                                if (jsep !== null && jsep !== undefined)
+                                    sfutest.handleRemoteJsep({jsep: jsep});
+                                var id = result["id"];
+                                if (id !== null && id !== undefined) {
+                                    Janus.log("The ID of the current recording is " + id);
+
+
+                                }
+                            }
+                            else if (event === 'slow_link') {
+                                var uplink = result["uplink"];
+                                if (uplink !== 0) {
+                                    // Janus detected issues when receiving our media, let's slow down
+                                    bandwidth = 128 * 1024;
+                                    sfutest.send({
+                                        'message': {
+                                            'request': 'configure',
+                                            'video-bitrate-max': bandwidth, // Reduce the bitrate
+                                            'video-keyframe-interval': 15000 // Keep the 15 seconds key frame interval
+                                        }
+                                    });
+                                }
+                            }
+                            else if (event === 'playing') {
+                                Janus.log("Playout has started!");
+                            }
+                            else if (event === 'stopped') {
+                                Janus.log("Session has stopped!");
+                            }
+                        }
+                    }
+                    else {
+                        // FIXME Error?
+                        var error = msg["error"];
+                        bootbox.alert(error);
+                    }
+                },
+                onlocalstream: function (stream) {
+                    Janus.debug(" ::: Got a local stream :::");
+                    Janus.debug(JSON.stringify(stream));
+                    //if (playing === true)
+                    //return;
+
+                    //$('#localVideo').append('<video class="rounded centered" id="thevideo" width=320 height=240 autoplay muted="muted"/>');
+                    //attachMediaStream($('#thevideo').get(0), stream);
+
+                    //attachMediaStream($('#localVideo').find('video').get(0), stream);
+                },
+                onremotestream: function (stream) {
+                    if (playing === false)
+                        return;
+                    Janus.debug(" ::: Got a remote stream :::");
+                    Janus.debug(JSON.stringify(stream));
+
+                    $('.video-page-container').append('<video class="rounded centered" id="thevideo" width=320 height=240 autoplay/>');
+
+                    // Show the video, hide the spinner and show the resolution when we get a playing event
+                    attachMediaStream($('#thevideo').get(0), stream);
+
+                },
+                oncleanup: function () {
+                    Janus.log(" ::: Got a cleanup notification :::");
+                }
+            });
+        },
+        error: function (error) {
+            Janus.error(error);
+            bootbox.alert(error, function () {
+                location.reload();
+            });
+        },
+        destroyed: function () {
+            location.reload();
+        }
+    });
+}
+
+function startRecordingLocalStream(data) {
+    var n = $.now();
+    recordingId = n + '-' + room_name;
+    //var f = data + '-' + recordingId;
+    var f = data + '-' + sfutest.getId();
+    /*sfutest.send({
+     'message': {
+     'request': 'configure',
+     'video-bitrate-max': bandwidth, // a quarter megabit
+     'video-keyframe-interval': 15000 // 15 seconds
+     }
+     });*/
+
+    //console.log(n);
+
+    sfutest.createOffer({
+        // By default, it's sendrecv for audio and video..
+        success: function (jsep) {
+            Janus.debug(jsep);
+            var body = {
+                "request": "record",
+                //"name": n.toString(),
+                "name": f.toString(),
+                "video": "stdres",
+                "filename": f.toString()
+            };
+            sfutest.send({"message": body, "jsep": jsep});
+        },
+        stream: localStream,
+        error: function (error) {
+            sfutest.hangup();
+        }
+    });
+}
+
+function startRecordingLocalScreenShare(data) {
+    var n = $.now();
+    recordingId = n + '-' + room_name;
+    //var f = data + '-' + recordingId;
+    var f = data + '-' + sfutest.getId();
+
+    screentest.createOffer({
+        // By default, it's sendrecv for audio and video..
+        success: function (jsep) {
+            Janus.debug(jsep);
+            var body = {
+                "request": "record",
+                //"name": 'screenshare-' + n.toString(),
+                "name": 'screenshare-' + f.toString(),
+                "video": "stdres",
+                "filename": 'screenshare-' + f.toString()
+            };
+            screentest.send({"message": body, "jsep": jsep});
+
+        },
+        stream: localScreenStream,
+        error: function (error) {
+            screentest.hangup();
+        }
+    });
+}
+
+function createJanusLocalScreenShare() {
+
+    // Create another session for screen sharing(The screen takes up one user space in the room)
+    janusscreen = new Janus(
+            {
+                server: server,
+                success: function () {
+                    // Attach to video room test plugin
+                    janusscreen.attach(
+                            {
+                                plugin: "janus.plugin.recordplay",
+                                success: function (pluginHandle) {
+                                    $('#details').remove();
+                                    screentest = pluginHandle;
+                                    Janus.log("Plugin attached! (" + screentest.getPlugin() + ", id=" + screentest.getId() + ")");
+
+                                },
+                                error: function (error) {
+                                    Janus.error("  -- Error attaching plugin...", error);
+                                    bootbox.alert("Error attaching plugin... " + error);
+                                },
+                                consentDialog: function (on) {
+                                    Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
+                                },
+                                webrtcState: function (on) {
+                                    Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+                                },
+                                onmessage: function (msg, jsep) {
+                                    Janus.debug(" ::: Got a message (publisher) :::");
+                                    Janus.debug(JSON.stringify(msg));
+                                    var event = msg["videoroom"];
+                                    Janus.debug("Event: " + event);
+                                    if (event != undefined && event != null) {
+                                        if (event === "joined") {
+                                            myid = msg["id"];
+                                            Janus.log("Successfully joined room " + msg["room"] + " with ID " + myid);
+                                            if (role === "publisher") {
+                                                // This is our session, publish our stream
+                                                Janus.debug("Negotiating WebRTC stream for our screen (capture " + capture + ")");
+                                                screentest.createOffer(
+                                                        {
+                                                            media: {video: capture, audio: false, videoRecv: false}, // Screen sharing doesn't work with audio, and Publishers are sendonly
+                                                            success: function (jsep) {
+                                                                Janus.debug("Got publisher SDP!");
+                                                                Janus.debug(jsep);
+                                                                var publish = {"request": "configure", "audio": true, "video": true};
+                                                                screentest.send({"message": publish, "jsep": jsep});
+                                                            },
+                                                            error: function (error) {
+                                                                Janus.error("WebRTC error:", error);
+                                                                bootbox.alert("WebRTC error... " + JSON.stringify(error));
+                                                            }
+                                                        });
+                                            } else {
+                                                // We're just watching a session, any feed to attach to?
+                                                if (msg["publishers"] !== undefined && msg["publishers"] !== null) {
+                                                    var list = msg["publishers"];
+                                                    Janus.debug("Got a list of available publishers/feeds:");
+                                                    Janus.debug(list);
+                                                    for (var f in list) {
+                                                        var id = list[f]["id"];
+                                                        var display = list[f]["display"];
+                                                        Janus.debug("  >> [" + id + "] " + display);
+                                                        newRemoteFeed(id, display)
+                                                    }
+                                                }
+                                            }
+                                        } else if (event === "event") {
+                                            // Any feed to attach to?
+                                            if (role === "listener" && msg["publishers"] !== undefined && msg["publishers"] !== null) {
+                                                var list = msg["publishers"];
+                                                Janus.debug("Got a list of available publishers/feeds:");
+                                                Janus.debug(list);
+                                                for (var f in list) {
+                                                    var id = list[f]["id"];
+                                                    var display = list[f]["display"];
+                                                    Janus.debug("  >> [" + id + "] " + display);
+                                                    newRemoteFeed(id, display)
+                                                }
+                                            } else if (msg["leaving"] !== undefined && msg["leaving"] !== null) {
+                                                // One of the publishers has gone away?
+                                                var leaving = msg["leaving"];
+                                                Janus.log("Publisher left: " + leaving);
+                                                if (role === "listener" && msg["leaving"] === source) {
+                                                    bootbox.alert("The screen sharing session is over, the publisher left", function () {
+                                                        window.location.reload();
+                                                    });
+                                                }
+                                            } else if (msg["error"] !== undefined && msg["error"] !== null) {
+                                                bootbox.alert(msg["error"]);
+                                            }
+                                        }
+                                    }
+                                    if (jsep !== undefined && jsep !== null) {
+                                        Janus.debug("Handling SDP as well...");
+                                        Janus.debug(jsep);
+                                        screentest.handleRemoteJsep({jsep: jsep});
+                                    }
+                                },
+                                onlocalstream: function (stream) {
+                                    Janus.debug(" ::: Got a local stream :::");
+                                    Janus.debug(JSON.stringify(stream));
+                                    //$('#localVideo').append('<video class="rounded centered" id="myscreenshare" width="100%" autoplay muted="muted"/>');
+                                    //attachMediaStream($('#myscreenshare').get(0), stream);
+                                },
+                                onremotestream: function (stream) {
+                                    // The publisher stream is sendonly, we don't expect anything here
+                                },
+                                oncleanup: function () {
+                                    Janus.log(" ::: Got a cleanup notification :::");
+                                }
+                            });
+                },
+                error: function (error) {
+                    Janus.error(error);
+                    bootbox.alert(error, function () {
+                        window.location.reload();
+                    });
+                },
+                destroyed: function () {
+                    //window.location.reload();
+                }
+            });
+
+
+
+}
+
+function saveNfo() {
+    $.ajax({
+        url: public_path + 'saveNfoJanus',
+        data: {
+            //local: data + '-' + sfutest.getId()
+            stream: sfutest.getId(),
+            session: session
+        },
+        type: "POST",
+        beforeSend: function () {
+
+        },
+        success: function (e) {
+            console.log(e);
+            console.log('NFO generated');
+
+        },
+        complete: function () {
+
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: retrying');
+        }
+    });
+}
+
+function saveScreenShareNfo() {
+
+    $.ajax({
+        url: public_path + 'saveScreenShareNfoJanus',
+        data: {
+            //local: data + '-' + sfutest.getId()
+            stream: sfutest.getId(),
+            session: session
+        },
+        type: "POST",
+        beforeSend: function () {
+
+        },
+        success: function (e) {
+            console.log(e);
+            console.log('Screenshare NFO generated');
+
+        },
+        complete: function () {
+
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: retrying');
+        }
+    });
+}
+
+function isRecording() {
+    var session_id = $('.session_id').val();
+
+    if (session_id !== "") {
+        $.ajax({
+            url: public_path + 'isRecording',
+            data: {
+                //local: data + '-' + sfutest.getId()
+                session: session_id
+            },
+            type: "POST",
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                if (data === 'Yes') {
+                    recording = true;
+
+                    $('.is-recording').attr("value", "true");
+                    $('.session_id').attr("value", data);
+
+                    startRecordingLocalStream(data);
+                    if (hasShareScreen === 1) {
+                        startRecordingLocalScreenShare(data);
+                    }
+
+                    //Get Page type to determine if it's a company employee or applicant
+                    var room_type = $('.page_type').val();
+
+                    formData = new FormData();
+                    formData.append('session', data);
+                    formData.append('room_name', room_name);
+                    formData.append('room_type', room_type);
+                    formData.append('stream', sfutest.getId());
+                    formData.append('rec_dir', rec_dir);
+                    formData.append('_token', csrf_token);
+
+                    var ajaxurl = public_path + 'startRecording';
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            //$('.save-progress').text(data);
+                            //socket.emit('add-video', data);
+                            //$('.download-complete-sound').get(0).play();
+                            console.log('Added Session Data to database, Starting Recording');
+                        },
+                        complete: function () {
+
+                        },
+                        error: function (xhr, status, error) {
+                            $('.save-progress').text('Recording failed');
+                        }
+                    }); //ajax
+                }
+            },
+            complete: function () {
+
+            },
+            error: function (xhr, status, error) {
+                console.log('Error: retrying');
+            }
+        });
     }
 }

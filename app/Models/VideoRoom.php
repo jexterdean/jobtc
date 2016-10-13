@@ -18,7 +18,7 @@ class VideoRoom extends Model
      *
      * @var array
      */
-    protected $fillable = ['session','room_name','room_type','streams','rec_dir'];
+    protected $fillable = ['session_id','room_name','room_type','stream','rec_dir'];
     
     public function video_tags() {
         return $this->hasOne('App\Models\VideoTag');
