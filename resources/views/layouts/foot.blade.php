@@ -89,7 +89,24 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
         </div>
     </div>
 </div>
-<form id="form-delete" action="" method="post" style="width: 0px;height: 0px;">
+<div class="modal fade" id="delete-modal" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Delete</h4>
+            </div>
+            <div class="modal-body">
+                <h4 class="delete-msg"></h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-submit btn btn-shadow confirm-delete">Yes</button>&nbsp;&nbsp;
+                <button type="button" class="btn-edit btn btn-shadow" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="form-delete" action="" method="post" style="width: 0;height: 0;">
     {!! csrf_field() !!}
     {!! method_field('delete') !!}
 </form>
@@ -344,9 +361,9 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
     });
             /*region Auto Close Alert Message*/
             setInterval(function(){
-            $('section.content').find('.alert').fadeTo(2000, 500).slideUp(500, function(){
-            $(this).alert('close');
-            });
+                $('section.content').find('.alert').fadeTo(2000, 500).slideUp(500, function(){
+                    $(this).alert('close');
+                });
             }, 2000);
             /*endregion*/
             $(document).on('click', '.show_edit_form', function(e){

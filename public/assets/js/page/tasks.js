@@ -544,10 +544,18 @@ $('.task-list').on('click', '.delete-tasklist', function (e) {
     var url = $(this).attr('href');
     var task_id = url.split('/').pop();
 
-    //Remove the collapse panel immediately
-    $('#collapse-container-' + task_id).remove();
-
-    $.post(url);
+    //region Delete Modal
+    var _delete_modal = $('#delete-modal');
+    _delete_modal.find('.delete-msg').html('Deleting this Briefcase will delete all content.');
+    _delete_modal.modal('show');
+    $('.confirm-delete').on('click',function(e){
+        e.preventDefault();
+        //Remove the collapse panel immediately
+        _delete_modal.modal('hide');
+        $('#collapse-container-' + task_id).remove();
+        $.post(url);
+    });
+    //endregion
 });
 //endregion
 

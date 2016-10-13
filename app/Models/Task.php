@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Task extends Model
 {
+    use SoftDeletes;
 
     protected $fillable = [
         'task_id',
@@ -23,6 +25,7 @@ class Task extends Model
 
     protected $primaryKey = 'task_id';
     protected $table = 'task';
+    protected $dates = ['deleted_at'];
     
     public function project() {
         return $this->belongsTo('App\Models\Project');
