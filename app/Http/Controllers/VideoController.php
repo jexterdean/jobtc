@@ -7,29 +7,32 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Video;
 use App\Models\VideoRoom;
+use App\Models\VideoSession;
 use App\Models\VideoTag;
 use PhanAn\Remote\Remote;
 use Auth;
 
 class VideoController extends Controller {
+
     var $media_server;
     var $remote_connection;
 
-    public function __construct(){
+    public function __construct() {
         $this->media_server = "laravel.software";
+        //$this->media_server = "ubuntu-server.com";
         $this->remote_connection = new Remote([
             'host' => $this->media_server,
             'port' => 22,
             'username' => 'root',
             'password' => '(radio5)'
         ]);
-        /*$this->media_server = "linux.me";
-        $this->remote_connection = new Remote([
-            'host' => $this->media_server,
-            'port' => 22,
-            'username' => 'chimuel',
-            'password' => 'GChimuel111491'
-        ]);*/
+        /* $this->media_server = "linux.me";
+          $this->remote_connection = new Remote([
+          'host' => $this->media_server,
+          'port' => 22,
+          'username' => 'chimuel',
+          'password' => 'GChimuel111491'
+          ]); */
     }
 
     /**
@@ -211,30 +214,44 @@ class VideoController extends Controller {
         $stream = $request->input('stream');
         $rec_dir = $request->input('rec_dir');
 
+        $video_room = new VideoRoom([
+            'session_id' => $session,
+            'room_name' => $room_name,
+            'room_type' => $room_type,
+            'stream' => $stream,
+            'rec_dir' => $rec_dir
+        ]);
+        $video_room->save();
 
-        $session_exists = VideoRoom::where('session', $session)->exists();
-
-        if ($session_exists) {
-
-            $existing_streams = VideoRoom::where('session', $session)->pluck('streams');
-
-            $update_video_room = VideoRoom::where('session', $session)->update([
-                'streams' => $existing_streams . ',' . $stream
-            ]);
-        } else {
-
-            $video_room = new VideoRoom([
-                'session' => $session,
-                'room_name' => $room_name,
-                'room_type' => $room_type,
-                'streams' => $stream,
-                'rec_dir' => $rec_dir
-            ]);
-            $video_room->save();
-        }
-
+        $video_sessions = new VideoSession([
+            'session_id' => $session,
+            'unique_id' => $room_name,
+            'owner_type' => $room_type,
+            'total_time' => '',
+            'is_recording' => 'Yes'
+        ]);
+        $video_sessions->save();
 
         return "true";
+    }
+
+    public function stopRecording(Request $request) {
+        $session = $request->input('session');
+
+
+        $video_sessions = VideoSession::where('session_id', $session)->update([
+            'total_time' => '',
+            'is_recording' => 'No'
+        ]);
+
+        return "true";
+    }
+
+    public function isRecording(Request $request) {
+        $session = $request->input('session');
+
+        $video_sessions = VideoSession::where('session_id', $session)->first();
+        return $video_sessions->is_recording;
     }
 
     public function saveVideo(Request $request) {
@@ -250,11 +267,11 @@ class VideoController extends Controller {
         $video_extension = '.webm';
         $audio_extension = '.ogg';
 
-        $video_url = $rec_dir . '/' . $stream . '-final' . $video_extension;
-        $audio_url = $rec_dir . '/' . $stream . $audio_extension;
-        
-        $video_room = VideoRoom::where('session',$session)->first();
-       
+        $video_url = $rec_dir . '/' . $session . '-' . $stream . '-final' . $video_extension;
+        $audio_url = $rec_dir . '/' . $session . '-' . $stream . $audio_extension;
+
+        $video_room = VideoRoom::where('session_id', $session)->first();
+
         $video_id = $video_room->id;
 
         $video_details = json_encode(array('video_id' => $video_id, 'video' => $video_url, 'audio' => $audio_url), JSON_FORCE_OBJECT);
@@ -265,24 +282,49 @@ class VideoController extends Controller {
         //$merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.ogg -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $stream . '-final.webm';
         $merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $session . '-' . $stream . '-video.webm -i /var/www/html/recordings/' . $session . '-' . $stream . '-audio.ogg -c:v copy -shortest /var/www/html/recordings/' . $session . '-' . $stream . '-final.webm';
 
+        //For Screenshare video
+        //$convert_screenshare_to_webm_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/screenshare-'. $session  .'-'. $stream .'-video.mjr /var/www/html/recordings/screenshare-'. $session . '-' . $stream . '-video.webm';
         //Execute main video scripts
-        $remote_connection->exec($convert_to_webm_command . ';' . $convert_to_ogg_command);
-        $remote_connection->exec($merge_webm_and_ogg_command);
+        $remote_connection->exec($convert_to_webm_command . ';' . $convert_to_ogg_command . ';' . $merge_webm_and_ogg_command);
+        //$remote_connection->exec($merge_webm_and_ogg_command);
+        //Execute main video scripts
+        //$remote_connection->exec($convert_screenshare_to_webm_command);
+        //$check_if_screenshare_exists = '[ -f /var/www/html/recordings/' . $session . '-screenshare-' . $stream . '-video.mjr ] && echo "File exists" || echo "File doesn not exist"';
+        //$file_exists = $remote_connection->exec($check_if_screenshare_exists);
+        //if ($file_exists === 'File exists') {
+        //}
+
+        return $video_details;
+    }
+
+    public function saveScreenShare() {
+
+        //Connect to the media server
+        $remote_connection = $this->remote_connection;
+
+        $session = $request->input('session');
+        $room_type = $request->input('room_type');
+        $room_name = $request->input('room_name');
+        $stream = $request->input('stream');
+        $rec_dir = $request->input('rec_dir');
+
+        $video_extension = '.webm';
+        $audio_extension = '.ogg';
+
+        $video_url = $rec_dir . '/' . $stream . '-final' . $video_extension;
+        $audio_url = $rec_dir . '/' . $stream . $audio_extension;
+
+        $video_room = VideoRoom::where('session_id', $session)->first();
+
+        $video_id = $video_room->id;
+
+        $video_details = json_encode(array('video_id' => $video_id, 'video' => $video_url, 'audio' => $audio_url), JSON_FORCE_OBJECT);
 
         //For Screenshare video
-        $convert_screenshare_to_webm_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $session . '-screenshare-' . $stream . '-video.mjr /var/www/html/recordings/' . $session . '-screenshare-' . $stream . '-video.webm';
-            
-        //Execute main video scripts
+        $convert_screenshare_to_webm_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/screenshare-' . $session . '-' . $stream . '-video.mjr /var/www/html/recordings/screenshare-' . $session . '-' . $stream . '-video.webm';
+
         $remote_connection->exec($convert_screenshare_to_webm_command);
-        
-        //$check_if_screenshare_exists = '[ -f /var/www/html/recordings/' . $session . '-screenshare-' . $stream . '-video.mjr ] && echo "File exists" || echo "File doesn not exist"';
 
-        //$file_exists = $remote_connection->exec($check_if_screenshare_exists);
-
-        //if ($file_exists === 'File exists') {
-
-            
-        //}
 
         return $video_details;
     }
@@ -292,15 +334,15 @@ class VideoController extends Controller {
 
         $remote_connection = $this->remote_connection;
 
-        $streams = VideoRoom::where('id', $video_id)->pluck('streams');
-        $session = VideoRoom::where('id', $video_id)->pluck('session');
+        $streams = VideoRoom::where('id', $video_id)->pluck('stream');
+        $session = VideoRoom::where('id', $video_id)->pluck('session_id');
 
 
         $rec_dir = '/var/www/html/recordings/';
         $video_extension = '-video.webm';
         $audio_extension = '-audio.ogg';
 
-        foreach (explode(",",$streams) as $stream) {
+        foreach (explode(",", $streams) as $stream) {
 
             $final_url = $rec_dir . $session . '-' . $stream . '-final' . $video_extension;
             $video_url = $rec_dir . $session . '-' . $stream . $video_extension;
@@ -325,7 +367,6 @@ class VideoController extends Controller {
 
         return $video_id;
     }
-    
 
     public function addVideoTag(Request $request) {
 
@@ -379,23 +420,40 @@ class VideoController extends Controller {
 
     //janus API
     public function saveNfoJanus(Request $request) {
-        if ($request->input('local')) {
-            $this->saveThisNfoJanus($request->input('local'));
-        }
-        if ($request->input('remote')) {
-            $this->saveThisNfoJanus($request->input('remote'));
-        }
-    }
-
-    private function saveThisNfoJanus($id) {
         $remote_connection = $this->remote_connection;
 
-        $nfo = "echo '[" . $id . "]\nname = " . $id . "\n" .
+        $session_id = $request->input('session');
+        $stream_id = $request->input('stream');
+
+        $nfo = "echo '[" . $stream_id . "]\nname = " . $session_id . '-' . $stream_id . "\n" .
                 "date = " . date('Y-m-d H:i:s') . "\n" .
-                "audio = " . $id . "-audio.mjr\n" .
-                "video = " . $id . "-video.mjr' > /var/www/html/recordings/" . $id . ".nfo";
+                "audio = " . $session_id . '-' . $stream_id . "-audio.mjr\n" .
+                "video = " . $session_id . '-' . $stream_id . "-video.mjr' > /var/www/html/recordings/" . $session_id . ".nfo";
         $remote_connection->exec($nfo);
     }
+
+    public function saveScreenShareNfoJanus(Request $request) {
+        $remote_connection = $this->remote_connection;
+
+        $session_id = $request->input('session');
+        $stream_id = $request->input('stream');
+
+        $nfo = "echo '[" . $session_id . "]\nname = " . $session_id . '-' . $stream_id . "\n" .
+                "date = " . date('Y-m-d H:i:s') . "\n" .
+                "audio = " . $session_id . '-' . $stream_id . "-audio.mjr\n" .
+                "video = " . $session_id . '-' . $stream_id . "-video.mjr' > /var/www/html/recordings/screenshare-" . $session_id . ".nfo";
+        $remote_connection->exec($nfo);
+    }
+
+    /* private function saveThisNfoJanus($id,$session) {
+      $remote_connection = $this->remote_connection;
+
+      $nfo = "echo '[" . $id . "]\nname = " . $session.'-'.$id . "\n" .
+      "date = " . date('Y-m-d H:i:s') . "\n" .
+      "audio = " . $session.'-'.$id . "-audio.mjr\n" .
+      "video = " . $session.'-'.$id . "-video.mjr' > /var/www/html/recordings/" . $id . ".nfo";
+      $remote_connection->exec($nfo);
+      } */
 
     public function convertJanusVideo(Request $request) {
         $hasAudio = 1;
@@ -417,24 +475,23 @@ class VideoController extends Controller {
         $remote_connection = $this->remote_connection;
 
         //convert to opus and webm
-        if($audio) {
+        if ($audio) {
             $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $id . '-audio.mjr /var/www/html/recordings/' . $id . '-audio.opus';
             $remote_connection->exec($convert_to_audio);
         }
         $convert_to_webm = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $id . '-video.mjr /var/www/html/recordings/' . $id . '-video.webm';
         $remote_connection->exec($convert_to_webm);
 
-        if($audio) {
+        if ($audio) {
             $sync_audio_video = 'ffmpeg -i /var/www/html/recordings/' . $id . '-video.webm -i /var/www/html/recordings/' . $id . '-audio.opus -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $id . '.webm';
             $remote_connection->exec($sync_audio_video);
-        }
-        else{
+        } else {
             $sync_audio_video = 'ffmpeg -i /var/www/html/recordings/' . $id . '-video.webm -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $id . '.webm';
             $remote_connection->exec($sync_audio_video);
         }
 
 
-        if($audio) {
+        if ($audio) {
             $delete_opus = 'rm -rf /var/www/html/recordings/' . $id . '-audio.opus';
             $remote_connection->exec($delete_opus);
         }

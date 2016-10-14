@@ -67,9 +67,12 @@ Route::post('updateRole', 'CompanyController@updateRole');
 
 /* For Video */
 Route::post('startRecording', 'VideoController@startRecording');
+Route::post('stopRecording', 'VideoController@stopRecording');
+Route::post('isRecording', 'VideoController@isRecording');
 Route::post('saveVideo', 'VideoController@saveVideo');
 Route::post('deleteVideo', 'VideoController@deleteVideo');
 Route::post('saveNfoJanus', 'VideoController@saveNfoJanus');
+Route::post('saveScreenShareNfoJanus', 'VideoController@saveScreenShareNfoJanus');
 Route::post('convertJanusVideo', 'VideoController@convertJanusVideo');
 
 /* For Video Status */

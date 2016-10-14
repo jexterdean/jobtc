@@ -325,16 +325,22 @@
                                         <button class="btn btn-default btn-shadow record-button"><i class="fa fa-circle"></i>&nbsp;<span>Start Recording</span></button>
                                         @endif
                                         <button href="#" class="btn btn-success btn-shadow interview-applicant"><i class="fa fa-phone"></i>&nbsp;<span>Join Conference</span></button>
+                                        
                                         <div class="video-options-text pull-right">
                                             <text class="save-progress"></text>
                                             <text class="total-files"></text>
+                                            @if(count($video_sessions) === 0) 
+                                            <input class="is-recording" hidden="true" value="false" />
+                                            <input class="session_id" hidden="true" value="" />
+                                            @else
+                                            <input class="is-recording" hidden="true" value="true" />
+                                            <input class="session_id" hidden="true" value="{{$video_sessions->session_id}}" />
+                                            @endif
                                         </div>
                                     </div>
                                     <audio controls class="download-complete-sound" src="{{url('assets/sounds/download_complete.wav')}}"></audio>
                                 </div>
                             </div>
-
-
                             @if(count($video_questions) > 0)
                             <div class="row question-videos">
                                 @foreach($video_questions as $v)
@@ -389,37 +395,38 @@
                                 <div class="row">
                                     <div class="col-xs-10">
                                         <div class="row">
-                                            @foreach(explode(",",$video->streams) as $stream)
                                             <div class="col-xs-6">
                                                 <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
                                                     Your browser does not support the video tag.
                                                     <!--source src="{{url($video->video_url)}}"-->
-                                                    <source src="{{$video->rec_dir.'/'.$video->session.'-'.$stream}}-final.webm" type="video/webm">
+                                                    <source src="{{$video->rec_dir.'/'.$video->session_id.'-'.$video->stream}}-final.webm" type="video/webm">
                                                 </video>
-                                                <input class="stream_id" type="hidden" value="{{$stream}}"/>
+                                                <input class="stream_id" type="hidden" value="{{$video->stream}}"/>
                                             </div>
-                                            @endforeach
                                         </div>
                                         <div class="row">
-                                            @foreach(explode(",",$video->streams) as $stream)
+                                            
                                             <div class="col-xs-6">
                                                 <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
                                                     Your browser does not support the video tag.
                                                     <!--source src="{{url($video->video_url)}}"-->
-                                                    <source src="{{$video->rec_dir.'/'.$video->session.'-screenshare-'.$stream}}-video.webm" type="video/webm">
+                                                    <source src="{{$video->rec_dir.'/screenshare-'.$video->session_id.'-'.$video->stream}}.webm" type="video/webm">
                                                 </video>
-                                                <input class="stream_id" type="hidden" value="{{$stream}}"/>
+                                                <input class="stream_id" type="hidden" value="{{$video->stream}}"/>
+                                                
                                             </div>
-                                            @endforeach
+                                            
                                         </div>
                                     </div>
                                     <div class="col-xs-2">
                                         <button class="btn btn-danger btn-shadow pull-right delete-video"><i class="fa fa-times"></i></button>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
+                                        
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12">
+                                        <button href="#" class="btn btn-success btn-shadow play-record"><i class="fa fa-play-circle" aria-hidden="true"></i>&nbsp;<span>Play Record</span></button>
                                         <textarea class="video-status-container">
                                             {{$video->tags['tags']}}
                                         </textarea>
