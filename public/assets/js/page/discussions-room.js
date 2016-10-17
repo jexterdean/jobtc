@@ -15,6 +15,8 @@ $.fn.clickToggle = function (func1, func2) {
     return this;
 };
 
+//Display name
+var display_name = $('.display_name').val();
 
 //Get Room name
 var room_name_tmp = window.location.pathname;
@@ -53,6 +55,7 @@ var webrtc = new SimpleWebRTC({
         audio: true
     },
     enableDataChannels: true,
+    nick: display_name,
     url: 'https://laravel.software:8888'
 });
 
@@ -100,7 +103,6 @@ webrtc.on('videoAdded', function (video, peer) {
             switch (peer.pc.iceConnectionState) {
                 case 'checking':
                     connstate.innerText = 'Connecting to peer...';
-                    janus_btn.addClass('hidden');
                     break;
                 case 'connected':
                 case 'completed': // on caller side
@@ -242,8 +244,11 @@ webrtc.on('readyToCall', function () {
 
 });
 
-webrtc.on('message',function(details){
-    console.log('on message event from signalling server');
+webrtc.connection.on('message', function (data) {
+    if (data.type === 'chat') {
+        console.log('chat received' + JSON.stringify(data));
+        $('#message-log').append('<text>' + data.payload.display_name+ " : " + data.payload.message + '</text><br />');
+    }
 });
 
 //Immediately start the local video upon entering this discussion room
@@ -310,22 +315,21 @@ $('body').on('click', '.stop-screen-share', function () {
     $('.stop-screen-share').remove();
 });
 
-$('#message').keyup(function(){
-   var message = $("#message").val().length;
-   if(message != 0) {
-       $('#send-message').attr('disabled',false);
-   } else {
-       $('#send-message').attr('disabled',true);
-   }
+$('#message').keyup(function () {
+    var message = $("#message").val().length;
+    if (message != 0) {
+        $('#send-message').attr('disabled', false);
+    } else {
+        $('#send-message').attr('disabled', true);
+    }
 });
 
 $('#send-message').click(function () {
-    
     var message = $("#message").val();
-    var message_object = '<text>' + message + '</text><br />';
+    var message_object = '<text>' + webrtc.config.nick + " : "+ message + '</text><br />';
     $('#message-log').append(message_object);
     $("#message").val("");
-    webrtc.sendToAll('message',message_object);
+    webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
 });
 
 //Keypress events
@@ -333,8 +337,9 @@ $('body').keypress(function (e) {
     if (e.which == 13) {
         var message = $("#message").val();
         if (message !== "") {
-            $('#message-log').append('<text>' + message + '</text><br />');
+            $('#message-log').append('<text>' + webrtc.config.nick + " : "+ message + '</text><br />');
             $("#message").val("");
+            webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
         }
         return false;
     }

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Discussion;
 use App\Models\Profile;
+use App\Models\User;
 use Auth;
 
 class DiscussionsController extends Controller
@@ -80,8 +81,13 @@ class DiscussionsController extends Controller
     {
          $assets = ['discussions-room'];
         
+         $user_id = Auth::user()->user_id;
+         
+         $display_name = User::where('user_id',$user_id)->pluck('name');
+         
         return view('discussions.show',[
-            'assets' => $assets
+            'assets' => $assets,
+            'display_name' => $display_name
         ]);
     }
 

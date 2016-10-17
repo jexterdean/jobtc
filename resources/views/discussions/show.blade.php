@@ -47,5 +47,5 @@
         </div>
     </div>
 </div>
-
+<input class="display_name" type="hidden" value="{{$display_name}}"/>
 @stop
