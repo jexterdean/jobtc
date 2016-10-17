@@ -18,8 +18,8 @@ class VideoController extends Controller {
     var $remote_connection;
 
     public function __construct() {
-        //$this->media_server = "laravel.software";
-        $this->media_server = "ubuntu-server.com";
+        $this->media_server = "laravel.software";
+        //$this->media_server = "ubuntu-server.com";
         $this->remote_connection = new Remote([
             'host' => $this->media_server,
             'port' => 22,
