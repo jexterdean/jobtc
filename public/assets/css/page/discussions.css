@@ -1,0 +1,41 @@
+/**
+** Discussions CSS 
+*/
+
+.localVideoContainer {
+    
+}
+
+.remoteVideoContainer {
+    height: 400px;
+    background-color: #fff;
+}
+
+.remoteVideoContainer video {
+    padding: 5px;
+}
+
+.remoteScreenContainer {
+    height: 400px;
+    background-color: #fff;
+    padding: 5px;
+}
+
+.chat-box .panel{
+    
+    background-color:#fff;
+}
+
+.chat-box .panel-body {
+    height: 400px;
+}
+
+.remoteVideo {
+    
+}
+
+.remoteScreen {
+    
+}
+
+//Chat style

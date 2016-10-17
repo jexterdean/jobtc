@@ -18,8 +18,8 @@ class VideoController extends Controller {
     var $remote_connection;
 
     public function __construct() {
-        $this->media_server = "laravel.software";
-        //$this->media_server = "ubuntu-server.com";
+        //$this->media_server = "laravel.software";
+        $this->media_server = "ubuntu-server.com";
         $this->remote_connection = new Remote([
             'host' => $this->media_server,
             'port' => 22,
@@ -209,6 +209,7 @@ class VideoController extends Controller {
 
     public function startRecording(Request $request) {
         $session = $request->input('session');
+        $nfo_id = $request->input('nfo_id');
         $room_type = $request->input('room_type');
         $room_name = $request->input('room_name');
         $stream = $request->input('stream');
@@ -216,6 +217,7 @@ class VideoController extends Controller {
 
         $video_room = new VideoRoom([
             'session_id' => $session,
+            'nfo_id' => $nfo_id,
             'room_name' => $room_name,
             'room_type' => $room_type,
             'stream' => $stream,
@@ -237,20 +239,26 @@ class VideoController extends Controller {
 
     public function stopRecording(Request $request) {
         $session = $request->input('session');
-
+        $nfo_id = $request->input('nfo_id');
+        $stream = $request->input('stream');
 
         $video_sessions = VideoSession::where('session_id', $session)->update([
             'total_time' => '',
             'is_recording' => 'No'
         ]);
 
+        $video_rooms = VideoRoom::where('session_id', $session)->where('stream',$stream)->update([
+            'nfo_id' => $nfo_id
+        ]);
+        
         return "true";
     }
 
     public function isRecording(Request $request) {
         $session = $request->input('session');
-
+        
         $video_sessions = VideoSession::where('session_id', $session)->first();
+        
         return $video_sessions->is_recording;
     }
 
@@ -277,15 +285,15 @@ class VideoController extends Controller {
         $video_details = json_encode(array('video_id' => $video_id, 'video' => $video_url, 'audio' => $audio_url), JSON_FORCE_OBJECT);
 
         //For Main video
-        $convert_to_webm_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $session . '-' . $stream . '-video.mjr /var/www/html/recordings/' . $session . '-' . $stream . '-video.webm';
-        $convert_to_ogg_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $session . '-' . $stream . '-audio.mjr /var/www/html/recordings/' . $session . '-' . $stream . '-audio.ogg';
+        //$convert_to_webm_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $session . '-' . $stream . '-video.mjr /var/www/html/recordings/' . $session . '-' . $stream . '-video.webm';
+        //$convert_to_ogg_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $session . '-' . $stream . '-audio.mjr /var/www/html/recordings/' . $session . '-' . $stream . '-audio.ogg';
         //$merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $stream . '.webm -i /var/www/html/recordings/' . $stream . '.ogg -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $stream . '-final.webm';
-        $merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $session . '-' . $stream . '-video.webm -i /var/www/html/recordings/' . $session . '-' . $stream . '-audio.ogg -c:v copy -shortest /var/www/html/recordings/' . $session . '-' . $stream . '-final.webm';
+        //$merge_webm_and_ogg_command = 'ffmpeg -i /var/www/html/recordings/' . $session . '-' . $stream . '-video.webm -i /var/www/html/recordings/' . $session . '-' . $stream . '-audio.ogg -c:v copy -shortest /var/www/html/recordings/' . $session . '-' . $stream . '-final.webm';
 
         //For Screenshare video
         //$convert_screenshare_to_webm_command = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/screenshare-'. $session  .'-'. $stream .'-video.mjr /var/www/html/recordings/screenshare-'. $session . '-' . $stream . '-video.webm';
         //Execute main video scripts
-        $remote_connection->exec($convert_to_webm_command . ';' . $convert_to_ogg_command . ';' . $merge_webm_and_ogg_command);
+        //$remote_connection->exec($convert_to_webm_command . ';' . $convert_to_ogg_command . ';' . $merge_webm_and_ogg_command);
         //$remote_connection->exec($merge_webm_and_ogg_command);
         //Execute main video scripts
         //$remote_connection->exec($convert_screenshare_to_webm_command);
@@ -425,7 +433,7 @@ class VideoController extends Controller {
         $session_id = $request->input('session');
         $stream_id = $request->input('stream');
 
-        $nfo = "echo '[" . $stream_id . "]\nname = " . $session_id . '-' . $stream_id . "\n" .
+        $nfo = "echo '[" . $session_id . "]\nname = " . $session_id . '-' . $stream_id . "\n" .
                 "date = " . date('Y-m-d H:i:s') . "\n" .
                 "audio = " . $session_id . '-' . $stream_id . "-audio.mjr\n" .
                 "video = " . $session_id . '-' . $stream_id . "-video.mjr' > /var/www/html/recordings/" . $session_id . ".nfo";

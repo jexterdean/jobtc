@@ -14,6 +14,7 @@ class CreateVideoRoomsTable extends Migration
         Schema::create('video_rooms', function(Blueprint $table) {
             $table->increments('id');
             $table->string('session_id');
+            $table->string('nfo_id');
             $table->string('room_name');
             $table->string('room_type');
             $table->string('stream');

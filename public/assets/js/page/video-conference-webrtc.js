@@ -104,7 +104,9 @@ var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
 var csrf_token = $('._token').val();
 var playing = false;
+var playing_video = null;
 var recording = false;
+var nfo_id = null;
 
 
 var webrtc = new SimpleWebRTC({
@@ -187,8 +189,19 @@ $.fn.timerStart = function () {
         time_limit--;
     }, 1000);
 };
+
 function randomString(len, charSet) {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var randomString = '';
+    for (var i = 0; i < len; i++) {
+        var randomPoz = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPoz, randomPoz + 1);
+    }
+    return randomString;
+}
+
+function randomInteger(len, charSet) {
+    charSet = charSet || '0123456789';
     var randomString = '';
     for (var i = 0; i < len; i++) {
         var randomPoz = Math.floor(Math.random() * charSet.length);
@@ -489,7 +502,7 @@ socket.on('stop-interview', function (data) {
 });
 
 socket.on('start-recording', function (data) {
-
+    console.log('nfo_id' + nfo_id);
     recording = true;
 
     $('.is-recording').attr("value", "true");
@@ -508,6 +521,7 @@ socket.on('start-recording', function (data) {
     formData.append('room_name', room_name);
     formData.append('room_type', room_type);
     formData.append('stream', sfutest.getId());
+    formData.append('nfo_id', nfo_id);
     formData.append('rec_dir', rec_dir);
     formData.append('_token', csrf_token);
 
@@ -547,6 +561,8 @@ socket.on('stop-recording', function (data) {
     var ajaxurl = public_path + 'stopRecording';
 
     formData.append('session', data);
+    formData.append('nfo_id', nfo_id);
+    formData.append('stream', sfutest.getId());
 
     $.ajax({
         url: ajaxurl,
@@ -627,30 +643,6 @@ socket.on('save-video', function (data) {
 
     console.log("NFO id: " + sfutest.getId());
 
-    /*$.ajax({
-     url: public_path + 'saveNfoJanus',
-     data: {
-     //local: data + '-' + sfutest.getId()
-     stream: sfutest.getId(),
-     session: data
-     },
-     type: "POST",
-     beforeSend: function () {
-     
-     },
-     success: function (e) {
-     console.log(e);
-     console.log('NFO generated');
-     
-     },
-     complete: function () {
-     
-     },
-     error: function (xhr, status, error) {
-     console.log('Error: retrying');
-     }
-     });*/
-
     saveNfo();
 
     if (hasShareScreen === 1) {
@@ -707,7 +699,7 @@ $('.interview-applicant').clickToggle(function () {
      startRecordingLocalStream(session);
      }*/
     //Check if room is being recorded
-    isRecording();
+    //isRecording();
 
     $('.time-limit-conference').each(function (e) {
         $(this).after('<span class="janus-waiting" style="color: #f00;">Waiting for Remote...</span>');
@@ -733,9 +725,17 @@ $('.interview-applicant').clickToggle(function () {
 
 
 $('.play-record').click(function () {
+
+    var play_nfo_id = $(this).siblings('.nfo_id').val();
+
+    console.log("nfo_id: " + play_nfo_id);
+
+    $('#video-archive-item-' + play_nfo_id).remove();
+    
     playing = true;
-    var play = {"request": "play", "id": parseInt('6597723518788823')};
+    var play = {"request": "play", "id": parseInt(play_nfo_id)};
     sfutest.send({"message": play});
+
 });
 
 $('.screen-share').clickToggle(function () {
@@ -810,7 +810,8 @@ $('.record-button').clickToggle(function () {
 function startRecording() {
     // bitrate and keyframe interval can be set at any time:
     // before, after, during recording
-    session = randomString(12);
+    //session = randomString(12);
+    session = randomInteger(15);
     socket.emit('start-recording', session);
 
 }
@@ -888,16 +889,6 @@ function createJanusLocalStream() {
                         $('.janus-waiting').remove();
                     }
                     janusConnected = 1;
-                    var createRoom = {
-                        "request": "create",
-                        "record": false,
-                        "publishers": 10,
-                        "room": room_name,
-                        "bitrate": bandwidth
-                    };
-                    sfutest.send({"message": createRoom});
-                    var register = {"request": "join", "room": room_name, "ptype": "publisher", "display": display_name};
-                    sfutest.send({"message": register});
                 },
                 error: function (error) {
                     Janus.error("  -- Error attaching plugin...", error);
@@ -913,11 +904,13 @@ function createJanusLocalStream() {
                     Janus.debug(" ::: Got a message :::");
                     Janus.debug(JSON.stringify(msg));
                     var result = msg["result"];
+                    console.log("result: " + result);
                     if (result !== null && result !== undefined) {
                         if (result["status"] !== undefined && result["status"] !== null) {
                             var event = result["status"];
                             if (event === 'preparing') {
-                                Janus.log("Preparing the recording playout");
+                                Janus.log("Preparing the recording playout :" + result["id"]);
+                                playing_video = result["id"]
                                 sfutest.createAnswer({
                                     jsep: jsep,
                                     media: {audioSend: false, videoSend: false}, // We want recvonly audio/video
@@ -942,7 +935,8 @@ function createJanusLocalStream() {
                                 var id = result["id"];
                                 if (id !== null && id !== undefined) {
                                     Janus.log("The ID of the current recording is " + id);
-
+                                    //Get the nfo id to map to the mjr file generated
+                                    nfo_id = id;
 
                                 }
                             }
@@ -965,6 +959,9 @@ function createJanusLocalStream() {
                             }
                             else if (event === 'stopped') {
                                 Janus.log("Session has stopped!");
+                            } else if (event === 'done') {
+                                $('#video-archive-item-' + playing_video).remove();
+                                playing_video = null;
                             }
                         }
                     }
@@ -988,13 +985,11 @@ function createJanusLocalStream() {
                 onremotestream: function (stream) {
                     if (playing === false)
                         return;
-                    Janus.debug(" ::: Got a remote stream :::");
-                    Janus.debug(JSON.stringify(stream));
-
-                    $('.video-page-container').append('<video class="rounded centered" id="thevideo" width=320 height=240 autoplay/>');
+                    Janus.debug(" ::: Got a remote stream :::" + JSON.stringify(stream));
+                    $('.video-element-holder #' + playing_video).append('<video class="rounded centered" id="video-archive-item-' + playing_video + '" width=320 height=240 controls autoplay/>');
 
                     // Show the video, hide the spinner and show the resolution when we get a playing event
-                    attachMediaStream($('#thevideo').get(0), stream);
+                    attachMediaStream($('#video-archive-item-' + playing_video).get(0), stream);
 
                 },
                 oncleanup: function () {
@@ -1014,11 +1009,11 @@ function createJanusLocalStream() {
     });
 }
 
-function startRecordingLocalStream(data) {
+function startRecordingLocalStream(session_local) {
     var n = $.now();
     recordingId = n + '-' + room_name;
     //var f = data + '-' + recordingId;
-    var f = data + '-' + sfutest.getId();
+    var f = session_local + '-' + sfutest.getId();
     /*sfutest.send({
      'message': {
      'request': 'configure',
@@ -1199,9 +1194,6 @@ function createJanusLocalScreenShare() {
                     //window.location.reload();
                 }
             });
-
-
-
 }
 
 function saveNfo() {
@@ -1217,7 +1209,6 @@ function saveNfo() {
 
         },
         success: function (e) {
-            console.log(e);
             console.log('NFO generated');
 
         },

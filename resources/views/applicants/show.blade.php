@@ -395,33 +395,19 @@
                                 <div class="row">
                                     <div class="col-xs-10">
                                         <div class="row">
-                                            <div class="col-xs-6">
-                                                <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
+                                            <div id="{{$video->nfo_id}}" class="col-xs-6">
+                                                <!--video id="video-archive-item-{{$video->nfo_id}}" class="video-archive-item" controls>
                                                     Your browser does not support the video tag.
-                                                    <!--source src="{{url($video->video_url)}}"-->
+                                                    
                                                     <source src="{{$video->rec_dir.'/'.$video->session_id.'-'.$video->stream}}-final.webm" type="video/webm">
-                                                </video>
-                                                <input class="stream_id" type="hidden" value="{{$video->stream}}"/>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            
-                                            <div class="col-xs-6">
-                                                <video id="video-archive-item-{{$video->id}}" class="video-archive-item" controls>
-                                                    Your browser does not support the video tag.
-                                                    <!--source src="{{url($video->video_url)}}"-->
-                                                    <source src="{{$video->rec_dir.'/screenshare-'.$video->session_id.'-'.$video->stream}}.webm" type="video/webm">
-                                                </video>
-                                                <input class="stream_id" type="hidden" value="{{$video->stream}}"/>
+                                                </video-->
                                                 
                                             </div>
-                                            
                                         </div>
                                     </div>
                                     <div class="col-xs-2">
                                         <button class="btn btn-danger btn-shadow pull-right delete-video"><i class="fa fa-times"></i></button>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
-                                        
                                     </div>
                                 </div>
                                 <div class="row">
@@ -431,11 +417,11 @@
                                             {{$video->tags['tags']}}
                                         </textarea>
                                         <input class="video_id" type="hidden" value="{{$video->id}}"/>
+                                        <input class="nfo_id" type="hidden" value="{{$video->nfo_id}}"/>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
-
                             @foreach($quiz_videos as $video)
                             <div class="video-element-holder">
                                 <div class="row">
