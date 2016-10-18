@@ -10,6 +10,9 @@
             "@wraparound": "true"
         }
     },
+    "commandPanel": {
+        "@value": "discussions"
+    },
     "console": {
         "@expanded": true,
         "@height": "153",
@@ -28,7 +31,8 @@
                     "name": "tab0",
                     "path": "",
                     "className": [
-                        "tab0"
+                        "tab0",
+                        "focus"
                     ],
                     "document": {
                         "changed": false,
@@ -118,7 +122,7 @@
             "@menuitem": 13,
             "@pane": 2,
             "@session": 3,
-            "@tab": 3,
+            "@tab": 4,
             "@undoManager": 4
         }
     },
@@ -137,8 +141,8 @@
     },
     "panecycle": {
         "json()": [
-            "tab2",
-            "tab0"
+            "tab0",
+            "tab3"
         ]
     },
     "panels": {
@@ -190,9 +194,10 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/public/assets/js/janus.js",
+            "focus": "/public/assets/css/page/discussions.css",
             "meta": {
                 "accessList": [
+                    "tab3",
                     "tab2"
                 ]
             },
@@ -203,17 +208,37 @@
                     "name": "tab2",
                     "path": "/public/assets/js/janus.js",
                     "className": [
-                        "tab2",
+                        "tab2"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1474448838900
+                        },
+                        "filter": true,
+                        "title": "janus.js",
+                        "tooltip": "/public/assets/js/janus.js",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab3",
+                    "path": "/public/assets/css/page/discussions.css",
+                    "className": [
+                        "tab3",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1473780464560
+                            "timestamp": 1476778592497
                         },
                         "filter": true,
-                        "title": "janus.js",
-                        "tooltip": "/public/assets/js/janus.js",
+                        "title": "discussions.css",
+                        "tooltip": "/public/assets/css/page/discussions.css",
                         "ace": {}
                     },
                     "editorType": "ace",
