@@ -70,6 +70,10 @@
         {!!  HTML::style('assets/css/page/applicants.css')  !!}
         @endif
 
+        @if(in_array('discussions',$assets) || in_array('discussions-room',$assets))
+        {!!  HTML::style('assets/css/page/discussions.css')  !!}
+        @endif
+        
         @if(in_array('users',$assets))
         {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
         {!!  HTML::style('assets/css/page/users.css')  !!}

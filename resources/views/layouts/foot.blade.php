@@ -273,6 +273,17 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/tasks.js')  !!}
 @endif
 
+@if(in_array('discussions',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!!  HTML::script('assets/js/page/discussions.js')  !!}
+@endif
+
+@if(in_array('discussions-room',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+<script src="https://simplewebrtc.com/latest-v2.js"></script>
+{!!  HTML::script('assets/js/page/discussions-room.js')  !!}
+@endif
+
 @if(in_array('dashboard',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/page/dashboard.js')  !!}

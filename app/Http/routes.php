@@ -380,6 +380,10 @@ Route::group(['middleware' => 'auth'], function () {
     /*Search in Assign Tests*/
     Route::post('searchApplicants','SearchController@searchApplicants');
     
+    
+    /*Discussion Pages*/
+    Route::resource('discussions','DiscussionsController');
+    
 });
 
 Route::group(['prefix' => 'api'], function () {
