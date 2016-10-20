@@ -29,6 +29,10 @@ var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator
 var hasExtension = false;
 
 
+var screenshare_count = 0;
+var participant_count = 0;
+
+var peerStream;
 //Video 
 
 var webrtc = new SimpleWebRTC({
@@ -63,7 +67,6 @@ var webrtc = new SimpleWebRTC({
 webrtc.on('localStream', function (stream) {
     console.log('this is the localstream : ' + stream);
     localStream = stream;
-
 });
 
 /*For Video Sharing*/
@@ -74,8 +77,10 @@ webrtc.on('videoAdded', function (video, peer) {
     var remotes = document.getElementById('remotes');
     var remoteVideo = document.getElementById('remoteVideo');
     var remoteScreen = document.getElementById('remoteScreen');
+
     if (remotes) {
         video.id = 'container_' + webrtc.getDomId(peer);
+        console.log(video.id);
         video.style.width = '234px';
         // suppress contextmenu
         video.oncontextmenu = function () {
@@ -84,12 +89,36 @@ webrtc.on('videoAdded', function (video, peer) {
 
         var dom_id = webrtc.getDomId(peer);
         if (dom_id.includes('screen')) {
-            //video.style.width = '652px';
 
+            localScreenStream = peer.stream;
+
+            //video.style.width = '652px';
             $(video).attr('controls', 'controls');
-            remoteScreen.appendChild(video);
+            var screenShareOptions = '<div class="screenshare_options">' +
+                    '<button class="btn btn-small set-video">Set as Main Video</button>' +
+                    '<button class="btn btn-small full-screen"><i class="fa fa-arrows-alt" aria-hidden="true"></i></button>' +
+                    '<input class="screenshare_id" type="hidden" value="' + screenshare_count + '"/>' +
+                    '</div>';
+            var screenContainer = "<div class='col-md-3' id='screenContainer-" + screenshare_count + "'>" + screenShareOptions + "</div>";
+
+            $("#remoteScreen").append(screenContainer);
+            $('#screenContainer-' + screenshare_count).prepend(video);
+
+            //
+            //remoteScreen.appendChild(video);
         } else {
-            remoteVideo.appendChild(video);
+
+            participant_count++;
+
+            var remoteVideoOptions = '<div class="remote_video_options">' +
+                    '<button class="btn btn-small set-video">Set as Main Video</button>' +
+                    '<button class="btn btn-small full-screen"><i class="fa fa-arrows-alt" aria-hidden="true"></i></button>' +
+                    '<input class="participant_id" type="hidden" value="' + participant_count + '"/>' +
+                    '</div>';
+            var remoteVideoContainer = "<div class='col-md-3' id='remoteVideo-" + participant_count + "'>" + remoteVideoOptions + "</div>";
+
+            $("#remoteVideo").append(remoteVideoContainer);
+            $("#remoteVideo-" + participant_count).prepend(video);
         }
 
         //remotes.appendChild(container);
@@ -122,6 +151,42 @@ webrtc.on('videoAdded', function (video, peer) {
             }
         });
     }
+
+    // receiving an incoming filetransfer
+    peer.on('fileTransfer', function (metadata, receiver) {
+        console.log('incoming filetransfer', metadata.name, metadata);
+        receiver.on('progress', function (bytesReceived) {
+            console.log('receive progress', bytesReceived, 'out of', metadata.size);
+        });
+        // get notified when file is done
+        receiver.on('receivedFile', function (file, metadata) {
+            console.log('received file', metadata.name, metadata.size);
+            console.log("file:"+file);
+            
+            var file_url = window.URL.createObjectURL(file);
+            
+            $("#message-log").prepend('<a href="'+file_url+'" download="'+metadata.name+'"><i class="fa fa-file" aria-hidden="true"></i>'+metadata.name+'</a><br />');
+            
+            // close the channel
+            receiver.channel.close();
+        });
+        //filelist.appendChild(item);
+    });
+
+    // send a file
+    $('#sendFile').change(function () {
+
+        var file = this.files[0];
+        var name = file.name;
+        var size = file.size;
+        var type = file.type;
+        console.log("Sending File: " + name);
+        console.log("Size: " + size);
+        console.log("Type: " + type);
+        //webrtc.sendToAll('fileTransfer', {name: name, size: size, type: type});
+        $("#message-log").prepend('<text>Sending file: '+name+' '+size+' bytes</text>');
+        var sender = peer.sendFile(file);
+    });
 });
 
 // a peer video was removed
@@ -135,11 +200,17 @@ webrtc.on('videoRemoved', function (video, peer) {
     if (remotes && el) {
         var dom_id = webrtc.getDomId(peer);
         if (dom_id.includes('video') && el) {
-            remoteVideo.removeChild(el);
+            //$('#remoteVideo').find('#remoteVideo-'+participant_count).remove();
+            var remote_video_id = $('#container_' + webrtc.getDomId(peer)).parent().attr('id');
+            console.log('remote_video_id:' + remote_video_id);
+            $('#' + remote_video_id).remove();
         }
 
         if (dom_id.includes('screen') && el) {
-            remoteScreen.removeChild(el);
+            //remoteScreen.removeChild(el);
+            var remote_video_id = $('#container_' + webrtc.getDomId(peer)).parent().attr('id');
+            console.log('remote_video_id:' + remote_video_id);
+            $('#' + remote_video_id).remove();
         }
     }
 
@@ -209,23 +280,41 @@ webrtc.on('unmute', function (data) { // hide muted symbol
     });
 });
 
+// called when a peer is created
+webrtc.on('createdPeer', function (peer) {
+    console.log('createdPeer', peer);
+
+});
+
 /*For Screensharing*/
 // local screen obtained
 webrtc.on('localScreenAdded', function (video) {
-    /*video.onclick = function () {
-     video.style.width = video.videoWidth + 'px';
-     video.style.height = video.videoHeight + 'px';
-     };*/
-    //document.getElementById('localVideo').appendChil(video);
-    //$('#localScreenContainer').show();
-    video.id = '';
     //Get the local screen media stream object
+
+    screenshare_count++;
+    video.id = "localScreen-" + screenshare_count;
+    video.class = "localScreen";
     localScreenStream = webrtc.getLocalScreen();
     console.log('This is the local screenshare stream: ' + localScreenStream);
     video.style.width = '234px';
     $(video).attr('controls', 'controls');
-    $('#remoteScreen').append(video);
+
+    var screenShareOptions = '<div class="screenshare_options">' +
+            '<button class="btn btn-small set-video">Set as Main Video</button>' +
+            '<button class="btn btn-small full-screen"><i class="fa fa-arrows-alt" aria-hidden="true"></i></button>' +
+            '<button class="btn btn-small stop-screen-share">' +
+            '<i class="fa fa-times" aria-hidden="true"></i>' +
+            '</button>' +
+            '<input class="screenshare_id" type="hidden" value="' + screenshare_count + '"/>' +
+            '</div>';
+    var screenContainer = "<div id='screenContainer-" + screenshare_count + "'>" + screenShareOptions + "</div>";
+
+    $("#remoteScreen").append(screenContainer);
+    $('#screenContainer-' + screenshare_count).prepend(video);
+    //$('#screenContainer-'+screenshare_count).append('<button class="btn btn-small stop-screen-share"><i class="fa fa-times" aria-hidden="true"></i></button>');
+    //$('#screenContainer-'+screenshare_count).append('<input class="screenshare_id" type="hidden" value="'+screenshare_count+'"/>');
     hasShareScreen = 1;
+    console.log(webrtc.getLocalScreen());
 });
 // local screen removed
 webrtc.on('localScreenRemoved', function (video) {
@@ -247,7 +336,7 @@ webrtc.on('readyToCall', function () {
 webrtc.connection.on('message', function (data) {
     if (data.type === 'chat') {
         console.log('chat received' + JSON.stringify(data));
-        $('#message-log').append('<text>' + data.payload.display_name+ " : " + data.payload.message + '</text><br />');
+        $('#message-log').prepend('<text>' + data.payload.display_name + " : " + data.payload.message + '</text><br />');
     }
 });
 
@@ -299,20 +388,17 @@ $('.share-screen').click(function () {
             }
         } else {
             console.log("Screensharing active");
-
-            var stop_button_exists = $('.stop-screen-share').length;
-
-            if (stop_button_exists === 0) {
-                $('<button class="btn stop-screen-share">Stop Screen Share</button>').insertAfter('.share-screen');
-            }
         }
     });
 });
 
 $('body').on('click', '.stop-screen-share', function () {
+
+    var screenshare_id = $('.screenshare_id').val();
+    $('#screenContainer-' + screenshare_id).remove();
     webrtc.stopScreenShare();
-    $('#remoteScreen').children('video').remove();
-    $('.stop-screen-share').remove();
+    //$('.localScreen').remove();
+    //$('.stop-screen-share').remove();
 });
 
 $('#message').keyup(function () {
@@ -326,8 +412,8 @@ $('#message').keyup(function () {
 
 $('#send-message').click(function () {
     var message = $("#message").val();
-    var message_object = '<text>' + webrtc.config.nick + " : "+ message + '</text><br />';
-    $('#message-log').append(message_object);
+    var message_object = '<text>' + webrtc.config.nick + " : " + message + '</text><br />';
+    $('#message-log').prepend(message_object);
     $("#message").val("");
     webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
 });
@@ -337,7 +423,7 @@ $('body').keypress(function (e) {
     if (e.which == 13) {
         var message = $("#message").val();
         if (message !== "") {
-            $('#message-log').append('<text>' + webrtc.config.nick + " : "+ message + '</text><br />');
+            $('#message-log').prepend('<text>' + webrtc.config.nick + " : " + message + '</text><br />');
             $("#message").val("");
             webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
         }
@@ -345,10 +431,28 @@ $('body').keypress(function (e) {
     }
 });
 
-$('.leave-discussion').click(function () {
-    window.close();
+$('body').on('click', '.full-screen', function () {
+    var video_id = $(this).parent().parent().find('video').attr('id');
+    var localVideo = document.getElementById(video_id);
+
+    // go full-screen
+    if (localVideo.requestFullscreen) {
+        localVideo.requestFullscreen();
+    } else if (localVideo.webkitRequestFullscreen) {
+        localVideo.webkitRequestFullscreen();
+    } else if (localVideo.mozRequestFullScreen) {
+        localVideo.mozRequestFullScreen();
+    } else if (localVideo.msRequestFullscreen) {
+        localVideo.msRequestFullscreen();
+    }
+
+    console.log('full screen video id: ' + video_id);
 });
 
 
 
+
+$('.leave-discussion').click(function () {
+    window.close();
+});
 

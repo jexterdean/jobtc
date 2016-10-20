@@ -8,7 +8,9 @@
 
 .remoteVideoContainer {
     height: 400px;
+    padding: 5px;
     background-color: #fff;
+    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
 }
 
 .remoteVideoContainer video {
@@ -19,15 +21,21 @@
     height: 400px;
     background-color: #fff;
     padding: 5px;
+    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
+}
+
+.chat-box {
+    padding-right: 18px;
 }
 
 .chat-box .panel{
-    
+    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
     background-color:#fff;
 }
 
 .chat-box .panel-body {
-    height: 400px;
+    height: 200px;
+    overflow-x: auto;
 }
 
 .remoteVideo {
@@ -37,5 +45,3 @@
 .remoteScreen {
     
 }
-
-//Chat style
