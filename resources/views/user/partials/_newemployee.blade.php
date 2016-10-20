@@ -3,9 +3,9 @@
         <div class="col-md-10">
             <i class="pull-left" aria-hidden="true">
                 @if($profile->user->photo === '' || $profile->user->photo === NULL)
-                <img class="employee-photo" src="{{url('assets/user/default-avatar.jpg')}}" />
+                <img class="employee-photo thumbnail" src="{{url('assets/user/default-avatar.jpg')}}" />
                 @else
-                <img class="employee-photo" src="{{url($profile->user->photo)}}"/>
+                <img class="employee-photo thumbnail" src="{{url($profile->user->photo)}}"/>
                 @endif
             </i>
             <div class="employee-details">
@@ -21,25 +21,25 @@
             </div>
         </div>
         <div class="employee-options pull-right">
-            <a target="_blank" href="{{url('user/'.$profile->user->user_id.'/company/'.$profile->company_id)}}" class="btn-edit btn-shadow btn employee-profile">
+            <a target="_blank" href="{{url('user/'.$profile->user->user_id.'/company/'.$profile->company_id)}}" class="btn-edit btn-sm btn-shadow btn employee-profile">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 Profile
             </a>
             
             @if($module_permissions->where('slug','assign.positions')->count() === 1)  
-            <a href="#" class="btn-edit btn-shadow btn edit-employee-permissions">
+            <a href="#" class="btn-edit btn-sm btn-shadow btn edit-employee-permissions">
                 <i class="fa fa-flag" aria-hidden="true"></i>
                 Permissions
             </a>
             @endif
             @if($module_permissions->where('slug','edit.employees')->count() === 1)
-            <a href="#" class="btn-edit btn-shadow btn edit-employee">
+            <a href="#" class="btn-edit btn-sm btn-shadow btn edit-employee">
                 <i class="fa fa-pencil" aria-hidden="true"></i> 
                 Edit
             </a>
             @endif
             @if($module_permissions->where('slug','remove.employees')->count() === 1)
-            <a href="#" class="btn-delete btn-shadow btn remove-employee">
+            <a href="#" class="btn-delete btn-sm btn-shadow btn remove-employee">
                 <i class="fa fa-times"></i> 
                 Remove
             </a>

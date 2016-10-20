@@ -215,8 +215,14 @@
     margin-bottom: -1px;
     background-color: #fff;
     border: 1px solid #ddd;
+    box-shadow: 2px 2px 5px -1px rgba(15, 15, 15, 0.50);
 }
-
+.employee-container > .employee-row > .employee-column{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    padding: 10px!important;
+}
 .employee-details {
     position: relative;
     left: 5px;
@@ -269,6 +275,11 @@
         width: 50%!important;
         float: left!important;
         padding-bottom: 0!important;
+    }
+}
+@media (min-width: 768px){
+    .employee-column {
+        width: 48%;
     }
 }
 @media (max-width: 550px) and (min-width: 380px) {

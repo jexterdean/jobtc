@@ -147,12 +147,12 @@ body {
   width: 100%;
 }
 .video-conference-container #remoteVideo{
-  //height: 600px;
+  /*height: 600px;*/
   width: 100%;
 }
 
 .video-conference-container #remoteVideo video {
-  //height: 600px;
+  /*height: 600px;*/
   width: 100%;
 }
 
@@ -320,4 +320,8 @@ body {
 .edit-applicant-photo{
     height: 150px;
     width: 150px;
+}
+.pager-previous,.pager-next{
+    padding-left: 7px;
+    padding-right: 7px;
 }

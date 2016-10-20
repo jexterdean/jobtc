@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Project extends Model
 {
-
+    Use SoftDeletes;
     protected $fillable = ['company_id',
                            'user_id',
                            'ref_no', 
@@ -21,6 +22,7 @@ class Project extends Model
 
     protected $primaryKey = 'project_id';
     protected $table = 'project';
+    protected $dates = ['deleted_at'];
 
     public function user() {
         return $this->belongsTo('App\Models\User');
