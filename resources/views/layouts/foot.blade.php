@@ -220,7 +220,8 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!! HTML::script('assets/js/adapter.js') !!}
 {!! HTML::script('assets/js/janus.js') !!}
 {!! HTML::script('assets/js/spin.min.js') !!}
-<script src="https://simplewebrtc.com/latest-v2.js"></script>
+<!--script src="https://simplewebrtc.com/latest-v2.js"></script-->
+{!!  HTML::script('assets/js/SimpleWebRTC/latest-v2.js')  !!}
 {!! HTML::script('assets/js/janus-api.js') !!}
 @endif
 
@@ -280,7 +281,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 
 @if(in_array('discussions-room',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
-<script src="https://simplewebrtc.com/latest-v2.js"></script>
+{!!  HTML::script('assets/js/SimpleWebRTC/latest-v2.js')  !!}
 {!!  HTML::script('assets/js/page/discussions-room.js')  !!}
 @endif
 
