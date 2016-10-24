@@ -14,16 +14,6 @@
 
         </div>
     </div>
-    <div class="col-md-6 remoteVideoContainer">
-        <div class="center-block"><button class="btn add-participant"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Participant</button></div>
-        <div id="remotes">
-            <div class="row" id="remoteVideo">
-
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
     <div class="col-md-6 ">
         <div class="chat-box">
             <div class="panel panel-default">
@@ -47,6 +37,16 @@
             </div>
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-6 remoteVideoContainer">
+        <div class="center-block"><button class="btn add-participant"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Participant</button></div>
+        <div id="remotes">
+            <div class="row" id="remoteVideo">
+
+            </div>
+        </div>
+    </div>
     <div class="col-md-6 remoteScreenContainer">
         <div class="center-block"><button class="btn share-screen"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Share Screen</button></div>
         <div class="row" id="remoteScreen">
@@ -54,4 +54,5 @@
     </div>
 </div>
 <input class="display_name" type="hidden" value="{{$display_name}}"/>
+<input class="room_type" type="hidden" value="{{$room_type}}"/>
 @stop

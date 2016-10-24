@@ -18,7 +18,7 @@ class Discussion extends Model
      *
      * @var array
      */
-    protected $fillable = ['owner_id','company_id', 'room_name'];
+    protected $fillable = ['owner_id','company_id', 'room_name','room_type'];
 
     /**
      * The attributes excluded from the model's JSON form.

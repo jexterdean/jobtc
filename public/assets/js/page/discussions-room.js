@@ -89,23 +89,29 @@ webrtc.on('videoAdded', function (video, peer) {
 
         var dom_id = webrtc.getDomId(peer);
         if (dom_id.includes('screen')) {
-
+            screenshare_count++;
             localScreenStream = peer.stream;
 
             //video.style.width = '652px';
             $(video).attr('controls', 'controls');
             var screenShareOptions = '<div class="screenshare_options">' +
-                    '<button class="btn btn-small set-video">Set as Main Video</button>' +
+                    '<button id="set-video-' + peer.stream.id + '" class="btn btn-small set-video">Set as Main Video</button>' +
                     '<button class="btn btn-small full-screen"><i class="fa fa-arrows-alt" aria-hidden="true"></i></button>' +
                     '<input class="screenshare_id" type="hidden" value="' + screenshare_count + '"/>' +
+                    '<input class="stream_id" type="hidden" value="' + webrtc.getDomId(peer) + '">' +
                     '</div>';
-            var screenContainer = "<div class='col-md-3' id='screenContainer-" + screenshare_count + "'>" + screenShareOptions + "</div>";
+            var screenContainer = "<div class='col-md-4' id='screenContainer-" + screenshare_count + "'>" + screenShareOptions + "</div>";
 
             $("#remoteScreen").append(screenContainer);
             $('#screenContainer-' + screenshare_count).prepend(video);
 
-            //
-            //remoteScreen.appendChild(video);
+            $('#set-video-' + peer.stream.id).click(function () {
+                //video.style.height = '639px';
+                video.style.width = '600px';
+                //$('#localVideo video').remove();
+                //$('#localVideo').append(video);
+            });
+
         } else {
 
             participant_count++;
@@ -114,6 +120,7 @@ webrtc.on('videoAdded', function (video, peer) {
                     '<button class="btn btn-small set-video">Set as Main Video</button>' +
                     '<button class="btn btn-small full-screen"><i class="fa fa-arrows-alt" aria-hidden="true"></i></button>' +
                     '<input class="participant_id" type="hidden" value="' + participant_count + '"/>' +
+                    '<input class="stream_id" type="hidden" value="' + webrtc.getDomId(peer) + '">' +
                     '</div>';
             var remoteVideoContainer = "<div class='col-md-3' id='remoteVideo-" + participant_count + "'>" + remoteVideoOptions + "</div>";
 
@@ -161,12 +168,12 @@ webrtc.on('videoAdded', function (video, peer) {
         // get notified when file is done
         receiver.on('receivedFile', function (file, metadata) {
             console.log('received file', metadata.name, metadata.size);
-            console.log("file:"+file);
-            
+            console.log("file:" + file);
+
             var file_url = window.URL.createObjectURL(file);
-            
-            $("#message-log").prepend('<a href="'+file_url+'" download="'+metadata.name+'"><i class="fa fa-file" aria-hidden="true"></i>'+metadata.name+'</a><br />');
-            
+
+            $("#message-log").prepend('<a href="' + file_url + '" download="' + metadata.name + '"><i class="fa fa-file" aria-hidden="true"></i>' + metadata.name + '</a><br />');
+
             // close the channel
             receiver.channel.close();
         });
@@ -184,7 +191,7 @@ webrtc.on('videoAdded', function (video, peer) {
         console.log("Size: " + size);
         console.log("Type: " + type);
         //webrtc.sendToAll('fileTransfer', {name: name, size: size, type: type});
-        $("#message-log").prepend('<text>Sending file: '+name+' '+size+' bytes</text>');
+        $("#message-log").prepend('<text>Sending file: ' + name + ' ' + size + ' bytes</text>');
         var sender = peer.sendFile(file);
     });
 });
@@ -282,7 +289,12 @@ webrtc.on('unmute', function (data) { // hide muted symbol
 
 // called when a peer is created
 webrtc.on('createdPeer', function (peer) {
-    console.log('createdPeer', peer);
+    console.log('createdPeer', peer.stream);
+
+});
+
+webrtc.on('localScreen', function (video) {
+    console.log('created localScreen');
 
 });
 
@@ -307,14 +319,14 @@ webrtc.on('localScreenAdded', function (video) {
             '</button>' +
             '<input class="screenshare_id" type="hidden" value="' + screenshare_count + '"/>' +
             '</div>';
-    var screenContainer = "<div id='screenContainer-" + screenshare_count + "'>" + screenShareOptions + "</div>";
+    var screenContainer = "<div class='col-md-4' id='screenContainer-" + screenshare_count + "'>" + screenShareOptions + "</div>";
 
     $("#remoteScreen").append(screenContainer);
     $('#screenContainer-' + screenshare_count).prepend(video);
     //$('#screenContainer-'+screenshare_count).append('<button class="btn btn-small stop-screen-share"><i class="fa fa-times" aria-hidden="true"></i></button>');
     //$('#screenContainer-'+screenshare_count).append('<input class="screenshare_id" type="hidden" value="'+screenshare_count+'"/>');
     hasShareScreen = 1;
-    console.log(webrtc.getLocalScreen());
+
 });
 // local screen removed
 webrtc.on('localScreenRemoved', function (video) {
@@ -449,7 +461,83 @@ $('body').on('click', '.full-screen', function () {
     console.log('full screen video id: ' + video_id);
 });
 
+$('.add-participant').click(function (e) {
+    e.preventDefault();
+    
+    var add_participant_form = public_path + '/addParticipantForm';
 
+    BootstrapDialog.show({
+        title: 'Add Participant',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Send Invitation',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+                    var ajaxurl = public_path + 'addParticipant';
+
+                    var formData = new FormData();
+                    var room_name = $('.room_name').val();
+                    var room_type = $('.room_type').val();
+
+                    formData.append('room_name', room_name);
+                    formData.append('room_type', room_type);
+                    formData.append('_method', 'PUT');
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+
+                            var json_data = JSON.parse(data);
+                            $('#room_name-' + json_data.id).text(json_data.room_name);
+                            $('#room_type-' + json_data.id).text(json_data.room_type);
+                            if (json_data.room_type === 'public') {
+                                $('#room_link-' + json_data.id).attr('href', public_path + 'discussions/' + json_data.id + '/public');
+                            } else {
+                                $('#room_link-' + json_data.id).attr('href', public_path + 'discussions/' + json_data.id);
+                            }
+                            dialog.close();
+
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax
+                }
+            }, {
+                label: 'Cancel',
+                cssClass: 'btn-delete btn-shadow',
+                action: function (dialog) {
+                    dialog.close();
+                }
+            }],
+        data: {
+            'pageToLoad': add_participant_form
+        },
+        onshown: function (ref) {
+            //initCkeditor(ref);
+        },
+        closable: false
+    });
+
+});
 
 
 $('.leave-discussion').click(function () {

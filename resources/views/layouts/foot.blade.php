@@ -281,7 +281,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 
 @if(in_array('discussions-room',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
-{!!  HTML::script('assets/js/SimpleWebRTC/latest-v2.js')  !!}
+{!!  HTML::script('assets/js/SimpleWebRTC/simplewebrtc.bundle.js')  !!}
 {!!  HTML::script('assets/js/page/discussions-room.js')  !!}
 @endif
 

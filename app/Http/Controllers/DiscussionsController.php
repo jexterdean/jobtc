@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Discussion;
@@ -11,25 +10,24 @@ use App\Models\Profile;
 use App\Models\User;
 use Auth;
 
-class DiscussionsController extends Controller
-{
+class DiscussionsController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        
+    public function index() {
+
         $user_id = Auth::user()->user_id;
-        
-        $company_id = Profile::where('user_id',$user_id)->pluck('company_id');
-        
-        $discussions = Discussion::where('company_id',$company_id)->get();
-        
+
+        $company_id = Profile::where('user_id', $user_id)->pluck('company_id');
+
+        $discussions = Discussion::where('company_id', $company_id)->get();
+
         $assets = ['discussions'];
-        
-        return view('discussions.index',[
+
+        return view('discussions.index', [
             'discussions' => $discussions,
             'assets' => $assets
         ]);
@@ -40,8 +38,7 @@ class DiscussionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('discussions.create');
     }
 
@@ -51,23 +48,25 @@ class DiscussionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $user_id = Auth::user()->user_id;
-        
-        $company_id = Profile::where('user_id',$user_id)->pluck('company_id');
-        
+
+        $company_id = Profile::where('user_id', $user_id)->pluck('company_id');
+
         $room_name = $request->input('room_name');
-        
+
+        $room_type = $request->input('room_type');
+
         $add_discussion_room = new Discussion([
             'owner_id' => $user_id,
             'company_id' => $company_id,
-            'room_name' => $room_name
+            'room_name' => $room_name,
+            'room_type' => $room_type
         ]);
         $add_discussion_room->save();
-        
-        $room_details = json_encode(array('id' => $add_discussion_room->id, 'room_name' => $room_name), JSON_FORCE_OBJECT);
-        
+
+        $room_details = json_encode(array('id' => $add_discussion_room->id, 'room_name' => $room_name, 'room_type' => $room_type), JSON_FORCE_OBJECT);
+
         return $room_details;
     }
 
@@ -77,17 +76,19 @@ class DiscussionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-         $assets = ['discussions-room'];
+    public function show($id) {
+        $assets = ['discussions-room'];
+
+        $user_id = Auth::user()->user_id;
+
+        $display_name = User::where('user_id', $user_id)->pluck('name');
         
-         $user_id = Auth::user()->user_id;
-         
-         $display_name = User::where('user_id',$user_id)->pluck('name');
-         
-        return view('discussions.show',[
+        $room_type = Discussion::where('id',$id)->pluck('room_type');
+
+        return view('discussions.show', [
             'assets' => $assets,
-            'display_name' => $display_name
+            'display_name' => $display_name,
+            'room_type' => $room_type
         ]);
     }
 
@@ -97,9 +98,13 @@ class DiscussionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+
+        $discussion = Discussion::where('id', $id)->first();
+
+        return view('discussions.edit', [
+            'discussion' => $discussion
+        ]);
     }
 
     /**
@@ -109,9 +114,20 @@ class DiscussionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $id) {
+        $room_name = $request->input('room_name');
+        $room_type = $request->input('room_type');
+
+        $edit_discussion_room = Discussion::where('id', $id)->update([
+            'room_name' => $room_name,
+            'room_type' => $room_type,
+        ]);
+
+
+
+        $room_details = json_encode(array('id' => $id, 'room_name' => $room_name, 'room_type' => $room_type), JSON_FORCE_OBJECT);
+
+        return $room_details;
     }
 
     /**
@@ -120,8 +136,58 @@ class DiscussionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id) {
+
+        $delete_discussion_room = Discussion::where('id', $id)->delete();
+
+        return $id;
     }
+
+    public function showPublicRoom($id) {
+        $assets = ['discussions-room'];
+
+        $discussion_room = Discussion::where('id', $id)->first();
+        
+        //Public rooms can be accessed without logging in
+        //If it's a private room but with a /public on the url, redirect them to 
+        //the login page if not logged in
+        if ($discussion_room->room_type === 'public') {
+
+            if (Auth::check()) {
+                $user_id = Auth::user()->user_id;
+
+                $display_name = User::where('user_id', $user_id)->pluck('name');
+            } else {
+                $display_name = "Anonymous";
+            }
+
+            return view('discussions.show', [
+                'assets' => $assets,
+                'display_name' => $display_name,
+                'room_type' => $discussion_room->room_type
+            ]);
+        } else {
+            if (Auth::check()) {
+                $user_id = Auth::user()->user_id;
+
+                $display_name = User::where('user_id', $user_id)->pluck('name');
+
+                return redirect('discussions/' . $id)->with([
+                            'display_name' => $display_name,
+                            'room_type' => $discussion_room->room_type 
+                ]);
+            } else {
+                return redirect('login');
+            }
+        }
+    }
+
+    public function addParticipantForm() {
+        return view('discussions.addParticipantForm');
+    }
+    
+    public function addParticipant() {
+        
+    }
+    
 }

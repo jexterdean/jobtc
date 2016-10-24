@@ -384,7 +384,15 @@ Route::group(['middleware' => 'auth'], function () {
     /*Discussion Pages*/
     Route::resource('discussions','DiscussionsController');
     
+    /*Adding Participants*/
+    Route::get('addParticipantForm','DiscussionsController@addParticipantForm');
+    Route::post('addParticipant','DiscussionsController@addParticipant');
 });
+
+
+/*For Public Discussion Pages*/
+Route::resource('discussions/{id}/public','DiscussionsController@showPublicRoom');
+
 
 Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'v1'], function () {

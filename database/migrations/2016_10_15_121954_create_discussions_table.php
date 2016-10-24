@@ -16,6 +16,7 @@ class CreateDiscussionsTable extends Migration
             $table->integer('owner_id');
             $table->integer('company_id');
             $table->string('room_name');
+            $table->string('room_type');
             $table->timestamps();
         });
     }
