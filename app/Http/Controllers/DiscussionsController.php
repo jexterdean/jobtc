@@ -9,6 +9,7 @@ use App\Models\Discussion;
 use App\Models\Profile;
 use App\Models\User;
 use Auth;
+use Mail;
 
 class DiscussionsController extends Controller {
 
@@ -82,8 +83,8 @@ class DiscussionsController extends Controller {
         $user_id = Auth::user()->user_id;
 
         $display_name = User::where('user_id', $user_id)->pluck('name');
-        
-        $room_type = Discussion::where('id',$id)->pluck('room_type');
+
+        $room_type = Discussion::where('id', $id)->pluck('room_type');
 
         return view('discussions.show', [
             'assets' => $assets,
@@ -147,7 +148,7 @@ class DiscussionsController extends Controller {
         $assets = ['discussions-room'];
 
         $discussion_room = Discussion::where('id', $id)->first();
-        
+
         //Public rooms can be accessed without logging in
         //If it's a private room but with a /public on the url, redirect them to 
         //the login page if not logged in
@@ -174,7 +175,7 @@ class DiscussionsController extends Controller {
 
                 return redirect('discussions/' . $id)->with([
                             'display_name' => $display_name,
-                            'room_type' => $discussion_room->room_type 
+                            'room_type' => $discussion_room->room_type
                 ]);
             } else {
                 return redirect('login');
@@ -185,9 +186,20 @@ class DiscussionsController extends Controller {
     public function addParticipantForm() {
         return view('discussions.addParticipantForm');
     }
-    
-    public function addParticipant() {
+
+    public function addParticipant(Request $request) {
         
+        $user_id = Auth::user()->user_id;
+        $to_email = $request->input('email');
+        $room_url = $request->input('room_url');
+        
+        $from_email = User::where('user_id', $user_id)->first();
+        
+        Mail::queue('emails.addParticipantEmail', ['from_email' => $from_email, 'to_email' => $to_email, 'room_url' => $room_url], function ($message) use ($from_email, $to_email) {
+            $message->from($from_email->email, 'Job.tc');
+            $message->to($to_email);
+            $message->subject('Job.tc Discussions');
+        });
     }
-    
+
 }

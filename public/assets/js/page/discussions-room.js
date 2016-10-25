@@ -52,8 +52,10 @@ var webrtc = new SimpleWebRTC({
         video: {
             mandatory: {
                 maxFrameRate: 60,
-                maxWidth: 652,
-                maxHeight: 400
+                //maxWidth: 652,
+                maxWidth: 1920,
+                //maxHeight: 400
+                maxHeight: 1080
             }
         },
         audio: true
@@ -482,12 +484,12 @@ $('.add-participant').click(function (e) {
                     var ajaxurl = public_path + 'addParticipant';
 
                     var formData = new FormData();
-                    var room_name = $('.room_name').val();
-                    var room_type = $('.room_type').val();
-
-                    formData.append('room_name', room_name);
-                    formData.append('room_type', room_type);
-                    formData.append('_method', 'PUT');
+                    var email = $('.email').val();
+                    var room_url = window.location.href;
+                    
+                    formData.append('email', email);
+                    formData.append('room_url',room_url);
+                    console.log(room_url);
 
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
@@ -504,17 +506,7 @@ $('.add-participant').click(function (e) {
 
                         },
                         success: function (data) {
-
-                            var json_data = JSON.parse(data);
-                            $('#room_name-' + json_data.id).text(json_data.room_name);
-                            $('#room_type-' + json_data.id).text(json_data.room_type);
-                            if (json_data.room_type === 'public') {
-                                $('#room_link-' + json_data.id).attr('href', public_path + 'discussions/' + json_data.id + '/public');
-                            } else {
-                                $('#room_link-' + json_data.id).attr('href', public_path + 'discussions/' + json_data.id);
-                            }
                             dialog.close();
-
                         },
                         error: function (xhr, status, error) {
 

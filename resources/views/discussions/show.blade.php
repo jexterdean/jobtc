@@ -6,7 +6,7 @@
  */
 ?>
 <div class="row">
-    <div class="col-md-6 localVideoContainer">
+    <div id="localVideoContainer" class="col-md-6 localVideoContainer">
         <div id="localVideo"></div>
         <div id="localVideoOptions" class="hidden">            
             <button class="btn mute">Mute</button>
