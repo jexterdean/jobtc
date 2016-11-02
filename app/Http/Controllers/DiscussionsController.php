@@ -186,6 +186,10 @@ class DiscussionsController extends Controller {
     public function addParticipantForm() {
         return view('discussions.addParticipantForm');
     }
+    
+    public function displayNameForm() {
+        return view('discussions.displayNameForm');
+    }
 
     public function addParticipant(Request $request) {
         

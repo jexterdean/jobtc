@@ -28,11 +28,33 @@
                                 @foreach($checkList as $list_item)
                                 <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                     <div class="row task-list-details">
-                                        <div class="col-sm-9">
-                                            <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
+                                        <div class="col-sm-6">
+                                            <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}&nbsp;</a>
                                             <input type="hidden" class="company_id" value="{{$company_id}}" />
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                             <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            @forelse($list_item->timer as $timer)
+                                            <div id='timer-options-{{$list_item->id}}' class="pull-right"> 
+                                                @if($timer->timer_status === 'Resumed' || $timer->timer_status === 'Started')
+                                                <text id='timer-{{$list_item->id}}' class='still-counting'>{{$timer->total_time}}</text>
+                                                <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary pause-timer">Pause</button>
+                                                @else
+                                                <text id='timer-{{$list_item->id}}'>{{$timer->total_time}}</text>
+                                                <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary resume-timer">Resume</button>
+                                                @endif
+                                                <input class="timer_id" type="hidden" value="{{$timer->timer_id}}">
+                                                <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
+                                                <input class="total_time" type="hidden" value="{{$timer->total_time}}">
+                                                <input class="timer_status" type="hidden" value="{{$timer->timer_status}}">
+                                            </div>
+                                            @empty
+                                            <div id='timer-options-{{$list_item->id}}' class="pull-right">
+                                                <text id='timer-{{$list_item->id}}'></text>
+                                                <input class="timer_id" type="hidden" value="">
+                                            </div>
+                                            @endforelse
                                         </div>
                                         <div class="col-sm-3" style="white-space: nowrap">
                                             <div class="pull-right">
@@ -214,8 +236,57 @@
         </div>
     </div>
 </div>
+{!! HTML::script('assets/js/jquery.plugin.min.js') !!}
+{!! HTML::script('assets/js/jquery.countdown.js') !!}
 <script>
     $(function (e) {
+
+        //Click Toggle Function
+        $.fn.clickToggle = function (func1, func2) {
+            var funcs = [func1, func2];
+            this.data('toggleclicked', 0);
+            this.click(function () {
+                var data = $(this).data();
+                var tc = data.toggleclicked;
+                $.proxy(funcs[tc], this)();
+                data.toggleclicked = (tc + 1) % 2;
+            });
+            return this;
+        };
+
+        function dateAdd(date, interval, units) {
+            var ret = new Date(date); //don't change original date
+            switch (interval.toLowerCase()) {
+                case 'year'   :
+                    ret.setFullYear(ret.getFullYear() + units);
+                    break;
+                case 'quarter':
+                    ret.setMonth(ret.getMonth() + 3 * units);
+                    break;
+                case 'month'  :
+                    ret.setMonth(ret.getMonth() + units);
+                    break;
+                case 'week'   :
+                    ret.setDate(ret.getDate() + 7 * units);
+                    break;
+                case 'day'    :
+                    ret.setDate(ret.getDate() + units);
+                    break;
+                case 'hour'   :
+                    ret.setTime(ret.getTime() + units * 3600000);
+                    break;
+                case 'minute' :
+                    ret.setTime(ret.getTime() + units * 60000);
+                    break;
+                case 'second' :
+                    ret.setTime(ret.getTime() + units * 1000);
+                    break;
+                default       :
+                    ret = undefined;
+                    break;
+            }
+            return ret;
+        }
 
         //region For Draggability
         $('.tasklist-group').sortable({
@@ -353,6 +424,109 @@
 
         };
 
+        function startTask(id) {
+
+            var data = [];
+            data.push({'name': 'task_checklist_id', 'value': id});
+            $.post(public_path + 'startTask', data, function (timer_id) {
+                $('#timer-' + id).parent().find('.timer_id').val(timer_id);
+            });
+        }
+
+        function pauseTask(timer_id, time_paused) {
+            var data = [];
+            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': time_paused});
+            $.post(public_path + 'pauseTask', data, function (e) {
+            });
+        }
+
+
+        function resumeTask(timer_id) {
+            var data = [];
+            data.push({'name': 'timer_id', 'value': timer_id});
+            $.post(public_path + 'resumeTask', data, function (e) {
+            });
+        }
+
+        function endTask(timer_id) {
+
+            var data = [];
+            data.push({'name': 'timer_id', 'value': timer_id});
+            $.post(public_path + 'endTask', data, function (e) {
+            });
+
+        }
+
+        function saveCurrentTime(timer_id, current_time) {
+            var data = [];
+            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': current_time});
+            $.post(public_path + 'saveCurrentTime', data, function (e) {
+            });
+        }
+
+
+        $('.still-counting').each(function (index) {
+            var timer_id = $(this).siblings('.timer_id').val();
+            var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+            $('#timer-pause-' + task_checklist_id).text('Pause');
+            var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val();
+            console.log('time_resume: ' + time_resume);
+
+            var time_array = time_resume.split(":");
+
+            var hours = '-' + time_array[0] + 'H';
+            var minutes = '-' + time_array[1] + 'M';
+            var seconds = '-' + time_array[2] + 'S';
+
+            var since = hours + ' ' + minutes + ' ' + seconds;
+
+            $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
+            $('#timer-' + task_checklist_id).countdown('resume');
+        });
+        
+        _body.on('click', '.pause-timer', function () {
+             var timer_id = $(this).siblings('.timer_id').val();
+            var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+            var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').first().text();
+            console.log('time_paused: ' + time_paused);
+
+            $('#timer-' + task_checklist_id).countdown('pause');
+            $('#timer-pause-' + task_checklist_id).text('Resume');
+            $('#timer-options-' + task_checklist_id).children('timer_status', 'Paused');
+            $('#timer-' + task_checklist_id).removeClass('still-counting');
+            $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer','resume-timer');
+            pauseTask(timer_id, time_paused);
+        });
+        
+        _body.on('click', '.resume-timer', function () {
+        //$('.resume-timer').clickToggle(function () {
+
+            var timer_id = $(this).siblings('.timer_id').val();
+            var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+            $('#timer-pause-' + task_checklist_id).text('Pause');
+            var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val();
+
+            var time_array = time_resume.split(":");
+
+            var hours = '-' + time_array[0] + 'H';
+            var minutes = '-' + time_array[1] + 'M';
+            var seconds = '-' + time_array[2] + 'S';
+
+            var since = hours + ' ' + minutes + ' ' + seconds;
+
+            $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
+            $('#timer-' + task_checklist_id).countdown('resume');
+            $('#timer-' + task_checklist_id).addClass('still-counting');
+            $('#timer-options-' + task_checklist_id).children('timer_status', 'Resumed');
+            $('#timer-pause-' + task_checklist_id).switchClass('resume-timer','pause-timer');    
+            console.log("timer_id: " + timer_id);
+            console.log("task_checklist_id: " + task_checklist_id);
+            resumeTask(timer_id);
+        });
+
+
         //region Check List
         //For Checklist Status
         _body.on('click', '.checklist-status', function (e) {
@@ -370,7 +544,29 @@
                 $(this).html('&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;');
                 $(this).switchClass('bg-gray', 'bg-orange', function () {
                     update_checklist_status(id, 'Ongoing');
+                    startTask(id);
+                    var d = new Date();
+                    $('#timer-' + id).countdown({since: d, format: 'HMS', compact: true});
+                    $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary">Pause</button>');
+                    $('#timer-' + id).addClass('still-counting');
+                    $('#timer-pause-' + id).clickToggle(function () {
+                        $('#timer-' + id).countdown('pause');
+                        $('#timer-pause-' + id).text('Resume');
+                        var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
+                        var time_paused = $('#timer-' + id).find('.countdown-row').text();
+                        console.log("timer_id: " + timer_id);
+                        console.log("time: " + time_paused);
+                        $('#timer-' + id).removeClass('still-counting');
+                        pauseTask(timer_id, time_paused);
+                    }, function () {
+                        $('#timer-' + id).countdown('resume');
+                        $('#timer-pause-' + id).text('Pause');
+                        
+                        $('#timer-' + id).addClass('still-counting');
+                        resumeTask(id);
+                    });
                 });
+
             }
             /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
             if ($(this).hasClass('bg-orange')) {
@@ -379,6 +575,8 @@
                     finish_checklist();
                     update_checklist_status(id, 'Completed');
                 });
+                var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
+                endTask(timer_id);
             }
             /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
             if ($(this).hasClass('bg-green')) {
@@ -825,7 +1023,7 @@
             var _delete_modal = $('#delete-modal');
             _delete_modal.find('.delete-msg').html('Deleting this Briefcase will delete all content.');
             _delete_modal.modal('show');
-            $('.confirm-delete').on('click',function(e){
+            $('.confirm-delete').on('click', function (e) {
                 e.preventDefault();
                 //Remove the collapse panel immediately
                 _delete_modal.modal('hide');
@@ -834,109 +1032,6 @@
             });
             //endregion
         });
-        //endregion
-
-        //region Timer
-        var element = _body.find('.timer-text');
-        function startEditTimer(s) {
-            var timerStart = parseInt(0) + parseInt(s);
-            var $minutes = parseInt(timerStart / 60);
-            var $hoursValue = parseInt($minutes / 60);
-            var $minutesValue = $minutes - ($hoursValue * 60);
-            var $secondsValue = timerStart - (($hoursValue * 3600) + ($minutesValue * 60));
-
-            $.countDownTimer(element, {
-                includeTimer: {
-                    hour: 1,
-                    minutes: 1,
-                    seconds: 1
-                },
-                isMilitaryTime: 0,
-                isCountUp: 1,
-                hours: $hoursValue,
-                minutes: $minutesValue,
-                seconds: $secondsValue
-            });
-        }
-        var timer = function () {
-            var current = _body.find('.stop_time').attr('data-current');
-            if (current) {
-                startEditTimer(current);
-            }
-        };
-
-        timer();
-
-        var _post_timer = function (url, _data, _this) {
-            var tbody = _body.find('.task-table-body');
-
-            $.post(url, _data, function (return_data) {
-                var ele = '';
-                var _return_data = jQuery.parseJSON(return_data);
-                var total = 0;
-                $.each(_return_data.table, function (index, value) {
-                    ele += '<tr>';
-                    ele += '<td>' + value.name + '</td>';
-                    ele += '<td class="text-center">' + $.format.date(value.start_time, "dd/MM/yyyy hh:mm:ss a") + '</td>';
-                    ele += '<td class="text-center">' + (value.end_time != '0000-00-00 00:00:00' ? $.format.date(value.end_time, "dd/MM/yyyy hh:mm:ss a") : '&nbsp;') + '</td>';
-                    ele += '<td class="text-center">' + (value.time ? value.time : '0.00') + '</td>';
-                    ele += '<td class="text-center" style="width: 5%;"><a href="/deleteTaskTimer/' + value.id + '" class="alert_delete"> <i class="fa fa-trash-o fa-2x"></i> </a></td>';
-                    ele += '</tr>';
-                    total += (value.time ? parseFloat(value.time) : 0);
-                });
-                total = total.toFixed(2);
-                ele += '<tr>';
-                ele += '<td class="text-right" colspan="3"><strong>Total Time:</strong></td>';
-                ele += '<td class="text-center">' + total + '</td>';
-                ele += '<td>&nbsp;</td>';
-                ele += '</tr>';
-                _body.find('.total-time').html(total);
-                if (_this) {
-                    var _return_latest_task_timer = _return_data.return_task_timer;
-                    _this.attr('id', _return_latest_task_timer);
-                }
-                tbody.html(ele);
-            });
-        };
-
-        _body
-                .on('click', '.timer-btn', function (e) {
-                    var form = _body.find('.task-form');
-                    var data = form.serializeArray();
-                    var date = $.now();
-                    var now = $.format.date(date, "yyyy-MM-dd HH:mm:ss");
-                    var tbody = _body.find('.task-table-body');
-                    var _this = $(this);
-
-                    if ($(this).hasClass('start_time')) {
-                        startEditTimer(0);
-                        _this
-                                .html('Stop Time')
-                                .removeClass('btn-timer start_time')
-                                .addClass('btn-delete stop_time');
-                        element
-                                .removeClass('bg-red-gradient')
-                                .addClass('bg-green');
-                        data.push({'name': 'start_time', 'value': now});
-                        _post_timer(form.attr('action'), data, _this);
-                        //alert_msg('Successfully added start time!!', 'alert-success');
-                    }
-                    else {
-                        var url = public_path + 'updateTaskTimer/' + this.id;
-                        $(this)
-                                .html('Start Time')
-                                .removeClass('btn-delete stop_time')
-                                .addClass('btn-timer start_time');
-                        element
-                                .removeClass('bg-green')
-                                .addClass('bg-red-gradient');
-                        $.stopCountDownTimer();
-                        data.push({'name': 'end_time', 'value': now});
-                        _post_timer(url, data);
-                        //alert_msg('Successfully stop timer!!', 'alert-success');
-                    }
-
-                });
         //endregion
 
         //region Add Spreadsheet
@@ -1117,67 +1212,97 @@
         //region Auto Change and Select Category Name
         var _category_name = '';
         $('.category-name')
-            .bind('keyup keypress blur', function () {
-                _category_name = $(this).val();
-                var myStr = $(this).val();
-                myStr = myStr.toLowerCase();
-                myStr = myStr.replace(/\s+/g, "-");
-                $(this).val(myStr);
-            })
-            .focusout(function () {
-                var cat_form = $('.category-form');
-                var form_data = [];
-                var url = public_path + 'linkCategory';
-                var cat_value = $(this).val();
-                if ($(this).val()) {
-                    form_data.push(
-                            {name: 'slug', value: $(this).val()},
-                    {name: 'name', value: _category_name},
-                    {name: 'request_from_link_page', value: '1'}
-                    );
-                    $.post(url, form_data, function (data) {
-                        var _return_data = jQuery.parseJSON(data);
-                        var option_ele = '<option value>Select Category</option>';
-                        $.each(_return_data, function (key, val) {
-                            var is_selected = cat_value == val.name ? 'selected' : '';
-                            option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
+                .bind('keyup keypress blur', function () {
+                    _category_name = $(this).val();
+                    var myStr = $(this).val();
+                    myStr = myStr.toLowerCase();
+                    myStr = myStr.replace(/\s+/g, "-");
+                    $(this).val(myStr);
+                })
+                .focusout(function () {
+                    var cat_form = $('.category-form');
+                    var form_data = [];
+                    var url = public_path + 'linkCategory';
+                    var cat_value = $(this).val();
+                    if ($(this).val()) {
+                        form_data.push(
+                                {name: 'slug', value: $(this).val()},
+                        {name: 'name', value: _category_name},
+                        {name: 'request_from_link_page', value: '1'}
+                        );
+                        $.post(url, form_data, function (data) {
+                            var _return_data = jQuery.parseJSON(data);
+                            var option_ele = '<option value>Select Category</option>';
+                            $.each(_return_data, function (key, val) {
+                                var is_selected = cat_value == val.name ? 'selected' : '';
+                                option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
+                            });
+                            $('select.category').html(option_ele);
                         });
-                        $('select.category').html(option_ele);
-                    });
-                }
+                    }
 
-                $(this).val('');
-            });
+                    $(this).val('');
+                });
 
 
         $('.load-task-assign')
-            .on('click', '.remove-link', function (e) {
-                e.preventDefault();
-                $.post($(this).attr('href'));
-                $('#link-' + this.id + ',.link-' + this.id).remove();
-            })
-            .on('click', '.edit-link', function (e) {
-                e.preventDefault();
-                var _id = this.id;
-                var _href = $(this).attr('href');
-                var edit_link_modal = $('.edit-link-modal');
-                var _modal_dialog = edit_link_modal.find('.modal-content');
-                _modal_dialog.html('');
-                _modal_dialog.load(_href);
-                edit_link_modal.modal('show');
+                .on('click', '.remove-link', function (e) {
+                    e.preventDefault();
+                    $.post($(this).attr('href'));
+                    $('#link-' + this.id + ',.link-' + this.id).remove();
+                })
+                .on('click', '.edit-link', function (e) {
+                    e.preventDefault();
+                    var _id = this.id;
+                    var _href = $(this).attr('href');
+                    var edit_link_modal = $('.edit-link-modal');
+                    var _modal_dialog = edit_link_modal.find('.modal-content');
+                    _modal_dialog.html('');
+                    _modal_dialog.load(_href);
+                    edit_link_modal.modal('show');
 
-                edit_link_modal.on('click','.update-link-btn',function(e){
+                    edit_link_modal.on('click', '.update-link-btn', function (e) {
+                        e.preventDefault();
+                        var _this = $(this);
+                        var _link_modal = _this.parents('.edit-link-modal');
+                        var _form = _this.parents('.edit-link-modal').find('form');
+                        var _data = _form.serializeArray();
+                        _this.attr('disabled', 'disabled');
+                        $.post(_form.attr('action'), _data, function (res) {
+                            var _return_data = jQuery.parseJSON(res);
+                            $.each(_return_data, function (key, val) {
+                                var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
+                                var ele = '<div class="col-md-4">';
+                                ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                                ele += '</div>';
+                                ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                                ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                                ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
+                                ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                                ele += '</div>';
+                                ele += '<hr/>';
+                                var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
+                                _link_column.html(ele);
+                            });
+
+                            _link_modal.modal('hide');
+                        });
+                    });
+                })
+                .on('click', '.add-link-btn', function (e) {
                     e.preventDefault();
                     var _this = $(this);
-                    var _link_modal = _this.parents('.edit-link-modal');
-                    var _form = _this.parents('.edit-link-modal').find('form');
+                    var _link_modal = _this.parents('.add_link_modal');
+                    var _form = _this.parents('.add_link_modal').find('form');
                     var _data = _form.serializeArray();
-                    _this.attr('disabled','disabled');
+                    _this.attr('disabled', 'disabled');
                     $.post(_form.attr('action'), _data, function (res) {
                         var _return_data = jQuery.parseJSON(res);
+                        var _task_id = '';
+                        var ele = '';
                         $.each(_return_data, function (key, val) {
-                            var url = isUrlValid(val.url) ?  val.url :  'http://' + val.url;
-                            var ele =  '<div class="col-md-4">';
+                            ele = '<div class="col-md-12" id="link-' + val.id + '">';
+                            ele += '<div class="col-md-4">';
                             ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
                             ele += '</div>';
                             ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
@@ -1186,46 +1311,16 @@
                             ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
                             ele += '</div>';
                             ele += '<hr/>';
-                            var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
-                            _link_column.html(ele);
+                            ele += '</div>';
+                            _task_id = val.task_id;
                         });
-
+                        var _link_column = $('#collapse-' + _task_id).find('.link-column');
+                        _link_column.prepend(ele);
                         _link_modal.modal('hide');
                     });
                 });
-            })
-            .on('click', '.add-link-btn', function (e) {
-                 e.preventDefault();
-                 var _this = $(this);
-                 var _link_modal = _this.parents('.add_link_modal');
-                 var _form = _this.parents('.add_link_modal').find('form');
-                 var _data = _form.serializeArray();
-                 _this.attr('disabled','disabled');
-                 $.post(_form.attr('action'), _data, function (res) {
-                     var _return_data = jQuery.parseJSON(res);
-                     var _task_id = '';
-                     var ele = '';
-                     $.each(_return_data, function (key, val) {
-                         ele = '<div class="col-md-12" id="link-' + val.id + '">';
-                         ele += '<div class="col-md-4">';
-                         ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                         ele += '</div>';
-                         ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                         ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
-                         ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
-                         ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
-                         ele += '</div>';
-                         ele += '<hr/>';
-                         ele += '</div>';
-                         _task_id = val.task_id;
-                     });
-                     var _link_column = $('#collapse-' + _task_id).find('.link-column');
-                     _link_column.prepend(ele);
-                     _link_modal.modal('hide');
-                 });
-             });
         $('.check-list-container')
-            .on('click', '.toggle-tasklistitem', function () {
+                .on('click', '.toggle-tasklistitem', function () {
 
                     var task_list_item_id = $(this).siblings('.task_list_item_id').val();
                     var company_id = $(this).siblings('.company_id').val();
@@ -1252,5 +1347,20 @@
         function isUrlValid(url) {
             return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
         }
+
+        window.onbeforeunload = function (event) {
+            $('.still-counting').each(function (index) {
+                $('#timer-' + task_checklist_id).countdown('pause');
+                var timer_id = $(this).siblings('.timer_id').val();
+                var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+                var current_time = $('#timer-' + task_checklist_id).find('.countdown-row').text();
+                console.log('current_time: ' + current_time);
+
+                saveCurrentTime(timer_id,current_time);
+            });
+        };
+
+
     });
 </script>

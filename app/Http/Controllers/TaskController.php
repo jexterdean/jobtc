@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use Bican\Roles\Exceptions\RoleDeniedException;
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\Timer;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\TaskTimer;
@@ -81,6 +82,7 @@ class TaskController extends BaseController {
         } elseif ($user->level() > 1) {
             $task = Task::find($id);
         }
+
         $task_timer = DB::table('task_timer')
                 ->leftJoin('user', 'task_timer.user_id', '=', 'user.user_id')
                 ->leftJoin('task', 'task_timer.task_id', '=', 'task.task_id')
@@ -110,26 +112,22 @@ class TaskController extends BaseController {
 
         if ($task_order_count > 0) {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
-            $checkList = TaskChecklist::where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
+            $checkList = TaskChecklist::with('timer')->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
-            $checkList = TaskChecklist::where('task_id', '=', $id)->get();
+            $checkList = TaskChecklist::with('timer')->where('task_id', '=', $id)->get();
         }
 
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
         $finish_checklist = TaskChecklist::where('status', '=', 'Completed')->where('task_id', '=', $id)->count();
         $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
         $links = Link::select(
-                    'links.id', 'title',
-                    'url', 'descriptions',
-                    'tags', 'comments',
-                    'task_item_id', 'user_id','task_id',
-                    'link_categories.name as category_name'
+                        'links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'task_item_id', 'user_id', 'task_id', 'link_categories.name as category_name'
                 )
-            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-            ->where('task_id', '=', $id)
-            ->orderBy('id','DESC')
-            ->get();
+                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                ->where('task_id', '=', $id)
+                ->orderBy('id', 'DESC')
+                ->get();
 
         $categories = LinkCategory::all()
                 ->lists('name', 'id')
@@ -154,10 +152,10 @@ class TaskController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
-        $project_owner = Project::where('project_id',$task->project_id)->pluck('user_id');
 
-        $assets = ['calendar'];
+        $project_owner = Project::where('project_id', $task->project_id)->pluck('user_id');
+
+        $assets = ['briefcases', 'calendar'];
 
         return view('task.show', [
             'task' => $task,
@@ -348,9 +346,9 @@ class TaskController extends BaseController {
             ]);
 
             //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
-            $data = TaskChecklist::where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
         } else {
-            $data = TaskChecklist::where('task_id', '=', $task_id)->get();
+            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->get();
         }
 
         return json_encode($data);
@@ -550,17 +548,15 @@ class TaskController extends BaseController {
         return "true";
     }
 
-    public function getTaskChecklistItem(Request $request, $task_check_list_id, $company_id,$task_list_id) {
+    public function getTaskChecklistItem(Request $request, $task_check_list_id, $company_id, $task_list_id) {
         //$task_check_list_id = $request->input('task_check_list_id');
-
         //$data = TaskChecklist::where('id', '=', $task_check_list_id)->get();
-
         //return json_encode($data);
-        
+
         $user_id = Auth::user('user')->user_id;
-        
-        $list_item = TaskChecklist::where('id',$task_check_list_id)->first();
-       
+
+        $list_item = TaskChecklist::where('id', $task_check_list_id)->first();
+
         $permissions_list = [];
 
         $permissions_user = PermissionUser::with('permission')
@@ -575,21 +571,17 @@ class TaskController extends BaseController {
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         $links = Link::select(
-                'links.id', 'title',
-                'url', 'descriptions',
-                'tags', 'comments','task_id',
-                'task_item_id', 'user_id',
-                'link_categories.name as category_name'
-            )
-            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-            ->where('task_id', '=', $task_list_id)
-            ->get();
+                        'links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'task_id', 'task_item_id', 'user_id', 'link_categories.name as category_name'
+                )
+                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                ->where('task_id', '=', $task_list_id)
+                ->get();
 
         $categories = LinkCategory::all()
-            ->lists('name', 'id')
-            ->toArray();
+                ->lists('name', 'id')
+                ->toArray();
 
-        return view('task.partials._taskchecklistitem',[
+        return view('task.partials._taskchecklistitem', [
             'list_item' => $list_item,
             'module_permissions' => $module_permissions,
             'links' => $links,
@@ -597,7 +589,6 @@ class TaskController extends BaseController {
             'company_id' => $company_id,
             'categories' => $categories
         ]);
-        
     }
 
     public function saveSpreadsheet(Request $request) {
@@ -687,12 +678,12 @@ class TaskController extends BaseController {
     }
 
     public function getTaskListItem(Request $request, $id) {
-        
+
         $user_id = Auth::user('user')->user_id;
         $company_id = $request->input('company_id');
-        
-        $list_item = TaskChecklist::where('id',$id)->first();
-        
+
+        $list_item = TaskChecklist::where('id', $id)->first();
+
         $user_profile_role = Profile::where('user_id', $user_id)
                 ->where('company_id', $company_id)
                 ->first();
@@ -709,12 +700,115 @@ class TaskController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
-        return view('task._partials._taskchecklistitem',[
+
+        return view('task._partials._taskchecklistitem', [
             'list_item' => $list_item,
             'module_permissions' => $module_permissions
         ]);
     }
+
+    public function startTask(Request $request) {
+
+        $user_id = Auth::user()->user_id;
+        $task_checklist_id = $request->input('task_checklist_id');
+
+        $current_timestamp = time();
+
+        $start_timestamp = date('Y-m-d H:i:s', $current_timestamp);
+
+        $timer = new Timer([
+            'user_id' => $user_id,
+            'task_checklist_id' => $task_checklist_id,
+            'start_time' => $start_timestamp,
+            'timer_status' => 'Started'
+        ]);
+        $timer->save();
+
+        return $timer->timer_id;
+    }
+
+    public function pauseTask(Request $request) {
+
+        $user_id = Auth::user()->user_id;
+
+        $timer_id = $request->input('timer_id');
+        $time = $request->input('time');
+
+        $current_timestamp = time();
+
+        $start_timestamp = Timer::where('timer_id', $timer_id)->pluck('start_time');
+        $end_timestamp = date('Y-m-d H:i:s', $current_timestamp);
+
+        $start_date = date_create($start_timestamp);
+        $end_date = date_create($end_timestamp);
+        $diff = date_diff($start_date, $end_date);
+
+        $total_time = $diff->format('%H:%I:%S');
+
+        $timer = Timer::where('timer_id', $timer_id)->update([
+            'end_time' => $end_timestamp,
+            'total_time' => $time,
+            'timer_status' => 'Paused'
+        ]);
+
+        return "true";
+    }
+
+    public function resumeTask(Request $request) {
+
+        $user_id = Auth::user()->user_id;
+
+        $timer_id = $request->input('timer_id');
+
+        $timer = Timer::where('timer_id', $timer_id)->update([
+            'end_time' => '',
+            'timer_status' => 'Resumed'
+        ]);
+
+        return "true";
+    }
+
+    public function endTask(Request $request) {
+
+        $user_id = Auth::user()->user_id;
+
+        $timer_id = $request->input('timer_id');
+
+        $current_timestamp = time();
+
+        $start_timestamp = Timer::where('timer_id', $timer_id)->pluck('start_time');
+
+        $end_timestamp = date('Y-m-d H:i:s', $current_timestamp);
+
+        $start_date = date_create($start_timestamp);
+        $end_date = date_create($end_timestamp);
+        $diff = date_diff($start_date, $end_date);
+
+        $total_time = $diff->format('%H:%I:%S');
+
+        $timer = Timer::where('timer_id', $timer_id)->update([
+            'end_time' => $end_timestamp,
+            'total_time' => $total_time,
+            'timer_status' => 'Completed'
+        ]);
+
+        return "true";
+    }
+
+    public function saveCurrentTime(Request $request) {
+        $user_id = Auth::user()->user_id;
+
+        $timer_id = $request->input('timer_id');
+        $time = $request->input('time');
+
+        $timer = Timer::where('timer_id', $timer_id)->update([
+            'total_time' => $time,
+            'timer_status' => 'Resumed'
+        ]);
+
+        return "true";
+    }
+
 }
 
 ?>

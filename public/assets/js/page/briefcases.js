@@ -102,6 +102,15 @@ var update_checklist_status = function (id, status) {
 
 };
 
+function startTask(id) {
+    
+    var data = [];
+    data.push({'task_id': id});
+    $.post(public_path + 'startTask', data , function (e) {
+    });
+}
+
+
 var update_checklist_data = function (id, header, details, checklist_header, checklist_item) {
 
     var data = [];
@@ -137,13 +146,16 @@ _body.on('click', '.checklist-status', function (e) {
 
     var index = $(this).parent().parent().parent().index();
     var id = $(this).parent().siblings().find('.task_list_item_id').val();
+    startTask(id);
 
     /*From Default, Change to ongoing*/
     if ($(this).hasClass('bg-gray')) {
         $(this).html('&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;');
         $(this).switchClass('bg-gray', 'bg-orange', function () {
+            
             update_checklist_status(id, 'Ongoing');
         });
+        
     }
     /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
     if ($(this).hasClass('bg-orange')) {

@@ -114,7 +114,7 @@ Route::group(['middleware' => 'guest'], function () {
         return view('session.forgotPassword');
     });
     Route::post('forgotPassword', 'ProfileController@forgotPassword');
-    Route::get('resetPassword/{token}/{usertype}','ProfileController@resetPasswordForm');
+    Route::get('resetPassword/{token}/{usertype}', 'ProfileController@resetPasswordForm');
     Route::post('resetPassword', 'ProfileController@resetPassword');
 });
 
@@ -137,7 +137,7 @@ Route::group(['middleware' => 'auth'], function () {
             ->where('billing_type', 'invoice|estimate');
     Route::get('/print/{billing_type}/{billing_id}', ['uses' => 'BillingController@printing'])
             ->where('billing_type', 'invoice|estimate');
-    
+
     Route::resource('billing', 'BillingController');
     Route::resource('setting', 'SettingController');
     Route::resource('template', 'TemplateController');
@@ -227,18 +227,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('addProjectForm', 'ProjectController@addProjectForm');
     Route::post('addProject', 'ProjectController@addProject');
 
-    
-    /* 
+
+    /*
      * Briefcases 
-     **/
+     * */
     Route::resource('task', 'TaskController'); //This is temporary, need it for briefcases loaded as project
     Route::resource('briefcase', 'BriefcaseController');
-    
+
     /*
      * Task List Items 
-     **/
+     * */
     Route::resource('taskitem', 'TaskListItemController');
-    
+
     /*
      * Employees
      * */
@@ -310,8 +310,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('attachment', 'AttachmentController');
     Route::resource('message', 'MessageController');
     Route::resource('ticket', 'TicketController');
-    Route::post('startTimer', 'ProjectController@startTimer');
-    Route::post('endTimer', 'ProjectController@endTimer');
+    Route::post('startTask', 'TaskController@startTask');
+    Route::post('pauseTask', 'TaskController@pauseTask');
+    Route::post('resumeTask', 'TaskController@resumeTask');
+    Route::post('endTask', 'TaskController@endTask');
+    Route::post('saveCurrentTime','TaskController@saveCurrentTime');
     Route::post('updateTaskStatus', 'TaskController@updateTaskStatus');
     Route::post('updateProgress', 'ProjectController@updateProgress');
     Route::post('updateBugStatus', 'BugController@updateBugStatus');
@@ -365,34 +368,35 @@ Route::group(['middleware' => 'auth'], function () {
     /*
      * Search 
      * */
-    Route::get('/search/{type}','SearchController@search');
-    Route::get('/bulkIndex/{type}','SearchController@bulkIndex');
-    
-    /*Search in Assign Projects*/
-    Route::post('searchProjects','SearchController@searchProjects');
-    Route::post('searchEmployees','SearchController@searchEmployees');
-    Route::post('searchCompanies','SearchController@searchCompanies');
-    Route::post('searchTests','SearchController@searchTests');
-    
-    /*Search in Assign Jobs*/
-    Route::post('searchJobs','SearchController@searchJobs');
-    
-    /*Search in Assign Tests*/
-    Route::post('searchApplicants','SearchController@searchApplicants');
-    
-    
-    /*Discussion Pages*/
-    Route::resource('discussions','DiscussionsController');
-    
-    /*Adding Participants*/
-    Route::get('addParticipantForm','DiscussionsController@addParticipantForm');
-    Route::post('addParticipant','DiscussionsController@addParticipant');
+    Route::get('/search/{type}', 'SearchController@search');
+    Route::get('/bulkIndex/{type}', 'SearchController@bulkIndex');
+
+    /* Search in Assign Projects */
+    Route::post('searchProjects', 'SearchController@searchProjects');
+    Route::post('searchEmployees', 'SearchController@searchEmployees');
+    Route::post('searchCompanies', 'SearchController@searchCompanies');
+    Route::post('searchTests', 'SearchController@searchTests');
+
+    /* Search in Assign Jobs */
+    Route::post('searchJobs', 'SearchController@searchJobs');
+
+    /* Search in Assign Tests */
+    Route::post('searchApplicants', 'SearchController@searchApplicants');
+
+
+    /* Discussion Pages */
+    Route::resource('discussions', 'DiscussionsController');
+
+    /* Adding Participants */
+    Route::get('addParticipantForm', 'DiscussionsController@addParticipantForm');
+    Route::post('addParticipant', 'DiscussionsController@addParticipant');
 });
 
+/* For Public Discussion Pages */
+Route::resource('discussions/{id}/public', 'DiscussionsController@showPublicRoom');
 
-/*For Public Discussion Pages*/
-Route::resource('discussions/{id}/public','DiscussionsController@showPublicRoom');
-
+/* Display Name */
+Route::get('displayNameForm', 'DiscussionsController@displayNameForm');
 
 Route::group(['prefix' => 'api'], function () {
     Route::group(['prefix' => 'v1'], function () {
