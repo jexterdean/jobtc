@@ -109,27 +109,38 @@
                 </div>
             </div>
             <div class="link-column">
-            @foreach($links as $link)
-                @if($link->task_id == $task->task_id)
-                <div class="col-md-12" id="link-{{$link->id}}">
-                    <div class="col-md-4">
-                        {{--*/ $parse_url = parse_url($link->url) /*--}}
-                        @if(empty($parse_url['scheme']))
-                        <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                        @else
-                        <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                <ul class="list-group link-group">
+                {{--*/ $ref = 1 /*--}}
+                    @foreach($links as $link)
+                        @if($link->task_id == $task->task_id)
+                        <li class="list-group-item" id="link-{{$link->id}}" style="{{ $ref == 1 ?  '' : 'border-top: none!important'}}">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    {{--*/ $parse_url = parse_url($link->url) /*--}}
+                                    <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                    <input type="hidden" class="company_id" value="{{$company_id}}" />
+                                    @if(empty($parse_url['scheme']))
+                                    <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                    @else
+                                    <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                    @endif
+                                </div>
+                                <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
+                                <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
+                                    <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
+                                    @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                                    <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
+                                    @endif
+                                    @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                                    <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    @endif
+                                </div>
+                            </div>
+                        </li>
+                        {{--*/ $ref++ /*--}}
                         @endif
-                    </div>
-                    <div class="col-md-5" style="text-align: justify">{{ $link->descriptions }}</div>
-                    <div class="col-md-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                        @if($user_id == $link->user_id)
-                        <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
-                        @endif
-                    </div>
-                    <hr/>
-                </div>
-                @endif
-                @endforeach
+                    @endforeach
+                </ul>
             </div>
             <div class="row">
                 <div class="col-sm-8" style="white-space: nowrap!important">
@@ -138,7 +149,7 @@
                     <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
                     <a href="#" class="btn btn-submit btn-shadow btn-sm task-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Task List </a>&nbsp;&nbsp;
                     @endif
-                    <a href="#" class="btn-edit btn-shadow btn-sm btn" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
+                    <a href="#" class="btn-submit btn-shadow btn-sm btn" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                     @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                     <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                     @endif
@@ -153,6 +164,12 @@
         </div>
     </div>
     <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
+    <div class="modal fade edit-link-modal" id="edit_link" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
     {{--region Briefcase Item Add Link--}}
     <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id }}" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog">

@@ -1,4 +1,41 @@
 //region For Draggability
+$('.link-group').sortable({
+    handle: '.move-link',
+    connectWith: ".link-group",
+    placeholder: "ui-state-highlight",
+    receive: function (event, ui) {
+        var _link_items = ui.item.parents('.link-group').find('.list-group-item');
+        var _task_id = ui.item.find('.task_list_id').val();
+        var _company_id = ui.item.find('.company_id').val();
+        var _data = [];
+        $.each(_link_items,function(e){
+            var _str_id = this.id;
+            var _id = _str_id.split('-');
+            _data.push(_id);
+        });
+        var url = public_path + '/setLinkOrder/' + _task_id + '/' + _company_id;
+        $.post(url, {links_order: _data},function(res){
+            console.log(res);
+        });
+    },
+    update: function (event, ui) {
+        var _link_items = ui.item.parents('.link-group').find('.list-group-item');
+        var _task_id = ui.item.find('.task_list_id').val();
+        var _company_id = ui.item.find('.company_id').val();
+        var _data = [];
+        $.each(_link_items,function(e){
+            var _str_id = this.id;
+            var _id = _str_id.split('-');
+            _data.push(_id[1]);
+        });
+
+        var url = public_path + 'setLinkOrder/' + _task_id + '/' + _company_id;
+        $.post(url, {links_order: _data},function(res){
+            console.log(res);
+        });
+    }
+});
+
 $('.tasklist-group').sortable({
     dropOnEmpty: true,
     connectWith: ".tasklist-group",
@@ -941,6 +978,50 @@ $('.content')
         $.post($(this).attr('href'));
         $('#link-' + this.id + ',.link-' + this.id).remove();
     })
+    .on('click', '.edit-link', function (e) {
+        e.preventDefault();
+        var _id = this.id;
+        var _href = $(this).attr('href');
+        var edit_link_modal = $('.edit-link-modal');
+        var _modal_dialog = edit_link_modal.find('.modal-content');
+        _modal_dialog.html('');
+        _modal_dialog.load(_href);
+        edit_link_modal.modal('show');
+
+        edit_link_modal.on('click', '.update-link-btn', function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            var _link_modal = _this.parents('.edit-link-modal');
+            var _form = _this.parents('.edit-link-modal').find('form');
+            var _data = _form.serializeArray();
+            _this.attr('disabled', 'disabled');
+            $.post(_form.attr('action'), _data, function (res) {
+                var _return_data = jQuery.parseJSON(res);
+                var ref = 1;
+                $.each(_return_data, function (key, val) {
+                    var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
+                    var ele = '<div class="row">';
+                        ele += '<div class="col-md-4">';
+                            ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
+                            ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
+                            ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                        ele += '</div>';
+                        ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                        ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                            ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
+                            ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
+                            ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                        ele += '</div>';
+                    ele += '</div>';
+                    var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
+                    _link_column.html(ele);
+                    ref++;
+                });
+
+                _link_modal.modal('hide');
+            });
+        });
+    })
     .on('click', '.add-link-btn', function (e) {
         e.preventDefault();
         var _this = $(this);
@@ -950,24 +1031,29 @@ $('.content')
         var _data = _form.serializeArray();
         $.post(_form.attr('action'), _data, function (res) {
             var _return_data = jQuery.parseJSON(res);
-            console.log(_return_data);
-            console.log(_user_id);
+            var _task_id = '';
+            var ele = '';
             $.each(_return_data, function (key, val) {
-                var ele = '<div class="col-md-12" id="link-' + val.id + '">';
-                ele += '<div class="col-md-4">';
-                ele += '<a href="' + val.url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                ele += '</div>';
-                ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                ele += '<div class="col-md-3 text-right">' + val.category_name + '&nbsp;&nbsp;&nbsp;';
-                ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>';
-                ele += '</div>';
-                ele += '<hr/>';
-                ele += '</div>';
-                ele += '<hr/>';
-                var _link_column = $('#collapse-' + val.task_id).find('.link-column');
-                _link_column.append(ele);
+                var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
+                ele = '<li class="list-group-item" id="link-' + val.id + '" style="border-top: none!important">';
+                    ele += '<div class="row">';
+                        ele += '<div class="col-md-4">';
+                            ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
+                            ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
+                            ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                        ele += '</div>';
+                        ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                        ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                            ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
+                            ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
+                            ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                        ele += '</div>';
+                    ele += '</div>';
+                ele += '</li>';
+                _task_id = val.task_id;
             });
-
+            var _link_column = $('#collapse-' + _task_id).find('.link-group');
+            _link_column.prepend(ele);
             _link_modal.modal('hide');
         });
     });
@@ -984,6 +1070,10 @@ $('.check-list-container').on('click', '.toggle-tasklistitem', function () {
         $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
     });
 });
+
+function isUrlValid(url) {
+    return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+}
 
 function makeid()
 {

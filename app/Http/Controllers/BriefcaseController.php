@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\BaseController;
 use Bican\Roles\Exceptions\RoleDeniedException;
+use App\Models\LinksOrder;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -114,16 +115,36 @@ class BriefcaseController extends Controller
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
         $finish_checklist = TaskChecklist::where('status', '=', 'Completed')->where('task_id', '=', $id)->count();
         $percentage = $total_checklist > 0 ? ($finish_checklist / $total_checklist) * 100 : 0;
-        $links = Link::select(
-                    'links.id', 'title',
-                    'url', 'descriptions',
-                    'tags', 'comments','task_id',
-                    'task_item_id', 'user_id',
-                    'link_categories.name as category_name'
-                )
-            ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-            ->where('task_id', '=', $id)
-            ->get();
+
+        $links_order_count = LinksOrder::where('task_id', $id)->count();
+
+        if($links_order_count > 0){
+            $links_order = LinksOrder::where('task_id', $id)->first();
+            $links = Link::select(
+                'links.id', 'title',
+                'url', 'descriptions',
+                'tags', 'comments',
+                'task_item_id', 'user_id','task_id',
+                'link_categories.name as category_name'
+            )
+                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                ->where('task_id', '=', $id)
+                ->orderBy(DB::raw('FIELD(fp_links.id,' . $links_order->links_order . ')'))
+                ->get();
+        }
+        else{
+            $links = Link::select(
+                'links.id', 'title',
+                'url', 'descriptions',
+                'tags', 'comments',
+                'task_item_id', 'user_id','task_id',
+                'link_categories.name as category_name'
+            )
+                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                ->where('task_id', '=', $id)
+                ->orderBy('id','DESC')
+                ->get();
+        }
 
         $categories = LinkCategory::all()
                 ->lists('name', 'id')
