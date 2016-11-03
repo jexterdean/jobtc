@@ -6,7 +6,7 @@
                     <div class="panel-container">
                         <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#task-details" data-parent="#accordion_" aria-expanded="true">
                             <h4 class="panel-title">
-                                Personal Test
+                                <i class="glyphicon glyphicon-education"></i> Personal Test
                             </h4>
                         </div>
                         <div id="task-details" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
@@ -20,6 +20,7 @@
                                                     <div class="row">
                                                         <div class="col-xs-5">
                                                             <h4 class="panel-title task-list-header">
+                                                                <i class="glyphicon glyphicon-education"></i>
                                                                 {{ substr($val->title, 0, 25) . (strlen($val->title) > 25 ? '...' : '') }}
                                                                 <span class="test-version-area hidden">&nbsp;v<span class="test-version">{{ $val->version }}</span></span>
                                                             </h4>
@@ -188,7 +189,7 @@
                     <div class="panel-container">
                         <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-target="#task-details" data-parent="#accordion_" aria-expanded="true">
                             <h4 class="panel-title">
-                                Community Test
+                                <i class="glyphicon glyphicon-education"></i> Community Test
                             </h4>
                         </div>
                         <div id="task-details" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">

@@ -119,30 +119,38 @@
             </div>
         </div>
         <div class="link-column">
-            @foreach($links as $link)
-            @if($link->task_id == $task->task_id)
-            <div class="col-md-12" id="link-{{$link->id}}">
-                <div class="col-sm-4">
-                    {{--*/ $parse_url = parse_url($link->url) /*--}}
-                    @if(empty($parse_url['scheme']))
-                    <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                    @else
-                    <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+            <ul class="list-group link-group">
+            {{--*/ $ref = 1 /*--}}
+                @foreach($links as $link)
+                    @if($link->task_id == $task->task_id)
+                    <li class="list-group-item" id="link-{{$link->id}}" style="{{ $ref == 1 ?  '' : 'border-top: none!important'}}">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                {{--*/ $parse_url = parse_url($link->url) /*--}}
+                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                <input type="hidden" class="company_id" value="{{$company_id}}" />
+                                @if(empty($parse_url['scheme']))
+                                <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                @else
+                                <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                @endif
+                            </div>
+                            <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
+                            <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
+                                <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
+                                @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                                <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
+                                @endif
+                                @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                                <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
+                                @endif
+                            </div>
+                        </div>
+                    </li>
+                    {{--*/ $ref++ /*--}}
                     @endif
-                </div>
-                <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
-                <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                    @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                    <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right"><i class="glyphicon glyphicon-remove"></i></a>
-                    @endif
-                    @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                    <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
-                    @endif
-                </div>
-                <hr />
-            </div>
-            @endif
-            @endforeach
+                @endforeach
+            </ul>
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -218,6 +226,42 @@
     $(function (e) {
 
         //region For Draggability
+        $('.link-group').sortable({
+            handle: '.move-link',
+            connectWith: ".link-group",
+            placeholder: "ui-state-highlight",
+            receive: function (event, ui) {
+                var _link_items = ui.item.parents('.link-group').find('.list-group-item');
+                var _task_id = ui.item.find('.task_list_id').val();
+                var _company_id = ui.item.find('.company_id').val();
+                var _data = [];
+                $.each(_link_items,function(e){
+                    var _str_id = this.id;
+                    var _id = _str_id.split('-');
+                    _data.push(_id);
+                });
+                var url = public_path + '/setLinkOrder/' + _task_id + '/' + _company_id;
+                $.post(url, {links_order: _data},function(res){
+                    console.log(res);
+                });
+            },
+            update: function (event, ui) {
+                var _link_items = ui.item.parents('.link-group').find('.list-group-item');
+                var _task_id = ui.item.find('.task_list_id').val();
+                var _company_id = ui.item.find('.company_id').val();
+                var _data = [];
+                $.each(_link_items,function(e){
+                    var _str_id = this.id;
+                    var _id = _str_id.split('-');
+                    _data.push(_id[1]);
+                });
+
+                var url = public_path + 'setLinkOrder/' + _task_id + '/' + _company_id;
+                $.post(url, {links_order: _data},function(res){
+                    console.log(res);
+                });
+            }
+        });
         $('.tasklist-group').sortable({
             dropOnEmpty: true,
             connectWith: ".tasklist-group",

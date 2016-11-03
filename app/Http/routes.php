@@ -127,7 +127,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('links', 'LinkController');
     Route::any('deleteLink/{id}', 'LinkController@deleteLink');
     Route::resource('linkCategory', 'LinkCategoryController');
-
+    Route::post('setLinkOrder/{task_id}/{company_id}', 'LinkController@setLinkOrder');
 
     Route::get('/billing/{billing_type}', ['uses' => 'BillingController@index'])
             ->where('billing_type', 'invoice|estimate');

@@ -8,6 +8,7 @@ if(count($test_community) > 0){
                 <div class="row">
                     <div class="col-xs-5">
                         <h4 class="panel-title task-list-header">
+                            <i class="glyphicon glyphicon-education"></i>
                             {{ substr($val->title, 0, 25) . (strlen($val->title) > 25 ? '...' : '') }}
                             <span class="test-version-area">&nbsp;v<span class="test-version">{{ $val->version }}</span></span>
                         </h4>

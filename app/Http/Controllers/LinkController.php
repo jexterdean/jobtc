@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Link;
 use App\Models\Task;
+use App\Models\LinksOrder;
 use App\Models\LinkCategory;
 use Illuminate\Http\Request;
 
@@ -169,6 +170,32 @@ class LinkController extends BaseController
         }
 
         return redirect()->route('links.index');
+    }
+
+    public function setLinkOrder(Request $request,$task_id,$company_id){
+
+        $count_links_order = LinksOrder::where('task_id' ,'=',$task_id)->count();
+
+        $links_id_array = implode(",", str_replace("\"", '', $request->get('links_order')));
+
+        if($count_links_order > 0){
+            $links_order_list = LinksOrder::where('task_id' ,'=',$task_id)->first();
+
+            $linksOrder  = LinksOrder::find($links_order_list->id);
+            $linksOrder->links_order = $links_id_array;
+            $linksOrder->save();
+        }
+        else{
+            $linksOrder = new LinksOrder();
+
+            $linksOrder->task_id = $task_id;
+            $linksOrder->company_id = $company_id;
+            $linksOrder->links_order = $links_id_array;
+            $linksOrder->save();
+        }
+
+        $links_new_order = LinksOrder::find($linksOrder->id);
+        return json_encode($links_new_order);
     }
 
 }
