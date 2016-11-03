@@ -23,4 +23,8 @@ class TaskChecklist extends Model
     public function task() {
         return $this->belongsTo('App\Models\Task');
     }
+    
+    public function timer() {
+        return $this->hasMany('App\Models\Timer');
+    }
 }

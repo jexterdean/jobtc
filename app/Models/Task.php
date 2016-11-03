@@ -38,5 +38,7 @@ class Task extends Model
     public function task_permission(){
         return $this->hasMany('App\Models\TaskCheckListPermission');
     }
+    
+    
 
 }

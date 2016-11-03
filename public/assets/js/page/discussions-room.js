@@ -35,6 +35,10 @@ var participant_count = 0;
 var peerStream;
 //Video 
 
+
+
+
+
 var webrtc = new SimpleWebRTC({
     // the id/element dom element that will hold "our" video
     localVideoEl: 'localVideo',
@@ -74,7 +78,7 @@ webrtc.on('localStream', function (stream) {
 /*For Video Sharing*/
 // a peer video has been added
 webrtc.on('videoAdded', function (video, peer) {
-    console.log('video added', peer);
+    console.log('video added', peer.nick);
     peerStream = peer.stream;
     var remotes = document.getElementById('remotes');
     var remoteVideo = document.getElementById('remoteVideo');
@@ -355,7 +359,44 @@ webrtc.connection.on('message', function (data) {
 });
 
 //Immediately start the local video upon entering this discussion room
+
+//Check if room is public
+
+/*if (display_name === 'Anonymous') {
+
+    var display_name_form = public_path + '/displayNameForm';
+
+    BootstrapDialog.show({
+        title: 'Enter your name',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Ok',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+                    var new_display_name = $('.new_display_name').val();
+                    $('.display_name').val(new_display_name);
+                    webrtc.startLocalVideo();
+                    dialog.close();
+                }
+            }],
+        data: {
+            'pageToLoad': display_name_form
+        },
+        onshown: function (ref) {
+            //initCkeditor(ref);
+        },
+        closable: false
+    });
+} */
+
 webrtc.startLocalVideo();
+
 
 //Remove video when the tab closes
 window.addEventListener("beforeunload", function (e) {
@@ -429,7 +470,8 @@ $('#send-message').click(function () {
     var message_object = '<text>' + webrtc.config.nick + " : " + message + '</text><br />';
     $('#message-log').prepend(message_object);
     $("#message").val("");
-    webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
+    //webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
+    webrtc.sendToAll('chat', {message: message, display_name: display_name});
 });
 
 //Keypress events
@@ -439,7 +481,8 @@ $('body').keypress(function (e) {
         if (message !== "") {
             $('#message-log').prepend('<text>' + webrtc.config.nick + " : " + message + '</text><br />');
             $("#message").val("");
-            webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
+            //webrtc.sendToAll('chat', {message: message, display_name: webrtc.config.nick});
+            webrtc.sendToAll('chat', {message: message, display_name: display_name});
         }
         return false;
     }
@@ -465,7 +508,7 @@ $('body').on('click', '.full-screen', function () {
 
 $('.add-participant').click(function (e) {
     e.preventDefault();
-    
+
     var add_participant_form = public_path + '/addParticipantForm';
 
     BootstrapDialog.show({
@@ -486,9 +529,9 @@ $('.add-participant').click(function (e) {
                     var formData = new FormData();
                     var email = $('.email').val();
                     var room_url = window.location.href;
-                    
+
                     formData.append('email', email);
-                    formData.append('room_url',room_url);
+                    formData.append('room_url', room_url);
                     console.log(room_url);
 
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
