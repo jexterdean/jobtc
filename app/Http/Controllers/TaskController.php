@@ -113,10 +113,14 @@ class TaskController extends BaseController {
 
         if ($task_order_count > 0) {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
-            $checkList = TaskChecklist::with('timer')->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
+            $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
+                            $query->where('user_id', $user_id)->get();
+                        }])->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
-            $checkList = TaskChecklist::with('timer')->where('task_id', '=', $id)->get();
+            $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
+                            $query->where('user_id', $user_id)->get();
+                        }])->where('task_id', '=', $id)->get();
         }
 
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
@@ -125,32 +129,23 @@ class TaskController extends BaseController {
 
         $links_order_count = LinksOrder::where('task_id', $id)->count();
 
-        if($links_order_count > 0){
+        if ($links_order_count > 0) {
             $links_order = LinksOrder::where('task_id', $id)->first();
             $links = Link::select(
-                'links.id', 'title',
-                'url', 'descriptions',
-                'tags', 'comments',
-                'task_item_id', 'user_id','task_id',
-                'link_categories.name as category_name'
-            )
-                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-                ->where('task_id', '=', $id)
-                ->orderBy(DB::raw('FIELD(fp_links.id,' . $links_order->links_order . ')'))
-                ->get();
-        }
-        else{
+                            'links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'task_item_id', 'user_id', 'task_id', 'link_categories.name as category_name'
+                    )
+                    ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                    ->where('task_id', '=', $id)
+                    ->orderBy(DB::raw('FIELD(fp_links.id,' . $links_order->links_order . ')'))
+                    ->get();
+        } else {
             $links = Link::select(
-                'links.id', 'title',
-                'url', 'descriptions',
-                'tags', 'comments',
-                'task_item_id', 'user_id','task_id',
-                'link_categories.name as category_name'
-            )
-                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-                ->where('task_id', '=', $id)
-                ->orderBy('id','DESC')
-                ->get();
+                            'links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'task_item_id', 'user_id', 'task_id', 'link_categories.name as category_name'
+                    )
+                    ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                    ->where('task_id', '=', $id)
+                    ->orderBy('id', 'DESC')
+                    ->get();
         }
 
         $categories = LinkCategory::all()
@@ -370,9 +365,9 @@ class TaskController extends BaseController {
             ]);
 
             //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
-            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->where('id',$task_check_list_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
         } else {
-            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->get();
+            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->where('id',$task_check_list_id)->get();
         }
 
         return json_encode($data);

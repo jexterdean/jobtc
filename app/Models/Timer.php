@@ -11,5 +11,9 @@ class Timer extends Model
 
     protected $primaryKey = 'timer_id';
     protected $table = 'timer';
+    
+     public function task_checklist() {
+        return $this->belongsTo('App\Models\TaskChecklist');
+    }
 
 }

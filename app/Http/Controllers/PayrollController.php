@@ -8,6 +8,12 @@ use \DB;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Profile;
+use App\Models\TaskChecklist;
+use App\Models\Timer;
+
+
 
 class PayrollController extends Controller
 {
@@ -98,7 +104,26 @@ class PayrollController extends Controller
      */
     public function show($id)
     {
-        //
+        
+        $employees = Profile::with('user')->where('company_id',$id)->get();
+        
+        $employee_ids = [];
+        foreach($employees as $employee) {
+            array_push($employee_ids,$employee->user->user_id);
+        }
+        
+        $tasks = Timer::with('task_checklist')->whereIn('user_id',$employee_ids)->get();
+        
+        $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, user_id"))->groupBy('user_id')->get();
+        
+        $assets = ['assets'];
+        
+        return view('payroll.show',[
+            'assets' => $assets,
+            'employees' => $employees,
+            'tasks' => $tasks,
+            'total_time' => $total_time
+        ]);
     }
 
     /**
