@@ -303,7 +303,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
         $("[data-mask]").inputmask();
 
         $('#add_ticket').on('shown.bs.modal', function(e){
-            $(this).find('.modal-body').load('{{--{{ $setting->grab('main_route').'/create' }}--}}');
+            $(this).find('.modal-body').load('{{ $setting->grab('main_route').'/create' }}');
         });
         $('.datetimepicker').datetimepicker({
             format: "DD-MM-YYYY",
