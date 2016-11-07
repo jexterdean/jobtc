@@ -142,35 +142,35 @@
         </div>
         <div class="link-column">
             <ul class="list-group link-group">
-            {{--*/ $ref = 1 /*--}}
+                {{--*/ $ref = 1 /*--}}
                 @foreach($links as $link)
-                    @if($link->task_id == $task->task_id)
-                    <li class="list-group-item" id="link-{{$link->id}}" style="{{ $ref == 1 ?  '' : 'border-top: none!important'}}">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                {{--*/ $parse_url = parse_url($link->url) /*--}}
-                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                <input type="hidden" class="company_id" value="{{$company_id}}" />
-                                @if(empty($parse_url['scheme']))
-                                <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                                @else
-                                <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                                @endif
-                            </div>
-                            <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
-                            <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                                <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
-                                @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                                <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
-                                @endif
-                                @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                                <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
-                                @endif
-                            </div>
+                @if($link->task_id == $task->task_id)
+                <li class="list-group-item" id="link-{{$link->id}}" style="{{ $ref == 1 ?  '' : 'border-top: none!important'}}">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            {{--*/ $parse_url = parse_url($link->url) /*--}}
+                            <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                            <input type="hidden" class="company_id" value="{{$company_id}}" />
+                            @if(empty($parse_url['scheme']))
+                            <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                            @else
+                            <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                            @endif
                         </div>
-                    </li>
-                    {{--*/ $ref++ /*--}}
-                    @endif
+                        <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
+                        <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
+                            <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
+                            @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                            <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
+                            @endif
+                            @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                            <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
+                            @endif
+                        </div>
+                    </div>
+                </li>
+                {{--*/ $ref++ /*--}}
+                @endif
                 @endforeach
             </ul>
         </div>
@@ -306,13 +306,13 @@
                 var _task_id = ui.item.find('.task_list_id').val();
                 var _company_id = ui.item.find('.company_id').val();
                 var _data = [];
-                $.each(_link_items,function(e){
+                $.each(_link_items, function (e) {
                     var _str_id = this.id;
                     var _id = _str_id.split('-');
                     _data.push(_id);
                 });
                 var url = public_path + '/setLinkOrder/' + _task_id + '/' + _company_id;
-                $.post(url, {links_order: _data},function(res){
+                $.post(url, {links_order: _data}, function (res) {
                     console.log(res);
                 });
             },
@@ -321,14 +321,14 @@
                 var _task_id = ui.item.find('.task_list_id').val();
                 var _company_id = ui.item.find('.company_id').val();
                 var _data = [];
-                $.each(_link_items,function(e){
+                $.each(_link_items, function (e) {
                     var _str_id = this.id;
                     var _id = _str_id.split('-');
                     _data.push(_id[1]);
                 });
 
                 var url = public_path + 'setLinkOrder/' + _task_id + '/' + _company_id;
-                $.post(url, {links_order: _data},function(res){
+                $.post(url, {links_order: _data}, function (res) {
                     console.log(res);
                 });
             }
@@ -528,9 +528,9 @@
             $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
             $('#timer-' + task_checklist_id).countdown('resume');
         });
-        
+
         _body.on('click', '.pause-timer', function () {
-             var timer_id = $(this).siblings('.timer_id').val();
+            var timer_id = $(this).siblings('.timer_id').val();
             var task_checklist_id = $(this).siblings('.task_checklist_id').val();
             var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').first().text();
             console.log('time_paused: ' + time_paused);
@@ -539,12 +539,12 @@
             $('#timer-pause-' + task_checklist_id).text('Resume');
             $('#timer-options-' + task_checklist_id).children('timer_status', 'Paused');
             $('#timer-' + task_checklist_id).removeClass('still-counting');
-            $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer','resume-timer');
+            $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
             pauseTask(timer_id, time_paused);
         });
-        
+
         _body.on('click', '.resume-timer', function () {
-        //$('.resume-timer').clickToggle(function () {
+            //$('.resume-timer').clickToggle(function () {
 
             var timer_id = $(this).siblings('.timer_id').val();
             var task_checklist_id = $(this).siblings('.task_checklist_id').val();
@@ -564,7 +564,7 @@
             $('#timer-' + task_checklist_id).countdown('resume');
             $('#timer-' + task_checklist_id).addClass('still-counting');
             $('#timer-options-' + task_checklist_id).children('timer_status', 'Resumed');
-            $('#timer-pause-' + task_checklist_id).switchClass('resume-timer','pause-timer');    
+            $('#timer-pause-' + task_checklist_id).switchClass('resume-timer', 'pause-timer');
             console.log("timer_id: " + timer_id);
             console.log("task_checklist_id: " + task_checklist_id);
             resumeTask(timer_id);
@@ -605,7 +605,7 @@
                     }, function () {
                         $('#timer-' + id).countdown('resume');
                         $('#timer-pause-' + id).text('Pause');
-                        
+
                         $('#timer-' + id).addClass('still-counting');
                         resumeTask(id);
                     });
@@ -812,13 +812,54 @@
 
                         ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
                         ele += '<div class="row task-list-details">';
-                        ele += '<div class="col-md-7">';
+                        ele += '<div class="col-sm-6">';
                         ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header">' + val.checklist_header + '</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
+                        ele += '<div class="col-sm-3">';
+                        
+                        if (val.timer[0] !== undefined) {
+                            ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                            if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
+                                ele += '<text id="timer-' + val.id + '" class="still-counting">' + val.timer[0].total_time + '</text>';
+                                ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary pause-timer">Pause</button>';
+                            } else {
+                                ele += '<text id="timer-' + val.id + '">' + val.timer[0].total_time + '</text>';
+                                ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary resume-timer">Resume</button>';
+                                ele += '<input class="timer_id" type="hidden" value="' + val.timer[0].timer_id + '">';
+                                ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
+                                ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
+                                ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
+                                
+                            }
+                            ele += '</div>';
+                        } else {
+                            
+                            ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                            ele += '<text id="timer-' + val.id + '"></text>';
+                            ele += '<input class="timer_id" type="hidden" value="">';
+                            ele += '</div>'
+                            
+                        }
+                        ele += '</div>';
+                        ele += '<div class="col-sm-3">';
                         ele += '<div class="pull-right">';
-                        ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                        
+                        if (status === 'Default') {
+                            ele += '<div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
+                        }
+                        if (status === 'Ongoing') {
+                            ele += '<div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>';
+                        }
+                        if (status === 'Completed') {
+                            ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
+                        }
+                        if(status === 'Urgent') {
+                            ele+= '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
+                        }
+                        ele += '&nbsp;&nbsp;&nbsp;';
+                        //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
                         //ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
@@ -830,8 +871,7 @@
                         ele += '<div class="checklist-item">' + val.checklist + '</div>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-
-                        ele += '<hr/>';
+                        ele += '<br/>';
                         ele += '<div class="row">';
                         ele += '<div class="col-md-12">';
                         ele += '<div class="pull-right" style="margin-right: 5px">';
@@ -839,6 +879,7 @@
                         ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                        ele += '</div>';
                         ele += '</div>';
                         ele += '</div>';
                         ele += '</div>';
@@ -854,7 +895,7 @@
                     //Remove Text area
                     $('#add-new-task').remove();
                     check_list_container.children('li:contains("No data was found.")').remove();
-                    check_list_container.html(ele);
+                    check_list_container.append(ele);
                     _this.removeAttr('disabled');
                 });
             }).on('click', '.cancel-checklist', function () {
@@ -1318,17 +1359,17 @@
                             $.each(_return_data, function (key, val) {
                                 var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
                                 var ele = '<div class="row">';
-                                    ele += '<div class="col-md-4">';
-                                        ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
-                                        ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
-                                        ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                                    ele += '</div>';
-                                    ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                                    ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
-                                        ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
-                                        ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
-                                        ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
-                                    ele += '</div>';
+                                ele += '<div class="col-md-4">';
+                                ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
+                                ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
+                                ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                                ele += '</div>';
+                                ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                                ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                                ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
+                                ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
+                                ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                                ele += '</div>';
                                 ele += '</div>';
                                 var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
                                 _link_column.html(ele);
@@ -1351,21 +1392,21 @@
                         var _task_id = '';
                         var ele = '';
                         $.each(_return_data, function (key, val) {
-                        var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
+                            var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
                             ele = '<li class="list-group-item" id="link-' + val.id + '" style="border-top: none!important">';
-                                ele += '<div class="row">';
-                                    ele += '<div class="col-md-4">';
-                                        ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
-                                        ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
-                                        ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                                    ele += '</div>';
-                                    ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                                    ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
-                                        ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
-                                        ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
-                                        ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
-                                    ele += '</div>';
-                                ele += '</div>';
+                            ele += '<div class="row">';
+                            ele += '<div class="col-md-4">';
+                            ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
+                            ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
+                            ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                            ele += '</div>';
+                            ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                            ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                            ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
+                            ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
+                            ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                            ele += '</div>';
+                            ele += '</div>';
                             ele += '</li>';
                             _task_id = val.task_id;
                         });
@@ -1412,7 +1453,7 @@
                 var current_time = $('#timer-' + task_checklist_id).find('.countdown-row').text();
                 console.log('current_time: ' + current_time);
 
-                saveCurrentTime(timer_id,current_time);
+                saveCurrentTime(timer_id, current_time);
             });
         };
 

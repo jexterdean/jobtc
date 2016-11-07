@@ -345,6 +345,12 @@
                             </a>
                         </li>
                         @endif
+                        <li>
+                            <a href="{{url('/payroll/'.$company->company->id)}}">
+                                <i class="fa fa-money" aria-hidden="true"></i>
+                                <span>Payroll</span>
+                            </a>
+                        </li>
                         @if(
                         $module_permissions->where('slug','assign.projects')->count() === 1 || 
                         $module_permissions->where('slug','assign.jobs')->count() === 1 || 
