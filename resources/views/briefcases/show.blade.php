@@ -45,7 +45,7 @@
                                         {{--endregion--}}
                                         <div class="row task-list-details">
                                             <div class="col-md-7">
-                                                <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
+                                                <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem"><i class="glyphicon glyphicon-list"></i> {!! $list_item->checklist_header !!}</a>
                                                 <input type="hidden" class="company_id" value="{{$company_id}}" />
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                                 <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
@@ -160,6 +160,13 @@
                 <div class="col-sm-4">
 
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit_task_{{ $task->task_id }}" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @include('task/edit', ['task'=> $task] )
             </div>
         </div>
     </div>

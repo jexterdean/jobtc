@@ -3,7 +3,7 @@
 <div class="column">
 
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Projects <i class="glyphicon glyphicon-arrow-right"></i> Project Dash</div>
+        <div class="portlet-header reduce-portlet-header">Projects</div>
         <div class="portlet-content">
             <ul class='list-group'>
                 @foreach($projects as $project)
@@ -20,7 +20,7 @@
     </div>
 
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Jobs <i class="glyphicon glyphicon-arrow-right"></i> Job Dash</div>
+        <div class="portlet-header reduce-portlet-header">Jobs</div>
         <div class="portlet-content">
             @foreach($jobs as $job)
             <li class='list-group-item'>
@@ -35,7 +35,7 @@
     </div>
 
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Tests <i class="glyphicon glyphicon-arrow-right"></i> Test Dash</div>
+        <div class="portlet-header reduce-portlet-header">Tests</div>
         <div class="portlet-content">
             @foreach($tests as $test)
             <li class='list-group-item'>
@@ -52,7 +52,7 @@
 
 <div class="column">
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Employees <i class="glyphicon glyphicon-arrow-right"></i> Employee Dash</div>
+        <div class="portlet-header reduce-portlet-header">Employees</div>
         <div class="portlet-content">
             @foreach($employees as $employee)
             <li class='list-group-item'>
@@ -91,7 +91,7 @@
 
 <div class="column">
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Applicants <i class="glyphicon glyphicon-arrow-right"></i> Applicant Dash</div>
+        <div class="portlet-header reduce-portlet-header">Applicants</div>
         <div class="portlet-content">
             @foreach($applicants as $applicant)
             <li class='list-group-item'>
@@ -105,7 +105,7 @@
         </div>
     </div>
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Briefcase Items <i class="glyphicon glyphicon-arrow-right"></i> Item Dash</div>
+        <div class="portlet-header reduce-portlet-header">Briefcase Items</div>
         <div class="portlet-content">
             @foreach($items as $item)
             <li class='list-group-item'>
@@ -132,7 +132,7 @@
         </div>
     </div>
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Briefcase <i class="glyphicon glyphicon-arrow-right"></i> Briefcase Dash</div>
+        <div class="portlet-header reduce-portlet-header">Briefcase</div>
         <div class="portlet-content">
             @foreach($briefcases as $briefcase)
             <li class='list-group-item'>

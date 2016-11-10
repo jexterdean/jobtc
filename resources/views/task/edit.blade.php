@@ -6,6 +6,6 @@
         {!! Form::model($task,['method' => 'PATCH','route' => ['task.update',$task->task_id] ,'class' =>
         'form-horizontal link-form'])  !!}
         @include('task/partials/_form', ['belongs_to'=> $task->belongs_to,
-                'unique_id'=> $task->unique_id,'buttonText' => 'Update Task'] )
+                'unique_id'=> $task->unique_id,'buttonText' => 'Save'] )
         {!!  Form::close()  !!}
 </div>
