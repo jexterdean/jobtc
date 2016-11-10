@@ -35,7 +35,11 @@
                             <div class="col-md-3">&nbsp;</div>
                             @foreach($total_time_per_project->where('user_id',$employee->user_id)->where('project_id',$project->project_id) as $total)
                             <div class="col-md-3">{{$total->timeSum}}</div>
+                            @if($employee->rate->count() > 0)
                             <div class="col-md-3">{{$employee->rate[0]->currency}}&nbsp;{{$total->hours * $employee->rate[0]->rate_value}}</div>
+                            @else
+                            <div class="col-md-3"></div>
+                            @endif
                             @endforeach
                         </div>
                     </div>
