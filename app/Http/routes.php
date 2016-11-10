@@ -390,6 +390,10 @@ Route::group(['middleware' => 'auth'], function () {
     /* Adding Participants */
     Route::get('addParticipantForm', 'DiscussionsController@addParticipantForm');
     Route::post('addParticipant', 'DiscussionsController@addParticipant');
+    
+    /*Adding Employee Rates*/
+    Route::resource('rate','RateController');
+    
 });
 
 /* For Public Discussion Pages */

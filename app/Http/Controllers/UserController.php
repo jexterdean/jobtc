@@ -16,6 +16,7 @@ use App\Models\Permission;
 use Bican\Roles\Models\Role;
 use App\Models\Module;
 use App\Models\ProfileLevel;
+use App\Models\Rate;
 use Illuminate\Support\Facades\Storage;
 use Elasticsearch\ClientBuilder as ES;
 use DB;
@@ -749,7 +750,7 @@ class UserController extends BaseController {
 
         $user_id = Auth::user('user')->user_id;
 
-        $profiles = Profile::with('role')->where('company_id', $id)->get();
+        $profiles = Profile::with('role','rate')->where('company_id', $id)->get();
 
         $countries_option = Country::orderBy('country_name', 'asc')->get();
 
@@ -769,7 +770,7 @@ class UserController extends BaseController {
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-
+        
         $assets = ['companies', 'real-time'];
 
         return view('user.employees', [
@@ -790,7 +791,7 @@ class UserController extends BaseController {
 
         return implode(',', $parts);
     }
-
+    
 }
 
 ?>

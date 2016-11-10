@@ -730,7 +730,9 @@ class TaskController extends BaseController {
 
         $user_id = Auth::user()->user_id;
         $task_checklist_id = $request->input('task_checklist_id');
-
+        $task_id = TaskChecklist::where('id',$task_checklist_id)->pluck('task_id');
+        $project_id = Task::where('task_id',$task_id)->pluck('project_id');
+        
         $current_timestamp = time();
 
         $start_timestamp = date('Y-m-d H:i:s', $current_timestamp);
@@ -739,6 +741,8 @@ class TaskController extends BaseController {
             'user_id' => $user_id,
             'task_checklist_id' => $task_checklist_id,
             'start_time' => $start_timestamp,
+            'task_id' => $task_id,
+            'project_id' => $project_id,
             'timer_status' => 'Started'
         ]);
         $timer->save();

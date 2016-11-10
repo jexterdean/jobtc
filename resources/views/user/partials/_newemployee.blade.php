@@ -21,6 +21,18 @@
             </div>
         </div>
         <div class="employee-options pull-right">
+            @if($profile->rate->count() > 0)
+            <a target="_blank" href="{{url('rate/'.$profile->user->user_id.'/company/'.$profile->company_id)}}" id="rate-{{$profile->user->user_id}}" class="btn-edit btn-sm btn-shadow btn edit-rate">
+                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                <span>Edit Rate</span>
+            </a>
+            @else
+            <a target="_blank" href="{{url('rate/'.$profile->user->user_id.'/company/'.$profile->company_id)}}" id="rate-{{$profile->user->user_id}}" class="btn-edit btn-sm btn-shadow btn add-rate">
+                <i class="fa fa-credit-card" aria-hidden="true"></i>
+                <span>Add Rate</span>
+            </a>
+            @endif
+            
             <a target="_blank" href="{{url('user/'.$profile->user->user_id.'/company/'.$profile->company_id)}}" class="btn-edit btn-sm btn-shadow btn employee-profile">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 Profile
@@ -46,6 +58,11 @@
             @endif
             <input class="user_id" type="hidden" value="{{$profile->user_id}}"/>
             <input class="company_id" type="hidden" value="{{$company_id}}"/>
+            @if($profile->rate->count() > 0)
+            <input class="rate_id" type="hidden" value="{{$profile->rate[0]->id}}"/>
+            @else
+            <input class="rate_id" type="hidden" value=""/>
+            @endif
         </div>
     </div>
     <div class="row">

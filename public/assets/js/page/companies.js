@@ -1732,3 +1732,157 @@ $('[data-toggle="tooltip"]').tooltip({
     template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="max-width: 500px!important;text-align: left!important;"></div></div>',
     html: true
 });
+
+$('.employee-options').on('click','.add-rate',function(e){
+    e.preventDefault();
+    
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    
+    console.log('user_id: '+user_id);
+    console.log('company_id: '+company_id);
+    
+    var edit_rate_form = public_path + 'rate/create';
+    
+    BootstrapDialog.show({
+        title: 'Edit Rate <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var ajaxurl = public_path + 'rate';
+                    var form = $("#add-rate-form")[0];
+                    var currency = $(form).find('select[name="currency"]').val();
+                    var rate_type = $(form).find('select[name="rate_type"]').val();
+                    var rate_value = $(form).find('input[name="rate_value"]').val();
+                    
+                    console.log('rate type: '+rate_type);
+                    console.log('rate value: '+rate_value);
+                    
+                    var formData = new FormData();
+                    formData.append('user_id',user_id);
+                    formData.append('company_id',company_id);
+                    formData.append('currency',currency);
+                    formData.append('rate_type',rate_type);
+                    formData.append('rate_value',rate_value);
+                    
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            $('#rate-'+user_id).switchClass('add-rate','edit-rate');
+                            $('#rate-'+user_id).children('span').text('Edit Rate');
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': edit_rate_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+    
+});
+
+$('.employee-options').on('click','.edit-rate',function(e){
+    e.preventDefault();
+    
+    var user_id = $(this).siblings('.user_id').val();
+    var company_id = $(this).siblings('.company_id').val();
+    var rate_id = $(this).siblings('.rate_id').val();
+    
+    console.log('user_id: '+user_id);
+    console.log('company_id: '+company_id);
+    console.log('rate_id: '+rate_id);
+    
+    var edit_rate_form = public_path + 'rate/'+rate_id+'/edit';
+    
+    BootstrapDialog.show({
+        title: 'Edit Rate <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn-edit btn-shadow',
+                action: function (dialog) {
+
+                    var ajaxurl = public_path + 'rate/'+rate_id;
+                    var form = $("#edit-rate-form")[0];
+                    var currency = $(form).find('select[name="currency"]').val();
+                    var rate_type = $(form).find('select[name="rate_type"]').val();
+                    var rate_value = $(form).find('input[name="rate_value"]').val();
+                    
+                    console.log('rate type: '+rate_type);
+                    console.log('rate value: '+rate_value);
+                    
+                    var formData = new FormData();
+                    formData.append('currency',currency);
+                    formData.append('rate_type',rate_type);
+                    formData.append('rate_value',rate_value);
+                    formData.append('_method', 'PUT');
+                    
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': edit_rate_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+    
+});

@@ -22,4 +22,8 @@ class Profile extends Model
     public function role() {
         return $this->belongsTo('Bican\Roles\Models\Role');
     }
+    
+    public function rate() {
+        return $this->hasMany('App\Models\Rate');
+    }
 }
