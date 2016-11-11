@@ -626,6 +626,7 @@
 
                         $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
                         $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary">Pause</button>');
+                        $('#timer-' + id).countdown('resume');
                         $('#timer-pause-' + id).clickToggle(function () {
                             $('#timer-' + id).countdown('pause');
                             $('#timer-pause-' + id).text('Resume');
