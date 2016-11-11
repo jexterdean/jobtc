@@ -365,9 +365,9 @@ class TaskController extends BaseController {
             ]);
 
             //$data = TaskChecklist::where('task_id', '=', $taskCheckList->task_id)->get();
-            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->where('id',$task_check_list_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
+            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->where('id', $task_check_list_id)->orderBy(DB::raw('FIELD(id,' . $task_list_id_array . ')'))->get();
         } else {
-            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->where('id',$task_check_list_id)->get();
+            $data = TaskChecklist::with('timer')->where('task_id', '=', $task_id)->where('id', $task_check_list_id)->get();
         }
 
         return json_encode($data);
@@ -730,24 +730,36 @@ class TaskController extends BaseController {
 
         $user_id = Auth::user()->user_id;
         $task_checklist_id = $request->input('task_checklist_id');
-        $task_id = TaskChecklist::where('id',$task_checklist_id)->pluck('task_id');
-        $project_id = Task::where('task_id',$task_id)->pluck('project_id');
+        $task_id = TaskChecklist::where('id', $task_checklist_id)->pluck('task_id');
+        $project_id = Task::where('task_id', $task_id)->pluck('project_id');
+         
         
         $current_timestamp = time();
 
         $start_timestamp = date('Y-m-d H:i:s', $current_timestamp);
 
-        $timer = new Timer([
-            'user_id' => $user_id,
-            'task_checklist_id' => $task_checklist_id,
-            'start_time' => $start_timestamp,
-            'task_id' => $task_id,
-            'project_id' => $project_id,
-            'timer_status' => 'Started'
-        ]);
-        $timer->save();
+        $timer_exists = Timer::where('user_id', $user_id)->where('task_checklist_id',$task_checklist_id)->count();
 
-        return $timer->timer_id;
+        if ($timer_exists > 0) {
+            $timer = Timer::where('user_id', $user_id)->where('task_checklist_id',$task_checklist_id)->update([
+                'timer_status' => 'Started'
+            ]);
+            
+            $timer_id = Timer::where('user_id', $user_id)->where('task_checklist_id',$task_checklist_id)->pluck('timer_id');
+        } else {
+
+            $timer = new Timer([
+                'user_id' => $user_id,
+                'task_checklist_id' => $task_checklist_id,
+                'start_time' => $start_timestamp,
+                'task_id' => $task_id,
+                'project_id' => $project_id,
+                'timer_status' => 'Started'
+            ]);
+            $timer->save();
+            $timer_id = $timer->timer_id;
+        }
+        return $timer_id;
     }
 
     public function pauseTask(Request $request) {
@@ -779,8 +791,6 @@ class TaskController extends BaseController {
 
     public function resumeTask(Request $request) {
 
-        $user_id = Auth::user()->user_id;
-
         $timer_id = $request->input('timer_id');
 
         $timer = Timer::where('timer_id', $timer_id)->update([
@@ -793,14 +803,14 @@ class TaskController extends BaseController {
 
     public function endTask(Request $request) {
 
-        $user_id = Auth::user()->user_id;
+       $user_id = Auth::user()->user_id;
 
         $timer_id = $request->input('timer_id');
+        $time = $request->input('time');
 
         $current_timestamp = time();
 
         $start_timestamp = Timer::where('timer_id', $timer_id)->pluck('start_time');
-
         $end_timestamp = date('Y-m-d H:i:s', $current_timestamp);
 
         $start_date = date_create($start_timestamp);
@@ -811,7 +821,7 @@ class TaskController extends BaseController {
 
         $timer = Timer::where('timer_id', $timer_id)->update([
             'end_time' => $end_timestamp,
-            'total_time' => $total_time,
+            'total_time' => $time,
             'timer_status' => 'Completed'
         ]);
 

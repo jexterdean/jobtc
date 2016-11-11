@@ -40,6 +40,8 @@
                                                 @if($timer->timer_status === 'Resumed' || $timer->timer_status === 'Started')
                                                 <text id='timer-{{$list_item->id}}' class='still-counting'>{{$timer->total_time}}</text>
                                                 <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary pause-timer">Pause</button>
+                                                @elseif($timer->timer_status === 'Completed')
+                                                <text id='timer-{{$list_item->id}}'>{{$timer->total_time}}</text>
                                                 @else
                                                 <text id='timer-{{$list_item->id}}'>{{$timer->total_time}}</text>
                                                 <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary resume-timer">Resume</button>
@@ -492,10 +494,10 @@
             });
         }
 
-        function endTask(timer_id) {
+        function endTask(timer_id, time_ended) {
 
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id});
+            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': time_ended});
             $.post(public_path + 'endTask', data, function (e) {
             });
 
@@ -589,26 +591,57 @@
                 $(this).switchClass('bg-gray', 'bg-orange', function () {
                     update_checklist_status(id, 'Ongoing');
                     startTask(id);
-                    var d = new Date();
-                    $('#timer-' + id).countdown({since: d, format: 'HMS', compact: true});
-                    $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary">Pause</button>');
-                    $('#timer-' + id).addClass('still-counting');
-                    $('#timer-pause-' + id).clickToggle(function () {
-                        $('#timer-' + id).countdown('pause');
-                        $('#timer-pause-' + id).text('Resume');
-                        var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
-                        var time_paused = $('#timer-' + id).find('.countdown-row').text();
-                        console.log("timer_id: " + timer_id);
-                        console.log("time: " + time_paused);
-                        $('#timer-' + id).removeClass('still-counting');
-                        pauseTask(timer_id, time_paused);
-                    }, function () {
-                        $('#timer-' + id).countdown('resume');
-                        $('#timer-pause-' + id).text('Pause');
-
+                    if ($('#timer-' + id).length === 0) {
+                        var d = new Date();
+                        $('#timer-' + id).countdown({since: d, format: 'HMS', compact: true});
+                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary">Pause</button>');
                         $('#timer-' + id).addClass('still-counting');
-                        resumeTask(id);
-                    });
+                        $('#timer-pause-' + id).clickToggle(function () {
+                            $('#timer-' + id).countdown('pause');
+                            $('#timer-pause-' + id).text('Resume');
+                            var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
+                            var time_paused = $('#timer-' + id).find('.countdown-row').text();
+                            console.log("timer_id: " + timer_id);
+                            console.log("time: " + time_paused);
+                            $('#timer-' + id).removeClass('still-counting');
+                            pauseTask(timer_id, time_paused);
+                        }, function () {
+                            $('#timer-' + id).countdown('resume');
+                            $('#timer-pause-' + id).text('Pause');
+                            $('#timer-' + id).addClass('still-counting');
+                            resumeTask(id);
+                        });
+                    } else {
+                        
+                        $('#timer-pause-' + id).text('Pause');
+                        var time_resume = $('#timer-options-' + id).find('.total_time').val();
+
+                        var time_array = time_resume.split(":");
+
+                        var hours = '-' + time_array[0] + 'H';
+                        var minutes = '-' + time_array[1] + 'M';
+                        var seconds = '-' + time_array[2] + 'S';
+
+                        var since = hours + ' ' + minutes + ' ' + seconds;
+
+                        $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
+                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary">Pause</button>');
+                        $('#timer-pause-' + id).clickToggle(function () {
+                            $('#timer-' + id).countdown('pause');
+                            $('#timer-pause-' + id).text('Resume');
+                            var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
+                            var time_paused = $('#timer-' + id).find('.countdown-row').text();
+                            console.log("timer_id: " + timer_id);
+                            console.log("time: " + time_paused);
+                            $('#timer-' + id).removeClass('still-counting');
+                            pauseTask(timer_id, time_paused);
+                        }, function () {
+                            $('#timer-' + id).countdown('resume');
+                            $('#timer-pause-' + id).text('Pause');
+                            $('#timer-' + id).addClass('still-counting');
+                            resumeTask(id);
+                        });
+                    }
                 });
 
             }
@@ -620,7 +653,13 @@
                     update_checklist_status(id, 'Completed');
                 });
                 var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
-                endTask(timer_id);
+                var time_ended = $('#timer-' + id).text();
+                console.log('time_ended: '+time_ended);
+                if ($('#timer-pause-' + id).length > 0) {
+                    $('#timer-pause-' + id).remove();
+                }
+                $('#timer-' + id).countdown('pause');
+                endTask(timer_id,time_ended);
             }
             /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
             if ($(this).hasClass('bg-green')) {
@@ -818,7 +857,7 @@
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
                         ele += '<div class="col-sm-3">';
-                        
+
                         if (val.timer[0] !== undefined) {
                             ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
                             if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
@@ -831,21 +870,21 @@
                                 ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
                                 ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
                                 ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
-                                
+
                             }
                             ele += '</div>';
                         } else {
-                            
+
                             ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
                             ele += '<text id="timer-' + val.id + '"></text>';
                             ele += '<input class="timer_id" type="hidden" value="">';
                             ele += '</div>'
-                            
+
                         }
                         ele += '</div>';
                         ele += '<div class="col-sm-3">';
                         ele += '<div class="pull-right">';
-                        
+
                         if (status === 'Default') {
                             ele += '<div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
                         }
@@ -855,8 +894,8 @@
                         if (status === 'Completed') {
                             ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
                         }
-                        if(status === 'Urgent') {
-                            ele+= '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
+                        if (status === 'Urgent') {
+                            ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
                         }
                         ele += '&nbsp;&nbsp;&nbsp;';
                         //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
