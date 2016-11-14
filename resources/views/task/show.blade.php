@@ -38,12 +38,12 @@
                                             @forelse($list_item->timer as $timer)
                                             <div id='timer-options-{{$list_item->id}}' class="pull-right"> 
                                                 @if($timer->timer_status === 'Resumed' || $timer->timer_status === 'Started')
-                                                <text id='timer-{{$list_item->id}}' class='still-counting'>{{$timer->total_time}}</text>
+                                                <text id='timer-{{$list_item->id}}' class='still-counting task-item-timer'>{{$timer->total_time}}</text>
                                                 <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary pause-timer">Pause</button>
                                                 @elseif($timer->timer_status === 'Completed')
-                                                <text id='timer-{{$list_item->id}}'>{{$timer->total_time}}</text>
+                                                <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
                                                 @else
-                                                <text id='timer-{{$list_item->id}}'>{{$timer->total_time}}</text>
+                                                <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
                                                 <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary resume-timer">Resume</button>
                                                 @endif
                                                 <input class="timer_id" type="hidden" value="{{$timer->timer_id}}">
@@ -53,7 +53,7 @@
                                             </div>
                                             @empty
                                             <div id='timer-options-{{$list_item->id}}' class="pull-right">
-                                                <text id='timer-{{$list_item->id}}'></text>
+                                                <text id='timer-{{$list_item->id}}' class="task-item-timer"></text>
                                                 <input class="timer_id" type="hidden" value="">
                                             </div>
                                             @endforelse
@@ -510,36 +510,43 @@
             });
         }
 
+        function saveStillCounting() {
+            $('.still-counting').each(function (index) {
+                var timer_id = $(this).siblings('.timer_id').val();
+                var task_checklist_id = $(this).siblings('.task_checklist_id').val();
 
-        $('.still-counting').each(function (index) {
-            var timer_id = $(this).siblings('.timer_id').val();
-            var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+                $('#timer-pause-' + task_checklist_id).text('Pause');
+                var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val();
+                console.log('time_resume: ' + time_resume);
 
-            $('#timer-pause-' + task_checklist_id).text('Pause');
-            var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val();
-            console.log('time_resume: ' + time_resume);
+                var time_array = time_resume.split(":");
 
-            var time_array = time_resume.split(":");
+                var hours = '-' + time_array[0] + 'H';
+                var minutes = '-' + time_array[1] + 'M';
+                var seconds = '-' + time_array[2] + 'S';
 
-            var hours = '-' + time_array[0] + 'H';
-            var minutes = '-' + time_array[1] + 'M';
-            var seconds = '-' + time_array[2] + 'S';
+                var since = hours + ' ' + minutes + ' ' + seconds;
 
-            var since = hours + ' ' + minutes + ' ' + seconds;
+                $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
+                $('#timer-' + task_checklist_id).countdown('resume');
+            });
+        }
 
-            $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
-            $('#timer-' + task_checklist_id).countdown('resume');
-        });
+        //on Page load, save and resume the timer that wasn't paused
+        saveStillCounting();
+
 
         _body.on('click', '.pause-timer', function () {
             var timer_id = $(this).siblings('.timer_id').val();
             var task_checklist_id = $(this).siblings('.task_checklist_id').val();
-            var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').first().text();
+            var time_paused = $('#timer-' + task_checklist_id).text();
+            console.log('task_checklist_id: ' + task_checklist_id);
             console.log('time_paused: ' + time_paused);
 
             $('#timer-' + task_checklist_id).countdown('pause');
             $('#timer-pause-' + task_checklist_id).text('Resume');
-            $('#timer-options-' + task_checklist_id).children('timer_status', 'Paused');
+            $('#timer-options-' + task_checklist_id).children('.timer_status').val('Paused');
+            $('#timer-options-' + task_checklist_id).children('.total_time').val(time_paused);
             $('#timer-' + task_checklist_id).removeClass('still-counting');
             $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
             pauseTask(timer_id, time_paused);
@@ -563,10 +570,30 @@
             var since = hours + ' ' + minutes + ' ' + seconds;
 
             $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
+
+            $('.task-item-timer').countdown('pause');
+            $('.task-item-timer').siblings('.pause-timer').text('Resume');
+            $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
+            $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+
+            $('.still-counting').each(function (index) {
+                var timer_id = $(this).siblings('.timer_id').val();
+                var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+                var time_paused = $('#timer-options-' + task_checklist_id).find('.countdown-row').text();
+                console.log('time_paused: ' + time_paused);
+
+                pauseTask(timer_id, time_paused);
+            });
+
+
+            $('.task-item-timer').removeClass('still-counting');
+
             $('#timer-' + task_checklist_id).countdown('resume');
             $('#timer-' + task_checklist_id).addClass('still-counting');
-            $('#timer-options-' + task_checklist_id).children('timer_status', 'Resumed');
+            $('#timer-options-' + task_checklist_id).children('timer_status').val('Resumed');
             $('#timer-pause-' + task_checklist_id).switchClass('resume-timer', 'pause-timer');
+            $('#timer-pause-' + task_checklist_id).text('Pause');
             console.log("timer_id: " + timer_id);
             console.log("task_checklist_id: " + task_checklist_id);
             resumeTask(timer_id);
@@ -591,31 +618,56 @@
                 $(this).switchClass('bg-gray', 'bg-orange', function () {
                     update_checklist_status(id, 'Ongoing');
                     startTask(id);
-                    if ($('#timer-' + id).length === 0) {
+                    console.log('Starting Task' + $('#timer-' + id).text());
+                    if ($('#timer-' + id).text() === '') {
+                        $('.task-item-timer').countdown('pause');
+                        $('.task-item-timer').siblings('.pause-timer').text('Resume');
+                        $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
+                        $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+
+                        $('.still-counting').each(function (index) {
+                            var timer_id = $(this).siblings('.timer_id').val();
+                            var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+                            //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
+                            var time_paused = $('.still-counting').text();
+                            console.log('time_paused: ' + time_paused);
+
+                            pauseTask(timer_id, time_paused);
+                        });
+
+                        $('.task-item-timer').removeClass('still-counting');
+
                         var d = new Date();
                         $('#timer-' + id).countdown({since: d, format: 'HMS', compact: true});
-                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary">Pause</button>');
+                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
+                        $('#timer-' + id).parent().append('<input class="task_checklist_id" type="hidden" value="'+id+'" />');
+                        $('#timer-' + id).parent().append('<input class="total_time" type="hidden" value="" />');
+                        $('#timer-' + id).parent().append('<input class="timer_status" type="hidden" value="Started" />');
+                        $('#timer-' + id).countdown('resume');
                         $('#timer-' + id).addClass('still-counting');
-                        $('#timer-pause-' + id).clickToggle(function () {
+                        /*$('#timer-pause-' + id).clickToggle(function () {
                             $('#timer-' + id).countdown('pause');
                             $('#timer-pause-' + id).text('Resume');
                             var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
-                            var time_paused = $('#timer-' + id).find('.countdown-row').text();
+                            //var time_paused = $('#timer-' + id).find('.countdown-row').text();
+                            var time_paused = $('.still-counting').text();
                             console.log("timer_id: " + timer_id);
                             console.log("time: " + time_paused);
                             $('#timer-' + id).removeClass('still-counting');
                             pauseTask(timer_id, time_paused);
                         }, function () {
+                            $('.pause-timer').text('Resume');
                             $('#timer-' + id).countdown('resume');
                             $('#timer-pause-' + id).text('Pause');
                             $('#timer-' + id).addClass('still-counting');
+                            $('.task-item-timer').countdown('pause');
                             resumeTask(id);
-                        });
+                        });*/
                     } else {
-                        
                         $('#timer-pause-' + id).text('Pause');
-                        var time_resume = $('#timer-options-' + id).find('.total_time').val();
-
+                        var time_resume = $('#timer-' + id).text();
+                        console.log('time_resume: ' + time_resume);
                         var time_array = time_resume.split(":");
 
                         var hours = '-' + time_array[0] + 'H';
@@ -625,9 +677,9 @@
                         var since = hours + ' ' + minutes + ' ' + seconds;
 
                         $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
-                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary">Pause</button>');
+                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
                         $('#timer-' + id).countdown('resume');
-                        $('#timer-pause-' + id).clickToggle(function () {
+                        /*$('#timer-pause-' + id).clickToggle(function () {
                             $('#timer-' + id).countdown('pause');
                             $('#timer-pause-' + id).text('Resume');
                             var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
@@ -640,8 +692,10 @@
                             $('#timer-' + id).countdown('resume');
                             $('#timer-pause-' + id).text('Pause');
                             $('#timer-' + id).addClass('still-counting');
+                            $('.pause-timer').text('Resume');
+                            $('.task-item-timer').countdown('pause');
                             resumeTask(id);
-                        });
+                        });*/
                     }
                 });
 
@@ -655,12 +709,13 @@
                 });
                 var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
                 var time_ended = $('#timer-' + id).text();
-                console.log('time_ended: '+time_ended);
+                console.log('time_ended: ' + time_ended);
                 if ($('#timer-pause-' + id).length > 0) {
                     $('#timer-pause-' + id).remove();
                 }
+                $('#timer-' + id).removeClass('still-counting');
                 $('#timer-' + id).countdown('pause');
-                endTask(timer_id,time_ended);
+                endTask(timer_id, time_ended);
             }
             /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
             if ($(this).hasClass('bg-green')) {

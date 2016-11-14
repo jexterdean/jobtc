@@ -732,21 +732,35 @@ class TaskController extends BaseController {
         $task_checklist_id = $request->input('task_checklist_id');
         $task_id = TaskChecklist::where('id', $task_checklist_id)->pluck('task_id');
         $project_id = Task::where('task_id', $task_id)->pluck('project_id');
-         
-        
+
+
         $current_timestamp = time();
 
         $start_timestamp = date('Y-m-d H:i:s', $current_timestamp);
 
-        $timer_exists = Timer::where('user_id', $user_id)->where('task_checklist_id',$task_checklist_id)->count();
+        $timer_exists = Timer::where('user_id', $user_id)->where('task_checklist_id', $task_checklist_id)->count();
+
+        $timers_running = Timer::where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->count();
 
         if ($timer_exists > 0) {
-            $timer = Timer::where('user_id', $user_id)->where('task_checklist_id',$task_checklist_id)->update([
+            $timer = Timer::where('user_id', $user_id)->where('task_checklist_id', $task_checklist_id)->update([
                 'timer_status' => 'Started'
             ]);
-            
-            $timer_id = Timer::where('user_id', $user_id)->where('task_checklist_id',$task_checklist_id)->pluck('timer_id');
+
+            $timer_id = Timer::where('user_id', $user_id)->where('task_checklist_id', $task_checklist_id)->pluck('timer_id');
+
+            if ($timers_running > 0) {
+                $stop_timers = Timer::where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->update([
+                    'timer_status' => 'Paused'
+                ]);
+            }
         } else {
+
+            /* if($timers_running > 0) {
+              $stop_timers = Timer::whereNotIn('user_id',$user_id)->where('timer_status','Started')->orWhere('timer_status','Resumed')->update([
+              'timer_status' => 'Paused'
+              ]);
+              } */
 
             $timer = new Timer([
                 'user_id' => $user_id,
@@ -793,6 +807,14 @@ class TaskController extends BaseController {
 
         $timer_id = $request->input('timer_id');
 
+        $timers_running = Timer::where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->count();
+
+        if ($timers_running > 0) {
+            $stop_timers = Timer::where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->update([
+                'timer_status' => 'Paused'
+            ]);
+        }
+
         $timer = Timer::where('timer_id', $timer_id)->update([
             'end_time' => '',
             'timer_status' => 'Resumed'
@@ -803,7 +825,7 @@ class TaskController extends BaseController {
 
     public function endTask(Request $request) {
 
-       $user_id = Auth::user()->user_id;
+        $user_id = Auth::user()->user_id;
 
         $timer_id = $request->input('timer_id');
         $time = $request->input('time');
