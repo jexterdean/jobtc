@@ -120,9 +120,9 @@ class PayrollController extends Controller {
                     array_push($project_ids, $task_checklist->task_checklist->task->project->project_id);
                 }
 
-                $projects = Project::whereIn('project_id', $project_ids)->get();
-
-                $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, user_id, project_id"))->groupBy('project_id')->get();
+                $projects = Project::whereIn('project_id', $project_ids)->where('company_id', $id)->get();
+                
+                $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, user_id, project_id"))->groupBy('project_id')->groupBy('user_id')->get();
 
                 $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->groupBy('user_id')->get();
 

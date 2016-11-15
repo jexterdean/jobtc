@@ -290,6 +290,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('updateTaskTimer/{id}', 'TaskController@updateTaskTimer');
     Route::any('deleteTaskTimer/{id}', 'TaskController@deleteTaskTimer');
     Route::post('checkList', 'TaskController@checkList');
+    Route::post('updateCheckListStatus/{id}', 'TaskController@updateCheckListStatus');
     Route::post('updateCheckList/{id}', 'TaskController@updateCheckList');
     Route::any('deleteCheckList/{id}', 'TaskController@deleteCheckList');
     Route::post('sortCheckList/{id}', 'TaskController@sortCheckList');

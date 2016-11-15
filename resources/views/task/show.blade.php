@@ -60,15 +60,19 @@
                                         </div>
                                         <div class="col-sm-3" style="white-space: nowrap">
                                             <div class="pull-right">
-                                                @if ($list_item->status === 'Default')
+                                                @forelse($list_item->task_checklist_statuses->where('user_id',$user_id) as $task_checklist_status)
+                                                @if ($task_checklist_status->status === 'Default')
                                                 <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                                @elseif($list_item->status === 'Ongoing')
+                                                @elseif($task_checklist_status->status === 'Ongoing')
                                                 <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>
-                                                @elseif($list_item->status === 'Completed')
+                                                @elseif($task_checklist_status->status === 'Completed')
                                                 <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>
-                                                @elseif($list_item->status === 'Urgent')
+                                                @elseif($task_checklist_status->status === 'Urgent')
                                                 <div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>
                                                 @endif
+                                                @empty
+                                                <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                @endforelse
                                                 &nbsp;&nbsp;&nbsp;
                                                 {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
@@ -439,7 +443,7 @@
             {'name': 'status', 'value': status}
             );
 
-            $.post(public_path + 'updateCheckList/' + id, data, function (e) {
+            $.post(public_path + 'updateCheckListStatus/' + id, data, function (e) {
             });
 
         };
@@ -647,24 +651,6 @@
                         $('#timer-' + id).parent().append('<input class="timer_status" type="hidden" value="Started" />');
                         $('#timer-' + id).countdown('resume');
                         $('#timer-' + id).addClass('still-counting');
-                        /*$('#timer-pause-' + id).clickToggle(function () {
-                         $('#timer-' + id).countdown('pause');
-                         $('#timer-pause-' + id).text('Resume');
-                         var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
-                         //var time_paused = $('#timer-' + id).find('.countdown-row').text();
-                         var time_paused = $('.still-counting').text();
-                         console.log("timer_id: " + timer_id);
-                         console.log("time: " + time_paused);
-                         $('#timer-' + id).removeClass('still-counting');
-                         pauseTask(timer_id, time_paused);
-                         }, function () {
-                         $('.pause-timer').text('Resume');
-                         $('#timer-' + id).countdown('resume');
-                         $('#timer-pause-' + id).text('Pause');
-                         $('#timer-' + id).addClass('still-counting');
-                         $('.task-item-timer').countdown('pause');
-                         resumeTask(id);
-                         });*/
                     } else {
 
                         $('.task-item-timer').countdown('pause');
@@ -699,23 +685,6 @@
                         $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
                         $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
                         $('#timer-' + id).countdown('resume');
-                        /*$('#timer-pause-' + id).clickToggle(function () {
-                         $('#timer-' + id).countdown('pause');
-                         $('#timer-pause-' + id).text('Resume');
-                         var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
-                         var time_paused = $('#timer-' + id).find('.countdown-row').text();
-                         console.log("timer_id: " + timer_id);
-                         console.log("time: " + time_paused);
-                         $('#timer-' + id).removeClass('still-counting');
-                         pauseTask(timer_id, time_paused);
-                         }, function () {
-                         $('#timer-' + id).countdown('resume');
-                         $('#timer-pause-' + id).text('Pause');
-                         $('#timer-' + id).addClass('still-counting');
-                         $('.pause-timer').text('Resume');
-                         $('.task-item-timer').countdown('pause');
-                         resumeTask(id);
-                         });*/
                     }
                 });
 

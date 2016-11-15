@@ -27,4 +27,8 @@ class TaskChecklist extends Model
     public function timer() {
         return $this->hasMany('App\Models\Timer');
     }
+    
+    public function task_checklist_statuses() {
+        return $this->hasMany('App\Models\TaskChecklistStatus');
+    }
 }
