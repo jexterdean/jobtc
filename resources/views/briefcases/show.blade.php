@@ -75,15 +75,19 @@
                                                 @endforelse
                                             </div>
                                             <div class="pull-right">
-                                                @if ($list_item->status === 'Default')
+                                                @forelse($list_item->task_checklist_statuses->where('user_id',$user_id) as $task_checklist_status)
+                                                @if ($task_checklist_status->status === 'Default')
                                                 <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                                @elseif($list_item->status === 'Ongoing')
+                                                @elseif($task_checklist_status->status === 'Ongoing')
                                                 <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>
-                                                @elseif($list_item->status === 'Completed')
+                                                @elseif($task_checklist_status->status === 'Completed')
                                                 <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>
-                                                @elseif($list_item->status === 'Urgent')
+                                                @elseif($task_checklist_status->status === 'Urgent')
                                                 <div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>
                                                 @endif
+                                                @empty
+                                                <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                                @endforelse
                                                 &nbsp;&nbsp;&nbsp;
                                                 {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
