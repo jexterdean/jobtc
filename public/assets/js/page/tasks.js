@@ -1,7 +1,147 @@
 
-//var task_id = '{{ $task->task_id }}';
+
+//Click Toggle Function
+$.fn.clickToggle = function (func1, func2) {
+    var funcs = [func1, func2];
+    this.data('toggleclicked', 0);
+    this.click(function () {
+        var data = $(this).data();
+        var tc = data.toggleclicked;
+        $.proxy(funcs[tc], this)();
+        data.toggleclicked = (tc + 1) % 2;
+    });
+    return this;
+};
+
+function dateAdd(date, interval, units) {
+    var ret = new Date(date); //don't change original date
+    switch (interval.toLowerCase()) {
+        case 'year'   :
+            ret.setFullYear(ret.getFullYear() + units);
+            break;
+        case 'quarter':
+            ret.setMonth(ret.getMonth() + 3 * units);
+            break;
+        case 'month'  :
+            ret.setMonth(ret.getMonth() + units);
+            break;
+        case 'week'   :
+            ret.setDate(ret.getDate() + 7 * units);
+            break;
+        case 'day'    :
+            ret.setDate(ret.getDate() + units);
+            break;
+        case 'hour'   :
+            ret.setTime(ret.getTime() + units * 3600000);
+            break;
+        case 'minute' :
+            ret.setTime(ret.getTime() + units * 60000);
+            break;
+        case 'second' :
+            ret.setTime(ret.getTime() + units * 1000);
+            break;
+        default       :
+            ret = undefined;
+            break;
+    }
+    return ret;
+}
+
+//region For Draggability
+$('.link-group').sortable({
+    handle: '.move-link',
+    connectWith: ".link-group",
+    placeholder: "ui-state-highlight",
+    receive: function (event, ui) {
+        var _link_items = ui.item.parents('.link-group').find('.list-group-item');
+        var _task_id = ui.item.find('.task_list_id').val();
+        var _company_id = ui.item.find('.company_id').val();
+        var _data = [];
+        $.each(_link_items, function (e) {
+            var _str_id = this.id;
+            var _id = _str_id.split('-');
+            _data.push(_id);
+        });
+        var url = public_path + '/setLinkOrder/' + _task_id + '/' + _company_id;
+        $.post(url, {links_order: _data}, function (res) {
+            console.log(res);
+        });
+    },
+    update: function (event, ui) {
+        var _link_items = ui.item.parents('.link-group').find('.list-group-item');
+        var _task_id = ui.item.find('.task_list_id').val();
+        var _company_id = ui.item.find('.company_id').val();
+        var _data = [];
+        $.each(_link_items, function (e) {
+            var _str_id = this.id;
+            var _id = _str_id.split('-');
+            _data.push(_id[1]);
+        });
+
+        var url = public_path + 'setLinkOrder/' + _task_id + '/' + _company_id;
+        $.post(url, {links_order: _data}, function (res) {
+            console.log(res);
+        });
+    }
+});
+$('.tasklist-group').sortable({
+    dropOnEmpty: true,
+    connectWith: ".tasklist-group",
+    handle: '.drag-handle',
+    placeholder: "ui-state-highlight",
+    receive: function (event, ui) {
+        //For receiving
+        var itemText = ui.item.attr('id');
+
+        var list_group_id = $(this).attr('id').split('_').pop();
+
+        var task_list_id = $(this).find('.task_list_id').val();
+
+        var task_list_item_id = ui.item.attr('id').split('_').pop();
+
+        var data = $(this).sortable('serialize');
+        //data.push({'name': '_token', 'value': _body.find('input[name="_token"]').val()})
+
+        url = public_path + '/changeCheckList/' + list_group_id + '/' + task_list_item_id;
+
+        //Remove warning that no data is found if dragged to an empty list
+        $(this).find('li:contains("No data was found.")').remove();
+
+        $.post(url, data);
+
+    },
+    update: function (event, ui) {
+
+        //For Sorting within lists
+        var list_group_id = $(this).attr('id').split('_').pop();
+
+        var task_list_id = $(this).find('.task_list_id').val();
+
+        var task_list_item_id = $(this).find('.task_list_item_id').val();
+
+        var data = $(this).sortable('serialize');
+
+        var url;
+
+        url = public_path + '/sortCheckList/' + list_group_id;
+
+        $.post(url, data);
+
+    }
+});
+//endregion
 var task_id = $('.task_id').val();
 var _body = $('#collapse-' + task_id);
+//var _body = $('#collapse-' + '{{ $task->task_id }}');
+//var task_id = '{{ $task->task_id }}';
+var alert_msg = function (msg, _class) {
+    var alert = '<div class="alert ' + _class + ' alert-dismissable">';
+    alert += '<i class="fa fa-check"></i>';
+    alert += '<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>';
+    alert += '<strong>' + msg + '</strong>';
+    alert += '</div>';
+    $('section.content').prepend(alert);
+};
 
 //region For Delete Hover
 _body.find('.list-group .alert_delete').hover(function (e) {
@@ -50,7 +190,7 @@ var update_checklist_status = function (id, status) {
     {'name': 'status', 'value': status}
     );
 
-    $.post(public_path + 'updateCheckList/' + id, data, function (e) {
+    $.post(public_path + 'updateCheckListStatus/' + id, data, function (e) {
     });
 
 };
@@ -81,6 +221,137 @@ var update_checklist_data = function (id, header, details, checklist_header, che
 
 };
 
+function startTask(id) {
+
+    var data = [];
+    data.push({'name': 'task_checklist_id', 'value': id});
+    $.post(public_path + 'startTask', data, function (timer_id) {
+        $('#timer-' + id).parent().find('.timer_id').val(timer_id);
+    });
+}
+
+function pauseTask(timer_id, time_paused) {
+    var data = [];
+    data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': time_paused});
+    $.post(public_path + 'pauseTask', data, function (e) {
+    });
+}
+
+
+function resumeTask(timer_id) {
+    var data = [];
+    data.push({'name': 'timer_id', 'value': timer_id});
+    $.post(public_path + 'resumeTask', data, function (e) {
+    });
+}
+
+function endTask(timer_id, time_ended) {
+
+    var data = [];
+    data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': time_ended});
+    $.post(public_path + 'endTask', data, function (e) {
+    });
+
+}
+
+function saveCurrentTime(timer_id, current_time) {
+    var data = [];
+    data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': current_time});
+    $.post(public_path + 'saveCurrentTime', data, function (e) {
+    });
+}
+
+function saveStillCounting() {
+    $('.still-counting').each(function (index) {
+        var timer_id = $(this).siblings('.timer_id').val();
+        var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+        $('#timer-pause-' + task_checklist_id).text('Pause');
+        var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val();
+        console.log('time_resume: ' + time_resume);
+
+        var time_array = time_resume.split(":");
+
+        var hours = '-' + time_array[0] + 'H';
+        var minutes = '-' + time_array[1] + 'M';
+        var seconds = '-' + time_array[2] + 'S';
+
+        var since = hours + ' ' + minutes + ' ' + seconds;
+
+        $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
+        $('#timer-' + task_checklist_id).countdown('resume');
+    });
+}
+
+//on Page load, save and resume the timer that wasn't paused
+saveStillCounting();
+
+
+_body.on('click', '.pause-timer', function () {
+    var timer_id = $(this).siblings('.timer_id').val();
+    var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+    var time_paused = $('#timer-' + task_checklist_id).text();
+    console.log('task_checklist_id: ' + task_checklist_id);
+    console.log('time_paused: ' + time_paused);
+
+    $('#timer-' + task_checklist_id).countdown('pause');
+    $('#timer-pause-' + task_checklist_id).text('Resume');
+    $('#timer-options-' + task_checklist_id).children('.timer_status').val('Paused');
+    $('#timer-options-' + task_checklist_id).children('.total_time').val(time_paused);
+    $('#timer-' + task_checklist_id).removeClass('still-counting');
+    $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
+    pauseTask(timer_id, time_paused);
+});
+
+_body.on('click', '.resume-timer', function () {
+    //$('.resume-timer').clickToggle(function () {
+
+    var timer_id = $(this).siblings('.timer_id').val();
+    var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+    $('#timer-pause-' + task_checklist_id).text('Pause');
+    var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val();
+
+    var time_array = time_resume.split(":");
+
+    var hours = '-' + time_array[0] + 'H';
+    var minutes = '-' + time_array[1] + 'M';
+    var seconds = '-' + time_array[2] + 'S';
+
+    var since = hours + ' ' + minutes + ' ' + seconds;
+
+    $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
+
+    $('.task-item-timer').countdown('pause');
+    $('.task-item-timer').siblings('.pause-timer').text('Resume');
+    $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
+    $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+
+    $('.still-counting').each(function (index) {
+        var timer_id = $(this).siblings('.timer_id').val();
+        var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+        var time_paused = $('#timer-options-' + task_checklist_id).find('.countdown-row').text();
+        console.log('time_paused: ' + time_paused);
+
+        pauseTask(timer_id, time_paused);
+    });
+
+
+    $('.task-item-timer').removeClass('still-counting');
+
+    $('#timer-' + task_checklist_id).countdown('resume');
+    $('#timer-' + task_checklist_id).addClass('still-counting');
+    $('#timer-' + task_checklist_id).addClass('task-item-timer');
+    $('#timer-options-' + task_checklist_id).children('timer_status').val('Resumed');
+    $('#timer-pause-' + task_checklist_id).switchClass('resume-timer', 'pause-timer');
+    $('#timer-pause-' + task_checklist_id).text('Pause');
+    console.log("timer_id: " + timer_id);
+    console.log("task_checklist_id: " + task_checklist_id);
+    resumeTask(timer_id);
+});
+
+
 //region Check List
 //For Checklist Status
 _body.on('click', '.checklist-status', function (e) {
@@ -89,14 +360,81 @@ _body.on('click', '.checklist-status', function (e) {
     e.stopImmediatePropagation();
 
     var index = $(this).parent().parent().parent().index();
-    var id = $(this).parent().siblings().find('.task_list_item_id').val();
+    var id = $(this).siblings('.task_list_item_id').val();
+
+    console.log(id);
 
     /*From Default, Change to ongoing*/
     if ($(this).hasClass('bg-gray')) {
         $(this).html('&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;');
         $(this).switchClass('bg-gray', 'bg-orange', function () {
             update_checklist_status(id, 'Ongoing');
+            startTask(id);
+            console.log('Starting Task' + $('#timer-' + id).text());
+            if ($('#timer-' + id).text() === '') {
+                $('.task-item-timer').countdown('pause');
+                $('.task-item-timer').siblings('.pause-timer').text('Resume');
+                $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
+                $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+
+                $('.still-counting').each(function (index) {
+                    var timer_id = $(this).siblings('.timer_id').val();
+                    var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+                    //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
+                    var time_paused = $('.still-counting').text();
+                    console.log('time_paused: ' + time_paused);
+
+                    pauseTask(timer_id, time_paused);
+                });
+
+                $('.task-item-timer').removeClass('still-counting');
+
+                var d = new Date();
+                $('#timer-' + id).countdown({since: d, format: 'HMS', compact: true});
+                $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
+                $('#timer-' + id).parent().append('<input class="task_checklist_id" type="hidden" value="' + id + '" />');
+                $('#timer-' + id).parent().append('<input class="total_time" type="hidden" value="" />');
+                $('#timer-' + id).parent().append('<input class="timer_status" type="hidden" value="Started" />');
+                $('#timer-' + id).countdown('resume');
+                $('#timer-' + id).addClass('still-counting');
+            } else {
+
+                $('.task-item-timer').countdown('pause');
+                $('.task-item-timer').siblings('.pause-timer').text('Resume');
+                $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
+                $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+
+                $('.still-counting').each(function (index) {
+                    var timer_id = $(this).siblings('.timer_id').val();
+                    var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+                    //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
+                    var time_paused = $('.still-counting').text();
+                    console.log('time_paused: ' + time_paused);
+
+                    pauseTask(timer_id, time_paused);
+                });
+
+                $('.task-item-timer').removeClass('still-counting');
+
+                $('#timer-pause-' + id).text('Pause');
+                var time_resume = $('#timer-' + id).text();
+                console.log('time_resume: ' + time_resume);
+                var time_array = time_resume.split(":");
+
+                var hours = '-' + time_array[0] + 'H';
+                var minutes = '-' + time_array[1] + 'M';
+                var seconds = '-' + time_array[2] + 'S';
+
+                var since = hours + ' ' + minutes + ' ' + seconds;
+
+                $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
+                $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
+                $('#timer-' + id).countdown('resume');
+            }
         });
+
     }
     /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
     if ($(this).hasClass('bg-orange')) {
@@ -105,6 +443,15 @@ _body.on('click', '.checklist-status', function (e) {
             finish_checklist();
             update_checklist_status(id, 'Completed');
         });
+        var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
+        var time_ended = $('#timer-' + id).text();
+        console.log('time_ended: ' + time_ended);
+        if ($('#timer-pause-' + id).length > 0) {
+            $('#timer-pause-' + id).remove();
+        }
+        $('#timer-' + id).removeClass('still-counting');
+        $('#timer-' + id).countdown('pause');
+        endTask(timer_id, time_ended);
     }
     /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
     if ($(this).hasClass('bg-green')) {
@@ -296,13 +643,54 @@ _body.on('click', '.check-list-btn', function () {
 
                 ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
                 ele += '<div class="row task-list-details">';
-                ele += '<div class="col-md-7">';
+                ele += '<div class="col-sm-6">';
                 ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header">' + val.checklist_header + '</a>';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                 ele += '</div>';
+                ele += '<div class="col-sm-3">';
+
+                if (val.timer[0] !== undefined) {
+                    ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                    if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
+                        ele += '<text id="timer-' + val.id + '" class="still-counting">' + val.timer[0].total_time + '</text>';
+                        ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary pause-timer">Pause</button>';
+                    } else {
+                        ele += '<text id="timer-' + val.id + '">' + val.timer[0].total_time + '</text>';
+                        ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary resume-timer">Resume</button>';
+                        ele += '<input class="timer_id" type="hidden" value="' + val.timer[0].timer_id + '">';
+                        ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
+                        ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
+                        ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
+
+                    }
+                    ele += '</div>';
+                } else {
+
+                    ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                    ele += '<text id="timer-' + val.id + '"></text>';
+                    ele += '<input class="timer_id" type="hidden" value="">';
+                    ele += '</div>'
+
+                }
+                ele += '</div>';
+                ele += '<div class="col-sm-3">';
                 ele += '<div class="pull-right">';
-                ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+
+                if (status === 'Default') {
+                    ele += '<div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
+                }
+                if (status === 'Ongoing') {
+                    ele += '<div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>';
+                }
+                if (status === 'Completed') {
+                    ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
+                }
+                if (status === 'Urgent') {
+                    ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
+                }
+                ele += '&nbsp;&nbsp;&nbsp;';
+                //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
                 //ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
@@ -314,8 +702,7 @@ _body.on('click', '.check-list-btn', function () {
                 ele += '<div class="checklist-item">' + val.checklist + '</div>';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-
-                ele += '<hr/>';
+                ele += '<br/>';
                 ele += '<div class="row">';
                 ele += '<div class="col-md-12">';
                 ele += '<div class="pull-right" style="margin-right: 5px">';
@@ -328,16 +715,18 @@ _body.on('click', '.check-list-btn', function () {
                 ele += '</div>';
                 ele += '</div>';
                 ele += '</div>';
+                ele += '</div>';
                 ele += '</li>';
 
             });
 
             console.log(_body.find('input[class="project_id"]').val());
-            
+            //socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_check_list_id': task_check_list_id});
+
             //Remove Text area
             $('#add-new-task').remove();
             check_list_container.children('li:contains("No data was found.")').remove();
-            check_list_container.html(ele);
+            check_list_container.append(ele);
             _this.removeAttr('disabled');
         });
     }).on('click', '.cancel-checklist', function () {
@@ -406,6 +795,7 @@ _body.on('click', '.edit-task-list-item', function (e) {
     content_text_area_ele += '<textarea id="editChecklistItem' + task_list_item_id + '" class="form-control edit-checklist-item" name="checklist" placeholder="Checklist" rows="3">' + content_text + '</textarea><br/>';
     content_text_area_ele += '</div>'; //form-group
     content_text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm update-checklist" type="button">Save & Close</button>&nbsp;&nbsp;&nbsp;';
+    content_text_area_ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete pull-right" style="margin-right:0;font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>';
     content_text_area_ele += '<input type="hidden" class="task_list_item_id" value="' + task_list_item_id + '" />';
     content_text_area_ele += '<input type="hidden" class="task_list_id" value="' + task_list_id + '" />';
     content_text_area_ele += '</div>';
@@ -444,7 +834,8 @@ _body.on('click', '.edit-task-list-item', function (e) {
         }); //ajax
     });
 
-    //Toggle the content area to show    
+    //Toggle the content area to show
+    $('#task-item-collapse-' + task_list_item_id).collapse('show');
     $(this).css({'display': 'none'});
     $(this).siblings('.alert_delete').css({'display': 'none'});
 });
@@ -483,7 +874,7 @@ _body.on('click', '.update-checklist', function (e) {
     update_checklist_data(task_list_item_id, task_list_header, task_list_data, checklist_header, checklist_item);
 
     //Hide the content area
-    //$('#task-item-collapse-' + task_list_item_id).collapse('hide');
+    $('#task-item-collapse-' + task_list_item_id).collapse('hide');
 
     $('.edit-task-list-item')
             .removeAttr('style');
@@ -548,7 +939,7 @@ $('.task-list').on('click', '.delete-tasklist', function (e) {
     var _delete_modal = $('#delete-modal');
     _delete_modal.find('.delete-msg').html('Deleting this Briefcase will delete all content.');
     _delete_modal.modal('show');
-    $('.confirm-delete').on('click',function(e){
+    $('.confirm-delete').on('click', function (e) {
         e.preventDefault();
         //Remove the collapse panel immediately
         _delete_modal.modal('hide');
@@ -557,109 +948,6 @@ $('.task-list').on('click', '.delete-tasklist', function (e) {
     });
     //endregion
 });
-//endregion
-
-//region Timer
-var element = _body.find('.timer-text');
-function startEditTimer(s) {
-    var timerStart = parseInt(0) + parseInt(s);
-    var $minutes = parseInt(timerStart / 60);
-    var $hoursValue = parseInt($minutes / 60);
-    var $minutesValue = $minutes - ($hoursValue * 60);
-    var $secondsValue = timerStart - (($hoursValue * 3600) + ($minutesValue * 60));
-
-    $.countDownTimer(element, {
-        includeTimer: {
-            hour: 1,
-            minutes: 1,
-            seconds: 1
-        },
-        isMilitaryTime: 0,
-        isCountUp: 1,
-        hours: $hoursValue,
-        minutes: $minutesValue,
-        seconds: $secondsValue
-    });
-}
-var timer = function () {
-    var current = _body.find('.stop_time').attr('data-current');
-    if (current) {
-        startEditTimer(current);
-    }
-};
-
-timer();
-
-var _post_timer = function (url, _data, _this) {
-    var tbody = _body.find('.task-table-body');
-
-    $.post(url, _data, function (return_data) {
-        var ele = '';
-        var _return_data = jQuery.parseJSON(return_data);
-        var total = 0;
-        $.each(_return_data.table, function (index, value) {
-            ele += '<tr>';
-            ele += '<td>' + value.name + '</td>';
-            ele += '<td class="text-center">' + $.format.date(value.start_time, "dd/MM/yyyy hh:mm:ss a") + '</td>';
-            ele += '<td class="text-center">' + (value.end_time != '0000-00-00 00:00:00' ? $.format.date(value.end_time, "dd/MM/yyyy hh:mm:ss a") : '&nbsp;') + '</td>';
-            ele += '<td class="text-center">' + (value.time ? value.time : '0.00') + '</td>';
-            ele += '<td class="text-center" style="width: 5%;"><a href="/deleteTaskTimer/' + value.id + '" class="alert_delete"> <i class="fa fa-trash-o fa-2x"></i> </a></td>';
-            ele += '</tr>';
-            total += (value.time ? parseFloat(value.time) : 0);
-        });
-        total = total.toFixed(2);
-        ele += '<tr>';
-        ele += '<td class="text-right" colspan="3"><strong>Total Time:</strong></td>';
-        ele += '<td class="text-center">' + total + '</td>';
-        ele += '<td>&nbsp;</td>';
-        ele += '</tr>';
-        _body.find('.total-time').html(total);
-        if (_this) {
-            var _return_latest_task_timer = _return_data.return_task_timer;
-            _this.attr('id', _return_latest_task_timer);
-        }
-        tbody.html(ele);
-    });
-};
-
-_body
-        .on('click', '.timer-btn', function (e) {
-            var form = _body.find('.task-form');
-            var data = form.serializeArray();
-            var date = $.now();
-            var now = $.format.date(date, "yyyy-MM-dd HH:mm:ss");
-            var tbody = _body.find('.task-table-body');
-            var _this = $(this);
-
-            if ($(this).hasClass('start_time')) {
-                startEditTimer(0);
-                _this
-                        .html('Stop Time')
-                        .removeClass('btn-timer start_time')
-                        .addClass('btn-delete stop_time');
-                element
-                        .removeClass('bg-red-gradient')
-                        .addClass('bg-green');
-                data.push({'name': 'start_time', 'value': now});
-                _post_timer(form.attr('action'), data, _this);
-                //alert_msg('Successfully added start time!!', 'alert-success');
-            }
-            else {
-                var url = public_path + 'updateTaskTimer/' + this.id;
-                $(this)
-                        .html('Start Time')
-                        .removeClass('btn-delete stop_time')
-                        .addClass('btn-timer start_time');
-                element
-                        .removeClass('bg-green')
-                        .addClass('bg-red-gradient');
-                $.stopCountDownTimer();
-                data.push({'name': 'end_time', 'value': now});
-                _post_timer(url, data);
-                //alert_msg('Successfully stop timer!!', 'alert-success');
-            }
-
-        });
 //endregion
 
 //region Add Spreadsheet
@@ -685,7 +973,7 @@ _body.on('click', '.add-spreadsheet', function () {
 
     var text_area_ele = '<li id="add-new-spreadsheet" class="list-group-item text-area-content area-content">';
     text_area_ele += '<input class="form-control" name="spreadsheet_header" placeholder="Title" value="" />';
-    text_area_ele += '<iframe style="height: 800px; width:100%" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
+    text_area_ele += '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
     text_area_ele += '<button class="btn btn-submit btn-shadow btn-sm submit-checklist" type="button">Save</button>&nbsp;&nbsp;&nbsp;';
     text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
     text_area_ele += '</li>';
@@ -728,7 +1016,7 @@ _body.on('click', '.add-spreadsheet', function () {
         e.stopImmediatePropagation();
         //var data = _body.find('.task-form').serializeArray();
 
-        var spreadsheet_html = '<iframe style="height: 800px; width: 100%" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
+        var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
 
         var data = [];
         data.push(
@@ -772,16 +1060,18 @@ _body.on('click', '.add-spreadsheet', function () {
                 ele += '</div>';
                 ele += '<div class="pull-right">';
                 ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
                 ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
+                ele += '<a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a>';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                 ele += '</div>';
                 ele += '</div>';
                 ele += '<div class="row">';
                 ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
-                ele += '<div class="checklist-item">' + val.checklist + '</div>';
+                ele += '<div class="checklist-item"><i class="glyphicon glyphicon-list"></i>' + val.checklist + '</div>';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                 ele += '<hr/>';
@@ -870,24 +1160,105 @@ $('.category-name')
             $(this).val('');
         });
 
-$('.check-list-container').on('click', '.remove-link', function (e) {
-    e.preventDefault();
-    $.post($(this).attr('href'));
-    $('#link-' + this.id + ',.link-' + this.id).remove();
-});
-//endregion
-$('.check-list-container').on('click', '.toggle-tasklistitem', function () {
 
-    var task_list_item_id = $(this).siblings('.task_list_item_id').val();
-    var company_id = $(this).siblings('.company_id').val();
-    var task_list_id = $(this).siblings('.task_list_id').val();
+$('.load-task-assign')
+        .on('click', '.remove-link', function (e) {
+            e.preventDefault();
+            $.post($(this).attr('href'));
+            $('#link-' + this.id + ',.link-' + this.id).remove();
+        })
+        .on('click', '.edit-link', function (e) {
+            e.preventDefault();
+            var _id = this.id;
+            var _href = $(this).attr('href');
+            var edit_link_modal = $('.edit-link-modal');
+            var _modal_dialog = edit_link_modal.find('.modal-content');
+            _modal_dialog.html('');
+            _modal_dialog.load(_href);
+            edit_link_modal.modal('show');
 
-    var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' + company_id + '/' + task_list_id;
+            edit_link_modal.on('click', '.update-link-btn', function (e) {
+                e.preventDefault();
+                var _this = $(this);
+                var _link_modal = _this.parents('.edit-link-modal');
+                var _form = _this.parents('.edit-link-modal').find('form');
+                var _data = _form.serializeArray();
+                _this.attr('disabled', 'disabled');
+                $.post(_form.attr('action'), _data, function (res) {
+                    var _return_data = jQuery.parseJSON(res);
+                    var ref = 1;
+                    $.each(_return_data, function (key, val) {
+                        var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
+                        var ele = '<div class="row">';
+                        ele += '<div class="col-md-4">';
+                        ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
+                        ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
+                        ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                        ele += '</div>';
+                        ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                        ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                        ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
+                        ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
+                        ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                        ele += '</div>';
+                        ele += '</div>';
+                        var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
+                        _link_column.html(ele);
+                        ref++;
+                    });
 
-    $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
-        $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
-    });
-});
+                    _link_modal.modal('hide');
+                });
+            });
+        })
+        .on('click', '.add-link-btn', function (e) {
+            e.preventDefault();
+            var _this = $(this);
+            var _link_modal = _this.parents('.add_link_modal');
+            var _form = _this.parents('.add_link_modal').find('form');
+            var _data = _form.serializeArray();
+            _this.attr('disabled', 'disabled');
+            $.post(_form.attr('action'), _data, function (res) {
+                var _return_data = jQuery.parseJSON(res);
+                var _task_id = '';
+                var ele = '';
+                $.each(_return_data, function (key, val) {
+                    var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
+                    ele = '<li class="list-group-item" id="link-' + val.id + '" style="border-top: none!important">';
+                    ele += '<div class="row">';
+                    ele += '<div class="col-md-4">';
+                    ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
+                    ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
+                    ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
+                    ele += '</div>';
+                    ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
+                    ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
+                    ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
+                    ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
+                    ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
+                    ele += '</div>';
+                    ele += '</div>';
+                    ele += '</li>';
+                    _task_id = val.task_id;
+                });
+                var _link_column = $('#collapse-' + _task_id).find('.link-group');
+                _link_column.prepend(ele);
+                _link_modal.modal('hide');
+            });
+        });
+$('.check-list-container')
+        .on('click', '.toggle-tasklistitem', function () {
+
+            var task_list_item_id = $(this).siblings('.task_list_item_id').val();
+            var company_id = $(this).siblings('.company_id').val();
+            var task_list_id = $(this).siblings('.task_list_id').val();
+
+            var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' + company_id + '/' + task_list_id;
+
+            $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
+                $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
+            });
+        });
 
 function makeid()
 {
@@ -899,3 +1270,23 @@ function makeid()
 
     return text;
 }
+
+function isUrlValid(url) {
+    return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+}
+
+window.onbeforeunload = function (event) {
+    $('.still-counting').each(function (index) {
+        $('#timer-' + task_checklist_id).countdown('pause');
+        var timer_id = $(this).siblings('.timer_id').val();
+        var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+        var current_time = $('#timer-' + task_checklist_id).find('.countdown-row').text();
+        console.log('current_time: ' + current_time);
+
+        saveCurrentTime(timer_id, current_time);
+    });
+};
+
+
+    

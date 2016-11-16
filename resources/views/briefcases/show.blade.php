@@ -50,6 +50,30 @@
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                                 <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                             </div>
+                                            <div class="col-md-3">
+                                                @forelse($list_item->timer as $timer)
+                                                <div id='timer-options-{{$list_item->id}}' class="pull-right"> 
+                                                    @if($timer->timer_status === 'Resumed' || $timer->timer_status === 'Started')
+                                                    <text id='timer-{{$list_item->id}}' class='still-counting task-item-timer'>{{$timer->total_time}}</text>
+                                                    <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary pause-timer">Pause</button>
+                                                    @elseif($timer->timer_status === 'Completed')
+                                                    <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                                                    @else
+                                                    <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                                                    <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary resume-timer">Resume</button>
+                                                    @endif
+                                                    <input class="timer_id" type="hidden" value="{{$timer->timer_id}}">
+                                                    <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
+                                                    <input class="total_time" type="hidden" value="{{$timer->total_time}}">
+                                                    <input class="timer_status" type="hidden" value="{{$timer->timer_status}}">
+                                                </div>
+                                                @empty
+                                                <div id='timer-options-{{$list_item->id}}' class="pull-right">
+                                                    <text id='timer-{{$list_item->id}}' class="task-item-timer"></text>
+                                                    <input class="timer_id" type="hidden" value="">
+                                                </div>
+                                                @endforelse
+                                            </div>
                                             <div class="pull-right">
                                                 @if ($list_item->status === 'Default')
                                                 <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
@@ -110,35 +134,35 @@
             </div>
             <div class="link-column">
                 <ul class="list-group link-group">
-                {{--*/ $ref = 1 /*--}}
+                    {{--*/ $ref = 1 /*--}}
                     @foreach($links as $link)
-                        @if($link->task_id == $task->task_id)
-                        <li class="list-group-item" id="link-{{$link->id}}" style="{{ $ref == 1 ?  '' : 'border-top: none!important'}}">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    {{--*/ $parse_url = parse_url($link->url) /*--}}
-                                    <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
-                                    <input type="hidden" class="company_id" value="{{$company_id}}" />
-                                    @if(empty($parse_url['scheme']))
-                                    <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                                    @else
-                                    <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
-                                    @endif
-                                </div>
-                                <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
-                                <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
-                                    <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
-                                    @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                                    <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
-                                    @endif
-                                    @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                                    <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
-                                    @endif
-                                </div>
+                    @if($link->task_id == $task->task_id)
+                    <li class="list-group-item" id="link-{{$link->id}}" style="{{ $ref == 1 ?  '' : 'border-top: none!important'}}">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                {{--*/ $parse_url = parse_url($link->url) /*--}}
+                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
+                                <input type="hidden" class="company_id" value="{{$company_id}}" />
+                                @if(empty($parse_url['scheme']))
+                                <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                @else
+                                <a target="_blank" href="{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
+                                @endif
                             </div>
-                        </li>
-                        {{--*/ $ref++ /*--}}
-                        @endif
+                            <div class="col-sm-5" style="text-align: justify">{{ $link->descriptions }}</div>
+                            <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
+                                <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
+                                @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                                <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
+                                @endif
+                                @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
+                                <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
+                                @endif
+                            </div>
+                        </div>
+                    </li>
+                    {{--*/ $ref++ /*--}}
+                    @endif
                     @endforeach
                 </ul>
             </div>

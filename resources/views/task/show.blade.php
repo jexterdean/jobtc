@@ -385,8 +385,10 @@
             }
         });
         //endregion
-        var _body = $('#collapse-' + '{{ $task->task_id }}');
-        var task_id = '{{ $task->task_id }}';
+        var task_id = $('.task_id').val();
+        var _body = $('#collapse-' + task_id);
+        //var _body = $('#collapse-' + '{{ $task->task_id }}');
+        //var task_id = '{{ $task->task_id }}';
         var alert_msg = function (msg, _class) {
             var alert = '<div class="alert ' + _class + ' alert-dismissable">';
             alert += '<i class="fa fa-check"></i>';

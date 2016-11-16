@@ -267,10 +267,15 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @if(in_array('briefcases',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/page/briefcases.js')  !!}
+{!! HTML::script('assets/js/jquery.plugin.min.js') !!}
+{!! HTML::script('assets/js/jquery.countdown.js') !!}
+{!!  HTML::script('assets/js/page/tasks.js')  !!}
 @endif
 
 @if(in_array('tasks',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
+{!! HTML::script('assets/js/jquery.plugin.min.js') !!}
+{!! HTML::script('assets/js/jquery.countdown.js') !!}
 {!!  HTML::script('assets/js/page/tasks.js')  !!}
 @endif
 
@@ -292,152 +297,150 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 <!--Search Scripts-->
 {!!  HTML::script('assets/js/page/search.js')  !!}
 <script>
-    $(function () {
+        $(function () {
         //to fix the ajax PATCH/POST method type of form not working
         $.ajaxSetup({
-            headers: {
-                'X-CSRF-Token': $('input[name="_token"]').val()
-            }
+        headers: {
+        'X-CSRF-Token': $('input[name="_token"]').val()
+        }
         });
-        $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
-        $("[data-mask]").inputmask();
-
-        $('#add_ticket').on('shown.bs.modal', function(e){
-            $(this).find('.modal-body').load('{{ $setting->grab('main_route').'/create' }}');
+                $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
+                $("[data-mask]").inputmask();
+                $('#add_ticket').on('shown.bs.modal', function(e){
+        $(this).find('.modal-body').load('{{ $setting->grab('main_route').' / create' }}');
         });
-        $('.datetimepicker').datetimepicker({
-            format: "DD-MM-YYYY",
-            useCurrent: false,
-            pickTime: false
-        });
-       $('body').on('click','.datetimepicker',function(e){
-            $(this).datetimepicker({
-                format: "DD-MM-YYYY",
+                $('.datetimepicker').datetimepicker({
+        format: "DD-MM-YYYY",
                 useCurrent: false,
                 pickTime: false
-            });
         });
-
-        $( '#dl-menu' ).dlmenu({
-            animationClasses : { in : 'dl-animate-in-2', out : 'dl-animate-out-2' }
+                $('body').on('click', '.datetimepicker', function(e){
+        $(this).datetimepicker({
+        format: "DD-MM-YYYY",
+                useCurrent: false,
+                pickTime: false
         });
-    });
-            $(document).ajaxComplete(function () {
-    $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
-            $("[data-mask]").inputmask();
-    });
-            $(document).ready(function () {
-    @if (in_array('table', $assets))
-            var table = $('.datatableclass').dataTable({
-    "sDom": 'RC<"clear">lfrtip',
-            colVis: {
-            restore: "Restore",
-                    showAll: "Show all",
-                    showNone: "Show none"
-            },
-            "language": {
-            "emptyTable": "No data available in table"
-            },
-            "bPaginate": true,
-            "bLengthChange": true,
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": true,
-            "sAjaxSource": "{{ url('/data/'. (isset($cacheKey)?$cacheKey:'none')) }}"
-    });
-            var tt = new $.fn.dataTable.TableTools(table);
-            $(tt.fnContainer()).insertBefore('div.dataTables_wrapper');
-            @endif
+        });
+                $('#dl-menu').dlmenu({
+        animationClasses : { in : 'dl-animate-in-2', out : 'dl-animate-out-2' }
+        });
+        });
+        $(document).ajaxComplete(function () {
+$("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
+        $("[data-mask]").inputmask();
+});
+        $(document).ready(function () {
+@if (in_array('table', $assets))
+        var table = $('.datatableclass').dataTable({
+"sDom": 'RC<"clear">lfrtip',
+        colVis: {
+        restore: "Restore",
+                showAll: "Show all",
+                showNone: "Show none"
+        },
+        "language": {
+        "emptyTable": "No data available in table"
+        },
+        "bPaginate": true,
+        "bLengthChange": true,
+        "bFilter": true,
+        "bSort": true,
+        "bInfo": true,
+        "bAutoWidth": true,
+        "sAjaxSource": "{{ url('/data/'. (isset($cacheKey)?$cacheKey:'none')) }}"
+});
+        var tt = new $.fn.dataTable.TableTools(table);
+        $(tt.fnContainer()).insertBefore('div.dataTables_wrapper');
+        @endif
 
-            $(".textarea").wysihtml5({
-                "link": false,
-                "image": false,
-                "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
-                "emphasis": false, //Italics, bold, etc. Default true
-                "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-                "html": false, //Button which allows you to edit the generated HTML. Default false
-                "color": false //Button to change color of font
-            });
-            $('#task-list-box').slimScroll({
-    height: '250px'
-    });
-            /*region load task page to project page*/
-            var load_task_page = function(){
-                $('.load-task-assign').each(function(){
-                    $(this).load($(this).data('url'));
-                });
-            };
-            load_task_page();
-            /*endregion*/
-    });
-            /*region Auto Close Alert Message*/
-            setInterval(function(){
-                $('section.content').find('.alert').fadeTo(2000, 500).slideUp(500, function(){
-                    $(this).alert('close');
-                });
-            }, 2000);
-            /*endregion*/
-            $(document).on('click', '.show_edit_form', function(e){
-                e.preventDefault();
-                var link = e.currentTarget.href;
-                console.log(link);
-                var _modal_target = $(this).data('target');
-                $(_modal_target + ' .modal-content').load(link);
-                $(_modal_target).modal('show');
-            });
-            /*region Hover Task List*/
-            $('.task-list .task-header').hover(
-            function(){
-            var id = $(this).data('target');
-                    var task_list = $('#collapse-container-' + id.match(/\d+/));
-                    if (!task_list.hasClass('is-selected')){
-            task_list.addClass('hovered');
-            }
-            },
-            function(){
-            var id = $(this).data('target');
-                    $('#collapse-container-' + id.match(/\d+/)).removeClass('hovered');
-            }
-    );
-            /*endregion*/
-            /*$(document).on("click", ".alert_delete", function (e) {
-             var link = $(this).attr("href");
-             
-             e.preventDefault();
-             bootbox.confirm("Are you sure want to proceed?", function (result) {
-             if (result) {
-             var form = $('#form-delete');
-             form.attr('action',link);
-             form.submit();
-             
-             //                document.location.href = link;
-             }
-             });
-             });*/
+        $(".textarea").wysihtml5({
+"link": false,
+        "image": false,
+        "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+        "emphasis": false, //Italics, bold, etc. Default true
+        "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+        "html": false, //Button which allows you to edit the generated HTML. Default false
+        "color": false //Button to change color of font
+});
+        $('#task-list-box').slimScroll({
+height: '250px'
+});
+        /*region load task page to project page*/
+        var load_task_page = function(){
+        $('.load-task-assign').each(function(){
+        $(this).load($(this).data('url'));
+        });
+        };
+        load_task_page();
+        /*endregion*/
+});
+        /*region Auto Close Alert Message*/
+        setInterval(function(){
+        $('section.content').find('.alert').fadeTo(2000, 500).slideUp(500, function(){
+        $(this).alert('close');
+        });
+        }, 2000);
+        /*endregion*/
+        $(document).on('click', '.show_edit_form', function(e){
+e.preventDefault();
+        var link = e.currentTarget.href;
+        console.log(link);
+        var _modal_target = $(this).data('target');
+        $(_modal_target + ' .modal-content').load(link);
+        $(_modal_target).modal('show');
+});
+        /*region Hover Task List*/
+        $('.task-list .task-header').hover(
+        function(){
+        var id = $(this).data('target');
+                var task_list = $('#collapse-container-' + id.match(/\d+/));
+                if (!task_list.hasClass('is-selected')){
+        task_list.addClass('hovered');
+        }
+        },
+        function(){
+        var id = $(this).data('target');
+                $('#collapse-container-' + id.match(/\d+/)).removeClass('hovered');
+        }
+);
+        /*endregion*/
+        /*$(document).on("click", ".alert_delete", function (e) {
+         var link = $(this).attr("href");
+         
+         e.preventDefault();
+         bootbox.confirm("Are you sure want to proceed?", function (result) {
+         if (result) {
+         var form = $('#form-delete');
+         form.attr('action',link);
+         form.submit();
+         
+         //                document.location.href = link;
+         }
+         });
+         });*/
 
-            @if (in_array('calendar', $assets))
-            $(function () {
-            var date = new Date();
-                    var d = date.getDate(),
-                    m = date.getMonth(),
-                    y = date.getFullYear();
-                    $('#calendar').fullCalendar({
-            header: {
-            left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-            },
-                    buttonText: {
-                    today: 'today',
-                            month: 'month',
-                            week: 'week',
-                            day: 'day'
-                    },
-                    events:{!!  $EVENTS or "[]" !!}
-            });
-            });
-            @endif
+        @if (in_array('calendar', $assets))
+        $(function () {
+        var date = new Date();
+                var d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear();
+                $('#calendar').fullCalendar({
+        header: {
+        left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+        },
+                buttonText: {
+                today: 'today',
+                        month: 'month',
+                        week: 'week',
+                        day: 'day'
+                },
+                events:{!!  $EVENTS or "[]" !!}
+        });
+        });
+        @endif
 </script>
 
 @section('js_footer')

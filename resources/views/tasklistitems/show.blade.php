@@ -25,11 +25,35 @@
             </div>
             {{--endregion--}}
             <div class="row task-list-details">
-                <div class="col-sm-9">
+                <div class="col-sm-6">
                     <a href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem">{!! $list_item->checklist_header !!}</a>
                     <input type="hidden" class="company_id" value="{{$company_id}}" />
                     <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                     <input type="hidden" class="task_list_id" value="{{$list_item->task_id}}" />
+                </div>
+                <div class="col-sm-3">
+                    @forelse($list_item->timer as $timer)
+                    <div id='timer-options-{{$list_item->id}}' class="pull-right"> 
+                        @if($timer->timer_status === 'Resumed' || $timer->timer_status === 'Started')
+                        <text id='timer-{{$list_item->id}}' class='still-counting task-item-timer'>{{$timer->total_time}}</text>
+                        <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary pause-timer">Pause</button>
+                        @elseif($timer->timer_status === 'Completed')
+                        <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                        @else
+                        <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                        <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary resume-timer">Resume</button>
+                        @endif
+                        <input class="timer_id" type="hidden" value="{{$timer->timer_id}}">
+                        <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
+                        <input class="total_time" type="hidden" value="{{$timer->total_time}}">
+                        <input class="timer_status" type="hidden" value="{{$timer->timer_status}}">
+                    </div>
+                    @empty
+                    <div id='timer-options-{{$list_item->id}}' class="pull-right">
+                        <text id='timer-{{$list_item->id}}' class="task-item-timer"></text>
+                        <input class="timer_id" type="hidden" value="">
+                    </div>
+                    @endforelse
                 </div>
                 <div class="col-sm-3" style="white-space: nowrap">
                     <div class="pull-right">

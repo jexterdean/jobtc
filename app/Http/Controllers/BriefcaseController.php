@@ -106,10 +106,14 @@ class BriefcaseController extends Controller
 
         if ($task_order_count > 0) {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
-            $checkList = TaskChecklist::where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
+            $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
+                            $query->where('user_id', $user_id)->get();
+                        },'task_checklist_statuses'])->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
-            $checkList = TaskChecklist::where('task_id', '=', $id)->get();
+            $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
+                            $query->where('user_id', $user_id)->get();
+                        },'task_checklist_statuses'])->where('task_id', '=', $id)->get();
         }
 
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
