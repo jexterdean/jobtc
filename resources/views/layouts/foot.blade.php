@@ -266,10 +266,9 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 
 @if(in_array('briefcases',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
-{!!  HTML::script('assets/js/page/briefcases.js')  !!}
 {!! HTML::script('assets/js/jquery.plugin.min.js') !!}
 {!! HTML::script('assets/js/jquery.countdown.js') !!}
-{!!  HTML::script('assets/js/page/tasks.js')  !!}
+{!!  HTML::script('assets/js/page/briefcases.js')  !!}
 @endif
 
 @if(in_array('tasks',$assets))

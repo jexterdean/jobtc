@@ -175,7 +175,7 @@ class TaskController extends BaseController {
 
         $project_owner = Project::where('project_id', $task->project_id)->pluck('user_id');
 
-        $assets = ['calendar'];
+        $assets = ['tasks','calendar'];
 
         return view('task.show', [
             'task' => $task,
