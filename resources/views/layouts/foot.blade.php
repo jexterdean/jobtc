@@ -327,7 +327,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
         $(document).ajaxComplete(function () {
 $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
         $("[data-mask]").inputmask();
-});
+        });
         $(document).ready(function () {
 @if (in_array('table', $assets))
         var table = $('.datatableclass').dataTable({
@@ -347,7 +347,7 @@ $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
         "bInfo": true,
         "bAutoWidth": true,
         "sAjaxSource": "{{ url('/data/'. (isset($cacheKey)?$cacheKey:'none')) }}"
-});
+        });
         var tt = new $.fn.dataTable.TableTools(table);
         $(tt.fnContainer()).insertBefore('div.dataTables_wrapper');
         @endif
@@ -360,10 +360,10 @@ $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
         "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
         "html": false, //Button which allows you to edit the generated HTML. Default false
         "color": false //Button to change color of font
-});
+        });
         $('#task-list-box').slimScroll({
 height: '250px'
-});
+        });
         /*region load task page to project page*/
         var load_task_page = function(){
         $('.load-task-assign').each(function(){
@@ -372,7 +372,7 @@ height: '250px'
         };
         load_task_page();
         /*endregion*/
-});
+        });
         /*region Auto Close Alert Message*/
         setInterval(function(){
         $('section.content').find('.alert').fadeTo(2000, 500).slideUp(500, function(){
@@ -381,13 +381,13 @@ height: '250px'
         }, 2000);
         /*endregion*/
         $(document).on('click', '.show_edit_form', function(e){
-e.preventDefault();
+        e.preventDefault();
         var link = e.currentTarget.href;
         console.log(link);
         var _modal_target = $(this).data('target');
         $(_modal_target + ' .modal-content').load(link);
         $(_modal_target).modal('show');
-});
+        });
         /*region Hover Task List*/
         $('.task-list .task-header').hover(
         function(){
