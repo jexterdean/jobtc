@@ -101,7 +101,7 @@ class PayrollController extends Controller {
      */
     public function show($id) {
 
-        $employees = Profile::with('user','rate')->where('company_id', $id)->get();
+        $employees = Profile::with('user', 'rate')->where('company_id', $id)->get();
 
         $employee_ids = [];
         $project_ids = [];
@@ -109,11 +109,14 @@ class PayrollController extends Controller {
             array_push($employee_ids, $employee->user->user_id);
         }
 
+        //Get the task checklists for today(Filter will start at today's day)
+        $date_today = date('Y-m-d');
+
         $task_checklists = Timer::with(['task_checklist' => function($task_checklist_query) {
                         $task_checklist_query->with(['task' => function($task_query) {
                                 $task_query->with('project')->get();
                             }])->get();
-                    }])->whereIn('user_id', $employee_ids)->get();
+                    }])->whereIn('user_id', $employee_ids)->whereBetween('created_at', [$date_today . ' 00:00:00', $date_today . ' 23:59:59'])->get();
 
 
                 foreach ($task_checklists as $task_checklist) {
@@ -121,12 +124,12 @@ class PayrollController extends Controller {
                 }
 
                 $projects = Project::whereIn('project_id', $project_ids)->where('company_id', $id)->get();
-                
-                $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, user_id, project_id"))->groupBy('project_id')->groupBy('user_id')->get();
 
-                $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->groupBy('user_id')->get();
+                $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, DATE_FORMAT(created_at,'%Y-%m-%d') as day , user_id, project_id"))->whereBetween('created_at', [$date_today . ' 00:00:00', $date_today . ' 23:59:59'])->groupBy('project_id')->groupBy('user_id')->get();
 
-                $assets = ['assets'];
+                $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->whereBetween('created_at', [$date_today . ' 00:00:00', $date_today . ' 23:59:59'])->groupBy('user_id')->get();
+
+                $assets = ['select', 'payroll', 'assets'];
 
                 return view('payroll.show', [
                     'assets' => $assets,
@@ -135,6 +138,7 @@ class PayrollController extends Controller {
                     'projects' => $projects,
                     'total_time_per_project' => $total_time_per_project,
                     'total_time' => $total_time,
+                    'company_id' => $id
                 ]);
             }
 
@@ -168,9 +172,110 @@ class PayrollController extends Controller {
             public function destroy($id) {
                 //
             }
-            
-            public function filter(Request $request) {
+
+            public function filter(Request $request, $company_id, $filter, $date) {
+
+                $employees = Profile::with('user', 'rate')->where('company_id', $company_id)->get();
+
+                $employee_ids = [];
+                $project_ids = [];
+                foreach ($employees as $employee) {
+                    array_push($employee_ids, $employee->user->user_id);
+                }
+
+                if ($filter === 'day') {
+
+                    $task_checklists = Timer::with(['task_checklist' => function($task_checklist_query) {
+                                    $task_checklist_query->with(['task' => function($task_query) {
+                                            $task_query->with('project')->get();
+                                        }])->get();
+                                }])->whereIn('user_id', $employee_ids)->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])->get();
+
+
+                            foreach ($task_checklists as $task_checklist) {
+                                array_push($project_ids, $task_checklist->task_checklist->task->project->project_id);
+                            }
+
+                            $projects = Project::whereIn('project_id', $project_ids)->where('company_id', $company_id)->get();
+
+                            $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, DATE_FORMAT(created_at,'%Y-%m-%d') as day , user_id, project_id"))->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])->groupBy('project_id')->groupBy('user_id')->get();
+
+                            $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->whereBetween('created_at', [$date . ' 00:00:00', $date . ' 23:59:59'])->groupBy('user_id')->get();
+
+                            return view('payroll.filter', [
+                                'employees' => $employees,
+                                'task_checklists' => $task_checklists,
+                                'projects' => $projects,
+                                'total_time_per_project' => $total_time_per_project,
+                                'total_time' => $total_time,
+                                'company_id' => $company_id
+                            ]);
+                        } elseif ($filter === 'week') {
+                            
+                        } else if ($filter === 'month') {
+                            
+                            $date_array = explode("-",$date);
+                            $month = $date_array[0];
+                            $year = $date_array[1];
+                            
+                              $task_checklists = Timer::with(['task_checklist' => function($task_checklist_query) {
+                                    $task_checklist_query->with(['task' => function($task_query) {
+                                            $task_query->with('project')->get();
+                                        }])->get();
+                                }])->whereIn('user_id', $employee_ids)->whereMonth('created_at','=', $month)->whereYear('created_at','=',$year)->get();
+
+
+                            foreach ($task_checklists as $task_checklist) {
+                                array_push($project_ids, $task_checklist->task_checklist->task->project->project_id);
+                            }
+
+                            $projects = Project::whereIn('project_id', $project_ids)->where('company_id', $company_id)->get();
+
+                            $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, DATE_FORMAT(created_at,'%Y-%m-%d') as day , user_id, project_id"))->whereMonth('created_at','=', $month)->whereYear('created_at','=',$year)->groupBy('project_id')->groupBy('user_id')->get();
+
+                            $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->whereMonth('created_at','=', $month)->whereYear('created_at','=',$year)->groupBy('user_id')->get();
+
+                            return view('payroll.filter', [
+                                'employees' => $employees,
+                                'task_checklists' => $task_checklists,
+                                'projects' => $projects,
+                                'total_time_per_project' => $total_time_per_project,
+                                'total_time' => $total_time,
+                                'company_id' => $company_id
+                            ]);
+                            
+                            
+                            
+                        } else if ($filter === 'year') {
+                            
+                              $task_checklists = Timer::with(['task_checklist' => function($task_checklist_query) {
+                                    $task_checklist_query->with(['task' => function($task_query) {
+                                            $task_query->with('project')->get();
+                                        }])->get();
+                                }])->whereIn('user_id', $employee_ids)->whereYear('created_at','=',$date)->get();
+
+
+                            foreach ($task_checklists as $task_checklist) {
+                                array_push($project_ids, $task_checklist->task_checklist->task->project->project_id);
+                            }
+
+                            $projects = Project::whereIn('project_id', $project_ids)->where('company_id', $company_id)->get();
+
+                            $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, DATE_FORMAT(created_at,'%Y-%m-%d') as day , user_id, project_id"))->whereYear('created_at','=',$date)->groupBy('project_id')->groupBy('user_id')->get();
+
+                            $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->whereYear('created_at','=',$date)->groupBy('user_id')->get();
+
+                            return view('payroll.filter', [
+                                'employees' => $employees,
+                                'task_checklists' => $task_checklists,
+                                'projects' => $projects,
+                                'total_time_per_project' => $total_time_per_project,
+                                'total_time' => $total_time,
+                                'company_id' => $company_id
+                            ]);
+                            
+                        }
+                    }
+
+                }
                 
-            }
-        }
-        

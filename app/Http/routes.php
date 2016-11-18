@@ -365,7 +365,8 @@ Route::group(['middleware' => 'auth'], function () {
      */
     Route::resource('payroll', 'PayrollController');
     Route::get('payrollJson', 'PayrollController@payrollJson');
-
+    Route::get('payroll/filter/{company_id}/{filter}/{date}','PayrollController@filter');
+    
     /*
      * Search 
      * */
