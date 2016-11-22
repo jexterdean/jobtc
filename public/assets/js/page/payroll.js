@@ -27,11 +27,13 @@ $(document).ready(function () {
         }
 
         if (filter_val === 'week') {
-            var week_number = moment(date).format('W');
-            var this_weeks_monday = moment().startOf('isoweek').format('ddd MMM DD, YYYY');
-            var this_weeks_sunday = moment(this_weeks_monday).add(6, 'days').format('ddd MMM DD, YYYY');
             var day = moment(date_today).format('YYYY-MM-DD');
             $('.date').val(day);
+            
+            var week_number = moment(day).format('W');
+            var this_weeks_monday = moment().startOf('isoweek').format('ddd MMM DD, YYYY');
+            var this_weeks_sunday = moment(this_weeks_monday).add(6, 'days').format('ddd MMM DD, YYYY');
+            
 
             $('.date-text').text(this_weeks_monday + " - " + this_weeks_sunday);
             
@@ -40,7 +42,7 @@ $(document).ready(function () {
             }
 
             console.log("week_number: " + week_number);
-            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date + '-' + week_number;
+            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + day + '-' + week_number;
         }
 
         if (filter_val === 'month') {
