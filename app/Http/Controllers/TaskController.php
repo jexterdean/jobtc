@@ -115,13 +115,13 @@ class TaskController extends BaseController {
         if ($task_order_count > 0) {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
             $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
-                            $query->where('user_id', $user_id)->get();
-                        },'task_checklist_statuses'])->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
+                            $query->select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, MAX(timer_id) as timer_id, MAX(timer_status) as timer_status, user_id,project_id,task_checklist_id'))->where('user_id', $user_id)->groupBy('task_checklist_id')->get();
+                        }, 'task_checklist_statuses'])->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
             $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
-                            $query->where('user_id', $user_id)->get();
-                        },'task_checklist_statuses'])->where('task_id', '=', $id)->get();
+                            $query->select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, MAX(timer_id) as timer_id, MAX(timer_status) as timer_status, user_id,project_id,task_checklist_id'))->where('user_id', $user_id)->groupBy('task_checklist_id')->get();
+                        }, 'task_checklist_statuses'])->where('task_id', '=', $id)->get();
         }
 
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
@@ -175,7 +175,7 @@ class TaskController extends BaseController {
 
         $project_owner = Project::where('project_id', $task->project_id)->pluck('user_id');
 
-        $assets = ['tasks','calendar'];
+        $assets = ['tasks', 'calendar'];
 
         return view('task.show', [
             'task' => $task,
@@ -402,14 +402,14 @@ class TaskController extends BaseController {
     }
 
     public function updateCheckListStatus(Request $request, $id) {
-        
+
         $user_id = Auth::user()->user_id;
         $status = $request->input('status');
-        
-        $taskCheckListStatusCount = TaskChecklistStatus::where('task_checklist_id',$id)->where('user_id',$user_id)->count();
-        
-        if($taskCheckListStatusCount > 0) {
-            $taskCheckListStatus = TaskChecklistStatus::where('task_checklist_id',$id)->where('user_id',$user_id)->update([
+
+        $taskCheckListStatusCount = TaskChecklistStatus::where('task_checklist_id', $id)->where('user_id', $user_id)->count();
+
+        if ($taskCheckListStatusCount > 0) {
+            $taskCheckListStatus = TaskChecklistStatus::where('task_checklist_id', $id)->where('user_id', $user_id)->update([
                 'status' => $status
             ]);
         } else {
@@ -420,16 +420,16 @@ class TaskController extends BaseController {
             ]);
             $taskCheckListStatus->save();
         }
-        
+
         return "true";
     }
-    
+
     public function updateCheckList(Request $request, $id) {
         $taskCheckList = TaskChecklist::find($id);
         $data = $request->all();
-        
+
         $taskCheckList->update($data);
-        
+
         return json_encode($data);
     }
 
@@ -778,18 +778,18 @@ class TaskController extends BaseController {
             }
         } else {
 
-            /*if ($timers_running > 0) {
-                $stop_timers = Timer::whereNotIn('user_id', $user_id)->where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->update([
-                    'timer_status' => 'Paused'
-                ]);
-            }*/
+            /* if ($timers_running > 0) {
+              $stop_timers = Timer::whereNotIn('user_id', $user_id)->where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->update([
+              'timer_status' => 'Paused'
+              ]);
+              } */
 
             if ($timers_running > 0) {
                 $stop_timers = Timer::where('user_id', $user_id)->where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->where('user_id', $user_id)->update([
                     'timer_status' => 'Paused'
                 ]);
             }
-            
+
             $timer = new Timer([
                 'user_id' => $user_id,
                 'task_checklist_id' => $task_checklist_id,
@@ -809,24 +809,32 @@ class TaskController extends BaseController {
         $user_id = Auth::user()->user_id;
 
         $timer_id = $request->input('timer_id');
+        $task_checklist_id = $request->input('task_checklist_id');
         $time = $request->input('time');
 
         $current_timestamp = time();
 
-        $start_timestamp = Timer::where('timer_id', $timer_id)->pluck('start_time');
         $end_timestamp = date('Y-m-d H:i:s', $current_timestamp);
 
-        $start_date = date_create($start_timestamp);
-        $end_date = date_create($end_timestamp);
-        $diff = date_diff($start_date, $end_date);
+        $previous_timers_count = Timer::where('user_id', $user_id)->where('task_checklist_id', $task_checklist_id)->whereRaw("DATE(created_at) <> DATE(NOW())")->count();
 
-        $total_time = $diff->format('%H:%I:%S');
+        if ($previous_timers_count === 0) {
+            $timer = Timer::where('timer_id', $timer_id)->update([
+                'end_time' => $end_timestamp,
+                'total_time' => $time,
+                'timer_status' => 'Paused'
+            ]);
+        } else {
 
-        $timer = Timer::where('timer_id', $timer_id)->update([
-            'end_time' => $end_timestamp,
-            'total_time' => $time,
-            'timer_status' => 'Paused'
-        ]);
+            $previous_timers = Timer::select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum'))->where('user_id', $user_id)->where('task_checklist_id', $task_checklist_id)->whereRaw("DATE(created_at) <> DATE(NOW())")->first();
+
+            $total_time_today = date('H:i:s', strtotime($time) - strtotime($previous_timers->timeSum));
+            $timer = Timer::where('timer_id', $timer_id)->update([
+                'end_time' => $end_timestamp,
+                'total_time' => $total_time_today,
+                'timer_status' => 'Paused'
+            ]);
+        }
 
         return "true";
     }
@@ -834,23 +842,48 @@ class TaskController extends BaseController {
     public function resumeTask(Request $request) {
 
         $timer_id = $request->input('timer_id');
-        
+
         $user_id = Auth::user()->user_id;
-        
+
         $timers_running = Timer::where('user_id', $user_id)->where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->where('user_id', $user_id)->count();
-        
+
         if ($timers_running > 0) {
-            $stop_timers = Timer::where('user_id',$user_id)->where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->where('user_id', $user_id)->update([
+            $stop_timers = Timer::where('user_id', $user_id)->where('timer_status', 'Started')->orWhere('timer_status', 'Resumed')->where('user_id', $user_id)->update([
                 'timer_status' => 'Paused'
             ]);
         }
 
-        $timer = Timer::where('timer_id', $timer_id)->update([
-            'end_time' => '',
-            'timer_status' => 'Resumed'
-        ]);
+        $current_timestamp = time();
 
-        return "true";
+        $current_timestamp_format = date('Y-m-d', $current_timestamp);
+
+        $day_start = strtotime(Timer::where('timer_id', $timer_id)->pluck('created_at'));
+        $day_start_format = date('Y-m-d', $day_start);
+
+
+        if ($current_timestamp_format === $day_start_format) {
+
+            $timer = Timer::where('timer_id', $timer_id)->update([
+                'end_time' => '',
+                'timer_status' => 'Resumed'
+            ]);
+        } else {
+
+            $previous_timer = Timer::where('timer_id', $timer_id)->first();
+            $start_time = date('Y-m-d H:i:s', $current_timestamp);
+
+            $timer = new Timer([
+                'user_id' => $user_id,
+                'task_checklist_id' => $previous_timer->task_checklist_id,
+                'start_time' => $start_time,
+                'task_id' => $previous_timer->task_id,
+                'project_id' => $previous_timer->project_id,
+                'timer_status' => 'Resumed'
+            ]);
+            $timer->save();
+            $timer_id = $timer->timer_id;
+        }
+        return $timer_id;
     }
 
     public function endTask(Request $request) {
@@ -884,17 +917,32 @@ class TaskController extends BaseController {
         $user_id = Auth::user()->user_id;
 
         $timer_id = $request->input('timer_id');
+        $task_checklist_id = $request->input('task_checklist_id');
         $time = $request->input('time');
 
         $current_timestamp = time();
 
         $end_timestamp = date('Y-m-d H:i:s', $current_timestamp);
 
-        $timer = Timer::where('timer_id', $timer_id)->update([
-            'end_time' => $end_timestamp,
-            'total_time' => $time,
-            'timer_status' => 'Resumed'
-        ]);
+        $previous_timers_count = Timer::where('user_id', $user_id)->where('task_checklist_id', $task_checklist_id)->whereRaw("DATE(created_at) <> DATE(NOW())")->count();
+
+        if ($previous_timers_count === 0) {
+            $timer = Timer::where('timer_id', $timer_id)->update([
+                'end_time' => $end_timestamp,
+                'total_time' => $time,
+                'timer_status' => 'Resumed'
+            ]);
+        } else {
+
+            $previous_timers = Timer::select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum'))->where('user_id', $user_id)->where('task_checklist_id', $task_checklist_id)->whereRaw("DATE(created_at) <> DATE(NOW())")->first();
+
+            $total_time_today = date('H:i:s', strtotime($time) - strtotime($previous_timers->timeSum));
+            $timer = Timer::where('timer_id', $timer_id)->update([
+                'end_time' => $end_timestamp,
+                'total_time' => $total_time_today,
+                'timer_status' => 'Resumed'
+            ]);
+        }
 
         return "true";
     }

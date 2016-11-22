@@ -38,17 +38,17 @@
                                             @forelse($list_item->timer as $timer)
                                             <div id='timer-options-{{$list_item->id}}' class="pull-right"> 
                                                 @if($timer->timer_status === 'Resumed' || $timer->timer_status === 'Started')
-                                                <text id='timer-{{$list_item->id}}' class='still-counting task-item-timer'>{{$timer->total_time}}</text>
+                                                <text id='timer-{{$list_item->id}}' class='still-counting task-item-timer'>{{$timer->timeSum}}</text>
                                                 <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary pause-timer">Pause</button>
                                                 @elseif($timer->timer_status === 'Completed')
-                                                <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                                                <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->timeSum}}</text>
                                                 @else
-                                                <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                                                <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->timeSum}}</text>
                                                 <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary resume-timer">Resume</button>
                                                 @endif
                                                 <input class="timer_id" type="hidden" value="{{$timer->timer_id}}">
                                                 <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
-                                                <input class="total_time" type="hidden" value="{{$timer->total_time}}">
+                                                <input class="total_time" type="hidden" value="{{$timer->timeSum}}">
                                                 <input class="timer_status" type="hidden" value="{{$timer->timer_status}}">
                                             </div>
                                             @empty
@@ -485,18 +485,20 @@
             });
         }
 
-        function pauseTask(timer_id, time_paused) {
+        function pauseTask(timer_id,task_checklist_id ,time_paused) {
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': time_paused});
+            data.push({'name': 'timer_id', 'value': timer_id},{'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': time_paused});
             $.post(public_path + 'pauseTask', data, function (e) {
             });
         }
 
 
-        function resumeTask(timer_id) {
+        function resumeTask(timer_id,task_checklist_id) {
             var data = [];
             data.push({'name': 'timer_id', 'value': timer_id});
-            $.post(public_path + 'resumeTask', data, function (e) {
+            $.post(public_path + 'resumeTask', data, function (new_timer_id) {
+                console.log('new_timer_id: '+new_timer_id);
+                $('#timer-'+task_checklist_id).siblings('.timer_id').val(new_timer_id);
             });
         }
 
@@ -509,9 +511,9 @@
 
         }
 
-        function saveCurrentTime(timer_id, current_time) {
+        function saveCurrentTime(timer_id, task_checklist_id, current_time) {
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': current_time});
+            data.push({'name': 'timer_id', 'value': timer_id},{'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': current_time});
             $.post(public_path + 'saveCurrentTime', data, function (e) {
             });
         }
@@ -555,7 +557,7 @@
             $('#timer-options-' + task_checklist_id).children('.total_time').val(time_paused);
             $('#timer-' + task_checklist_id).removeClass('still-counting');
             $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
-            pauseTask(timer_id, time_paused);
+            pauseTask(timer_id,task_checklist_id, time_paused);
         });
 
         _body.on('click', '.resume-timer', function () {
@@ -589,7 +591,7 @@
                 var time_paused = $('#timer-options-' + task_checklist_id).find('.countdown-row').text();
                 console.log('time_paused: ' + time_paused);
 
-                pauseTask(timer_id, time_paused);
+                pauseTask(timer_id,task_checklist_id, time_paused);
             });
 
 
@@ -603,7 +605,7 @@
             $('#timer-pause-' + task_checklist_id).text('Pause');
             console.log("timer_id: " + timer_id);
             console.log("task_checklist_id: " + task_checklist_id);
-            resumeTask(timer_id);
+            resumeTask(timer_id,task_checklist_id);
         });
 
 
@@ -640,7 +642,7 @@
                             var time_paused = $('.still-counting').text();
                             console.log('time_paused: ' + time_paused);
 
-                            pauseTask(timer_id, time_paused);
+                            pauseTask(timer_id,task_checklist_id, time_paused);
                         });
 
                         $('.task-item-timer').removeClass('still-counting');
@@ -668,7 +670,7 @@
                             var time_paused = $('.still-counting').text();
                             console.log('time_paused: ' + time_paused);
 
-                            pauseTask(timer_id, time_paused);
+                            pauseTask(timer_id,task_checklist_id, time_paused);
                         });
 
                         $('.task-item-timer').removeClass('still-counting');
@@ -1539,7 +1541,7 @@
                 var current_time = $('#timer-' + task_checklist_id).find('.countdown-row').text();
                 console.log('current_time: ' + current_time);
 
-                saveCurrentTime(timer_id, current_time);
+                saveCurrentTime(timer_id,task_checklist_id, current_time);
             });
         };
 

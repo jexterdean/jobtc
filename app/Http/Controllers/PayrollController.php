@@ -212,11 +212,46 @@ class PayrollController extends Controller {
                             ]);
                         } elseif ($filter === 'week') {
                             
+                            $date_array = explode("-",$date);
+                            $month = $date_array[1];
+                            $year = $date_array[0];
+                            $week = $date_array[3];
+                            
+                            $monday = date("Y-m-d",strtotime($year."-W".$week."-1"));
+                            $sunday = date("Y-m-d",strtotime($year."-W".$week."-7"));
+                            
+                            $task_checklists = Timer::with(['task_checklist' => function($task_checklist_query) {
+                                    $task_checklist_query->with(['task' => function($task_query) {
+                                            $task_query->with('project')->get();
+                                        }])->get();
+                                }])->whereIn('user_id', $employee_ids)->whereBetween('created_at', [$monday . ' 00:00:00', $sunday . ' 23:59:59'])->get();
+
+
+                            foreach ($task_checklists as $task_checklist) {
+                                array_push($project_ids, $task_checklist->task_checklist->task->project->project_id);
+                            }
+
+                            $projects = Project::whereIn('project_id', $project_ids)->where('company_id', $company_id)->get();
+
+                            $total_time_per_project = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours, DATE_FORMAT(created_at,'%Y-%m-%d') as day , user_id, project_id"))->whereBetween('created_at', [$monday . ' 00:00:00', $sunday . ' 23:59:59'])->groupBy('project_id')->groupBy('user_id')->get();
+
+                            $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->whereBetween('created_at', [$monday . ' 00:00:00', $sunday . ' 23:59:59'])->groupBy('user_id')->get();
+
+                            return view('payroll.filter', [
+                                'employees' => $employees,
+                                'task_checklists' => $task_checklists,
+                                'projects' => $projects,
+                                'total_time_per_project' => $total_time_per_project,
+                                'total_time' => $total_time,
+                                'company_id' => $company_id
+                            ]);
+                            
+                            
                         } else if ($filter === 'month') {
                             
                             $date_array = explode("-",$date);
                             $month = $date_array[0];
-                            $year = $date_array[1];
+                            $year = $date_array[2];
                             
                               $task_checklists = Timer::with(['task_checklist' => function($task_checklist_query) {
                                     $task_checklist_query->with(['task' => function($task_query) {

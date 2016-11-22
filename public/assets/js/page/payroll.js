@@ -19,17 +19,43 @@ $(document).ready(function () {
             $('.date-text').text(day_text);
             $('.date').val(day);
 
+            if ($('.filter-next').length === 1) {
+                $('.filter-next').remove();
+            }
+
             ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + day;
+        }
+
+        if (filter_val === 'week') {
+            var week_number = moment(date).format('W');
+            var this_weeks_monday = moment().startOf('isoweek').format('ddd MMM DD, YYYY');
+            var this_weeks_sunday = moment(this_weeks_monday).add(6, 'days').format('ddd MMM DD, YYYY');
+            var day = moment(date_today).format('YYYY-MM-DD');
+            $('.date').val(day);
+
+            $('.date-text').text(this_weeks_monday + " - " + this_weeks_sunday);
+            
+            if ($('.filter-next').length === 1) {
+                $('.filter-next').remove();
+            }
+
+            console.log("week_number: " + week_number);
+            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date + '-' + week_number;
         }
 
         if (filter_val === 'month') {
             var date_month = $('.date_month').val();
             var date_year = $('.date_year').val();
+            var day = moment(date_today).format('YYYY-MM-DD');
             
             var month = moment(date).format('MMMM YYYY');
-            var month_number = moment(date).format('MM-YYYY');
+            var month_number = moment(date).format('MM-DD-YYYY');
             $('.date-text').text(month);
-            $('.date').val(month_number);
+            $('.date').val(day);
+
+            if ($('.filter-next').length === 1) {
+                $('.filter-next').remove();
+            }
 
             ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + month_number;
         }
@@ -39,7 +65,11 @@ $(document).ready(function () {
             var year = moment(date_year).format('YYYY');
             $('.date-text').text(year);
             $('.date').val(year);
-            
+
+            if ($('.filter-next').length === 1) {
+                $('.filter-next').remove();
+            }
+
             ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + year;
         }
 
@@ -66,27 +96,42 @@ $(document).ready(function () {
             if ($('.filter-next').length === 0) {
                 $('.date-options').append('<button class="btn btn-primary filter-next"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>&nbsp;Next</button>');
             }
-            
+
             ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date_previous;
+        }
+
+        if (filter_val === 'week') {
+            var week_number = moment(date).subtract(1, 'weeks').format('W');
+            var previous_weeks_monday = moment(date).startOf('isoweek').subtract(1, 'weeks').format('ddd MMM DD, YYYY');
+            var previous_weeks_sunday = moment(previous_weeks_monday).add(6, 'days').format('ddd MMM DD, YYYY');
+
+            var date_previous = moment(date).startOf('isoweek').subtract(1, 'weeks').format('YYYY-MM-DD');
+            $('.date-text').text(previous_weeks_monday + " - " + previous_weeks_sunday);
+            $('.date').val(date_previous);
+            if ($('.filter-next').length === 0) {
+                $('.date-options').append('<button class="btn btn-primary filter-next"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>&nbsp;Next</button>');
+            }
+            console.log("week_number: " + week_number);
+            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date + '-' + week_number;
         }
 
         if (filter_val === 'month') {
             var date_month = $('.date_month').val();
             var date_year = $('.date_year').val();
-            
-            date_previous = moment(date_month).subtract(1, 'month').format('M');
-            date_previous_text = moment(date_month).subtract(1, 'month').format('MMMM');
+
+            date_previous = moment(date).subtract(1, 'month').format('MM-DD-YYYY');
+            date_previous_text = moment(date).subtract(1, 'month').format('MMMM YYYY');
             //console.log('date_previous: ' + date_previous);
-            
-            
+
+
             console.log(date_previous);
-            
-            $('.date').val(date_previous+"-"+date_year);
-            $('.date-text').text(date_previous_text+" "+date_year);
+
+            $('.date').val(date_previous);
+            $('.date-text').text(date_previous_text);
             if ($('.filter-next').length === 0) {
                 $('.date-options').append('<button class="btn btn-primary filter-next"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>&nbsp;Next</button>');
             }
-            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date_previous+"-"+date_year;
+            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date_previous;
         }
 
         if (filter_val === 'year') {
@@ -119,32 +164,69 @@ $(document).ready(function () {
             date_next = moment(date).add(1, 'days').format('YYYY-MM-DD');
             date_next_text = moment(date).add(1, 'days').format('MMM DD, YYYY');
             console.log('date_next: ' + date_next);
-            $('.date').val(date_next_text)
-            $('.date-text').text(date_next_text)
+            $('.date').val(date_next_text);
+            $('.date-text').text(date_next_text);
             if (date_today === date_next) {
                 $('.filter-next').remove();
             }
             ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date_next;
         }
 
+        if (filter_val === 'week') {
+            var week_number = moment(date).add(1, 'weeks').format('W');
+            var next_weeks_monday = moment(date).startOf('isoweek').add(1, 'weeks').format('ddd MMM DD, YYYY');
+            var next_weeks_sunday = moment(next_weeks_monday).add(6, 'days').format('ddd MMM DD, YYYY');
+
+            var date_next = moment(date).startOf('isoweek').add(1, 'weeks').format('YYYY-MM-DD');
+            $('.date-text').text(next_weeks_monday + " - " + next_weeks_sunday);
+            $('.date').val(date_next);
+            if ($('.filter-next').length === 0) {
+                $('.date-options').append('<button class="btn btn-primary filter-next"><i class="fa fa-chevron-circle-right" aria-hidden="true"></i>&nbsp;Next</button>');
+            }
+            console.log("week_number: " + week_number);
+
+            var week_today = moment(date_today).format('W');
+
+            if (week_today === week_number) {
+                $('.filter-next').remove();
+            }
+
+            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date + '-' + week_number;
+        }
+
         if (filter_val === 'month') {
             var date_month = $('.date_month').val();
             var date_year = $('.date_year').val();
-            date_next = moment(date_month).add(1, 'month').format('MM');
-            date_next_text = moment(date_month).add(1, 'month').format('MMMM');
+            date_next = moment(date).add(1, 'month').format('MM-DD-YYYY');
+            date_next_text = moment(date).add(1, 'month').format('MMMM YYYY');
             console.log('date_next: ' + date_next);
-            $('.date').val(date_next_text+"-"+date_year);
-            $('.date-text').text(date_next_text+" "+date_year);
-            
-            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date_next+"-"+date_year;
+            $('.date').val(date_next);
+            $('.date-text').text(date_next_text);
+
+            var date_month_today = moment(date_today).format('MM');
+            var date_next_month = moment(date).add(1, 'month').format('MM');
+
+            if (date_month_today === date_next_month) {
+                $('.filter-next').remove();
+            }
+
+            ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date_next;
         }
 
         if (filter_val === 'year') {
             date_next = moment(date).add(1, 'year').format('YYYY-MM-DD');
             date_next_text = moment(date).add(1, 'year').format('YYYY');
             console.log('date_next: ' + date_next);
-            $('.date').val(date_next_text)
-            $('.date-text').text(date_next_text)
+            $('.date').val(date_next_text);
+            $('.date-text').text(date_next_text);
+
+            var date_year_today = moment(date_today).format('YYYY');
+            var date_next_year = moment().format('YYYY');
+
+            if (date_year_today === date_next_year) {
+                $('.filter-next').remove();
+            }
+
             ajaxurl = public_path + 'payroll/filter/' + company_id + '/' + filter_val + '/' + date_next;
         }
 
