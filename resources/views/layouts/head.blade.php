@@ -116,7 +116,11 @@
         @if(in_array('tasks',$assets))
         {!!  HTML::style('assets/css/page/tasks.css')  !!}
         @endif
-
+        
+        @if(in_array('payroll',$assets))
+        {!!  HTML::style('assets/css/page/payroll.css')  !!}
+        @endif
+        
         {!!  HTML::style('assets/css/page/search.css')  !!}
 
 

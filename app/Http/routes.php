@@ -366,6 +366,19 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('payroll', 'PayrollController');
     Route::get('payrollJson', 'PayrollController@payrollJson');
     Route::get('payroll/filter/{company_id}/{filter}/{date}','PayrollController@filter');
+    Route::get('payroll/paymentHistory/{id}','PayrollController@showPaymentHistory');
+    Route::get('payroll/payrollSettings/{id}','PayrollController@showPayrollSettings');
+    
+    //Add Payroll Column
+    Route::get('addPayrollColumnForm','PayrollController@addPayrollColumnForm');
+    Route::post('addPayrollColumn','PayrollController@addPayrollColumn');
+    
+    //Edit Payroll Column
+    Route::get('editPayrollColumnForm/{id}','PayrollController@editPayrollColumnForm');
+    Route::post('editPayrollColumn','PayrollController@editPayrollColumn');
+    
+    //Delate Payroll Column
+    Route::post('deletePayrollColumn','PayrollController@deletePayrollColumn');
     
     /*
      * Search 

@@ -1398,7 +1398,7 @@ $('#employees').on('click', '.edit-employee', function (e) {
                     var formData = new FormData();
                     formData.append('user_id', user_id);
                     formData.append('company_id', company_id);
-                    
+
                     var photo = $(form).find('input[name="photo"]')[0].files[0];
                     var resume = $(form).find('input[name="resume"]')[0].files[0];
                     var name = $(form).find('input[name="name"]').val();
@@ -1411,8 +1411,8 @@ $('#employees').on('click', '.edit-employee', function (e) {
                     var address_2 = $(form).find('input[name="address_2"]').val();
                     var zipcode = $(form).find('input[name="zipcode"]').val();
                     var authority = $(form).find('input[name="authority"]:checked').val();
-                    
-                    
+
+
                     var country = $(form).find('select[name="country_id"] option:selected').text();
                     var country_id = $(form).find('select[name="country_id"] option:selected').val();
 
@@ -1426,9 +1426,9 @@ $('#employees').on('click', '.edit-employee', function (e) {
                     formData.append('address_2', address_2);
                     formData.append('zipcode', zipcode);
                     formData.append('country_id', country_id);
-                    formData.append('photo',photo);
-                    formData.append('resume',resume);
-                    formData.append('authority',authority);
+                    formData.append('photo', photo);
+                    formData.append('resume', resume);
+                    formData.append('authority', authority);
                     console.log(authority);
 
                     if ($('#new-position').hasClass('active') === true) {
@@ -1440,7 +1440,7 @@ $('#employees').on('click', '.edit-employee', function (e) {
                         var role_id = $(form).find('select[name="role_id"] option:selected').val();
                         formData.append('role_id', role_id);
                     }
-                   
+
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
                     $button.spin();
@@ -1456,10 +1456,10 @@ $('#employees').on('click', '.edit-employee', function (e) {
 
                         },
                         success: function (data) {
-                            var json_data = JSON.parse(data);    
-                                
+                            var json_data = JSON.parse(data);
+
                             //Update Employee information
-                            $('#employee-' + user_id).find('.employee-photo').attr('src',public_path + json_data.photo);
+                            $('#employee-' + user_id).find('.employee-photo').attr('src', public_path + json_data.photo);
                             $('#employee-' + user_id).find('.name').children('a').text(name);
                             $('#employee-' + user_id).find('.email').children('a').text(email);
                             $('#employee-' + user_id).find('.phone').children('a').text(phone);
@@ -1680,24 +1680,24 @@ $('.permission-list-group').on('click', '.position-permission', function (e) {
 });
 
 
- $( ".column" ).sortable({
-      connectWith: ".column",
-      handle: ".portlet-header",
-      cancel: ".portlet-toggle",
-      placeholder: "portlet-placeholder ui-corner-all"
-    });
- 
-    $( ".portlet" )
-      .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
-      .find( ".portlet-header" )
-        .addClass( "ui-widget-header ui-corner-all" )
-        .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
- 
-    $( ".portlet-toggle" ).click(function() {
-      var icon = $( this );
-      icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
-      icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
-    });
+$(".column").sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    placeholder: "portlet-placeholder ui-corner-all"
+});
+
+$(".portlet")
+        .addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+        .find(".portlet-header")
+        .addClass("ui-widget-header ui-corner-all")
+        .prepend("<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+
+$(".portlet-toggle").click(function () {
+    var icon = $(this);
+    icon.toggleClass("ui-icon-minusthick ui-icon-plusthick");
+    icon.closest(".portlet").find(".portlet-content").toggle();
+});
 
 $('.remove-link').on('click', function (e) {
     e.preventDefault();
@@ -1715,13 +1715,13 @@ $('.edit-link').on('click', function (e) {
     _modal_dialog.load(_href);
     edit_link_modal.modal('show');
 
-    edit_link_modal.on('click','.update-link-btn',function(e){
+    edit_link_modal.on('click', '.update-link-btn', function (e) {
         e.preventDefault();
         var _this = $(this);
         var _link_modal = _this.parents('.edit-link-modal');
         var _form = _this.parents('.edit-link-modal').find('form');
         var _data = _form.serializeArray();
-        _this.attr('disabled','disabled');
+        _this.attr('disabled', 'disabled');
         $.post(_form.attr('action'), _data, function (res) {
             location.reload();
             _link_modal.modal('hide');
@@ -1733,17 +1733,17 @@ $('[data-toggle="tooltip"]').tooltip({
     html: true
 });
 
-$('.employee-options').on('click','.add-rate',function(e){
+$('.employee-options').on('click', '.add-rate', function (e) {
     e.preventDefault();
-    
+
     var user_id = $(this).siblings('.user_id').val();
     var company_id = $(this).siblings('.company_id').val();
-    
-    console.log('user_id: '+user_id);
-    console.log('company_id: '+company_id);
-    
+
+    console.log('user_id: ' + user_id);
+    console.log('company_id: ' + company_id);
+
     var edit_rate_form = public_path + 'rate/create';
-    
+
     BootstrapDialog.show({
         title: 'Edit Rate <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
         size: 'size-normal',
@@ -1763,17 +1763,48 @@ $('.employee-options').on('click','.add-rate',function(e){
                     var currency = $(form).find('select[name="currency"]').val();
                     var rate_type = $(form).find('select[name="rate_type"]').val();
                     var rate_value = $(form).find('input[name="rate_value"]').val();
+                    var pay_period = $(form).find('select[name="pay_period"]').val();
+                     var payday;
+
+                    switch (pay_period) {
+                        case 'biweekly':
+                            
+                            payday = $(form).find('select[name="biweekly-1"]').val() + ',' + $(form).find('select[name="biweekly-2"]').val();
+                            
+                            break;
+                        case 'weekly':
+                            
+                            payday = $(form).find('select[name="weekly"]').val();
+                            
+                            break;
+                        case 'monthly':
+                            
+                            payday = $(form).find('select[name="monthly"]').val();
+                            break;
+                        case 'semi-monthly':
+                            
+                            payday = $(form).find('select[name="semi-monthly-1"]').val() + ',' + $(form).find('select[name="semi-monthly-2"]').val();
+                            break;
+
+                    }
                     
-                    console.log('rate type: '+rate_type);
-                    console.log('rate value: '+rate_value);
-                    
+                    console.log('user_id: ' + user_id);
+                    console.log('rate type: ' + rate_type);
+                    console.log('rate value: ' + rate_value);
+                    console.log('company_id: ' + company_id);
+                    console.log('currency: ' + currency);
+                    console.log('pay_period: ' + pay_period);
+                    console.log('payday: ' + payday);
+
                     var formData = new FormData();
-                    formData.append('user_id',user_id);
-                    formData.append('company_id',company_id);
-                    formData.append('currency',currency);
-                    formData.append('rate_type',rate_type);
-                    formData.append('rate_value',rate_value);
-                    
+                    formData.append('user_id', user_id);
+                    formData.append('company_id', company_id);
+                    formData.append('currency', currency);
+                    formData.append('rate_type', rate_type);
+                    formData.append('rate_value', rate_value);
+                    formData.append('pay_period', pay_period);
+                    formData.append('payday', payday);
+
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
                     $button.spin();
@@ -1789,8 +1820,10 @@ $('.employee-options').on('click','.add-rate',function(e){
 
                         },
                         success: function (data) {
-                            $('#rate-'+user_id).switchClass('add-rate','edit-rate');
-                            $('#rate-'+user_id).children('span').text('Edit Rate');
+                            $('#rate-' + user_id).switchClass('add-rate', 'edit-rate');
+                            $('#rate-' + user_id).children('span').text('Edit Rate');
+                            $('#employee-'+user_id+' .rate_id').val(data);
+                            console.log();
                             dialog.close();
                         },
                         error: function (xhr, status, error) {
@@ -1807,22 +1840,22 @@ $('.employee-options').on('click','.add-rate',function(e){
         },
         closable: false
     });
-    
+
 });
 
-$('.employee-options').on('click','.edit-rate',function(e){
+$('.employee-options').on('click', '.edit-rate', function (e) {
     e.preventDefault();
-    
+
     var user_id = $(this).siblings('.user_id').val();
     var company_id = $(this).siblings('.company_id').val();
     var rate_id = $(this).siblings('.rate_id').val();
-    
-    console.log('user_id: '+user_id);
-    console.log('company_id: '+company_id);
-    console.log('rate_id: '+rate_id);
-    
-    var edit_rate_form = public_path + 'rate/'+rate_id+'/edit';
-    
+
+    console.log('user_id: ' + user_id);
+    console.log('company_id: ' + company_id);
+    console.log('rate_id: ' + rate_id);
+
+    var edit_rate_form = public_path + 'rate/' + rate_id + '/edit';
+
     BootstrapDialog.show({
         title: 'Edit Rate <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
         size: 'size-normal',
@@ -1837,21 +1870,53 @@ $('.employee-options').on('click','.edit-rate',function(e){
                 cssClass: 'btn-edit btn-shadow',
                 action: function (dialog) {
 
-                    var ajaxurl = public_path + 'rate/'+rate_id;
+                    var ajaxurl = public_path + 'rate/' + rate_id;
                     var form = $("#edit-rate-form")[0];
                     var currency = $(form).find('select[name="currency"]').val();
                     var rate_type = $(form).find('select[name="rate_type"]').val();
                     var rate_value = $(form).find('input[name="rate_value"]').val();
-                    
-                    console.log('rate type: '+rate_type);
-                    console.log('rate value: '+rate_value);
+                    var pay_period = $(form).find('select[name="pay_period"]').val();
+                    var payday;
+
+                    switch (pay_period) {
+                        case 'biweekly':
+                            
+                            payday = $(form).find('select[name="biweekly-1"]').val() + ',' + $(form).find('select[name="biweekly-2"]').val();
+                            
+                            break;
+                        case 'weekly':
+                            
+                            payday = $(form).find('select[name="weekly"]').val();
+                            
+                            break;
+                        case 'monthly':
+                            
+                            payday = $(form).find('select[name="monthly"]').val();
+                            break;
+                        case 'semi-monthly':
+                            
+                            payday = $(form).find('select[name="semi-monthly-1"]').val() + ',' + $(form).find('select[name="semi-monthly-2"]').val();
+                            break;
+
+                    }
+
+
+                    console.log('rate type: ' + rate_type);
+                    console.log('rate value: ' + rate_value);
+                    console.log('pay period: ' + pay_period);
+                    console.log('payday : '+payday);
+                    console.log('user_id: '+user_id);
                     
                     var formData = new FormData();
-                    formData.append('currency',currency);
-                    formData.append('rate_type',rate_type);
-                    formData.append('rate_value',rate_value);
+                    formData.append('currency', currency);
+                    formData.append('rate_type', rate_type);
+                    formData.append('rate_value', rate_value);
+                    formData.append('pay_period', pay_period);
+                    formData.append('payday', payday);
+                    formData.append('user_id', user_id);
+                    formData.append('company_id', company_id);
                     formData.append('_method', 'PUT');
-                    
+
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
                     $button.spin();
@@ -1867,7 +1932,7 @@ $('.employee-options').on('click','.edit-rate',function(e){
 
                         },
                         success: function (data) {
-
+                            console.log('profile id: '+data);
                             dialog.close();
                         },
                         error: function (xhr, status, error) {
@@ -1884,5 +1949,5 @@ $('.employee-options').on('click','.edit-rate',function(e){
         },
         closable: false
     });
-    
+
 });

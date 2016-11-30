@@ -279,6 +279,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @endif
 
 @if(in_array('payroll',$assets))
+{!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/page/payroll.js')  !!}
 @endif
 

@@ -29,14 +29,14 @@ $(document).ready(function () {
         if (filter_val === 'week') {
             var day = moment(date_today).format('YYYY-MM-DD');
             $('.date').val(day);
-            
+
             var week_number = moment(day).format('W');
             var this_weeks_monday = moment().startOf('isoweek').format('ddd MMM DD, YYYY');
             var this_weeks_sunday = moment(this_weeks_monday).add(6, 'days').format('ddd MMM DD, YYYY');
-            
+
 
             $('.date-text').text(this_weeks_monday + " - " + this_weeks_sunday);
-            
+
             if ($('.filter-next').length === 1) {
                 $('.filter-next').remove();
             }
@@ -49,7 +49,7 @@ $(document).ready(function () {
             var date_month = $('.date_month').val();
             var date_year = $('.date_year').val();
             var day = moment(date_today).format('YYYY-MM-DD');
-            
+
             var month = moment(date).format('MMMM YYYY');
             var month_number = moment(date).format('MM-DD-YYYY');
             $('.date-text').text(month);
@@ -123,8 +123,6 @@ $(document).ready(function () {
 
             date_previous = moment(date).subtract(1, 'month').format('MM-DD-YYYY');
             date_previous_text = moment(date).subtract(1, 'month').format('MMMM YYYY');
-            //console.log('date_previous: ' + date_previous);
-
 
             console.log(date_previous);
 
@@ -235,8 +233,265 @@ $(document).ready(function () {
         filter(ajaxurl);
     });
 
+    $('#payment-history-tab').click(function () {
+        console.log('Clicked payment history');
+        var company_id = $('.company_id').val();
+        var ajaxurl = public_path + 'payroll/paymentHistory/' + company_id;
+        getPaymentHistory(ajaxurl);
+    });
 
+    $('#payroll-settings-tab').click(function () {
+        console.log('Clicked payment history');
+        var company_id = $('.company_id').val();
+        var ajaxurl = public_path + 'payroll/payrollSettings/' + company_id;
+        getPayrollSettings(ajaxurl);
+    });
+
+
+    //Add Global Payroll Column
+    $('body').on('click', '#add-column', function () {
+        var add_column_form = public_path + '/addPayrollColumnForm';
+
+        BootstrapDialog.show({
+            title: 'Add Payroll Column',
+            size: 'size-wide',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Save',
+                    cssClass: 'btn-edit btn-shadow',
+                    action: function (dialog) {
+                        var ajaxurl = public_path + '/addPayrollColumn';
+                        var form = $("#add-payroll-column-form")[0];
+
+                        var formData = new FormData(form);
+                        var column_name = $(form).find('input[name="column_name"]').val();
+                        var column_type = $(form).find('select[name="column_type"]').val();
+                        var default_value = $(form).find('input[name="default_value"]').val();
+
+                        console.log(column_name);
+                        console.log(column_type);
+                        console.log(default_value);
+
+                        formData.append('column_name', column_name);
+                        formData.append('column_type', column_type);
+                        formData.append('default_value', default_value);
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $('#payroll-settings-table').html(data);
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax
+                    }
+                }, {
+                    label: 'Close',
+                    cssClass: 'btn-delete btn-shadow',
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }],
+            data: {
+                'pageToLoad': add_column_form
+            },
+            onshown: function (ref) {
+                //initCkeditor(ref);
+            },
+            closable: false
+        });
+    });
+    $('body').on('click', '.edit-column', function () {
+
+        var column_id = $(this).siblings('.column_id').val();
+        console.log(column_id);
+        var edit_column_form = public_path + '/editPayrollColumnForm/' + column_id;
+
+        BootstrapDialog.show({
+            title: 'Edit Payroll Column',
+            size: 'size-wide',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Save',
+                    cssClass: 'btn-edit btn-shadow',
+                    action: function (dialog) {
+                        var ajaxurl = public_path + '/editPayrollColumn';
+                        var form = $("#edit-payroll-column-form")[0];
+
+                        var formData = new FormData(form);
+                        var column_name = $(form).find('input[name="column_name"]').val();
+                        var column_type = $(form).find('select[name="column_type"]').val();
+                        var default_value = $(form).find('input[name="default_value"]').val();
+
+                        console.log(column_name);
+                        console.log(column_type);
+                        console.log(default_value);
+
+                        formData.append('column_name', column_name);
+                        formData.append('column_type', column_type);
+                        formData.append('default_value', default_value);
+                        formData.append('column_id', column_id);
+                        //formData.append('_method', 'PUT');
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $('#payroll-settings-table').html(data);
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax
+                    }
+                }, {
+                    label: 'Close',
+                    cssClass: 'btn-delete btn-shadow',
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }],
+            data: {
+                'pageToLoad': edit_column_form
+            },
+            onshown: function (ref) {
+                //initCkeditor(ref);
+            },
+            closable: false
+        });
+    });
+    $('body').on('click', '.delete-column', function () {
+
+        var column_id = $(this).siblings('.column_id').val();
+
+        var ajaxurl = public_path + '/deletePayrollColumn';
+
+        var formData = new FormData();
+        formData.append('column_id', column_id);
+        //formData.append('_method', 'PUT');
+
+        $.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: formData,
+            // THIS MUST BE DONE FOR FILE UPLOADING
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#payroll-settings-table').html(data);
+
+            },
+            error: function (xhr, status, error) {
+
+            }
+        }); //ajax
+
+    });
+
+    //Add Global Pay Period
+    $('body').on('click', '#add-pay-period', function () {
+        var add_column_form = public_path + '/addPayPeriodForm';
+
+        BootstrapDialog.show({
+            title: 'Add Pay Period',
+            size: 'size-wide',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Save',
+                    cssClass: 'btn-edit btn-shadow',
+                    action: function (dialog) {
+                        var ajaxurl = public_path + '/addPayrollColumn';
+                        var form = $("#add-payroll-column-form")[0];
+
+                        var formData = new FormData(form);
+                        var column_name = $(form).find('input[name="column_name"]').val();
+                        var default_value = $(form).find('input[name="default_value"]').val();
+
+                        console.log(column_name);
+                        console.log(default_value);
+
+                        formData.append('column_name', column_name);
+                        formData.append('default_value', default_value);
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $('#payroll-settings-table').html(data);
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax
+                    }
+                }, {
+                    label: 'Close',
+                    cssClass: 'btn-delete btn-shadow',
+                    action: function (dialog) {
+                        dialog.close();
+                    }
+                }],
+            data: {
+                'pageToLoad': add_column_form
+            },
+            onshown: function (ref) {
+                //initCkeditor(ref);
+            },
+            closable: false
+        });
+    });
+    
+    
 });
+
+function addColumn(column_name, default_value) {
+
+}
+
 
 function filter(ajaxurl) {
     $.ajax({
@@ -246,6 +501,36 @@ function filter(ajaxurl) {
         },
         success: function (data) {
             $('#payroll-table-container').html(data);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+}
+
+function getPaymentHistory(ajaxurl) {
+    $.ajax({
+        url: ajaxurl,
+        type: "GET",
+        beforeSend: function () {
+        },
+        success: function (data) {
+            $('#payment-history').html(data);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax
+}
+
+function getPayrollSettings(ajaxurl) {
+    $.ajax({
+        url: ajaxurl,
+        type: "GET",
+        beforeSend: function () {
+        },
+        success: function (data) {
+            $('#payroll-settings').html(data);
         },
         error: function (xhr, status, error) {
 

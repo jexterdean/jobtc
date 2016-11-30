@@ -1,4 +1,4 @@
-<table id="payroll-table" class="table">
+<table id="payroll-table" class="table table-condensed table-bordered table-hover">
     <thead>
         <tr>
             <th>Name</th>

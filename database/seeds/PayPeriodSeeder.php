@@ -11,9 +11,24 @@ class PayPeriodSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pay_period')->insert(array(
-            array('period' => 'Monthly'),
-            array('period' => 'Biweekly')
-        ));
+        DB::table('payroll_pay_periods')->insert([
+            'period' => 'biweekly',
+            'default' => 'Friday,Friday'
+        ]);
+        
+        DB::table('payroll_pay_periods')->insert([
+            'period' => 'weekly',
+            'default' => 'Friday'
+        ]);
+        
+        DB::table('payroll_pay_periods')->insert([
+            'period' => 'monthly',
+            'default' => '30'
+        ]);
+        
+        DB::table('payroll_pay_periods')->insert([
+            'period' => 'semi-monthly',
+            'default' => '30,30'
+        ]);
     }
 }

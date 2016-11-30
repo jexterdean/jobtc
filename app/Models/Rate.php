@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rate extends Model
 {
-    protected $fillable = ['profile_id', 'rate_type', 'rate_value', 'currency'];
+    protected $fillable = ['profile_id', 'rate_type', 'rate_value','pay_period_id','currency'];
 
     protected $primaryKey = 'id';
     protected $table = 'rates';
+    
+    public function pay_period() {
+        return $this->hasOne('App\Models\PayPeriod','id','pay_period_id');
+    }
 }
