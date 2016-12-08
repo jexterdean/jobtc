@@ -41,6 +41,6 @@
     font-weight: bold;
 }
 
-#payroll-table td:first-child {
+#payroll-table td {
     vertical-align: top !important;
 }

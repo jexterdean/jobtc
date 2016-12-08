@@ -77,13 +77,13 @@ class TaskListItemController extends Controller {
         if ($task_order_count > 0) {
             $task_order = TaskChecklistOrder::where('task_id', $task_id)->first();
             $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
-                            $query->where('user_id', $user_id)->get();
+                            $query->select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, MAX(timer_id) as timer_id, MAX(timer_status) as timer_status, user_id,project_id,task_checklist_id'))->where('user_id', $user_id)->groupBy('task_checklist_id')->get();
                         },'task_checklist_statuses'])->where('id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->first();
             
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $task_id)->first();
             $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
-                            $query->where('user_id', $user_id)->get();
+                            $query->select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, MAX(timer_id) as timer_id, MAX(timer_status) as timer_status, user_id,project_id,task_checklist_id'))->where('user_id', $user_id)->groupBy('task_checklist_id')->get();
                         },'task_checklist_statuses'])->where('id', '=', $id)->first();
         }
 

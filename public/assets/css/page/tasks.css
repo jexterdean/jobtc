@@ -453,3 +453,7 @@ select{
 .dl-menu .dropdown:hover > .dropdown-menu{
     display: block!important;
 }
+
+iframe {
+    width: 100%;
+}

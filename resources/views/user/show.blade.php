@@ -207,7 +207,7 @@
             @if(Auth::check('user'))
             <div class="mini-space"></div>
             <div id="comment-list-{{$profile->user->user_id}}" class="comment-list">
-                @unless($comments->count())
+                @unless($comments->count() === 0)
                 <div class="no-comment-notifier"></div>
                 @else
                 @foreach($comments as $comment)

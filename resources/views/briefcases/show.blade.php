@@ -54,17 +54,17 @@
                                                 @forelse($list_item->timer as $timer)
                                                 <div id='timer-options-{{$list_item->id}}' class="pull-right"> 
                                                     @if($timer->timer_status === 'Resumed' || $timer->timer_status === 'Started')
-                                                    <text id='timer-{{$list_item->id}}' class='still-counting task-item-timer'>{{$timer->total_time}}</text>
+                                                    <text id='timer-{{$list_item->id}}' class='still-counting task-item-timer'>{{$timer->timeSum}}</text>
                                                     <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary pause-timer">Pause</button>
                                                     @elseif($timer->timer_status === 'Completed')
-                                                    <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                                                    <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->timeSum}}</text>
                                                     @else
-                                                    <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->total_time}}</text>
+                                                    <text id='timer-{{$list_item->id}}' class="task-item-timer">{{$timer->timeSum}}</text>
                                                     <button id="timer-pause-{{$list_item->id}}" class="btn btn-primary resume-timer">Resume</button>
                                                     @endif
                                                     <input class="timer_id" type="hidden" value="{{$timer->timer_id}}">
                                                     <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
-                                                    <input class="total_time" type="hidden" value="{{$timer->total_time}}">
+                                                    <input class="total_time" type="hidden" value="{{$timer->timeSum}}">
                                                     <input class="timer_status" type="hidden" value="{{$timer->timer_status}}">
                                                 </div>
                                                 @empty

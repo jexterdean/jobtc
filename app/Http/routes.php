@@ -377,8 +377,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('editPayrollColumnForm/{id}','PayrollController@editPayrollColumnForm');
     Route::post('editPayrollColumn','PayrollController@editPayrollColumn');
     
-    //Delate Payroll Column
+    //Delete Payroll Column
     Route::post('deletePayrollColumn','PayrollController@deletePayrollColumn');
+    
+    //Change payment status 
+    Route::post('editPaymentStatus','PayrollController@editPaymentStatus');
     
     /*
      * Search 

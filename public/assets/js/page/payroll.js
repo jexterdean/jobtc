@@ -1,6 +1,21 @@
 /* 
  * Payroll Scripts
  */
+
+//For Click toggle
+
+$.fn.clickToggle = function (func1, func2) {
+    var funcs = [func1, func2];
+    this.data('toggleclicked', 0);
+    this.click(function () {
+        var data = $(this).data();
+        var tc = data.toggleclicked;
+        $.proxy(funcs[tc], this)();
+        data.toggleclicked = (tc + 1) % 2;
+    });
+    return this;
+};
+
 $(document).ready(function () {
     $('#filter').removeClass('hidden');
 
@@ -50,8 +65,8 @@ $(document).ready(function () {
             var date_year = $('.date_year').val();
             var day = moment(date_today).format('YYYY-MM-DD');
 
-            var month = moment(date).format('MMMM YYYY');
-            var month_number = moment(date).format('MM-DD-YYYY');
+            var month = moment(date_today).format('MMMM YYYY');
+            var month_number = moment(date_today).format('MM-DD-YYYY');
             $('.date-text').text(month);
             $('.date').val(day);
 
@@ -77,6 +92,32 @@ $(document).ready(function () {
 
         filter(ajaxurl);
 
+    });
+
+//Payment History Filter Scripts
+    $('#payment-history-filter').change(function () {
+        var filter_val = $('#payment-history-filter').val();
+        var company_id = $('.company_id').val();
+        var date = $('.date').val();
+        var date_today = $('.date_today').val();
+
+        var ajaxurl;
+
+        if (filter_val === 'monthly') {
+
+        }
+
+        if (filter_val === 'semi-monthly') {
+
+        }
+
+        if (filter_val === 'biweekly') {
+
+        }
+
+        if (filter_val === 'weekly') {
+
+        }
     });
 
     $('.date-label').on('click', '.filter-previous', function () {
@@ -484,8 +525,52 @@ $(document).ready(function () {
             closable: false
         });
     });
-    
-    
+
+    $('.date-label').on('click', '.payment-history-previous', function () {
+        var company_id = $('.company_id').val();
+        var filter_val = $('#filter').val();
+        var date = $('.date').val();
+
+        var date_previous;
+        var date_previous_text;
+        var ajaxurl;
+
+    });
+
+    $('.date-label').on('click', '.payment-history-next', function () {
+        var company_id = $('.company_id').val();
+        var filter_val = $('#filter').val();
+        var date = $('.date').val();
+
+        var date_previous;
+        var date_previous_text;
+        var ajaxurl;
+
+    });
+
+
+    $('body').on('click', '.pay-employee', function () {
+        var text = $(this).find('.pay-employee-text').text();
+        var ajaxurl = public_path + '/editPaymentStatus';
+        var profile_id = $(this).siblings('.profile_id').val();
+        var formData = new FormData();
+        if (text === 'Pay') {
+            $(this).find('.pay-employee-text').text('Paid');
+            $('.payroll-status-'+profile_id).text('Paid');
+            $(this).find('i').replaceWith('<i class="fa fa-check-circle" aria-hidden="true"></i>');
+            formData.append('profile_id', profile_id);
+            formData.append('status','Paid');
+            editPayrollStatus(ajaxurl, formData);
+        } else {
+            $(this).find('.pay-employee-text').text('Pay');
+            $('.payroll-status-'+profile_id).text('Unpaid');
+            $(this).find('i').replaceWith('<i class="fa fa-minus-circle" aria-hidden="true"></i>');
+            formData.append('profile_id', profile_id);
+            formData.append('status','Unpaid');
+            editPayrollStatus(ajaxurl, formData);
+        }
+    });
+
 });
 
 function addColumn(column_name, default_value) {
@@ -516,6 +601,12 @@ function getPaymentHistory(ajaxurl) {
         },
         success: function (data) {
             $('#payment-history').html(data);
+            $('#payment-history-filter').removeClass('hidden');
+
+            var base_url = window.location.origin;
+            //Bootstrap select doesn't refresh automatically if the dropdown is loaded via AJAX
+            $('#payment-history-filter').selectpicker('refresh');
+
         },
         error: function (xhr, status, error) {
 
@@ -536,4 +627,24 @@ function getPayrollSettings(ajaxurl) {
 
         }
     }); //ajax
+}
+
+function editPayrollStatus(ajaxurl, formData) {
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
 }
