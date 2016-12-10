@@ -10,4 +10,9 @@ class UserPayPeriod extends Model
 
     protected $primaryKey = 'id';
     protected $table = 'user_pay_periods';
+    
+    
+    public function payroll() {
+        return $this->hasOne('App\Models\Payroll');
+    }
 }

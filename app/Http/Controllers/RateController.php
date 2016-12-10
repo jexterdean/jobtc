@@ -9,6 +9,7 @@ use App\Models\Profile;
 use App\Models\Rate;
 use App\Models\PayPeriod;
 use App\Models\UserPayPeriod;
+use App\Models\Payroll;
 
 class RateController extends Controller {
 
@@ -40,8 +41,6 @@ class RateController extends Controller {
         $user_id = $request->input('user_id');
         $company_id = $request->input('company_id');
 
-        $profile_id = Profile::where('user_id', $user_id)->where('company_id', $company_id)->pluck('id');
-
         $rate_type = $request->input('rate_type');
         $rate_value = $request->input('rate_value');
         $currency = $request->input('currency');
@@ -66,7 +65,54 @@ class RateController extends Controller {
             'payday' => $payday
         ]);
         $user_pay_period->save();
-
+        
+        //Biweekly and semi-monthly will always have 2 payments dates,
+        //get the one relevant to this month
+        //at the time you add the employee's rate
+        $next_due;
+        if($pay_period === 'biweekly') {
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+2 week"));
+            
+        }
+        
+        if($pay_period === 'weekly') {
+            
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+1 week"));
+            
+            
+        }
+        
+        if($pay_period === 'monthly') {
+            
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+1 month"));
+            
+            
+        }
+        if($pay_period === 'semi-monthly') {
+            
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+1 month"));
+            
+        }
+        
+        $payroll = new Payroll([
+           'user_pay_period_id' =>  $user_pay_period->id,
+           'next_due' => $next_due 
+        ]);
+        $payroll->save();
+        
+        
         return $rate->id;
     }
 
@@ -125,7 +171,56 @@ class RateController extends Controller {
             'pay_period_id' => $pay_period_id,
             'payday' => $payday
         ]);
-
+        
+        
+        //Biweekly and semi-monthly will always have 2 payments dates,
+        //get the one relevant to this month
+        //at the time you add the employee's rate
+        $next_due;
+        if($pay_period === 'biweekly') {
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+2 week"));
+            
+        }
+        
+        if($pay_period === 'weekly') {
+            
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+1 week"));
+            
+            
+        }
+        
+        if($pay_period === 'monthly') {
+            
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+1 month"));
+            
+            
+        }
+        if($pay_period === 'semi-monthly') {
+            
+            $payday_array = explode(",",$payday);
+            
+            //Get the date today
+            $next_due = date('Y-m-d',strtotime("+1 month"));
+            
+        }
+        
+        $user_pay_period_id = UserPayPeriod::where('profile_id', $profile_id)->pluck('id');
+        
+        $payroll = Payroll::where('user_pay_period_id',$user_pay_period_id)->update([
+           'next_due' => $next_due 
+        ]);
+        
+        
+        
         return $profile_id;
     }
 

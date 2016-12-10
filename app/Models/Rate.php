@@ -14,4 +14,8 @@ class Rate extends Model
     public function pay_period() {
         return $this->hasOne('App\Models\PayPeriod','id','pay_period_id');
     }
+    
+    public function user_pay_period() {
+        return $this->hasOne('App\Models\UserPayPeriod','profile_id','profile_id');
+    }
 }
