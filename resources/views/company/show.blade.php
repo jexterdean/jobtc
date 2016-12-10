@@ -3,7 +3,7 @@
 <div class="column">
 
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Projects</div>
+        <div class="portlet-header reduce-portlet-header"><a href="{{url('company/' . $company_id . '/projects')}}">Projects</a></div>
         <div class="portlet-content">
             <ul class='list-group'>
                 @foreach($projects as $project)
@@ -20,7 +20,7 @@
     </div>
 
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Jobs</div>
+        <div class="portlet-header reduce-portlet-header"><a href="{{url('company/' . $company_id . '/jobs')}}">Jobs</a></div>
         <div class="portlet-content">
             @foreach($jobs as $job)
             <li class='list-group-item'>
@@ -35,7 +35,7 @@
     </div>
 
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Tests</div>
+        <div class="portlet-header reduce-portlet-header"><a href="{{url('quizPerCompany/' . $company_id)}}">Tests</a></div>
         <div class="portlet-content">
             @foreach($tests as $test)
             <li class='list-group-item'>
@@ -52,7 +52,7 @@
 
 <div class="column">
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Employees</div>
+        <div class="portlet-header reduce-portlet-header"><a href="{{url('employees/' . $company_id)}}">Employees</a></div>
         <div class="portlet-content">
             @foreach($employees as $employee)
             <li class='list-group-item'>
@@ -67,7 +67,7 @@
         </div>
     </div>
     <div class="portlet fixed-portlet">
-        <div class="portlet-header reduce-portlet-header">Links</div>
+        <div class="portlet-header reduce-portlet-header"><a href="{{url('companyLinks/' . $company_id)}}">Links</a></div>
         <div class="portlet-content">
             @foreach($links as $link)
             <li class='list-group-item'>

@@ -168,10 +168,16 @@ $('.edit-applicant').on('click', function (e) {
     var is_upload = $(this).hasClass('is-upload-document') ? 1 : 0;
     var applicant_id = $(this).siblings('.applicant_id').val();
     var company_id = $(this).siblings('.company_id').val();
-    var edit_applicant_form = is_upload ? public_path + 'a/' + applicant_id + '/edit' : public_path + 'a/' + applicant_id + '/edit?upload=1';
+    var edit_applicant_form = !is_upload ? public_path + 'a/' + applicant_id + '/edit' : public_path + 'a/' + applicant_id + '/edit?upload=1';
     var ajaxurl = public_path + 'a/' + applicant_id;
-
-    BootstrapDialog.show({
+    var _this_modal = $('.this-modal');
+    _this_modal.find('.modal-body').load(edit_applicant_form);
+    _this_modal.find('.modal-title').html((is_upload ? 'Upload File' : 'Edit Profile'));
+    _this_modal.modal('show');
+    _this_modal.on('click','input[type=submit]',function(e){
+        _this_modal.modal('hide');
+    });
+    /*BootstrapDialog.show({
         title:  (is_upload ? 'Upload File' : 'Edit Profile') + ' <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
         size: 'size-normal',
         message: function (dialog) {
@@ -187,46 +193,52 @@ $('.edit-applicant').on('click', function (e) {
 
                     var form = $(".edit-applicant-form");
 
-                    var formData = new FormData();
-                    formData.append('_method', "PATCH");
+                    var formData = form.serializeArray();
+                    *//*formData.append('_method', "PATCH");
                     formData.append('applicant_id', applicant_id);
-                    formData.append('company_id', company_id);
+                    formData.append('company_id', company_id);*//*
 
-                    var resume = $(form).find('input[name="resume"]')[0].files[0];
-                    var photo = $(form).find('input[name="photo"]')[0].files[0];
-                    var name = $(form).find('input[name="name"]').val();
-                    var email = $(form).find('input[name="email"]').val();
-                    var phone = $(form).find('input[name="phone"]').val();
+                    var resume = form.find('input[name="resume"]')[0].files[0];
+                    var photo = form.find('input[name="photo"]')[0].files[0];
+                    var name = form.find('input[name="name"]').val();
+                    var email = form.find('input[name="email"]').val();
+                    var phone = form.find('input[name="phone"]').val();
 
-                    console.log('name:' + name);
-                    console.log('email:' + email);
-                    console.log('phone:' + phone);
+                    formData.push(
+                        {name:'applicant_id',value:applicant_id},
+                        {name:'company_id',value:company_id}
+                    );
                     if(!is_upload){
-                        formData.append('name', name);
-                        formData.append('email', email);
-                        formData.append('phone', phone);
+                        formData.push(
+                            {name:'name',value:name},
+                            {name:'email',value:email},
+                            {name:'phone',value:phone}
+                        );
                     }
 
-                    formData.append('photo', photo);
-                    formData.append('resume',resume);
+                    formData.push(
+                        {name:'photo',value:photo},
+                        {name:'resume',value:resume}
+                    );
 
                     var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
                     $button.disable();
                     $button.spin();
-
                     $.ajax({
                         url: ajaxurl,
-                        type: "POST",
+                        type: "post",
                         data: formData,
                         // THIS MUST BE DONE FOR FILE UPLOADING
                         contentType: false,
+                        cache: false,
                         processData: false,
-                        beforeSend: function () {
+                        beforeSend: function (data) {
 
                         },
                         success: function (data) {
-                            var json_data = JSON.parse(data);
-                            
+                            console.log(data);
+                            *//*var json_data = JSON.parse(data);
+
                             //Update Employee information
                             $('.applicant-posting-resume').attr('src','https://docs.google.com/viewer?url='+public_path + json_data.resume+'&embedded=true');
                             $('.add-comment-form').find('.employee-photo').attr('src', public_path + json_data.photo);
@@ -235,14 +247,13 @@ $('.edit-applicant').on('click', function (e) {
                             $('#applicant-' + applicant_id).find('.applicant-name').text(name);
                             $('#applicant-' + applicant_id).find('.applicant-email').text(email);
                             $('#applicant-' + applicant_id).find('.applicant-phone').text(phone);
-                            
-                            dialog.close();
+
+                            dialog.close();*//*
 
                         },
                         error: function (xhr, status, error) {
-
                         }
-                    }); //ajax*/
+                    }); //ajax
                 }
             }],
         data: {
@@ -252,7 +263,7 @@ $('.edit-applicant').on('click', function (e) {
             //initCkeditor(ref);
         },
         closable: false
-    });
+    });*/
 
 });
 

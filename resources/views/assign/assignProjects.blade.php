@@ -300,15 +300,15 @@
                             <li id="company-{{$user_company->id}}" class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-9">
-                                        <a id="employee-toggle-{{$user_company->id}}" class="toggle-employees" target="_blank" href="{{ url('company/' . $user_company->id) }}">
-                                            {{$user_company->name}}
+                                        <a id="employee-toggle-{{$user_company->id}}" class="toggle-employees company-link" target="_blank" href="{{ url('company/' . $user_company->id) }}">
+                                            <strong>{{$user_company->name}}</strong>
                                         </a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="drag-handle">
+                                        <a href="#" class="drag-handle company-link">
                                             <i class="fa fa-arrows"></i>
                                         </a>
-                                        <a href="#" class="unassign-company hidden">
+                                        <a href="#" class="unassign-company company-link hidden">
                                             <i class="fa fa-times"></i>
                                             <input class="company_id" type="hidden" value="{{$user_company->id}}"/>
                                             <input class="project_id" type="hidden" value=""/>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 
 class DownloadController extends Controller
@@ -83,5 +85,29 @@ class DownloadController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function getDownload()
+    {
+        $file_info = finfo_open(FILEINFO_MIME_TYPE);
+        $_get_file = Input::get('file');
+        $file = public_path() . '/' . $_get_file;
+
+        if (file_exists($file))
+        {
+            $file_array = explode('/',$_get_file);
+
+            $headers = array(
+                'Content-Type: '. finfo_file($file_info, $file),
+            );
+
+            return response()->download($file, end($file_array), $headers);
+        }
+        else{
+
+            return 'File not found';
+        }
+
     }
 }

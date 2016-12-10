@@ -31,6 +31,17 @@
         </div>
     </div>
 </div>
+<div class="modal fade this-modal" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Add Ticket</h4>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
 
 <?php $countries = \App\Models\Country::orderBy('country_name', 'asc')->lists('country_name', 'country_id')->toArray(); ?>
 <div class="modal fade bs-example-modal-sm" id="add_company" tabindex="-1" role="basic" aria-hidden="true">
@@ -297,6 +308,11 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @if(in_array('dashboard',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/page/dashboard.js')  !!}
+@endif
+
+@if(in_array('file-input',$assets))
+{!!  HTML::style('assets/css/fileinput.css')  !!}
+{!!  HTML::script('assets/js/dashboard.js')  !!}
 @endif
 <!--Search Scripts-->
 {!!  HTML::script('assets/js/page/search.js')  !!}

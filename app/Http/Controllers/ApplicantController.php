@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
-use App\Http\Requests;
+//use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Profile;
@@ -332,8 +332,8 @@ class ApplicantController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        $applicant_id = $request->input('applicant_id');
-        $company_id = $request->input('company_id');
+        //$applicant_id = $request->input('applicant_id');
+        //$company_id = $request->input('company_id');
 
         $applicant = Applicant::where('id', $id);
 
@@ -364,17 +364,32 @@ class ApplicantController extends Controller {
         } else {
             $resume_path = Applicant::where('id', $id)->pluck('resume');
         }
+        $post = [];
+        if($request->input('name')){
+            $post['name'] = $request->input('name');
+        }
+        if($request->input('email')){
+            $post['email'] = $request->input('email');
+        }
+        if($request->input('phone')){
+            $post['phone'] = $request->input('phone');
+        }
+        if($request->input('skype')){
+            $post['skype'] = $request->input('skype');
+        }
+        if($request->hasFile('resume')){
+            $post['photo'] = $photo_path;
+        }
+        if ($request->hasFile('photo')){
+            $post['resume'] = $resume_path;
+        }
 
-        $applicant->update([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'photo' => $photo_path,
-            'resume' => $resume_path
-        ]);
+        $applicant->update($post);
 
-        $data = array('photo' => $photo_path, 'resume' => $resume_path);
-        return json_encode($data);
+        //$data = array('photo' => $photo_path, 'resume' => $resume_path);
+        //return json_encode($data);
+
+        return redirect()->back();
     }
 
     /**

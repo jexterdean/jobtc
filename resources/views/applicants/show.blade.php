@@ -26,11 +26,13 @@
                     <div class="media">
                         <div class="media-left">
                             <a href="#">
-                                @if($applicant->photo !== '')
-                                <img class="img-thumbnail media-object applicant-photo " src="{{url($applicant->photo)}}" alt="Applicant Photo">
+                                @if($applicant->photo !== '' && file_exists(public_path() . '/' . $applicant->photo))
+                                <img class="img-thumbnail media-object applicant-photo edit-applicant is-upload-document" data-toggle="tooltip" title="Upload Photo" src="{{url($applicant->photo)}}" alt="Applicant Photo">
                                 @else
-                                <img class="img-thumbnail media-object applicant-photo " src="{{url('assets/user/avatar.png')}}" alt="Applicant Photo">
+                                <img class="img-thumbnail media-object applicant-photo edit-applicant is-upload-document" data-toggle="tooltip" title="Upload Photo" src="{{url('assets/user/avatar.png')}}" alt="Applicant Photo">
                                 @endif
+                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                             </a>
                             @if(Auth::user('user'))
                             <div class="rating text-center"></div>
@@ -38,27 +40,27 @@
                         </div>
                         <div class="media-body media-right">
                             @if(Auth::user('user'))
-                            <a href="#" class="btn btn-default pull-right interview-applicant"><i class="fa fa-comment-o"></i></a>
-                            <text class="media-heading">{{$applicant->name}}&nbsp;<a href="{{$applicant->id}}" class="delete-applicant"><i class="fa fa-trash"></i></a></text>
-                            @else
-                            <text class="media-heading">{{$applicant->name}}</text>
-                            <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
-                            @endif
-                            <br />
-                            <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
-                            <br />
-                            <a href="mailto:{{$applicant->email}}" class="applicant-email">{{$applicant->email}}</a>
-                            <br />
-                            <text class="applicant-job-title">{{$job->title}}</text>
-                            <br />
-                            <text>{{date_format(date_create($applicant->created_at),'M d,Y')}}</text>
+                                <a href="#" class="btn btn-default pull-right interview-applicant"><i class="fa fa-comment-o"></i></a>
+                                <text class="media-heading">{{$applicant->name}}&nbsp;<a href="{{$applicant->id}}" class="delete-applicant"><i class="fa fa-trash"></i></a></text>
+                                @else
+                                <text class="media-heading">{{$applicant->name}}</text>
+                                <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
+                                @endif
+                                <br />
+                                <a href="tel:{{$applicant->phone}}" class="applicant-phone">{{$applicant->phone}}</a>
+                                <br />
+                                <a href="mailto:{{$applicant->email}}" class="applicant-email">{{$applicant->email}}</a>
+                                <br />
+                                <text class="applicant-job-title">{{$job->title}}</text>
+                                <br />
+                                <text>{{date_format(date_create($applicant->created_at),'M d,Y')}}</text>
                             @if(Auth::user('user'))
-                            <br />
-                            <textarea class="status-container">
-                                        @if(isset($statuses))
-                                            {{$statuses->tags}}
-                                        @endif    
-                            </textarea>
+                                <br />
+                                <textarea class="status-container">
+                                            @if(isset($statuses))
+                                                {{$statuses->tags}}
+                                            @endif
+                                </textarea>
                             @endif
                         </div>
                     </div>
@@ -94,11 +96,13 @@
                         <div class="media">
                             <div class="media-left">
                                 <a href="#">
-                                    @if($applicant->photo !== '')
-                                    <img class="img-thumbnail media-object applicant-photo " src="{{url($applicant->photo)}}" alt="Applicant Photo">
+                                    @if($applicant->photo !== '' && file_exists(public_path() . '/' . $applicant->photo))
+                                    <img class="img-thumbnail media-object applicant-photo edit-applicant is-upload-document" data-toggle="tooltip" title="Upload Photo" src="{{url($applicant->photo)}}" alt="Applicant Photo">
                                     @else
-                                    <img class="img-thumbnail media-object applicant-photo " src="{{url('user/avatar.png')}}" alt="Applicant Photo">
+                                    <img class="img-thumbnail media-object applicant-photo edit-applicant is-upload-document" data-toggle="tooltip" title="Upload Photo" src="{{url('assets/user/avatar.png')}}" alt="Applicant Photo">
                                     @endif
+                                    <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                    <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                                 </a>
                                 @if(Auth::user())
                                 <div class="rating text-center"></div>
@@ -108,24 +112,24 @@
                                 {{--*/ $display_move_btn = $applicant->hired === 'Yes' ? 'display:inline;' : 'display:none;' /*--}}
                                 @if(Auth::user('user'))
                                 <text class="media-heading">
-                                {{$applicant->name}}&nbsp;
-                                @if(Auth::user('user')->user_id === $job->user_id)
-                                @if($applicant->hired === 'No')
-                                <a href="#" class='pull-right btn btn-edit btn-shadow bg-light-blue-gradient hire'>Hire</a>
-                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
-                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
-                                @else
-                                <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
-                                <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
-                                <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
-                                @endif
-                                @endif
+                                    {{$applicant->name}}&nbsp;
+                                    @if(Auth::user('user')->user_id === $job->user_id)
+                                        @if($applicant->hired === 'No')
+                                        <a href="#" class='pull-right btn btn-edit btn-shadow bg-light-blue-gradient hire'>Hire</a>
+                                        <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                        <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                        @else
+                                        <a href="#" class='pull-right btn btn-shadow bg-green hire'><i class="fa fa-star" aria-hidden="true"></i>&nbsp;Hired</a>
+                                        <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
+                                        <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
+                                        @endif
+                                    @endif
                                 </text>
                                 @else
-                                <text class="media-heading applicant-name"><span>{{$applicant->name}}</span></text>
-                                @if(Auth::user('applicant'))
-                                <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
-                                @endif
+                                    <text class="media-heading applicant-name"><span>{{$applicant->name}}</span></text>
+                                    @if(Auth::user('applicant'))
+                                    <a class="btn btn-shadow btn-delete pull-right" href="{{ url('/logout') }}"><i class="glyphicon glyphicon-off"></i> Logout</a>
+                                    @endif
                                 @endif
 
                                 <br />
@@ -146,7 +150,7 @@
                                 {{--Admin Option--}}
                                 @if($module_permissions->where('slug','edit.applicants')->count() === 1)
                                 <div class="applicant-options">
-                                    <a class="btn btn-edit btn-shadow bg-light-blue-gradient edit-applicant is-upload-document" href="#"><i class="fa fa-pencil" aria-hidden="true"></i>  Upload </a>
+                                    {{--<a class="btn btn-edit btn-shadow bg-light-blue-gradient edit-applicant is-upload-document" href="#"><i class="fa fa-pencil" aria-hidden="true"></i>  Upload </a>--}}
                                     <input class="applicant_id" type="hidden" value="{{$applicant->id}}"/>
                                     <input class="company_id" type="hidden" value="{{$job->company_id}}"/>
                                 </div>
@@ -204,6 +208,8 @@
             @if(Auth::check('user') || Auth::check('applicant'))
             <div class="mini-space"></div>
             {{--*/ $collapse = $applicant->notes ? 'in' : '' /*--}}
+            {{--*/ $str = str_replace('\\','/',$applicant->resume) /*--}}
+            {{--*/ $file = explode('/',$str) /*--}}
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -224,6 +230,15 @@
                     </div>
                 </div>
             </div>
+            @if(file_exists(public_path() .'/' . $str))
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="{{ url('downloadFile?file=' . $str)}}" class="btn btn-edit btn-shadow" data-toggle="tooltip"
+                            title="Download {{end($file)}}" data-placement="right">
+                            <i class="glyphicon glyphicon-file"></i> {{end($file)}}</a>
+                </div>
+            </div>
+            @endif
             <div id="comment-list-{{$applicant->id}}" class="comment-list">
                 @unless($comments->count())
                 <div class="no-comment-notifier"></div>
@@ -233,9 +248,9 @@
                     <div class="media">
                         <div class="media-left">
                             <a href="#">
-                                @if(isset($comment->user->photo))
+                                @if(isset($comment->user->photo) && file_exists(public_path().'/'.$comment->user->photo))
                                 <img class="comment-photo" src="{{url($comment->user->photo)}}" alt="Employee Photo">
-                                @elseif(isset($comment->applicant->photo))
+                                @elseif(isset($comment->applicant->photo) && file_exists(public_path().'/'.$comment->applicant->photo))
                                 <img class="comment-photo" src="{{url($comment->applicant->photo)}}" alt="Employee Photo">
                                 @else
                                 <img class="comment-photo" src="{{url('assets/user/avatar.png')}}" alt="Employee Photo">
@@ -297,7 +312,7 @@
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="resume-tab">
-                        <iframe class="applicant-posting-resume" src="https://docs.google.com/viewer?url={{url($applicant->resume)}}&embedded=true"></iframe>
+                        <iframe class="applicant-posting-resume" src="https://docs.google.com/viewer?url={{url($str)}}&embedded=true"></iframe>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="video-tab">
                         <div class="video-conference-container">

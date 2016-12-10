@@ -408,7 +408,9 @@ Route::group(['middleware' => 'auth'], function () {
     
     /*Adding Employee Rates*/
     Route::resource('rate','RateController');
-    
+
+    /*Download Files*/
+    Route::any('downloadFile','DownloadController@getDownload');
 });
 
 /* For Public Discussion Pages */
