@@ -78,7 +78,7 @@ class TaskController extends BaseController {
         $user_id = Auth::user('user')->user_id;
         $user = User::find($user_id);
 
-        $task = [];
+        $task = Task::find($id);
         if ($user->level() === 1) {
             $task = Task::find($id);
         } elseif ($user->level() > 1) {

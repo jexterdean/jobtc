@@ -145,6 +145,7 @@ class ProjectController extends BaseController {
 
         $user_authority = User::find($user_id);
 
+        $project = Project::find($id);
         if ($user_authority->level() === 1) {
             $project = Project::find($id);
         } elseif ($user_authority->level() > 1) {
