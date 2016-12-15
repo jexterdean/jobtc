@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\BaseController;
 use Bican\Roles\Exceptions\RoleDeniedException;
 use App\Models\LinksOrder;
@@ -27,15 +26,14 @@ use Validator;
 use Input;
 use \DB;
 
-class BriefcaseController extends Controller
-{
+class BriefcaseController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
@@ -44,8 +42,7 @@ class BriefcaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
@@ -55,8 +52,7 @@ class BriefcaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
@@ -108,12 +104,12 @@ class BriefcaseController extends Controller
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
             $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
                             $query->select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, MAX(timer_id) as timer_id, MAX(timer_status) as timer_status, user_id,project_id,task_checklist_id'))->where('user_id', $user_id)->groupBy('task_checklist_id')->get();
-                        },'task_checklist_statuses'])->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
+                        }, 'task_checklist_statuses'])->where('task_id', '=', $id)->orderBy(DB::raw('FIELD(id,' . $task_order->task_id_order . ')'))->get();
         } else {
             $task_order = TaskChecklistOrder::where('task_id', $id)->first();
             $checkList = TaskChecklist::with(['timer' => function($query) use($user_id) {
                             $query->select(DB::raw('SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, MAX(timer_id) as timer_id, MAX(timer_status) as timer_status, user_id,project_id,task_checklist_id'))->where('user_id', $user_id)->groupBy('task_checklist_id')->get();
-                        },'task_checklist_statuses'])->where('task_id', '=', $id)->get();
+                        }, 'task_checklist_statuses'])->where('task_id', '=', $id)->get();
         }
 
         $total_checklist = TaskChecklist::where('task_id', '=', $id)->count();
@@ -122,32 +118,23 @@ class BriefcaseController extends Controller
 
         $links_order_count = LinksOrder::where('task_id', $id)->count();
 
-        if($links_order_count > 0){
+        if ($links_order_count > 0) {
             $links_order = LinksOrder::where('task_id', $id)->first();
             $links = Link::select(
-                'links.id', 'title',
-                'url', 'descriptions',
-                'tags', 'comments',
-                'task_item_id', 'user_id','task_id',
-                'link_categories.name as category_name'
-            )
-                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-                ->where('task_id', '=', $id)
-                ->orderBy(DB::raw('FIELD(fp_links.id,' . $links_order->links_order . ')'))
-                ->get();
-        }
-        else{
+                            'links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'task_item_id', 'user_id', 'task_id', 'link_categories.name as category_name'
+                    )
+                    ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                    ->where('task_id', '=', $id)
+                    ->orderBy(DB::raw('FIELD(fp_links.id,' . $links_order->links_order . ')'))
+                    ->get();
+        } else {
             $links = Link::select(
-                'links.id', 'title',
-                'url', 'descriptions',
-                'tags', 'comments',
-                'task_item_id', 'user_id','task_id',
-                'link_categories.name as category_name'
-            )
-                ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
-                ->where('task_id', '=', $id)
-                ->orderBy('id','DESC')
-                ->get();
+                            'links.id', 'title', 'url', 'descriptions', 'tags', 'comments', 'task_item_id', 'user_id', 'task_id', 'link_categories.name as category_name'
+                    )
+                    ->leftJoin('link_categories', 'link_categories.id', '=', 'links.category_id')
+                    ->where('task_id', '=', $id)
+                    ->orderBy('id', 'DESC')
+                    ->get();
         }
 
         $categories = LinkCategory::all()
@@ -173,10 +160,10 @@ class BriefcaseController extends Controller
         }
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-        
-        $project_owner = Project::where('project_id',$task->project_id)->pluck('user_id');
 
-        $assets = ['briefcases','real-time'];
+        $project_owner = Project::where('project_id', $task->project_id)->pluck('user_id');
+
+        $assets = ['briefcases'];
 
         return view('briefcases.show', [
             'task' => $task,
@@ -200,9 +187,17 @@ class BriefcaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+        $task = Task::find($id);
+
+        $assign_username = User::orderBy('name')
+                ->lists('name', 'user_id');
+
+        if (count($task) > 0) {
+            return view('briefcases.partials._form', [
+                'task' => $task
+            ]);
+        }
     }
 
     /**
@@ -212,9 +207,15 @@ class BriefcaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $id) {
+        $task = Task::find($id);
+
+        $data = $request->all();
+        $data['due_date'] = date("Y-m-d H:i:s", strtotime($data['due_date']));
+
+        $task->update($data);
+
+        return Redirect::back();
     }
 
     /**
@@ -223,8 +224,18 @@ class BriefcaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id) {
+         $task = Task::where('task_id', $id)->delete();
+
+        //Check if the task exists in the task checklist permission table and delete it
+        $task_check_list_permission_count = TaskCheckListPermission::where('task_id', $id)->count();
+
+        if ($task_check_list_permission_count > 0) {
+            $task_check_list_permission = TaskCheckListPermission::where('task_id', $id);
+            $task_check_list_permission->delete();
+        }
+
+        return json_encode($task);
     }
+
 }

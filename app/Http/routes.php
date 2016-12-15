@@ -125,6 +125,8 @@ Route::group(['middleware' => 'auth'], function () {
      * Links
      */
     Route::resource('links', 'LinkController');
+    Route::get('addLinkForm','LinkController@addLinkForm');
+    Route::get('addLinkFormBriefcase','LinkController@addLinkFormBriefcase');
     Route::any('deleteLink/{id}', 'LinkController@deleteLink');
     Route::resource('linkCategory', 'LinkCategoryController');
     Route::post('setLinkOrder/{task_id}/{company_id}', 'LinkController@setLinkOrder');
@@ -213,7 +215,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('getCompanyEmployeesForProject/{project_id}/{company_id}', 'CompanyController@getCompanyEmployeesForProject');
     /* For Company Links Load on Demand */
     Route::get('companyLinks/{company_id}', 'CompanyController@companyLinks');
-
+    /*For Dashboard Link Editing*/
+    Route::get('editDashboardLink/{link_id}/{company_id}', 'LinkController@editDashboardLink');
+    
     /**
      * CSS Reference
      */

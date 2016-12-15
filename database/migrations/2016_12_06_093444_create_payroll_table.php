@@ -13,10 +13,14 @@ class CreatePayrollTable extends Migration {
     public function up() {
         Schema::create('payroll', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_pay_period_id');
-            $table->string('payment_method')->default('paypal');
-            $table->string('next_due');
-            $table->string('status')->default('Unpaid');
+            $table->string('profile_id');
+            $table->string('month');
+            $table->string('year');
+            $table->string('pay_period');
+            $table->string('start_period');
+            $table->string('end_period');
+            $table->string('due');
+            $table->string('status');
             $table->timestamps();
         });
     }

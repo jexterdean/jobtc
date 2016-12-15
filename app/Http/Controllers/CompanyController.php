@@ -1277,24 +1277,14 @@ class CompanyController extends BaseController {
     }
 
     public function companyLinks($company_id){
+        
         $user_id = Auth::user('user')->user_id;
         $user = User::find($user_id);
 
-        $links = Link::where('company_id',$company_id)
-            ->get();
-        $category = LinkCategory::all()
-            ->lists('name', 'id')
-            ->toArray();
-        $_links = [];
-        $category_id = [];
-
-        foreach($links as $link){
-            $category_name = $link->category_id ? $category[$link->category_id] : 'No Category';
-            $_links[$category_name][] = (Object)$link;
-            $category_id[$category_name] = $link->category_id;
-        }
-        ksort($_links);
-
+        $links = Link::where('company_id',$company_id)->get();
+        
+        $categories = LinkCategory::all();
+        
         $user_profile_role = Profile::where('user_id', $user_id)
             ->where('company_id', $company_id)
             ->first();
@@ -1312,28 +1302,22 @@ class CompanyController extends BaseController {
 
         $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
-        $categories = LinkCategory::all()
-            ->lists('name','id')
-            ->toArray();
-
         $briefcase = Task::select(
             'task.task_title','task.task_id'
         )
             ->leftJoin('project', 'task.project_id', '=', 'project.project_id')
-            ->where('project.company_id',$company_id)
-            ->lists('task_title','task_id')
-            ->toArray();
+            ->where('project.company_id',$company_id)->get();
+        
 
-        $assets = ['companies', 'real-time'];
+        $assets = ['companies'];
 
         return view(
             'company.partials._companylinks',[
-                'links' => $_links,
+                'links' => $links,
                 'assets' => $assets,
                 'user_id' => $user_id,
                 'company_id' => $company_id,
                 'categories' => $categories,
-                'category_id' => $category_id,
                 'briefcase' => $briefcase,
                 'module_permissions' => $module_permissions
             ]);

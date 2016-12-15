@@ -318,7 +318,7 @@ class PayrollController extends Controller {
 
                                                 $employees = Profile::with(['user', 'rate' => function($rate_query) {
                                                                 $rate_query->with(['pay_period', 'user_pay_period' => function($payday_query) {
-                                                                        $payday_query->with('payroll')->get();
+                                                                        //$payday_query->with('payroll')->get();
                                                                     }])->get();
                                                             }])->where('company_id', $id)->get();
 
@@ -350,7 +350,9 @@ class PayrollController extends Controller {
                                                                 $deductions = PayrollColumn::where('column_type', 'deductions')->get();
 
                                                                 $total_time = Timer::select(DB::raw("SEC_TO_TIME( SUM( TIME_TO_SEC( total_time ) ) ) AS timeSum, (SUM(TIME_TO_SEC( total_time )) / 3600) as hours , user_id"))->whereMonth('created_at', '=', $month)->groupBy('user_id')->get();
-
+                                                                
+                                                                $payroll_months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                                                                
                                                                 $assets = ['select', 'payroll', 'assets'];
 
                                                                 return view('payroll.paymenthistory', [
@@ -359,6 +361,7 @@ class PayrollController extends Controller {
                                                                     'task_checklists' => $task_checklists,
                                                                     'additions' => $additions,
                                                                     'deductions' => $deductions,
+                                                                    'payroll_months' => $payroll_months,
                                                                     'total_time' => $total_time,
                                                                     'company_id' => $id
                                                                 ]);
