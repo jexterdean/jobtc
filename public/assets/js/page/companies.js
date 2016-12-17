@@ -1699,35 +1699,7 @@ $(".portlet-toggle").click(function () {
     icon.closest(".portlet").find(".portlet-content").toggle();
 });
 
-$('.remove-link').on('click', function (e) {
-    e.preventDefault();
-    $.post($(this).attr('href'));
-    $('.link-' + this.id).remove();
-});
 
-$('.edit-link').on('click', function (e) {
-    e.preventDefault();
-    var _id = this.id;
-    var _href = $(this).attr('href');
-    var edit_link_modal = $('.edit-link-modal');
-    var _modal_dialog = edit_link_modal.find('.modal-content');
-    _modal_dialog.html('');
-    _modal_dialog.load(_href);
-    edit_link_modal.modal('show');
-
-    edit_link_modal.on('click', '.update-link-btn', function (e) {
-        e.preventDefault();
-        var _this = $(this);
-        var _link_modal = _this.parents('.edit-link-modal');
-        var _form = _this.parents('.edit-link-modal').find('form');
-        var _data = _form.serializeArray();
-        _this.attr('disabled', 'disabled');
-        $.post(_form.attr('action'), _data, function (res) {
-            location.reload();
-            _link_modal.modal('hide');
-        });
-    });
-});
 $('[data-toggle="tooltip"]').tooltip({
     template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="max-width: 500px!important;text-align: left!important;"></div></div>',
     html: true
@@ -1764,30 +1736,30 @@ $('.employee-options').on('click', '.add-rate', function (e) {
                     var rate_type = $(form).find('select[name="rate_type"]').val();
                     var rate_value = $(form).find('input[name="rate_value"]').val();
                     var pay_period = $(form).find('select[name="pay_period"]').val();
-                     var payday;
+                    var payday;
 
                     switch (pay_period) {
                         case 'biweekly':
-                            
+
                             payday = $(form).find('select[name="biweekly-1"]').val() + ',' + $(form).find('select[name="biweekly-2"]').val();
-                            
+
                             break;
                         case 'weekly':
-                            
+
                             payday = $(form).find('select[name="weekly"]').val();
-                            
+
                             break;
                         case 'monthly':
-                            
+
                             payday = $(form).find('select[name="monthly"]').val();
                             break;
                         case 'semi-monthly':
-                            
+
                             payday = $(form).find('select[name="semi-monthly-1"]').val() + ',' + $(form).find('select[name="semi-monthly-2"]').val();
                             break;
 
                     }
-                    
+
                     console.log('user_id: ' + user_id);
                     console.log('rate type: ' + rate_type);
                     console.log('rate value: ' + rate_value);
@@ -1822,7 +1794,7 @@ $('.employee-options').on('click', '.add-rate', function (e) {
                         success: function (data) {
                             $('#rate-' + user_id).switchClass('add-rate', 'edit-rate');
                             $('#rate-' + user_id).children('span').text('Edit Rate');
-                            $('#employee-'+user_id+' .rate_id').val(data);
+                            $('#employee-' + user_id + ' .rate_id').val(data);
                             console.log();
                             dialog.close();
                         },
@@ -1880,21 +1852,21 @@ $('.employee-options').on('click', '.edit-rate', function (e) {
 
                     switch (pay_period) {
                         case 'biweekly':
-                            
+
                             payday = $(form).find('select[name="biweekly-1"]').val() + ',' + $(form).find('select[name="biweekly-2"]').val();
-                            
+
                             break;
                         case 'weekly':
-                            
+
                             payday = $(form).find('select[name="weekly"]').val();
-                            
+
                             break;
                         case 'monthly':
-                            
+
                             payday = $(form).find('select[name="monthly"]').val();
                             break;
                         case 'semi-monthly':
-                            
+
                             payday = $(form).find('select[name="semi-monthly-1"]').val() + ',' + $(form).find('select[name="semi-monthly-2"]').val();
                             break;
 
@@ -1904,9 +1876,9 @@ $('.employee-options').on('click', '.edit-rate', function (e) {
                     console.log('rate type: ' + rate_type);
                     console.log('rate value: ' + rate_value);
                     console.log('pay period: ' + pay_period);
-                    console.log('payday : '+payday);
-                    console.log('user_id: '+user_id);
-                    
+                    console.log('payday : ' + payday);
+                    console.log('user_id: ' + user_id);
+
                     var formData = new FormData();
                     formData.append('currency', currency);
                     formData.append('rate_type', rate_type);
@@ -1932,7 +1904,7 @@ $('.employee-options').on('click', '.edit-rate', function (e) {
 
                         },
                         success: function (data) {
-                            console.log('profile id: '+data);
+                            console.log('profile id: ' + data);
                             dialog.close();
                         },
                         error: function (xhr, status, error) {
@@ -1950,4 +1922,180 @@ $('.employee-options').on('click', '.edit-rate', function (e) {
         closable: false
     });
 
+});
+
+$('.add-link').on('click', function (e) {
+
+    var add_link_form = public_path + '/addLinkForm';
+
+    var category_id = $(this).siblings('.add_link_category_id').val();
+    var company_id = $(this).siblings('.add_link_company_id').val();
+    var user_id = $(this).siblings('.add_link_user_id').val();
+
+    console.log('category_id: ' + category_id);
+    console.log('company_id: ' + company_id);
+    console.log('user_id: ' + user_id);
+
+    BootstrapDialog.show({
+        title: 'Add Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Add Link',
+                cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                action: function (dialog) {
+
+                    var ajaxurl = public_path + '/links';
+
+                    var form = $("#add-link-form")[0];
+
+                    var formData = new FormData(form);
+                    formData.append('category_id', category_id);
+                    formData.append('company_id', company_id);
+                    formData.append('user_id', user_id);
+                    formData.append('is_dashboard', 1);
+
+                    console.log('category_id: ' + category_id);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            //var result_category_id = $(data).children('.category_id').val();
+                            console.log('result_category_id: ' + category_id);
+
+                            $('.link-group-'+category_id).append(data);
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': add_link_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+});
+
+$('body').on('click', '.edit-link', function () {
+
+    var link_id = $(this).attr('id');
+
+    var company_id = $('.add_link_company_id').val();
+    var user_id = $('.add_link_user_id').val();
+
+    var edit_link_form = public_path + '/editDashboardLink/' + link_id + '/' + company_id;
+
+    BootstrapDialog.show({
+        title: 'Edit Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Edit Link',
+                cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                action: function (dialog) {
+
+                    var ajaxurl = public_path + '/links/' + link_id;
+
+                    var form = $("#add-link-form")[0];
+
+
+                    var formData = new FormData(form);
+                    formData.append('task_id', task_id);
+                    formData.append('company_id', company_id);
+                    formData.append('user_id', user_id);
+                    formData.append('is_dashboard', 0);
+                    formData.append('_method', 'PATCH');
+
+                    console.log('task_id: ' + task_id);
+                    console.log('company_id: ' + company_id);
+                    console.log('user_id: ' + user_id);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            $('#link-' + link_id).replaceWith(data);
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': edit_link_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+});
+$('body').on('click', '.remove-link', function (e) {
+    e.preventDefault();
+    var link_id = $(this).attr('id');
+
+    var ajaxurl = public_path + '/links/' + link_id;
+    var formData = new FormData();
+    formData.append('_method', 'DELETE');
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            $('.link-' + link_id).remove();
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax*/
 });

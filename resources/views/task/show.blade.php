@@ -74,9 +74,8 @@
                                                 <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                                                 @endforelse
                                                 &nbsp;&nbsp;&nbsp;
-                                                {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
-                                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />--}}
+                                                <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
 
                                                 <a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;
                                                 <!--a href="#" class="icon icon-btn alert_delete"><i class="fa fa-times" aria-hidden="true"></i></a-->
@@ -95,7 +94,6 @@
                                                 @if($link->task_item_id == $list_item->id)
                                                 <div class="col-md-12" id="link-{{$link->id}}">
                                                     <div class="col-md-3">
-                                                        {{--*/ $parse_url = parse_url($link->url) /*--}}
                                                         @if(empty($parse_url['scheme']))
                                                         <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
                                                         @else
@@ -167,10 +165,10 @@
                         <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
                             <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
                             @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                            <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
+                            <a id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
                             @endif
                             @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                            <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
                             @endif
                         </div>
                     </div>
@@ -186,12 +184,12 @@
                 <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                 <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
                 @endif
-                <a href="#" class="btn-submit btn-shadow btn-sm btn add-link-modal" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" id="{{$task->task_id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
+                <a href="#" class="btn-submit btn-shadow btn-sm btn add-link-modal" id="{{$task->task_id}}"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                 @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
-                <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
+                <a id="{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow edit-briefcase"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                 @endif
                 @if($module_permissions->where('slug','delete.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
-                <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
+                <a id="{{ $task->task_id }}" class="btn btn-delete btn-sm btn-shadow delete-briefcase" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                 @endif
             </div>
             <div class="col-sm-4">
@@ -485,20 +483,20 @@
             });
         }
 
-        function pauseTask(timer_id,task_checklist_id ,time_paused) {
+        function pauseTask(timer_id, task_checklist_id, time_paused) {
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id},{'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': time_paused});
+            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': time_paused});
             $.post(public_path + 'pauseTask', data, function (e) {
             });
         }
 
 
-        function resumeTask(timer_id,task_checklist_id) {
+        function resumeTask(timer_id, task_checklist_id) {
             var data = [];
             data.push({'name': 'timer_id', 'value': timer_id});
             $.post(public_path + 'resumeTask', data, function (new_timer_id) {
-                console.log('new_timer_id: '+new_timer_id);
-                $('#timer-'+task_checklist_id).siblings('.timer_id').val(new_timer_id);
+                console.log('new_timer_id: ' + new_timer_id);
+                $('#timer-' + task_checklist_id).siblings('.timer_id').val(new_timer_id);
             });
         }
 
@@ -513,7 +511,7 @@
 
         function saveCurrentTime(timer_id, task_checklist_id, current_time) {
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id},{'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': current_time});
+            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': current_time});
             $.post(public_path + 'saveCurrentTime', data, function (e) {
             });
         }
@@ -557,7 +555,7 @@
             $('#timer-options-' + task_checklist_id).children('.total_time').val(time_paused);
             $('#timer-' + task_checklist_id).removeClass('still-counting');
             $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
-            pauseTask(timer_id,task_checklist_id, time_paused);
+            pauseTask(timer_id, task_checklist_id, time_paused);
         });
 
         _body.on('click', '.resume-timer', function () {
@@ -591,7 +589,7 @@
                 var time_paused = $('#timer-options-' + task_checklist_id).find('.countdown-row').text();
                 console.log('time_paused: ' + time_paused);
 
-                pauseTask(timer_id,task_checklist_id, time_paused);
+                pauseTask(timer_id, task_checklist_id, time_paused);
             });
 
 
@@ -605,7 +603,7 @@
             $('#timer-pause-' + task_checklist_id).text('Pause');
             console.log("timer_id: " + timer_id);
             console.log("task_checklist_id: " + task_checklist_id);
-            resumeTask(timer_id,task_checklist_id);
+            resumeTask(timer_id, task_checklist_id);
         });
 
 
@@ -642,7 +640,7 @@
                             var time_paused = $('.still-counting').text();
                             console.log('time_paused: ' + time_paused);
 
-                            pauseTask(timer_id,task_checklist_id, time_paused);
+                            pauseTask(timer_id, task_checklist_id, time_paused);
                         });
 
                         $('.task-item-timer').removeClass('still-counting');
@@ -670,7 +668,7 @@
                             var time_paused = $('.still-counting').text();
                             console.log('time_paused: ' + time_paused);
 
-                            pauseTask(timer_id,task_checklist_id, time_paused);
+                            pauseTask(timer_id, task_checklist_id, time_paused);
                         });
 
                         $('.task-item-timer').removeClass('still-counting');
@@ -1417,92 +1415,6 @@
                     $(this).val('');
                 });
 
-
-        $('.load-task-assign')
-                .on('click', '.remove-link', function (e) {
-                    e.preventDefault();
-                    $.post($(this).attr('href'));
-                    $('#link-' + this.id + ',.link-' + this.id).remove();
-                })
-                .on('click', '.edit-link', function (e) {
-                    e.preventDefault();
-                    var _id = this.id;
-                    var _href = $(this).attr('href');
-                    var edit_link_modal = $('.edit-link-modal');
-                    var _modal_dialog = edit_link_modal.find('.modal-content');
-                    _modal_dialog.html('');
-                    _modal_dialog.load(_href);
-                    edit_link_modal.modal('show');
-
-                    edit_link_modal.on('click', '.update-link-btn', function (e) {
-                        e.preventDefault();
-                        var _this = $(this);
-                        var _link_modal = _this.parents('.edit-link-modal');
-                        var _form = _this.parents('.edit-link-modal').find('form');
-                        var _data = _form.serializeArray();
-                        _this.attr('disabled', 'disabled');
-                        $.post(_form.attr('action'), _data, function (res) {
-                            var _return_data = jQuery.parseJSON(res);
-                            var ref = 1;
-                            $.each(_return_data, function (key, val) {
-                                var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
-                                var ele = '<div class="row">';
-                                ele += '<div class="col-md-4">';
-                                ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
-                                ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
-                                ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                                ele += '</div>';
-                                ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                                ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
-                                ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
-                                ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
-                                ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
-                                ele += '</div>';
-                                ele += '</div>';
-                                var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
-                                _link_column.html(ele);
-                                ref++;
-                            });
-
-                            _link_modal.modal('hide');
-                        });
-                    });
-                })
-                .on('click', '.add-link-btn', function (e) {
-                    e.preventDefault();
-                    var _this = $(this);
-                    var _link_modal = _this.parents('.add_link_modal');
-                    var _form = _this.parents('.add_link_modal').find('form');
-                    var _data = _form.serializeArray();
-                    _this.attr('disabled', 'disabled');
-                    $.post(_form.attr('action'), _data, function (res) {
-                        var _return_data = jQuery.parseJSON(res);
-                        var _task_id = '';
-                        var ele = '';
-                        $.each(_return_data, function (key, val) {
-                            var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
-                            ele = '<li class="list-group-item" id="link-' + val.id + '" style="border-top: none!important">';
-                            ele += '<div class="row">';
-                            ele += '<div class="col-md-4">';
-                            ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
-                            ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
-                            ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                            ele += '</div>';
-                            ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                            ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
-                            ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
-                            ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
-                            ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
-                            ele += '</div>';
-                            ele += '</div>';
-                            ele += '</li>';
-                            _task_id = val.task_id;
-                        });
-                        var _link_column = $('#collapse-' + _task_id).find('.link-group');
-                        _link_column.prepend(ele);
-                        _link_modal.modal('hide');
-                    });
-                });
         $('.check-list-container')
                 .on('click', '.toggle-tasklistitem', function () {
 
@@ -1541,10 +1453,303 @@
                 var current_time = $('#timer-' + task_checklist_id).find('.countdown-row').text();
                 console.log('current_time: ' + current_time);
 
-                saveCurrentTime(timer_id,task_checklist_id, current_time);
+                saveCurrentTime(timer_id, task_checklist_id, current_time);
             });
         };
 
 
     });
+
+    $('body').on('click','.add-link-modal', function (e) {
+        e.stopImmediatePropagation();
+        var add_link_form = public_path + '/addLinkFormBriefcase';
+
+        var company_id = $('.company_id').val();
+        var user_id = $('input[name="user_id"]').val()
+        var task_id = $(this).attr('id');
+
+        BootstrapDialog.show({
+            title: 'Add Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            size: 'size-normal',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Add Link',
+                    cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                    action: function (dialog) {
+
+                        var ajaxurl = public_path + '/links';
+
+                        var form = $("#add-link-form")[0];
+
+                        var formData = new FormData(form);
+                        formData.append('task_id', task_id);
+                        formData.append('company_id', company_id);
+                        formData.append('user_id', user_id);
+                        formData.append('is_dashboard', 0);
+
+                        console.log('task_id: ' + task_id);
+                        console.log('company_id: ' + company_id);
+                        console.log('user_id: ' + user_id);
+
+                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                        $button.disable();
+                        $button.spin();
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $('#load-task-assign-'+task_id).find('.link-group').append(data);
+                                console.log($('#load-task-assign-'+task_id).find('.link-group').attr('class'));
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax*/
+                    }
+                }],
+            data: {
+                'pageToLoad': add_link_form
+            },
+            onshown: function (ref) {
+
+            },
+            closable: false
+        });
+    });
+
+    $('body').on('click', '.edit-link', function () {
+
+        var link_id = $(this).attr('id');
+
+         var company_id = $('.company_id').val();
+        var user_id = $('input[name="user_id"]').val()
+        var task_id = $('input[name="task_id"]').val()
+
+        var edit_link_form = public_path + '/links/' + link_id + '/edit';
+
+        BootstrapDialog.show({
+            title: 'Edit Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            size: 'size-normal',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Edit Link',
+                    cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                    action: function (dialog) {
+
+                        var ajaxurl = public_path + '/links/' + link_id;
+
+                        var form = $("#add-link-form")[0];
+
+
+                        var formData = new FormData(form);
+                        formData.append('task_id', task_id);
+                        formData.append('company_id', company_id);
+                        formData.append('user_id', user_id);
+                        formData.append('is_dashboard', 0);
+                        formData.append('_method', 'PATCH');
+
+                        console.log('task_id: ' + task_id);
+                        console.log('company_id: ' + company_id);
+                        console.log('user_id: ' + user_id);
+
+                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                        $button.disable();
+                        $button.spin();
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $('#link-' + link_id).replaceWith(data);
+
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax*/
+                    }
+                }],
+            data: {
+                'pageToLoad': edit_link_form
+            },
+            onshown: function (ref) {
+
+            },
+            closable: false
+        });
+    });
+
+    $('body').on('click', '.remove-link', function (e) {
+        e.preventDefault();
+        var link_id = $(this).attr('id');
+
+        var ajaxurl = public_path + '/links/' + link_id;
+        var formData = new FormData();
+        formData.append('_method', 'DELETE');
+
+        $.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: formData,
+            // THIS MUST BE DONE FOR FILE UPLOADING
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#link-' + link_id).remove();
+            },
+            error: function (xhr, status, error) {
+
+            }
+        }); //ajax*/
+    });
+
+    //Briefcase Options
+    //Edit Briefcase
+    $('.edit-briefcase').click(function (e) {
+        e.stopImmediatePropagation();
+        var briefcase_id = $(this).attr('id');
+
+        var edit_briefcase_form = public_path + '/briefcase/' + briefcase_id + '/edit';
+
+        BootstrapDialog.show({
+            title: 'Edit Briefcase <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            size: 'size-normal',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Save',
+                    cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                    action: function (dialog) {
+
+                        var ajaxurl = public_path + '/briefcase/' + briefcase_id;
+
+                        var form = $("#edit-briefcase-form")[0];
+
+                        var formData = new FormData(form);
+                        formData.append('_method', 'PATCH');
+
+                        console.log(formData.get('task_title'));
+
+                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                        $button.disable();
+                        $button.spin();
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $('#briefcase-title-' + briefcase_id).html(formData.get('task_title'));
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax*/
+                    }
+                }],
+            data: {
+                'pageToLoad': edit_briefcase_form
+            },
+            onshown: function (ref) {
+
+            },
+            closable: false
+        });
+
+    });
+
+    $('.delete-briefcase').click(function (e) {
+        e.stopImmediatePropagation();
+        var briefcase_id = $(this).attr('id');
+        BootstrapDialog.confirm({
+            title: 'Delete Briefcase',
+            message: 'Warning! Deleting this Briefcase will delete all content. Continue?',
+            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: 'No', // <-- Default value is 'Cancel',
+            btnOKLabel: 'Yes', // <-- Default value is 'OK',
+            btnOKClass: 'btn-submit', // <-- If you didn't specify it, dialog type will be used,
+            btnCancelClass: 'btn-cancel', // <-- If you didn't specify it, dialog type will be used,
+            callback: function (result) {
+                // result will be true if button was click, while it will be false if users close the dialog directly.
+                if (result) {
+
+                    console.log('briefcase_id: ' + briefcase_id);
+                    var ajaxurl = public_path + '/briefcase/' + briefcase_id;
+
+                    var formData = new FormData();
+                    formData.append('_method', 'DELETE');
+
+                    var project_id = $('body').find('.project_id').val();
+                    var project_url = public_path + '/project/' + project_id;
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+
+                            window.location = project_url
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                } else {
+
+                }
+            }
+        });
+
+    });
+
+
 </script>

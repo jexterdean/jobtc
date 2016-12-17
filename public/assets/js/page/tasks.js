@@ -876,9 +876,6 @@ _body.on('click', '.update-checklist', function (e) {
 
     update_checklist_data(task_list_item_id, task_list_header, task_list_data, checklist_header, checklist_item);
 
-    //Hide the content area
-    $('#task-item-collapse-' + task_list_item_id).collapse('hide');
-
     $('.edit-task-list-item')
             .removeAttr('style');
     $('.alert_delete').css({'display': 'inline'});
@@ -1290,6 +1287,4 @@ window.onbeforeunload = function (event) {
         saveCurrentTime(timer_id,task_checklist_id, current_time);
     });
 };
-
-
     

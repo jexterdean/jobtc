@@ -22,27 +22,6 @@
                                     @if(count($checkList) > 0)
                                     @foreach($checkList as $list_item)
                                     <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
-                                        {{--region Briefcase Item Add Link--}}
-                                        <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id . '-' . $list_item->id }}" tabindex="-1" role="basic" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                                        <h4 class="modal-title">Add Link</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        {!! Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                                                        {!! Form::hidden('task_id',$task->task_id) !!}
-                                                        {!! Form::hidden('task_item_id',$list_item->id) !!}
-                                                        {!! Form::hidden('user_id',$user_id) !!}
-                                                        {!! Form::hidden('company_id',$company_id) !!}
-                                                        @include('links/partials/_form')
-                                                        {!! Form::close()  !!}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {{--endregion--}}
                                         <div class="row task-list-details">
                                             <div class="col-md-7">
                                                 <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem"><i class="glyphicon glyphicon-list"></i> {!! $list_item->checklist_header !!}</a>
@@ -147,6 +126,7 @@
                                 {{--*/ $parse_url = parse_url($link->url) /*--}}
                                 <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
                                 <input type="hidden" class="company_id" value="{{$company_id}}" />
+                                <input type="hidden" class="user_id" value="{{$user_id}}" />
                                 @if(empty($parse_url['scheme']))
                                 <a target="_blank" href="http://{{ $link->url }}"><strong>{{ $link->title }}</strong></a>
                                 @else
@@ -157,10 +137,10 @@
                             <div class="col-sm-3 text-right">{{ $link->category_name }}&nbsp;&nbsp;&nbsp;
                                 <a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>
                                 @if($module_permissions->where('slug','delete.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                                <a href="{{ url('deleteLink/' . $link->id) }}" id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
+                                <a id="{{$link->id}}" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>
                                 @endif
                                 @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
-                                <a href="{{ url('links/' . $link->id . '/edit') }}" id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <a id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>
                                 @endif
                             </div>
                         </div>
@@ -175,14 +155,13 @@
                     @if($module_permissions->where('slug','create.tasks')->count() === 1 || $project_owner === Auth::user('user')->user_id)
                     <a href="#" class="btn btn-submit btn-shadow btn-sm check-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Document </a>&nbsp;&nbsp;
                     <a href="#" class="btn btn-submit btn-shadow btn-sm add-spreadsheet" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Spreadsheet </a>&nbsp;&nbsp;
-                    <a href="#" class="btn btn-submit btn-shadow btn-sm task-list-btn" id="{{ $task->task_id }}"><i class="glyphicon glyphicon-plus"></i> Task List </a>&nbsp;&nbsp;
                     @endif
-                    <a href="#" class="btn-submit btn-shadow btn-sm btn" data-toggle="modal" data-target="#add_link_{{ $task->task_id }}" data-placement="right" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
+                    <a href="#" class="btn-submit btn-shadow btn-sm btn add-link-modal" title="Add Links"><i class="fa fa-plus"></i> Link</a>&nbsp;&nbsp;
                     @if($module_permissions->where('slug','edit.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
-                    <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
+                    <a href="#" data-toggle="modal" data-target="#edit_task_{{ $task->task_id }}" class="btn btn-edit btn-sm btn-shadow edit-briefcase"><i class="fa fa-pencil"></i> Edit</a>&nbsp;&nbsp;
                     @endif
                     @if($module_permissions->where('slug','delete.briefcases')->count() === 1 || $project_owner === Auth::user('user')->user_id)
-                    <a href="{{ url('task/delete/'.$task->task_id) }}" class="delete-tasklist btn btn-delete btn-sm btn-shadow" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
+                    <a class="btn btn-delete btn-sm btn-shadow delete-briefcase" style="font-size: 16px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;
                     @endif
                 </div>
                 <div class="col-sm-4">
@@ -191,79 +170,5 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="edit_task_{{ $task->task_id }}" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                @include('task/edit', ['task'=> $task] )
-            </div>
-        </div>
-    </div>
-    <input class="task_id" type="hidden" value="{{$task->task_id}}"/>
-    <div class="modal fade edit-link-modal" id="edit_link" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div>
-        </div>
-    </div>
-    {{--region Briefcase Item Add Link--}}
-    <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id }}" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                    <h4 class="modal-title">Add Link</h4>
-                </div>
-                <div class="modal-body">
-                    {!!  Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                    {!! Form::hidden('task_id',$task->task_id) !!}
-                    {!! Form::hidden('user_id',$user_id) !!}
-                    {!! Form::hidden('company_id',$company_id) !!}
-                    @include('links/partials/_add_form')
-                    {!! Form::close()  !!}
-                </div>
-            </div>
-        </div>
-    </div>
-    {{--endregion--}}
-    <div class="modal fade" id="ajax" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                    <h4 class="modal-title">Add Task</h4>
-                </div>
-            </div>
-            <div class="modal-body">
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="ajax1" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                    <h4 class="modal-title">Edit Briefcase</h4>
-                </div>
-            </div>
-            <div class="modal-body">
-            </div>
-        </div>
-    </div>
-    <div class="modal fade add_link_modal" id="add_link_{{ $task->task_id }}" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                    <h4 class="modal-title">Add Link</h4>
-                </div>
-                <div class="modal-body">
-                    {!! Form::open(['route' => 'links.store','class' => 'form-horizontal link-form'])  !!}
-                    {!! Form::hidden('task_id',$task->task_id) !!}
-                    @include('links/partials/_form')
-                    {!! Form::close()  !!}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <input class="briefcase_id" type="hidden" value="{{$task->task_id}}"/>
 @stop

@@ -116,14 +116,14 @@
             "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
-            "@document": 4,
+            "@document": 8,
             "@form": 5,
             "@menu": 5,
             "@menuitem": 13,
             "@pane": 2,
-            "@session": 3,
-            "@tab": 4,
-            "@undoManager": 4
+            "@session": 7,
+            "@tab": 8,
+            "@undoManager": 8
         }
     },
     "findinfiles": {
@@ -142,7 +142,7 @@
     "panecycle": {
         "json()": [
             "tab0",
-            "tab3"
+            "tab7"
         ]
     },
     "panels": {
@@ -192,11 +192,22 @@
     "recentfiles": {
         "json()": []
     },
+    "search-history": {
+        "search": {
+            "json()": [
+                "show"
+            ]
+        }
+    },
     "tabs": {
         "json()": {
-            "focus": "/public/assets/css/page/discussions.css",
+            "focus": "/app/Http/Controllers/TaskListItemController.php",
             "meta": {
                 "accessList": [
+                    "tab7",
+                    "tab6",
+                    "tab5",
+                    "tab4",
                     "tab3",
                     "tab2"
                 ]
@@ -211,14 +222,40 @@
                         "tab2"
                     ],
                     "document": {
-                        "changed": false,
-                        "meta": {
-                            "timestamp": 1474448838900
-                        },
                         "filter": true,
                         "title": "janus.js",
                         "tooltip": "/public/assets/js/janus.js",
-                        "ace": {}
+                        "ace": {
+                            "folds": [],
+                            "scrolltop": 3678.5,
+                            "scrollleft": 0,
+                            "selection": {
+                                "start": {
+                                    "row": 300,
+                                    "column": 23
+                                },
+                                "end": {
+                                    "row": 300,
+                                    "column": 23
+                                },
+                                "isBackwards": false
+                            },
+                            "options": {
+                                "guessTabSize": true,
+                                "useWrapMode": false,
+                                "wrapToView": true
+                            },
+                            "firstLineState": {
+                                "row": 261,
+                                "state": "start",
+                                "mode": "ace/mode/javascript"
+                            }
+                        },
+                        "hash": "1c23144304764c50eaf75fcf8a3b86168282c740",
+                        "meta": {
+                            "timestamp": 1474448838900
+                        },
+                        "changed": false
                     },
                     "editorType": "ace",
                     "active": false
@@ -228,17 +265,97 @@
                     "name": "tab3",
                     "path": "/public/assets/css/page/discussions.css",
                     "className": [
-                        "tab3",
+                        "tab3"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1477323274443
+                        },
+                        "filter": true,
+                        "title": "discussions.css",
+                        "tooltip": "/public/assets/css/page/discussions.css",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab4",
+                    "path": "/app/Http/Controllers/ProjectController.php",
+                    "className": [
+                        "tab4"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1481816237819
+                        },
+                        "filter": true,
+                        "title": "ProjectController.php",
+                        "tooltip": "/app/Http/Controllers/ProjectController.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab5",
+                    "path": "/app/Http/Controllers/BriefcaseController.php",
+                    "className": [
+                        "tab5"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1481816262742
+                        },
+                        "filter": true,
+                        "title": "BriefcaseController.php",
+                        "tooltip": "/app/Http/Controllers/BriefcaseController.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab6",
+                    "path": "/app/Http/Controllers/TaskController.php",
+                    "className": [
+                        "tab6"
+                    ],
+                    "document": {
+                        "changed": false,
+                        "meta": {
+                            "timestamp": 1481816284796
+                        },
+                        "filter": true,
+                        "title": "TaskController.php",
+                        "tooltip": "/app/Http/Controllers/TaskController.php",
+                        "ace": {}
+                    },
+                    "editorType": "ace",
+                    "active": false
+                },
+                {
+                    "type": "tab",
+                    "name": "tab7",
+                    "path": "/app/Http/Controllers/TaskListItemController.php",
+                    "className": [
+                        "tab7",
                         "focus"
                     ],
                     "document": {
                         "changed": false,
                         "meta": {
-                            "timestamp": 1476778592497
+                            "timestamp": 1481816323566
                         },
                         "filter": true,
-                        "title": "discussions.css",
-                        "tooltip": "/public/assets/css/page/discussions.css",
+                        "title": "TaskListItemController.php",
+                        "tooltip": "/app/Http/Controllers/TaskListItemController.php",
                         "ace": {}
                     },
                     "editorType": "ace",

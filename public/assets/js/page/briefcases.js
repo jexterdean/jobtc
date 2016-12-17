@@ -130,8 +130,8 @@ $('.tasklist-group').sortable({
     }
 });
 //endregion
-var task_id = $('.task_id').val();
-var _body = $('#collapse-' + task_id);
+var task_id = $('.briefcase_id').val();
+var _body = $('body');
 //var _body = $('#collapse-' + '{{ $task->task_id }}');
 //var task_id = '{{ $task->task_id }}';
 var alert_msg = function (msg, _class) {
@@ -303,7 +303,7 @@ _body.on('click', '.pause-timer', function () {
     $('#timer-options-' + task_checklist_id).children('.total_time').val(time_paused);
     $('#timer-' + task_checklist_id).removeClass('still-counting');
     $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
-    pauseTask(timer_id,task_checklist_id, time_paused);
+    pauseTask(timer_id, task_checklist_id, time_paused);
 });
 
 _body.on('click', '.resume-timer', function () {
@@ -337,7 +337,7 @@ _body.on('click', '.resume-timer', function () {
         var time_paused = $('#timer-options-' + task_checklist_id).find('.countdown-row').text();
         console.log('time_paused: ' + time_paused);
 
-        pauseTask(timer_id,task_checklist_id, time_paused);
+        pauseTask(timer_id, task_checklist_id, time_paused);
     });
 
 
@@ -481,8 +481,11 @@ _body.on('click', '.check-list-btn', function () {
     text_area_ele += '<button class="btn btn-delete btn-shadow btn-sm cancel-checklist" type="button">Cancel</button>';
     text_area_ele += '</li>';
 
+    var briefcase_id = $('.briefcase_id').val();
+
     var _this = $(this);
-    var check_list_container = $('#list_group_' + this.id);
+    var check_list_container = $('#list_group_' + briefcase_id);
+    console.log('briefcase_id: ' + briefcase_id);
     _this.addClass('disabled');
     check_list_container.append(text_area_ele);
 
@@ -491,8 +494,8 @@ _body.on('click', '.check-list-btn', function () {
     var new_task_url = public_path + 'addNewTask';
     var blank_task = new FormData();
     blank_task.append('_token', _body.find('input[name="_token"]').val());
-    blank_task.append('task_id', _body.find('input[name="task_id"]').val());
-    blank_task.append('user_id', _body.find('input[name="user_id"]').val());
+    blank_task.append('task_id', _body.find('.briefcase_id').val());
+    blank_task.append('user_id', _body.find('.user_id').val());
 
     $.ajax({
         url: new_task_url,
@@ -615,8 +618,8 @@ _body.on('click', '.check-list-btn', function () {
         data.push(
                 {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
         {'name': 'task_check_list_id', 'value': task_check_list_id},
-        {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-        {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+        {'name': 'task_id', 'value': _body.find('.briefcase_id').val()},
+        {'name': 'user_id', 'value': _body.find('.user_id').val()},
         {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
         {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
         );
@@ -991,8 +994,8 @@ _body.on('click', '.add-spreadsheet', function () {
     var new_task_url = public_path + 'addNewTask';
     var blank_task = new FormData();
     blank_task.append('_token', _body.find('input[name="_token"]').val());
-    blank_task.append('task_id', _body.find('input[name="task_id"]').val());
-    blank_task.append('user_id', _body.find('input[name="user_id"]').val());
+    blank_task.append('task_id', _body.find('.briefcase_id').val());
+    blank_task.append('user_id', _body.find('.user_id').val());
 
     $.ajax({
         url: new_task_url,
@@ -1025,8 +1028,8 @@ _body.on('click', '.add-spreadsheet', function () {
         data.push(
                 {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
         {'name': 'task_check_list_id', 'value': task_check_list_id},
-        {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-        {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+        {'name': 'task_id', 'value': _body.find('.briefcase_id').val()},
+        {'name': 'user_id', 'value': _body.find('.user_id').val()},
         {'name': 'checklist_header', 'value': _body.find('input[name="spreadsheet_header"]').val()},
         {'name': 'checklist', 'value': spreadsheet_html}
         );
@@ -1127,128 +1130,6 @@ _body.on('click', '.add-spreadsheet', function () {
     });
 });
 //endregion
-
-//region Auto Change and Select Category Name
-var _category_name = '';
-$('.category-name')
-        .bind('keyup keypress blur', function () {
-            _category_name = $(this).val();
-            var myStr = $(this).val();
-            myStr = myStr.toLowerCase();
-            myStr = myStr.replace(/\s+/g, "-");
-            $(this).val(myStr);
-        })
-        .focusout(function () {
-            var cat_form = $('.category-form');
-            var form_data = [];
-            var url = public_path + 'linkCategory';
-            var cat_value = $(this).val();
-            if ($(this).val()) {
-                form_data.push(
-                        {name: 'slug', value: $(this).val()},
-                {name: 'name', value: _category_name},
-                {name: 'request_from_link_page', value: '1'}
-                );
-                $.post(url, form_data, function (data) {
-                    var _return_data = jQuery.parseJSON(data);
-                    var option_ele = '<option value>Select Category</option>';
-                    $.each(_return_data, function (key, val) {
-                        var is_selected = cat_value == val.name ? 'selected' : '';
-                        option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
-                    });
-                    $('select.category').html(option_ele);
-                });
-            }
-
-            $(this).val('');
-        });
-
-
-$('.load-task-assign')
-        .on('click', '.remove-link', function (e) {
-            e.preventDefault();
-            $.post($(this).attr('href'));
-            $('#link-' + this.id + ',.link-' + this.id).remove();
-        })
-        .on('click', '.edit-link', function (e) {
-            e.preventDefault();
-            var _id = this.id;
-            var _href = $(this).attr('href');
-            var edit_link_modal = $('.edit-link-modal');
-            var _modal_dialog = edit_link_modal.find('.modal-content');
-            _modal_dialog.html('');
-            _modal_dialog.load(_href);
-            edit_link_modal.modal('show');
-
-            edit_link_modal.on('click', '.update-link-btn', function (e) {
-                e.preventDefault();
-                var _this = $(this);
-                var _link_modal = _this.parents('.edit-link-modal');
-                var _form = _this.parents('.edit-link-modal').find('form');
-                var _data = _form.serializeArray();
-                _this.attr('disabled', 'disabled');
-                $.post(_form.attr('action'), _data, function (res) {
-                    var _return_data = jQuery.parseJSON(res);
-                    var ref = 1;
-                    $.each(_return_data, function (key, val) {
-                        var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
-                        var ele = '<div class="row">';
-                        ele += '<div class="col-md-4">';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
-                        ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
-                        ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                        ele += '</div>';
-                        ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                        ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
-                        ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
-                        ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
-                        ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        var _link_column = $('#collapse-' + val.task_id).find('#link-' + val.id);
-                        _link_column.html(ele);
-                        ref++;
-                    });
-
-                    _link_modal.modal('hide');
-                });
-            });
-        })
-        .on('click', '.add-link-btn', function (e) {
-            e.preventDefault();
-            var _this = $(this);
-            var _link_modal = _this.parents('.add_link_modal');
-            var _form = _this.parents('.add_link_modal').find('form');
-            var _data = _form.serializeArray();
-            _this.attr('disabled', 'disabled');
-            $.post(_form.attr('action'), _data, function (res) {
-                var _return_data = jQuery.parseJSON(res);
-                var _task_id = '';
-                var ele = '';
-                $.each(_return_data, function (key, val) {
-                    var url = isUrlValid(val.url) ? val.url : 'http://' + val.url;
-                    ele = '<li class="list-group-item" id="link-' + val.id + '" style="border-top: none!important">';
-                    ele += '<div class="row">';
-                    ele += '<div class="col-md-4">';
-                    ele += '<input type="hidden" class="task_list_id" value="' + val.company_id + '" />';
-                    ele += '<input type="hidden" class="company_id" value="' + val.company_id + '" />';
-                    ele += '<a href="' + url + '" target="_blank"><strong>' + val.title + '</strong></a>';
-                    ele += '</div>';
-                    ele += '<div class="col-md-5" style="text-align: justify">' + val.descriptions + '</div>';
-                    ele += '<div class="col-md-3 text-right">' + (val.category_name != null ? val.category_name : '') + '&nbsp;&nbsp;&nbsp;';
-                    ele += '<a href="#" class="pull-right move-link"><i class="glyphicon glyphicon-move"></i></a>';
-                    ele += '<a href="' + public_path + 'deleteLink/' + val.id + '" id="' + val.id + '" class="remove-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-remove"></i></a>';
-                    ele += '<a href="' + public_path + 'links/' + val.id + '/edit" id="' + val.id + '" class="edit-link pull-right" style="padding-right: 10px"><i class="glyphicon glyphicon-pencil"></i></a>';
-                    ele += '</div>';
-                    ele += '</div>';
-                    ele += '</li>';
-                    _task_id = val.task_id;
-                });
-                var _link_column = $('#collapse-' + _task_id).find('.link-group');
-                _link_column.prepend(ele);
-                _link_modal.modal('hide');
-            });
-        });
 $('.check-list-container')
         .on('click', '.toggle-tasklistitem', function () {
 
@@ -1287,9 +1168,295 @@ window.onbeforeunload = function (event) {
         var current_time = $('#timer-' + task_checklist_id).find('.countdown-row').text();
         console.log('current_time: ' + current_time);
 
-        saveCurrentTime(timer_id,task_checklist_id, current_time);
+        saveCurrentTime(timer_id, task_checklist_id, current_time);
     });
 };
 
 
+$('.add-link-modal').on('click', function (e) {
+
+    var add_link_form = public_path + '/addLinkFormBriefcase';
+
+    var company_id = $('.company_id').val();
+    var user_id = $('.user_id').val();
+    var task_id = $('.task_list_id').val();
+
+    BootstrapDialog.show({
+        title: 'Add Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Add Link',
+                cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                action: function (dialog) {
+
+                    var ajaxurl = public_path + '/links';
+
+                    var form = $("#add-link-form")[0];
+
+                    var formData = new FormData(form);
+                    formData.append('task_id', task_id);
+                    formData.append('company_id', company_id);
+                    formData.append('user_id', user_id);
+                    formData.append('is_dashboard', 0);
+
+                    console.log('task_id: ' + task_id);
+                    console.log('company_id: ' + company_id);
+                    console.log('user_id: ' + user_id);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            $('.link-group').append(data);
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': add_link_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+});
+
+$('body').on('click', '.edit-link', function () {
+
+    var link_id = $(this).attr('id');
     
+    var company_id = $('.company_id').val();
+    var user_id = $('.user_id').val();
+    var task_id = $('.task_list_id').val();
+    
+    var edit_link_form = public_path + '/links/' + link_id + '/edit';
+
+    BootstrapDialog.show({
+        title: 'Edit Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Edit Link',
+                cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                action: function (dialog) {
+                    
+                    var ajaxurl = public_path + '/links/'+link_id;
+                    
+                    var form = $("#add-link-form")[0];
+                    
+                    
+                    var formData = new FormData(form);
+                    formData.append('task_id', task_id);
+                    formData.append('company_id', company_id);
+                    formData.append('user_id', user_id);
+                    formData.append('is_dashboard', 0);
+                    formData.append('_method', 'PATCH');
+
+                    console.log('task_id: ' + task_id);
+                    console.log('company_id: ' + company_id);
+                    console.log('user_id: ' + user_id);
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            $('#link-'+link_id).replaceWith(data);
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': edit_link_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+});
+
+$('body').on('click', '.remove-link', function (e) {
+    e.preventDefault();
+    var link_id = $(this).attr('id');
+
+    var ajaxurl = public_path +'/links/' + link_id;
+    var formData = new FormData();
+    formData.append('_method', 'DELETE');
+
+    $.ajax({
+        url: ajaxurl,
+        type: "POST",
+        data: formData,
+        // THIS MUST BE DONE FOR FILE UPLOADING
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+
+        },
+        success: function (data) {
+            $('#link-'+link_id).remove();
+        },
+        error: function (xhr, status, error) {
+
+        }
+    }); //ajax*/
+});
+
+//Briefcase Options
+//Edit Briefcase
+$('.edit-briefcase').click(function () {
+
+    var briefcase_id = $('.briefcase_id').val();
+
+    var edit_briefcase_form = public_path + '/briefcase/' + briefcase_id + '/edit';
+
+    BootstrapDialog.show({
+        title: 'Edit Briefcase <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+        size: 'size-normal',
+        message: function (dialog) {
+            var $message = $('<div></div>');
+            var pageToLoad = dialog.getData('pageToLoad');
+            $message.load(pageToLoad);
+            return $message;
+        },
+        buttons: [{
+                label: 'Save',
+                cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                action: function (dialog) {
+
+                    var ajaxurl = public_path + '/briefcase/' + briefcase_id;
+
+                    var form = $("#edit-briefcase-form")[0];
+
+                    var formData = new FormData(form);
+                    formData.append('_method', 'PATCH');
+
+                    console.log(formData.get('task_title'));
+
+                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                    $button.disable();
+                    $button.spin();
+
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+
+                            dialog.close();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    }); //ajax*/
+                }
+            }],
+        data: {
+            'pageToLoad': edit_briefcase_form
+        },
+        onshown: function (ref) {
+
+        },
+        closable: false
+    });
+
+});
+
+$('.delete-briefcase').click(function () {
+    BootstrapDialog.confirm({
+        title: 'Delete Briefcase',
+        message: 'Warning! Deleting this Briefcase will delete all content. Continue?',
+        type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+        closable: true, // <-- Default value is false
+        draggable: true, // <-- Default value is false
+        btnCancelLabel: 'No', // <-- Default value is 'Cancel',
+        btnOKLabel: 'Yes', // <-- Default value is 'OK',
+        btnOKClass: 'btn-submit', // <-- If you didn't specify it, dialog type will be used,
+        btnCancelClass: 'btn-cancel', // <-- If you didn't specify it, dialog type will be used,
+        callback: function (result) {
+            // result will be true if button was click, while it will be false if users close the dialog directly.
+            if (result) {
+                var briefcase_id = $('.briefcase_id').val();
+                var ajaxurl = public_path + '/briefcase/' + briefcase_id;
+
+                var formData = new FormData();
+                formData.append('_method', 'DELETE');
+
+                var project_id = _body.find('input[class="project_id"]').val();
+                var project_url = public_path + '/project/' + project_id;
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: "POST",
+                    data: formData,
+                    // THIS MUST BE DONE FOR FILE UPLOADING
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+
+                        window.location = project_url
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                }); //ajax*/
+            } else {
+
+            }
+        }
+    });
+
+});

@@ -13,6 +13,12 @@
             </div>
         </div>
         <div class="form-group">
+            <div class="col-md-12">
+                {!!  Form::select('task_id', $briefcase, isset($link->task_id) ?
+                $link->task_id : '', ['class' => 'form-control input-xlarge select2me briefcase', 'placeholder' => 'Select Briefcase', 'tabindex' =>'2'] )  !!}
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-6">
                 {!!  Form::select('category_id', $categories, isset($link->category_id) ?
                 $link->category_id : '', ['class' => 'form-control input-xlarge select2me category', 'placeholder' => 'Select Category', 'tabindex' =>'2'] )  !!}

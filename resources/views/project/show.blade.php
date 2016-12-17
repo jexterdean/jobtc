@@ -92,7 +92,7 @@
                     <div id="task-{{ $val->task_id }}" class="panel-heading task-header toggle-briefcase" data-target="#collapse-{{ $val->task_id }}" role="tab" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
                         <div class="row">
                             <div class="col-xs-6">
-                                <h4 class="panel-title task-list-header"><i class="glyphicon glyphicon-briefcase"></i> {{ $val->task_title }}</h4>
+                                <h4 class="panel-title task-list-header"><i class="glyphicon glyphicon-briefcase"></i> <span id="briefcase-title-{{$val->task_id}}">{{ $val->task_title }}</span></h4>
                             </div>
                             <div class="col-xs-6">
                                 <div class="btn-group pull-right">
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                        <input class="project_id" type="hidden" value="{{$project->company_id}}"/>
+                        <input class="project_id" type="hidden" value="{{$project->project_id}}"/>
                         <input class="task_id" type="hidden" value="{{$val->task_id}}"/>
                         <input class="company_id" type="hidden" value="{{$project->company_id}}"/>
                     </div>
