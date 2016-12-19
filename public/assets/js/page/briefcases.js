@@ -200,8 +200,8 @@ var update_checklist_data = function (id, header, details, checklist_header, che
     var data = [];
     data.push(
             {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
-    {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-    {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+    {'name': 'task_id', 'value': _body.find('.task_id').val()},
+    {'name': 'user_id', 'value': _body.find('.user_id').val()},
     {'name': 'checklist_header', 'value': header},
     {'name': 'checklist', 'value': details}
     );
