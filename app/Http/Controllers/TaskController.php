@@ -406,7 +406,7 @@ class TaskController extends BaseController {
         $user_id = Auth::user()->user_id;
         $status = $request->input('status');
 
-        $taskCheckListStatusCount = TaskChecklistStatus::where('task_checklist_id', $id)->where('user_id', $user_id)->count();
+        /*$taskCheckListStatusCount = TaskChecklistStatus::where('task_checklist_id', $id)->where('user_id', $user_id)->count();
 
         if ($taskCheckListStatusCount > 0) {
             $taskCheckListStatus = TaskChecklistStatus::where('task_checklist_id', $id)->where('user_id', $user_id)->update([
@@ -419,8 +419,11 @@ class TaskController extends BaseController {
                 'status' => $status
             ]);
             $taskCheckListStatus->save();
-        }
-
+        }*/
+        $task_checklist = TaskChecklist::where('id',$id)->update([
+            'status' => $status
+        ]);
+        
         return "true";
     }
 
