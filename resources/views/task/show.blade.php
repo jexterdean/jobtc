@@ -904,7 +904,7 @@
                         ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
                         ele += '<div class="row task-list-details">';
                         ele += '<div class="col-sm-6">';
-                        ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header">' + val.checklist_header + '</a>';
+                        ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header"><i class="glyphicon glyphicon-list"></i>' + val.checklist_header + '</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
