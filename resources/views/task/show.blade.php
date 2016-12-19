@@ -6,6 +6,8 @@
 @foreach($task_timer as $timer)
 <?php $_total += $timer->time ?>
 @endforeach
+<input type="hidden" class="task_id" value="{{$task->task_id}}" />
+<input type="hidden" class="user_id" value="{{$user_id}}" />
 <div class="row">
     <div class="col-sm-12">
         <div class="row">
@@ -249,97 +251,94 @@
 {!! HTML::script('assets/js/jquery.plugin.min.js') !!}
 {!! HTML::script('assets/js/jquery.countdown.js') !!}
 <script>
-    $(function (e) {
+            $(function (e) {
 
-        //Click Toggle Function
-        $.fn.clickToggle = function (func1, func2) {
-            var funcs = [func1, func2];
-            this.data('toggleclicked', 0);
+                //Click Toggle Function         $.fn.clickToggle = function (func1, func2) {
+                var funcs = [func1, func2];
+                this.data('toggleclicked', 0);
             this.click(function () {
-                var data = $(this).data();
-                var tc = data.toggleclicked;
-                $.proxy(funcs[tc], this)();
-                data.toggleclicked = (tc + 1) % 2;
+            var data = $(this).data();                 var tc = data.toggleclicked;
+        $.proxy(funcs[tc], this)();
+            data.toggleclicked = (tc + 1) % 2;
             });
             return this;
         };
 
-        function dateAdd(date, interval, units) {
-            var ret = new Date(date); //don't change original date
-            switch (interval.toLowerCase()) {
-                case 'year'   :
+                function dateAdd(date, interval, units) {
+                var ret = new Date(date); //don't change original date             switch (interval.toLowerCase()) {
+                    case 'year'   :
                     ret.setFullYear(ret.getFullYear() + units);
-                    break;
-                case 'quarter':
+                break;
+                    case 'quarter':
                     ret.setMonth(ret.getMonth() + 3 * units);
-                    break;
-                case 'month'  :
+                break;
+                    case 'month'  :
                     ret.setMonth(ret.getMonth() + units);
-                    break;
-                case 'week'   :
+                break;
+                    case 'week'   :
                     ret.setDate(ret.getDate() + 7 * units);
-                    break;
-                case 'day'    :
+                break;
+                    case 'day'    :
                     ret.setDate(ret.getDate() + units);
-                    break;
-                case 'hour'   :
+                break;
+                    case 'hour'   :
                     ret.setTime(ret.getTime() + units * 3600000);
-                    break;
-                case 'minute' :
+                break;
+                    case 'minute' :
                     ret.setTime(ret.getTime() + units * 60000);
-                    break;
-                case 'second' :
-                    ret.setTime(ret.getTime() + units * 1000);
-                    break;
-                default       :
-                    ret = undefined;
-                    break;
+                break;
+                    case 'second' :
+            ret.setTime(ret.getTime() + units * 1000);
+            break;
+        default       :
+        ret = undefined;
+            break;
             }
             return ret;
         }
 
-        //region For Draggability
-        $('.link-group').sortable({
-            handle: '.move-link',
+            //region For Draggability
+            $('.link-group').sortable({
+                handle: '.move-link',
             connectWith: ".link-group",
             placeholder: "ui-state-highlight",
-            receive: function (event, ui) {
+                receive: function (event, ui) {
                 var _link_items = ui.item.parents('.link-group').find('.list-group-item');
                 var _task_id = ui.item.find('.task_list_id').val();
-                var _company_id = ui.item.find('.company_id').val();
+                    var _company_id = ui.item.find('.company_id').val();
                 var _data = [];
                 $.each(_link_items, function (e) {
-                    var _str_id = this.id;
+                var _str_id = this.id;
                     var _id = _str_id.split('-');
-                    _data.push(_id);
+                _data.push(_id);
                 });
-                var url = public_path + '/setLinkOrder/' + _task_id + '/' + _company_id;
+            var url = public_path + '/setLinkOrder/' + _task_id + '/' + _company_id;
                 $.post(url, {links_order: _data}, function (res) {
                     console.log(res);
                 });
             },
-            update: function (event, ui) {
+                update: function (event, ui) {
                 var _link_items = ui.item.parents('.link-group').find('.list-group-item');
                 var _task_id = ui.item.find('.task_list_id').val();
-                var _company_id = ui.item.find('.company_id').val();
+                    var _company_id = ui.item.find('.company_id').val();
                 var _data = [];
-                $.each(_link_items, function (e) {
-                    var _str_id = this.id;
+                    $.each(_link_items, function (e) {
+                var _str_id = this.id;
                     var _id = _str_id.split('-');
-                    _data.push(_id[1]);
+                _data.push(_id[1]);
                 });
 
-                var url = public_path + 'setLinkOrder/' + _task_id + '/' + _company_id;
-                $.post(url, {links_order: _data}, function (res) {
-                    console.log(res);
+            var url = public_path + 'setLinkOrder/' + _task_id + '/' + _company_id;
+            $.post(url, {links_order: _data}, function (res) {
+            console.log(res);
                 });
             }
         });
-        $('.tasklist-group').sortable({
+            $('.tasklist-group').sortable({
             dropOnEmpty: true,
-            connectWith: ".tasklist-group",
-            handle: '.drag-handle',
-            placeholder: "ui-state-highlight",
+                connectWith: ".tasklist-group",
+                handle: '.drag-handle',
+                placeholder: "ui-state-highlight",
             receive: function (event, ui) {
                 //For receiving
                 var itemText = ui.item.attr('id');
@@ -355,13 +354,13 @@
 
                 url = public_path + '/changeCheckList/' + list_group_id + '/' + task_list_item_id;
 
-                //Remove warning that no data is found if dragged to an empty list
+            //Remove warning that no data is found if dragged to an empty list
                 $(this).find('li:contains("No data was found.")').remove();
 
                 $.post(url, data);
 
             },
-            update: function (event, ui) {
+                update: function (event, ui) {
 
                 //For Sorting within lists
                 var list_group_id = $(this).attr('id').split('_').pop();
@@ -372,30 +371,28 @@
 
                 var data = $(this).sortable('serialize');
 
-                var url;
+        var url;
 
-                url = public_path + '/sortCheckList/' + list_group_id;
+        url = public_path + '/sortCheckList/' + list_group_id;
 
                 $.post(url, data);
 
-            }
-        });
-        //endregion
+        }
+        });         //endregion
         //var task_id = $('.task_id').val();
-        //var _body = $('#collapse-' + task_id);
-        var _body = $('#collapse-' + '{{ $task->task_id }}');
-        var task_id = '{{ $task->task_id }}';
+            //var _body = $('#collapse-' + task_id);         var _body = $('#collapse-' + '{{ $task->task_id }}');
+            var task_id = '{{ $task->task_id }}';
         var alert_msg = function (msg, _class) {
             var alert = '<div class="alert ' + _class + ' alert-dismissable">';
             alert += '<i class="fa fa-check"></i>';
             alert += '<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>';
-            alert += '<strong>' + msg + '</strong>';
+        alert += '<strong>' + msg + '</strong>';
             alert += '</div>';
             $('section.content').prepend(alert);
         };
 
-        //region For Delete Hover
-        _body.find('.list-group .alert_delete').hover(function (e) {
+            //region For Delete Hover
+            _body.find('.list-group .alert_delete').hover(function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
             var index = $(this).parent().parent().parent().index();
@@ -408,100 +405,94 @@
             e.stopImmediatePropagation();
             var index = $(this).parent().parent().parent().index();
             var checklist_item_id = $(this).parent().parent().parent().parent().attr('id');
-            //console.log(checklist_item_id);
+        //console.log(checklist_item_id);
             $('#' + checklist_item_id + ' .list-group-item:eq(' + index + ')').removeClass('has-border');
-        });
+            });
 
         //endregion
 
-        var finish_checklist = function () {
-            var count = 0;
+                var finish_checklist = function () {
+                var count = 0;
             var over_all = 0;
             _body.find('.checklist-status').each(function () {
-                over_all++;
-                if ($(this).hasClass('bg-green')) {
+            over_all++;
+            if ($(this).hasClass('bg-green')) {
                     count++;
                 }
-            });
-            var _percentage = (count / over_all) * 100;
+                        });
+                    var _percentage = (count / over_all) * 100;
             _body.find(".progress-in")
                     .animate({
-                        width: _percentage.toFixed(0) + '%'
+        width: _percentage.toFixed(0) + '%'
                     }, 100);
-            _body.find('.progress-val').html(_percentage.toFixed(0) + '%');
+                    _body.find('.progress-val').html(_percentage.toFixed(0) + '%');
         };
 
         var update_checklist_status = function (id, status) {
 
             var data = [];
-            data.push(
-                    {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+            data.push(                     {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
             {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
             {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
-            {'name': 'status', 'value': status}
+        {'name': 'status', 'value': status}
             );
 
             $.post(public_path + 'updateCheckListStatus/' + id, data, function (e) {
             });
-
-        };
-
-        var update_checklist_data = function (id, header, details, checklist_header, checklist_item) {
+         };
+            
+                    var update_checklist_data = function (id, header, details, checklist_header, checklist_item) {
 
             var data = [];
-            data.push(
-                    {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+            data.push(                     {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
             {'name': 'task_id', 'value': _body.find('.task_id').val()},
             {'name': 'user_id', 'value': _body.find('.user_id').val()},
-            {'name': 'checklist_header', 'value': header},
-            {'name': 'checklist', 'value': details}
-            );
+                {'name': 'checklist_header', 'value': header},             {'name': 'checklist', 'value': details}             );
 
-            $.post(public_path + 'updateCheckList/' + id, data, function (_data) {
-                var _return_data = jQuery.parseJSON(_data);
-                $('.text-area-content').remove();
-
+                $.post(public_path + 'updateCheckList/' + id, data, function (_data) {
+                var _return_data = jQuery.parseJSO N (_data);
+                $('.text-area-content').remove(); 
                 var header = '<i class="glyphicon glyphicon-list"></i>'+_return_data.checklist_header;
                 var content = _return_data.checklist;
 
 
-                checklist_header.removeAttr('style').html(header);
-                checklist_item.removeAttr('style').html(content);
+            checklist_header.removeAttr('style').html(header);
+            checklist_item.removeAttr('style').html(content);
 
             });
 
-        };
+            };
 
         function startTask(id) {
 
             var data = [];
-            data.push({'name': 'task_checklist_id', 'value': id});
-            $.post(public_path + 'startTask', data, function (timer_id) {
-                $('#timer-' + id).parent().find('.timer_id').val(timer_id);
+                data.push({'name': 'task_checklist_id', 'value': id});
+        $.post(public_path + 'startTask', data, function (timer_id) {
+            $('#timer-' + id).parent().find('.timer_id').val(timer_id);
             });
         }
 
         function pauseTask(timer_id, task_checklist_id, time_paused) {
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': time_paused});
+        data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': time_paused});
             $.post(public_path + 'pauseTask', data, function (e) {
             });
         }
 
 
-        function resumeTask(timer_id, task_checklist_id) {
+            function resumeTask(timer_id, task_checklist_id) {
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id});
-            $.post(public_path + 'resumeTask', data, function (new_timer_id) {
-                console.log('new_timer_id: ' + new_timer_id);
-                $('#timer-' + task_checklist_id).siblings('.timer_id').val(new_timer_id);
+                data.push({'name': 'timer_id', 'value': timer_id});
+                $.post(public_path + 'resumeTask', data, function (new_timer_id) {
+        console.log('new_timer_id: ' + new_timer_id);
+            $('#timer-' + task_checklist_id).siblings('.timer_id').val(new_timer_id);
             });
         }
 
-        function endTask(timer_id, time_ended) {
+            function endTask(timer_id, time_ended) {
 
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': time_ended});
+        data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'time', 'value': time_ended});
             $.post(public_path + 'endTask', data, function (e) {
             });
 
@@ -509,12 +500,12 @@
 
         function saveCurrentTime(timer_id, task_checklist_id, current_time) {
             var data = [];
-            data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': current_time});
-            $.post(public_path + 'saveCurrentTime', data, function (e) {
+        data.push({'name': 'timer_id', 'value': timer_id}, {'name': 'task_checklist_id', 'value': task_checklist_id}, {'name': 'time', 'value': current_time});
+                $.post(public_path + 'saveCurrentTime', data, function (e) {
             });
         }
 
-        function saveStillCounting() {
+                function saveStillCounting() {
             $('.still-counting').each(function (index) {
                 var timer_id = $(this).siblings('.timer_id').val();
                 var task_checklist_id = $(this).siblings('.task_checklist_id').val();
@@ -524,42 +515,41 @@
                 console.log('time_resume: ' + time_resume);
 
                 var time_array = time_resume.split(":");
-
                 var hours = '-' + time_array[0] + 'H';
                 var minutes = '-' + time_array[1] + 'M';
                 var seconds = '-' + time_array[2] + 'S';
 
                 var since = hours + ' ' + minutes + ' ' + seconds;
 
-                $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
-                $('#timer-' + task_checklist_id).countdown('resume');
+        $('#timer-' + task_checklist_id).countdown({since: since, format: 'HMS', compact: true});
+        $('#timer-' + task_checklist_id).countdown('resume');
             });
         }
 
-        //on Page load, save and resume the timer that wasn't paused
-        saveStillCounting();
+            //on Page load, save and resume the timer that wasn't paused
+            saveStillCounting();
 
 
-        _body.on('click', '.start-timer', function () {
+            _body.on('click', '.start-timer', function () {
             var id = $(this).siblings('.task_checklist_id').val();
             startTask(id);
-            console.log('Starting Task' + $('#timer-' + id).text());
-            $(this).remove();
+                console.log('Starting Task' + $('#timer-' + id).text());
+                $(this).remove();
             if ($('#timer-' + id).text() === '') {
                 $('.task-item-timer').countdown('pause');
                 $('.task-item-timer').siblings('.pause-timer').text('Resume');
                 $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
-                $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+                    $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
 
-                $('.still-counting').each(function (index) {
+                    $('.still-counting').each(function (index) {
                     var timer_id = $(this).siblings('.timer_id').val();
                     var task_checklist_id = $(this).siblings('.task_checklist_id').val();
 
                     //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
                     var time_paused = $('.still-counting').text();
-                    console.log('time_paused: ' + time_paused);
+                console.log('time_paused: ' + time_paused);
 
-                    pauseTask(timer_id, task_checklist_id, time_paused);
+                pauseTask(timer_id, task_checklist_id, time_paused);
                 });
 
                 $('.task-item-timer').removeClass('still-counting');
@@ -569,7 +559,7 @@
                 $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
                 $('#timer-' + id).parent().append('<input class="task_checklist_id" type="hidden" value="' + id + '" />');
                 $('#timer-' + id).parent().append('<input class="total_time" type="hidden" value="" />');
-                $('#timer-' + id).parent().append('<input class="timer_status" type="hidden" value="Started" />');
+            $('#timer-' + id).parent().append('<input class="timer_status" type="hidden" value="Started" />');
                 $('#timer-' + id).countdown('resume');
                 $('#timer-' + id).addClass('still-counting');
             } else {
@@ -577,17 +567,17 @@
                 $('.task-item-timer').countdown('pause');
                 $('.task-item-timer').siblings('.pause-timer').text('Resume');
                 $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
-                $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+                    $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
 
-                $('.still-counting').each(function (index) {
+                    $('.still-counting').each(function (index) {
                     var timer_id = $(this).siblings('.timer_id').val();
                     var task_checklist_id = $(this).siblings('.task_checklist_id').val();
 
                     //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
                     var time_paused = $('.still-counting').text();
-                    console.log('time_paused: ' + time_paused);
+                console.log('time_paused: ' + time_paused);
 
-                    pauseTask(timer_id, task_checklist_id, time_paused);
+                pauseTask(timer_id, task_checklist_id, time_paused);
                 });
 
                 $('.task-item-timer').removeClass('still-counting');
@@ -596,7 +586,6 @@
                 var time_resume = $('#timer-' + id).text();
                 console.log('time_resume: ' + time_resume);
                 var time_array = time_resume.split(":");
-
                 var hours = '-' + time_array[0] + 'H';
                 var minutes = '-' + time_array[1] + 'M';
                 var seconds = '-' + time_array[2] + 'S';
@@ -604,10 +593,10 @@
                 var since = hours + ' ' + minutes + ' ' + seconds;
 
                 $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
-                $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
-                $('#timer-' + id).countdown('resume');
+        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
+            $('#timer-' + id).countdown('resume');
             }
-        });
+            });
 
 
         _body.on('click', '.pause-timer', function () {
@@ -622,19 +611,18 @@
             $('#timer-options-' + task_checklist_id).children('.timer_status').val('Paused');
             $('#timer-options-' + task_checklist_id).children('.total_time').val(time_paused);
             $('#timer-' + task_checklist_id).removeClass('still-counting');
-            $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
+        $('#timer-pause-' + task_checklist_id).switchClass('.pause-timer', 'resume-timer');
             pauseTask(timer_id, task_checklist_id, time_paused);
         });
 
-        _body.on('click', '.resume-timer', function () {
+            _body.on('click', '.resume-timer', function () {
             //$('.resume-timer').clickToggle(function () {
 
             var timer_id = $(this).siblings('.timer_id').val();
             var task_checklist_id = $(this).siblings('.task_checklist_id').val();
 
             $('#timer-pause-' + task_checklist_id).text('Pause');
-            var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val();
-
+            var time_resume = $('#timer-options-' + task_checklist_id).find('.total_time').val(); 
             var time_array = time_resume.split(":");
 
             var hours = '-' + time_array[0] + 'H';
@@ -648,16 +636,16 @@
             $('.task-item-timer').countdown('pause');
             $('.task-item-timer').siblings('.pause-timer').text('Resume');
             $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
-            $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+                $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
 
             $('.still-counting').each(function (index) {
                 var timer_id = $(this).siblings('.timer_id').val();
                 var task_checklist_id = $(this).siblings('.task_checklist_id').val();
 
-                var time_paused = $('#timer-options-' + task_checklist_id).find('.countdown-row').text();
-                console.log('time_paused: ' + time_paused);
+            var time_paused = $('#timer-options-' + task_checklist_id).find('.countdown-row').text();
+            console.log('time_paused: ' + time_paused);
 
-                pauseTask(timer_id, task_checklist_id, time_paused);
+            pauseTask(timer_id, task_checklist_id, time_paused);
             });
 
 
@@ -669,68 +657,67 @@
             $('#timer-options-' + task_checklist_id).children('timer_status').val('Resumed');
             $('#timer-pause-' + task_checklist_id).switchClass('resume-timer', 'pause-timer');
             $('#timer-pause-' + task_checklist_id).text('Pause');
-            console.log("timer_id: " + timer_id);
-            console.log("task_checklist_id: " + task_checklist_id);
+        console.log("timer_id: " + timer_id);
+        console.log("task_checklist_id: " + task_checklist_id);
             resumeTask(timer_id, task_checklist_id);
-        });
+            });
 
 
         //region Check List
-        //For Checklist Status
-        _body.on('click', '.checklist-status', function (e) {
+            //For Checklist Status
+            _body.on('click', '.checklist-status', function (e) {
             //$('.checklist-status').click(function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+            e.preventDefault();             e.stopImmediatePropagation();
 
             var index = $(this).parent().parent().parent().index();
-            var id = $(this).siblings('.task_list_item_id').val();
+                var id = $(this).siblings('.task_list_item_id').val();
 
             console.log(id);
 
             /*From Default, Change to ongoing*/
-            if ($(this).hasClass('bg-gray')) {
-                $(this).html('&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;');
-                $(this).switchClass('bg-gray', 'bg-orange', function () {
-                    update_checklist_status(id, 'Ongoing');
+                if ($(this).hasClass('bg-gray')) {
+                    $(this).html('&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;');
+            $(this).switchClass('bg-gray', 'bg-orange', function () {
+            update_checklist_status(id, 'Ongoing');
 
                 });
 
             }
-            /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
-            if ($(this).hasClass('bg-orange')) {
-                $(this).html('&nbsp;<i class="glyphicon glyphicon-ok"></i>&nbsp;');
+                /*From Ongoing, Change to Completed, Update the progress bar, increase the value*/
+                if ($(this).hasClass('bg-orange')) {
+                    $(this).html('&nbsp;<i class="glyphicon glyphicon-ok"></i>&nbsp;');
                 $(this).switchClass('bg-orange', 'bg-green', function () {
                     finish_checklist();
-                    update_checklist_status(id, 'Completed');
+                update_checklist_status(id, 'Completed');
                 });
                 //var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
                 //var time_ended = $('#timer-' + id).text();
                 //console.log('time_ended: ' + time_ended);
                 //if ($('#timer-pause-' + id).length > 0) {
-                    //$('#timer-pause-' + id).remove();
+                //$('#timer-pause-' + id).remove();
                 //}
-                //$('#timer-' + id).removeClass('still-counting');
+            //$('#timer-' + id).removeClass('still-counting');
                 //$('#timer-' + id).countdown('pause');
-                //endTask(timer_id, time_ended);
+            //endTask(timer_id, time_ended);
             }
-            /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
-            if ($(this).hasClass('bg-green')) {
-                $(this).html('&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;');
-                $(this).switchClass('bg-green', 'bg-red', function () {
-                    finish_checklist();
-                    update_checklist_status(id, 'Urgent');
+                /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
+                if ($(this).hasClass('bg-green')) {
+                    $(this).html('&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;');
+            $(this).switchClass('bg-green', 'bg-red', function () {
+            finish_checklist();
+            update_checklist_status(id, 'Urgent');
                 });
             }
-            /*From Urgent, Change to back to Default*/
+                /*From Urgent, Change to back to Default*/
             if ($(this).hasClass('bg-red')) {
                 $(this).html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-                $(this).switchClass('bg-red', 'bg-gray', function () {
-                    update_checklist_status(id, 'Default');
+        $(this).switchClass('bg-red', 'bg-gray', function () {
+            update_checklist_status(id, 'Default');
                 });
             }
         });
 
-        _body.on('click', '.check-list-btn', function () {
+            _body.on('click', '.check-list-btn', function () {
             var text_area_ele = '<li id="add-new-task" class="list-group-item text-area-content area-content">';
             text_area_ele += '<input class="form-control" name="checklist_header" placeholder="Title" value="" />';
             text_area_ele += '<textarea id="add-new-task-textarea" class=" form-control" name="checklist" placeholder="New Task" rows="3"></textarea><br/>';
@@ -748,37 +735,35 @@
             var new_task_url = public_path + 'addNewTask';
             var blank_task = new FormData();
             blank_task.append('_token', _body.find('input[name="_token"]').val());
-            blank_task.append('task_id', _body.find('input[name="task_id"]').val());
-            blank_task.append('user_id', _body.find('input[name="user_id"]').val());
+                blank_task.append('task_id', _body.find('input[name="task_id"]').val());
+                blank_task.append('user_id', _body.find('input[name="user_id"]').val());
 
             $.ajax({
                 url: new_task_url,
                 type: "POST",
                 data: blank_task,
                 // THIS MUST BE DONE FOR FILE UPLOADING
-                contentType: false,
-                processData: false,
+                    contentType: false,                 processData: false,
                 beforeSend: function () {
 
+                },                 success: function (data) {
+            task_check_list_id = data;
                 },
-                success: function (data) {
-                    task_check_list_id = data;
-                },
-                error: function (xhr, status, error) {
+            error: function (xhr, status, error) {
 
                 }
             }); //ajax
 
 
-            var add_new_task_textarea = CKEDITOR.replace('add-new-task-textarea');
+                var add_new_task_textarea = CKEDITOR.replace('add-new-task-textarea');
 
 
-            _body.find('input[name="checklist_header"]').on('change', function () {
+                _body.find('input[name="checklist_header"]').on('change', function () {
                 var ajaxurl = public_path + 'saveTaskCheckListHeader';
 
                 var formData = new FormData();
-                formData.append('task_check_list_id', task_check_list_id);
-                formData.append('checklist_header', $(this).val());
+                    formData.append('task_check_list_id', task_check_list_id);
+                    formData.append('checklist_header', $(this).val());
 
                 $.ajax({
                     url: ajaxurl,
@@ -789,20 +774,20 @@
                     processData: false,
                     beforeSend: function () {
                     },
-                    success: function (data) {
-                    },
-                    error: function (xhr, status, error) {
+                success: function (data) {
+            },
+                error: function (xhr, status, error) {
 
                     }
                 }); //ajax
-            });
+                });
 
-            add_new_task_textarea.on('change', function (evt) {
+                add_new_task_textarea.on('change', function (evt) {
                 var ajaxurl = public_path + 'saveTaskCheckList';
 
                 var formData = new FormData();
-                formData.append('task_check_list_id', task_check_list_id);
-                formData.append('checklist_content', evt.editor.getData());
+                    formData.append('task_check_list_id', task_check_list_id);
+                    formData.append('checklist_content', evt.editor.getData());
 
                 $.ajax({
                     url: ajaxurl,
@@ -813,18 +798,18 @@
                     processData: false,
                     beforeSend: function () {
                     },
-                    success: function (data) {
-                    },
+                success: function (data) {
+            },
                     error: function (xhr, status, error) {
 
-                    }
+                }
                 }); //ajax
 
-            });
+                        });
 
-            add_new_task_textarea.on('fileUploadRequest', function (evt) {
+                add_new_task_textarea.on('fileUploadRequest', function (evt) {
                 var fileLoader = evt.data.fileLoader,
-                        xhr = fileLoader.xhr;
+                xhr = fileLoader.xhr;
 
                 //xhr.open('PUT', fileLoader.uploadUrl, true);
 
@@ -835,58 +820,56 @@
 
                 //saveChecklistContent(task_check_list_id,CKEDITOR.instances['add-new-task-textarea'].getData());
                 var ajaxurl = fileLoader.uploadUrl;
-                formData = new FormData();
-                formData.append('upload', fileLoader.file, fileLoader.fileName);
+                    formData = new FormData();
+                    formData.append('upload', fileLoader.file, fileLoader.fileName);
                 $.ajax({
                     url: ajaxurl,
                     type: "POST",
                     data: formData,
                     // THIS MUST BE DONE FOR FILE UPLOADING
                     contentType: false,
-                    processData: false,
+                        processData: false,
                     beforeSend: function () {
                     },
                     success: function (data) {
 
-                        console.log('file upload finished');
-                    },
+                console.log('file upload finished');
+            },
                     error: function (xhr, status, error) {
-
+            
                     }
                 }); //ajax
 
-            }); // Listener with priority 4 will be executed before priority 5.
+                }); // Listener with priority 4 will be executed before priority 5.
 
-            add_new_task_textarea.on('fileUploadResponse', function (evt) {
+                add_new_task_textarea.on('fileUploadResponse', function (evt) {
                 console.log('task_check_list_id', task_check_list_id);
-                console.log('editor data', CKEDITOR.instances['add-new-task-textarea'].getData());
+            console.log('editor data', CKEDITOR.instances['add-new-task-textarea'].getData());
                 //saveChecklistContent(task_check_list_id, evt.editor.getData());
-            });
+                });
 
-            check_list_container.on('click', '.submit-checklist', function (e) {
+                check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
                 e.preventDefault();
-                e.stopImmediatePropagation();
+                        e.stopImmediatePropagation();
                 //var data = _body.find('.task-form').serializeArray();
                 var data = [];
                 data.push(
-                        {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+                {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
                 {'name': 'task_check_list_id', 'value': task_check_list_id},
                 {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-                {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
-                {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
-                {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
+                {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},                 {'name': 'checklist_header', 'value': _body.find('input[name="checklist_header"]').val()},
+                    {'name': 'checklist', 'value': CKEDITOR.instances['add-new-task-textarea'].getData()}
                 );
 
-                $.post(public_path + 'checkList', data, function (d) {
-                    var _return_data = jQuery.parseJSON(d);
+                    $.post(public_path + 'checkList', data, function (d) {
+                        var _return_data = jQuery.parseJSON(d);
 
-                    var ele = '';
-                    $.each(_return_data, function (index, val) {
-                        var status = val.status;
+                        var ele = '';
+                        $.each(_return_data, function (index, val) {
+                                var status = val.status;
                         var statusClass;
-
-                        switch (status) {
+                                switch (status) {
                             case 'Default':
                                 statusClass = 'bg-gray'
                                 break;
@@ -896,7 +879,7 @@
                             case 'Completed':
                                 statusClass = 'bg-green'
                                 break;
-                            case 'Urgent':
+                        case 'Urgent':
                                 statusClass = 'bg-red'
                                 break;
                         }
@@ -907,34 +890,33 @@
                         ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header"><i class="glyphicon glyphicon-list"></i>' + val.checklist_header + '</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>';
+                            ele += '</div>';
                         ele += '<div class="col-sm-3">';
 
-                        if (val.timer[0] !== undefined) {
-                            ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                            if (val.timer[0] !== undefined) {
+                                ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
                             if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
                                 ele += '<text id="timer-' + val.id + '" class="still-counting">' + val.timer[0].total_time + '</text>';
                                 ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary pause-timer">Pause</button>';
-                            } else {
+                                } else {
                                 ele += '<text id="timer-' + val.id + '">' + val.timer[0].total_time + '</text>';
                                 ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary resume-timer">Resume</button>';
                                 ele += '<input class="timer_id" type="hidden" value="' + val.timer[0].timer_id + '">';
                                 ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
-                                ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
-                                ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
+                            ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
+                            ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
 
                             }
                             ele += '</div>';
                         } else {
-
                             ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
-                            ele += '<text id="timer-' + val.id + '"></text>';
-                            ele += '<input class="timer_id" type="hidden" value="">';
-                            ele += '</div>'
+                        ele += '<text id="timer-' + val.id + '"></text>';
+                        ele += '<input class="timer_id" type="hidden" value="">';
+                        ele += '</div>'
 
                         }
                         ele += '</div>';
-                        ele += '<div class="col-sm-3">';
+                            ele += '<div class="col-sm-3">';
                         ele += '<div class="pull-right">';
 
                         if (status === 'Default') {
@@ -947,7 +929,7 @@
                             ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
                         }
                         if (status === 'Urgent') {
-                            ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
+                        ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
                         }
                         ele += '&nbsp;&nbsp;&nbsp;';
                         //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
@@ -973,10 +955,10 @@
                         ele += '</div>';
                         ele += '</div>';
                         ele += '</div>';
+                    ele += '</div>';
+                    ele += '</div>';
                         ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</li>';
+                    ele += '</li>';
 
                     });
 
@@ -985,47 +967,44 @@
 
                     //Remove Text area
                     $('#add-new-task').remove();
-                    check_list_container.children('li:contains("No data was found.")').remove();
+            check_list_container.children('li:contains("No data was found.")').remove();
                     check_list_container.append(ele);
-                    _this.removeAttr('disabled');
+                _this.removeAttr('disabled');
                 });
-            }).on('click', '.cancel-checklist', function () {
+                }).on('click', '.cancel-checklist', function () {
                 _this.removeClass('disabled');
                 $('#add-new-task').remove();
 
                 var delete_new_task = public_path + 'cancelAddNewTask';
-                var delete_task = new FormData();
-                delete_task.append('task_check_list_id', task_check_list_id);
+                    var delete_task = new FormData();
+                    delete_task.append('task_check_list_id', task_check_list_id);
 
-                $.ajax({
+                    $.ajax({
                     url: delete_new_task,
-                    type: "POST",
-                    data: delete_task,
+                    type: "POST",                     data: delete_task,
                     // THIS MUST BE DONE FOR FILE UPLOADING
                     contentType: false,
                     processData: false,
                     beforeSend: function () {
                     },
-                    success: function (data) {
-                    },
-                    error: function (xhr, status, error) {
-
+                success: function (data) {
+                },
+        error: function (xhr, status, error) {
+        
                     }
-                }); //ajax
-
-                //$('.text-area-content').remove();
+                }); //ajax 
+            //$('.text-area-content').remove();
             });
         });
 
-        _body.on('click', '.edit-task-list-item', function (e) {
+            _body.on('click', '.edit-task-list-item', function (e) {
             //Prevents default behavior
             e.preventDefault();
 
             //Get list item index
             var index = $(this).parent().parent().parent().parent().parent().parent().index();
 
-            //Get the list group id
-            var list_group_id = $(this).parent().parent().parent().parent().parent().parent().parent().attr('id');
+            //Get the list group id             var list_group_id = $(this).parent().parent().parent().parent().parent().parent().parent().attr('id');
 
             var task_list_id = $(this).siblings('.task_list_id').val();
 
@@ -1059,23 +1038,21 @@
             content_text_area_ele += '<input type="hidden" class="task_list_item_id" value="' + task_list_item_id + '" />';
             content_text_area_ele += '<input type="hidden" class="task_list_id" value="' + task_list_id + '" />';
             content_text_area_ele += '</div>';
-
-
+ 
             task_item_header.css({'display': 'none'}).before(header_text_area_ele);
 
             task_item_content.css({'display': 'none'}).before(content_text_area_ele);
-
-            //var textarea_id = $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').attr('id');
+             //var textarea_id = $('#' + list_group_id + ' .list-group-item').eq(index).find('textarea').attr('id');
             var textarea_id = $(this).parent().parent().parent().parent().parent().parent().find('.edit-checklist-item').attr('id');
 
-            var edit_task_list_editor = CKEDITOR.replace(textarea_id);
-            edit_task_list_editor.on('change', function (evt) {
+                var edit_task_list_editor = CKEDITOR.replace(textarea_id);
+                edit_task_list_editor.on('change', function (evt) {
 
                 var ajaxurl = public_path + 'autoSaveEditChecklist';
 
                 var formData = new FormData();
-                formData.append('task_check_list_id', task_list_item_id);
-                formData.append('checklist', evt.editor.getData());
+                    formData.append('task_check_list_id', task_list_item_id);
+                    formData.append('checklist', evt.editor.getData());
 
                 $.ajax({
                     url: ajaxurl,
@@ -1086,26 +1063,25 @@
                     processData: false,
                     beforeSend: function () {
                     },
-                    success: function (data) {
-                    },
-                    error: function (xhr, status, error) {
+                success: function (data) {
+            },
+            error: function (xhr, status, error) {
 
                     }
                 }); //ajax
             });
 
             //Toggle the content area to show
-            $('#task-item-collapse-' + task_list_item_id).collapse('show');
-            $(this).css({'display': 'none'});
-            $(this).siblings('.alert_delete').css({'display': 'none'});
+        $('#task-item-collapse-' + task_list_item_id).collapse('show');
+            $(this).css({'display': 'none'});             $(this).siblings('.alert_delete').css({'display': 'none'});
         });
 
-        _body.on('click', '.update-checklist', function (e) {
+            _body.on('click', '.update-checklist', function (e) {
             //Stops multiple calls to the this event
-            e.stopImmediatePropagation();
+                    e.stopImmediatePropagation();
             //Get Task item header
             var task_item_id = $(this).parent().parent().find('.task_list_item_id').val(),
-                    _task_item = $('#task_item_' + task_item_id);
+            _task_item = $('#task_item_' + task_item_id);
             _task_item.removeClass('is-task-item-selected');
             //Get list item index
             var index = $(this).parent().parent().parent().parent().parent().index();
@@ -1133,16 +1109,16 @@
 
             update_checklist_data(task_list_item_id, task_list_header, task_list_data, checklist_header, checklist_item);
 
-            //Hide the content area
+                    //Hide the content area
             $('#task-item-collapse-' + task_list_item_id).collapse('hide');
 
-            $('.edit-task-list-item')
-                    .removeAttr('style');
+        $('.edit-task-list-item')
+            .removeAttr('style');
             $('.alert_delete').css({'display': 'inline'});
         });
 
 
-        _body.on('click', '.alert_delete', function (e) {
+            _body.on('click', '.alert_delete', function (e) {
             e.preventDefault();
 
             //var index = $(this).parent().parent().parent().index();
@@ -1153,77 +1129,74 @@
 
             var list_item = $('#task_item_' + task_list_item_id);
 
-            list_item.remove();
+        list_item.remove();
 
             var url = public_path + 'deleteCheckList/' + task_list_item_id;
 
             $.post(url);
-
-        });
-        $('.task-list').on('show.bs.collapse', function () {
-            var id = this.id.match(/\d+/);
-            var task_list = $('#collapse-container-' + id);
-            task_list.addClass('is-selected');
+            });         $('.task-list').on('show.bs.collapse', function () {
+        var id = this.id.match(/\d+/);
+                var task_list = $('#collapse-container-' + id);
+                    task_list.addClass('is-selected');
         });
         $('.task-list .panel-heading .col-xs-6')
-                .click(function () {
+                    .click(function () {
                     var data_target = $(this).parent().parent().parent().find('.task-header').data('target');
-                    var id = data_target.match(/\d+/);
-                    var task_list = $('#collapse-container-' + id);
+                var id = data_target.match(/\d+/);
+        var task_list = $('#collapse-container-' + id);
                     task_list.removeClass('is-selected');
-                });
+            });
         $('.task-list-item .checklist-header, .task-list-details .edit-task-list-item').click(function (event) {
             var href = !$(this).hasClass('icon') ? $(this).attr('href') : $(this).parent().parent().find('.checklist-header').attr('href');
-            var id = href.match(/\d+/);
-            var task_list_item = $('#task_item_' + parseInt(id));
+        var id = href.match(/\d+/);
+        var task_list_item = $('#task_item_' + parseInt(id));
             task_list_item.addClass('is-task-item-selected');
-        });
-        $('.list-group-item.task-list-item').on('hidden.bs.collapse', function () {
-            var id = this.id.match(/\d+/);
+            });
+            $('.list-group-item.task-list-item').on('hidden.bs.collapse', function () {
+        var id = this.id.match(/\d+/);
             var task_list = $('#task_item_' + id);
-            task_list.removeClass('is-task-item-selected');
+         task_list.removeClass('is-task-item-selected');
         });
-        /*$('.task-list-item').bind('dblclick', function () {
-         var edit_btn = $(this).find('.icon-btn.edit-task-list-item');
-         edit_btn.bind().trigger('click');
+         /*$('.task-list-item').bind('dblclick', function () {
+        var edit_btn = $(this).find('.icon-btn.edit-task-list-item');
+        edit_btn.bind().trigger('click');
          console.log('trigger');
-         });*/
+            });*/
         //endregion
-        //region For Tasklist Delete
-        $('.task-list').on('click', '.delete-tasklist', function (e) {
+            //region For Tasklist Delete
+            $('.task-list').on('click', '.delete-tasklist', function (e) {
             e.preventDefault();
             var url = $(this).attr('href');
             var task_id = url.split('/').pop();
 
             //region Delete Modal
             var _delete_modal = $('#delete-modal');
-            _delete_modal.find('.delete-msg').html('Deleting this Briefcase will delete all content.');
-            _delete_modal.modal('show');
-            $('.confirm-delete').on('click', function (e) {
+                _delete_modal.find('.delete-msg').html('Deleting this Briefcase will delete all content.');
+                _delete_modal.modal('show');
+                $('.confirm-delete').on('click', function (e) {
                 e.preventDefault();
                 //Remove the collapse panel immediately
-                _delete_modal.modal('hide');
-                $('#collapse-container-' + task_id).remove();
-                $.post(url);
-            });
+        _delete_modal.modal('hide');
+        $('#collapse-container-' + task_id).remove();
+        $.post(url);             });
             //endregion
         });
         //endregion
 
-        //region Add Spreadsheet
-        _body.on('click', '.add-spreadsheet', function () {
+            //region Add Spreadsheet
+            _body.on('click', '.add-spreadsheet', function () {
 
             var spreadsheet_name = 'task-spreadsheet-' + makeid();
 
             //Create a new spreadsheet page in ethercalc
             var request = new XMLHttpRequest();
-            request.open('POST', 'https://job.tc:9000/');
-            request.setRequestHeader('Content-Type', 'application/json');
-            request.onreadystatechange = function () {
+                request.open('POST', 'https://job.tc:9000/');
+                    request.setRequestHeader('Content-Type', 'application/json');
+                    request.onreadystatechange = function () {
                 if (this.readyState === 4) {
                     console.log('Status:', this.status);
-                    console.log('Headers:', this.getAllResponseHeaders());
-                    console.log('Body:', this.responseText);
+                console.log('Headers:', this.getAllResponseHeaders());
+            console.log('Body:', this.responseText);
                 }
             };
             var body = {
@@ -1248,55 +1221,52 @@
             var new_task_url = public_path + 'addNewTask';
             var blank_task = new FormData();
             blank_task.append('_token', _body.find('input[name="_token"]').val());
-            blank_task.append('task_id', _body.find('input[name="task_id"]').val());
-            blank_task.append('user_id', _body.find('input[name="user_id"]').val());
+                blank_task.append('task_id', _body.find('input[name="task_id"]').val());
+                blank_task.append('user_id', _body.find('input[name="user_id"]').val());
 
             $.ajax({
                 url: new_task_url,
                 type: "POST",
                 data: blank_task,
                 // THIS MUST BE DONE FOR FILE UPLOADING
-                contentType: false,
-                processData: false,
+                    contentType: false,                 processData: false,
                 beforeSend: function () {
 
-                },
-                success: function (data) {
-                    task_check_list_id = data;
+                },                 success: function (data) {
+            task_check_list_id = data;
                 },
                 error: function (xhr, status, error) {
 
                 }
-            }); //ajax
+                }); //ajax
 
 
-            check_list_container.on('click', '.submit-checklist', function (e) {
+                check_list_container.on('click', '.submit-checklist', function (e) {
                 _this.removeClass('disabled');
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 //var data = _body.find('.task-form').serializeArray();
 
-                var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
+                        var spreadsheet_html = '<iframe style="height: 800px;" id="spreadsheet_iframe" class="spreadsheet_iframe" src="https://job.tc:9000/' + spreadsheet_name + '"></iframe>';
 
                 var data = [];
                 data.push(
-                        {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
+                {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
                 {'name': 'task_check_list_id', 'value': task_check_list_id},
                 {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
                 {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
                 {'name': 'checklist_header', 'value': _body.find('input[name="spreadsheet_header"]').val()},
-                {'name': 'checklist', 'value': spreadsheet_html}
+                    {'name': 'checklist', 'value': spreadsheet_html}
                 );
 
-                $.post(public_path + 'saveSpreadsheet', data, function (d) {
-                    var _return_data = jQuery.parseJSON(d);
+                    $.post(public_path + 'saveSpreadsheet', data, function (d) {
+                        var _return_data = jQuery.parseJSON(d);
 
-                    var ele = '';
-                    $.each(_return_data, function (index, val) {
-                        var status = val.status;
+                        var ele = '';
+                        $.each(_return_data, function (index, val) {
+                                var status = val.status;
                         var statusClass;
-
-                        switch (status) {
+                                switch (status) {
                             case 'Default':
                                 statusClass = 'bg-gray';
                                 break;
@@ -1306,7 +1276,7 @@
                             case 'Completed':
                                 statusClass = 'bg-green';
                                 break;
-                            case 'Urgent':
+                        case 'Urgent':
                                 statusClass = 'bg-red';
                                 break;
                         }
@@ -1317,8 +1287,7 @@
                         ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header">' + val.checklist_header + '</a>';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>';
-                        ele += '<div class="pull-right">';
+                        ele += '</div>';                         ele += '<div class="pull-right">';
                         ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
                         ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
                         ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
@@ -1344,148 +1313,142 @@
                         ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
                         ele += '</div>';
                         ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
+                    ele += '</div>';
+                    ele += '</div>';
+                    ele += '</div>';
                         ele += '</li>';
 
                     });
 
                     $('#add-new-task').remove();
-                    check_list_container.children('li:contains("No data was found.")').remove();
+            check_list_container.children('li:contains("No data was found.")').remove();
                     check_list_container.html(ele);
-                    _this.removeAttr('disabled');
+                _this.removeAttr('disabled');
                 });
-            }).on('click', '.cancel-checklist', function () {
+                }).on('click', '.cancel-checklist', function () {
                 _this.removeClass('disabled');
                 $('#add-new-spreadsheet').remove();
 
                 var delete_new_task = public_path + 'cancelAddNewTask';
-                var delete_task = new FormData();
-                delete_task.append('task_check_list_id', task_check_list_id);
+                    var delete_task = new FormData();
+                    delete_task.append('task_check_list_id', task_check_list_id);
 
-                $.ajax({
+                    $.ajax({
                     url: delete_new_task,
-                    type: "POST",
-                    data: delete_task,
+                    type: "POST",                     data: delete_task,
                     // THIS MUST BE DONE FOR FILE UPLOADING
                     contentType: false,
                     processData: false,
                     beforeSend: function () {
                     },
-                    success: function (data) {
-                    },
-                    error: function (xhr, status, error) {
+                success: function (data) {
+                },
+        error: function (xhr, status, error) {
 
-                    }
+        }
                 }); //ajax
 
-                //$('.text-area-content').remove();
-            });
+        //$('.text-area-content').remove();             });
         });
-        //endregion
+                //endregion
 
-        //region Auto Change and Select Category Name
+                    //region Auto Change and Select Category Name
         var _category_name = '';
-        $('.category-name')
-                .bind('keyup keypress blur', function () {
+                    $('.category-name')
+                    .bind('keyup keypress blur', function () {
                     _category_name = $(this).val();
                     var myStr = $(this).val();
-                    myStr = myStr.toLowerCase();
-                    myStr = myStr.replace(/\s+/g, "-");
-                    $(this).val(myStr);
-                })
-                .focusout(function () {
+                myStr = myStr.toLowerCase();
+                    myStr = myStr.replace(/\s+/g, "-");                     $(this).val(myStr);
+                    })                 .focusout(function () {
                     var cat_form = $('.category-form');
                     var form_data = [];
-                    var url = public_path + 'linkCategory';
-                    var cat_value = $(this).val();
-                    if ($(this).val()) {
+                        var url = public_path + 'linkCategory';
+                                var cat_value = $(this).val();
+                        if ($(this).val()) {
                         form_data.push(
-                                {name: 'slug', value: $(this).val()},
-                        {name: 'name', value: _category_name},
-                        {name: 'request_from_link_page', value: '1'}
+                        {name: 'slug', value: $(this).val()},
+                            {name: 'name', value: _category_name},                         {name: 'request_from_link_page', value: '1'}
                         );
-                        $.post(url, form_data, function (data) {
+                            $.post(url, form_data, function (data) {
                             var _return_data = jQuery.parseJSON(data);
-                            var option_ele = '<option value>Select Category</option>';
-                            $.each(_return_data, function (key, val) {
-                                var is_selected = cat_value == val.name ? 'selected' : '';
-                                option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
-                            });
-                            $('select.category').html(option_ele);
-                        });
+                                var option_ele = '<option value>Select Category</option>';
+                                $.each(_return_data, function (key, val) {
+                            var is_selected = cat_value == val.name ? 'selected' : '';
+                    option_ele += '<option value="' + val.id + '" ' + is_selected + '>' + val.name + '</option>';
+                    });
+        $('select.category').html(option_ele);
+                });
                     }
 
                     $(this).val('');
                 });
 
         $('.check-list-container')
-                .on('click', '.toggle-tasklistitem', function () {
+                    .on('click', '.toggle-tasklistitem', function () {
 
                     var task_list_item_id = $(this).siblings('.task_list_item_id').val();
                     var company_id = $(this).siblings('.company_id').val();
                     var task_list_id = $(this).siblings('.task_list_id').val();
 
-                    var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' + company_id + '/' + task_list_id;
+                        var task_checklist_url = public_path + 'getTaskChecklistItem/' + task_list_item_id + '/' + company_id + '/' + task_list_id;
 
-                    $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
-                        $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
+                $('#task-item-collapse-' + task_list_item_id).load(task_checklist_url, function (e) {
+            $('#task_item_' + task_list_item_id).find('a').removeClass('toggle-tasklistitem');
                     });
                 });
 
-        function makeid()
+            function makeid()
         {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-            for (var i = 0; i < 5; i++)
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
+        for (var i = 0; i < 5; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
 
             return text;
         }
 
         function isUrlValid(url) {
-            return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+                return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
         }
 
-        window.onbeforeunload = function (event) {
+                window.onbeforeunload = function (event) {
             $('.still-counting').each(function (index) {
                 $('#timer-' + task_checklist_id).countdown('pause');
                 var timer_id = $(this).siblings('.timer_id').val();
                 var task_checklist_id = $(this).siblings('.task_checklist_id').val();
 
                 var current_time = $('#timer-' + task_checklist_id).find('.countdown-row').text();
-                console.log('current_time: ' + current_time);
+    console.log('current_time: ' + current_time);
 
-                saveCurrentTime(timer_id, task_checklist_id, current_time);
-            });
-        };
+        saveCurrentTime(timer_id, task_checklist_id, current_time);
+        });         };
 
 
     });
 
-    $('body').on('click', '.add-link-modal', function (e) {
+        $('body').on('click', '.add-link-modal', function (e) {
         e.stopImmediatePropagation();
         var add_link_form = public_path + '/addLinkFormBriefcase';
 
-        var company_id = $('.company_id').val();
+            var company_id = $('.company_id').val();
         var user_id = $('input[name="user_id"]').val()
         var task_id = $(this).attr('id');
 
-        BootstrapDialog.show({
-            title: 'Add Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            BootstrapDialog.show({
+                title: 'Add Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
             size: 'size-normal',
-            message: function (dialog) {
+                message: function (dialog) {
                 var $message = $('<div></div>');
-                var pageToLoad = dialog.getData('pageToLoad');
-                $message.load(pageToLoad);
+                    var pageToLoad = dialog.getData('pageToLoad');
+                    $message.load(pageToLoad);
                 return $message;
             },
-            buttons: [{
-                    label: 'Add Link',
-                    cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
-                    action: function (dialog) {
+                    buttons: [{
+                        label: 'Add Link',
+                        cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                        action: function (dialog) {
 
                         var ajaxurl = public_path + '/links';
 
@@ -1501,63 +1464,60 @@
                         console.log('company_id: ' + company_id);
                         console.log('user_id: ' + user_id);
 
-                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                        $button.disable();
-                        $button.spin();
+                            var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                            $button.disable();
+                            $button.spin();
 
-                        $.ajax({
+                            $.ajax({
                             url: ajaxurl,
                             type: "POST",
                             data: formData,
                             // THIS MUST BE DONE FOR FILE UPLOADING
                             contentType: false,
-                            processData: false,
-                            beforeSend: function () {
+                                processData: false,                             beforeSend: function () {
 
                             },
-                            success: function (data) {
+                                success: function (data) {
                                 $('#load-task-assign-' + task_id).find('.link-group').append(data);
-                                console.log($('#load-task-assign-' + task_id).find('.link-group').attr('class'));
-                                dialog.close();
+                            console.log($('#load-task-assign-' + task_id).find('.link-group').attr('class'));
+                        dialog.close();
                             },
-                            error: function (xhr, status, error) {
+                error: function (xhr, status, error) {
 
                             }
-                        }); //ajax*/
+            }); //ajax*/
                     }
-                }],
+            }],
             data: {
-                'pageToLoad': add_link_form
+    'pageToLoad': add_link_form
             },
-            onshown: function (ref) {
-
+        onshown: function (ref) { 
             },
-            closable: false
-        });
-    });
+        closable: false
+        });     });
 
-    $('body').on('click', '.edit-link', function () {
+        $('body').on('click', '.edit-link', function () {
 
         var link_id = $(this).attr('id');
 
         var company_id = $('.company_id').val();
         var user_id = $('input[name="user_id"]').val()
-        var task_id = $('input[name="task_id"]').val()
+            var task_id = $('input[name="task_id"]').val()
 
         var edit_link_form = public_path + '/links/' + link_id + '/edit';
 
-        BootstrapDialog.show({
-            title: 'Edit Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            BootstrapDialog.show({
+                title: 'Edit Link <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
             size: 'size-normal',
-            message: function (dialog) {
+                message: function (dialog) {
                 var $message = $('<div></div>');
-                var pageToLoad = dialog.getData('pageToLoad');
-                $message.load(pageToLoad);
+                    var pageToLoad = dialog.getData('pageToLoad');
+                    $message.load(pageToLoad);
                 return $message;
             },
-            buttons: [{
-                    label: 'Edit Link',
-                    cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
+                    buttons: [{
+                        label: 'Edit Link',
+                        cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
                     action: function (dialog) {
 
                         var ajaxurl = public_path + '/links/' + link_id;
@@ -1576,89 +1536,84 @@
                         console.log('company_id: ' + company_id);
                         console.log('user_id: ' + user_id);
 
-                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                        $button.disable();
-                        $button.spin();
+                            var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                            $button.disable();
+                            $button.spin();
 
-                        $.ajax({
+                            $.ajax({
                             url: ajaxurl,
                             type: "POST",
                             data: formData,
                             // THIS MUST BE DONE FOR FILE UPLOADING
                             contentType: false,
-                            processData: false,
-                            beforeSend: function () {
-
-                            },
+                                processData: false,                             beforeSend: function () { 
+                                },
                             success: function (data) {
-                                $('#link-' + link_id).replaceWith(data);
+                            $('#link-' + link_id).replaceWith(data);
 
-                                dialog.close();
+                        dialog.close();
                             },
-                            error: function (xhr, status, error) {
+                error: function (xhr, status, error) {
 
                             }
-                        }); //ajax*/
+            }); //ajax*/
                     }
-                }],
+            }],
             data: {
-                'pageToLoad': edit_link_form
+    'pageToLoad': edit_link_form
             },
-            onshown: function (ref) {
+        onshown: function (ref) {
 
             },
-            closable: false
+        closable: false
         });
-    });
+        });
 
-    $('body').on('click', '.remove-link', function (e) {
+        $('body').on('click', '.remove-link', function (e) {
         e.preventDefault();
-        var link_id = $(this).attr('id');
-
-        var ajaxurl = public_path + '/links/' + link_id;
-        var formData = new FormData();
-        formData.append('_method', 'DELETE');
+        var link_id = $(this).attr('id'); 
+            var ajaxurl = public_path + '/links/' + link_id;
+            var formData = new FormData();
+            formData.append('_method', 'DELETE');
 
         $.ajax({
             url: ajaxurl,
             type: "POST",
             data: formData,
             // THIS MUST BE DONE FOR FILE UPLOADING
-            contentType: false,
+                contentType: false,
             processData: false,
             beforeSend: function () {
 
             },
-            success: function (data) {
-                $('#link-' + link_id).remove();
-            },
-            error: function (xhr, status, error) {
+        success: function (data) {
+    $('#link-' + link_id).remove();
+    },
+    error: function (xhr, status, error) {
 
-            }
+        }
         }); //ajax*/
-    });
+        });
 
-    //Briefcase Options
-    //Edit Briefcase
-    $('.edit-briefcase').click(function (e) {
-        e.stopImmediatePropagation();
-        var briefcase_id = $(this).attr('id');
+    //Briefcase Options     //Edit Briefcase
+        $('.edit-briefcase').click(function (e) {         e.stopImmediatePropagation();
+            var briefcase_id = $(this).attr('id');
 
         var edit_briefcase_form = public_path + '/briefcase/' + briefcase_id + '/edit';
 
-        BootstrapDialog.show({
-            title: 'Edit Briefcase <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            BootstrapDialog.show({
+                title: 'Edit Briefcase <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
             size: 'size-normal',
-            message: function (dialog) {
+                message: function (dialog) {
                 var $message = $('<div></div>');
-                var pageToLoad = dialog.getData('pageToLoad');
-                $message.load(pageToLoad);
+                    var pageToLoad = dialog.getData('pageToLoad');
+                    $message.load(pageToLoad);
                 return $message;
             },
-            buttons: [{
-                    label: 'Save',
+                    buttons: [{
+                        label: 'Save',
                     cssClass: 'btn btn-submit btn-shadow btn-sm pull-right',
-                    action: function (dialog) {
+                        action: function (dialog) {
 
                         var ajaxurl = public_path + '/briefcase/' + briefcase_id;
 
@@ -1669,45 +1624,44 @@
 
                         console.log(formData.get('task_title'));
 
-                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                        $button.disable();
-                        $button.spin();
+                            var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                            $button.disable();
+                            $button.spin();
 
-                        $.ajax({
+                            $.ajax({
                             url: ajaxurl,
                             type: "POST",
                             data: formData,
                             // THIS MUST BE DONE FOR FILE UPLOADING
                             contentType: false,
-                            processData: false,
-                            beforeSend: function () {
+                                processData: false,                             beforeSend: function () {
 
                             },
-                            success: function (data) {
-                                $('#briefcase-title-' + briefcase_id).html(formData.get('task_title'));
-                                dialog.close();
+                                success: function (data) {
+                            $('#briefcase-title-' + briefcase_id).html(formData.get('task_title'));
+                        dialog.close();
                             },
-                            error: function (xhr, status, error) {
+                error: function (xhr, status, error) {
 
                             }
-                        }); //ajax*/
+            }); //ajax*/
                     }
-                }],
+            }],
             data: {
-                'pageToLoad': edit_briefcase_form
+    'pageToLoad': edit_briefcase_form
             },
-            onshown: function (ref) {
+        onshown: function (ref) {
 
             },
-            closable: false
+        closable: false
         });
 
     });
 
-    $('.delete-briefcase').click(function (e) {
-        e.stopImmediatePropagation();
+            $('.delete-briefcase').click(function (e) {
+            e.stopImmediatePropagation();
         var briefcase_id = $(this).attr('id');
-        BootstrapDialog.confirm({
+            BootstrapDialog.confirm({
             title: 'Delete Briefcase',
             message: 'Warning! Deleting this Briefcase will delete all content. Continue?',
             type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
@@ -1715,10 +1669,9 @@
             draggable: true, // <-- Default value is false
             btnCancelLabel: 'No', // <-- Default value is 'Cancel',
             btnOKLabel: 'Yes', // <-- Default value is 'OK',
-            btnOKClass: 'btn-submit', // <-- If you didn't specify it, dialog type will be used,
-            btnCancelClass: 'btn-cancel', // <-- If you didn't specify it, dialog type will be used,
-            callback: function (result) {
-                // result will be true if button was click, while it will be false if users close the dialog directly.
+                btnOKClass: 'btn-submit', // <-- If you didn't specify it, dialog type will be used,             btnCancelClass: 'btn-cancel', // <-- If you didn't specify it, dialog type will be used,
+                callback: function (result) {
+                    // result will be true if button was click, while it will be false if users close the dialog directly.
                 if (result) {
 
                     console.log('briefcase_id: ' + briefcase_id);
@@ -1727,24 +1680,23 @@
                     var formData = new FormData();
                     formData.append('_method', 'DELETE');
 
-                    var project_id = $('body').find('.project_id').val();
-                    var project_url = public_path + '/project/' + project_id;
+                        var project_id = $('body').find('.project_id').val();
+                        var project_url = public_path + '/project/' + project_id;
 
-                    $.ajax({
+                        $.ajax({
                         url: ajaxurl,
                         type: "POST",
                         data: formData,
                         // THIS MUST BE DONE FOR FILE UPLOADING
                         contentType: false,
-                        processData: false,
+                            processData: false,
                         beforeSend: function () {
 
                         },
-                        success: function (data) {
-
-                            window.location = project_url
-                        },
-                        error: function (xhr, status, error) {
+                        success: function (data) { 
+                    window.location = project_url
+                },
+    error: function (xhr, status, error) {
 
                         }
                     }); //ajax*/
