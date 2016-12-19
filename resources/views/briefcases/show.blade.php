@@ -1,6 +1,8 @@
 @extends('layouts.default')
 @section('content')
 <div id="collapse-{{ $task->task_id }}">
+    <input type="hidden" class="task_id" value="{{$task->task_id}}" />
+    <input type="hidden" class="user_id" value="{{$user_id}}" />
     <div class="row">
         <div class="col-sm-12">
             <div class="row">

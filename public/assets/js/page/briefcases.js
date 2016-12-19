@@ -210,7 +210,7 @@ var update_checklist_data = function (id, header, details, checklist_header, che
         var _return_data = jQuery.parseJSON(_data);
         $('.text-area-content').remove();
 
-        var header = _return_data.checklist_header;
+        var header = '<i class="glyphicon glyphicon-list"></i>'+_return_data.checklist_header;
         var content = _return_data.checklist;
 
 
@@ -854,8 +854,10 @@ _body.on('click', '.update-checklist', function (e) {
     //Stops multiple calls to the this event
     e.stopImmediatePropagation();
     //Get Task item header
-    var task_item_id = $(this).parent().parent().find('.task_list_item_id').val(),
-            _task_item = $('#task_item_' + task_item_id);
+    var task_item_id = $(this).parent().parent().find('.task_list_item_id').val();
+    
+    var _task_item = $('#task_item_' + task_item_id);
+    
     _task_item.removeClass('is-task-item-selected');
     //Get list item index
     var index = $(this).parent().parent().parent().parent().parent().index();

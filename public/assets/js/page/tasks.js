@@ -210,7 +210,7 @@ var update_checklist_data = function (id, header, details, checklist_header, che
         var _return_data = jQuery.parseJSON(_data);
         $('.text-area-content').remove();
 
-        var header = _return_data.checklist_header;
+        var header ='<i class="glyphicon glyphicon-list"></i>'+ _return_data.checklist_header;
         var content = _return_data.checklist;
 
 

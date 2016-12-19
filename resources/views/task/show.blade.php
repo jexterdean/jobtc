@@ -451,8 +451,8 @@
             var data = [];
             data.push(
                     {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
-            {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-            {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+            {'name': 'task_id', 'value': _body.find('.task_id').val()},
+            {'name': 'user_id', 'value': _body.find('.user_id').val()},
             {'name': 'checklist_header', 'value': header},
             {'name': 'checklist', 'value': details}
             );
@@ -461,7 +461,7 @@
                 var _return_data = jQuery.parseJSON(_data);
                 $('.text-area-content').remove();
 
-                var header = _return_data.checklist_header;
+                var header = '<i class="glyphicon glyphicon-list"></i>'+_return_data.checklist_header;
                 var content = _return_data.checklist;
 
 
