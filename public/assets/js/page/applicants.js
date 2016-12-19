@@ -168,7 +168,7 @@ $('.edit-applicant').on('click', function (e) {
     var is_upload = $(this).hasClass('is-upload-document') ? 1 : 0;
     var applicant_id = $(this).siblings('.applicant_id').val();
     var company_id = $(this).siblings('.company_id').val();
-    var edit_applicant_form = is_upload ? public_path + 'a/' + applicant_id + '/edit' : public_path + 'a/' + applicant_id + '/edit?upload=1';
+    var edit_applicant_form = public_path + 'a/' + applicant_id + '/edit';
     var ajaxurl = public_path + 'a/' + applicant_id;
 
     BootstrapDialog.show({
