@@ -653,7 +653,7 @@ _body.on('click', '.check-list-btn', function () {
 
                 ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
                 ele += '<div class="row task-list-details">';
-                ele += '<div class="col-sm-7">';
+                ele += '<div class="col-sm-6">';
                 ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header"><i class="glyphicon glyphicon-list"></i>' + val.checklist_header + '</a>';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
@@ -708,7 +708,7 @@ _body.on('click', '.check-list-btn', function () {
                 ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
                 ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
                 ele += '</div>';
-                
+                ele += '</div>';
                 ele += '<div class="row">';
                 ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
                 ele += '<div class="checklist-item">' + val.checklist + '</div>';

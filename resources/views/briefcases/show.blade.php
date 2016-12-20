@@ -25,7 +25,7 @@
                                     @foreach($checkList as $list_item)
                                     <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                         <div class="row task-list-details">
-                                            <div class="col-md-7">
+                                            <div class="col-md-6">
                                                 <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem"><i class="glyphicon glyphicon-list"></i> {!! $list_item->checklist_header !!}</a>
                                                 <input type="hidden" class="company_id" value="{{$company_id}}" />
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
