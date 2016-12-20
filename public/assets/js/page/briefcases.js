@@ -653,7 +653,7 @@ _body.on('click', '.check-list-btn', function () {
 
                 ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
                 ele += '<div class="row task-list-details">';
-                ele += '<div class="col-sm-6">';
+                ele += '<div class="col-sm-7">';
                 ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header"><i class="glyphicon glyphicon-list"></i>' + val.checklist_header + '</a>';
                 ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
                 ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
@@ -678,13 +678,15 @@ _body.on('click', '.check-list-btn', function () {
                 } else {
 
                     ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                    ele += '<button id="timer-start-' + val.id + '" class="btn btn-primary start-timer">Start</button>';
                     ele += '<text id="timer-' + val.id + '"></text>';
+                    ele += '<input class="task_checklist_id" type="hidden" value="'+ val.id +'">';
                     ele += '<input class="timer_id" type="hidden" value="">';
                     ele += '</div>'
 
                 }
                 ele += '</div>';
-                ele += '<div class="col-sm-3">';
+                
                 ele += '<div class="pull-right">';
 
                 if (status === 'Default') {
@@ -706,7 +708,7 @@ _body.on('click', '.check-list-btn', function () {
                 ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
                 ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
                 ele += '</div>';
-                ele += '</div>';
+                
                 ele += '<div class="row">';
                 ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
                 ele += '<div class="checklist-item">' + val.checklist + '</div>';

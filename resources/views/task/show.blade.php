@@ -884,104 +884,106 @@
                     var _return_data = jQuery.parseJSON(d);
 
                     var ele = '';
+                    
                     $.each(_return_data, function (index, val) {
-                        var status = val.status;
-                        var statusClass;
+                var status = val.status;
+                var statusClass;
 
-                        switch (status) {
-                            case 'Default':
-                                statusClass = 'bg-gray'
-                                break;
-                            case 'Ongoing':
-                                statusClass = 'bg-orange'
-                                break;
-                            case 'Completed':
-                                statusClass = 'bg-green'
-                                break;
-                            case 'Urgent':
-                                statusClass = 'bg-red'
-                                break;
-                        }
+                switch (status) {
+                    case 'Default':
+                        statusClass = 'bg-gray'
+                        break;
+                    case 'Ongoing':
+                        statusClass = 'bg-orange'
+                        break;
+                    case 'Completed':
+                        statusClass = 'bg-green'
+                        break;
+                    case 'Urgent':
+                        statusClass = 'bg-red'
+                        break;
+                }
 
-                        ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
-                        ele += '<div class="row task-list-details">';
-                        ele += '<div class="col-sm-6">';
-                        ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header"><i class="glyphicon glyphicon-list"></i>' + val.checklist_header + '</a>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>';
-                        ele += '<div class="col-sm-3">';
+                ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
+                ele += '<div class="row task-list-details">';
+                ele += '<div class="col-sm-6">';
+                ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header"><i class="glyphicon glyphicon-list"></i>' + val.checklist_header + '</a>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '</div>';
+                ele += '<div class="col-sm-3">';
 
-                        if (val.timer[0] !== undefined) {
-                            ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
-                            if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
-                                ele += '<text id="timer-' + val.id + '" class="still-counting">' + val.timer[0].total_time + '</text>';
-                                ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary pause-timer">Pause</button>';
-                            } else {
-                                ele += '<text id="timer-' + val.id + '">' + val.timer[0].total_time + '</text>';
-                                ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary resume-timer">Resume</button>';
-                                ele += '<input class="timer_id" type="hidden" value="' + val.timer[0].timer_id + '">';
-                                ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
-                                ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
-                                ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
+                if (val.timer[0] !== undefined) {
+                    ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                    if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
+                        ele += '<text id="timer-' + val.id + '" class="still-counting">' + val.timer[0].total_time + '</text>';
+                        ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary pause-timer">Pause</button>';
+                    } else {
+                        ele += '<text id="timer-' + val.id + '">' + val.timer[0].total_time + '</text>';
+                        ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary resume-timer">Resume</button>';
+                        ele += '<input class="timer_id" type="hidden" value="' + val.timer[0].timer_id + '">';
+                        ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
+                        ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
+                        ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
 
-                            }
-                            ele += '</div>';
-                        } else {
+                    }
+                    ele += '</div>';
+                } else {
 
-                            ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
-                            ele += '<text id="timer-' + val.id + '"></text>';
-                            ele += '<input class="timer_id" type="hidden" value="">';
-                            ele += '</div>'
+                    ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                    ele += '<button id="timer-start-' + val.id + '" class="btn btn-primary start-timer">Start</button>';
+                    ele += '<text id="timer-' + val.id + '"></text>';
+                    ele += '<input class="task_checklist_id" type="hidden" value="'+ val.id +'">';
+                    ele += '<input class="timer_id" type="hidden" value="">';
+                    ele += '</div>'
 
-                        }
-                        ele += '</div>';
-                        ele += '<div class="col-sm-3">';
-                        ele += '<div class="pull-right">';
+                }
+                ele += '</div>';
+                ele += '<div class="col-sm-3">';
+                ele += '<div class="pull-right">';
 
-                        if (status === 'Default') {
-                            ele += '<div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
-                        }
-                        if (status === 'Ongoing') {
-                            ele += '<div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>';
-                        }
-                        if (status === 'Completed') {
-                            ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
-                        }
-                        if (status === 'Urgent') {
-                            ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
-                        }
-                        ele += '&nbsp;&nbsp;&nbsp;';
-                        //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
-                        //ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
-                        ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '<div class="row">';
-                        ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
-                        ele += '<div class="checklist-item">' + val.checklist + '</div>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '<br/>';
-                        ele += '<div class="row">';
-                        ele += '<div class="col-md-12">';
-                        ele += '<div class="pull-right" style="margin-right: 5px">';
-                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</li>';
+                if (status === 'Default') {
+                    ele += '<div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
+                }
+                if (status === 'Ongoing') {
+                    ele += '<div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>';
+                }
+                if (status === 'Completed') {
+                    ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
+                }
+                if (status === 'Urgent') {
+                    ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
+                }
+                ele += '&nbsp;&nbsp;&nbsp;';
+                //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                //ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
+                ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '<div class="row">';
+                ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
+                ele += '<div class="checklist-item">' + val.checklist + '</div>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '<br/>';
+                ele += '<div class="row">';
+                ele += '<div class="col-md-12">';
+                ele += '<div class="pull-right" style="margin-right: 5px">';
+                ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;';
+                ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</li>';
 
-                    });
-
+            });
                     console.log(_body.find('input[class="project_id"]').val());
                     //socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_check_list_id': task_check_list_id});
 
