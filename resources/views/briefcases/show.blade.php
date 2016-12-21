@@ -1,6 +1,8 @@
 @extends('layouts.default')
 @section('content')
 <div id="collapse-{{ $task->task_id }}">
+    <input type="hidden" class="task_id" value="{{$task->task_id}}" />
+    <input type="hidden" class="user_id" value="{{$user_id}}" />
     <div class="row">
         <div class="col-sm-12">
             <div class="row">
@@ -23,7 +25,7 @@
                                     @foreach($checkList as $list_item)
                                     <li id="task_item_{{$list_item->id}}" class="list-group-item task-list-item">
                                         <div class="row task-list-details">
-                                            <div class="col-md-7">
+                                            <div class="col-md-6">
                                                 <a data-toggle="collapse" href="#task-item-collapse-{{$list_item->id}}" class="checklist-header toggle-tasklistitem"><i class="glyphicon glyphicon-list"></i> {!! $list_item->checklist_header !!}</a>
                                                 <input type="hidden" class="company_id" value="{{$company_id}}" />
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
@@ -49,24 +51,22 @@
                                                 @empty
                                                 <div id='timer-options-{{$list_item->id}}' class="pull-right">
                                                     <text id='timer-{{$list_item->id}}' class="task-item-timer"></text>
+                                                    <button id="timer-start-{{$list_item->id}}" class="btn btn-primary start-timer">Start</button>
+                                                    <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
                                                     <input class="timer_id" type="hidden" value="">
                                                 </div>
                                                 @endforelse
                                             </div>
                                             <div class="pull-right">
-                                                @forelse($list_item->task_checklist_statuses->where('user_id',$user_id) as $task_checklist_status)
-                                                @if ($task_checklist_status->status === 'Default')
+                                                @if ($list_item->status === 'Default')
                                                 <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                                @elseif($task_checklist_status->status === 'Ongoing')
+                                                @elseif($list_item->status === 'Ongoing')
                                                 <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>
-                                                @elseif($task_checklist_status->status === 'Completed')
+                                                @elseif($list_item->status === 'Completed')
                                                 <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>
-                                                @elseif($task_checklist_status->status === 'Urgent')
+                                                @elseif($list_item->status === 'Urgent')
                                                 <div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>
                                                 @endif
-                                                @empty
-                                                <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                                @endforelse
                                                 &nbsp;&nbsp;&nbsp;
                                                 {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                             <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
@@ -171,4 +171,4 @@
         </div>
     </div>
     <input class="briefcase_id" type="hidden" value="{{$task->task_id}}"/>
-@stop
+    @stop

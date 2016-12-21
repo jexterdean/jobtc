@@ -51,25 +51,23 @@
                     @empty
                     <div id='timer-options-{{$list_item->id}}' class="pull-right">
                         <text id='timer-{{$list_item->id}}' class="task-item-timer"></text>
+                        <button id="timer-start-{{$list_item->id}}" class="btn btn-primary start-timer">Start</button>
+                        <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
                         <input class="timer_id" type="hidden" value="">
                     </div>
                     @endforelse
                 </div>
                 <div class="col-sm-3" style="white-space: nowrap">
                     <div class="pull-right">
-                        @forelse($list_item->task_checklist_statuses->where('user_id',$user_id) as $task_checklist_status)
-                        @if ($task_checklist_status->status === 'Default')
+                        @if ($list_item->status === 'Default')
                         <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                        @elseif($task_checklist_status->status === 'Ongoing')
+                        @elseif($list_item->status === 'Ongoing')
                         <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>
-                        @elseif($task_checklist_status->status === 'Completed')
+                        @elseif($list_item->status === 'Completed')
                         <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>
-                        @elseif($task_checklist_status->status === 'Urgent')
+                        @elseif($list_item->status === 'Urgent')
                         <div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>
                         @endif
-                        @empty
-                        <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                        @endforelse
                         &nbsp;&nbsp;&nbsp;
                         {{--<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />

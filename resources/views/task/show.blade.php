@@ -6,6 +6,8 @@
 @foreach($task_timer as $timer)
 <?php $_total += $timer->time ?>
 @endforeach
+<input type="hidden" class="task_id" value="{{$task->task_id}}" />
+<input type="hidden" class="user_id" value="{{$user_id}}" />
 <div class="row">
     <div class="col-sm-12">
         <div class="row">
@@ -54,25 +56,23 @@
                                             @empty
                                             <div id='timer-options-{{$list_item->id}}' class="pull-right">
                                                 <text id='timer-{{$list_item->id}}' class="task-item-timer"></text>
+                                                <button id="timer-start-{{$list_item->id}}" class="btn btn-primary start-timer">Start</button>
+                                                <input class="task_checklist_id" type="hidden" value="{{$list_item->id}}">
                                                 <input class="timer_id" type="hidden" value="">
                                             </div>
                                             @endforelse
                                         </div>
                                         <div class="col-sm-3" style="white-space: nowrap">
                                             <div class="pull-right">
-                                                @forelse($list_item->task_checklist_statuses->where('user_id',$user_id) as $task_checklist_status)
-                                                @if ($task_checklist_status->status === 'Default')
+                                                @if ($list_item->status === 'Default')
                                                 <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                                @elseif($task_checklist_status->status === 'Ongoing')
+                                                @elseif($list_item->status === 'Ongoing')
                                                 <div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>
-                                                @elseif($task_checklist_status->status === 'Completed')
+                                                @elseif($list_item->status === 'Completed')
                                                 <div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>
-                                                @elseif($task_checklist_status->status === 'Urgent')
+                                                @elseif($list_item->status === 'Urgent')
                                                 <div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>
                                                 @endif
-                                                @empty
-                                                <div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                                                @endforelse
                                                 &nbsp;&nbsp;&nbsp;
                                                 <input type="hidden" class="task_list_item_id" value="{{$list_item->id}}" />
                                                 <input type="hidden" class="task_list_id" value="{{$task->task_id}}" />
@@ -453,8 +453,8 @@
             var data = [];
             data.push(
                     {'name': '_token', 'value': _body.find('input[name="_token"]').val()},
-            {'name': 'task_id', 'value': _body.find('input[name="task_id"]').val()},
-            {'name': 'user_id', 'value': _body.find('input[name="user_id"]').val()},
+            {'name': 'task_id', 'value': _body.find('.task_id').val()},
+            {'name': 'user_id', 'value': _body.find('.user_id').val()},
             {'name': 'checklist_header', 'value': header},
             {'name': 'checklist', 'value': details}
             );
@@ -463,7 +463,7 @@
                 var _return_data = jQuery.parseJSON(_data);
                 $('.text-area-content').remove();
 
-                var header = _return_data.checklist_header;
+                var header = '<i class="glyphicon glyphicon-list"></i>'+_return_data.checklist_header;
                 var content = _return_data.checklist;
 
 
@@ -540,6 +540,76 @@
 
         //on Page load, save and resume the timer that wasn't paused
         saveStillCounting();
+
+
+        _body.on('click', '.start-timer', function () {
+            var id = $(this).siblings('.task_checklist_id').val();
+            startTask(id);
+            console.log('Starting Task' + $('#timer-' + id).text());
+            $(this).remove();
+            if ($('#timer-' + id).text() === '') {
+                $('.task-item-timer').countdown('pause');
+                $('.task-item-timer').siblings('.pause-timer').text('Resume');
+                $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
+                $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+
+                $('.still-counting').each(function (index) {
+                    var timer_id = $(this).siblings('.timer_id').val();
+                    var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+                    //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
+                    var time_paused = $('.still-counting').text();
+                    console.log('time_paused: ' + time_paused);
+
+                    pauseTask(timer_id, task_checklist_id, time_paused);
+                });
+
+                $('.task-item-timer').removeClass('still-counting');
+
+                var d = new Date();
+                $('#timer-' + id).countdown({since: d, format: 'HMS', compact: true});
+                $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
+                $('#timer-' + id).parent().append('<input class="task_checklist_id" type="hidden" value="' + id + '" />');
+                $('#timer-' + id).parent().append('<input class="total_time" type="hidden" value="" />');
+                $('#timer-' + id).parent().append('<input class="timer_status" type="hidden" value="Started" />');
+                $('#timer-' + id).countdown('resume');
+                $('#timer-' + id).addClass('still-counting');
+            } else {
+
+                $('.task-item-timer').countdown('pause');
+                $('.task-item-timer').siblings('.pause-timer').text('Resume');
+                $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
+                $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
+
+                $('.still-counting').each(function (index) {
+                    var timer_id = $(this).siblings('.timer_id').val();
+                    var task_checklist_id = $(this).siblings('.task_checklist_id').val();
+
+                    //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
+                    var time_paused = $('.still-counting').text();
+                    console.log('time_paused: ' + time_paused);
+
+                    pauseTask(timer_id, task_checklist_id, time_paused);
+                });
+
+                $('.task-item-timer').removeClass('still-counting');
+
+                $('#timer-pause-' + id).text('Pause');
+                var time_resume = $('#timer-' + id).text();
+                console.log('time_resume: ' + time_resume);
+                var time_array = time_resume.split(":");
+
+                var hours = '-' + time_array[0] + 'H';
+                var minutes = '-' + time_array[1] + 'M';
+                var seconds = '-' + time_array[2] + 'S';
+
+                var since = hours + ' ' + minutes + ' ' + seconds;
+
+                $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
+                $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
+                $('#timer-' + id).countdown('resume');
+            }
+        });
 
 
         _body.on('click', '.pause-timer', function () {
@@ -624,70 +694,7 @@
                 $(this).html('&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;');
                 $(this).switchClass('bg-gray', 'bg-orange', function () {
                     update_checklist_status(id, 'Ongoing');
-                    startTask(id);
-                    console.log('Starting Task' + $('#timer-' + id).text());
-                    if ($('#timer-' + id).text() === '') {
-                        $('.task-item-timer').countdown('pause');
-                        $('.task-item-timer').siblings('.pause-timer').text('Resume');
-                        $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
-                        $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
 
-                        $('.still-counting').each(function (index) {
-                            var timer_id = $(this).siblings('.timer_id').val();
-                            var task_checklist_id = $(this).siblings('.task_checklist_id').val();
-
-                            //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
-                            var time_paused = $('.still-counting').text();
-                            console.log('time_paused: ' + time_paused);
-
-                            pauseTask(timer_id, task_checklist_id, time_paused);
-                        });
-
-                        $('.task-item-timer').removeClass('still-counting');
-
-                        var d = new Date();
-                        $('#timer-' + id).countdown({since: d, format: 'HMS', compact: true});
-                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
-                        $('#timer-' + id).parent().append('<input class="task_checklist_id" type="hidden" value="' + id + '" />');
-                        $('#timer-' + id).parent().append('<input class="total_time" type="hidden" value="" />');
-                        $('#timer-' + id).parent().append('<input class="timer_status" type="hidden" value="Started" />');
-                        $('#timer-' + id).countdown('resume');
-                        $('#timer-' + id).addClass('still-counting');
-                    } else {
-
-                        $('.task-item-timer').countdown('pause');
-                        $('.task-item-timer').siblings('.pause-timer').text('Resume');
-                        $('.task-item-timer').siblings('.pause-timer').addClass('resume-timer');
-                        $('.task-item-timer').siblings('.pause-timer').removeClass('pause-timer');
-
-                        $('.still-counting').each(function (index) {
-                            var timer_id = $(this).siblings('.timer_id').val();
-                            var task_checklist_id = $(this).siblings('.task_checklist_id').val();
-
-                            //var time_paused = $('#timer-' + task_checklist_id).find('.countdown-row').text();
-                            var time_paused = $('.still-counting').text();
-                            console.log('time_paused: ' + time_paused);
-
-                            pauseTask(timer_id, task_checklist_id, time_paused);
-                        });
-
-                        $('.task-item-timer').removeClass('still-counting');
-
-                        $('#timer-pause-' + id).text('Pause');
-                        var time_resume = $('#timer-' + id).text();
-                        console.log('time_resume: ' + time_resume);
-                        var time_array = time_resume.split(":");
-
-                        var hours = '-' + time_array[0] + 'H';
-                        var minutes = '-' + time_array[1] + 'M';
-                        var seconds = '-' + time_array[2] + 'S';
-
-                        var since = hours + ' ' + minutes + ' ' + seconds;
-
-                        $('#timer-' + id).countdown({since: since, format: 'HMS', compact: true});
-                        $('#timer-' + id).parent().append('<button id="timer-pause-' + id + '" class="btn btn-primary pause-timer">Pause</button>');
-                        $('#timer-' + id).countdown('resume');
-                    }
                 });
 
             }
@@ -698,15 +705,15 @@
                     finish_checklist();
                     update_checklist_status(id, 'Completed');
                 });
-                var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
-                var time_ended = $('#timer-' + id).text();
-                console.log('time_ended: ' + time_ended);
-                if ($('#timer-pause-' + id).length > 0) {
-                    $('#timer-pause-' + id).remove();
-                }
-                $('#timer-' + id).removeClass('still-counting');
-                $('#timer-' + id).countdown('pause');
-                endTask(timer_id, time_ended);
+                //var timer_id = $('#timer-' + id).parent().find('.timer_id').val();
+                //var time_ended = $('#timer-' + id).text();
+                //console.log('time_ended: ' + time_ended);
+                //if ($('#timer-pause-' + id).length > 0) {
+                    //$('#timer-pause-' + id).remove();
+                //}
+                //$('#timer-' + id).removeClass('still-counting');
+                //$('#timer-' + id).countdown('pause');
+                //endTask(timer_id, time_ended);
             }
             /*From Completed, Change to Urgent, Update the progress bar, decrease the value*/
             if ($(this).hasClass('bg-green')) {
@@ -877,104 +884,106 @@
                     var _return_data = jQuery.parseJSON(d);
 
                     var ele = '';
+                    
                     $.each(_return_data, function (index, val) {
-                        var status = val.status;
-                        var statusClass;
+                var status = val.status;
+                var statusClass;
 
-                        switch (status) {
-                            case 'Default':
-                                statusClass = 'bg-gray'
-                                break;
-                            case 'Ongoing':
-                                statusClass = 'bg-orange'
-                                break;
-                            case 'Completed':
-                                statusClass = 'bg-green'
-                                break;
-                            case 'Urgent':
-                                statusClass = 'bg-red'
-                                break;
-                        }
+                switch (status) {
+                    case 'Default':
+                        statusClass = 'bg-gray'
+                        break;
+                    case 'Ongoing':
+                        statusClass = 'bg-orange'
+                        break;
+                    case 'Completed':
+                        statusClass = 'bg-green'
+                        break;
+                    case 'Urgent':
+                        statusClass = 'bg-red'
+                        break;
+                }
 
-                        ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
-                        ele += '<div class="row task-list-details">';
-                        ele += '<div class="col-sm-6">';
-                        ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header">' + val.checklist_header + '</a>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>';
-                        ele += '<div class="col-sm-3">';
+                ele += '<li id="task_item_' + val.id + '" class="list-group-item task-list-item">';
+                ele += '<div class="row task-list-details">';
+                ele += '<div class="col-sm-6">';
+                ele += '<a data-toggle="collapse" href="#task-item-collapse-' + val.id + '" class="checklist-header"><i class="glyphicon glyphicon-list"></i>' + val.checklist_header + '</a>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '</div>';
+                ele += '<div class="col-sm-3">';
 
-                        if (val.timer[0] !== undefined) {
-                            ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
-                            if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
-                                ele += '<text id="timer-' + val.id + '" class="still-counting">' + val.timer[0].total_time + '</text>';
-                                ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary pause-timer">Pause</button>';
-                            } else {
-                                ele += '<text id="timer-' + val.id + '">' + val.timer[0].total_time + '</text>';
-                                ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary resume-timer">Resume</button>';
-                                ele += '<input class="timer_id" type="hidden" value="' + val.timer[0].timer_id + '">';
-                                ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
-                                ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
-                                ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
+                if (val.timer[0] !== undefined) {
+                    ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                    if (val.timer[0].timer_status === 'Resumed' || val.timer[0].timer_status === 'Started') {
+                        ele += '<text id="timer-' + val.id + '" class="still-counting">' + val.timer[0].total_time + '</text>';
+                        ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary pause-timer">Pause</button>';
+                    } else {
+                        ele += '<text id="timer-' + val.id + '">' + val.timer[0].total_time + '</text>';
+                        ele += '<button id="timer-pause-' + val.id + '" class="btn btn-primary resume-timer">Resume</button>';
+                        ele += '<input class="timer_id" type="hidden" value="' + val.timer[0].timer_id + '">';
+                        ele += '<input class="task_checklist_id" type="hidden" value="' + val.id + '">';
+                        ele += '<input class="total_time" type="hidden" value="' + val.timer[0].total_time + '">';
+                        ele += '<input class="timer_status" type="hidden" value="' + val.timer[0].timer_status + '">';
 
-                            }
-                            ele += '</div>';
-                        } else {
+                    }
+                    ele += '</div>';
+                } else {
 
-                            ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
-                            ele += '<text id="timer-' + val.id + '"></text>';
-                            ele += '<input class="timer_id" type="hidden" value="">';
-                            ele += '</div>'
+                    ele += '<div id="timer-options-' + val.id + '" class="pull-right">';
+                    ele += '<button id="timer-start-' + val.id + '" class="btn btn-primary start-timer">Start</button>';
+                    ele += '<text id="timer-' + val.id + '"></text>';
+                    ele += '<input class="task_checklist_id" type="hidden" value="'+ val.id +'">';
+                    ele += '<input class="timer_id" type="hidden" value="">';
+                    ele += '</div>'
 
-                        }
-                        ele += '</div>';
-                        ele += '<div class="col-sm-3">';
-                        ele += '<div class="pull-right">';
+                }
+                ele += '</div>';
+                ele += '<div class="col-sm-3">';
+                ele += '<div class="pull-right">';
 
-                        if (status === 'Default') {
-                            ele += '<div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
-                        }
-                        if (status === 'Ongoing') {
-                            ele += '<div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>';
-                        }
-                        if (status === 'Completed') {
-                            ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
-                        }
-                        if (status === 'Urgent') {
-                            ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
-                        }
-                        ele += '&nbsp;&nbsp;&nbsp;';
-                        //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
-                        //ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
-                        ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '<div class="row">';
-                        ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
-                        ele += '<div class="checklist-item">' + val.checklist + '</div>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '<br/>';
-                        ele += '<div class="row">';
-                        ele += '<div class="col-md-12">';
-                        ele += '<div class="pull-right" style="margin-right: 5px">';
-                        ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;';
-                        ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
-                        ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
-                        ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</div>';
-                        ele += '</li>';
+                if (status === 'Default') {
+                    ele += '<div class="btn btn-default btn-shadow bg-gray checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>';
+                }
+                if (status === 'Ongoing') {
+                    ele += '<div class="btn btn-default btn-shadow bg-orange checklist-status">&nbsp;<i class="glyphicon glyphicon-time"></i>&nbsp;</div>';
+                }
+                if (status === 'Completed') {
+                    ele += '<div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div><div class="btn btn-default btn-shadow bg-green checklist-status">&nbsp;<i class="glyphicon glyphicon glyphicon-ok"></i>&nbsp;</div>';
+                }
+                if (status === 'Urgent') {
+                    ele += '<div class="btn btn-default btn-shadow bg-red checklist-status">&nbsp;&nbsp;<i class="fa fa-exclamation"></i>&nbsp;&nbsp;&nbsp;</div>';
+                }
+                ele += '&nbsp;&nbsp;&nbsp;';
+                //ele += '<div class="btn btn-default btn-shadow ' + statusClass + ' checklist-status">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>&nbsp;&nbsp;&nbsp;';
+                //ele += '<a href="#" class="icon icon-btn edit-task-list-item"><i class="fa fa-pencil" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.id + '" />';
+                ele += '<a href="#" class="drag-handle icon icon-btn move-tasklist"><i class="fa fa-arrows"></i></a>&nbsp;&nbsp;&nbsp;';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '<div class="row">';
+                ele += '<div id="task-item-collapse-' + val.id + '" class="task-item-collapse collapse">';
+                ele += '<div class="checklist-item">' + val.checklist + '</div>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '<br/>';
+                ele += '<div class="row">';
+                ele += '<div class="col-md-12">';
+                ele += '<div class="pull-right" style="margin-right: 5px">';
+                ele += '<a href="#" class="btn-delete btn-shadow btn alert_delete" style="font-size: 18px!important;"><i class="fa fa-times" aria-hidden="true"></i> Delete</a>&nbsp;&nbsp;&nbsp;';
+                ele += '<a href="#" class="btn-edit btn-shadow btn edit-task-list-item" style="font-size: 18px!important;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>';
+                ele += '<input type="hidden" class="task_list_item_id" value="' + val.id + '" />';
+                ele += '<input type="hidden" class="task_list_id" value="' + val.task_id + '" />';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</div>';
+                ele += '</li>';
 
-                    });
-
+            });
                     console.log(_body.find('input[class="project_id"]').val());
                     //socket.emit('add-task-list-item', {'room_name': '/project/' + _body.find('input[class="project_id"]').val(), 'list_group_id': _body.find('input[name="task_id"]').val(), 'task_check_list_id': task_check_list_id});
 
@@ -1460,7 +1469,7 @@
 
     });
 
-    $('body').on('click','.add-link-modal', function (e) {
+    $('body').on('click', '.add-link-modal', function (e) {
         e.stopImmediatePropagation();
         var add_link_form = public_path + '/addLinkFormBriefcase';
 
@@ -1511,8 +1520,8 @@
 
                             },
                             success: function (data) {
-                                $('#load-task-assign-'+task_id).find('.link-group').append(data);
-                                console.log($('#load-task-assign-'+task_id).find('.link-group').attr('class'));
+                                $('#load-task-assign-' + task_id).find('.link-group').append(data);
+                                console.log($('#load-task-assign-' + task_id).find('.link-group').attr('class'));
                                 dialog.close();
                             },
                             error: function (xhr, status, error) {
@@ -1535,7 +1544,7 @@
 
         var link_id = $(this).attr('id');
 
-         var company_id = $('.company_id').val();
+        var company_id = $('.company_id').val();
         var user_id = $('input[name="user_id"]').val()
         var task_id = $('input[name="task_id"]').val()
 

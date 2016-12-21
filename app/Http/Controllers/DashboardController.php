@@ -13,6 +13,7 @@ use \Redirect;
 use \DB;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Profile;
 use App\Models\Events;
 use App\Models\Bug;
 use App\Models\Project;
@@ -28,10 +29,13 @@ class DashboardController extends BaseController {
 
         $projects = Project::where('user_id', $user_id)->get();
         
+        $companies = Profile::with('company')->where('user_id',$user_id)->get();
+        
         $assets = ['dashboard','real-time'];
         
         return view('user.dashboard', [
                     'projects' => $projects,
+                    'companies' => $companies,
                     'assets' => $assets,
                     'company_id' => 0
         ]);
