@@ -316,11 +316,8 @@ class ApplicantController extends Controller {
 
         $applicant = Applicant::find($id);
 
-        $is_upload = isset($_GET['upload']) ? 1 : 0;
-
         return view('forms.editApplicantForm', [
-            'applicant' => $applicant,
-            'is_upload' => $is_upload
+            'applicant' => $applicant
         ]);
     }
 
