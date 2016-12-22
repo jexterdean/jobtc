@@ -10,6 +10,7 @@
                 <li class='list-group-item link-{{$link->id}}'>
                     <div class="row">
                         <div class="col-sm-9">
+				            {{--*/ $parse_url = parse_url($link->url) /*--}}
                             @if(empty($parse_url['scheme']))
                             <a target="_blank" href="http://{{ $link->url }}">{{ $link->title }}</a>
                             @else
