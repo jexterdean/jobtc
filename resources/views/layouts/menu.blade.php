@@ -11,6 +11,7 @@
                 <li class="divider"></li>
                 @if(count($companies) > 0)
                 @foreach($companies as $company)
+                @if($company->company->deleted_at === NULL)
                 {{--*/ $module_permissions = \App\Helpers\Helper::getPermissions($company->company->id) /*--}}
                 <li class="dropdown">
                     <a href="{{ url('company/' . $company->company->id) }}">
@@ -404,6 +405,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
                 @endforeach
                 @endif
                 @endif

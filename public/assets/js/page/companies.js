@@ -2003,7 +2003,7 @@ $('.add-link').on('click', function (e) {
 $('body').on('click', '.edit-link', function () {
 
     var link_id = $(this).attr('id');
-
+    var task_id = $(this).siblings('.task_id').val();
     var company_id = $('.add_link_company_id').val();
     var user_id = $('.add_link_user_id').val();
 

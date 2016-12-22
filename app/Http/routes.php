@@ -25,6 +25,8 @@ Route::get('addJobFormCompany', 'JobController@addJobFormCompany');
 Route::post('addJobCompany', 'JobController@addJobCompany');
 Route::get('company/{company_id}/jobs', 'JobController@getCompanyJobs');
 
+
+
 Route::get('applyToJobForm', 'JobController@getApplyToJobForm');
 Route::post('applyToJob', 'JobController@applyToJob');
 Route::post('saveJobNotes', 'JobController@saveJobNotes');
@@ -148,6 +150,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('user', 'UserController');
     Route::resource('user.company', 'UserController');
     Route::resource('company', 'CompanyController');
+    Route::get('addCompanyForm','CompanyController@addCompanyForm');
+    Route::get('editCompanyForm/{id}','CompanyController@editCompanyForm');
+    
+    
+    
     Route::resource('applicant', 'ApplicantController');
     Route::resource('assigneduser', 'AssignedController');
 
@@ -330,7 +337,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('updateMyProfile', 'ProfileController@updateMyProfile');
     Route::post('deleteTimer', 'ProjectController@deleteTimer');
 
-    Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index', 'https' => true]);
+    
+    /*For Personal Dashboard*/
+    Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index', 'https' => true]);    
+    /*For Dashboard Job Postings(So that any user apply to all the job postings that are active)*/
+    Route::get('getJobPostings','DashboardController@getJobPostings');
+    
     Route::get('user/{user_id}/delete', 'UserController@delete');
     Route::get('event/{event_id}/delete', 'EventsController@delete');
     Route::get('company/{company_id}/delete', 'CompanyController@delete');

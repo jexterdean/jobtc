@@ -374,38 +374,9 @@ class CompanyController extends BaseController {
     }
 
     public function destroy($company_id) {
-        $company = Company::find($company_id);
-
-        if (!$company || !parent::hasRole('Admin'))
-            return Redirect::to('company')->withErrors('This is not a valid link!!');
-
-        $user = User::find($company_id);
-
-        $project = Project::where('company_id', '=', $company->id)->get();
-
-        if (count($project)) {
-            return Redirect::to('company')->withErrors('This client has some projects!! Delete that project first!!');
-        }
-
-        $ticket = Ticket::where('user_id', $user->id)->get();
-
-        if (count($ticket))
-            return Redirect::to('client')->withErrors('This client has some ticket!! Delete that ticket first!!');
-
-        DB::table('message')
-                ->where('from_user_id', '=', $user->id)
-                ->orWhere('to_user_id', '=', $user->id)
-                ->delete();
-
-        DB::table('events')
-                ->where('user_id', '=', $user->id)
-                ->delete();
-
-        $user->delete();
-
-        $company->delete();
-
-        return Redirect::to('client')->withSuccess('Company deleted successfully!!');
+        $company = Company::destroy($company_id);
+        
+       return "true";
     }
 
     //Create a team for a project,     
@@ -1281,7 +1252,7 @@ class CompanyController extends BaseController {
         $user_id = Auth::user('user')->user_id;
         $user = User::find($user_id);
 
-        $links = Link::where('company_id',$company_id)->get();
+        $links = Link::with('briefcases')->where('company_id',$company_id)->get();
         
         $categories = LinkCategory::all();
         
@@ -1322,6 +1293,32 @@ class CompanyController extends BaseController {
                 'module_permissions' => $module_permissions
             ]);
     }
+    
+    public function addCompanyForm(Request $request) {
+        
+        $countries = Country::orderBy('country_name', 'asc')
+                ->lists('country_name', 'country_id')
+                ->toArray();
+        
+        return view('forms.addCompanyForm',[
+            'countries' => $countries
+        ]);
+    }
+    
+    public function editCompanyForm(Request $request,$id) {
+        
+        $companies = Company::find($id);
+        
+        $countries = Country::orderBy('country_name', 'asc')
+                ->lists('country_name', 'country_id')
+                ->toArray();
+        
+        return view('forms.addCompanyForm',[
+            'companies' => $companies,
+            'countries' => $countries
+        ]);
+    }
+    
 }
 
 ?>

@@ -19,4 +19,8 @@ class Link extends Model
     ];
     protected $primaryKey = 'id';
     protected $table = 'links';
+    
+    public function briefcases() {
+        return $this->belongsTo('App\Models\Task','task_id','task_id');
+    }
 }

@@ -57,23 +57,29 @@
 }
 
 #company_tabs li.active a {
-    background-color: #e5e5e5;;
+    background-color: #4285f4 !important;
     text-decoration: none;
-    color: #4285f4;
+    color: #fff !important;
     font-weight: bold;
-    text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;
+    //text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;
+    
 }
 
 #company_tabs a:focus {
     /*color: #fff !important;*/
 }
 
-#company_tabs li a {
-    background-color: #4285f4;
+#company_tabs li a{
+    background-color: #e5e5e5 !important;
     text-decoration: none;
-    color: #fff;
+    color: #000 !important;
     font-weight: bold;
-    text-shadow:1px 1px 1px #000000, 0 0 0 #000000, 1px 1px 1px #000000!important;
+    
+    //text-shadow:1px 1px 1px #000000, 0 0 0 #000000, 1px 1px 1px #000000!important;
+}
+
+#company_tabs li {
+    border-right: 1px #000 solid;
 }
 
 .employee-photo {

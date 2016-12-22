@@ -1466,5 +1466,4 @@ $('.delete-briefcase').click(function () {
             }
         }
     });
-
 });

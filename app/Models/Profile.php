@@ -16,7 +16,7 @@ class Profile extends Model
     }
     
     public function company() {
-        return $this->belongsTo('App\Models\Company');
+        return $this->belongsTo('App\Models\Company')->withTrashed();
     }
     
     public function role() {

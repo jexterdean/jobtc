@@ -17,6 +17,7 @@ use App\Models\Profile;
 use App\Models\Events;
 use App\Models\Bug;
 use App\Models\Project;
+use App\Models\Job;
 use App\Models\Ticket;
 use App\Models\Task;
 use App\Models\Billing;
@@ -41,6 +42,14 @@ class DashboardController extends BaseController {
         ]);
     }
     
+    public function getJobPostings(Request $request) {
+        
+        $jobs = Job::all();
+        
+        return view('jobs.partials._dashboardjobpostings',[
+            'jobs' => $jobs
+        ]);
+    }
 }
 
 ?>

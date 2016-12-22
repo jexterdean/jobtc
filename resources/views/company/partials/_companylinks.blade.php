@@ -10,6 +10,7 @@
                 <li class='list-group-item link-{{$link->id}}'>
                     <div class="row">
                         <div class="col-sm-9">
+                            {{--*/ $parse_url = parse_url($link->url) /*--}}
                             @if(empty($parse_url['scheme']))
                             <a target="_blank" href="http://{{ $link->url }}">{{ $link->title }}</a>
                             @else
@@ -23,6 +24,7 @@
                             @if($module_permissions->where('slug','edit.links')->count() === 1 || $link->user_id === Auth::user('user')->user_id)
                             <a id="{{$link->id}}" class="edit-link pull-right" style="padding-right: 10px;"><i class="glyphicon glyphicon-pencil"></i></a>
                             @endif
+                            <input class="task_id" type="hidden" value="{{$link->briefcases['task_id']}}"/>
                         </div>
                     </div>
                 </li>
