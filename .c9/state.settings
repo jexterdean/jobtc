@@ -61,7 +61,9 @@
                     ],
                     "document": {
                         "changed": false,
-                        "meta": {},
+                        "meta": {
+                            "timestamp": 1494395027049
+                        },
                         "filter": true,
                         "title": "Immediate (Javascript (browser))",
                         "tooltip": "Immediate (Javascript (browser))",
@@ -96,7 +98,7 @@
     },
     "ext": {
         "counters": {
-            "@ace": 2,
+            "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
             "@document": 31,
@@ -107,7 +109,7 @@
             "@pane": 3,
             "@postmessage": 1,
             "@preview": 1,
-            "@session": 31,
+            "@session": 3,
             "@tab": 31,
             "@tree": 2,
             "@undoManager": 31
@@ -407,8 +409,8 @@
             "focus": "tab0",
             "meta": {
                 "accessList": [
-                    "tab30",
                     "tab9",
+                    "tab30",
                     "tab2",
                     "tab14",
                     "tab6",
