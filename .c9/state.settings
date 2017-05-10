@@ -60,7 +60,9 @@
                     ],
                     "document": {
                         "changed": false,
-                        "meta": {},
+                        "meta": {
+                            "timestamp": 1494395027049
+                        },
                         "filter": true,
                         "title": "Immediate (Javascript (browser))",
                         "tooltip": "Immediate (Javascript (browser))",
@@ -95,7 +97,7 @@
     },
     "ext": {
         "counters": {
-            "@ace": 2,
+            "@ace": 1,
             "@acestatus": 1,
             "@divider": 4,
             "@document": 31,
@@ -106,7 +108,7 @@
             "@pane": 3,
             "@postmessage": 1,
             "@preview": 1,
-            "@session": 31,
+            "@session": 3,
             "@tab": 31,
             "@tree": 2,
             "@undoManager": 31
@@ -403,17 +405,11 @@
     },
     "tabs": {
         "json()": {
-<<<<<<< HEAD
-            "focus": "/resources/views/company/partials/_companylinks.blade.php",
-            "meta": {
-                "accessList": [
-                    "tab2"
-=======
             "focus": "tab0",
             "meta": {
                 "accessList": [
-                    "tab30",
                     "tab9",
+                    "tab30",
                     "tab2",
                     "tab14",
                     "tab6",
@@ -441,7 +437,6 @@
                     "tab27",
                     "tab28",
                     "tab29"
->>>>>>> 58555290eb3606770e68ef989e3c44a60f0045ae
                 ]
             },
             "name": "pane0",
