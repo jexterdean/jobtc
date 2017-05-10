@@ -28,7 +28,7 @@
 /* delete icon */
 .tag-editor .tag-editor-delete { background: #e0eaf1; cursor: pointer; padding-right: 5px; border-radius: 0 2px 2px 0; }
 .tag-editor .tag-editor-delete i {
-    display: inline-block; width: 7px; height: 7px; vertical-align: middle; background: url(images/delete.png) 0 0 no-repeat;
+    display: inline-block; width: 7px; height: 7px; vertical-align: middle; background: url(delete.png) 0 0 no-repeat;
     position: relative; top: -1px;
 }
 .tag-editor .tag-editor-delete:hover i { background-position: 0 -14px; }

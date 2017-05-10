@@ -107,33 +107,104 @@ var playing = false;
 var playing_video = null;
 var recording = false;
 var nfo_id = null;
+var participant_count = 0;
 
+//default media options
+var mediaOptions = {
+    audio: true,
+    video: true
+};
+
+var audioDevices = [];
+var videoDevices = [];
+var audioInputSelect = document.querySelector('select#audio-input-list');
+var videoSelect = document.querySelector('select#video-camera-list');
+    navigator.mediaDevices.enumerateDevices().then(function (devices) {
+      for (var i = 0; i !== devices.length; ++i) {
+          var device = devices[i];
+          if (device.kind === 'audioinput') {
+              audioDevices.push(device);
+              device.label = device.label || 'microphone ' + (audioDevices.length + 1);
+              var option = document.createElement('option');
+              option.value = device.deviceId;
+              option.text = device.label || 'microphone ' + (audioDevices.length + 1);
+              
+              audioInputSelect.appendChild(option);
+              $('#audio-input-list option').attr('data-content',"<i class='glyphicon glyphicon-volume-up'></i>");
+              
+              if(localStorage.getItem('audio') == null) {
+                  
+                  mediaOptions.audio = {
+                      deviceId: device.deviceId
+                  };
+                  
+                  console.log('Media Options Audio: '+mediaOptions.audio.deviceId);
+              } else {
+                  
+                mediaOptions.audio = {
+                      deviceId: localStorage.getItem('audio')
+                  };  
+                  
+                $('#audio-input-list').val(localStorage.getItem('audio'));    
+              }
+              
+          } else if (device.kind === 'videoinput') {
+              device.label = device.label || 'camera ' + (videoDevices.length + 1);
+              videoDevices.push(device);
+              console.log(device);
+              var option = document.createElement('option');
+              option.value = device.deviceId;
+              option.text = device.label || 'camera ' + (videoDevices.length + 1);
+              videoSelect.appendChild(option);
+              
+              if(localStorage.getItem('video') == null) {
+                  mediaOptions.video = {
+                      deviceId: device.deviceId
+                  };
+                  
+                  console.log('Media Options Video: '+mediaOptions.video.deviceId);
+              } else {
+                  
+                mediaOptions.video = {
+                      deviceId: localStorage.getItem('video')
+                  };  
+                  
+                $('#video-camera-list').val(localStorage.getItem('video'));    
+              }
+          }
+      }
+});
+
+//Make all video containers resizable
+$( "#localVideoContainer" ).resizable({
+    containment: "#discussions-container",
+    minHeight: 350,
+    minWidth: 350,
+    grid: 50
+});
 
 var webrtc = new SimpleWebRTC({
-    // the id/element dom element that will hold "our" video
-    localVideoEl: 'localVideo',
-    // the id/element dom element that will hold remote videos
-    remoteVideosEl: '',
-    // immediately ask for camera access
-    autoRequestMedia: false,
-    debug: true,
-    localVideo: {
-        autoplay: true, // automatically play the video stream on the page
-        mirror: false, // flip the local video to mirror mode (for UX)
-        muted: true // mute local video stream to prevent echo
-    },
-    media: {
-        video: {
-            mandatory: {
-                maxFrameRate: 60,
-                maxWidth: 535,
-                maxHeight: 480
-            }
-        },
-        audio: true
-    },
-    url: 'https://laravel.software:8888'
-});
+                     // the id/element dom element that will hold "our" video
+                    localVideoEl: 'localVideo',
+                    // the id/element dom element that will hold remote videos
+                    remoteVideosEl: '',
+                    // immediately ask for camera access
+                    autoRequestMedia: false,
+                    debug: true,
+                    localVideo: {
+                        autoplay: true, // automatically play the video stream on the page
+                        mirror: false, // flip the local video to mirror mode (for UX)
+                        muted: true // mute local video stream to prevent echo
+                    },
+                    //peerConnectionConfig:{ iceTransports: 'relay' },
+                    mediaOptions: mediaOptions,
+                    enableDataChannels: true,
+                    detectSpeakingEvents: false,
+                    nick: display_name,    
+                    url: 'https://job.tc:9999'
+            });
+
+webrtc.startLocalVideo();
 
 var localStream;
 var localScreenStream;
@@ -143,9 +214,9 @@ var hasShareScreen = 0;
 var janus_btn = $('.btn-video');
 var currentRecordData, currentRecordUrl, interval;
 
-var server = "https://laravel.software:8089/janus";
-var media_server_url = "laravel.software";
-var rec_dir = 'https://laravel.software/recordings';
+var server = "https://extremefreedom.org:8089/janus";
+var media_server_url = "extremefreedom.org";
+var rec_dir = 'https://extremefreedom.org/recordings';
 
 /*var server = "https://linux.me:8089/janus";
  var media_server_url = "linux.me";
@@ -220,12 +291,13 @@ webrtc.on('localStream', function (stream) {
 webrtc.on('videoAdded', function (video, peer) {
     console.log('video added', peer);
     peerStream = peer.stream;
+    console.log(peerStream);
     var remotes = document.getElementById('remotes');
     var remoteVideo = document.getElementById('remoteVideo');
     var remoteScreen = document.getElementById('remoteScreen');
-    if (remotes) {
+    
+    //if (remotes) {
         video.id = 'container_' + webrtc.getDomId(peer);
-
         // suppress contextmenu
         video.oncontextmenu = function () {
             return false;
@@ -237,16 +309,80 @@ webrtc.on('videoAdded', function (video, peer) {
             $(video).attr('controls', 'controls');
             remoteScreen.appendChild(video);
         } else {
-            remoteVideo.appendChild(video);
+            
+              participant_count++;
+                    
+            var videoTag = $('#localVideo')[0];
+            
+            var remoteVideoOptions = '<div class="row">'+
+                                    '<div class="col-xs-5">'+
+                                        '<button class="btn record"><i class="material-icons">fiber_manual_record</i><span class="record-text">Record</span></button>'+
+                                        '<input class="stream_id" type="hidden" value="' + webrtc.getDomId(peer) + '">' +
+                                        '<input class="participant_id" type="hidden" value="' + participant_count + '"/>' +
+                                        '<input class="video_type" type="hidden" value="remote" />'+
+                                    '</div>'+
+                                    '<div class="col-xs-7">'+
+                                        '<div class="btn-group" role="group" aria-label="Remote Media Options">'+
+                                            '<button class="btn  stop-video"><i class="material-icons">videocam</i></button>'+            
+                                            '<button class="btn  mute"><i class="material-icons">mic</i></button>'+
+                                            '<button class="btn full-screen"><i class="material-icons">fullscreen</i></button>' +
+                                            '<input class="participant_id" type="hidden" value="' + participant_count + '"/>' +
+                                            '<input class="stream_id" type="hidden" value="' + webrtc.getDomId(peer) + '">' +
+                                            '<input class="video_type" type="hidden" value="remote"/>'
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
+            
+            
+            var collapseContainer = '<div class="col-xs-4 remote-video" id="remoteVideo-' + participant_count + '"><div class="panel-group">'+
+    '<div class="panel panel-default">'+
+      '<div class="panel-heading">'+
+        '<h4 class="panel-title">'+
+          '<a data-toggle="collapse" href="#remote-video-collapse-'+participant_count+'">'+peer.nick+'</a>'+
+        '</h4>'+
+      '</div>'+
+      '<div id="remote-video-collapse-'+participant_count+'" class="panel-collapse collapse in">'+
+        '<div class="panel-body">'+
+        '<div class="row">'+
+            '<div class="col-xs-5">'+
+                '<div class="blink hidden"><i class="fa fa-circle text-danger"></i>&nbsp;<span class="blink-text">Recording</span></div>'+
+            '</div>'+
+            '<div class="col-xs-7">'+
+                '<div id="progress" class="progress hidden">'+
+                    '<div style="color:#000;font-weight:bold" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">Processing 0% Complete'+
+                    '</div>'+
+                    '</div>'+
+                    '<input class="processing-percent" type="hidden" value="0"/>'+
+            '</div>'+
+        '</div>'+
+        '<input class="participant_id" type="hidden" value="' + participant_count + '"/>' +
+        '</div>'+
+        '<div class="panel-footer">'+remoteVideoOptions+'</div>'+
+      '</div>'+
+    '</div>'+
+  '</div></div>';
+            
+            var remoteVideoContainer = "<div class='col-xs-12' id='remoteVideo-" + participant_count + "'>" + remoteVideoOptions + "</div>";
+            
+            $('#remoteVideo').append(collapseContainer);
+            $("#remote-video-collapse-" + participant_count+' .panel-body').prepend(video);
+            
+            $('#remoteVideo-'+participant_count).resizable({
+                 containment: "#discussions-container",
+                 minHeight: 350,
+                 minWidth: 350,
+                 grid: 50
+            });
+            
         }
 
         //remotes.appendChild(container);
-    }
+    //}
     // show the ice connection state
     if (peer && peer.pc) {
         var connstate = document.createElement('div');
         connstate.className = 'connectionstate';
-        remotes.appendChild(connstate);
+        remoteVideo.appendChild(connstate);
         peer.pc.on('iceConnectionStateChange', function (event) {
             switch (peer.pc.iceConnectionState) {
                 case 'checking':
@@ -287,16 +423,21 @@ webrtc.on('videoRemoved', function (video, peer) {
     var remoteScreen = document.getElementById('remoteScreen');
     var el = document.getElementById(peer ? 'container_' + webrtc.getDomId(peer) : 'localScreenContainer');
 
-    if (remotes && el) {
+    
         var dom_id = webrtc.getDomId(peer);
         if (dom_id.includes('video') && el) {
-            remoteVideo.removeChild(el);
+            console.log(el);
+            //remoteVideo.removeChild(el);
+            var remote_video_id = $('#container_' + webrtc.getDomId(peer)).parent().attr('id');
+            var participant_id = $(video).siblings('.participant_id').val();
+            console.log('participant_id: '+participant_id);
+            $('#remoteVideo-'+participant_id).remove();
         }
 
         if (dom_id.includes('screen') && el) {
             remoteScreen.removeChild(el);
         }
-    }
+    
 
     /*if (remotes && el) {
      remotes.removeChild(el);
@@ -372,7 +513,7 @@ webrtc.on('localScreenAdded', function (video) {
      video.style.width = video.videoWidth + 'px';
      video.style.height = video.videoHeight + 'px';
      };*/
-    //document.getElementById('localVideo').appendChil(video);
+    //document.getElementById('localVideo').appendChild(video);
     //$('#localScreenContainer').show();
     video.id = '';
     //Get the local screen media stream object
@@ -394,14 +535,15 @@ webrtc.on('localScreenRemoved', function (video) {
 webrtc.on('readyToCall', function () {
     // you can name it anything
     webrtc.joinRoom(room_name_tmp);
+    console.log(room_name_tmp);
     console.log("Ready to Join Conference");
     //$('.interview-applicant').attr('disabled',false);
 });
 
 //region Recording Area
-$(document).ready(function () {
+//$(document).ready(function () {
     // Initialize the library (all console debuggers enabled)
-    Janus.init({debug: "all", callback: function () {
+    /*Janus.init({debug: "all", callback: function () {
             if (!Janus.isWebrtcSupported()) {
                 bootbox.alert("No WebRTC support... ");
                 return;
@@ -410,11 +552,8 @@ $(document).ready(function () {
             // Create session for Local Video
             createJanusLocalStream();
             createJanusLocalScreenShare();
-
-
-
-        }});
-});
+        }});*/
+//});
 
 socket.on('start-interview', function (data) {
     //var n = $.now();

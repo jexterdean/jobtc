@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Discussion;
+use App\Models\Chat;
+use App\Models\RecordedVideo;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\Tag;
 use Auth;
 use Mail;
 
@@ -78,18 +81,27 @@ class DiscussionsController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        $assets = ['discussions-room'];
+        $assets = ['discussions-room','select'];
 
         $user_id = Auth::user()->user_id;
 
         $display_name = User::where('user_id', $user_id)->pluck('name');
 
         $room_type = Discussion::where('id', $id)->pluck('room_type');
-
+        
+        $recorded_videos = RecordedVideo::with(['tags' =>function($query) {
+            $query->where('tag_type','=','discussions')->get();
+        }])->where('module_id',$id)->where('module_type','discussions')->orderBy('created_at','desc')->paginate(4);
+        
+        $chat = Chat::where('module_type','discussions')->where('module_id',$id)->orderBy('created_at','desc')->get();
+        
         return view('discussions.show', [
             'assets' => $assets,
             'display_name' => $display_name,
-            'room_type' => $room_type
+            'room_type' => $room_type,
+            'room_number' => $id,
+            'recorded_videos' => $recorded_videos,
+            'chat' => $chat
         ]);
     }
 
@@ -145,10 +157,16 @@ class DiscussionsController extends Controller {
     }
 
     public function showPublicRoom($id) {
-        $assets = ['discussions-room'];
+        $assets = ['discussions-room','select'];
 
         $discussion_room = Discussion::where('id', $id)->first();
-
+    
+        $recorded_videos = RecordedVideo::with(['tags' =>function($query) {
+            $query->where('tag_type','=','discussions')->get();
+        }])->where('module_id',$id)->where('module_type','discussions')->orderBy('created_at','desc')->paginate(4);
+        
+        $chat = Chat::where('module_type','discussions')->where('module_id',$id)->orderBy('created_at','desc')->get();
+        
         //Public rooms can be accessed without logging in
         //If it's a private room but with a /public on the url, redirect them to 
         //the login page if not logged in
@@ -165,7 +183,10 @@ class DiscussionsController extends Controller {
             return view('discussions.show', [
                 'assets' => $assets,
                 'display_name' => $display_name,
-                'room_type' => $discussion_room->room_type
+                'room_type' => $discussion_room->room_type,
+                'room_number' => $id,
+                'recorded_videos' => $recorded_videos,
+                'chat' => $chat
             ]);
         } else {
             if (Auth::check()) {
@@ -175,7 +196,10 @@ class DiscussionsController extends Controller {
 
                 return redirect('discussions/' . $id)->with([
                             'display_name' => $display_name,
-                            'room_type' => $discussion_room->room_type
+                            'room_type' => $discussion_room->room_type,
+                            'room_number' => $id,
+                            'recorded_videos' => $recorded_videos,
+                            'chat' => $chat
                 ]);
             } else {
                 return redirect('login');

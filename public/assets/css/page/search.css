@@ -53,12 +53,14 @@
 .search-container {
     position: relative;
     top: 5px;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
+    margin-left: auto;
     width: 90%;
 }
 
 .search-container .module-selector {
-    background-color: #5af !important;
+    background: #4285F4 !important;
+    color: #ffffff !important;
 }
 
 .search-column {
@@ -82,7 +84,8 @@
   }
   .portlet {
     margin: 0 1em 1em 0;
-    padding: 0.3em;
+    /*padding: 0.3em;*/
+    padding: 10px;
   }
   .portlet-header {
     padding: 0.2em 0.3em;
@@ -96,7 +99,8 @@
     margin-top: -8px;
   }
   .portlet-content {
-    padding: 0.4em;
+    /*padding: 0.4em;*/
+    padding: 0;
   }
   .portlet-placeholder {
     border: 1px dotted black;

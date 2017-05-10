@@ -62,7 +62,8 @@
     color: #fff !important;
     font-weight: bold;
     //text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;
-    
+    border: 1px solid #4285f4;
+    border-radius: 0;
 }
 
 #company_tabs a:focus {
@@ -80,6 +81,10 @@
 
 #company_tabs li {
     border-right: 1px #000 solid;
+}
+
+#company_tabs li:last-child{
+    border-right: 0;
 }
 
 .employee-photo {

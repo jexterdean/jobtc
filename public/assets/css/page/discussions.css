@@ -2,21 +2,50 @@
 ** Discussions CSS 
 */
 
-.localVideoContainer {
-    //background-color: #fff;
+html,body{
+    height: 100%,
+    overflow:hidden;
+    
+}
+
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.ui-resizable-handle {
+    
+}
+
+#localVideoContainer {
+    
+}
+
+#localVideo {
+  
+  
+}
+
+#localVideoEl {
+    width:100%;
 }
 
 #localVideoOptions {
-    //position: absolute;
-    //top:300px;
-    //left: 250px;
+  
+}
+
+#localVideoContainer {
+    /*min-height: 426px;
+    min-width: 426px;*/
 }
 
 .remoteVideoContainer {
-    height: 400px;
+    height: 30vh;
     padding: 5px;
-    //background-color: #fff;
-    //box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
+    
 }
 
 .remoteVideoContainer video {
@@ -24,10 +53,8 @@
 }
 
 .remoteScreenContainer {
-    height: 400px;
-    //background-color: #fff;
+    height: 30vh;
     padding: 5px;
-    //box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
 }
 
 .chat-box {
@@ -35,19 +62,267 @@
 }
 
 .chat-box .panel{
-    //box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
+    height: 40vh;
     background-color:#f3f3f3 !important;
 }
 
 .chat-box .panel-body {
-    height: 400px;
-    overflow-x: auto;
+    overflow-x: hidden;
+    height: 40vh;
 }
 
-.remoteVideo {
+#chat-box-container {;
     
 }
 
-.remoteScreen {
+.chat-name {
+    padding:5px;
+}
+
+.chat-bubble-left {
+    float: left;   
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 6px #B2B2B2;
+    display: inline-block;
+    padding: 10px 18px;
+    position: relative;
+    vertical-align: top;
+    margin: 5px 45px 5px 20px; 
+    font-size: 16px !important;
+}
+
+.refresh-video-archive {
+    float:right;
+}
+
+.chat-bubble-right {
+    float: right;   
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 6px #B2B2B2;
+    display: inline-block;
+    padding: 10px 18px;
+    position: relative;
+    vertical-align: top;
+    margin: 5px 45px 5px 20px; 
+}
+
+.chat-bubble {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 6px #B2B2B2;
+    display: inline-block;
+    padding: 10px 18px;
+    position: relative;
+    vertical-align: top;
+    margin: 5px 45px 5px 20px; 
+    width:100%;
+}
+
+.toggle-panel-chat, .toggle-video-archive, .toggle-screen-shares {
+    background-color: #4285F4;
+    color:#fff;
+    font-weight:bold;
+}
+
+#video-archive-container {
+     
+}
+
+
+.video-archive {
+    width: 100%;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.video-archive-element {
+     //height:175px;   
+     //width:250px;
+     display:block;
+     max-width: 100%;
+     height: auto;
+     background-color:#000;
+     border: 2px #fff solid;
+}
+
+.video-image {
+    //height: 175px;
+     //width: 250px;
+}
+
+.video-archive-item-options {
+    padding: 5px;
+}
+
+.video-tags {
+    width:100%;
+}
+
+.video-title {
+    background-color: #000;
+    color:#fff;
+    border: 2px solid;
+}
+
+.panel {
+    background-color: transparent !important;
+}
+
+.btn-delete-video i {
+    font-weight: bold;
+    font-size: 30px;
+    color: red;
+    cursor: pointer;
+}
+
+.btn-edit-video-title i {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.btn-save-video-title i {
+    font-weight: bold;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.pagination {
+  padding:3px;
+}
+
+.remote-video .panel-title {
     
+}
+
+#remote-video-container  {
+    height:100%;
+}
+
+#remote-screen-container {
+    
+}
+
+#video-camera-list, #audio-input-list {
+    background: #fff !important;
+    color: #000 !important;
+}
+
+.topbar {
+    position: absolute;
+    top: 50px;
+    width: 100%;
+    padding-top:20px;
+}
+
+.sidebar {
+   position: fixed;
+   top: 110px;
+   right: 5px;
+   width: 30%;
+   height: 100%;
+ }
+
+.footer {
+   position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.participant-box-text {
+  font-weight: bold;
+  color:#000;
+}
+
+#discussions-container {
+    position: absolute;
+    top: 120px;
+    width: 100%;
+    height:100%;
+}
+
+.local-volume-meter {
+     width:100%;
+}
+
+.remote-volume-meter {
+    width:100%;
+}
+
+.record {
+    background-color: #d7efed;
+    color: #000;
+    width:100%;
+}
+
+.record-text {
+    font-weight: bold;
+    position: relative;
+    top: -5px;
+}
+
+#progress {
+  position:relative;
+  z-index:9999;
+  width:70%;
+  color:#000;
+  bottom:40px;
+}
+
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+  position: relative;
+  z-index:9999;
+  bottom: 40px;
+  left: 10px;
+}
+
+.speaking-blink {
+    /*animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;*/
+}
+
+.blink-text {
+  color: #fff;
+  font-weight: bold;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+#remote-video-list .panel-body {
+    height: 100%;
+}
+
+#remote-screen-list .panel-body {
+    
+}
+
+.muted, .paused {
+    display: none
+    position: absolute
+    z-index: 1
+    color: #12acef
+}
+
+.muted {
+    left: 0px
+    bottom: 10%
+    width: 100%
+}
+
+.paused {
+    left: 0px
+    top: 40%
+    width: 100%
 }

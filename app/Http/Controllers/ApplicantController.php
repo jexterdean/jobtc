@@ -14,6 +14,7 @@ use App\Models\ApplicantTag;
 use App\Models\Tag;
 use App\Models\ApplicantRating;
 use App\Models\Comment;
+use App\Models\RecordedVideo;
 use App\Models\Video;
 use App\Models\VideoRoom;
 use App\Models\VideoSession;
@@ -75,12 +76,13 @@ class ApplicantController extends Controller {
      */
     public function show(Request $request, $id) {
         $applicant = Applicant::where('id', $id)->first();
-
+        $display_name = "";
         if ($applicant !== NULL) {
 
             //Get logged in User
             if (Auth::check('user')) {
                 $user_id = $request->user('user')->user_id;
+                $display_name = $request->user('user')->name;
 
                 $user_info = User::where('user_id', $user_id)->with('profile')->first();
 
@@ -91,7 +93,8 @@ class ApplicantController extends Controller {
                 $user_id = $id;
 
                 $user_info = Applicant::where('id', $id)->first();
-
+                $display_name = $user_info->name;
+                
                 //$comments = Comment::with('applicant')->where('applicant_id', $id)->orderBy('id', 'desc')->get();
                 //$comments = Applicant::with('comment')->where('id',$id)->orderBy('id', 'desc')->get();
                 $comments = Comment::with('user', 'applicant')->where('belongs_to', 'applicant')->where('unique_id', $id)->orderBy('comment_id', 'desc')->get();
@@ -276,10 +279,13 @@ class ApplicantController extends Controller {
             }
 
             $module_permissions = Permission::whereIn('id', $permissions_list)->get();
-
+            
+            $recorded_videos = RecordedVideo::where('module_type','=','applicants')->where('module_id','=',$id)->paginate(4);
+            
             $assets = ['applicants', 'real-time'];
 
             return view('applicants.show', [
+                'display_name' => $display_name,
                 'applicant' => $applicant,
                 'user_info' => $user_info,
                 'comments' => $comments,
@@ -297,6 +303,7 @@ class ApplicantController extends Controller {
                 'previous_applicant' => $prevApplicant,
                 'next_applicant' => $nextApplicant,
                 'rating' => $rating,
+                'recorded_videos' => $recorded_videos,
                 'videos' => $videos,
                 'video_sessions' => $video_sessions,
                 'assets' => $assets,
