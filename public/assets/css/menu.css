@@ -8,7 +8,8 @@
 /* Common styles of menus */
 
 .dl-menuwrapper {
-    width: 100%;
+    /*width: 100%;*/
+    width: 55px;
     max-width: 300px;
     float: left;
     position: relative;
@@ -153,7 +154,7 @@
     -webkit-transform: translateY(0px);
     -moz-transform: translateY(0px);
     transform: translateY(0px);
-    margin-left: 5px;
+    /*margin-left: 5px;*/
     min-width: 250px;
 }
 /* Hide the inner submenus */

@@ -7,10 +7,12 @@
   width: 25px;
   height: 25px;
   outline: none;
-  font-size: 30px!important;
-  opacity: 0.8!important;
+  font-size: 30px !important;
+  opacity: 0.8 !important;
   text-shadow: 0 1px 0 #f2f2f2;
-  color: #383737 ;
+  color: #383737;
+  font-weight: 400;
+  line-height: 25px;
 }
 .close:hover{
   opacity: 1!important;
@@ -311,8 +313,14 @@ input[type=radio].radio,input[type=checkbox].checkbox {
     padding:0;
     border:0;
 }
-input[type=text],input[type=email],input[type=tel],textarea,input[type=password],input[type=number]{
-    box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4);
+input[type=text],
+input[type=email],
+input[type=tel],
+textarea,
+input[type=password],
+input[type=number],
+select{
+    box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.4) !important;
 }
 textarea:focus{
 
@@ -377,8 +385,10 @@ input[type=checkbox].checkbox + label,input[type=radio].radio + label{
     filter: alpha(opacity=0);
 }
 select{
-    background: #4285F4!important;
-    color: #ffffff!important;
+    background: #4285F4;
+    color: #ffffff;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
 }
 .edit-checklist-header, input[name="checklist_header"], input[name="spreadsheet_header"]{
     color: #ffa500;
@@ -465,4 +475,70 @@ select{
 }
 .content{
     padding: 15px!important;
+}
+
+/* General */
+.row{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Navbar */
+#navbar{
+    padding: 15px 15px 0;
+}
+#navbar .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+#navbar .col-sm-6{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Dashboard */
+#add-company-form .col-md-12{
+    margin-bottom: 15px;
+}
+.modal-footer .btn.btn-edit.btn-shadow{
+    margin-right: 4px;
+    margin-bottom: 15px;
+}
+.btn.add-company{
+    margin-bottom: 20px;
+}
+#my_companies .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.companies_container .ui-widget-header .ui-icon,
+.ui-widget-header .ui-icon{
+    margin-right: 6px;
+}
+#my_jobs{
+    margin-top: 20px;
+}
+.jobs_container .row{
+    margin-left: 0;
+    margin-right: 0;
+}
+.jobs_container .portlet{
+    margin: 0 0 15px;
+}
+.jobs_container .ui-widget-header .ui-icon{
+    margin-right: 6px;
+}
+.project_tab_options{
+    margin-top: 10px;
+}
+.project_container{
+    margin-top: 15px;
+}
+#add-project-form .col-md-6{
+    padding-right: 3px;
+}
+
+/* Search */
+.search-module{
+    margin-bottom: 15px;
 }

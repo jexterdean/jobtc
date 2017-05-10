@@ -19,8 +19,8 @@ var io = require('socket.io');
 
 var options = {
     //Production
-    key: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.key"),
-    cert: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.crt")
+    key: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.2.key"),
+    cert: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.2.crt")
     //Local
     //key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
     //cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")

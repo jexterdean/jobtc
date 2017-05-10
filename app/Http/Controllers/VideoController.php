@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\RecordedVideo;
 use App\Models\Video;
 use App\Models\VideoRoom;
 use App\Models\VideoSession;
@@ -18,7 +19,7 @@ class VideoController extends Controller {
     var $remote_connection;
 
     public function __construct() {
-        $this->media_server = "laravel.software";
+        $this->media_server = "extremefreedom.org";
         //$this->media_server = "ubuntu-server.com";
         $this->remote_connection = new Remote([
             'host' => $this->media_server,
@@ -375,6 +376,28 @@ class VideoController extends Controller {
 
         return $video_id;
     }
+    
+    
+    public function editRecordedVideo(Request $request, $id) {
+        
+        $title = $request->input('title');
+        
+        $update_recorded_video = RecordedVideo::where('id','=',$id)->update([
+                'alias' => $title
+            ]);
+            
+        return "true";    
+    }
+    
+    public function deleteRecordedVideo(Request $request,$id) {
+        
+        //$module_type = $request->input('module_type');
+        //$module_type = $request->input('module_id');
+        $recorded_video_id = RecordedVideo::destroy($id);
+        
+        return "true";
+    }
+    
 
     public function addVideoTag(Request $request) {
 
@@ -462,7 +485,97 @@ class VideoController extends Controller {
       "video = " . $session.'-'.$id . "-video.mjr' > /var/www/html/recordings/" . $id . ".nfo";
       $remote_connection->exec($nfo);
       } */
+    
+    public function convertDiscussionsJanusVideo(Request $request) {
+        $remote_connection = $this->remote_connection;
+        
+        $filename = $request->input('filename');
+        $module_type = $request->input('module_type');
+        $module_id = $request->input('module_id');
+        
+        $recordedVideo = RecordedVideo::create([
+            'filename' =>  $filename,
+            'module_type' => $module_type,
+            'module_id' => $module_id,
+            'alias' => ''
+         ]);
+        
+        $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $filename . '-audio.mjr /var/www/html/recordings/' . $filename . '-audio.opus';
+        $remote_connection->exec($convert_to_audio);
+        
+        $convert_to_webm = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $filename . '-video.mjr /var/www/html/recordings/' . $filename . '-video.webm';
+        $remote_connection->exec($convert_to_webm);
+        
+        $generate_thumbnail = 'ffmpeg -i  /var/www/html/recordings/'.$filename.'-video.webm -vf  "thumbnail,scale=640:360" -frames:v 1  /var/www/html/recordings/'.$filename.'.png';
+        $remote_connection->exec($generate_thumbnail);
+        
+        $check_audio_file_if_exists = 'test -f /var/www/html/recordings/'.$filename.'-audio.opus && echo "1" || echo "0"';
+        $check_video_file_if_exists = 'test -f /var/www/html/recordings/'.$filename.'-video.webm && echo "1" || echo "0"';
+        $video_exists = $remote_connection->exec($check_video_file_if_exists);
+        $audio_exists = $remote_connection->exec($check_audio_file_if_exists);
+        
+        if($audio_exists == 1 && $video_exists == 1)    {
+            $sync_audio_video = 'nohup ffmpeg -i /var/www/html/recordings/' . $filename . '-video.webm -i /var/www/html/recordings/' . $filename . '-audio.opus -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $filename . '.webm 1> /var/www/html/recordings/'.$filename.'.txt 2>&1 &';
+            $remote_connection->exec($sync_audio_video);
+        } elseif($audio_exists == 0 && $video_exists == 1) {
+            $rename_video_file = 'nohup mv /var/www/html/recordings/'.$filename.'-video.webm /var/www/html/recordings/'.$filename.'.webm 1> /var/www/html/recordings/'.$filename.'.txt 2>&1 &';
+            $remote_connection->exec($rename_video_file);
+        } else {
+            $convert_audio_file_to_webm = 'nohup ffmpeg -i /var/www/html/recordings/'.$filename.'-audio.opus -c:a libvorbis -strict experimental /var/www/html/recordings/' . $filename . '.webm 1> /var/www/html/recordings/'.$filename.'.txt 2>&1 &';
+            $remote_connection->exec($convert_audio_file_to_webm);
+        }
+        
+        
+        return $audio_exists;
+    }
+    
+    public function getConversionProgress(Request $request) {
+        $remote_connection = $this->remote_connection;
+        
+        $filename = $request->input('filename');
+        
+        $get_file = "cat /var/www/html/recordings/".$filename.'.txt';
+        
+        $content = $remote_connection->exec($get_file);
+        
+        if($content){
+           //get duration of source
+            preg_match("/Duration: (.*?), start:/", $content, $matches);
 
+            $rawDuration = $matches[1];
+
+            //rawDuration is in 00:00:00.00 format. This converts it to seconds.
+            $ar = array_reverse(explode(":", $rawDuration));
+            $duration = floatval($ar[0]);
+            if (!empty($ar[1])) $duration += intval($ar[1]) * 60;
+            if (!empty($ar[2])) $duration += intval($ar[2]) * 60 * 60;
+
+            //get the time in the file that is already encoded
+            preg_match_all("/time=(.*?) bitrate/", $content, $matches);
+
+            $rawTime = array_pop($matches);
+
+            //this is needed if there is more than one match
+            if (is_array($rawTime)){$rawTime = array_pop($rawTime);}
+
+            //rawTime is in 00:00:00.00 format. This converts it to seconds.
+            $ar = array_reverse(explode(":", $rawTime));
+            $time = floatval($ar[0]);
+            if (!empty($ar[1])) $time += intval($ar[1]) * 60;
+            if (!empty($ar[2])) $time += intval($ar[2]) * 60 * 60;
+
+            //calculate the progress
+            $progress = round(($time/$duration) * 100);
+
+            //echo "Duration: " . $duration . "<br>";
+            //echo "Current Time: " . $time . "<br>";
+            //echo "Progress: " . $progress . "%";
+            
+            return $progress;
+        }
+    }
+    
+    
     public function convertJanusVideo(Request $request) {
         $hasAudio = 1;
         if ($request->input('audio')) {
