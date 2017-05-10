@@ -6,10 +6,15 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <?php
-            //change code because causes error on other pages
-            $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
-            ?>
+            {{--*/ $user_id = Illuminate\Support\Facades\Auth::user()->user_id /*--}}
+            {{--*/ $companies = App\Models\Profile::with('company')->where('user_id', $user_id)->get() /*--}}
+            {{--*/ $clients = [] /*--}}
+
+            @if(count($companies) > 0)
+                @foreach($companies as $company)
+                    {{--*/ $clients = [ $company->company->id =>  $company->company->name] /*--}}
+                @endforeach
+            @endif
             {!! Form::select('company_id', $clients, isset($project->company_id) ?
             $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company', 'tabindex' =>'2'] )  !!}
         </div>

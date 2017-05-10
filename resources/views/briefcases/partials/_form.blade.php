@@ -17,10 +17,14 @@
 
         <div class="form-group">
             {!!  Form::label('due_date','Due Date',['class' => 'col-md-3 control-label']) !!}
-            <div class="col-md-9">
-                {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
-                input-medium date-picker', 'placeholder' => 'Due Date',
-                'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+            <div class="col-md-6">
+                <div class='input-group date datetimepicker' id='start_date'>
+                    {!!  Form::input('text','due_date',
+                        isset($task->due_date) ? date("d-m-Y",strtotime($task->due_date)) : '', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Start', 'tabindex' => '4'])  !!}
+                    <span class="input-group-addon open-date-calendar">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                </div>
             </div>
         </div>
     </div>
