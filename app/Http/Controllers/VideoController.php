@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\RecordedVideo;
+use App\Models\User;
 use App\Models\Video;
 use App\Models\VideoRoom;
 use App\Models\VideoSession;
@@ -489,15 +490,29 @@ class VideoController extends Controller {
     public function convertDiscussionsJanusVideo(Request $request) {
         $remote_connection = $this->remote_connection;
         
+        if(Auth::check()) {
+            $user_id = Auth::user()->user_id;
+            $recorded_by = User::where('user_id',$user_id)->first()->name;
+            
+        } else {
+            $user_id = 0;
+            $recorded_by = $request->input('display_name');
+        }
+        
+        
         $filename = $request->input('filename');
         $module_type = $request->input('module_type');
         $module_id = $request->input('module_id');
+        $video_title = $request->input('video_title');
         
         $recordedVideo = RecordedVideo::create([
             'filename' =>  $filename,
             'module_type' => $module_type,
             'module_id' => $module_id,
-            'alias' => ''
+            'alias' => $video_title,
+            'recorded_by' => $recorded_by,
+            'user_id' => $user_id,
+            'description' => ''
          ]);
         
         $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $filename . '-audio.mjr /var/www/html/recordings/' . $filename . '-audio.opus';

@@ -292,29 +292,29 @@ class JobController extends Controller {
         return $message;
     }
 
-    public function updateJob(Request $request, $id) {
-        $user_id = $request->user()->user_id;
-        $job_id = $request->input('job_id');
-        $title = $request->input('title');
-        $description = $request->input('description');
+    // public function updateJob(Request $request, $id) {
+    //     $user_id = $request->user()->user_id;
+    //     $job_id = $request->input('job_id');
+    //     $title = $request->input('title');
+    //     $description = $request->input('description');
 
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photo_save = $photo->move('assets/job/', $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
-        } else {
-            $photo_path = Job::where('id', $id)->pluck('photo');
-        }
+    //     if ($request->hasFile('photo')) {
+    //         $photo = $request->file('photo');
+    //         $photo_save = $photo->move('assets/job/', $photo->getClientOriginalName());
+    //         $photo_path = $photo_save->getPathname();
+    //     } else {
+    //         $photo_path = Job::where('id', $id)->pluck('photo');
+    //     }
 
-        $job = Job::find($id);
-        $job->title = $title;
-        $job->description = $description;
-        $job->photo = $photo_path;
-        $job->save();
+    //     $job = Job::find($id);
+    //     $job->title = $title;
+    //     $job->description = $description;
+    //     $job->photo = $photo_path;
+    //     $job->save();
 
-        $message = 'Job Updated';
-        return $message;
-    }
+    //     $message = 'Job Updated';
+    //     return $message;
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -347,137 +347,137 @@ class JobController extends Controller {
 
     /* For Job Posting Dashboard */
 
-    public function getJobs(Request $request) {
-        if (Auth::check("user") || Auth::viaRemember("user")) {
+    // public function getJobs(Request $request) {
+    //     if (Auth::check("user") || Auth::viaRemember("user")) {
 
-            //Get logged in User
-            $user_id = $request->user()->id;
+    //         //Get logged in User
+    //         $user_id = $request->user()->id;
 
-            $users = User::find($user_id);
+    //         $users = User::find($user_id);
 
-            $user_info = User::where('id', $user_id)->with('profile', 'evaluation')->first();
+    //         $user_info = User::where('id', $user_id)->with('profile', 'evaluation')->first();
 
-            $agent = new Agent(array(), $request->header('User-Agent'));
+    //         $agent = new Agent(array(), $request->header('User-Agent'));
 
-            if ($agent->isMobile()) {
-                $is_mobile = 'true';
-                $jobs = Job::with('applicants')->paginate(1);
-            } else {
-                $is_mobile = 'false';
-                $jobs = Job::with('applicants')->paginate(3);
-            }
-            return view('jobs', ['name' => $users->first_name, 'user' => $users->user_type, 'user_info' => $user_info, 'user_id' => $user_id, 'jobs' => $jobs, 'is_mobile' => $is_mobile, 'count' => 0]);
-        } else if (Auth::check("applicant") || Auth::viaRemember("applicant")) {
-            return redirect()->route('a', [Auth::user("applicant")->id]);
-        } else {
-            return view('home');
-        }
-    }
+    //         if ($agent->isMobile()) {
+    //             $is_mobile = 'true';
+    //             $jobs = Job::with('applicants')->paginate(1);
+    //         } else {
+    //             $is_mobile = 'false';
+    //             $jobs = Job::with('applicants')->paginate(3);
+    //         }
+    //         return view('jobs', ['name' => $users->first_name, 'user' => $users->user_type, 'user_info' => $user_info, 'user_id' => $user_id, 'jobs' => $jobs, 'is_mobile' => $is_mobile, 'count' => 0]);
+    //     } else if (Auth::check("applicant") || Auth::viaRemember("applicant")) {
+    //         return redirect()->route('a', [Auth::user("applicant")->id]);
+    //     } else {
+    //         return view('home');
+    //     }
+    // }
 
-    public function addJobForm(Request $request) {
-        return view('templates.forms.addJobForm');
-    }
+    // public function addJobForm(Request $request) {
+    //     return view('templates.forms.addJobForm');
+    // }
 
-    public function getEditJobForm(Request $request, $id) {
+    // public function getEditJobForm(Request $request, $id) {
 
-        $job = Job::where('id', $id)->first();
+    //     $job = Job::where('id', $id)->first();
 
-        return view('templates.forms.editJobForm', ['job' => $job]);
-    }
+    //     return view('templates.forms.editJobForm', ['job' => $job]);
+    // }
 
-    public function addJob(Request $request) {
+    // public function addJob(Request $request) {
 
-        $user_id = $request->user()->id;
+    //     $user_id = $request->user()->id;
 
-        $title = $request->input('title');
-        $description = $request->input('description');
+    //     $title = $request->input('title');
+    //     $description = $request->input('description');
 
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photo_save = $photo->move('uploads/jobs/' . $user_id, $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
-        } else {
-            $photo_path = 'uploads/default-avatar.jpg';
-        }
+    //     if ($request->hasFile('photo')) {
+    //         $photo = $request->file('photo');
+    //         $photo_save = $photo->move('uploads/jobs/' . $user_id, $photo->getClientOriginalName());
+    //         $photo_path = $photo_save->getPathname();
+    //     } else {
+    //         $photo_path = 'uploads/default-avatar.jpg';
+    //     }
 
-        $job = new Job([
-            'title' => $title,
-            'user_id' => $user_id,
-            'description' => $description,
-            'photo' => $photo_path
-        ]);
+    //     $job = new Job([
+    //         'title' => $title,
+    //         'user_id' => $user_id,
+    //         'description' => $description,
+    //         'photo' => $photo_path
+    //     ]);
 
-        $job->save();
+    //     $job->save();
 
-        $message = "Job Added";
-        return $message;
-    }
+    //     $message = "Job Added";
+    //     return $message;
+    // }
 
-    public function editJob(Request $request) {
+    // public function editJob(Request $request) {
 
-        $user_id = $request->user()->id;
-        $job_id = $request->input('job_id');
-        $title = $request->input('title');
-        $description = htmlspecialchars($request->input('description'));
+    //     $user_id = $request->user()->id;
+    //     $job_id = $request->input('job_id');
+    //     $title = $request->input('title');
+    //     $description = htmlspecialchars($request->input('description'));
 
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photo_save = $photo->move('uploads/jobs/' . $user_id, $photo->getClientOriginalName());
-            $photo_path = $photo_save->getPathname();
-        } else {
-            $photo_path = Job::where('id', $job_id)->pluck('photo');
-        }
+    //     if ($request->hasFile('photo')) {
+    //         $photo = $request->file('photo');
+    //         $photo_save = $photo->move('uploads/jobs/' . $user_id, $photo->getClientOriginalName());
+    //         $photo_path = $photo_save->getPathname();
+    //     } else {
+    //         $photo_path = Job::where('id', $job_id)->pluck('photo');
+    //     }
 
 
-        Job::where('id', $job_id)->update([
-            'title' => $title,
-            'description' => $description,
-            'photo' => $photo_path,
-        ]);
+    //     Job::where('id', $job_id)->update([
+    //         'title' => $title,
+    //         'description' => $description,
+    //         'photo' => $photo_path,
+    //     ]);
 
-        $message = 'Job Updated';
-        return $message;
-    }
+    //     $message = 'Job Updated';
+    //     return $message;
+    // }
 
-    public function deleteJob(Request $request) {
+    // public function deleteJob(Request $request) {
 
-        $job_id = $request->input('job_id');
+    //     $job_id = $request->input('job_id');
 
-        Job::where('id', $job_id)->delete();
+    //     Job::where('id', $job_id)->delete();
 
-        $message = 'Job Deleted';
-        return $message;
-    }
+    //     $message = 'Job Deleted';
+    //     return $message;
+    // }
 
     /* For Single Job Posting */
 
-    public function getJobPosting(Request $request, $id) {
+    // public function getJobPosting(Request $request, $id) {
 
-        /* $job_posting = Job::with('applicants')->where('id', $id)->first();
-          if ($job_posting !== NULL) {
-
-
-          $applicants = Applicant::with(['status' => function ($query) {
-          $query->orderBy('created_at', 'desc');
-          }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
-
-          return view('templates.show.jobPost', ['job' => $job_posting, 'applicants' => $applicants, 'count' => 0]);
-          } else {
-
-          return redirect()->route('home');
-          } */
-
-        $job = Job::with('applicants')->where('id', $id)->first();
-
-        $assets = ['jobs'];
+    //     /* $job_posting = Job::with('applicants')->where('id', $id)->first();
+    //       if ($job_posting !== NULL) {
 
 
-        return view('jobs.show', [
-            'job' => $job,
-            'assets' => $assets,
-            'count' => 0
-        ]);
-    }
+    //       $applicants = Applicant::with(['status' => function ($query) {
+    //       $query->orderBy('created_at', 'desc');
+    //       }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
+
+    //       return view('templates.show.jobPost', ['job' => $job_posting, 'applicants' => $applicants, 'count' => 0]);
+    //       } else {
+
+    //       return redirect()->route('home');
+    //       } */
+
+    //     $job = Job::with('applicants')->where('id', $id)->first();
+
+    //     $assets = ['jobs'];
+
+
+    //     return view('jobs.show', [
+    //         'job' => $job,
+    //         'assets' => $assets,
+    //         'count' => 0
+    //     ]);
+    // }
 
     public function getApplyToJobForm(Request $request) {
         return view('forms.applyToJobForm');
@@ -581,24 +581,24 @@ class JobController extends Controller {
 
     /* Get Applicants */
 
-    public function getJobApplicants(Request $request, $id) {
+    // public function getJobApplicants(Request $request, $id) {
 
-        $agent = new Agent(array(), $request->header('User-Agent'));
+    //     $agent = new Agent(array(), $request->header('User-Agent'));
 
-        if ($agent->isMobile()) {
-            $applicants = Applicant::with(['tags' => function ($query) {
-                            $query->orderBy('created_at', 'desc');
-                        }])->where('job_id', $id)->orderBy('created_at', 'desc')->get();
+    //     if ($agent->isMobile()) {
+    //         $applicants = Applicant::with(['tags' => function ($query) {
+    //                         $query->orderBy('created_at', 'desc');
+    //                     }])->where('job_id', $id)->orderBy('created_at', 'desc')->get();
 
-            return view('templates.show.applicantListMobile', ['applicants' => $applicants, 'count' => 0]);
-        } else {
-            $applicants = Applicant::with(['tags' => function ($query) {
-                            $query->orderBy('created_at', 'desc');
-                        }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
+    //         return view('templates.show.applicantListMobile', ['applicants' => $applicants, 'count' => 0]);
+    //     } else {
+    //         $applicants = Applicant::with(['tags' => function ($query) {
+    //                         $query->orderBy('created_at', 'desc');
+    //                     }])->where('job_id', $id)->orderBy('created_at', 'desc')->paginate(5);
 
-            return view('templates.show.applicantList', ['applicants' => $applicants, 'count' => 0]);
-        }
-    }
+    //         return view('templates.show.applicantList', ['applicants' => $applicants, 'count' => 0]);
+    //     }
+    // }
 
     /* For Tags */
 

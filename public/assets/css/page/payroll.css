@@ -2,13 +2,14 @@
     padding:5px;
 }
 
-#payroll-tabs li.active a {
-    background-color: #e5e5e5;
-    text-decoration: none;
+#payroll-tabs li.active a,
+#payroll-tabs li a:active {
+    background-color: #e5e5e5 !important;
+    /*text-decoration: none;
     color: #4285f4 !important;
-    //color: #000 !important;
+    color: #000 !important;
     font-weight: bold;
-    text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;   
+    text-shadow: 1px 3px 1px #ffffff, 0 0 0 #ffffff, 1px 1px 1px #ffffff!important;*/
 }
 
 #payroll-tabs a:focus {
@@ -16,11 +17,12 @@
 }
 
 #payroll-tabs li a {
-    //background-color: #4285f4;
+    /*background-color: #4285f4;*/
     text-decoration: none;
-    color: #fff !important;
-    font-weight: bold;
-    text-shadow:1px 1px 1px #000000, 0 0 0 #000000, 1px 1px 1px #000000!important;
+    color: #000 !important;
+    /*font-weight: bold;*/
+    /*text-shadow:1px 1px 1px #000000, 0 0 0 #000000, 1px 1px 1px #000000!important;*/
+    text-shadow:none !important;
 }
 
 .additions-header {

@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-sm-6">
         <div id="dl-menu" class="dl-menuwrapper">
-            <button type="button" class="btn">GO</button>
+            <!--<button type="button" class="btn">GO</button>-->
+            <button type="button" class="btn"><span class="glyphicon glyphicon-menu-hamburger"></span></button>
             <ul class="dl-menu">
                 @if(Auth::check())
                 {{--*/ $companies = \App\Helpers\Helper::getCompanyLinks() /*--}}
@@ -429,7 +430,8 @@
         <div class="breadcrumb_container">
             <ul class="breadcrumb">
                 @foreach($breadcrumbs as $title => $url)
-                <li><a href="{{url($url)}}" title="{{$title}}" data-toggle="tooltip" data-placement="right">{{$title}}</a></li>
+                <li><a href="{{url($url)}}" title="{{$title}}">{{$title}}</a></li>
+                <!-- <li><a href="{{url($url)}}" title="{{$title}}" data-toggle="tooltip" data-placement="right">{{$title}}</a></li> -->
                 @endforeach
             </ul>
         </div>

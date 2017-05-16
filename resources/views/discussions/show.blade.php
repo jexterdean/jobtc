@@ -14,9 +14,8 @@
 </div>
 <div id="discussions-container">
 
-<div id="video-container" class="row">
-    <div id="remotes">
-        <div class="row" id="remoteVideo">
+<div id="video-container">
+        <div class="row-fluid" id="remoteVideo">
             <div id="localVideoContainer" class="col-xs-3 localVideoContainer">
                 <div class="panel-group">
                     <div class="panel panel-default">
@@ -75,7 +74,6 @@
                 </div>
             </div>
         </div>
-</div>
 </div>
 <div id="chat-box-container">
         <div class="mini-space"></div>
@@ -167,6 +165,12 @@
                             <input class="form-control video-tags" type="text" name="tags" placeholder="Enter Tags" value="{{$video->tags['tags']}}">
                             <input class="recorded_video_id" type="hidden" value="{{$video->id}}"/>
                       </div>
+                  </div>
+                  <div class="row video-archive-item-details">
+                      <div class="col-xs-6 recorded_on">{{date('M d, Y H:i A', strtotime($video->created_at))}}</div>
+                      <div class="col-xs-6 ">
+                          <span class="recorded_by pull-right">{{$video->recorded_by}}</span>
+                          </div>
                   </div>
               </div>
               @endforeach

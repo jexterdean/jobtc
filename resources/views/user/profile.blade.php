@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
+<div class="row profile">
     <div class="col-md-6">
         <div class="box box-default">
             <div class="box-header">
@@ -51,7 +51,7 @@
                         => 'Address 2']) !!}
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('zipcode','Zipcode') !!}
+                        {!!  Form::label('zipcode','Zip Code') !!}
                         {!!  Form::input('text','zipcode',Auth::user()->zipcode,['class' => 'form-control', 'placeholder'
                         => 'Enter Phone']) !!}
                     </div>
@@ -78,7 +78,7 @@
                         => 'Facebook']) !!}
                     </div>
                     <div class="form-group">
-                        {!!  Form::label('linkedin','Linkedin') !!}
+                        {!!  Form::label('linkedin','LinkedIn') !!}
                         {!!  Form::input('text','linkedin',Auth::user()->linkedin,['class' => 'form-control', 'placeholder'
                         => 'Linkedin']) !!}
                     </div>

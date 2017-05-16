@@ -23,6 +23,8 @@ var display_name = $('.display_name').val();
 var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
 var room_number = $('.room_number').val();
+var tag_type = 'discussions';
+
 
 console.log(room_name_tmp);
 
@@ -129,6 +131,14 @@ $( "#localVideoContainer" ).resizable({
     grid: 50
 });
 
+$( "#remoteVideo" ).sortable({
+     stop: function(event, ui) {
+         var video = ui.item.find('video').get(0);
+        video.play();
+    }
+});
+$( "#remoteVideo" ).disableSelection();
+
  webrtc = new SimpleWebRTC({
                      // the id/element dom element that will hold "our" video
                     localVideoEl: 'localVideoEl',
@@ -156,7 +166,7 @@ $( "#localVideoContainer" ).resizable({
 
 //Check if room is public
 
-if (display_name == 'Anonymous') {
+/*if (display_name == 'Anonymous') {
 
     var display_name_form = public_path + '/displayNameForm';
 
@@ -192,7 +202,9 @@ if (display_name == 'Anonymous') {
 } else {
     
     webrtc.startLocalVideo();
-}
+}*/
+
+webrtc.startLocalVideo();
 
 webrtc.on('localStream', function (stream) {
     console.log('this is the localstream : ' + JSON.stringify(stream));
@@ -212,7 +224,7 @@ webrtc.on('videoAdded', function (video, peer) {
     var remoteVideo = document.getElementById('remoteVideo');
     var remoteScreen = document.getElementById('remoteScreen');
     var videoTag = $('#localVideoEl')[0];
-    if (remotes) {
+    if (remoteVideo) {
         video.id = 'container_' + webrtc.getDomId(peer);
         console.log(video.id);
         //video.style.width = '334px';
@@ -458,7 +470,7 @@ webrtc.on('videoAdded', function (video, peer) {
     if (peer && peer.pc) {
         var connstate = document.createElement('div');
         connstate.className = 'connectionstate';
-        remotes.appendChild(connstate);
+        remoteVideo.appendChild(connstate);
         peer.pc.on('iceConnectionStateChange', function (event) {
             switch (peer.pc.iceConnectionState) {
                 case 'checking':
@@ -803,6 +815,7 @@ webrtc.connection.on('message', function (data) {
     if(data.type === 'changeName') {
         console.log('Received displayName ' + data.payload.display_name);
     }
+   
 });
 
 webrtc.on('channelMessage', function (peer, label, data) {
@@ -917,7 +930,6 @@ $('.share-screen').click(function () {
             }
         } else {
             console.log("Screensharing active");
-            $('#screen-share-container').collapse('show');
         }
     });
 });
@@ -926,8 +938,19 @@ $('body').on('click', '.stop-screen-share', function () {
 
     var screenshare_id = $('.screenshare_id').val();
     $('#screenContainer-' + screenshare_id).remove();
-    webrtc.stopScreenShare();
+     webrtc.stopScreenShare();
+     webrtc.leaveRoom(room_name_tmp);      
+     webrtc.stopLocalVideo();
+     webrtc.startLocalVideo();
+    //This solves a bug related to screensharing(First screen share not being disposed properly)
+    
+    //webrtc.stopLocalVideo(); 
+    //webrtc.startLocalVideo(); 
     console.log("Screensharing deactivated");
+    //var stream = webrtc.getLocalScreen();
+    //if (stream) {
+        //stream.getTracks().forEach(function (track) { track.stop(); });
+    //}
     //$('.localScreen').remove();
     //$('.stop-screen-share').remove();
 });
@@ -1476,7 +1499,9 @@ function convertJanusVideo(filename,container) {
      data: {
          'filename': filename,
          'module_type': 'discussions',
-         'module_id': room_number
+         'module_id': room_number,
+         'display_name':display_name,
+         'video_title':""
      },
      type: "POST",
      beforeSend: function () {
@@ -1749,6 +1774,45 @@ function showVolume(el, volume) {
     el.value = volume;
 }
 
+function videoTags(tag_type) {
+    //For Tags
+$('.video-tags').tagEditor({
+        maxTags: 9999,
+        clickDelete: true,
+        placeholder: 'Enter video tags ...',
+        autocomplete: {
+            delay: 0, // show suggestions immediately
+            position: {collision: 'flip'}, // automatic menu position up/down
+            source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/' +tag_type
+        },
+        onChange: function (field, editor, tags) {
+            var ajaxurl = public_path + 'addNewTag';
+
+            var unique_id = $(field).siblings('.recorded_video_id').val();
+            var formData = new FormData();
+            formData.append('unique_id', unique_id);
+            formData.append('tag_type', tag_type);
+            formData.append('tags', tags);
+            $.ajax({
+                url: ajaxurl,
+                type: "POST",
+                data: formData,
+                // THIS MUST BE DONE FOR FILE UPLOADING
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                },
+                success: function (data) {
+                },
+                error: function (xhr, status, error) {
+
+                }
+            }); //ajax
+            //alert(tags);
+        }
+});
+}
+
 var chat_toggle = $('#chat-box-container').scotchPanel({
                     startOpened: false, // Required
                     containerSelector: '#discussions-container',
@@ -1802,43 +1866,7 @@ $('#video-archive-container').on('click','.pager-element',function(e){
     console.log($(this).attr('href'));
     $('.current-video-page').val($(this).attr('href'));
     $('#video-archive').load($(this).attr('href')+' #video-archive',function(responseTxt, statusTxt, xhr){
-        $('.video-tags').tagEditor({
-        maxTags: 9999,
-        clickDelete: true,
-        placeholder: 'Enter video tags ...',
-        autocomplete: {
-            delay: 0, // show suggestions immediately
-            position: {collision: 'flip'}, // automatic menu position up/down
-            source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
-        },
-        onChange: function (field, editor, tags) {
-            var ajaxurl = public_path + 'addNewTag';
-
-            var unique_id = $(field).siblings('.recorded_video_id').val();
-            var tag_type = 'discussions';
-            var formData = new FormData();
-            formData.append('unique_id', unique_id);
-            formData.append('tag_type', tag_type);
-            formData.append('tags', tags);
-            $.ajax({
-                url: ajaxurl,
-                type: "POST",
-                data: formData,
-                // THIS MUST BE DONE FOR FILE UPLOADING
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                },
-                success: function (data) {
-                },
-                error: function (xhr, status, error) {
-
-                }
-            }); //ajax
-            //alert(tags);
-        }
-    });
-    
+        videoTags(tag_type);
     });
 });
 $('#video-archive-container').on('click','.previous',function(e){
@@ -1846,88 +1874,15 @@ $('#video-archive-container').on('click','.previous',function(e){
     console.log($(this).attr('href'));
     $('.current-video-page').val($(this).attr('href'));
     $('#video-archive').load($(this).attr('href')+' #video-archive',function(responseTxt, statusTxt, xhr){
-        $('.video-tags').tagEditor({
-        maxTags: 9999,
-        clickDelete: true,
-        placeholder: 'Enter video tags ...',
-        autocomplete: {
-            delay: 0, // show suggestions immediately
-            position: {collision: 'flip'}, // automatic menu position up/down
-            source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
-        },
-        onChange: function (field, editor, tags) {
-            var ajaxurl = public_path + 'addNewTag';
-
-            var unique_id = $(field).siblings('.recorded_video_id').val();
-            var tag_type = 'discussions';
-            var formData = new FormData();
-            formData.append('unique_id', unique_id);
-            formData.append('tag_type', tag_type);
-            formData.append('tags', tags);
-            $.ajax({
-                url: ajaxurl,
-                type: "POST",
-                data: formData,
-                // THIS MUST BE DONE FOR FILE UPLOADING
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                },
-                success: function (data) {
-                },
-                error: function (xhr, status, error) {
-
-                }
-            }); //ajax
-            //alert(tags);
-        }
-        
-    });
+        videoTags(tag_type);
     });
 });
-
 $('#video-archive-container').on('click','.next',function(e){
     e.preventDefault();
     console.log($(this).attr('href'));
     $('.current-video-page').val($(this).attr('href'));
     $('#video-archive').load($(this).attr('href')+' #video-archive',function(responseTxt, statusTxt, xhr){
-        $('.video-tags').tagEditor({
-        maxTags: 9999,
-        clickDelete: true,
-        placeholder: 'Enter video tags ...',
-        autocomplete: {
-            delay: 0, // show suggestions immediately
-            position: {collision: 'flip'}, // automatic menu position up/down
-            source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
-        },
-        onChange: function (field, editor, tags) {
-            var ajaxurl = public_path + 'addNewTag';
-
-            var unique_id = $(field).siblings('.recorded_video_id').val();
-            var tag_type = 'discussions';
-            var formData = new FormData();
-            formData.append('unique_id', unique_id);
-            formData.append('tag_type', tag_type);
-            formData.append('tags', tags);
-            $.ajax({
-                url: ajaxurl,
-                type: "POST",
-                data: formData,
-                // THIS MUST BE DONE FOR FILE UPLOADING
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                },
-                success: function (data) {
-                },
-                error: function (xhr, status, error) {
-
-                }
-            }); //ajax
-            //alert(tags);
-        }
-    });
-    
+        videoTags(tag_type);
     });
 });
 
@@ -2033,11 +1988,8 @@ $('body').on('click','.refresh-video-archive',function(e){
 
 $('body').on('click','.leave-discussion',function(e){
    e.preventDefault();
-     webrtc.leaveRoom();      
-     webrtc.stopLocalVideo(); 
-      webrtc.config.media.audio = false;
-      webrtc.config.media.video = false;
-      webrtc.startLocalVideo();
+     webrtc.leaveRoom(room_name_tmp);      
+      webrtc.stopLocalVideo(); 
 $(this).attr('class','btn rejoin-discussion');
 $(this).text('Rejoin Discussion');
    
@@ -2057,40 +2009,5 @@ $(this).text('Leave Discussion');
 
 
 
-//For Tags
-$('.video-tags').tagEditor({
-        maxTags: 9999,
-        clickDelete: true,
-        placeholder: 'Enter video tags ...',
-        autocomplete: {
-            delay: 0, // show suggestions immediately
-            position: {collision: 'flip'}, // automatic menu position up/down
-            source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
-        },
-        onChange: function (field, editor, tags) {
-            var ajaxurl = public_path + 'addNewTag';
-
-            var unique_id = $(field).siblings('.recorded_video_id').val();
-            var tag_type = 'discussions';
-            var formData = new FormData();
-            formData.append('unique_id', unique_id);
-            formData.append('tag_type', tag_type);
-            formData.append('tags', tags);
-            $.ajax({
-                url: ajaxurl,
-                type: "POST",
-                data: formData,
-                // THIS MUST BE DONE FOR FILE UPLOADING
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                },
-                success: function (data) {
-                },
-                error: function (xhr, status, error) {
-
-                }
-            }); //ajax
-            //alert(tags);
-        }
-});
+//Initialize Video Tags
+videoTags(tag_type);

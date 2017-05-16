@@ -64,7 +64,7 @@
         </div>
     </div>
 </div>
-<div class="col-md-12">
+<div class="col-md-12 project-list">
     <div class="modal fade edit-modal" id="ajax" role="basic" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

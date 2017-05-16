@@ -3045,9 +3045,9 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
-  outline: thin dotted;
+  /*outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
+  outline-offset: -2px;*/
 }
 .btn.btn-transparent {
   background-color: transparent!important;
@@ -3089,7 +3089,7 @@ fieldset[disabled] a.btn {
 }
 .btn-default {
   color: #333 !important;
-  background-color: #f2f2f2;
+  background-color: #fff;
   border-color: #ccc !important;
   margin-bottom: 5px;
 }
@@ -3121,7 +3121,7 @@ fieldset[disabled] a.btn {
 .btn-default.active.focus,
 .open > .dropdown-toggle.btn-default.focus {
   color: #333;
-  background-color: #c7c7c7;
+  background-color: #fff;
   border-color: #8c8c8c;
 }
 .btn-default:active,

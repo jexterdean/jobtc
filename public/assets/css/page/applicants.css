@@ -341,6 +341,7 @@ body {
 .footer {
    position: fixed;
     bottom: 0;
+    left: 10px;
     width: 99%;
 }
 .chat-bubble {
@@ -369,4 +370,56 @@ body {
     font-weight: bold;
     position: relative;
     top: -5px;
+}
+.video-archive-element {
+     //height:175px;   
+     //width:250px;
+     display:block;
+     max-width: 100%;
+     height: auto;
+     background-color:#000;
+     border: 2px #fff solid;
+}
+.video-archive-item-details {
+    color: white;
+    font-weight: bold;
+}
+.video-title {
+    background-color: #000;
+    color:#fff;
+    border: 2px solid;
+}
+.video-archive {
+    width: 100%;
+    margin: 0 auto;
+    padding: 15px;
+}
+#progress {
+  position:relative;
+  z-index:9999;
+  width:70%;
+  color:#000;
+  bottom:40px;
+}
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+  position: relative;
+  z-index:9999;
+  bottom: 40px;
+  left: 10px;
+}
+.blink-text {
+  color: #fff;
+  font-weight: bold;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
 }

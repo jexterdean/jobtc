@@ -96,18 +96,45 @@ $.fn.clickToggle = function (func1, func2) {
     return this;
 };
 
+//For Screenshare
 var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 var hasExtension = false;
 
-var display_name = $('.add-comment-form .media-heading').text();
+//var display_name = $('.add-comment-form .media-heading').text();
+var display_name = $('.display_name').val() + '('+$('.user_type').val()+')';
 var room_name_tmp = window.location.pathname;
 var room_name = parseInt(room_name_tmp.substr(room_name_tmp.lastIndexOf('/') + 1));
+var room_number = $('.room_number').val();
 var csrf_token = $('._token').val();
 var playing = false;
 var playing_video = null;
 var recording = false;
 var nfo_id = null;
+var tag_type = 'applicant';
+
 var participant_count = 0;
+var screenshare_count = 0;
+
+
+var peerStream;
+var localPeerId;
+var screentest;
+var sfutest;
+var janusLocalScreenStream;
+var isRecording = false;
+var mainVideo;
+var conversionProgress;
+var conversionAttempts = 0;
+var webrtc;
+
+//Initialize Janus for recording
+Janus.init({debug: "all", callback: function () {
+            if (!Janus.isWebrtcSupported()) {
+                bootbox.alert("No WebRTC support... ");
+                return;
+            }
+            // Create session for Local Video
+}});
 
 //default media options
 var mediaOptions = {
@@ -177,13 +204,13 @@ var videoSelect = document.querySelector('select#video-camera-list');
 
 //Make all video containers resizable
 $( "#localVideoContainer" ).resizable({
-    containment: "#discussions-container",
-    minHeight: 350,
-    minWidth: 350,
+    containment: "body",
+    minHeight: 150,
+    minWidth: 150,
     grid: 50
 });
 
-var webrtc = new SimpleWebRTC({
+webrtc = new SimpleWebRTC({
                      // the id/element dom element that will hold "our" video
                     localVideoEl: 'localVideo',
                     // the id/element dom element that will hold remote videos
@@ -282,8 +309,10 @@ function randomInteger(len, charSet) {
 }
 
 webrtc.on('localStream', function (stream) {
-    console.log('this is the localstream : ' + stream);
+    console.log('this is the localstream : ' + JSON.stringify(stream));
     localStream = stream;
+    mainVideo = stream;
+    console.log(webrtc.webrtc.localStreams[0]);
 });
 
 /*For Video Sharing*/
@@ -310,31 +339,32 @@ webrtc.on('videoAdded', function (video, peer) {
             remoteScreen.appendChild(video);
         } else {
             
-              participant_count++;
-                    
+            participant_count++;
+            var user_id = $('.user_id').val();
+            var user_type = $('.user_type').val();
+            webrtc.sendToAll('userType', {user_type: user_type,user_id:user_id,video_container:'container_' + webrtc.getDomId(peer)});      
+           
+                        
             var videoTag = $('#localVideo')[0];
             
+            
+            
             var remoteVideoOptions = '<div class="row">'+
-                                    '<div class="col-xs-5">'+
-                                        '<button class="btn record"><i class="material-icons">fiber_manual_record</i><span class="record-text">Record</span></button>'+
-                                        '<input class="stream_id" type="hidden" value="' + webrtc.getDomId(peer) + '">' +
-                                        '<input class="participant_id" type="hidden" value="' + participant_count + '"/>' +
-                                        '<input class="video_type" type="hidden" value="remote" />'+
-                                    '</div>'+
-                                    '<div class="col-xs-7">'+
+                                    '<div class="col-xs-12">'+
                                         '<div class="btn-group" role="group" aria-label="Remote Media Options">'+
+                                            '<button class="btn record"><i class="material-icons">fiber_manual_record</i><span class="record-text"></span></button>'+
                                             '<button class="btn  stop-video"><i class="material-icons">videocam</i></button>'+            
                                             '<button class="btn  mute"><i class="material-icons">mic</i></button>'+
                                             '<button class="btn full-screen"><i class="material-icons">fullscreen</i></button>' +
                                             '<input class="participant_id" type="hidden" value="' + participant_count + '"/>' +
                                             '<input class="stream_id" type="hidden" value="' + webrtc.getDomId(peer) + '">' +
-                                            '<input class="video_type" type="hidden" value="remote"/>'
+                                            '<input class="video_type" type="hidden" value="remote"/>' +
                                         '</div>'+
                                     '</div>'+
                                 '</div>';
             
             
-            var collapseContainer = '<div class="col-xs-4 remote-video" id="remoteVideo-' + participant_count + '"><div class="panel-group">'+
+            var collapseContainer = '<div class="col-xs-6 remote-video" id="remoteVideo-' + participant_count + '"><div class="panel-group">'+
     '<div class="panel panel-default">'+
       '<div class="panel-heading">'+
         '<h4 class="panel-title">'+
@@ -368,11 +398,14 @@ webrtc.on('videoAdded', function (video, peer) {
             $("#remote-video-collapse-" + participant_count+' .panel-body').prepend(video);
             
             $('#remoteVideo-'+participant_count).resizable({
-                 containment: "#discussions-container",
-                 minHeight: 350,
-                 minWidth: 350,
+                 containment: "body",
+                 minHeight: 150,
+                 minWidth: 150,
                  grid: 50
             });
+            
+             
+                
             
         }
 
@@ -387,28 +420,25 @@ webrtc.on('videoAdded', function (video, peer) {
             switch (peer.pc.iceConnectionState) {
                 case 'checking':
                     connstate.innerText = 'Connecting to peer...';
-                    janus_btn.addClass('hidden');
+                    
                     break;
                 case 'connected':
                 case 'completed': // on caller side
                     connstate.innerText = 'Connection established.';
                     connstate.remove();
                     if (janusConnected == 1) {
-                        janus_btn.removeClass('hidden');
                         $('.janus-waiting').remove();
                     }
                     simpleRtcConnected = 1;
                     break;
                 case 'disconnected':
                     connstate.innerText = 'Disconnected.';
-                    janus_btn.addClass('hidden');
                     break;
                 case 'failed':
                     break;
                 case 'closed':
                     connstate.innerText = 'Connection closed.';
                     connstate.remove();
-                    janus_btn.addClass('hidden');
                     break;
             }
         });
@@ -534,11 +564,53 @@ webrtc.on('localScreenRemoved', function (video) {
 // we have to wait until it's ready
 webrtc.on('readyToCall', function () {
     // you can name it anything
-    webrtc.joinRoom(room_name_tmp);
+    //webrtc.joinRoom(room_name_tmp);
     console.log(room_name_tmp);
     console.log("Ready to Join Conference");
     //$('.interview-applicant').attr('disabled',false);
+    
+     // you can name it anything
+    webrtc.joinRoom(room_name_tmp,function(){
+        console.log('Joining Room');  
+    });
+    
 });
+
+webrtc.connection.on('message', function (data) {
+    if (data.type === 'chat') {
+        console.log('chat received' + JSON.stringify(data));
+        var message = data.payload.message;
+         var regex = /(https?:\/\/([-\w\.]+)+(:\d+)?(\/([-\w/_\.]*(\?\S+)?)?)?)/ig;
+         
+        // Replace plain text links by hyperlinks
+        var replaced_text = message.replace(regex, "<a href='$1' target='_blank'>$1</a>");
+        
+        var chat_message = '<div class="row"><div class="col-xs-6">'+ data.payload.display_name + '</div><div class="col-xs-6"></div></div><div class="row"><div class="col-xs-8 chat-bubble-left">'+replaced_text+'</div></div>';
+        $('.incoming-chat-sound').get(0).play();
+        $('#message-log').prepend(chat_message);
+        
+        if($('#chat-box-container').hasClass("is-hidden") == true) {
+            var chat_count = parseInt($('.chat-badge').text()) + 1;
+            $('.chat-badge').text(chat_count);
+            $('.toggle-panel-chat').effect('highlight');
+        }
+    }
+    if(data.type === 'userType') {
+        console.log('Received userType ' + data.payload.user_type);
+        console.log('Received userID ' + data.payload.user_id);
+        console.log('Received video ' + data.payload.video_id);
+        //var remote_video_exists = $('#remoteVideo-'+participant_count).length;
+        //console.log(remote_video_exists);
+        //if(remote_video_exists > 0) {
+        $('#remoteVideo-'+participant_count+' .panel-footer').find('.user_type').val(data.payload.user_type);
+        $('#remoteVideo-'+participant_count+' .panel-footer').find('.user_id').val(data.payload.user_id);    
+        //}
+        
+        
+    }
+   
+});
+
 
 //region Recording Area
 //$(document).ready(function () {
@@ -691,7 +763,7 @@ socket.on('start-recording', function (data) {
     }); //ajax
 
 });
-socket.on('stop-recording', function (data) {
+/*socket.on('stop-recording', function (data) {
 
     recording = false;
 
@@ -734,8 +806,8 @@ socket.on('stop-recording', function (data) {
     screentest.detach();
     createJanusLocalStream();
     createJanusLocalScreenShare();
-});
-socket.on('save-video', function (data) {
+});*/
+/*socket.on('save-video', function (data) {
     var ajaxurl = public_path + 'saveVideo';
 
     //Get Page type to determine if it's a company employee or applicant
@@ -788,9 +860,9 @@ socket.on('save-video', function (data) {
         saveScreenShareNfo();
     }
 
-});
+});/*
 /*When video is successfully recorded, place it on the video archive*/
-socket.on('add-video', function (data) {
+/*socket.on('add-video', function (data) {
     console.log(data);
     var json_data = JSON.parse(data);
 
@@ -820,7 +892,7 @@ socket.on('add-video', function (data) {
 
     $('.save-progress').text("Video Recorded");
 
-});
+});*/
 
 //endregion
 
@@ -913,38 +985,605 @@ $('.screen-share').clickToggle(function () {
     $('#localScreen').remove();
 });
 
-$('.mute-button').clickToggle(function () {
-    $(this).find('span').text('Unmute');
-    webrtc.mute();
-}, function () {
-    $(this).find('span').text('Mute');
-    webrtc.unmute();
+
+$('body').on('click','.mute',function(){
+    var muteText = $(this).children('.material-icons').text();
+    var video_type = $(this).siblings('.video_type').val();
+    if(muteText == 'mic_off') {
+        if(video_type == 'local') { 
+            webrtc.unmute();
+        } else {
+            var video_id = 'container_'+$(this).siblings('.stream_id').val();
+             var remoteVideo = document.getElementById(video_id);
+             remoteVideo.volume = 1;
+             
+        }
+        $(this).children('.material-icons').text('mic');   
+        console.log('Mic On');
+    } else {
+        if(video_type == 'local') { 
+            webrtc.mute();
+        } else {
+            var video_id = 'container_'+$(this).siblings('.stream_id').val();
+             var remoteVideo = document.getElementById(video_id);
+             remoteVideo.volume = 0;
+        }
+        $(this).children('.material-icons').text('mic_off');   
+        console.log('Mic Off');
+    }
 });
 
-$('.show-video-button').clickToggle(function () {
-    $(this).find('span').text('Show Video');
-    webrtc.pauseVideo();
-}, function () {
-    $(this).find('span').text('Stop Video');
-    webrtc.resumeVideo();
+$('body').on('click','.stop-video',function(){
+    var muteText = $(this).children('.material-icons').text();
+    var video_type = $(this).siblings('.video_type').val();
+    if(muteText == 'videocam_off') {
+        if(video_type == 'local') { 
+            webrtc.resumeVideo();
+        } else {
+            var video_id = 'container_'+$(this).siblings('.stream_id').val();
+             var remoteVideo = document.getElementById(video_id);
+             remoteVideo.play();
+             
+        }
+        $(this).children('.material-icons').text('videocam');   
+        console.log('Video On');
+    } else {
+        if(video_type == 'local') { 
+            webrtc.pauseVideo();
+        } else {
+            var video_id = 'container_'+$(this).siblings('.stream_id').val();
+             var remoteVideo = document.getElementById(video_id);
+             remoteVideo.pause();
+        }
+        $(this).children('.material-icons').text('videocam_off');   
+        console.log('Video Off');
+    }
 });
 
-$('.record-button').clickToggle(function () {
-    $(this).addClass('btn-danger');
-    $(this).removeClass('btn-default');
-    $(this).find('i').css('color', 'orange');
-    $(this).children('span').text('Stop Recording');
-    $('.save-progress').text("Recording");
-    startRecording();
-}, function () {
-    $(this).addClass('btn-default');
-    $(this).removeClass('btn-danger');
-    $(this).find('i').css('color', 'green');
-    $(this).children('span').text('Start Recording');
-    $('.save-progress').text("");
-    stopRecording();
-    saveVideo();
+$('body').on('click', '.full-screen', function () {
+    var video_id = 'container_'+$(this).siblings('.stream_id').val();
+    
+    var localVideo = document.getElementById(video_id);
+
+    // go full-screen
+    if (localVideo.requestFullscreen) {
+        localVideo.requestFullscreen();
+    } else if (localVideo.webkitRequestFullscreen) {
+        localVideo.webkitRequestFullscreen();
+    } else if (localVideo.mozRequestFullScreen) {
+        localVideo.mozRequestFullScreen();
+    } else if (localVideo.msRequestFullscreen) {
+        localVideo.msRequestFullscreen();
+    }
+
+    console.log('full screen video id: ' + video_id);
 });
+
+$('body').on('change','#video-camera-list',function(){
+     //webrtc.stopLocalVideo();
+     var selectedOption = $(this).val();
+     console.log('selectedOption: '+selectedOption);
+     console.log('Audio Changed');
+     webrtc.leaveRoom();      
+     webrtc.stopLocalVideo();
+     localStorage.setItem('video',selectedOption);
+      webrtc.config.media.video = {
+        optional: [{sourceId: selectedOption}]
+      }
+      webrtc.startLocalVideo();
+});
+
+$('body').on('change','#audio-input-list',function(){
+     //webrtc.stopLocalVideo();
+     var selectedOption = $(this).val();
+     console.log(localStorage.getItem('audio'));
+     console.log('selectedOption: '+selectedOption);
+     console.log('Audio Changed');
+     webrtc.leaveRoom();      
+     webrtc.stopLocalVideo(); 
+     localStorage.setItem('audio',selectedOption);
+      webrtc.config.media.audio = {
+        optional: [{sourceId: selectedOption}]
+      }
+      webrtc.startLocalVideo();
+});
+
+
+$('body').on('click','.record',function(){
+    var muteText = $(this).children('.material-icons').text();
+    var video_type = $(this).siblings('.video_type').val();
+    var video_title = "";
+    console.log(muteText);
+    console.log(video_type);
+    if(muteText == 'fiber_manual_record') {
+        if(video_type == 'local') { 
+            mainVideo = localStream;
+            var container = 'localVideoContainer';
+            createJanusLocalStream(container,video_title);    
+        } else if(video_type == 'localScreen') { 
+            mainVideo = localScreenStream;
+            var screenshare_id = $(this).siblings('.screenshare_id').val();
+            var container = 'screenContainer-'+screenshare_id;
+            createJanusLocalStream(container,video_title);        
+        } else if(video_type == 'remoteScreen') {    
+            
+             var video_id = 'container_'+$(this).siblings('.stream_id').val();
+             var screenshare_id = $(this).siblings('.screenshare_id').val();
+             var remoteVideo = document.getElementById(video_id);
+             mainVideo = $('#'+video_id)[0].srcObject;
+             var container = 'screenContainer-'+screenshare_id;
+             console.log(container);
+             createJanusLocalStream(container,video_title);        
+            
+        } else {
+             var video_id = 'container_'+$(this).siblings('.stream_id').val();
+             var participant_id = $(this).siblings('.participant_id').val();
+             var remoteVideo = document.getElementById(video_id);
+             mainVideo = $('#'+video_id)[0].srcObject;
+             var container = 'remoteVideo-'+participant_id;
+             console.log(container);
+             createJanusLocalStream(container,video_title);        
+        }
+        isRecording = true;
+        $(this).css('background-color','orange');
+        $(this).children('.material-icons').text('stop');
+        //$(this).find('.record-text').text('Starting...');
+        $(this).attr('disabled',true);
+    } else {
+        sfutest.send({"message": stop});
+        sfutest.detach();
+        isRecording = false;
+        $(this).css('background-color','#d7efed');
+        $(this).children('.material-icons').text('fiber_manual_record');
+        //$(this).find('.record-text').text('Record');
+        //$(this).text('Start Recording');
+        $('.blink').addClass('hidden');    
+    }
+});
+
+//For Lightbox
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+    event.preventDefault();
+    $(this).ekkoLightbox({
+        alwaysShowClose: true
+    });
+});
+
+function createJanusLocalStream(container,video_title) {
+    janus = new Janus({
+        server: server,
+        success: function () {
+            //Local Video
+            janus.attach({
+                plugin: "janus.plugin.recordplay",
+                success: function (pluginHandle) {
+                    sfutest = pluginHandle;
+                    startRecordingLocalStream();
+                },
+                error: function (error) {
+                    Janus.error("  -- Error attaching plugin...", error);
+                    bootbox.alert("  -- Error attaching plugin... " + error);
+                },
+                consentDialog: function (on) {
+                    Janus.debug("Consent dialog should be " + (on ? "on" : "off") + " now");
+                },
+                webrtcState: function (on) {
+                    Janus.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+                },
+                onmessage: function (msg, jsep) {
+                    Janus.debug(" ::: Got a message :::");
+                    Janus.debug(JSON.stringify(msg));
+                    var result = msg["result"];
+                    console.log("result: " + result);
+                    if (result !== null && result !== undefined) {
+                        if (result["status"] !== undefined && result["status"] !== null) {
+                            var event = result["status"];
+                            if (event === 'preparing') {
+                                Janus.log("Preparing the recording playout :" + result["id"]);
+                                playing_video = result["id"]
+                                sfutest.createAnswer({
+                                    jsep: jsep,
+                                    media: {audioSend: false, videoSend: false}, // We want recvonly audio/video
+                                    success: function (jsep) {
+                                        Janus.debug("Got SDP!");
+                                        Janus.debug(jsep);
+                                        var body = {"request": "start"};
+                                        sfutest.send({"message": body, "jsep": jsep});
+                                    },
+                                    error: function (error) {
+                                        Janus.error("WebRTC error:", error);
+                                        bootbox.alert("WebRTC error... " + JSON.stringify(error));
+                                    }
+                                });
+                                if (result["warning"])
+                                    bootbox.alert(result["warning"]);
+                            }
+                            else if (event === 'recording') {
+                                // Got an ANSWER to our recording OFFER
+                                if (jsep !== null && jsep !== undefined)
+                                    sfutest.handleRemoteJsep({jsep: jsep});
+                                var id = result["id"];
+                                if (id !== null && id !== undefined) {
+                                    Janus.log("The ID of the current recording is " + id);
+                                    //Get the nfo id to map to the mjr file generated
+                                    nfo_id = id;
+                                    //$('.recording-loading-gif').remove();
+                                    $('#'+container).find('.blink').removeClass('hidden');
+                                    //$('#'+container).find('.record-text').text('Stop Recording');
+                                    $('#'+container).find('.record').attr('disabled',false);
+                                }
+                            }
+                            else if (event === 'slow_link') {
+                                var uplink = result["uplink"];
+                                if (uplink !== 0) {
+                                    // Janus detected issues when receiving our media, let's slow down
+                                    bandwidth = 128 * 1024;
+                                    sfutest.send({
+                                        'message': {
+                                            'request': 'configure',
+                                            'video-bitrate-max': bandwidth, // Reduce the bitrate
+                                            'video-keyframe-interval': 15000 // Keep the 15 seconds key frame interval
+                                        }
+                                    });
+                                }
+                            }
+                            else if (event === 'playing') {
+                                Janus.log("Playout has started!");
+                            }
+                            else if (event === 'stopped') {
+                                Janus.log("Session has stopped!");
+                                //$('.blink').addClass('hidden');
+                            } else if (event === 'done') {
+                                $('#video-archive-item-' + playing_video).remove();
+                                playing_video = null;
+                            }
+                        }
+                    }
+                    else {
+                        // FIXME Error?
+                        var error = msg["error"];
+                        bootbox.alert(error);
+                    }
+                },
+                onlocalstream: function (stream) {
+                    Janus.debug(" ::: Got a local stream :::");
+                    Janus.debug(JSON.stringify(stream));
+                    //if (playing === true)
+                    //return;
+
+                    //$('#localVideo').append('<video class="rounded centered" id="thevideo" width=320 height=240 autoplay muted="muted"/>');
+                    //attachMediaStream($('#thevideo').get(0), stream);
+
+                    //attachMediaStream($('#localVideo').find('video').get(0), stream);
+                },
+                onremotestream: function (stream) {
+                    if (playing === false)
+                        return;
+                    Janus.debug(" ::: Got a remote stream :::" + JSON.stringify(stream));
+                    $('.video-element-holder #' + playing_video).append('<video class="rounded centered" id="video-archive-item-' + playing_video + '" width=320 height=240 controls autoplay/>');
+
+                    // Show the video, hide the spinner and show the resolution when we get a playing event
+                    attachMediaStream($('#video-archive-item-' + playing_video).get(0), stream);
+
+                },
+                oncleanup: function () {
+                    Janus.log(" ::: Got a cleanup notification :::");
+                    var f = sfutest.getId();
+                    var filename = 'localRecording-' + f.toString();
+                    console.log('Converting file: '+filename);
+                    convertJanusVideo(filename,container,video_title);
+                },
+                detach: function() {
+                    
+                }
+            });
+        },
+        error: function (error) {
+            Janus.error(error);
+            bootbox.alert(error, function () {
+                location.reload();
+            });
+        },
+        destroyed: function () {
+            location.reload();
+        }
+    });
+}
+
+
+function startRecordingLocalStream() {
+   var n = $.now();
+    recordingId = n + '-' + room_name;
+    //var f = data + '-' + recordingId;
+    var f = sfutest.getId();
+    var filename = 'localRecording-' + f.toString();
+    
+    sfutest.createOffer({
+        // By default, it's sendrecv for audio and video..
+        success: function (jsep) {
+            Janus.debug(jsep);
+            var body = {
+                "request": "record",
+                "name": 'localRecording-' + f.toString(),
+                "video": "hires",
+                "filename": 'localRecording-' + f.toString()
+            };
+            sfutest.send({"message": body, "jsep": jsep});
+            
+        },
+        //stream: localStream,
+        stream: mainVideo,
+        error: function (error) {
+            sfutest.hangup();
+            $('.blink').addClass('hidden');
+        }
+    });
+}
+
+function convertJanusVideo(filename,container,video_title) {
+    
+    $.ajax({
+     url: public_path + 'convertDiscussionsJanusVideo',
+     data: {
+         'filename': filename,
+         'module_type': 'applicants',
+         'module_id': room_number,
+         'display_name': display_name,
+         'video_title': video_title
+     },
+     type: "POST",
+     beforeSend: function () {
+        console.log('Sending Conversion signal');
+        $('#'+container).find('.recording-status').removeClass('hidden');
+        $('#'+container).find('.recording-status').text('Saving Video');
+        
+     },
+     success: function (e) {
+     $('#'+container).find('.recording-status').text('Video Saved. Processing Video');
+     $('#'+container).find('.progress').removeClass('hidden');
+     
+     conversionProgress = window.setTimeout(function() { 
+            getConversionProgress(filename,container);
+     }, 1000);
+     
+     },
+     complete: function () {
+        console.log('Completed Conversion');
+     },
+     error: function (xhr, status, error) {
+     console.log('Error:'+error);
+     }
+     });
+    
+}
+
+var getConversionProgress = function(filename,container) {
+    conversionAttempts++;
+    $.ajax({
+     url: public_path + 'getConversionProgress',
+     data: {
+         'filename': filename
+     },
+     type: "POST",
+     beforeSend: function () {
+        
+     },
+     success: function (data) {
+        console.log($('.processing-percent').val(data));    
+       $('#'+container).find('.progress-bar').css('width', data+'%').attr('aria-valuenow', data);
+       $('#'+container).find('.progress-bar').html('Processing '+data+'% Complete');
+       $('#'+container).find('.processing-percent').val(data);
+       
+       if(data == '100') {
+           $('#'+container).find('.recording-status').text('Processing Completed');
+           $('#video-archive').load($('.current-video-page').val()+' #video-archive',function(responseTxt, statusTxt, xhr) {
+               $('.video-tags').tagEditor({
+                    maxTags: 9999,
+                    clickDelete: true,
+                    placeholder: 'Enter video tags ...',
+                    autocomplete: {
+                        delay: 0, // show suggestions immediately
+                        position: {collision: 'flip'}, // automatic menu position up/down
+                        source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
+                    },
+                    onChange: function (field, editor, tags) {
+                    var ajaxurl = public_path + 'addNewTag';
+
+                    var unique_id = $(field).siblings('.recorded_video_id').val();
+                    var tag_type = 'discussions';
+                    var formData = new FormData();
+                    formData.append('unique_id', unique_id);
+                    formData.append('tag_type', tag_type);
+                    formData.append('tags', tags);
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                }); //ajax
+            //alert(tags);
+        }
+    });
+           });
+           $('#'+container).find('.recording-status').addClass('hidden');
+           $('#'+container).find('.progress').addClass('hidden');
+           $('#'+container).find('.processing-percent').val("0");
+           conversionAttempts = 0;
+       } else
+        if(conversionAttempts < 10 && data < 99) {    
+        conversionProgress = window.setTimeout(function() { 
+            getConversionProgress(filename,container); 
+        }, 1000);    
+       } else {
+           conversionAttempts = 0;
+           $('#'+container).find('.recording-status').addClass('hidden');
+           $('#'+container).find('.progress').addClass('hidden');
+           $('#'+container).find('.processing-percent').val("0");
+           $('#video-archive').load($('.current-video-page').val()+' #video-archive',function(responseTxt, statusTxt, xhr) {
+               $('.video-tags').tagEditor({
+                    maxTags: 9999,
+                    clickDelete: true,
+                    placeholder: 'Enter video tags ...',
+                    autocomplete: {
+                        delay: 0, // show suggestions immediately
+                        position: {collision: 'flip'}, // automatic menu position up/down
+                        source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
+                    },
+                    onChange: function (field, editor, tags) {
+                    var ajaxurl = public_path + 'addNewTag';
+
+                    var unique_id = $(field).siblings('.recorded_video_id').val();
+                    var tag_type = 'discussions';
+                    var formData = new FormData();
+                    formData.append('unique_id', unique_id);
+                    formData.append('tag_type', tag_type);
+                    formData.append('tags', tags);
+                    $.ajax({
+                        url: ajaxurl,
+                        type: "POST",
+                        data: formData,
+                        // THIS MUST BE DONE FOR FILE UPLOADING
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                }); //ajax
+            //alert(tags);
+        }
+    });
+           });
+       }
+     },
+     complete: function () {
+        
+     },
+     error: function (xhr, status, error) {
+        console.log('Error: retrying');
+        conversionProgress = window.setTimeout(function() { 
+            getConversionProgress(filename,container); 
+        }, 1000);  
+     }
+     });
+
+}
+
+//For Video Archive Paginator
+$('#video-archive-container').on('click','.pager-element',function(e){
+    e.preventDefault();
+    console.log($(this).attr('href'));
+    $('.current-video-page').val($(this).attr('href'));
+    $('#video-archive').load($(this).attr('href')+' #video-archive',function(responseTxt, statusTxt, xhr){
+        videoTags(tag_type);
+    
+    });
+});
+$('#video-archive-container').on('click','.previous',function(e){
+    e.preventDefault();
+    console.log($(this).attr('href'));
+    $('.current-video-page').val($(this).attr('href'));
+    $('#video-archive').load($(this).attr('href')+' #video-archive',function(responseTxt, statusTxt, xhr){
+        videoTags(tag_type);
+    });
+});
+$('#video-archive-container').on('click','.next',function(e){
+    e.preventDefault();
+    console.log($(this).attr('href'));
+    $('.current-video-page').val($(this).attr('href'));
+    $('#video-archive').load($(this).attr('href')+' #video-archive',function(responseTxt, statusTxt, xhr){
+        videoTags(tag_type)
+    });
+});
+
+var chat_toggle = $('#chat-box-container').scotchPanel({
+                    startOpened: false, // Required
+                    containerSelector: '#applicant-posting-container',
+                    direction: 'left',
+                    duration: 300,
+                    transition: 'ease',
+                    //clickSelector: '.toggle-panel-chat',
+                    distanceX: '30%',
+                    enableEscapeKey: true
+                });
+
+//For Chat Toggling
+$('.toggle-panel-chat').click(function(){
+    if($(this).text() == 'Close Chat') {
+        $('#chat-box-container').addClass('is-hidden');
+        $(this).text('Open Chat');
+        $(this).append('<span class="badge chat-badge">0</span>');
+        
+    } else {
+        $('#chat-box-container').removeClass('is-hidden');
+        $(this).text('Close Chat');    
+        $(this).children('.chat-badge').remove();
+    }
+    chat_toggle.toggle();
+});
+
+function stopJanusRecording() {
+        sfutest.send({"message": stop});
+        sfutest.detach();   
+}
+
+//Initialize Video Tags
+videoTags(tag_type);
+function videoTags(tag_type) {
+    //For Tags
+$('.video-tags').tagEditor({
+        maxTags: 9999,
+        clickDelete: true,
+        placeholder: 'Enter video tags ...',
+        autocomplete: {
+            delay: 0, // show suggestions immediately
+            position: {collision: 'flip'}, // automatic menu position up/down
+            source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/' +tag_type
+        },
+        onChange: function (field, editor, tags) {
+            var ajaxurl = public_path + 'addNewTag';
+
+            var unique_id = $(field).siblings('.recorded_video_id').val();
+            var formData = new FormData();
+            formData.append('unique_id', unique_id);
+            formData.append('tag_type', tag_type);
+            formData.append('tags', tags);
+            $.ajax({
+                url: ajaxurl,
+                type: "POST",
+                data: formData,
+                // THIS MUST BE DONE FOR FILE UPLOADING
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                },
+                success: function (data) {
+                },
+                error: function (xhr, status, error) {
+
+                }
+            }); //ajax
+            //alert(tags);
+        }
+});
+}
+
+
+///////////////////////////////////////////
+//Old Code
+///////////////////////////////////////////
 
 function startRecording() {
     // bitrate and keyframe interval can be set at any time:
@@ -962,46 +1601,153 @@ function saveVideo() {
 }
 
 $('body').on('click', '.btn-video', function (e) {
-    var video_btn = $(this);
-    var time_limit = $(this).parent().find('.time-limit-conference');
-    var question_point = $(this).parent().find('.video-conference-points');
+    var timer_text = $(this).siblings('.timer-area').text();
+    var original_time = $(this).siblings('.original_time').val();
+    var question_id = $(this).siblings('.question_id').val();
+    
+    var time_array = timer_text.split(":");
+    
+    var minutes = '-' + time_array[0] + 'M';
+    var seconds = '-' + time_array[1] + 'S';
 
-    if ($(this).data('status') == 1) {
-        isLocal = 1;
-        recordingId = $.now() + '-' + room_name;
-        socket.emit('set-remote-id', 'remote-' + recordingId);
-        socket.emit('start-interview', 'local-' + recordingId);
-
-        time_limit.timerStart();
-        video_btn.data('status', 2);
-        video_btn.html('Score Answer');
+    var until = minutes + ' ' + seconds;
+   
+   var timer_id = $(this).siblings('.timer-area').attr('id');
+   
+    var b = addMinutes(new Date(),time_array[0]); 
+     
+    //Applicant will always be the remote video. Only the Interviewer can record the applicant's video
+    var remote_video_length = $('#video-conference-container .remote-video').length;   
+    
+    if(remote_video_length != 0) {
+    
+   if($(this).text() === 'Record Answer') {
+        for(i=0; i < remote_video_length; i++) {
+            var remote_video_id = $('#video-conference-container .remote-video').attr('id');
+            var remote_video_title = $('#'+remote_video_id+' .panel-title').text();
+            
+            if(remote_video_title.includes('(applicant)')) {
+                mainVideo = $('#'+remote_video_id+' .panel-body video')[0].srcObject;
+                //var video_id = 'container_'+$(this).siblings('.stream_id').val();
+                var container = $('#'+remote_video_id).find('.stream_id').val();
+                var video_title = $('#question-'+question_id+' .box-title').text();
+                console.log('Recording applicant');
+                $(this).text('Stop Recording');
+                $('#'+timer_id).countdown({until: b, format: 'MS', compact: true});
+                $('#'+timer_id).countdown('resume');
+                createJanusLocalStream(container,video_title);
+            }
     }
-    else if ($(this).data('status') == 2) {
-        var test_id = $(this).data('test');
-        var unique_id = $(this).data('unique');
-        currentRecordUrl = public_path + 'quiz?id=' + test_id + '&p=exam';
-        currentRecordData = {
-            local_record_id: 'local-' + recordingId,
-            record_id: 'remote-' + recordingId,
-            question_id: this.id,
-            answer: '',
-            result: 1,
-            unique_id: unique_id,
-            points: question_point.val(),
-            video_conference: 1
-        };
+   } else {
+       $(this).text('Record Answer');
+        sfutest.send({"message": stop});
+        sfutest.detach();
+        $('#'+timer_id).countdown('pause');
+        $('#'+timer_id).countdown('destroy');
+        console.log('original_time: '+original_time);
+        $(this).siblings('.timer-area').text(original_time);
+   }
+} else {
+        $(this).siblings('.recording-status-text').append('<span>Applicant is offline</span>');
+        $(this).siblings('.recording-status-text').find('span').fadeOut(1000);
+}
+    
+});
 
-        $(this)
-                .parent()
-                .find('.time-limit-conference')
-                .after('<span class="janus-waiting" style="color: #f00;">Please wait...</span>');
+function addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
+}
 
-        socket.emit('stop-interview', 'local-' + recordingId);
+$('body').on('change','.video-conference-points',function(){
+   
+   var question_id = $(this).siblings('.question_id').val();
+   var applicant_id = $(this).siblings('.applicant_id').val();
+   var score = $(this).val();
+   console.log('score: '+score);
+   console.log('question_id: '+question_id);
+   console.log('applicant_id: '+applicant_id);
+   $.ajax({
+            url: public_path + 'updateInterviewQuestionScore/'+question_id,
+            data: {
+                score: score,
+                applicant_id:applicant_id
+            },
+            type: "PUT",
+            beforeSend: function () {
 
-        clearInterval(interval);
-        $(this).html('Record Answer');
-        $(this).data('status', 1);
+            },
+            success: function (data) {
+                
+            },
+            complete: function () {
+
+            },
+            error: function (xhr, status, error) {
+                
+            }
+        });
+    
+});
+
+$('body').on('click','.btn-edit-video-title',function(e){
+    e.preventDefault();
+    
+    $(this).addClass('hidden');
+    $(this).siblings('.btn-save-video-title').removeClass('hidden');
+    $(this).parent().parent().find('.edit-title').removeClass('hidden');
+    $(this).parent().parent().find('.video-label').addClass('hidden');
+    $(this).siblings('.btn-delete-video').addClass('hidden');
+});
+
+$('body').on('click','.btn-save-video-title',function(e){
+    var recorded_video_id = $(this).siblings('.recorded_video_id').val();
+    var new_title = $(this).parent().parent().find('.edit-title').val();
+    if(new_title !== "") {
+        $(this).parent().parent().find('.video-label').text(new_title);    
+    } else {
+        $(this).parent().parent().find('.video-label').text('No Title');    
     }
+    
+    
+    $(this).addClass('hidden');
+    $(this).parent().parent().find('.edit-title').addClass('hidden');
+    $(this).siblings('.btn-edit-video-title').removeClass('hidden');
+    $(this).siblings('.btn-delete-video').removeClass('hidden');
+    $(this).parent().parent().find('.video-label').removeClass('hidden');
+    editRecordedVideo(new_title,recorded_video_id);
+});
+
+$('body').on('click','.btn-delete-video',function(e){
+    e.preventDefault();
+    var recorded_video_id = $(this).siblings('.recorded_video_id').val();
+    //console.log(recorded_video_id);var message_object = '<div class="row"><div class="col-xs-6">'+ webrtc.config.nick + '</div><div class="col-xs-6"></div></div><div class="row"><div class="col-xs-8 chat-bubble-left">'+message+'</div></div>';
+    var button = $(this);
+    BootstrapDialog.confirm({
+            title: 'Deleting Video',
+            message: 'Are you sure?',
+            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: 'Cancel', // <-- Default value is 'Cancel',
+            btnOKLabel: 'Ok', // <-- Default value is 'OK',
+            btnOKClass: 'btn-warning', // <-- If you didn't specify it, dialog type will be used,
+            callback: function(result) {
+                // result will be true if button was click, while it will be false if users close the dialog directly.
+                if(result) {
+                    button.attr('disabled','true');
+                    button.text('Deleting');
+                    deleteRecordedVideo(recorded_video_id,$(this));            
+                }else {
+                    
+                }
+            }
+        });
+});
+
+$('body').on('click','.refresh-video-archive',function(e){
+   e.preventDefault();
+   refreshVideoArchive();
+   $(this).text('Refreshing');
 });
 
 //Check if we have the Job.tc chrome extension if it's chrome
@@ -1013,7 +1759,7 @@ function checkExtension() {
     }
 }
 
-function createJanusLocalStream() {
+/*function createJanusLocalStream() {
     janus = new Janus({
         server: server,
         success: function () {
@@ -1146,21 +1892,14 @@ function createJanusLocalStream() {
             location.reload();
         }
     });
-}
+}*/
 
-function startRecordingLocalStream(session_local) {
+/*function startRecordingLocalStream(session_local) {
     var n = $.now();
     recordingId = n + '-' + room_name;
     //var f = data + '-' + recordingId;
     var f = session_local + '-' + sfutest.getId();
-    /*sfutest.send({
-     'message': {
-     'request': 'configure',
-     'video-bitrate-max': bandwidth, // a quarter megabit
-     'video-keyframe-interval': 15000 // 15 seconds
-     }
-     });*/
-
+    
     //console.log(n);
 
     sfutest.createOffer({
@@ -1181,7 +1920,7 @@ function startRecordingLocalStream(session_local) {
             sfutest.hangup();
         }
     });
-}
+}*/
 
 function startRecordingLocalScreenShare(data) {
     var n = $.now();
@@ -1459,4 +2198,32 @@ function isRecording() {
             }
         });
     }
+}
+
+function deleteRecordedVideo(recorded_video_id) {
+    
+    $.ajax({
+     url: public_path + '/deleteRecordedVideo/'+recorded_video_id,
+     type: "DELETE",
+     beforeSend: function () {
+        
+     },
+     success: function (e) {
+     console.log('Deleted Video');
+     refreshVideoArchive();
+     },
+     complete: function () {
+        
+     },
+     error: function (xhr, status, error) {
+     }
+     });
+    
+}
+
+function refreshVideoArchive() {
+    $('#video-archive').load($('.current-video-page').val()+' #video-archive',function(responseTxt, statusTxt, xhr){
+        $('.refresh-video-archive').text('Refresh Video Archive');
+         videoTags(tag_type);
+    });
 }

@@ -216,12 +216,15 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/jquery-tagEditor/jquery.caret.min.js')  !!}
 {!!  HTML::script('assets/js/jquery-tagEditor/jquery.tag-editor.min.js')  !!}
 {!!  HTML::script('assets/js/page/applicants.js')  !!}
-{{--  HTML::script('assets/js/erizo.js')  --}}
-{{--  HTML::script('assets/js/page/video-conference.js')  --}}
 {!!  HTML::script('assets/js/adapter.js')  !!}
-{{--  HTML::script('assets/js/janus.js')  --}}
-<script src="https://simplewebrtc.com/latest-v2.js"></script>
+{!!  HTML::script('assets/js/janus.js')  !!}
+{!!  HTML::script('assets/js/SimpleWebRTC/simplewebrtc.bundle.js')  !!}
 {!!  HTML::script('assets/js/html2canvas.js') !!}
+<script src="https://cdn.rawgit.com/scotch-io/scotch-panels/master/dist/scotchPanels.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.js"></script>
+{!! HTML::script('assets/js/moment.min.js') !!}
+{!! HTML::script('assets/js/jquery.plugin.min.js') !!}
+{!! HTML::script('assets/js/jquery.countdown.js') !!}
 {!!  HTML::script('assets/js/page/video-conference-webrtc.js') !!}
 {{--  HTML::script('assets/js/page/video-conference-janus.js') --}}
 {{--  HTML::script('assets/js/page/video-call-janus.js')  --}}
@@ -310,6 +313,7 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/jquery.tag-editor.min.js')  !!}
 <script src="https://cdn.rawgit.com/scotch-io/scotch-panels/master/dist/scotchPanels.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.js"></script>
+{!!  HTML::script('assets/js/jquery.gridly.js')  !!}
 {!!  HTML::script('assets/js/page/discussions-room.js')  !!}
 @endif
 

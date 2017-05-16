@@ -17,9 +17,10 @@
     margin-bottom: -1px;
     background-color: #fff;
     border: 1px solid #ddd;
+    min-height: 112px;
 }
 
 .project-details {
     position: relative;
-    left: 5px;
+    /*left: 5px;*/
 }
