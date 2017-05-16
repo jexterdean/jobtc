@@ -4,6 +4,10 @@
     Author     : Jexter Dean Buenaventura
 */
 
+.form-control:focus{
+    border-color: #ccc !important;
+}
+
 .space {
     padding: 15px;
 }
@@ -13,9 +17,11 @@
 
 .breadcrumb_container {
     position: relative;
-    top: 7px;
+    top: 13px;
+    /*top: 7px;*/
     margin: 0 auto;
     width: 90%;
+    font-size: 14px;
 }
 
 .breadcrumb {
@@ -29,7 +35,7 @@
 .breadcrumb li {
     float: left;
     background-color: transparent;/*#4285F4;*/
-    padding: 0 5px;
+    padding: 0;
     display: inline-flex;
 }
 
@@ -48,7 +54,7 @@
 .breadcrumb li a:hover {
     /*background-color: #4285F4;*/
     text-decoration: underline;
-    text-shadow: 1px 1px 1px #4288f7, 0 0 0 #4288f7, 1px 1px 1px #4288f7;
+    /*text-shadow: 1px 1px 1px #4288f7, 0 0 0 #4288f7, 1px 1px 1px #4288f7;*/
 }
 .search-container {
     position: relative;
@@ -61,6 +67,10 @@
 .search-container .module-selector {
     background: #4285F4 !important;
     color: #ffffff !important;
+}
+
+.search-container .module-selector:focus{
+    outline: none;
 }
 
 .search-column {

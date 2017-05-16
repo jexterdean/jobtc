@@ -453,6 +453,14 @@ Route::group(['prefix' => 'api'], function () {
 Route::get('/chat/get','ChatController@get');
 Route::resource('/chat','ChatController');
 
+/*Update Interview Question Score for Applicant*/
+Route::put('/updateInterviewQuestionScore/{id}','ApplicantController@updateInterviewQuestionScore');
+
+/*Interview Questions*/
+Route::resource('/interview/questions','InterviewQuestionController');
+
+
+
 /*
  * New Note
  */

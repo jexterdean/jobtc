@@ -38,7 +38,8 @@
                     </div>
                     <div class="input-group">
                         <input type="submit" class="btn btn-edit btn-shadow submit" name="login" tabindex="4" value="Login" />
-                        <a href="{{ url('forgotPassword') }}" class="lostpass space" href="" title="Password Lost and Found">Lost your password?</a>
+                        <a href="{{ url('forgotPassword') }}" class="lostpass space" href="" title="Password Lost and Found">Lost your password?</a><br>
+                        <p style="font-size:16px;text-indent:77px;">New member?<a href="{{ url('register') }}" class="lostpass space" href="" title="Sig up">Sign up now!</a></p>
                     </div>
                 </form>
                 <div class="space"></div>

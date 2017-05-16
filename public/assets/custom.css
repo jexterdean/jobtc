@@ -85,8 +85,11 @@ a:active,a:focus{
 .task-list-item:not(.is-task-item-selected):not(.ui-sortable-helper):hover{
     padding: 0!important;
     margin: 0!important;
-    border-top: 4px solid #f2f2f2 !important;
-    border-bottom: 4px solid #f2f2f2 !important;
+    /*border-top: 4px solid #f2f2f2 !important;
+    border-bottom: 4px solid #f2f2f2 !important;*/
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    background: #eee;
 }
 .has-border {
     border: 1px solid #ff0000!important;
@@ -140,7 +143,8 @@ a:active,a:focus{
     color: #1830ba!important;
     background: white!important;
     /*border: 1px solid #1830ba!important;*/
-    box-shadow: inset 3px 5px 2px -1px rgba(24, 48, 186, 0.34) !important;
+    /*box-shadow: inset 3px 5px 2px -1px rgba(24, 48, 186, 0.34) !important;*/
+    box-shadow: none !important;
 }
 .task-list .task-header .task-list-header{
     text-shadow: none!important;
@@ -172,19 +176,19 @@ a:active,a:focus{
     border-left: 5px solid rgba(230,230,230, 0.9);*/
 }
 .is-selected{
-    border-top: 5px solid #e6e6e6!important;
+    /*border-top: 5px solid #e6e6e6 !important;
     margin-top: 15px;
-    margin-bottom: 35px!important;
-    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34)!important;
+    margin-bottom: 35px !important;
+    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34) !important;*/
 
 }
 .is-selected .panel-heading{
-    height: 35px;
+    /*height: 35px;*/
 }
 .task-list .panel-body .panel-content{
-    -moz-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
+    /*-moz-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
     -webkit-box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
-    box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;
+    box-shadow: inset 3px 3px 6px rgba(0,0,0,.4)!important;*/
     border-left: 5px solid #ffffff;
     border-bottom: 5px solid #ffffff;
     border-right: 5px solid #ffffff;
@@ -192,7 +196,7 @@ a:active,a:focus{
     padding: 10px;
 }
 .is-selected h4{
-    font-size: 28px!important;
+    /*font-size: 28px!important;*/
 }
 .edit-task-list-item{
     font-size: 18px;
@@ -239,13 +243,16 @@ a:active,a:focus{
     border: 1px solid #4285F4!important;
 }
 .is-task-item-selected a.checklist-header{
-    font-size: 24px!important;
+    /*font-size: 24px!important;*/
 }
 .question-list.is-task-item-selected a.checklist-header{
     font-size: 25px!important;
 }
 .is-task-item-selected .pull-right{
-    margin-right: -7px;
+    margin-right: -8px;
+}
+.is-task-item-selected .col-sm-3:nth-child(2) .pull-right{
+    margin-right: -6px;
 }
 .text-area-content .form-group{
     margin-bottom: 0!important;
@@ -479,8 +486,14 @@ select{
 
 /* General */
 .row{
-    margin-left: 0;
-    margin-right: 0;
+    /*margin-left: 0;
+    margin-right: 0;*/
+}
+.breadcrumb > li + li:before{
+    content: "/";
+}
+.wrapper{
+    min-height: 100% !important;
 }
 
 /* Navbar */
@@ -502,7 +515,7 @@ select{
 }
 .modal-footer .btn.btn-edit.btn-shadow{
     margin-right: 4px;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 .btn.add-company{
     margin-bottom: 20px;
@@ -537,8 +550,138 @@ select{
 #add-project-form .col-md-6{
     padding-right: 3px;
 }
+.project-options{
+    margin-bottom: 15px;
+}
+#project-notes .panel-content{
+    box-shadow: none !important;
+}
 
 /* Search */
 .search-module{
     margin-bottom: 15px;
+}
+
+/* Applicant */
+.applicant-posting-container{
+    /*padding-left: 0;
+    padding-right: 0;*/
+}
+.applicant-posting-container .col-md-7{
+    /*padding-left: 0;*/
+    /*padding-right: 15px;*/
+}
+.applicant-posting-container .col-md-5{
+    /*padding-left: 0;
+    padding-right: 0;*/
+}
+.applicant-info{
+    /*padding-right: 15px !important;*/
+}
+.applicant-vcc{
+    padding-right: 0 !important;
+}
+
+/* Briefcase */
+.task-list-item .task-list-details{
+    padding: 10px 11px !important;
+}
+
+/* Payroll */
+.date-options{
+    margin: 0;
+}
+#work-history .btn-default{
+    margin-bottom: 0;
+}
+#payment-history .panel-body{
+    padding: 10px;
+}
+#payroll-table{
+    margin-top: 10px;
+    background: #fff;
+}
+#payroll-table td,
+#payroll-table th{
+    padding: 10px;
+}
+#payroll-table h6{
+    margin: 0;
+}
+#pay-period-table{
+    text-transform: capitalize;
+}
+#payroll-settings-table .col-md-6:first-child{
+    padding-right: 0;
+}
+#payroll-settings-table .col-md-6:last-child{
+    padding-left: 0;
+}
+
+/* Assign */
+.assign-project .box-header{
+    padding: 5px 5px 0;
+}
+.assign-project .box,
+.assign-project .box-content,
+.assign-project .panel{
+    box-shadow: none !important;
+}
+.assign-project .panel{
+    border: 1px solid #ccc;
+}
+#assign_my_projects .panel-heading{
+    font-size: 16px;
+    padding: 10px !important;
+}
+#assign_my_projects .panel-body{
+    padding: 10px;
+}
+.company-list-group .fa-chevron-down,
+.taskgroup-list .fa-chevron-down{
+    margin-top: 4px;
+}
+.taskgroup-list li:first-child,
+.taskgroup-list li:last-child{
+    border-radius: 0;
+}
+#assign_my_projects .company-list-group{
+    margin-bottom: 0;
+}
+#assign_my_projects .company-list-group li:last-child{
+    margin-bottom: 20px;
+}
+
+/* Discussions */
+.rooms-table{
+    background: #fff;
+    text-transform: capitalize;
+}
+
+/* Profile */
+.profile .box{
+    box-shadow: none;
+}
+.profile .box-content{
+    padding-top: 25px !important;
+    padding-left: 25px !important;
+    padding-right: 25px !important;
+    box-shadow: none !important;
+}
+.profile .col-md-6:first-child{
+    padding-right: 15px;
+}
+.profile .col-md-6:last-child{
+    padding-left: 0;
+}
+
+/* Projects */
+.project-list{
+    padding: 0;
+}
+.task-list-item .task-item-collapse{
+    padding-bottom: 25px !important;
+}
+.task-list .task-header .task-list-header .glyphicon{
+    top: 4px;
 }

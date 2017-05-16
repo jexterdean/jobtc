@@ -37,6 +37,20 @@ html,body{
   
 }
 
+#video-container {
+    height: 100vh;
+    width: 100%;
+}
+
+#remoteVideo {
+    
+}
+
+#remoteVideo li {
+    
+    
+}
+
 #localVideoContainer {
     /*min-height: 426px;
     min-width: 426px;*/
@@ -117,7 +131,7 @@ html,body{
     position: relative;
     vertical-align: top;
     margin: 5px 45px 5px 20px; 
-    width:100%;
+    width: 98%;
 }
 
 .toggle-panel-chat, .toggle-video-archive, .toggle-screen-shares {
@@ -154,6 +168,11 @@ html,body{
 
 .video-archive-item-options {
     padding: 5px;
+}
+
+.video-archive-item-details {
+    color: white;
+    font-weight: bold;
 }
 
 .video-tags {
@@ -227,7 +246,8 @@ html,body{
 .footer {
    position: fixed;
     bottom: 0;
-    width: 100%;
+    width: 98%;
+    left: 10px;
 }
 
 .participant-box-text {

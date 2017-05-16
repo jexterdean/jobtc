@@ -67,12 +67,14 @@
 
         @if(in_array('applicants',$assets))
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.css">
         {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
         {!!  HTML::style('assets/css/page/applicants.css')  !!}
         @endif
 
         @if(in_array('discussions',$assets) || in_array('discussions-room',$assets))
         {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
+        {!!  HTML::style('assets/css/jquery.gridly.css')  !!}
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         {!!  HTML::style('assets/css/page/discussions.css')  !!}
