@@ -8,19 +8,19 @@
     <div class="form-group">
         <div class="col-md-12">
             {!!  Form::input('email','email',isset($companies->email) ? $companies->email : '',['class' => 'form-control',
-            'placeholder' => 'Contact Email', 'tabindex' => '3']) !!}
+            'placeholder' => 'Contact Email', 'tabindex' => '2']) !!}
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-12">
             {!! Form::input('text','phone',isset($companies->phone) ? $companies->phone : '',['class' => 'form-control',
-            'placeholder' => 'Contact Number', 'tabindex' => '4']) !!}
+            'placeholder' => 'Contact Number', 'tabindex' => '3']) !!}
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-12">
             {!! Form::input('text','website',isset($companies->website) ? $companies->website: '',['class' => 'form-control',
-            'placeholder' => 'Website', 'tabindex' => '10']) !!}
+            'placeholder' => 'Website', 'tabindex' => '4']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -67,7 +67,7 @@
     <div class="form-group">
         <div class="col-md-12">
             {!!  Form::select('country_id', $countries,(isset($companies->country_id) ?
-            $companies->country_id : ''), ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Country', 'tabindex' => '11'] )  !!}
+            $companies->country_id : ''), ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Country', 'tabindex' => '10'] )  !!}
         </div>
     </div>
     <div class="row">

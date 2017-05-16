@@ -6,17 +6,16 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            {{--*/ $user_id = Illuminate\Support\Facades\Auth::user()->user_id /*--}}
-            {{--*/ $companies = App\Models\Profile::with('company')->where('user_id', $user_id)->get() /*--}}
+            {{--*/ $companies = \App\Helpers\Helper::getCompanyLinks() /*--}}
             {{--*/ $clients = [] /*--}}
-
+            {{--*/ $_company_id = Request::segment(2) /*--}}
             @if(count($companies) > 0)
                 @foreach($companies as $company)
-                    {{--*/ $clients = [ $company->company->id =>  $company->company->name] /*--}}
+                    {{--*/ $clients[$company->company->id] = $company->company->name /*--}}
                 @endforeach
             @endif
             {!! Form::select('company_id', $clients, isset($project->company_id) ?
-            $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company', 'tabindex' =>'2'] )  !!}
+            $project->client_id : $_company_id, ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
     <div class="form-group">
