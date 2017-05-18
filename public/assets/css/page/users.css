@@ -46,7 +46,10 @@ body {
     -moz-border-radius-bottomleft: 2px;
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;
-    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
+    /*box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);*/
+}
+.applicant-posting-info .row:last-child{
+  margin: 15px 0 0;
 }
 .applicant-posting-info .container-icon {
     font-size: 40px;
@@ -103,7 +106,7 @@ body {
     -moz-border-radius-bottomleft: 2px;
     border-bottom-right-radius: 2px;
     border-bottom-left-radius: 2px;
-    box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);
+    /*box-shadow: 3px 5px 2px -1px rgba(15, 15, 15, 0.34);*/
 }
 .add-comment-form .container-icon {
     font-size: 40px;
@@ -181,30 +184,31 @@ body {
   width: 100%;
 }
 #video-tab {
-  border-style: inset;
-  background-color: #D1D1D1;
+  /*border-style: inset;
+  background-color: #D1D1D1;*/
 }
 #video-archive-tab {
-  border-style: inset;
-  background-color: #D1D1D1;
+  /*border-style: inset;
+  background-color: #D1D1D1;*/
 }
 .applicant .nav-tabs li.active a {
-  background-color: #C6C6C6;
+  background-color: #fff;
+  border-color: #fff;
   text-decoration: none;
   color: #000;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 .applicant .nav-tabs a {
-  background-color: #fff;
+  background-color: #c6c6c6;
   text-decoration: none;
   color: #000;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75) !important;
+  /*text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75) !important;*/
 }
 .applicant .nav-tabs li {
   border: 5px #000;
   margin-right: 4px;
-  font-weight: bold;
-  box-shadow: 0px 3px 5px #C6C6C6;
+  /*font-weight: bold;
+  box-shadow: 0px 3px 5px #C6C6C6;*/
 }
 
 .save-progress,

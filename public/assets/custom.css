@@ -450,8 +450,8 @@ select{
 .dropdown-submenu:hover > a:after {
     border-left-color: #fff;
 }
-.nav a:active,.nav a:visited{
-    background: #3c8dbc!important;
+.nav a:active, .nav a:visited{
+    /*background: #3c8dbc !important;*/
 }
 
 .dropdown-submenu.pull-left {
@@ -564,16 +564,14 @@ select{
 
 /* Applicant */
 .applicant-posting-container{
-    /*padding-left: 0;
-    padding-right: 0;*/
+    padding-left: 0;
+    padding-right: 0;
 }
 .applicant-posting-container .col-md-7{
-    /*padding-left: 0;*/
-    /*padding-right: 15px;*/
+    padding-right: 15px;
 }
 .applicant-posting-container .col-md-5{
-    /*padding-left: 0;
-    padding-right: 0;*/
+    padding-left: 0;
 }
 .applicant-info{
     /*padding-right: 15px !important;*/
@@ -674,6 +672,21 @@ select{
 .profile .col-md-6:last-child{
     padding-left: 0;
 }
+.tab-content{
+    border: 0;
+    background: #fff;
+    padding: 15px;
+}
+.tab-content iframe{
+    border: 0;
+    background: #fff;
+}
+.cke_chrome{
+    box-shadow: none !important;
+}
+.video-options{
+    padding: 10px 0;
+}
 
 /* Projects */
 .project-list{
@@ -684,4 +697,9 @@ select{
 }
 .task-list .task-header .task-list-header .glyphicon{
     top: 4px;
+}
+
+/* Modal */
+.modal-content{
+    box-shadow: none !important;
 }

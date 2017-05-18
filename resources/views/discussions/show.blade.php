@@ -140,6 +140,11 @@
               @if($recorded_videos->count() > 0)
               @foreach($recorded_videos as $video)
               <div class="video-archive-element col-xs-3">
+                  <div class="row video-subject-name">
+                      <div class="col-xs-12 subject-name-container">
+                          <span class="subject_name">{{$video->subject_name}}</span>
+                      </div>
+                  </div>
                   <div class="row video-title">
                       <div class="col-xs-10">
                       @if($video->alias == "")
@@ -169,7 +174,7 @@
                   <div class="row video-archive-item-details">
                       <div class="col-xs-6 recorded_on">{{date('M d, Y H:i A', strtotime($video->created_at))}}</div>
                       <div class="col-xs-6 ">
-                          <span class="recorded_by pull-right">{{$video->recorded_by}}</span>
+                          <span class="recorded_by pull-right">By: {{$video->recorded_by}}</span>
                           </div>
                   </div>
               </div>

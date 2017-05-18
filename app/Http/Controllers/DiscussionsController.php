@@ -61,6 +61,7 @@ class DiscussionsController extends Controller {
 
         $room_type = $request->input('room_type');
 
+
         $add_discussion_room = new Discussion([
             'owner_id' => $user_id,
             'company_id' => $company_id,
