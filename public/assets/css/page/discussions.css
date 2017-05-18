@@ -173,6 +173,7 @@ html,body{
 .video-archive-item-details {
     color: white;
     font-weight: bold;
+    font-size:13px;
 }
 
 .video-tags {
@@ -183,6 +184,14 @@ html,body{
     background-color: #000;
     color:#fff;
     border: 2px solid;
+}
+
+.video-subject-name {
+    background-color:#fff;
+    font-weight:bold;
+}
+.subject-name-container {
+    text-align:center;
 }
 
 .panel {

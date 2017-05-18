@@ -504,6 +504,7 @@ class VideoController extends Controller {
         $module_type = $request->input('module_type');
         $module_id = $request->input('module_id');
         $video_title = $request->input('video_title');
+        $subject_name = $request->input('subject_name');
         
         $recordedVideo = RecordedVideo::create([
             'filename' =>  $filename,
@@ -512,7 +513,8 @@ class VideoController extends Controller {
             'alias' => $video_title,
             'recorded_by' => $recorded_by,
             'user_id' => $user_id,
-            'description' => ''
+            'description' => '',
+            'subject_name' => $subject_name
          ]);
         
         $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $filename . '-audio.mjr /var/www/html/recordings/' . $filename . '-audio.opus';

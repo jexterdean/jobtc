@@ -1494,6 +1494,8 @@ function saveScreenShareNfo() {
 
 function convertJanusVideo(filename,container) {
     
+    var subject_name = $('#'+container).find('.panel-title').text();
+    
     $.ajax({
      url: public_path + 'convertDiscussionsJanusVideo',
      data: {
@@ -1501,6 +1503,7 @@ function convertJanusVideo(filename,container) {
          'module_type': 'discussions',
          'module_id': room_number,
          'display_name':display_name,
+         'subject_name':subject_name,
          'video_title':""
      },
      type: "POST",

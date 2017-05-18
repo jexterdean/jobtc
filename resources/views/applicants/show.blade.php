@@ -270,7 +270,7 @@
                     </div>
                 </div>
             </div>
-            @if(Auth::check('user'))
+            @if(Auth::check('user')|| Auth::check('applicant'))
             <div class="row">
                 <div class="col-md-12">
                      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -300,7 +300,8 @@
                                                 </div>
                                             </div>
                                             <div class="box-body">
-                                                <div {{ Auth::check('applicant') ? '' : ('id=question-collapse-' . $v->id) }} class="box-content collapse">
+                                                @if(Auth::check('user'))
+                                                <div id="question-collapse-{{$v->id}}" class="box-content collapse">
                                                     {!! $v->note !!}
                                                     <div class="form-inline">
                                                         <label>Applicant Score</label>
@@ -317,6 +318,18 @@
                                                         <input class="original_time" type="hidden" value="{{$v->length ? date('i:s', strtotime($v->length)) : ''}}" />
                                                     </div>
                                                 </div>
+                                                @endif
+                                                @if(Auth::check('applicant'))
+                                                <div id="question-collapse-{{$v->id}}" class="box-content collapse">
+                                                    <div class="form-inline">
+                                                        <button type="button" class="btn btn-shadow btn-submit btn-video" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Record Answer</button>
+                                                        <div id="interview-questions-timer-{{$v->id}}" class="timer-area pull-right">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</div>
+                                                        <div class="recording-status-text"></div>
+                                                        <input class="question_id" type="hidden" value="{{$v->id}}" />
+                                                        <input class="original_time" type="hidden" value="{{$v->length ? date('i:s', strtotime($v->length)) : ''}}" />
+                                                    </div>
+                                                </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -497,6 +510,11 @@
               @if($recorded_videos->count() > 0)
               @foreach($recorded_videos as $video)
               <div class="video-archive-element col-xs-3">
+                  <div class="row video-subject-name">
+                      <div class="col-xs-12 subject-name-container">
+                          <span class="subject_name">{{$video->subject_name}}</span>
+                      </div>
+                  </div>
                   <div class="row video-title">
                       <div class="col-xs-10">
                       @if($video->alias == "")
@@ -514,6 +532,7 @@
                       <input class="recorded_video_id" type="hidden" value="{{$video->id}}"/>
                       </div>
                   </div>
+                  
                   <a id="container_{{$video->filename}}" href="https://extremefreedom.org/recordings/{{$video->filename}}.webm" data-toggle="lightbox" data-gallery="discussion-{{$room_number}}-gallery" data-type="url">
                   <img class="img-responsive" src="https://extremefreedom.org/recordings/{{$video->filename}}.png">
                   </a>
@@ -525,10 +544,13 @@
                   </div>
                   <div class="row video-archive-item-details">
                       <div class="col-xs-6 recorded_on">{{date('M d, Y H:i A', strtotime($video->created_at))}}</div>
-                      <div class="col-xs-6 ">
-                          <span class="recorded_by pull-right">{{$video->recorded_by}}</span>
+                      <div class="col-xs-6">
+                          <span class="recorded_by pull-right">By: {{$video->recorded_by}}</span>
                           </div>
                   </div>
+                  
+                  
+                  
               </div>
               @endforeach
               @else

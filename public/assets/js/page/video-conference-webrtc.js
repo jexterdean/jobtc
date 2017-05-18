@@ -1150,6 +1150,7 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
 });
 
 function createJanusLocalStream(container,video_title) {
+    console.log("container: "+container);
     janus = new Janus({
         server: server,
         success: function () {
@@ -1272,6 +1273,7 @@ function createJanusLocalStream(container,video_title) {
                     var filename = 'localRecording-' + f.toString();
                     console.log('Converting file: '+filename);
                     convertJanusVideo(filename,container,video_title);
+                    
                 },
                 detach: function() {
                     
@@ -1322,6 +1324,8 @@ function startRecordingLocalStream() {
 
 function convertJanusVideo(filename,container,video_title) {
     
+    var subject_name = $('#'+container).find('.panel-title').text();
+    
     $.ajax({
      url: public_path + 'convertDiscussionsJanusVideo',
      data: {
@@ -1329,7 +1333,8 @@ function convertJanusVideo(filename,container,video_title) {
          'module_type': 'applicants',
          'module_id': room_number,
          'display_name': display_name,
-         'video_title': video_title
+         'video_title': video_title,
+         'subject_name': subject_name
      },
      type: "POST",
      beforeSend: function () {
@@ -1629,7 +1634,8 @@ $('body').on('click', '.btn-video', function (e) {
             if(remote_video_title.includes('(applicant)')) {
                 mainVideo = $('#'+remote_video_id+' .panel-body video')[0].srcObject;
                 //var video_id = 'container_'+$(this).siblings('.stream_id').val();
-                var container = $('#'+remote_video_id).find('.stream_id').val();
+                //var container = $('#'+remote_video_id).find('.stream_id').val();
+                var container = remote_video_id;
                 var video_title = $('#question-'+question_id+' .box-title').text();
                 console.log('Recording applicant');
                 $(this).text('Stop Recording');
@@ -1646,6 +1652,7 @@ $('body').on('click', '.btn-video', function (e) {
         $('#'+timer_id).countdown('destroy');
         console.log('original_time: '+original_time);
         $(this).siblings('.timer-area').text(original_time);
+        $('.blink').addClass('hidden');
    }
 } else {
         $(this).siblings('.recording-status-text').append('<span>Applicant is offline</span>');
