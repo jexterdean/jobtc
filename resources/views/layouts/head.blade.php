@@ -132,5 +132,20 @@
 
         <!--Multi-navigation css-->
         {!!  HTML::style('assets/css/menu.css')  !!}
+
+        {!! HTML::script('assets/js/jquery.min.js') !!}
+        {!! HTML::script('assets/js/jquery-ui.min.js') !!}
+        {!! HTML::script('assets/js/bootstrap.min.js') !!}
+        {!! HTML::script('assets/js/jquery.validate.min.js') !!}
+        {!! HTML::script('assets/js/AdminLTE/app.js')  !!}
+        {!!  HTML::script('assets/js/bootbox.js')  !!}
+        {!!  HTML::script('assets/js/moment.min.js')  !!}
+
+        <!--DLMenu js-->
+        {!! HTML::script('assets/js/modernizr.custom.js') !!}
+        {!! HTML::script('assets/js/jquery.dlmenu.js') !!}
+
+        {!!  HTML::style('assets/css/fileinput.css')  !!}
+        {!!  HTML::script('assets/js/fileinput.min.js')  !!}
         <script> var public_path = "{{ URL::to('/') }}/";</script>
     </head>

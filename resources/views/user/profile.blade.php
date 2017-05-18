@@ -12,17 +12,8 @@
                 <div class="box-content">
                     <div class="form-group">
                         <div class="media">
-                            <div class="media-left">
-                                <a href="#">
-                                    <img class="profile-img" src="{{Auth::user()->photo}}"/>
-                                </a>
-                            </div>
                             <div class="media-body">
-                                <br />
-                                <br />
-                                <br />
-                                <br />
-                                {!!  Form::input('file','photo','') !!}
+                                {!!  Form::input('file','photo','',['accept' => 'image/*','class' => 'file-input', 'placeholder'=>'Upload Picture']) !!}
                             </div>
                         </div>
                     </div>
@@ -36,7 +27,7 @@
                     </div>
                     <div class="form-group">
                         {!!  Form::label('phone','Phone') !!}
-                        {!!  Form::input('text','phone',Auth::user()->phone,['class' => 'form-control', 'placeholder'
+                        {!!  Form::input('text','phone',Auth::user()->phone,['class' => 'form-control number-only', 'placeholder'
                         => 'Phone']) !!}
                     </div>
 
@@ -74,12 +65,12 @@
                     </div>
                     <div class="form-group">
                         {!!  Form::label('facebook','Facebook') !!}
-                        {!!  Form::input('text','facebook',Auth::user()->facebook,['class' => 'form-control', 'placeholder'
+                        {!!  Form::input('text','facebook',Auth::user()->facebook,['class' => 'form-control url-only', 'placeholder'
                         => 'Facebook']) !!}
                     </div>
                     <div class="form-group">
                         {!!  Form::label('linkedin','LinkedIn') !!}
-                        {!!  Form::input('text','linkedin',Auth::user()->linkedin,['class' => 'form-control', 'placeholder'
+                        {!!  Form::input('text','linkedin',Auth::user()->linkedin,['class' => 'form-control url-only', 'placeholder'
                         => 'Linkedin']) !!}
                     </div>
                 </div>
@@ -127,4 +118,35 @@
             </div>
         </div>
     </div>
+    <style>
+        .kv-file-remove{
+            display: none;
+        }
+    </style>
+    <script>
+        $(function (e) {
+            $('.file-input').fileinput({
+                uploadAsync: true,
+                maxFileSize: 1000000,
+                removeClass: "btn btn-sm btn-delete btn-shadow",
+                browseClass: "btn btn-sm btn-edit btn-shadow",
+                browseLabel: 'Browse Picture ..',
+                uploadClass: "btn btn-sm btn-assign hide btn-shadow",
+                cancelClass: "btn btn-sm btn-default btn-shadow",
+                showRemove: false,
+                showCaption: false,
+                initialPreviewFileType: ['image'],
+                dropZoneEnabled: false,
+                showUpload: true,
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                initialPreview:['{{url(Auth::user()->photo)}}'],
+                initialPreviewConfig: [{
+                    'caption' : 'User Profile',
+                    'width': '200px',
+                    'key' : 1
+                }]
+            });
+        });
+    </script>
     @stop

@@ -50,9 +50,14 @@
                     {!!  Form::textarea('task_description','',['size' => '30x3', 'class' => 'form-control',
                     'placeholder' => 'Description', 'tabindex' => '2']) !!}
                 </div>
+
                 <div class="form-group">
-                    {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
-                    input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+                    <div class='input-group date datetimepicker' id='start_date'>
+                        {!!  Form::input('text','due_date','', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Due Date', 'tabindex' => '4'])  !!}
+                        <span class="input-group-addon open-date-calendar">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

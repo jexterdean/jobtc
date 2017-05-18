@@ -20,7 +20,7 @@
         <div class="col-md-6">
             <div class='input-group date datetimepicker' id='start_date'>
                 {!!  Form::input('text','due_date',
-                    isset($task->due_date) ? date("d-m-Y",strtotime($task->due_date)) : '', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Start', 'tabindex' => '4'])  !!}
+                    isset($task->due_date) ? date("d-m-Y",strtotime($task->due_date)) : '', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Due Date', 'tabindex' => '4'])  !!}
                 <span class="input-group-addon open-date-calendar">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>

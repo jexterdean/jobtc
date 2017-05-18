@@ -19,10 +19,7 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="fileUpload btn btn-edit btn-shadow btn-sm">
-            <span>Upload Logo</span>
-            <input class="upload" name="photo" type="file" value="" />
-        </div>
+        <input class="upload" name="photo" type="file" placeholder="Upload Logo" value="" />
     </div>
     <div class="form-group">
         <div class="col-md-12">
@@ -53,6 +50,22 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {
             }
         }, this ) );
 };
+$('.upload').fileinput({
+    overwriteInitial: true,
+    uploadAsync: false,
+    maxFileSize: 1000000,
+    removeClass: "btn btn-sm btn-delete btn-shadow",
+    browseClass: "btn btn-sm btn-edit btn-shadow",
+    browseLabel: 'Upload Logo',
+    uploadClass: "btn btn-sm btn-assign hide btn-shadow",
+    cancelClass: "btn btn-sm btn-default btn-shadow",
+    maxFilesNum: 5,
+    showRemove: false,
+    showCaption: false,
+    dropZoneEnabled: false,
+    showUpload: true,
+    initialPreviewAsData: true
+});
 
 CKEDITOR.replace('description');
 </script>    

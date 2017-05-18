@@ -37,7 +37,7 @@
     <div class="form-group">
         <div class="col-md-12">
             {!!  Form::input('file','photo',isset($user->photo) ? $user->photo: '',['class' => 'form-control',
-            'placeholder' => 'Photo', 'tabindex' => '7']) !!}
+            'placeholder' => 'Photo', 'tabindex' => '7', 'accept' => 'image/*']) !!}
         </div>
     </div>
     <div class="form-group">

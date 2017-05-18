@@ -13,7 +13,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            {!! Form::input('text','phone',isset($companies->phone) ? $companies->phone : '',['class' => 'form-control',
+            {!! Form::input('text','phone',isset($companies->phone) ? $companies->phone : '',['class' => 'form-control number-only',
             'placeholder' => 'Contact Number', 'tabindex' => '3']) !!}
         </div>
     </div>
@@ -59,7 +59,7 @@
     
     <div class="form-group">
         <div class="col-md-12">
-            {!! Form::input('text','zipcode',isset($companies->zipcode) ? $companies->zipcode: '',['class' => 'form-control',
+            {!! Form::input('text','zipcode',isset($companies->zipcode) ? $companies->zipcode: '',['class' => 'form-control number-only',
             'placeholder' => 'Zip/Postal', 'tabindex' => '9']) !!}
         </div>
     </div>
