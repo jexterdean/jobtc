@@ -29,6 +29,120 @@ function removeDuplicates(listName, newItem) {
     return !dupl;
 }
 
+function activateRate(){
+    $('.employee-options').on('click', '.add-rate', function (e) {
+        e.preventDefault();
+
+        var user_id = $(this).siblings('.user_id').val();
+        var company_id = $(this).siblings('.company_id').val();
+
+        console.log('user_id: ' + user_id);
+        console.log('company_id: ' + company_id);
+
+        var edit_rate_form = public_path + 'rate/create';
+
+        BootstrapDialog.show({
+            title: 'Edit Rate <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
+            size: 'size-normal',
+            message: function (dialog) {
+                var $message = $('<div></div>');
+                var pageToLoad = dialog.getData('pageToLoad');
+                $message.load(pageToLoad);
+                return $message;
+            },
+            buttons: [{
+                    label: 'Save',
+                    cssClass: 'btn-edit btn-shadow',
+                    action: function (dialog) {
+
+                        var ajaxurl = public_path + 'rate';
+                        var form = $("#add-rate-form")[0];
+                        var currency = $(form).find('select[name="currency"]').val();
+                        var rate_type = $(form).find('select[name="rate_type"]').val();
+                        var rate_value = $(form).find('input[name="rate_value"]').val();
+                        var pay_period = $(form).find('select[name="pay_period"]').val();
+                        var payday;
+
+                        switch (pay_period) {
+                            case 'biweekly':
+
+                                payday = $(form).find('select[name="biweekly-1"]').val() + ',' + $(form).find('select[name="biweekly-2"]').val();
+
+                                break;
+                            case 'weekly':
+
+                                payday = $(form).find('select[name="weekly"]').val();
+
+                                break;
+                            case 'monthly':
+
+                                payday = $(form).find('select[name="monthly"]').val();
+                                break;
+                            case 'semi-monthly':
+
+                                payday = $(form).find('select[name="semi-monthly-1"]').val() + ',' + $(form).find('select[name="semi-monthly-2"]').val();
+                                break;
+
+                        }
+
+                        console.log('user_id: ' + user_id);
+                        console.log('rate type: ' + rate_type);
+                        console.log('rate value: ' + rate_value);
+                        console.log('company_id: ' + company_id);
+                        console.log('currency: ' + currency);
+                        console.log('pay_period: ' + pay_period);
+                        console.log('payday: ' + payday);
+
+                        var formData = new FormData();
+                        formData.append('user_id', user_id);
+                        formData.append('company_id', company_id);
+                        formData.append('currency', currency);
+                        formData.append('rate_type', rate_type);
+                        formData.append('rate_value', rate_value);
+                        formData.append('pay_period', pay_period);
+                        formData.append('payday', payday);
+
+                        var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                        $button.disable();
+                        $button.spin();
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: "POST",
+                            data: formData,
+                            // THIS MUST BE DONE FOR FILE UPLOADING
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $('#rate-' + user_id).switchClass('add-rate', 'edit-rate');
+                                $('#rate-' + user_id).children('span').text('Edit Rate');
+                                $('#employee-' + user_id + ' .rate_id').val(data);
+                                console.log();
+                                dialog.close();
+                            },
+                            error: function (xhr, status, error) {
+
+                            }
+                        }); //ajax*/
+                    }
+                }],
+            data: {
+                'pageToLoad': edit_rate_form
+            },
+            onshown: function (ref) {
+
+            },
+            closable: false
+        });
+
+    });
+}
+
+activateRate();
+
 function assignTask(user_id, task_id, project_id, company_id) {
 
     var url = public_path + 'assignTaskList';
@@ -1200,8 +1314,6 @@ $('#my_projects').on('click', '.cancel-project', function (e) {
     $('#add-project-form').remove();
 });
 
-
-
 /*Add Employee*/
 $('#employees').on('click', '#add-employee', function (e) {
     e.stopImmediatePropagation();
@@ -1282,6 +1394,7 @@ $('#employees').on('click', '#add-employee', function (e) {
                                 employee_container.append('<div class="row employee-row">' + data + '</div>');
                             }
 
+                            activateRate();
                             dialog.close();
                         },
                         error: function (xhr, status, error) {
@@ -1703,116 +1816,6 @@ $(".portlet-toggle").click(function () {
 $('[data-toggle="tooltip"]').tooltip({
     template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="max-width: 500px!important;text-align: left!important;"></div></div>',
     html: true
-});
-
-$('.employee-options').on('click', '.add-rate', function (e) {
-    e.preventDefault();
-
-    var user_id = $(this).siblings('.user_id').val();
-    var company_id = $(this).siblings('.company_id').val();
-
-    console.log('user_id: ' + user_id);
-    console.log('company_id: ' + company_id);
-
-    var edit_rate_form = public_path + 'rate/create';
-
-    BootstrapDialog.show({
-        title: 'Edit Rate <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>',
-        size: 'size-normal',
-        message: function (dialog) {
-            var $message = $('<div></div>');
-            var pageToLoad = dialog.getData('pageToLoad');
-            $message.load(pageToLoad);
-            return $message;
-        },
-        buttons: [{
-                label: 'Save',
-                cssClass: 'btn-edit btn-shadow',
-                action: function (dialog) {
-
-                    var ajaxurl = public_path + 'rate';
-                    var form = $("#add-rate-form")[0];
-                    var currency = $(form).find('select[name="currency"]').val();
-                    var rate_type = $(form).find('select[name="rate_type"]').val();
-                    var rate_value = $(form).find('input[name="rate_value"]').val();
-                    var pay_period = $(form).find('select[name="pay_period"]').val();
-                    var payday;
-
-                    switch (pay_period) {
-                        case 'biweekly':
-
-                            payday = $(form).find('select[name="biweekly-1"]').val() + ',' + $(form).find('select[name="biweekly-2"]').val();
-
-                            break;
-                        case 'weekly':
-
-                            payday = $(form).find('select[name="weekly"]').val();
-
-                            break;
-                        case 'monthly':
-
-                            payday = $(form).find('select[name="monthly"]').val();
-                            break;
-                        case 'semi-monthly':
-
-                            payday = $(form).find('select[name="semi-monthly-1"]').val() + ',' + $(form).find('select[name="semi-monthly-2"]').val();
-                            break;
-
-                    }
-
-                    console.log('user_id: ' + user_id);
-                    console.log('rate type: ' + rate_type);
-                    console.log('rate value: ' + rate_value);
-                    console.log('company_id: ' + company_id);
-                    console.log('currency: ' + currency);
-                    console.log('pay_period: ' + pay_period);
-                    console.log('payday: ' + payday);
-
-                    var formData = new FormData();
-                    formData.append('user_id', user_id);
-                    formData.append('company_id', company_id);
-                    formData.append('currency', currency);
-                    formData.append('rate_type', rate_type);
-                    formData.append('rate_value', rate_value);
-                    formData.append('pay_period', pay_period);
-                    formData.append('payday', payday);
-
-                    var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                    $button.disable();
-                    $button.spin();
-
-                    $.ajax({
-                        url: ajaxurl,
-                        type: "POST",
-                        data: formData,
-                        // THIS MUST BE DONE FOR FILE UPLOADING
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function () {
-
-                        },
-                        success: function (data) {
-                            $('#rate-' + user_id).switchClass('add-rate', 'edit-rate');
-                            $('#rate-' + user_id).children('span').text('Edit Rate');
-                            $('#employee-' + user_id + ' .rate_id').val(data);
-                            console.log();
-                            dialog.close();
-                        },
-                        error: function (xhr, status, error) {
-
-                        }
-                    }); //ajax*/
-                }
-            }],
-        data: {
-            'pageToLoad': edit_rate_form
-        },
-        onshown: function (ref) {
-
-        },
-        closable: false
-    });
-
 });
 
 $('.employee-options').on('click', '.edit-rate', function (e) {

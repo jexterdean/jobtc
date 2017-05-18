@@ -148,7 +148,7 @@ return [
 
         Bican\Roles\RolesServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        Kordy\Ticketit\TicketitServiceProvider::class,
+        // Kordy\Ticketit\TicketitServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         PhanAn\Remote\RemoteServiceProvider::class,
     ],
