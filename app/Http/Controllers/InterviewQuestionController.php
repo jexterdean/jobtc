@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\InterviewQuestion;
+use App\Models\InterviewQuestionAnswer;
 use App\Models\Assign;
 
 
@@ -132,8 +133,24 @@ class InterviewQuestionController extends Controller
     }
     
     
-    public function updateScore($id) {
+    public function addInterviewQuestionAnswer(Request $request) {
         
+        $question_id = $request->input('question_id');
+        $video_id = $request->input('video_id');
+        $module_type = $request->input('module_type');
+        $module_id = $request->input('module_id');
+        $score = $request->input('score');
+        
+        $interview_question_answer = new InterviewQuestionAnswer([
+            'question_id' => $question_id,
+            'video_id' => $video_id,
+            'module_type' => $module_type,
+            'module_id' => $module_id,
+            'score' => $score,
+            ]);
+        $interview_question_answer->save();
+        
+        return "true";
     }
     
 }

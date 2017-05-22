@@ -1093,8 +1093,6 @@ $('body').on('click','.record',function(){
     var muteText = $(this).children('.material-icons').text();
     var video_type = $(this).siblings('.video_type').val();
     var video_title = "";
-    console.log(muteText);
-    console.log(video_type);
     if(muteText == 'fiber_manual_record') {
         if(video_type == 'local') { 
             mainVideo = localStream;
@@ -1149,8 +1147,8 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
     });
 });
 
-function createJanusLocalStream(container,video_title) {
-    console.log("container: "+container);
+function createJanusLocalStream(container,video_title,question_id) {
+     console.log('question_id: '+question_id);
     janus = new Janus({
         server: server,
         success: function () {
@@ -1272,8 +1270,14 @@ function createJanusLocalStream(container,video_title) {
                     var f = sfutest.getId();
                     var filename = 'localRecording-' + f.toString();
                     console.log('Converting file: '+filename);
-                    convertJanusVideo(filename,container,video_title);
                     
+                    //question_id is an optional parameter, people can record via the record button on their hairline check
+                    console.log('Create Janus Local Stream question_id: '+question_id);
+                    //if (question_id === undefined) {
+                        //convertJanusVideo(filename,container,video_title);
+                    //} else {
+                        convertJanusVideo(filename,container,video_title,question_id);
+                    //}
                 },
                 detach: function() {
                     
@@ -1322,19 +1326,22 @@ function startRecordingLocalStream() {
     });
 }
 
-function convertJanusVideo(filename,container,video_title) {
+function convertJanusVideo(filename,container,video_title,question_id) {
+    
+    console.log('question_id in convertJanusVideo: '+question_id);
     
     var subject_name = $('#'+container).find('.panel-title').text();
     
     $.ajax({
-     url: public_path + 'convertDiscussionsJanusVideo',
+     url: public_path + 'convertApplicantsJanusVideo',
      data: {
-         'filename': filename,
-         'module_type': 'applicants',
-         'module_id': room_number,
-         'display_name': display_name,
-         'video_title': video_title,
-         'subject_name': subject_name
+        filename:filename,
+        module_type:'applicants',
+        module_id: room_number,
+        display_name: display_name,
+        video_title: video_title,
+        subject_name: subject_name,
+        question_id: question_id
      },
      type: "POST",
      beforeSend: function () {
@@ -1382,42 +1389,7 @@ var getConversionProgress = function(filename,container) {
        if(data == '100') {
            $('#'+container).find('.recording-status').text('Processing Completed');
            $('#video-archive').load($('.current-video-page').val()+' #video-archive',function(responseTxt, statusTxt, xhr) {
-               $('.video-tags').tagEditor({
-                    maxTags: 9999,
-                    clickDelete: true,
-                    placeholder: 'Enter video tags ...',
-                    autocomplete: {
-                        delay: 0, // show suggestions immediately
-                        position: {collision: 'flip'}, // automatic menu position up/down
-                        source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
-                    },
-                    onChange: function (field, editor, tags) {
-                    var ajaxurl = public_path + 'addNewTag';
-
-                    var unique_id = $(field).siblings('.recorded_video_id').val();
-                    var tag_type = 'discussions';
-                    var formData = new FormData();
-                    formData.append('unique_id', unique_id);
-                    formData.append('tag_type', tag_type);
-                    formData.append('tags', tags);
-                    $.ajax({
-                        url: ajaxurl,
-                        type: "POST",
-                        data: formData,
-                        // THIS MUST BE DONE FOR FILE UPLOADING
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function () {
-                        },
-                        success: function (data) {
-                        },
-                        error: function (xhr, status, error) {
-
-                        }
-                }); //ajax
-            //alert(tags);
-        }
-    });
+               videoTags(tag_type);
            });
            $('#'+container).find('.recording-status').addClass('hidden');
            $('#'+container).find('.progress').addClass('hidden');
@@ -1434,42 +1406,7 @@ var getConversionProgress = function(filename,container) {
            $('#'+container).find('.progress').addClass('hidden');
            $('#'+container).find('.processing-percent').val("0");
            $('#video-archive').load($('.current-video-page').val()+' #video-archive',function(responseTxt, statusTxt, xhr) {
-               $('.video-tags').tagEditor({
-                    maxTags: 9999,
-                    clickDelete: true,
-                    placeholder: 'Enter video tags ...',
-                    autocomplete: {
-                        delay: 0, // show suggestions immediately
-                        position: {collision: 'flip'}, // automatic menu position up/down
-                        source: public_path + 'getTags/' + $(this).siblings('.recorded_video_id') + '/discussions'
-                    },
-                    onChange: function (field, editor, tags) {
-                    var ajaxurl = public_path + 'addNewTag';
-
-                    var unique_id = $(field).siblings('.recorded_video_id').val();
-                    var tag_type = 'discussions';
-                    var formData = new FormData();
-                    formData.append('unique_id', unique_id);
-                    formData.append('tag_type', tag_type);
-                    formData.append('tags', tags);
-                    $.ajax({
-                        url: ajaxurl,
-                        type: "POST",
-                        data: formData,
-                        // THIS MUST BE DONE FOR FILE UPLOADING
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function () {
-                        },
-                        success: function (data) {
-                        },
-                        error: function (xhr, status, error) {
-
-                        }
-                }); //ajax
-            //alert(tags);
-        }
-    });
+                videoTags(tag_type);
            });
        }
      },
@@ -1626,11 +1563,11 @@ $('body').on('click', '.btn-video', function (e) {
     
     if(remote_video_length != 0) {
     
+    var remote_video_id = $('#video-conference-container .remote-video').attr('id');
+    var remote_video_title = $('#'+remote_video_id+' .panel-title').text();
+    
    if($(this).text() === 'Record Answer') {
         for(i=0; i < remote_video_length; i++) {
-            var remote_video_id = $('#video-conference-container .remote-video').attr('id');
-            var remote_video_title = $('#'+remote_video_id+' .panel-title').text();
-            
             if(remote_video_title.includes('(applicant)')) {
                 mainVideo = $('#'+remote_video_id+' .panel-body video')[0].srcObject;
                 //var video_id = 'container_'+$(this).siblings('.stream_id').val();
@@ -1641,7 +1578,7 @@ $('body').on('click', '.btn-video', function (e) {
                 $(this).text('Stop Recording');
                 $('#'+timer_id).countdown({until: b, format: 'MS', compact: true});
                 $('#'+timer_id).countdown('resume');
-                createJanusLocalStream(container,video_title);
+                createJanusLocalStream(container,video_title,question_id);
             }
     }
    } else {
@@ -2233,4 +2170,30 @@ function refreshVideoArchive() {
         $('.refresh-video-archive').text('Refresh Video Archive');
          videoTags(tag_type);
     });
+}
+
+//For adding running history on interview questions
+function addInterviewQuestionAnswer(module_type,module_id,question_id,video_id,score) {
+    $.ajax({
+     url: public_path + '/addInterviewQuestionAnswer',
+     data: {
+        module_type:module_type,
+        module_id:module_id,
+        question_id:question_id,
+        video_id:video_id,
+        score:score
+     },
+     type: "POST",
+     beforeSend: function () {
+        
+     },
+     success: function (e) {
+     console.log('Added Interview Question Score');
+     },
+     complete: function () {
+        
+     },
+     error: function (xhr, status, error) {
+     }
+     });
 }

@@ -79,6 +79,7 @@ Route::post('saveNfoJanus', 'VideoController@saveNfoJanus');
 Route::post('saveScreenShareNfoJanus', 'VideoController@saveScreenShareNfoJanus');
 Route::post('convertJanusVideo', 'VideoController@convertJanusVideo');
 Route::post('convertDiscussionsJanusVideo', 'VideoController@convertDiscussionsJanusVideo');
+Route::post('convertApplicantsJanusVideo','VideoController@convertApplicantsJanusVideo');
 Route::post('getConversionProgress', 'VideoController@getConversionProgress');
 
 
@@ -457,6 +458,7 @@ Route::resource('/chat','ChatController');
 Route::put('/updateInterviewQuestionScore/{id}','ApplicantController@updateInterviewQuestionScore');
 
 /*Interview Questions*/
+Route::post('/addInterviewQuestionAnswer','InterviewQuestionController@addInterviewQuestionAnswer');
 Route::resource('/interview/questions','InterviewQuestionController');
 
 

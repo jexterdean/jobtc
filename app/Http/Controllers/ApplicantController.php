@@ -15,6 +15,7 @@ use App\Models\Tag;
 use App\Models\ApplicantRating;
 use App\Models\Comment;
 use App\Models\RecordedVideo;
+use App\Models\InterviewQuestionAnswer;
 use App\Models\Video;
 use App\Models\VideoRoom;
 use App\Models\VideoSession;

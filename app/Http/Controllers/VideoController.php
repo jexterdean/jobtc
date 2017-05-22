@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\RecordedVideo;
+use App\Models\InterviewQuestionAnswer;
 use App\Models\User;
 use App\Models\Video;
 use App\Models\VideoRoom;
@@ -506,7 +507,7 @@ class VideoController extends Controller {
         $video_title = $request->input('video_title');
         $subject_name = $request->input('subject_name');
         
-        $recordedVideo = RecordedVideo::create([
+        $recordedVideo = new RecordedVideo([
             'filename' =>  $filename,
             'module_type' => $module_type,
             'module_id' => $module_id,
@@ -516,6 +517,7 @@ class VideoController extends Controller {
             'description' => '',
             'subject_name' => $subject_name
          ]);
+        $recordedVideo->save();
         
         $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $filename . '-audio.mjr /var/www/html/recordings/' . $filename . '-audio.opus';
         $remote_connection->exec($convert_to_audio);
@@ -545,6 +547,79 @@ class VideoController extends Controller {
         
         return $audio_exists;
     }
+    
+    public function convertApplicantsJanusVideo(Request $request) {
+        $remote_connection = $this->remote_connection;
+        
+        if(Auth::check()) {
+            $user_id = Auth::user()->user_id;
+            $recorded_by = User::where('user_id',$user_id)->first()->name;
+            
+        } else {
+            $user_id = 0;
+            $recorded_by = $request->input('display_name');
+        }
+        
+        
+        $filename = $request->input('filename');
+        $module_type = $request->input('module_type');
+        $module_id = $request->input('module_id');
+        $video_title = $request->input('video_title');
+        $subject_name = $request->input('subject_name');
+        $question_id = $request->input('question_id');
+        
+        $recordedVideo = new RecordedVideo([
+            'filename' =>  $filename,
+            'module_type' => $module_type,
+            'module_id' => $module_id,
+            'alias' => $video_title,
+            'recorded_by' => $recorded_by,
+            'user_id' => $user_id,
+            'description' => '',
+            'subject_name' => $subject_name
+         ]);
+        $recordedVideo->save();
+        
+        if($question_id !== null) {
+            $interview_question_answer = new InterviewQuestionAnswer([
+                'question_id' => $question_id,
+                'video_id' => $recordedVideo->id,
+                'module_type' => $module_type,
+                'module_id' => $module_id,
+                'score' => 0,
+                ]);
+            $interview_question_answer->save();
+        }
+        
+        $convert_to_audio = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $filename . '-audio.mjr /var/www/html/recordings/' . $filename . '-audio.opus';
+        $remote_connection->exec($convert_to_audio);
+        
+        $convert_to_webm = '/opt/janus/bin/janus-pp-rec /var/www/html/recordings/' . $filename . '-video.mjr /var/www/html/recordings/' . $filename . '-video.webm';
+        $remote_connection->exec($convert_to_webm);
+        
+        $generate_thumbnail = 'ffmpeg -i  /var/www/html/recordings/'.$filename.'-video.webm -vf  "thumbnail,scale=640:360" -frames:v 1  /var/www/html/recordings/'.$filename.'.png';
+        $remote_connection->exec($generate_thumbnail);
+        
+        $check_audio_file_if_exists = 'test -f /var/www/html/recordings/'.$filename.'-audio.opus && echo "1" || echo "0"';
+        $check_video_file_if_exists = 'test -f /var/www/html/recordings/'.$filename.'-video.webm && echo "1" || echo "0"';
+        $video_exists = $remote_connection->exec($check_video_file_if_exists);
+        $audio_exists = $remote_connection->exec($check_audio_file_if_exists);
+        
+        if($audio_exists == 1 && $video_exists == 1)    {
+            $sync_audio_video = 'nohup ffmpeg -i /var/www/html/recordings/' . $filename . '-video.webm -i /var/www/html/recordings/' . $filename . '-audio.opus -c:v copy -c:a libvorbis -strict experimental /var/www/html/recordings/' . $filename . '.webm 1> /var/www/html/recordings/'.$filename.'.txt 2>&1 &';
+            $remote_connection->exec($sync_audio_video);
+        } elseif($audio_exists == 0 && $video_exists == 1) {
+            $rename_video_file = 'nohup mv /var/www/html/recordings/'.$filename.'-video.webm /var/www/html/recordings/'.$filename.'.webm 1> /var/www/html/recordings/'.$filename.'.txt 2>&1 &';
+            $remote_connection->exec($rename_video_file);
+        } else {
+            $convert_audio_file_to_webm = 'nohup ffmpeg -i /var/www/html/recordings/'.$filename.'-audio.opus -c:a libvorbis -strict experimental /var/www/html/recordings/' . $filename . '.webm 1> /var/www/html/recordings/'.$filename.'.txt 2>&1 &';
+            $remote_connection->exec($convert_audio_file_to_webm);
+        }
+        
+        
+        return $audio_exists;
+    }
+    
     
     public function getConversionProgress(Request $request) {
         $remote_connection = $this->remote_connection;
@@ -591,6 +666,7 @@ class VideoController extends Controller {
             return $progress;
         }
     }
+    
     
     
     public function convertJanusVideo(Request $request) {
