@@ -12,6 +12,7 @@ use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\PermissionUser;
 use Auth;
+use Elasticsearch\ClientBuilder as ES;
 
 class RoleController extends Controller {
 
@@ -146,9 +147,11 @@ class RoleController extends Controller {
         $position->save();
 
         //Create an index for searching
+
+        /*
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
-                ->build();
+                ->build();*/
         $params = array();
         $params['body'] = array(
             'name' => $position->name
@@ -156,7 +159,7 @@ class RoleController extends Controller {
         $params['index'] = 'default';
         $params['type'] = 'position';
         $params['id'] = $position->id;
-        $results = $client->index($params);       //using Index() function to inject the data
+        // $results = $client->index($params);       //using Index() function to inject the data
 
         $modules = Module::all();
         $permissions = Permission::all();
@@ -186,9 +189,10 @@ class RoleController extends Controller {
         ]);
 
         //Update the index for searching
+        /*
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
-                ->build();
+                ->build();*/
         $params = array();
         $params['body'] = array(
             'doc' => [
@@ -198,7 +202,7 @@ class RoleController extends Controller {
         $params['index'] = 'default';
         $params['type'] = 'position';
         $params['id'] = $position->id;
-        $results = $client->update($params);       //using Index() function to inject the data
+        // $results = $client->update($params);       //using Index() function to inject the data
 
         return "true";
     }
@@ -210,15 +214,16 @@ class RoleController extends Controller {
         $position = Role::where('id', $position_id);
 
         //Delete the index for searching
+        /*
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
-                ->build();
+                ->build();*/
         $params = array();
 
         $params['index'] = 'default';
         $params['type'] = 'position';
         $params['id'] = $position->pluck('id');
-        $results = $client->delete($params);       //using Index() function to inject the data
+        // $results = $client->delete($params);       //using Index() function to inject the data
 
         $position->delete();
 
