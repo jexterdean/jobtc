@@ -175,8 +175,7 @@
     "panecycle": {
         "json()": [
             "tab6",
-            "tab10",
-            "tab7"
+            "tab2"
         ]
     },
     "panels": {
@@ -212,7 +211,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 6197,
+        "@scrollpos": 5934,
         "@showfs": true,
         "expanded": {
             "json()": [
@@ -467,7 +466,7 @@
     },
     "tabs": {
         "json()": {
-            "focus": "tab6",
+            "focus": "/public/assets/custom.css",
             "nodes": [
                 {
                     "type": "pane",
@@ -475,30 +474,11 @@
                     "nodes": [
                         {
                             "type": "tab",
-                            "name": "tab10",
-                            "path": "/database/migrations/2017_05_22_085128_create_interview_question_answers_table.php",
-                            "className": [
-                                "tab10"
-                            ],
-                            "document": {
-                                "changed": false,
-                                "meta": {
-                                    "timestamp": 1495444237064
-                                },
-                                "filter": true,
-                                "title": "2017_05_22_085128_create_interview_question_answers_table.php",
-                                "tooltip": "/database/migrations/2017_05_22_085128_create_interview_question_answers_table.php",
-                                "ace": {}
-                            },
-                            "editorType": "ace",
-                            "active": true
-                        },
-                        {
-                            "type": "tab",
                             "name": "tab2",
                             "path": "/public/assets/custom.css",
                             "className": [
-                                "tab2"
+                                "tab2",
+                                "focus"
                             ],
                             "document": {
                                 "changed": false,
@@ -511,7 +491,7 @@
                                 "ace": {}
                             },
                             "editorType": "ace",
-                            "active": false
+                            "active": true
                         },
                         {
                             "type": "tab",
@@ -927,35 +907,13 @@
                             },
                             "editorType": "ace",
                             "active": false
-                        },
-                        {
-                            "type": "tab",
-                            "name": "tab11",
-                            "path": "/database/migrations/2017_05_13_084424_create_assign_table.php",
-                            "className": [
-                                "tab11"
-                            ],
-                            "document": {
-                                "changed": false,
-                                "meta": {
-                                    "timestamp": 1494665310139
-                                },
-                                "filter": true,
-                                "title": "2017_05_13_084424_create_assign_table.php",
-                                "tooltip": "/database/migrations/2017_05_13_084424_create_assign_table.php",
-                                "ace": {}
-                            },
-                            "editorType": "ace",
-                            "active": false
                         }
                     ],
                     "skin": "editor_tab",
                     "skinset": "default",
                     "meta": {
                         "accessList": [
-                            "tab10",
                             "tab2",
-                            "tab11",
                             "tab7",
                             "tab13",
                             "tab14",
@@ -978,8 +936,7 @@
                             "name": "tab6",
                             "path": "",
                             "className": [
-                                "tab6",
-                                "focus"
+                                "tab6"
                             ],
                             "document": {
                                 "changed": false,
