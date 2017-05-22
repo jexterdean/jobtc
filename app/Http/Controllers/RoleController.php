@@ -164,12 +164,15 @@ class RoleController extends Controller {
         $modules = Module::all();
         $permissions = Permission::all();
         $permission_role = PermissionRole::all();
+        $permissions_list = [];
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         return view('roles.partials._newposition', [
             'position' => $position,
             'permissions' => $permissions,
             'permission_role' => $permission_role,
             'modules' => $modules,
+            'module_permissions' => $module_permissions,
             'company_id' => $company_id
         ]);
     }
@@ -182,6 +185,7 @@ class RoleController extends Controller {
         $description = $request->input('description');
 
         $position = Role::where('id', $position_id);
+
         $position->update([
             'name' => $name,
             'slug' => strtolower($name) . '-' . $company_id,
@@ -196,12 +200,12 @@ class RoleController extends Controller {
         $params = array();
         $params['body'] = array(
             'doc' => [
-                'name' => $position->name
+                'name' => $name
             ]
         );
         $params['index'] = 'default';
         $params['type'] = 'position';
-        $params['id'] = $position->id;
+        $params['id'] = $position_id;
         // $results = $client->update($params);       //using Index() function to inject the data
 
         return "true";
