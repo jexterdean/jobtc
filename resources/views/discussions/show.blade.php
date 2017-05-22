@@ -76,17 +76,16 @@
         </div>
 </div>
 <div id="chat-box-container">
-        <div class="mini-space"></div>
         <div class="chat-box">
             <div class="panel panel-default">
                 <div id="message-log" class="panel-body">
                     @if($chat->count() > 0)
                     @foreach($chat as $message)
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col-xs-6 sender-name">
                             {{$message->display_name}}:
                         </div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-6 text-right date-sent">
                             {{
                             date_format(date_create($message->created_at),"M d H:i")
                             }}
@@ -104,13 +103,15 @@
                     <div class="input-group">
                         <input id="message" type="text" class="form-control input-sm" placeholder="Type your message here..." />
                         <span class="input-group-btn">
-                            <label class="btn btn-sm">
-                                <i class="fa fa-file" aria-hidden="true" for="sendFile"></i>
-                                <input id="sendFile" type="file" style="display:none" class="btn btn-warning btn-sm" value="Send File" />
-                            </label>
-                        </span>
-                        <span class="input-group-btn">
                             <button class="btn btn-warning btn-sm" disabled="disabled" id="send-message">Send</button>
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <label class="btn btn-sm browse-btn">
+                                <i class="fa fa-file" aria-hidden="true" for="sendFile"></i>
+                                <input id="sendFile" type="file" class="btn btn-warning btn-sm" value="Send File" />
+                            </label>
                         </span>
                     </div>
                 </div>
@@ -124,7 +125,7 @@
 </div>
 
 <div class="footer">
-    <div class="panel-group" id="accordion">
+    <div class="panel-group discussion-nav" id="accordion">
         <div class="panel">
           <div class="panel-heading">
               <div class="row">
@@ -136,17 +137,21 @@
               </div>
           <div id="video-archive-container" class="panel-collapse collapse">
              <div id="video-archive">
-              <div class="row" class="panel-body">
+              <div class="row video-archive-body" class="panel-body">
               @if($recorded_videos->count() > 0)
               @foreach($recorded_videos as $video)
-              <div class="video-archive-element col-xs-3">
+              <!--<div class="video-archive-element col-xs-3">-->
+              <div class="video-archive-element">
                   <div class="row video-subject-name">
                       <div class="col-xs-12 subject-name-container">
                           <span class="subject_name">{{$video->subject_name}}</span>
                       </div>
                   </div>
+                  <a id="container_{{$video->filename}}" href="https://extremefreedom.org/recordings/{{$video->filename}}.webm" data-toggle="lightbox" data-gallery="discussion-{{$room_number}}-gallery" data-type="url">
+                  <img class="img-responsive" src="https://extremefreedom.org/recordings/{{$video->filename}}.png">
+                  </a>
                   <div class="row video-title">
-                      <div class="col-xs-10">
+                      <div class="col-xs-8">
                       @if($video->alias == "")
                       <label class="video-label">No Title</label>
                       <input class="form-control edit-title hidden" type="text" value="" placeholder="Enter new title"/>
@@ -155,28 +160,26 @@
                       <input class="form-control edit-title hidden" type="text" value="{{$video->alias}}" placeholder="Enter new title"/>
                       @endif
                       </div>
-                      <div class="col-xs-2">
+                      <div class="col-xs-4 text-right">
                       <a class="btn-edit-video-title"><i class="material-icons">mode_edit</i></a>
                       <a class="btn-save-video-title hidden"><i class="material-icons">done</i></a>
                       <a class="btn-delete-video"><i class="material-icons">delete_forever</i></a>
                       <input class="recorded_video_id" type="hidden" value="{{$video->id}}"/>
                       </div>
                   </div>
-                  <a id="container_{{$video->filename}}" href="https://extremefreedom.org/recordings/{{$video->filename}}.webm" data-toggle="lightbox" data-gallery="discussion-{{$room_number}}-gallery" data-type="url">
-                  <img class="img-responsive" src="https://extremefreedom.org/recordings/{{$video->filename}}.png">
-                  </a>
                   <div class="row video-archive-item-options center-block">
-                      <div class="col-xs-12">
+                      <!--<div class="col-xs-12">-->
                             <input class="form-control video-tags" type="text" name="tags" placeholder="Enter Tags" value="{{$video->tags['tags']}}">
                             <input class="recorded_video_id" type="hidden" value="{{$video->id}}"/>
-                      </div>
+                      <!--</div>-->
                   </div>
-                  <div class="row video-archive-item-details">
+                  <!--<div class="row video-archive-item-details">
                       <div class="col-xs-6 recorded_on">{{date('M d, Y H:i A', strtotime($video->created_at))}}</div>
                       <div class="col-xs-6 ">
                           <span class="recorded_by pull-right">By: {{$video->recorded_by}}</span>
                           </div>
-                  </div>
+                  </div>-->
+                  <div class="row video-archive-item-details">{{date('M d, Y H:i A', strtotime($video->created_at))}} &middot; By: {{$video->recorded_by}}</div>
               </div>
               @endforeach
               @else

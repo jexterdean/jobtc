@@ -3064,8 +3064,11 @@ select[multiple].input-lg {
 .btn:hover,
 .btn:focus,
 .btn.focus {
-  color: #333;
+  /*color: #333;*/
+  color: #fff !important;
   text-decoration: none;
+  background: #306aca;
+  outline: none;
 }
 .btn:active,
 .btn.active {
@@ -5152,7 +5155,9 @@ a.label:focus {
 }
 .btn .badge {
   position: relative;
-  top: -1px;
+  /*top: -1px;*/
+  top: -2px;
+  margin-left: 5px;
 }
 .btn-xs .badge,
 .btn-group-xs > .btn .badge {

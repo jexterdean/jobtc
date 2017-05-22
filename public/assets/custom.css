@@ -466,7 +466,7 @@ select{
     border-radius: 6px 0 6px 6px;
 }
 .dl-submenu > .dropdown:hover > .dropdown-menu li{
-    display: inline-block!important;
+    display: inline-block !important;
     width: 100%;
 }
 .dl-menu .dropdown > .dropdown-menu{
@@ -475,13 +475,13 @@ select{
     margin-left: 0;
     border-radius: 0;
     padding: 0;
-    display: none!important;
+    display: none !important;
 }
 .dl-menu .dropdown:hover > .dropdown-menu{
-    display: block!important;
+    display: block !important;
 }
 .content{
-    padding: 15px!important;
+    padding: 15px !important;
 }
 
 /* General */
@@ -654,6 +654,44 @@ select{
 .rooms-table{
     background: #fff;
     text-transform: capitalize;
+}
+.discussion-nav{
+    background: #fff;
+    margin-bottom: 10px;
+}
+.discussion-nav .panel-heading{
+    padding: 10px !important;
+}
+.badge.chat-badge{
+    background: #ff0000;
+}
+.btn i{
+    /*vertical-align: text-top;*/
+}
+#message-log{
+    padding: 10px;
+}
+.sender-name,
+.date-sent{
+    font-size: 12px;
+}
+.chat-box .panel-footer{
+    background: none;
+    padding: 5px 0;
+    margin-right: -4px;
+}
+.browse-btn{
+    width: 100%;
+}
+#video-archive .row,
+#video-archive .pagination{
+    margin: 0;
+}
+.video-archive-body{
+    padding: 0 10px 10px;
+}
+.scotch-panel-wrapper{
+    min-height: 520px;
 }
 
 /* Profile */

@@ -99,7 +99,7 @@
     outline: none;
     /*white-space: nowrap;*/
     width: 100%;
-    text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;*/
 }
 .dl-menuwrapper li a:visited,.dl-menuwrapper li a:active{
     color: #ffffff!important;

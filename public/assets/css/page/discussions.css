@@ -38,7 +38,7 @@ html,body{
 }
 
 #video-container {
-    height: 100vh;
+    /*height: 100vh;*/
     width: 100%;
 }
 
@@ -85,8 +85,9 @@ html,body{
     height: 40vh;
 }
 
-#chat-box-container {;
-    
+#chat-box-container {
+    margin-left: 4px;
+    height: 520px !important;
 }
 
 .chat-name {
@@ -99,11 +100,14 @@ html,body{
     border-radius: 5px;
     box-shadow: 0 0 6px #B2B2B2;
     display: inline-block;
-    padding: 10px 18px;
+    /*padding: 10px 18px;*/
+    padding: 7px;
     position: relative;
     vertical-align: top;
-    margin: 5px 45px 5px 20px; 
-    font-size: 16px !important;
+    /*margin: 5px 45px 5px 20px;*/
+    margin: 5px 45px 5px 5px;
+    /*font-size: 16px !important;*/
+    font-size: 14px !important;
 }
 
 .refresh-video-archive {
@@ -152,13 +156,21 @@ html,body{
 }
 
 .video-archive-element {
-     //height:175px;   
-     //width:250px;
-     display:block;
-     max-width: 100%;
-     height: auto;
-     background-color:#000;
-     border: 2px #fff solid;
+    /*height: 175px;
+    width: 250px;*/
+    display: block;
+    max-width: 100%;
+    height: auto;
+    width: 24.25%;
+    /*background-color:#000;
+    border: 2px #fff solid;*/
+    margin-right: 1%;
+    float: left;
+    color: #777;
+}
+
+.video-archive-element:last-child {
+    margin-right: 0;
 }
 
 .video-image {
@@ -167,13 +179,14 @@ html,body{
 }
 
 .video-archive-item-options {
-    padding: 5px;
+    /*padding: 5px;*/
 }
 
 .video-archive-item-details {
-    color: white;
+    /*color: white;*/
     font-weight: bold;
-    font-size:13px;
+    font-size: 13px;
+    margin-top: 5px !important;
 }
 
 .video-tags {
@@ -181,9 +194,21 @@ html,body{
 }
 
 .video-title {
-    background-color: #000;
+    /*background-color: #000;
     color:#fff;
-    border: 2px solid;
+    border: 2px solid;*/
+    margin-top: 5px !important;
+}
+
+.video-title .col-xs-8,
+.video-title .col-xs-4{
+    padding: 0;
+}
+
+.video-title .edit-title{
+    height: 25px;
+    margin-bottom: 5px;
+    font-size: 14px;
 }
 
 .video-subject-name {
@@ -200,19 +225,19 @@ html,body{
 
 .btn-delete-video i {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 20px;
     color: red;
     cursor: pointer;
 }
 
 .btn-edit-video-title i {
-    font-size: 30px;
+    font-size: 20px;
     cursor: pointer;
 }
 
 .btn-save-video-title i {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 20px;
     cursor: pointer;
 }
 
@@ -238,10 +263,10 @@ html,body{
 }
 
 .topbar {
-    position: absolute;
+    /*position: absolute;
     top: 50px;
     width: 100%;
-    padding-top:20px;
+    padding-top:20px;*/
 }
 
 .sidebar {
@@ -253,10 +278,13 @@ html,body{
  }
 
 .footer {
-   position: fixed;
+    position: fixed;
     bottom: 0;
-    width: 98%;
-    left: 10px;
+    /*width: 98%;
+    left: 10px;*/
+    width: 100%;
+    left: 0;
+    padding: 0 15px;
 }
 
 .participant-box-text {
@@ -265,10 +293,11 @@ html,body{
 }
 
 #discussions-container {
-    position: absolute;
+    /*position: absolute;
     top: 120px;
     width: 100%;
-    height:100%;
+    height:100%;*/
+    margin: 15px -4px 0;
 }
 
 .local-volume-meter {
@@ -354,4 +383,8 @@ html,body{
     left: 0px
     top: 40%
     width: 100%
+}
+
+#sendFile {
+    display: none;
 }
