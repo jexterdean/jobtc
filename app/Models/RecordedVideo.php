@@ -18,7 +18,7 @@ class RecordedVideo extends Model
      *
      * @var array
      */
-    protected $fillable = ['module_id','module_type','filename','alias'];
+    protected $fillable = ['module_id','module_type','filename','alias','recorded_by','user_id','description','subject_name'];
     
      public function tags() {
         return $this->hasOne('App\Models\Tag','unique_id');

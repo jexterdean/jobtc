@@ -405,3 +405,6 @@ var fire_applicant = function (applicant_id, company_id) {
     }); //ajax
 
 };
+
+//For saving Interview Scores
+

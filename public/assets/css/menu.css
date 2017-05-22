@@ -24,7 +24,8 @@
     /*margin-right: 100px;*/
 }
 .dl-menuwrapper button {
-    background: rgba(66,133,244,0.5)!important;
+    background: rgb(66, 136, 244) !important;
+    /*background: rgba(66,133,244,0.5)!important;*/
     border-top: 1px solid #ffffff;
     border-bottom: 1px solid #ffffff;
     border-right: 1px solid #ffffff;
@@ -36,15 +37,18 @@
     cursor: pointer;
     outline: none;
     color: #ffffff;
-    text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;*/
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
-    box-shadow: 2px 2px 5px -1px rgba(0, 0, 0, 0.5);
+    /*box-shadow: 2px 2px 5px -1px rgba(0, 0, 0, 0.5);*/
+}
+.dl-menuwrapper button:focus{
+    color: #fff;
 }
 .dl-menuwrapper button:hover, .dl-menuwrapper button.dl-active, .dl-menuwrapper ul {
     background: rgb(66, 136, 244) !important;
     color: #ffffff;
-    text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;*/
 }
 .dl-menuwrapper button:after {
     content: '';
@@ -95,7 +99,7 @@
     outline: none;
     /*white-space: nowrap;*/
     width: 100%;
-    text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;*/
 }
 .dl-menuwrapper li a:visited,.dl-menuwrapper li a:active{
     color: #ffffff!important;

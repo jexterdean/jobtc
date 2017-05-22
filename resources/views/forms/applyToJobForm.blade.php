@@ -50,9 +50,9 @@
             <label class="control-label col-md-2" for="phone">Phone</label>
             <div class="col-md-10">
                 @if(isset($applicant->email))
-                <input class="form-control phone" name="phone" type="text" value="{{$applicant->phone or ''}}" />
+                <input class="form-control phone number-only" name="phone" type="text" value="{{$applicant->phone or ''}}" />
                 @else
-                <input class="form-control phone" name="phone" type="text" value="" />
+                <input class="form-control phone number-only" name="phone" type="text" value="" />
                 @endif
             </div>
         </div>
@@ -61,7 +61,7 @@
         <div class="col-md-12">
             <label class="control-label col-md-2" for="resume">Resume</label>
             <div class="col-md-10">
-                <input class="form-control" name="resume" type="file" value="" />
+                <input class="form-control file-input" name="resume" type="file" value="" />
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@
                 @if(isset($applicant->photo))
                 <img class="profile-pic" src="{{url($applicant->photo)}}"/>
                 @endif
-                <input class="form-control" name="photo" type="file" value="" />
+                <input class="form-control photo-input" name="photo" type="file" value="" />
             </div>
         </div>
     </div>
@@ -80,6 +80,18 @@
 <script>
 
     var ajaxurl = public_path + '/checkApplicantDuplicateEmail';
+    var has_photo,has_config;
+    $('.number-only').numberOnly({
+        'isForContact': true
+    });
+
+    @if(isset($applicant->photo))
+            has_photo = ['{{url($applicant->photo)}}'];
+            has_config = [{
+                'width': '200px',
+                'key' : 1
+            }];
+    @endif
 
     //Initially Disable the save button
     $('.save').attr('disabled', 'disabled');
@@ -126,5 +138,40 @@
         } else {
             $('.save').attr('disabled', 'disabled');
         }
+    });
+
+    $('.file-input').fileinput({
+        overwriteInitial: true,
+        uploadAsync: false,
+        maxFileSize: 1000000,
+        removeClass: "btn btn-sm btn-delete btn-shadow",
+        browseClass: "btn btn-sm btn-edit btn-shadow",
+        browseLabel: 'Browse Document..',
+        uploadClass: "btn btn-sm btn-assign hide btn-shadow",
+        cancelClass: "btn btn-sm btn-default btn-shadow",
+        maxFilesNum: 5,
+        showRemove: false,
+        showCaption: false,
+        dropZoneEnabled: false,
+        showUpload: true,
+        initialPreviewAsData: true
+    });
+    $('.photo-input').fileinput({
+        uploadAsync: true,
+        maxFileSize: 1000000,
+        removeClass: "btn btn-sm btn-delete btn-shadow",
+        browseClass: "btn btn-sm btn-edit btn-shadow",
+        browseLabel: 'Browse Photo..',
+        uploadClass: "btn btn-sm btn-assign hide btn-shadow",
+        cancelClass: "btn btn-sm btn-default btn-shadow",
+        showRemove: false,
+        showCaption: false,
+        initialPreviewFileType: ['image'],
+        dropZoneEnabled: false,
+        showUpload: true,
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        initialPreview: has_photo,
+        initialPreviewConfig: has_config
     });
 </script>

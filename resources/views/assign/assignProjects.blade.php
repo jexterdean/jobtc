@@ -7,7 +7,7 @@
     </div>
 </div>
 <div class="mini-space"></div>
-<div class="row">
+<div class="row assign-project">
     <div class="col-md-4">
         <div class="box box-default">
             <div class="box-container">
@@ -33,14 +33,10 @@
                                     {{$project->project_title}}
                                     <div class="pull-right">
                                         @if(intval($project->company_id) !== intval($company_id))
-                                        <div class="row">
                                             <label>Shared by {{$project->company->name}}</label>
-                                        </div>
                                         @endif
                                         @if(Auth::user('user')->user_id !== $project->user_id)
-                                        <div class="row">
                                             <label>Shared by {{$project->user->name}}</label>
-                                        </div>
                                         @endif
                                     </div>
                                 </div>

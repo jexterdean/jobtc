@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<div class="applicant-posting-container container-fluid">
+<div id="applicant-posting-container" class="applicant-posting-container container-fluid">
     <div class="row">
         @if(Auth::user('user'))
         <div class="row single-applicant-pagination hidden-lg hidden-md hidden-sm">                   
@@ -67,8 +67,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-md-5">
+        <div class="col-xs-6">
             @if(Auth::user('user'))
             <div class="row single-applicant-pagination hidden-xs">
                 <div class="col-xs-7">
@@ -205,31 +204,11 @@
                     </div>
                 </div>
             </div>
-            @if(Auth::check('user') || Auth::check('applicant'))
             <div class="mini-space"></div>
             {{--*/ $collapse = $applicant->notes ? '' : '' /*--}}
             {{--*/ $str = str_replace('\\','/',$applicant->resume) /*--}}
             {{--*/ $file = explode('/',$str) /*--}}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                        <div id="collapse-container-1" class="panel task-list">
-                            <div class="panel-heading task-header" id="notes-{{$applicant->id}}" data-toggle="collapse" data-target="#resume-collapse-{{ $applicant->id }}">
-                                <div class="row">
-                                    <h4 class="panel-title task-list-header">Resume</h4>
-                                </div>
-                            </div>
-                            <div id="resume-collapse-{{ $applicant->id }}" class="box-content collapse {{ $collapse }}">
-                                <div class="panel-body">
-                                    <div class="panel-content">
-                                        <iframe class="applicant-posting-resume" src="https://docs.google.com/viewer?url={{url($str)}}&embedded=true"></iframe>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @if(Auth::check('user'))
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -239,7 +218,7 @@
                                     <h4 class="panel-title task-list-header">Notes</h4>
                                 </div>
                             </div>
-                            <div id="notes-collapse-{{ $applicant->id }}" class="box-content collapse {{ $collapse }}">
+                            <div id="notes-collapse-{{ $applicant->id }}" class="box-content collapse">
                                 <div class="panel-body">
                                     <div class="panel-content">
                                         <textarea id="applicant-notes" class="">{{$applicant->notes}}</textarea>
@@ -270,16 +249,17 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                         <div id="collapse-container-1" class="panel task-list">
-                            <div class="panel-heading task-header" id="notes-{{$applicant->id}}" data-toggle="collapse" data-target="#tests-collapse-{{ $applicant->id }}">
+                            <div class="panel-heading task-header" id="tests-{{$applicant->id}}" data-toggle="collapse" data-target="#tests-collapse-{{ $applicant->id }}">
                                 <div class="row">
                                     <h4 class="panel-title task-list-header">Tests</h4>
                                 </div>
                             </div>
-                            <div id="tests-collapse-{{ $applicant->id }}" class="box-content collapse {{ $collapse }}">
+                            <div id="tests-collapse-{{ $applicant->id }}" class="box-content collapse">
                                 <div class="panel-body">
                                     <div class="panel-content">
                                         @include('applicants.partials._quizlist')
@@ -290,16 +270,175 @@
                     </div>
                 </div>
             </div>
-            @if(file_exists(public_path() .'/' . $str))
+            @if(Auth::check('user')|| Auth::check('applicant'))
             <div class="row">
-                <div class="col-sm-12">
-                    <a href="{{ url('downloadFile?file=' . $str)}}" class="btn btn-edit btn-shadow" data-toggle="tooltip"
-                            title="Download {{end($file)}}" data-placement="right">
-                            <i class="glyphicon glyphicon-file"></i> {{end($file)}}</a>
+                <div class="col-md-12">
+                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div id="collapse-container-1" class="panel task-list">
+                            <div class="panel-heading task-header" id="interview-questions-{{$applicant->id}}" data-toggle="collapse" data-target="#interview-questions-collapse-{{ $applicant->id }}">
+                                <div class="row">
+                                    <h4 class="panel-title task-list-header">Interview Questions</h4>
+                                </div>
+                            </div>
+                            <div id="interview-questions-collapse-{{ $applicant->id }}" class="box-content collapse">
+                                <div class="panel-body">
+                                    <div class="panel-content">
+                                        @if(count($video_questions) > 0)
+                                        @foreach($video_questions as $v)
+                                <div class="tests-container">
+                                    <div class="box box-default">
+                                        <div class="box-container">
+                                            <div class="box-header" id="question-{{ $v->id }}" data-toggle="collapse" data-target="#question-collapse-{{ $v->id }}">
+                                                <h3 class="box-title">
+                                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;<?php
+                                                    $v->question = preg_replace("/<\/*[a-z0-9\s\"'.=;:-]*>/i", "", $v->question);
+                                                    echo $v->question;
+                                                    ?>
+                                                </h3>
+                                                <div class="pull-right" style="margin-right: 10px;">
+                                                    <strong>Time:</strong> {{ date('i:s', strtotime($v->length)) }}
+                                                </div>
+                                            </div>
+                                            <div class="box-body">
+                                                @if(Auth::check('user'))
+                                                <div id="question-collapse-{{$v->id}}" class="box-content collapse">
+                                                    {!! $v->note !!}
+                                                    <div class="form-inline">
+                                                        <label>Applicant Score</label>
+                                                        <div class="input-group">
+                                                            <input type="number" name="video-conference-points" id="{{ $v->result_id }}" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control video-conference-points" style="width: 70px;">
+                                                            <div class="input-group-addon">/{{ $v->max_point }}</div>
+                                                            <input class="question_id" type="hidden" value="{{$v->id}}" />
+                                                            <input class="applicant_id" type="hidden" value="{{ $applicant->id }}" />
+                                                        </div>
+                                                        <button type="button" class="btn btn-shadow btn-submit btn-video" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Record Answer</button>
+                                                        <div id="interview-questions-timer-{{$v->id}}" class="timer-area pull-right">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</div>
+                                                        <div class="recording-status-text"></div>
+                                                        <input class="question_id" type="hidden" value="{{$v->id}}" />
+                                                        <input class="original_time" type="hidden" value="{{$v->length ? date('i:s', strtotime($v->length)) : ''}}" />
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                @if(Auth::check('applicant'))
+                                                <div id="question-collapse-{{$v->id}}" class="box-content collapse">
+                                                    <div class="form-inline">
+                                                        <button type="button" class="btn btn-shadow btn-submit btn-video" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Record Answer</button>
+                                                        <div id="interview-questions-timer-{{$v->id}}" class="timer-area pull-right">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</div>
+                                                        <div class="recording-status-text"></div>
+                                                        <input class="question_id" type="hidden" value="{{$v->id}}" />
+                                                        <input class="original_time" type="hidden" value="{{$v->length ? date('i:s', strtotime($v->length)) : ''}}" />
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
                 </div>
             </div>
             @endif
-            <div id="comment-list-{{$applicant->id}}" class="comment-list">
+            </div>
+        <div class="col-xs-6 applicant">
+            @if(Auth::check('user') || Auth::check('applicant'))
+            
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="pill" href="#resume">Resume</a></li>
+              <li><a data-toggle="pill" href="#video-conference">Video Conference</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="resume" class="tab-pane fade in active">
+                    @if(file_exists(public_path() .'/' . $str))
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="{{ url('downloadFile?file=' . $str)}}" class="btn btn-edit btn-shadow" data-toggle="tooltip" title="Download {{end($file)}}" data-placement="right">
+                            <i class="glyphicon glyphicon-file"></i> {{end($file)}}</a>
+                        </div>
+                    </div>
+                    @endif  
+                    <iframe class="applicant-posting-resume" src="https://docs.google.com/viewer?url={{url($str)}}&embedded=true"></iframe>
+                </div>    
+              <div id="video-conference" class="tab-pane fade">
+                <div class="row">
+                <div class="col-xs-12">
+                    <div id="video-conference-container" class="video-conference-container">
+                            <div class="row" id="remoteVideo">
+                                    <div class="col-xs-6" id="localVideoContainer">
+                                <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">{{$display_name}}</h4>
+                                            </div>
+                                    <div class="panel-body">
+                                            <video id="localVideo"></video>
+                                            <div class="row">
+                                                <div class="col-xs-5">
+                                                    <div class="blink hidden"><i class="fa fa-circle text-danger"></i>&nbsp;<span class="blink-text">Recording</span></div>        
+                                                </div>
+                                                <div class="col-xs-7">
+                                                  <div id="progress" class="progress hidden">
+                                                  <div style="color:#000;font-weight:bold" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                      Processing 0% Complete
+                                                  </div>
+                                                  </div>
+                                                <input class="processing-percent" type="hidden" value="0"/>        
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="btn-group" role="group" aria-label="Local Media Options">
+                                                    <button class="btn record"><i class="material-icons">fiber_manual_record</i><span class="record-text"></span></button>
+                                                    <button class="btn  stop-video"><i class="material-icons">videocam</i></button>            
+                                                    <button class="btn  mute"><i class="material-icons">mic</i></button>
+                                                    <a class="btn toggle-media-options" data-toggle="collapse" href="#local-media-options"><i class="material-icons">settings</i></a>
+                                                    <input class="video_type" type="hidden" value="local"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="local-media-options" class="panel-collapse collapse">
+                            <div class="mini-space"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">
+                                    <i class="material-icons">videocam</i>
+                                </span>
+                                <select id="video-camera-list" class="btn form-control" data-show-icon="true"></select>       
+                            </div>
+                            <div class="mini-space"></div>
+                            <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon2">
+                                        <i class="material-icons">mic</i>    
+                                    </span>
+                                    <select id="audio-input-list" class="btn form-control" data-show-icon="true"></select>                        
+                            </div>
+                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                                    </div>
+                                </div>
+                            </div>        
+                </div>
+            </div>
+              </div>
+            </div>
+            @endif
+        </div>
+        </div>
+    <div id="chat-box-container">
+        <div class="mini-space"></div>
+        <div class="chat-box">
+              <div id="comment-list-{{$applicant->id}}" class="comment-list">
                 @unless($comments->count())
                 <div class="no-comment-notifier"></div>
                 @else
@@ -344,116 +483,6 @@
             </div>
             <div class="mini-space"></div>
             @include('forms.addCommentForm')
-            @endif
-        </div>
-        <div class="col-xs-7">
-            <div class="video-conference-container">
-                            <div class="row" id="remoteVideo">
-                                    <div class="col-xs-4">
-                                <div class="panel-group">
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">{{$display_name}}</h4>
-                                            </div>
-                                    <div class="panel-body">
-                                            <video id="localVideo"></video>
-                                            <div class="row">
-                                                <div class="col-xs-5">
-                                                    <div class="blink hidden"><i class="fa fa-circle text-danger"></i>&nbsp;<span class="blink-text">Recording</span></div>        
-                                                </div>
-                                                <div class="col-xs-7">
-                                                  <div id="progress" class="progress hidden">
-                                                  <div style="color:#000;font-weight:bold" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                                      Processing 0% Complete
-                                                  </div>
-                                                  </div>
-                                                <input class="processing-percent" type="hidden" value="0"/>        
-                                                </div>
-                                            </div>
-                                    </div>
-                                    <div class="panel-footer">
-                                        <div class="row">
-                                            <div class="col-xs-5">
-                                                <button class="btn record"><i class="material-icons">fiber_manual_record</i><span class="record-text">Record</span></button>
-                                                <input class="video_type" type="hidden" value="local"/>
-                                            </div>
-                                            <div class="col-xs-7">
-                                                <div class="btn-group" role="group" aria-label="Local Media Options">
-                                                    <button class="btn  stop-video"><i class="material-icons">videocam</i></button>            
-                                                    <button class="btn  mute"><i class="material-icons">mic</i></button>
-                                                    <a class="btn toggle-media-options" data-toggle="collapse" href="#local-media-options"><i class="material-icons">settings</i></a>
-                                                    <input class="video_type" type="hidden" value="local"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="local-media-options" class="panel-collapse collapse">
-                            <div class="mini-space"></div>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1">
-                                    <i class="material-icons">videocam</i>
-                                </span>
-                                <select id="video-camera-list" class="btn form-control" data-show-icon="true"></select>       
-                            </div>
-                            <div class="mini-space"></div>
-                            <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon2">
-                                        <i class="material-icons">mic</i>    
-                                    </span>
-                                    <select id="audio-input-list" class="btn form-control" data-show-icon="true"></select>                        
-                            </div>
-                            </div>
-                                    </div>
-                                </div>
-                            </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @if(count($video_questions) > 0)
-                            <div class="row question-videos">
-                                @foreach($video_questions as $v)
-                                <div class="tests-container">
-                                    <div class="box box-default">
-                                        <div class="box-container">
-                                            <div class="box-header" id="question-{{ $v->id }}" data-toggle="collapse" data-target="#question-collapse-{{ $v->id }}">
-                                                <h3 class="box-title">
-                                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>&nbsp;<?php
-                                                    $v->question = preg_replace("/<\/*[a-z0-9\s\"'.=;:-]*>/i", "", $v->question);
-                                                    echo $v->question;
-                                                    ?>
-                                                </h3>
-                                                <div class="pull-right" style="margin-right: 10px;">
-                                                    <strong>Time:</strong> {{ date('i:s', strtotime($v->length)) }}
-                                                </div>
-                                            </div>
-                                            <div class="box-body">
-                                                <div {{ Auth::check('applicant') ? '' : ('id=question-collapse-' . $v->id) }} class="box-content collapse">
-                                                    {!! $v->note !!}
-                                                    <div class="form-inline">
-                                                        <label>Applicant Score</label>
-                                                        <div class="input-group">
-                                                            <input type="number" name="video-conference-points" id="{{ $v->result_id }}" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control video-conference-points" style="width: 70px;">
-                                                            <div class="input-group-addon">/{{ $v->max_point }}</div>
-                                                        </div>
-                                                        <button type="button" class="btn btn-shadow btn-submit btn-video hidden" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Record Answer</button>
-                                                        <span class="time-limit-conference" data-length="{{ $v->length ? $v->length : '' }}">
-                                                            <strong class="timer-area">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</strong>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endif
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="preview-video text-center">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
         </div>
     </div>
 </div>
@@ -463,14 +492,15 @@
 <input class="job_id" type="hidden" value="{{$applicant->job_id}}"/>
 <input class="page_type" type="hidden" value="applicant"/>
 <input class="_token" type="hidden" value="{{csrf_token()}}"/>
+
 <div class="footer">
-    <div class="panel-group" id="accordion">
+    <div class="panel-group" id="accordion2">
         <div class="panel">
           <div class="panel-heading">
               <div class="row">
                   <div class="col-xs-12">
                   <button class="btn toggle-panel-chat">Open Chat<span class="badge chat-badge">0</span></button>
-                  <button data-toggle="collapse" data-parent="#accordion" href="#video-archive-container" class="btn toggle-video-archive">Open Video Archive</button>
+                  <button data-toggle="collapse" data-parent="#accordion2" href="#video-archive-container" class="btn toggle-video-archive">Open Video Archive</button>
                   </div>
               </div>
               </div>
@@ -480,6 +510,11 @@
               @if($recorded_videos->count() > 0)
               @foreach($recorded_videos as $video)
               <div class="video-archive-element col-xs-3">
+                  <div class="row video-subject-name">
+                      <div class="col-xs-12 subject-name-container">
+                          <span class="subject_name">{{$video->subject_name}}</span>
+                      </div>
+                  </div>
                   <div class="row video-title">
                       <div class="col-xs-10">
                       @if($video->alias == "")
@@ -497,6 +532,7 @@
                       <input class="recorded_video_id" type="hidden" value="{{$video->id}}"/>
                       </div>
                   </div>
+                  
                   <a id="container_{{$video->filename}}" href="https://extremefreedom.org/recordings/{{$video->filename}}.webm" data-toggle="lightbox" data-gallery="discussion-{{$room_number}}-gallery" data-type="url">
                   <img class="img-responsive" src="https://extremefreedom.org/recordings/{{$video->filename}}.png">
                   </a>
@@ -506,6 +542,15 @@
                             <input class="recorded_video_id" type="hidden" value="{{$video->id}}"/>
                       </div>
                   </div>
+                  <div class="row video-archive-item-details">
+                      <div class="col-xs-6 recorded_on">{{date('M d, Y H:i A', strtotime($video->created_at))}}</div>
+                      <div class="col-xs-6">
+                          <span class="recorded_by pull-right">By: {{$video->recorded_by}}</span>
+                          </div>
+                  </div>
+                  
+                  
+                  
               </div>
               @endforeach
               @else
@@ -540,4 +585,9 @@
 </div>
 </div>
 </div>
+<input class="user_id" type="hidden" value="{{$user_id}}"/>
+<input class="user_type" type="hidden" value="{{$user_type}}"/>
+<input class="display_name" type="hidden" value="{{$display_name}}"/>
+<input class="room_type" type="hidden" value="{{$room_type}}"/>
+<input class="room_number" type="hidden" value="{{$room_number}}"/>
 @stop

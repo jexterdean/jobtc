@@ -79,6 +79,7 @@ Route::post('saveNfoJanus', 'VideoController@saveNfoJanus');
 Route::post('saveScreenShareNfoJanus', 'VideoController@saveScreenShareNfoJanus');
 Route::post('convertJanusVideo', 'VideoController@convertJanusVideo');
 Route::post('convertDiscussionsJanusVideo', 'VideoController@convertDiscussionsJanusVideo');
+Route::post('convertApplicantsJanusVideo','VideoController@convertApplicantsJanusVideo');
 Route::post('getConversionProgress', 'VideoController@getConversionProgress');
 
 
@@ -452,6 +453,15 @@ Route::group(['prefix' => 'api'], function () {
 /*Chat*/
 Route::get('/chat/get','ChatController@get');
 Route::resource('/chat','ChatController');
+
+/*Update Interview Question Score for Applicant*/
+Route::put('/updateInterviewQuestionScore/{id}','ApplicantController@updateInterviewQuestionScore');
+
+/*Interview Questions*/
+Route::post('/addInterviewQuestionAnswer','InterviewQuestionController@addInterviewQuestionAnswer');
+Route::resource('/interview/questions','InterviewQuestionController');
+
+
 
 /*
  * New Note
