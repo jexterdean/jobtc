@@ -740,12 +740,12 @@
                     "meta": {
                         "accessList": [
                             "tab10",
+                            "tab7",
+                            "tab5",
+                            "tab29",
                             "tab2",
                             "tab0",
-                            "tab29",
                             "tab3",
-                            "tab5",
-                            "tab7",
                             "tab8"
                         ]
                     }
@@ -759,8 +759,7 @@
                             "name": "tab6",
                             "path": "",
                             "className": [
-                                "tab6",
-                                "connecting"
+                                "tab6"
                             ],
                             "document": {
                                 "changed": false,
@@ -773,8 +772,8 @@
                                 "terminal": {
                                     "id": "devel_461",
                                     "cwd": "",
-                                    "width": 2453,
-                                    "height": 417
+                                    "width": 1003,
+                                    "height": 160
                                 }
                             },
                             "editorType": "terminal",
