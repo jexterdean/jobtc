@@ -5,6 +5,8 @@
  * For Browser to Browser Calling/Video Calling
  * For Interview Recording
  **/
+
+
 var isUseHTTPs = !(!!process.env.PORT || !!process.env.IP);
 var exec = require('child_process').exec;
 var sys = require('sys');
@@ -19,11 +21,11 @@ var io = require('socket.io');
 
 var options = {
     //Production
-    key: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.key"),
-    cert: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.crt")
+    //key: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.key"),
+    //cert: fs.readFileSync("/etc/apache2/ssl/apache.job.tc.crt")
     //Local
-    //key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
-    //cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")
+    key: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.key"),
+    cert: fs.readFileSync("E://xampp-new/htdocs/laravel-pm/main-app/public/certs/apache.crt")
     //linux.me
     //key: fs.readFileSync("C://xampp/apache/conf/ssl.key/server.key"),
     //cert: fs.readFileSync("C://xampp/apache/conf/ssl.crt/server.crt")
@@ -155,5 +157,12 @@ io.on('connection', function (socket) {
             remote: remote_id
         });
     });
+    socket.on('is-recording',function(status) {
+        console.log("Checking room recording status");
+        io.to(room_name).emit('is-recording', {
+            recording: status
+        });
+    });
+    
     //endregion
 });
