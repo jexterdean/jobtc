@@ -373,9 +373,6 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
         });
                 $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
                 $("[data-mask]").inputmask();
-                $('#add_ticket').on('shown.bs.modal', function(e){
-        $(this).find('.modal-body').load('{{ $setting->grab('main_route').' / create' }}');
-        });
                 $('.datetimepicker').datetimepicker({
         format: "DD-MM-YYYY",
                 useCurrent: false,

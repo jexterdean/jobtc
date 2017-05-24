@@ -175,7 +175,7 @@
     "panecycle": {
         "json()": [
             "tab6",
-            "tab10"
+            "tab2"
         ]
     },
     "panels": {
@@ -257,27 +257,6 @@
     "search-history": {
         "search": {
             "json()": [
-                "show",
-                "convertJanusVideo",
-                "createJanusLocalStream",
-                "convertJanusVideo",
-                "createJanusLocalStream",
-                "convertJanusVideo",
-                "createJanusLocalStream",
-                "convertJanusVideo",
-                "createJanusLocalStream",
-                "convertJanusVideo",
-                "createJanusLocalStream",
-                "convertJanusVideo",
-                "convertDiscussionsJanusVideo",
-                "footer",
-                "btn-video",
-                "add",
-                "btn-video",
-                "createJanusLocalStream",
-                "getConversionProgress",
-                "convertJanus",
-                "btn-video",
                 ".btn:hover",
                 ".badge",
                 "sendFile",
@@ -456,7 +435,28 @@
                 "participant_count",
                 "video.style.width",
                 "leave",
-                "window"
+                "window",
+                "leave",
+                "rejoin",
+                "joinRoom",
+                "rejoin",
+                "joinRoom",
+                "leave-discussion",
+                "convertJanus",
+                "save",
+                "saveVideo",
+                "editRecordedVideo",
+                "tags",
+                "tagEditor",
+                "video-archive",
+                ".record",
+                "$('.blink').addClass('hidden');",
+                "createJanusLocalStream",
+                "setInterval",
+                "conversionPro",
+                "convert",
+                "convertJanusVideo",
+                ".record"
             ]
         },
         "searchfiles": {
@@ -478,45 +478,21 @@
                             "name": "tab2",
                             "path": "/public/assets/custom.css",
                             "className": [
-                                "tab2"
+                                "tab2",
+                                "focus"
                             ],
                             "document": {
+                                "changed": false,
+                                "meta": {
+                                    "timestamp": 1495340920300
+                                },
                                 "filter": true,
                                 "title": "custom.css",
                                 "tooltip": "/public/assets/custom.css",
-                                "ace": {
-                                    "folds": [],
-                                    "scrolltop": 12095,
-                                    "scrollleft": 0,
-                                    "selection": {
-                                        "start": {
-                                            "row": 724,
-                                            "column": 15
-                                        },
-                                        "end": {
-                                            "row": 724,
-                                            "column": 15
-                                        },
-                                        "isBackwards": false
-                                    },
-                                    "options": {
-                                        "guessTabSize": true,
-                                        "useWrapMode": false,
-                                        "wrapToView": true
-                                    },
-                                    "firstLineState": {
-                                        "row": 1623,
-                                        "mode": "ace/mode/css"
-                                    }
-                                },
-                                "hash": "359e9a78630c728e1949fd02016b085ebdc777e9",
-                                "meta": {
-                                    "timestamp": 1495445763256
-                                },
-                                "changed": false
+                                "ace": {}
                             },
                             "editorType": "ace",
-                            "active": false
+                            "active": true
                         },
                         {
                             "type": "tab",
@@ -531,16 +507,16 @@
                                 "tooltip": "/app/Http/routes.php",
                                 "ace": {
                                     "folds": [],
-                                    "scrolltop": 1182,
+                                    "scrolltop": 1213.5,
                                     "scrollleft": 0,
                                     "selection": {
                                         "start": {
-                                            "row": 81,
-                                            "column": 13
+                                            "row": 97,
+                                            "column": 59
                                         },
                                         "end": {
-                                            "row": 81,
-                                            "column": 40
+                                            "row": 97,
+                                            "column": 59
                                         },
                                         "isBackwards": false
                                     },
@@ -550,13 +526,13 @@
                                         "wrapToView": true
                                     },
                                     "firstLineState": {
-                                        "row": 1315,
+                                        "row": 1619,
                                         "mode": "ace/mode/php"
                                     }
                                 },
-                                "hash": "a884eff6adfc5d84fae38194f13ce5906fa24a6a",
+                                "hash": "e974574dabbd663a5d84608a9936a5946e3a8472",
                                 "meta": {
-                                    "timestamp": 1495454040514
+                                    "timestamp": 1494769331630
                                 },
                                 "changed": false
                             },
@@ -571,41 +547,55 @@
                                 "tab29"
                             ],
                             "document": {
-                                "changed": false,
-                                "meta": {
-                                    "timestamp": 1495460268091
-                                },
                                 "filter": true,
                                 "title": "video-conference-webrtc.js",
                                 "tooltip": "/public/assets/js/page/video-conference-webrtc.js",
-                                "ace": {}
-                            },
-                            "editorType": "ace",
-                            "active": false
-                        },
-                        {
-                            "type": "tab",
-                            "name": "tab3",
-                            "path": "/app/Models/InterviewQuestionAnswer.php",
-                            "className": [
-                                "tab3"
-                            ],
-                            "document": {
-                                "filter": true,
-                                "title": "InterviewQuestionAnswer.php",
-                                "tooltip": "/app/Models/InterviewQuestionAnswer.php",
                                 "ace": {
-                                    "folds": [],
-                                    "scrolltop": 0,
+                                    "folds": [
+                                        {
+                                            "start": {
+                                                "row": 765,
+                                                "column": 2
+                                            },
+                                            "end": {
+                                                "row": 896,
+                                                "column": 9
+                                            },
+                                            "placeholder": "..."
+                                        },
+                                        {
+                                            "start": {
+                                                "row": 1667,
+                                                "column": 60
+                                            },
+                                            "end": {
+                                                "row": 1696,
+                                                "column": 0
+                                            },
+                                            "placeholder": "..."
+                                        },
+                                        {
+                                            "start": {
+                                                "row": 1768,
+                                                "column": 2
+                                            },
+                                            "end": {
+                                                "row": 1929,
+                                                "column": 1
+                                            },
+                                            "placeholder": "..."
+                                        }
+                                    ],
+                                    "scrolltop": 25383.5,
                                     "scrollleft": 0,
                                     "selection": {
                                         "start": {
-                                            "row": 8,
-                                            "column": 85
+                                            "row": 1647,
+                                            "column": 37
                                         },
                                         "end": {
-                                            "row": 8,
-                                            "column": 85
+                                            "row": 1647,
+                                            "column": 37
                                         },
                                         "isBackwards": false
                                     },
@@ -615,13 +605,172 @@
                                         "wrapToView": true
                                     },
                                     "firstLineState": {
-                                        "row": 1315,
+                                        "row": 162,
+                                        "state": "start",
+                                        "mode": "ace/mode/javascript"
+                                    }
+                                },
+                                "hash": "881de639dfb87c3585364578d589643b7f0bb87a",
+                                "meta": {
+                                    "timestamp": 1494932294583
+                                },
+                                "changed": false
+                            },
+                            "editorType": "ace",
+                            "active": false
+                        },
+                        {
+                            "type": "tab",
+                            "name": "tab14",
+                            "path": "/public/assets/js/page/discussions-room.js",
+                            "className": [
+                                "tab14"
+                            ],
+                            "document": {
+                                "changed": false,
+                                "meta": {
+                                    "timestamp": 1494930656874
+                                },
+                                "filter": true,
+                                "title": "discussions-room.js",
+                                "tooltip": "/public/assets/js/page/discussions-room.js",
+                                "ace": {}
+                            },
+                            "editorType": "ace",
+                            "active": false
+                        },
+                        {
+                            "type": "tab",
+                            "name": "tab30",
+                            "path": "/resources/views/layouts/foot.blade.php",
+                            "className": [
+                                "tab30"
+                            ],
+                            "document": {
+                                "filter": true,
+                                "title": "foot.blade.php",
+                                "tooltip": "/resources/views/layouts/foot.blade.php",
+                                "ace": {
+                                    "folds": [],
+                                    "scrolltop": 4383.5,
+                                    "scrollleft": 0,
+                                    "selection": {
+                                        "start": {
+                                            "row": 287,
+                                            "column": 0
+                                        },
+                                        "end": {
+                                            "row": 287,
+                                            "column": 0
+                                        },
+                                        "isBackwards": false
+                                    },
+                                    "options": {
+                                        "guessTabSize": true,
+                                        "useWrapMode": false,
+                                        "wrapToView": true
+                                    },
+                                    "firstLineState": {
+                                        "row": 36,
+                                        "state": "start",
                                         "mode": "ace/mode/php"
                                     }
                                 },
-                                "hash": "d77692a3baa8f0eb2bdd6ddb55a3a51aedebadbd",
+                                "hash": "3dc0da2f01366b6658dad650d0442cb18c6a4cd4",
                                 "meta": {
-                                    "timestamp": 1495446919083
+                                    "timestamp": 1495089040896
+                                },
+                                "changed": false
+                            },
+                            "editorType": "ace",
+                            "active": false
+                        },
+                        {
+                            "type": "tab",
+                            "name": "tab3",
+                            "path": "/app/Http/Controllers/ApplicantController.php",
+                            "className": [
+                                "tab3"
+                            ],
+                            "document": {
+                                "filter": true,
+                                "title": "ApplicantController.php",
+                                "tooltip": "/app/Http/Controllers/ApplicantController.php",
+                                "ace": {
+                                    "folds": [],
+                                    "scrolltop": 4532,
+                                    "scrollleft": 0,
+                                    "selection": {
+                                        "start": {
+                                            "row": 291,
+                                            "column": 42
+                                        },
+                                        "end": {
+                                            "row": 291,
+                                            "column": 42
+                                        },
+                                        "isBackwards": false
+                                    },
+                                    "options": {
+                                        "guessTabSize": true,
+                                        "useWrapMode": false,
+                                        "wrapToView": true
+                                    },
+                                    "firstLineState": {
+                                        "row": 111,
+                                        "state": "php-start",
+                                        "mode": "ace/mode/php"
+                                    }
+                                },
+                                "hash": "5a22b8573278bfc1ef7f439ae87db4e5783c94cd",
+                                "meta": {
+                                    "timestamp": 1494771819033
+                                },
+                                "changed": false
+                            },
+                            "editorType": "ace",
+                            "active": false
+                        },
+                        {
+                            "type": "tab",
+                            "name": "tab4",
+                            "path": "/public/assets/js/page/applicants.js",
+                            "className": [
+                                "tab4"
+                            ],
+                            "document": {
+                                "filter": true,
+                                "title": "applicants.js",
+                                "tooltip": "/public/assets/js/page/applicants.js",
+                                "ace": {
+                                    "folds": [],
+                                    "scrolltop": 1908,
+                                    "scrollleft": 0,
+                                    "selection": {
+                                        "start": {
+                                            "row": 190,
+                                            "column": 27
+                                        },
+                                        "end": {
+                                            "row": 190,
+                                            "column": 27
+                                        },
+                                        "isBackwards": false
+                                    },
+                                    "options": {
+                                        "guessTabSize": true,
+                                        "useWrapMode": false,
+                                        "wrapToView": true
+                                    },
+                                    "firstLineState": {
+                                        "row": 382,
+                                        "state": "start",
+                                        "mode": "ace/mode/javascript"
+                                    }
+                                },
+                                "hash": "3ef0a144320055d0d60437b8c61ff963ee5e2e92",
+                                "meta": {
+                                    "timestamp": 1494672260307
                                 },
                                 "changed": false
                             },
@@ -631,66 +780,26 @@
                         {
                             "type": "tab",
                             "name": "tab5",
-                            "path": "/app/Http/Controllers/InterviewQuestionController.php",
+                            "path": "/public/assets/css/page/applicants.css",
                             "className": [
                                 "tab5"
                             ],
                             "document": {
-                                "changed": false,
-                                "meta": {
-                                    "timestamp": 1495447351550
-                                },
                                 "filter": true,
-                                "title": "InterviewQuestionController.php",
-                                "tooltip": "/app/Http/Controllers/InterviewQuestionController.php",
-                                "ace": {}
-                            },
-                            "editorType": "ace",
-                            "active": false
-                        },
-                        {
-                            "type": "tab",
-                            "name": "tab7",
-                            "path": "/app/Http/Controllers/VideoController.php",
-                            "className": [
-                                "tab7"
-                            ],
-                            "document": {
-                                "changed": false,
-                                "meta": {
-                                    "timestamp": 1495460455862
-                                },
-                                "filter": true,
-                                "title": "VideoController.php",
-                                "tooltip": "/app/Http/Controllers/VideoController.php",
-                                "ace": {}
-                            },
-                            "editorType": "ace",
-                            "active": false
-                        },
-                        {
-                            "type": "tab",
-                            "name": "tab8",
-                            "path": "/resources/views/applicants/show.blade.php",
-                            "className": [
-                                "tab8"
-                            ],
-                            "document": {
-                                "filter": true,
-                                "title": "show.blade.php",
-                                "tooltip": "/resources/views/applicants/show.blade.php",
+                                "title": "applicants.css",
+                                "tooltip": "/public/assets/css/page/applicants.css",
                                 "ace": {
                                     "folds": [],
-                                    "scrolltop": 8790,
-                                    "scrollleft": 96.37,
+                                    "scrolltop": 6766,
+                                    "scrollleft": 0,
                                     "selection": {
                                         "start": {
-                                            "row": 531,
-                                            "column": 41
+                                            "row": 424,
+                                            "column": 0
                                         },
                                         "end": {
-                                            "row": 531,
-                                            "column": 41
+                                            "row": 424,
+                                            "column": 0
                                         },
                                         "isBackwards": false
                                     },
@@ -700,14 +809,14 @@
                                         "wrapToView": true
                                     },
                                     "firstLineState": {
-                                        "row": 574,
-                                        "state": "start",
-                                        "mode": "ace/mode/php"
+                                        "row": 323,
+                                        "state": "ruleset",
+                                        "mode": "ace/mode/css"
                                     }
                                 },
-                                "hash": "0b61eff0896367352039233c2e37e2153a793242",
+                                "hash": "f650ab0e57e1b010adc5cbfce035edee22c356c8",
                                 "meta": {
-                                    "timestamp": 1495445763272
+                                    "timestamp": 1495018223267
                                 },
                                 "changed": false
                             },
@@ -716,23 +825,23 @@
                         },
                         {
                             "type": "tab",
-                            "name": "tab10",
-                            "path": "/app/Http/Controllers/ApplicantController.php",
+                            "name": "tab7",
+                            "path": "/resources/views/applicants/show.blade.php",
                             "className": [
                                 "tab10"
                             ],
                             "document": {
                                 "changed": false,
                                 "meta": {
-                                    "timestamp": 1495449966139
+                                    "timestamp": 1495440621927
                                 },
                                 "filter": true,
-                                "title": "ApplicantController.php",
-                                "tooltip": "/app/Http/Controllers/ApplicantController.php",
+                                "title": "show.blade.php",
+                                "tooltip": "/resources/views/discussions/show.blade.php",
                                 "ace": {}
                             },
                             "editorType": "ace",
-                            "active": true
+                            "active": false
                         }
                     ],
                     "skin": "editor_tab",
@@ -744,6 +853,9 @@
                             "tab5",
                             "tab29",
                             "tab2",
+                            "tab7",
+                            "tab13",
+                            "tab14",
                             "tab0",
                             "tab3",
                             "tab8"
@@ -789,6 +901,9 @@
                             ],
                             "document": {
                                 "changed": false,
+                                "meta": {
+                                    "timestamp": 1494927196905
+                                },
                                 "filter": true,
                                 "title": "bash - \"job.tc\"",
                                 "tooltip": "bash - \"job.tc\"",
@@ -796,18 +911,14 @@
                                     "id": "devel_915",
                                     "cwd": "",
                                     "width": 1003,
-                                    "height": 160,
-                                    "scrollTop": 10461
-                                },
-                                "meta": {
-                                    "timestamp": 1494927196905
+                                    "height": 431
                                 }
                             },
                             "editorType": "terminal",
                             "active": false
                         }
                     ],
-                    "height": "31.448098256735342%",
+                    "height": "72.35786450079239%",
                     "skin": "editor_tab",
                     "skinset": "default",
                     "meta": {

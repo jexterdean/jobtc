@@ -12,6 +12,7 @@ use App\Models\Permission;
 use App\Models\PermissionRole;
 use App\Models\PermissionUser;
 use Auth;
+use Elasticsearch\ClientBuilder as ES;
 
 class RoleController extends Controller {
 
@@ -146,9 +147,11 @@ class RoleController extends Controller {
         $position->save();
 
         //Create an index for searching
+
+        /*
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
-                ->build();
+                ->build();*/
         $params = array();
         $params['body'] = array(
             'name' => $position->name
@@ -156,17 +159,20 @@ class RoleController extends Controller {
         $params['index'] = 'default';
         $params['type'] = 'position';
         $params['id'] = $position->id;
-        $results = $client->index($params);       //using Index() function to inject the data
+        // $results = $client->index($params);       //using Index() function to inject the data
 
         $modules = Module::all();
         $permissions = Permission::all();
         $permission_role = PermissionRole::all();
+        $permissions_list = [];
+        $module_permissions = Permission::whereIn('id', $permissions_list)->get();
 
         return view('roles.partials._newposition', [
             'position' => $position,
             'permissions' => $permissions,
             'permission_role' => $permission_role,
             'modules' => $modules,
+            'module_permissions' => $module_permissions,
             'company_id' => $company_id
         ]);
     }
@@ -179,6 +185,7 @@ class RoleController extends Controller {
         $description = $request->input('description');
 
         $position = Role::where('id', $position_id);
+
         $position->update([
             'name' => $name,
             'slug' => strtolower($name) . '-' . $company_id,
@@ -186,19 +193,20 @@ class RoleController extends Controller {
         ]);
 
         //Update the index for searching
+        /*
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
-                ->build();
+                ->build();*/
         $params = array();
         $params['body'] = array(
             'doc' => [
-                'name' => $position->name
+                'name' => $name
             ]
         );
         $params['index'] = 'default';
         $params['type'] = 'position';
-        $params['id'] = $position->id;
-        $results = $client->update($params);       //using Index() function to inject the data
+        $params['id'] = $position_id;
+        // $results = $client->update($params);       //using Index() function to inject the data
 
         return "true";
     }
@@ -210,15 +218,16 @@ class RoleController extends Controller {
         $position = Role::where('id', $position_id);
 
         //Delete the index for searching
+        /*
         $client = ES::create()
                 ->setHosts(\Config::get('elasticsearch.host'))
-                ->build();
+                ->build();*/
         $params = array();
 
         $params['index'] = 'default';
         $params['type'] = 'position';
         $params['id'] = $position->pluck('id');
-        $results = $client->delete($params);       //using Index() function to inject the data
+        // $results = $client->delete($params);       //using Index() function to inject the data
 
         $position->delete();
 
