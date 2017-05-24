@@ -342,6 +342,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index', 'https' => true]);    
     /*For Dashboard Job Postings(So that any user apply to all the job postings that are active)*/
     Route::get('getJobPostings','DashboardController@getJobPostings');
+    /*For Dashboard Job Postings(So that any user apply to all the job postings that are active)*/
+    Route::post('dashboardApplyToJob','DashboardController@dashboardApplyToJob');
+    
     
     Route::get('user/{user_id}/delete', 'UserController@delete');
     Route::get('event/{event_id}/delete', 'EventsController@delete');
