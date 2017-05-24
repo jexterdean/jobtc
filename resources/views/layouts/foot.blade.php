@@ -122,17 +122,6 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
     {!! method_field('delete') !!}
 </form>
 
-{!! HTML::script('assets/js/jquery.min.js') !!}
-{!! HTML::script('assets/js/jquery-ui.min.js') !!}
-{!! HTML::script('assets/js/bootstrap.min.js') !!}
-{!! HTML::script('assets/js/jquery.validate.min.js') !!}
-{!! HTML::script('assets/js/AdminLTE/app.js')  !!}
-{!!  HTML::script('assets/js/bootbox.js')  !!}
-{!!  HTML::script('assets/js/moment.min.js')  !!}
-
-<!--DLMenu js-->
-{!! HTML::script('assets/js/modernizr.custom.js') !!}
-{!! HTML::script('assets/js/jquery.dlmenu.js') !!}
 
 @if(in_array('table',$assets))
 {!!   HTML::script('assets/js/plugins/datatables/jquery.dataTables.js') !!}
@@ -216,12 +205,15 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/jquery-tagEditor/jquery.caret.min.js')  !!}
 {!!  HTML::script('assets/js/jquery-tagEditor/jquery.tag-editor.min.js')  !!}
 {!!  HTML::script('assets/js/page/applicants.js')  !!}
-{{--  HTML::script('assets/js/erizo.js')  --}}
-{{--  HTML::script('assets/js/page/video-conference.js')  --}}
 {!!  HTML::script('assets/js/adapter.js')  !!}
 {!!  HTML::script('assets/js/janus.js')  !!}
-<script src="https://simplewebrtc.com/latest-v2.js"></script>
+{!!  HTML::script('assets/js/SimpleWebRTC/simplewebrtc.bundle.js')  !!}
 {!!  HTML::script('assets/js/html2canvas.js') !!}
+<script src="https://cdn.rawgit.com/scotch-io/scotch-panels/master/dist/scotchPanels.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.js"></script>
+{!! HTML::script('assets/js/moment.min.js') !!}
+{!! HTML::script('assets/js/jquery.plugin.min.js') !!}
+{!! HTML::script('assets/js/jquery.countdown.js') !!}
 {!!  HTML::script('assets/js/page/video-conference-webrtc.js') !!}
 {{--  HTML::script('assets/js/page/video-conference-janus.js') --}}
 {{--  HTML::script('assets/js/page/video-call-janus.js')  --}}
@@ -302,6 +294,15 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 @if(in_array('discussions-room',$assets))
 {!!  HTML::script('assets/bootstrap-dialog/src/js/bootstrap-dialog.js')  !!}
 {!!  HTML::script('assets/js/SimpleWebRTC/simplewebrtc.bundle.js')  !!}
+{!! HTML::script('assets/js/adapter.js') !!}
+{!! HTML::script('assets/js/janus.js') !!}
+{!! HTML::script('assets/js/spin.min.js') !!}
+{!! HTML::script('assets/js/janus-api.js') !!}
+{!!  HTML::script('assets/js/jquery.caret.min.js')  !!}
+{!!  HTML::script('assets/js/jquery.tag-editor.min.js')  !!}
+<script src="https://cdn.rawgit.com/scotch-io/scotch-panels/master/dist/scotchPanels.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.js"></script>
+{!!  HTML::script('assets/js/jquery.gridly.js')  !!}
 {!!  HTML::script('assets/js/page/discussions-room.js')  !!}
 @endif
 
@@ -310,14 +311,60 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/dashboard.js')  !!}
 @endif
 
-@if(in_array('file-input',$assets))
-{!!  HTML::style('assets/css/fileinput.css')  !!}
-{!!  HTML::script('assets/js/dashboard.js')  !!}
-@endif
+{!!  HTML::script('assets/js/number.js')  !!}
 <!--Search Scripts-->
 {!!  HTML::script('assets/js/page/search.js')  !!}
 <script>
         $(function () {
+            $('body')
+                    .on('focusin','.number-only',function (e) {
+                        $(this).numberOnly({
+                            'isForContact': true
+                        });
+                    })
+                    .on('focusout focusin','.url-only',function (e) {
+                        if($(this).val() && !isUrlValid($(this).val())){
+                            $(this).css({
+                                'border': '1px solid #ff0000'
+                            });
+                            $(this).tooltip({
+                                'placement' : 'right',
+                                'title' : 'Please input a valid URL!',
+                                'trigger' : 'click',
+                                'template' :
+                                '<div class="tooltip" role="tooltip" style="width: 150px!important;">' +
+                                    '<div class="tooltip-arrow"></div>' +
+                                    '<div class="tooltip-inner"></div>' +
+                                '</div>'
+                            });
+                            $(this).trigger('click');
+                        }
+                        else{
+                            $(this).siblings('.tooltip').remove();
+                            $(this).removeAttr('style data-original-title title aria-describedby');
+                        }
+                    });
+
+            $('input[type=file]').fileinput({
+                overwriteInitial: true,
+                uploadAsync: false,
+                maxFileSize: 1000000,
+                removeClass: "btn btn-sm btn-delete btn-shadow",
+                browseClass: "btn btn-sm btn-edit btn-shadow",
+                browseLabel: $('input[type=file]').attr('placeholder'),
+                uploadClass: "btn btn-sm btn-assign hide btn-shadow",
+                cancelClass: "btn btn-sm btn-default btn-shadow",
+                maxFilesNum: 5,
+                showRemove: false,
+                showCaption: false,
+                dropZoneEnabled: false,
+                showUpload: true,
+                initialPreviewAsData: true
+            });
+            function isUrlValid(url) {
+                return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+            }
+
         //to fix the ajax PATCH/POST method type of form not working
         $.ajaxSetup({
         headers: {

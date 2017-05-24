@@ -23,12 +23,16 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <?php
-            //change code because causes error on other pages
-            $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
-            ?>
+            {{--*/ $companies = \App\Helpers\Helper::getCompanyLinks() /*--}}
+            {{--*/ $clients = [] /*--}}
+            {{--*/ $_company_id = Request::segment(2) /*--}}
+            @if(count($companies) > 0)
+                @foreach($companies as $company)
+                    {{--*/ $clients[$company->company->id] = $company->company->name /*--}}
+                @endforeach
+            @endif
             {!! Form::select('company_id', $clients, isset($project->company_id) ?
-            $project->company_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Company', 'tabindex' =>'2'] )  !!}
+            $project->company_id : $_company_id, ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Company', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
     <div class="form-group">

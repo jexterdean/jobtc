@@ -66,11 +66,17 @@
         @endif
 
         @if(in_array('applicants',$assets))
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.css">
         {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
         {!!  HTML::style('assets/css/page/applicants.css')  !!}
         @endif
 
         @if(in_array('discussions',$assets) || in_array('discussions-room',$assets))
+        {!!  HTML::style('assets/css/jquery.tag-editor.css')  !!}
+        {!!  HTML::style('assets/css/jquery.gridly.css')  !!}
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.1.1/ekko-lightbox.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         {!!  HTML::style('assets/css/page/discussions.css')  !!}
         @endif
         
@@ -126,5 +132,20 @@
 
         <!--Multi-navigation css-->
         {!!  HTML::style('assets/css/menu.css')  !!}
+
+        {!! HTML::script('assets/js/jquery.min.js') !!}
+        {!! HTML::script('assets/js/jquery-ui.min.js') !!}
+        {!! HTML::script('assets/js/bootstrap.min.js') !!}
+        {!! HTML::script('assets/js/jquery.validate.min.js') !!}
+        {!! HTML::script('assets/js/AdminLTE/app.js')  !!}
+        {!!  HTML::script('assets/js/bootbox.js')  !!}
+        {!!  HTML::script('assets/js/moment.min.js')  !!}
+
+        <!--DLMenu js-->
+        {!! HTML::script('assets/js/modernizr.custom.js') !!}
+        {!! HTML::script('assets/js/jquery.dlmenu.js') !!}
+
+        {!!  HTML::style('assets/css/fileinput.css')  !!}
+        {!!  HTML::script('assets/js/fileinput.min.js')  !!}
         <script> var public_path = "{{ URL::to('/') }}/";</script>
     </head>

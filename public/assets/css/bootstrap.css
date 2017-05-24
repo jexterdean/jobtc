@@ -3045,9 +3045,9 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
-  outline: thin dotted;
+  /*outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
+  outline-offset: -2px;*/
 }
 .btn.btn-transparent {
   background-color: transparent!important;
@@ -3064,8 +3064,11 @@ select[multiple].input-lg {
 .btn:hover,
 .btn:focus,
 .btn.focus {
-  color: #333;
+  /*color: #333;*/
+  color: #fff !important;
   text-decoration: none;
+  background: #306aca;
+  outline: none;
 }
 .btn:active,
 .btn.active {
@@ -3089,7 +3092,7 @@ fieldset[disabled] a.btn {
 }
 .btn-default {
   color: #333 !important;
-  background-color: #f2f2f2;
+  background-color: #fff;
   border-color: #ccc !important;
   margin-bottom: 5px;
 }
@@ -3121,7 +3124,7 @@ fieldset[disabled] a.btn {
 .btn-default.active.focus,
 .open > .dropdown-toggle.btn-default.focus {
   color: #333;
-  background-color: #c7c7c7;
+  background-color: #fff;
   border-color: #8c8c8c;
 }
 .btn-default:active,
@@ -4239,14 +4242,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-radius: 4px 4px 0 0;
 }
 .nav-tabs > li > a:hover {
-  border-color: #eeeeee #eeeeee #ddd;
+  /*border-color: #eeeeee #eeeeee #ddd;*/
 }
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
   color: #555555;
-  background-color: #f2f2f2;
-  border: 1px solid #ddd;
+  background-color: #c6c6c6;
+  border: 1px solid #c6c6c6;
   border-bottom-color: transparent;
   cursor: default;
 }
@@ -5152,7 +5155,9 @@ a.label:focus {
 }
 .btn .badge {
   position: relative;
-  top: -1px;
+  /*top: -1px;*/
+  top: -2px;
+  margin-left: 5px;
 }
 .btn-xs .badge,
 .btn-group-xs > .btn .badge {

@@ -21,7 +21,7 @@ and open the template in the editor.
 
 .job-posting-container {
     margin: 0 auto;
-    width: 99%;
+    /*width: 99%;*/
 }
 
  .job-posting-container .job {
@@ -207,7 +207,7 @@ and open the template in the editor.
 
 .job {
     position: relative;
-    top: 25px;
+    /*top: 25px;*/
 }
 
 .job-header {

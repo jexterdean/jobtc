@@ -57,7 +57,7 @@
 <table id="pay-period-table" class="table">
     <thead>
         <tr>
-            <th><span>Pay Period</span></th>
+            <th width="50%"><span>Pay Period</span></th>
             <th><span>&nbsp;</span></th>
         </tr>
     </thead>

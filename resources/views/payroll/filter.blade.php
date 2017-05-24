@@ -11,9 +11,9 @@
         @foreach($employees as $employee)
         <tr>
             @if($employee->rate->count() > 0)
-            <td>{{$employee->user->name}}&nbsp;<h4>({{$employee->rate[0]->currency." ".$employee->rate[0]->rate_value}})</h4></td>
+            <td><span>{{$employee->user->name}}</span><h6>({{$employee->rate[0]->currency." ".$employee->rate[0]->rate_value}})</h6></td>
             @else
-            <td>{{$employee->user->name}}&nbsp;<h4>(No Rate Set)</h4></td>
+            <td><span>{{$employee->user->name}}</span><h6>(No Rate Set)</h6></td>
             @endif
             <td>
                 @foreach($projects as $project)

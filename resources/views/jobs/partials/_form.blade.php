@@ -6,19 +6,20 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <?php
-            //change code because causes error on other pages
-            $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
-            ?>
+            {{--*/ $companies = \App\Helpers\Helper::getCompanyLinks() /*--}}
+            {{--*/ $clients = [] /*--}}
+            {{--*/ $_company_id = Request::segment(2) /*--}}
+            @if(count($companies) > 0)
+                @foreach($companies as $company)
+                    {{--*/ $clients[$company->company->id] = $company->company->name /*--}}
+                @endforeach
+            @endif
             {!! Form::select('company_id', $clients, isset($project->company_id) ?
-            $project->client_id : '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company', 'tabindex' =>'2'] )  !!}
+            $project->client_id : $_company_id, ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Select Company', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
     <div class="form-group">
-        <div class="fileUpload btn btn-edit btn-shadow btn-sm">
-            <span>Upload Logo</span>
-            <input class="upload" name="photo" type="file" value="" />
-        </div>
+        <input class="upload" name="photo" type="file" placeholder="Upload Logo" value="" />
     </div>
     <div class="form-group">
         <div class="col-md-12">
@@ -49,6 +50,22 @@ $.fn.modal.Constructor.prototype.enforceFocus = function() {
             }
         }, this ) );
 };
+$('.upload').fileinput({
+    overwriteInitial: true,
+    uploadAsync: false,
+    maxFileSize: 1000000,
+    removeClass: "btn btn-sm btn-delete btn-shadow",
+    browseClass: "btn btn-sm btn-edit btn-shadow",
+    browseLabel: 'Upload Logo',
+    uploadClass: "btn btn-sm btn-assign hide btn-shadow",
+    cancelClass: "btn btn-sm btn-default btn-shadow",
+    maxFilesNum: 5,
+    showRemove: false,
+    showCaption: false,
+    dropZoneEnabled: false,
+    showUpload: true,
+    initialPreviewAsData: true
+});
 
 CKEDITOR.replace('description');
 </script>    

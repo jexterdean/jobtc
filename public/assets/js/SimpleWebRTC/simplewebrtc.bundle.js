@@ -5490,15 +5490,21 @@ LocalMedia.prototype.stopScreenShare = function (stream) {
         stream.getTracks().forEach(function (track) { track.stop(); });
         var idx = this.localScreens.indexOf(stream);
         if (idx > -1) {
-            this.emit('localScreenStopped', stream);
             this.localScreens.splice(idx, 1);
+            if (webrtcSupport.prefix === 'moz') {
+                this.emit('localScreenStopped', stream);
+            }
         }
     } else {
-        this.localScreens.forEach(function (stream) {
-            stream.getTracks().forEach(function (track) { track.stop(); });
-            self.emit('localScreenStopped', stream);
-        });
+        var oldLocalScreens = this.localScreens;
         this.localScreens = [];
+
+        oldLocalScreens.forEach(function (stream) {
+            stream.getTracks().forEach(function (track) { track.stop(); });
+            if (webrtcSupport.prefix === 'moz') {
+                self.emit('localScreenStopped', stream);
+            }
+        });
     }
 };
 
@@ -17619,15 +17625,17 @@ function SimpleWebRTC(opts) {
         });
     });
     this.webrtc.on('localScreenStopped', function (stream) {
-        self.stopScreenShare();
-        /*
-        self.connection.emit('unshareScreen');
+         if (self.getLocalScreen()) {
+            self.stopScreenShare();
+        }
+        
+        /*self.connection.emit('unshareScreen');
         self.webrtc.peers.forEach(function (peer) {
             if (peer.sharemyscreen) {
                 peer.end();
             }
-        });
-        */
+        });*/
+        
     });
 
     this.webrtc.on('channelMessage', function (peer, label, data) {

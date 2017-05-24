@@ -18,8 +18,13 @@
                     'placeholder' => 'Description', 'tabindex' => '2']) !!}
                 </div>
                 <div class="form-group">
-                    {!!  Form::input('text','due_date','',['class' => 'form-control form-control-inline
-                    input-medium date-picker', 'placeholder' => 'Due Date', 'tabindex' => '3', 'data-inputmask' => "'alias': 'dd-mm-yyyy'", 'data-mask' => 'true'])  !!}
+                    <div class='input-group date datetimepicker' id='start_date'>
+                        {!!  Form::input('text','due_date',
+                            isset($task->due_date) ? date("d-m-Y",strtotime($task->due_date)) : '', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Due Date', 'tabindex' => '4'])  !!}
+                        <span class="input-group-addon open-date-calendar">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                 </div>
                 @if(Auth::user('user')->user_type === 1 || Auth::user('user')->user_type === 2 || Auth::user('user')->user_type === 3)
                     <div class="form-group">

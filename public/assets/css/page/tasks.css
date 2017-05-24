@@ -89,8 +89,10 @@ a:active,a:focus{
 .task-list-item:not(.is-task-item-selected):not(.ui-sortable-helper):hover{
     padding: 0!important;
     margin: 0!important;
-    border-top: 4px solid #f2f2f2 !important;
-    border-bottom: 4px solid #f2f2f2 !important;
+    /*border-top: 4px solid #f2f2f2 !important;
+    border-bottom: 4px solid #f2f2f2 !important;*/
+    border-top: 0 !important;
+    border-bottom: 0 !important;
 }
 .has-border {
     border: 1px solid #ff0000!important;

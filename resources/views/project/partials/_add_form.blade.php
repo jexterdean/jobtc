@@ -22,58 +22,63 @@
     </div>
     <div class="form-group">
         <div class="col-md-12">
-            <?php
-            //change code because causes error on other pages
-            $clients = App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
-            ?>
-            {!! Form::select('company_id', $clients, '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Company', 'tabindex' =>'2'] )  !!}
+            {{--*/ $companies = \App\Helpers\Helper::getCompanyLinks() /*--}}
+            {{--*/ $clients = [] /*--}}
+            {{--*/ $_company_id = Request::segment(2) /*--}}
+            @if(count($companies) > 0)
+                @foreach($companies as $company)
+                    {{--*/ $clients[$company->company->id] = $company->company->name /*--}}
+                @endforeach
+            @endif
+
+            {!! Form::select('company_id', $clients, $_company_id, ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Company', 'tabindex' =>'2'] )  !!}
         </div>
     </div>
-    <div class="form-group">
-        <div class="col-md-6">
-            <div class='input-group date datetimepicker' id='start_date'>
-                {!!  Form::input('text','start_date','', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Start', 'tabindex' => '4'])  !!}
-                <span class="input-group-addon open-date-calendar">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class='input-group date datetimepicker' id='start_date'>
-                {!!  Form::input('text','deadline','', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Deadline', 'tabindex' => '5'])  !!}
-                <span class="input-group-addon open-date-calendar">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-2">
-            {!! Form::input('text','rate_value','',['class' =>
-            'form-control', 'placeholder' => 'Rate', 'tabindex' => '8']) !!}
-        </div>
-        <div class="col-md-3">
-            {!!  Form::select('currency', [
-            'USD' => 'USD',
-            'EUR' => 'EUR',
-            'GBP' => 'GBP',
-            'PHP' => 'PHP'
-            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Currency', 'tabindex' => '7'] )  !!}
-        </div>
-        <div class="col-md-3">
-            {!!  Form::select('rate_type', [
-            'fixed' => 'Fixed',
-            'hourly' => 'Hourly'
-            ], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Type', 'tabindex' => '7'] )  !!}
-        </div>
-        <div class="col-md-4">
-            {!!  Form::input('text','account','', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Account', 'tabindex' => '4'])  !!}
-        </div>
-    </div>
-    <div class="row">
-        <div class="pull-right">
-            {!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Project'),['class' => 'btn btn-edit btn-shadow', 'tabindex' =>
-            '9'])  !!}
-        </div>
-    </div>
+<div class="form-group">
+<div class="col-md-6">
+<div class='input-group date datetimepicker' id='start_date'>
+    {!!  Form::input('text','start_date','', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Start', 'tabindex' => '4'])  !!}
+    <span class="input-group-addon open-date-calendar">
+        <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+</div>
+</div>
+<div class="col-md-6">
+<div class='input-group date datetimepicker' id='start_date'>
+    {!!  Form::input('text','deadline','', ['class' => 'form-control form-control-inline input-medium date-picker', 'placeholder' => 'Deadline', 'tabindex' => '5'])  !!}
+    <span class="input-group-addon open-date-calendar">
+        <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-md-2">
+{!! Form::input('text','rate_value','',['class' =>
+'form-control', 'placeholder' => 'Rate', 'tabindex' => '8']) !!}
+</div>
+<div class="col-md-3">
+{!!  Form::select('currency', [
+'USD' => 'USD',
+'EUR' => 'EUR',
+'GBP' => 'GBP',
+'PHP' => 'PHP'
+], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Currency', 'tabindex' => '7'] )  !!}
+</div>
+<div class="col-md-3">
+{!!  Form::select('rate_type', [
+'fixed' => 'Fixed',
+'hourly' => 'Hourly'
+], '', ['class' => 'form-control input-xlarge select2me', 'placeholder' => 'Type', 'tabindex' => '7'] )  !!}
+</div>
+<div class="col-md-4">
+{!!  Form::input('text','account','', ['class' => 'form-control form-control-inline input-medium', 'placeholder' => 'Account', 'tabindex' => '4'])  !!}
+</div>
+</div>
+<div class="row">
+<div class="pull-right">
+{!!  Form::submit((isset($buttonText) ? $buttonText : 'Add Project'),['class' => 'btn btn-edit btn-shadow', 'tabindex' =>
+'9'])  !!}
+</div>
+</div>
 </div>

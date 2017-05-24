@@ -73,9 +73,15 @@ Route::post('stopRecording', 'VideoController@stopRecording');
 Route::post('isRecording', 'VideoController@isRecording');
 Route::post('saveVideo', 'VideoController@saveVideo');
 Route::post('deleteVideo', 'VideoController@deleteVideo');
+Route::put('/editRecordedVideo/{id}', 'VideoController@editRecordedVideo');
+Route::delete('/deleteRecordedVideo/{id}', 'VideoController@deleteRecordedVideo');
 Route::post('saveNfoJanus', 'VideoController@saveNfoJanus');
 Route::post('saveScreenShareNfoJanus', 'VideoController@saveScreenShareNfoJanus');
 Route::post('convertJanusVideo', 'VideoController@convertJanusVideo');
+Route::post('convertDiscussionsJanusVideo', 'VideoController@convertDiscussionsJanusVideo');
+Route::post('convertApplicantsJanusVideo','VideoController@convertApplicantsJanusVideo');
+Route::post('getConversionProgress', 'VideoController@getConversionProgress');
+
 
 /* For Video Status */
 Route::post('/addVideoTag', 'VideoController@addVideoTag');
@@ -446,6 +452,20 @@ Route::group(['prefix' => 'api'], function () {
         
     });
 });
+
+/*Chat*/
+Route::get('/chat/get','ChatController@get');
+Route::resource('/chat','ChatController');
+
+/*Update Interview Question Score for Applicant*/
+Route::put('/updateInterviewQuestionScore/{id}','ApplicantController@updateInterviewQuestionScore');
+
+/*Interview Questions*/
+Route::post('/addInterviewQuestionAnswer','InterviewQuestionController@addInterviewQuestionAnswer');
+Route::resource('/interview/questions','InterviewQuestionController');
+
+
+
 /*
  * New Note
  */
