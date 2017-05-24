@@ -15,10 +15,10 @@ class CreateInterviewQuestionAnswersTable extends Migration
         Schema::create('interview_question_answers', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('question_id');
-            $table->integer('module_type');
+            $table->string('module_type');
             $table->integer('module_id');
             $table->integer('video_id');
-            $table->double('score', 8, 2);
+            $table->double('score', 8, 2)->nullable();
             $table->timestamps();
         });
     }
