@@ -38,7 +38,11 @@ class Job extends Model {
     public function applicants() {
         return $this->hasMany('App\Models\Applicant');
     }
-
+    
+    public function applicant_jobs() {
+        return $this->hasMany('App\Models\ApplicantJob');
+    }
+   
     public function shared_jobs() {
         return $this->hasMany('App\Models\ShareJob');
     }

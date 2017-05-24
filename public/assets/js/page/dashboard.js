@@ -69,7 +69,6 @@ $('#my_projects').on('click', '.toggle-subprojects', function () {
 $('#job_postings_tab').on('click',function(){
     var url = public_path + 'getJobPostings';
     $.get(url, function (data) {
-        console.log(data);
         $('.jobs_container').html(data);
     });
     

@@ -16,7 +16,11 @@
                 {!! $job->description !!}
             </div>
             <div class="job-options pull-right">
+                @if($job->applicant_jobs->where('job_id',$job->id)->where('user_id',Auth::user()->user_id)->count() === 1)
+                <a href="#" disabled="disabled" class="btn btn-edit btn-sm btn-shadow"> Applied</a>
+                @else
                 <a href="#" class="btn btn-edit btn-sm btn-shadow apply-to-job"> Apply</a>
+                @endif
                 <input class="job_id" type="hidden" value="{{$job->id}}"/>
             </div>
         </div>
@@ -42,5 +46,32 @@
         var icon = $(this);
         icon.toggleClass("ui-icon-minusthick ui-icon-plusthick");
         icon.closest(".portlet").find(".portlet-content").toggle();
+    });
+
+
+    $('.apply-to-job').click(function () {
+        console.log('Applying to Job');
+        var ajaxurl = public_path + 'dashboardApplyToJob';
+        var job_id = $(this).siblings('.job_id').val();
+        
+        var formData = new FormData();
+        formData.append('job_id',job_id);
+        $.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: formData,
+            // THIS MUST BE DONE FOR FILE UPLOADING
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+               
+            },
+            error: function (xhr, status, error) {
+
+            }
+        }); //ajax*/
     });
 </script>
