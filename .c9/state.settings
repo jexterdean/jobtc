@@ -142,10 +142,10 @@
     },
     "ext": {
         "counters": {
-            "@ace": 1,
-            "@acestatus": 1,
+            "@ace": 2,
+            "@acestatus": 2,
             "@divider": 4,
-            "@document": 10,
+            "@document": 11,
             "@form": 5,
             "@immediate": 1,
             "@menu": 5,
@@ -153,10 +153,10 @@
             "@pane": 2,
             "@postmessage": 1,
             "@preview": 1,
-            "@session": 9,
-            "@tab": 11,
+            "@session": 10,
+            "@tab": 2,
             "@tree": 2,
-            "@undoManager": 10
+            "@undoManager": 11
         }
     },
     "findinfiles": {
@@ -211,7 +211,7 @@
         }
     },
     "projecttree": {
-        "@scrollpos": 133,
+        "@scrollpos": -10,
         "@showfs": true,
         "expanded": {
             "json()": [
@@ -246,7 +246,8 @@
                 "/resources/views/discussions",
                 "/public/assets/css",
                 "/resources/views/company",
-                "/resources/views/forms"
+                "/resources/views/forms",
+                "/.c9"
             ]
         }
     },
@@ -466,7 +467,7 @@
     },
     "tabs": {
         "json()": {
-            "focus": "/app/Http/Controllers/ApplicantController.php",
+            "focus": "tab6",
             "nodes": [
                 {
                     "type": "pane",
@@ -718,8 +719,7 @@
                             "name": "tab10",
                             "path": "/app/Http/Controllers/ApplicantController.php",
                             "className": [
-                                "tab10",
-                                "focus"
+                                "tab10"
                             ],
                             "document": {
                                 "changed": false,
@@ -759,7 +759,8 @@
                             "name": "tab6",
                             "path": "",
                             "className": [
-                                "tab6"
+                                "tab6",
+                                "focus"
                             ],
                             "document": {
                                 "changed": false,
@@ -811,8 +812,8 @@
                     "skinset": "default",
                     "meta": {
                         "accessList": [
-                            "tab9",
-                            "tab6"
+                            "tab6",
+                            "tab9"
                         ]
                     }
                 }
@@ -822,7 +823,7 @@
     },
     "tree_selection": {
         "json()": [
-            "/app/Http/Controllers/ApplicantController.php"
+            "/.c9/.gitignore"
         ]
     }
 }
