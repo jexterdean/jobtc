@@ -99,7 +99,16 @@
     </div>
     <div id="my_jobs" class="tab-pane fade">
         <div class="jobs_container">
-
+            @foreach($jobs as $job)
+            <div class="row">
+                <div class="col-xs-6">
+                    {{$job->title}}
+                </div>
+                <div class="col-xs-6">
+                    <input class="btn btn-assign btn-shadow btn-lg pull-right apply-to-job" type="button" value="Apply"/>
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
 

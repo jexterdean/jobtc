@@ -304,30 +304,63 @@
                                                 <div id="question-collapse-{{$v->id}}" class="box-content collapse">
                                                     {!! $v->note !!}
                                                     <div class="form-inline">
-                                                        <label>Applicant Score</label>
-                                                        <div class="input-group">
-                                                            <input type="number" name="video-conference-points" id="{{ $v->result_id }}" value="{{ $v->result_points }}" step="1" max="{{ $v->max_point }}" class="form-control video-conference-points" style="width: 70px;">
-                                                            <div class="input-group-addon">/{{ $v->max_point }}</div>
-                                                            <input class="question_id" type="hidden" value="{{$v->id}}" />
-                                                            <input class="applicant_id" type="hidden" value="{{ $applicant->id }}" />
-                                                        </div>
                                                         <button type="button" class="btn btn-shadow btn-submit btn-video" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Record Answer</button>
+                                                        <button type="button" class="btn refresh-interview-question-answers">Refresh Answers</button>
                                                         <div id="interview-questions-timer-{{$v->id}}" class="timer-area pull-right">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</div>
                                                         <div class="recording-status-text"></div>
                                                         <input class="question_id" type="hidden" value="{{$v->id}}" />
                                                         <input class="original_time" type="hidden" value="{{$v->length ? date('i:s', strtotime($v->length)) : ''}}" />
                                                     </div>
+                                                    <ul id="question-collapse-answers-{{$v->id}}" class="list-group">
+                                                        @foreach($interview_question_answers->where('question_id',$v->id) as $answer)
+                                                        <li class="list-group-item">
+                                                            <div class="row">
+                                                            <div class="col-xs-9">
+                                                            <a href="https://extremefreedom.org/recordings/{{$interview_question_answers_videos->where('id',$answer->video_id)->first()->filename}}.webm" data-toggle="lightbox" data-gallery="discussion-{{$room_number}}-gallery" data-type="url">
+                                                                {{date('M d, Y H:i A', strtotime($interview_question_answers_videos->where('id',$answer->video_id)->first()->created_at))}}
+                                                            </a>
+                                                            </div>
+                                                            <div class="col-xs-3">
+                                                            <div class="input-group">
+                                                                <input type="number" name="video-conference-points" id="{{ $answer->id }}" value="{{ $answer->score }}" step="1" max="{{ $v->max_point }}" class="form-control video-conference-points">
+                                                                <div class="input-group-addon">/{{ $v->max_point }}</div>
+                                                                <input class="question_id" type="hidden" value="{{$v->id}}" />
+                                                                <input class="applicant_id" type="hidden" value="{{ $applicant->id }}" />
+                                                                <input class="video_id" type="hidden" value="{{ $answer->video_id }}" />
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        </li>
+                                                        @endforeach
+                                                    </ul>
                                                 </div>
                                                 @endif
                                                 @if(Auth::check('applicant'))
                                                 <div id="question-collapse-{{$v->id}}" class="box-content collapse">
                                                     <div class="form-inline">
                                                         <button type="button" class="btn btn-shadow btn-submit btn-video" data-status="1" data-test="{{ $v->test_id }}" data-unique="{{ $applicant->id }}" id="{{ $v->id }}">Record Answer</button>
+                                                        <button type="button" class="btn refresh-interview-question-answers">Refresh Answers</button>
                                                         <div id="interview-questions-timer-{{$v->id}}" class="timer-area pull-right">{{ $v->length ? date('i:s', strtotime($v->length)) : '' }}</div>
                                                         <div class="recording-status-text"></div>
                                                         <input class="question_id" type="hidden" value="{{$v->id}}" />
                                                         <input class="original_time" type="hidden" value="{{$v->length ? date('i:s', strtotime($v->length)) : ''}}" />
                                                     </div>
+                                                    <ul id="question-collapse-answers-{{$v->id}}" class="list-group">
+                                                        @foreach($interview_question_answers as $answer)
+                                                        <li class="list-group-item">
+                                                            <div class="row">
+                                                            <div class="col-xs-8">
+                                                            <a href="https://extremefreedom.org/recordings/{{$interview_question_answers_videos->where('id',$answer->video_id)->first()->filename}}.webm" data-toggle="lightbox" data-gallery="discussion-{{$room_number}}-gallery" data-type="url">
+                                                                {{date('M d, Y H:i A', strtotime($interview_question_answers_videos->where('id',$answer->video_id)->first()->created_at))}}
+                                                            </a>
+                                                            </div>
+                                                            <div class="col-xs-4">
+                                                                {{ $answer->score }}/{{ $v->max_point }}
+                                                            </div>
+                                                        </div>
+                                                        </li>
+                                                        @endforeach
+                                                    </ul>
                                                 </div>
                                                 @endif
                                             </div>
@@ -364,8 +397,13 @@
                             <i class="glyphicon glyphicon-file"></i> {{end($file)}}</a>
                         </div>
                     </div>
-                    @endif  
+                    @endif
+                    @if(pathinfo(url($str),PATHINFO_EXTENSION) === 'pdf') 
                     <iframe class="applicant-posting-resume" src="https://docs.google.com/viewer?url={{url($str)}}&embedded=true"></iframe>
+                    @endif
+                    @if(pathinfo(url($str),PATHINFO_EXTENSION) === 'docx' || pathinfo(url($str),PATHINFO_EXTENSION) === 'doc')
+                    <iframe class="applicant-posting-resume" src="https://view.officeapps.live.com/op/view.aspx?src={{url($str)}}"></iframe>
+                    @endif
                 </div>    
               <div id="video-conference" class="tab-pane fade">
                 <div class="row">
@@ -548,9 +586,6 @@
                           <span class="recorded_by pull-right">By: {{$video->recorded_by}}</span>
                           </div>
                   </div>
-                  
-                  
-                  
               </div>
               @endforeach
               @else

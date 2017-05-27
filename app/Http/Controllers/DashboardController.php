@@ -33,12 +33,15 @@ class DashboardController extends BaseController {
         $projects = Project::where('user_id', $user_id)->get();
 
         $companies = Profile::with('company')->where('user_id', $user_id)->get();
-
+        
+         $jobs = Job::all();
+        
         $assets = ['dashboard', 'real-time'];
 
         return view('user.dashboard', [
             'projects' => $projects,
             'companies' => $companies,
+            'jobs' =>  $jobs,
             'assets' => $assets,
             'company_id' => 0
         ]);
