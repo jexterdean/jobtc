@@ -284,6 +284,10 @@ class ApplicantController extends Controller {
             
             $recorded_videos = RecordedVideo::where('module_type','=','applicants')->where('module_id','=',$id)->orderBy('created_at','desc')->paginate(4);
             
+            $interview_question_answers = InterviewQuestionAnswer::where('module_type','=','applicants')->where('module_id','=',$id)->orderBy('created_at','desc')->get();
+            
+            $interview_question_answers_videos = RecordedVideo::where('module_type','=','applicants')->where('module_id','=',$id)->orderBy('created_at','desc')->get();
+            
             $assets = ['applicants', 'real-time'];
 
             return view('applicants.show', [
@@ -305,6 +309,8 @@ class ApplicantController extends Controller {
                 'review_result' => $review_result,
                 'questions' => $questions,
                 'video_questions' => $video_questions,
+                'interview_question_answers' => $interview_question_answers,
+                'interview_question_answers_videos' => $interview_question_answers_videos,
                 'quiz_videos' => $quiz_videos,
                 'previous_applicant' => $prevApplicant,
                 'next_applicant' => $nextApplicant,
@@ -778,6 +784,8 @@ class ApplicantController extends Controller {
         
         $applicant_id = $request->input('applicant_id');
         
+        $video_id = $request->input('video_id');
+        
         $score = $request->input('score');
         
         $question = Question::where('id',$id)->first();
@@ -806,6 +814,11 @@ class ApplicantController extends Controller {
                 ]);
             $add_test_result->save();
         }
+        
+        
+        $update_interview_question_answer = InterviewQuestionAnswer::where('video_id',$video_id)->update([
+            'score' => $score
+            ]);
         
         return "true";        
     }

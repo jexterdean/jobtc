@@ -1561,13 +1561,33 @@ $('body').on('click', '.btn-video', function (e) {
     //Applicant will always be the remote video. Only the Interviewer can record the applicant's video
     var remote_video_length = $('#video-conference-container .remote-video').length;   
     
-    if(remote_video_length != 0) {
+    var user_id = $('.user_id').val();
+    var user_type = $('.user_type').val();
+   
+if($(this).text() === 'Record Answer') {
     
+if(user_id === room_number && user_type === 'applicant') {
+        
+        mainVideo = $('#localVideo')[0].srcObject;
+        //var video_id = 'container_'+$(this).siblings('.stream_id').val();
+        //var container = $('#'+remote_video_id).find('.stream_id').val();
+        var container = 'localVideoContainer';
+        var video_title = $('#question-'+question_id+' .box-title').text();
+        console.log('Recording applicant');
+        $(this).text('Stop Recording');
+        $('#'+timer_id).countdown({until: b, format: 'MS', compact: true});
+        $('#'+timer_id).countdown('resume');
+        createJanusLocalStream(container,video_title,question_id);
+        
+} else {
+        
+//For Remote
+if(remote_video_length != 0) {
+        
     var remote_video_id = $('#video-conference-container .remote-video').attr('id');
     var remote_video_title = $('#'+remote_video_id+' .panel-title').text();
     
-   if($(this).text() === 'Record Answer') {
-        for(i=0; i < remote_video_length; i++) {
+    for(i=0; i < remote_video_length; i++) {
             if(remote_video_title.includes('(applicant)')) {
                 mainVideo = $('#'+remote_video_id+' .panel-body video')[0].srcObject;
                 //var video_id = 'container_'+$(this).siblings('.stream_id').val();
@@ -1581,7 +1601,15 @@ $('body').on('click', '.btn-video', function (e) {
                 createJanusLocalStream(container,video_title,question_id);
             }
     }
-   } else {
+        
+   
+} else {
+        $(this).siblings('.recording-status-text').append('<span>Applicant is offline</span>');
+        $(this).siblings('.recording-status-text').find('span').fadeOut(1000);
+}
+
+    }
+} else {
        $(this).text('Record Answer');
         sfutest.send({"message": stop});
         sfutest.detach();
@@ -1590,11 +1618,8 @@ $('body').on('click', '.btn-video', function (e) {
         console.log('original_time: '+original_time);
         $(this).siblings('.timer-area').text(original_time);
         $('.blink').addClass('hidden');
-   }
-} else {
-        $(this).siblings('.recording-status-text').append('<span>Applicant is offline</span>');
-        $(this).siblings('.recording-status-text').find('span').fadeOut(1000);
-}
+}    
+
     
 });
 
@@ -1606,15 +1631,18 @@ $('body').on('change','.video-conference-points',function(){
    
    var question_id = $(this).siblings('.question_id').val();
    var applicant_id = $(this).siblings('.applicant_id').val();
+   var video_id = $(this).siblings('.video_id').val();
    var score = $(this).val();
    console.log('score: '+score);
+   console.log('video_id: '+video_id);
    console.log('question_id: '+question_id);
    console.log('applicant_id: '+applicant_id);
    $.ajax({
             url: public_path + 'updateInterviewQuestionScore/'+question_id,
             data: {
                 score: score,
-                applicant_id:applicant_id
+                applicant_id:applicant_id,
+                video_id:video_id
             },
             type: "PUT",
             beforeSend: function () {
@@ -1691,6 +1719,15 @@ $('body').on('click','.btn-delete-video',function(e){
 $('body').on('click','.refresh-video-archive',function(e){
    e.preventDefault();
    refreshVideoArchive();
+   $(this).text('Refreshing');
+});
+
+$('body').on('click','.refresh-interview-question-answers',function(e){
+   e.preventDefault();
+   
+   var question_id = $(this).siblings('.question_id').val();
+   
+   refreshInterviewQuestions(question_id,$(this));
    $(this).text('Refreshing');
 });
 
@@ -2170,6 +2207,14 @@ function refreshVideoArchive() {
         $('.refresh-video-archive').text('Refresh Video Archive');
          videoTags(tag_type);
     });
+}
+
+function refreshInterviewQuestions(question_id,button){
+   $('#question-collapse-answers-'+question_id).load($('.current-video-page').val()+' #question-collapse-answers-'+question_id,function(responseTxt, statusTxt, xhr){
+        $(button).text('Refresh Answers');
+    });
+    
+    
 }
 
 //For adding running history on interview questions
