@@ -116,6 +116,12 @@ Route::post('quizDeleteResult', 'QuizController@quizDeleteResult');
 
 Route::post('addJobFromCrawler', 'CrawlerController@addJobFromCrawler');
 Route::post('addApplicantFromCrawler', 'CrawlerController@addApplicantFromCrawler');
+/*
+* Crawler 
+**/
+Route::post('/indeed/import','CrawlerController@import');
+Route::resource('/indeed/importer','CrawlerController');
+
 
 Route::group(['middleware' => 'guest'], function () {
     Route::get('forgotPassword', function () {
@@ -128,7 +134,8 @@ Route::group(['middleware' => 'guest'], function () {
 
 
 Route::group(['middleware' => 'auth'], function () {
-
+    
+    
     /**
      * Links
      */

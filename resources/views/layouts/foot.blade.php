@@ -311,6 +311,10 @@ $companies = \App\Models\Company::orderBy('name', 'asc')->lists('name', 'id');
 {!!  HTML::script('assets/js/page/dashboard.js')  !!}
 @endif
 
+@if(in_array('importer',$assets))
+{!!  HTML::script('assets/js/page/crawler-page.js')  !!}
+@endif
+
 {!!  HTML::script('assets/js/number.js')  !!}
 <!--Search Scripts-->
 {!!  HTML::script('assets/js/page/search.js')  !!}

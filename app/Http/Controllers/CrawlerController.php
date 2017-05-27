@@ -7,16 +7,51 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\Applicant;
+use App\Models\Company;
+use App\Models\Profile;
+use PhanAn\Remote\Remote;
+use Auth;
 
 class CrawlerController extends Controller {
+    
+    var $media_server;
+    var $remote_connection;
 
+    public function __construct() {
+        //$this->media_server = "localhost";
+        $this->media_server = "job.tc";
+        $this->remote_connection = new Remote([
+            'host' => $this->media_server,
+            'port' => 22,
+            'username' => 'root',
+            'password' => '(radio5)'
+        ]);
+    }
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        //
+        $user_id = Auth::user('user_id')->user_id;
+        
+        $company_ids = [];
+        
+        $profile_companies = Profile::where('user_id',$user_id)->get();
+        
+        foreach($profile_companies as $profile_company) {
+            array_push($company_ids,$profile_company->company_id);
+        }
+        
+        $companies = Company::whereIn('id',$company_ids)->get();
+        
+        $assets = ['importer'];
+        
+        return view('crawler.index', [
+            'assets' => $assets,
+            'companies' => $companies            
+        ]);
     }
 
     /**
@@ -45,7 +80,9 @@ class CrawlerController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        //
+        
+        
+     
     }
 
     /**
@@ -79,6 +116,28 @@ class CrawlerController extends Controller {
         //
     }
 
+    public function import(Request $request) {
+        $user_id = Auth::user('user_id')->user_id;
+        $company_id = $request->input('company_id');
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $url = 'http://job.tc';
+        $applicant_dir = '/var/www/html/main-app';
+        
+        $import_indeed_entries = 'casperjs var/www/html/main-app/public/assets/js/crawlers/indeed-importer.js '
+                . '--company_id='.$company_id.' ' 
+                . '--user_id='.$user_id.' '
+                . '--url='.$url.' '
+                . '--applicants_dir='.$applicant_dir.' '
+                . '--token='.csrf_token().' '
+                . '--indeed_email='.$email.' '
+                . '--indeed_password='.$password;
+        
+        $remote_connection->exec($import_indeed_entries);
+        
+        return csrf_token();
+    }
+    
     public function addJobFromCrawler(Request $request) {
 
         $user_id = $request->input('user_id');
@@ -117,10 +176,10 @@ class CrawlerController extends Controller {
         $name = $request->input('name');
         $email = $request->input('email');
         $phone = $request->input('phone');
+        $company_id = $request->input('company_id');
         $date = date('Y-m-d h:i:s', time());
         
-
-        $job_id = Job::where('title', 'like', '%' . preg_replace('/\s+/', '', $job) . '%')->first();
+        $job_id = Job::where('company_id',$company_id)->where('title', 'like', '%' . preg_replace('/\s+/', '', $job) . '%')->first();
 
         $applicant_exists = Applicant::where('name', 'like', $name)->count();
 

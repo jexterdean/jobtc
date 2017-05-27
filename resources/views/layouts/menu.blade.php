@@ -416,6 +416,10 @@
                     <a href="{{url('/discussions')}}"><i class="fa fa-th-large" aria-hidden="true"></i> Meeting Rooms</a>
                 </li>
                 <li>
+                    <!--a href="https://laravel.software/jangouts/dist/#/rooms/1234?user={{Auth::user('user')->name}}"><i class="fa fa-th-large" aria-hidden="true"></i> Meeting Room</a-->
+                    <a href="{{url('/indeed/importer')}}"><i class="fa fa-th-large" aria-hidden="true"></i> Indeed Importer</a>
+                </li>
+                <li>
                     <a target="_blank" href="{{ url('/dashboard') }}"><i class="fa fa-bars" aria-hidden="true"></i> My Dashboard</a>
                 </li>
                 <li>

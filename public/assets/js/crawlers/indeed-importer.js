@@ -4,34 +4,32 @@
  **/
 
 var casper = require('casper').create({
-    verbose: false,
-    logLevel: 'debug',
     pageSettings: {
         loadImages: false, // The WebPage instance used by Casper will
         loadPlugins: false, // use these settings
         webSecurityEnabled: false,
-        ignoreSslErrors: true,
+        ignoreSslErrors: false,
         viewportSize: {width: 1366, height: 784}
         //userAgent: "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36"
     }
 //remoteScripts: ['https://code.jquery.com/jquery-2.1.4.min.js']
 });
 
-phantom.casperTest = true;
+phantom.casperTest = false;
 
 /*Script options*/
 //Job.tc Url
-casper.echo(casper.cli.get('url'));
+//casper.echo(casper.cli.get('url'));
 //Company who owns the jobs
-casper.echo(casper.cli.get('company_id'));
+//casper.echo(casper.cli.get('company_id'));
 //User who owns the jobs
-casper.echo(casper.cli.get('user_id'));
+//casper.echo(casper.cli.get('user_id'));
 //Where to store the applicant resumes
-casper.echo(casper.cli.get('applicants_dir'));
+//casper.echo(casper.cli.get('applicants_dir'));
 //Job.tc email
-casper.echo(casper.cli.get('jobtc_email'));
+//casper.echo(casper.cli.get('jobtc_email'));
 //Job.tc password
-casper.echo(casper.cli.get('jobtc_password'));
+//casper.echo(casper.cli.get('jobtc_password'));
 
 var url = 'https://employers.indeed.com/m#jobs';
 var linkurl = 'https://employers.indeed.com/m';
@@ -61,14 +59,16 @@ var job_title;
 var job;
 var resume;
 //For Http Validation
-var token;
+var token = casper.cli.raw.get('token');
 //For Directory
 
 //Login to Indeed using your employer account
 casper.start(url, function () {
     this.fill('form#loginform', {
-        email: 'projectmanager@hdenergy.ca',
-        password: '1234567890'
+        //__email: 'projectmanager@hdenergy.ca',
+        //__password: '1234567890'
+        __email: casper.cli.raw.get('indeed_email'),
+        __password: casper.cli.raw.get('indeed_password'),
     }, true);
 });
 
@@ -91,28 +91,29 @@ casper.then(function () {
         this.each(links, function (self, link) {
             this.thenOpen(linkurl + link, function () {
                 this.wait(3000, function () {
-                    self.echo(self.getCurrentUrl());
+                    //self.echo(self.getCurrentUrl());
                     this.test.assertExists('div#jD', 'Job Description Exists');
                     //this.echo(this.fetchText('div#jD'));
                     title = self.getTitle();
                     desc = self.fetchText('div#jD');
-                    self.echo(title, 'INFO');
+                    //self.echo(title, 'INFO');
                     //self.echo(desc, 'INFO');
 
                     jobs.push({title: title, description: desc});
 
                     this.echo('Starting Ajax request');
-                    this.thenOpen(casper.cli.get('url') + '/login', function () {
+                    
+                    /*this.thenOpen(casper.cli.get('url') + '/login', function () {
                         this.fill('form#login-form', {
                             email: casper.cli.raw.get('jobtc_email'),
                             password: casper.cli.raw.get('jobtc_password')
                         }, true);
                         this.echo(this.getTitle());
-                    });
-                    this.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
-                        var token = self.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
+                    });*/
+                    //this.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
+                        //var token = self.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
                         var jobData = {
-                            '_token': token,
+                            '_token': casper.cli.raw.get('token'),
                             title: title,
                             description: desc,
                             photo: '',
@@ -120,10 +121,10 @@ casper.then(function () {
                             company_id: casper.cli.raw.get('company_id')
                         };
                         //this.fill('form.add-job-form', jobData, true);
-                        this.evaluate(function (data, url) {
-                            __utils__.sendAJAX(url + '/addJobFromCrawler', 'POST', data, false);
+                        this.thenEvaluate(function (data, url) {
+                            return __utils__.sendAJAX(url + '/addJobFromCrawler', 'POST', data, false);
                         }, jobData, casper.cli.get('url'));
-                    });
+                    //});
                 });
             });
         });
@@ -159,6 +160,7 @@ casper.then(function () {
         });
     });
 });
+
 casper.then(function () {
     candidates = candidates.reduce(function (a, b) {
         if (a.indexOf(b) < 0)
@@ -167,10 +169,11 @@ casper.then(function () {
     }, []);
 });
 
+
 casper.then(function () {
     this.each(candidates, function (self, link) {
         self.thenOpen(linkurl + link, function () {
-            self.wait(3000, function () {
+            self.wait(6000, function () {
                 self.echo(self.fetchText('h3.name'));
                 self.echo(self.fetchText('a[data-element=back-job]'), 'INFO');
                 self.echo(self.fetchText('div.name-plate p'), 'INFO');
@@ -187,38 +190,38 @@ casper.then(function () {
                 //self.echo("Email: " + email);
                 //self.echo("Phone: " + phone);
                 //Get Job Title
-                var job_title_str = self.fetchText('a[data-element=back-job] span');
+                var job_title_str = self.fetchText('a[data-tn-element=back-job] span');
                 var job_title = job_title_str.split(' ');
+                self.echo("Job Title: " + job_title_str, 'INFO');
                 job = job_title[2];
                 self.echo("Job Title: " + job, 'INFO');
-                resume = downloadurl + "" + this.getElementAttribute('a[data-element=download-resume]', 'href');
+                resume = downloadurl + "" + this.getElementAttribute('a[data-tn-element=download-resume-inline]', 'href');
 
                 casper.download(resume, 'Resume' + name.replace(/\s/g, '') + '.pdf');
 
-                this.thenOpen(casper.cli.get('url') + '/login', function () {
-                    this.wait(3000, function () {
+                /*self.thenOpen(casper.cli.get('url') + '/login', function () {
                         this.fill('form#login-form', {
                             'email': casper.cli.raw.get('jobtc_email'),
                             'password': casper.cli.raw.get('jobtc_password')
                         }, true);
-                    });
-                });
-                this.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
-                    token = this.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
+                });*/
+                //self.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
+                    //token = this.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
 
                     var candidateData = {
                         name: name,
                         email: email,
                         phone: phone,
                         job: job,
-                        _token: token
+                        company_id: casper.cli.raw.get('company_id'),
+                        _token: casper.cli.raw.get('token')
                     };
 
-                    this.echo("Response: " + JSON.stringify(candidateData), 'INFO');
-                    this.evaluate(function (data, url) {
-                        __utils__.sendAJAX(url + '/addApplicantFromCrawler', 'POST', data, false);
+                    self.echo("Response: " + JSON.stringify(candidateData), 'INFO');
+                    self.thenEvaluate(function (data, url) {
+                        return __utils__.sendAJAX(url + '/addApplicantFromCrawler', 'POST', data, false);
                     }, candidateData, casper.cli.get('url'));
-                });
+                //});
             });
         });
     });
