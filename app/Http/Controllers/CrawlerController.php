@@ -117,14 +117,16 @@ class CrawlerController extends Controller {
     }
 
     public function import(Request $request) {
+        $remote_connection = $this->remote_connection;
+        
         $user_id = Auth::user('user_id')->user_id;
         $company_id = $request->input('company_id');
         $email = $request->input('email');
         $password = $request->input('password');
-        $url = 'http://job.tc';
+        $url = 'https://job.tc';
         $applicant_dir = '/var/www/html/main-app';
         
-        $import_indeed_entries = 'casperjs var/www/html/main-app/public/assets/js/crawlers/indeed-importer.js '
+        $import_indeed_entries = 'casperjs '.$applicant_dir.'/public/assets/js/crawlers/indeed-importer.js '
                 . '--company_id='.$company_id.' ' 
                 . '--user_id='.$user_id.' '
                 . '--url='.$url.' '
@@ -135,7 +137,7 @@ class CrawlerController extends Controller {
         
         $remote_connection->exec($import_indeed_entries);
         
-        return csrf_token();
+        return "true";
     }
     
     public function addJobFromCrawler(Request $request) {

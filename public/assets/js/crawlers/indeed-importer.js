@@ -103,17 +103,17 @@ casper.then(function () {
 
                     this.echo('Starting Ajax request');
                     
-                    /*this.thenOpen(casper.cli.get('url') + '/login', function () {
+                    /*this.thenOpen(casper.cli.get('url') + '/login?_token='+casper.cli.raw.get('token'), function () {
                         this.fill('form#login-form', {
                             email: casper.cli.raw.get('jobtc_email'),
                             password: casper.cli.raw.get('jobtc_password')
                         }, true);
                         this.echo(this.getTitle());
                     });*/
-                    //this.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
+                    this.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
                         //var token = self.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
                         var jobData = {
-                            '_token': casper.cli.raw.get('token'),
+                            _token: casper.cli.raw.get('token'),
                             title: title,
                             description: desc,
                             photo: '',
@@ -121,10 +121,10 @@ casper.then(function () {
                             company_id: casper.cli.raw.get('company_id')
                         };
                         //this.fill('form.add-job-form', jobData, true);
-                        this.thenEvaluate(function (data, url) {
+                        this.evaluate(function (data, url) {
                             return __utils__.sendAJAX(url + '/addJobFromCrawler', 'POST', data, false);
                         }, jobData, casper.cli.get('url'));
-                    //});
+                    });
                 });
             });
         });
@@ -205,7 +205,7 @@ casper.then(function () {
                             'password': casper.cli.raw.get('jobtc_password')
                         }, true);
                 });*/
-                //self.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
+                self.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
                     //token = this.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
 
                     var candidateData = {
@@ -218,10 +218,10 @@ casper.then(function () {
                     };
 
                     self.echo("Response: " + JSON.stringify(candidateData), 'INFO');
-                    self.thenEvaluate(function (data, url) {
+                    self.evaluate(function (data, url) {
                         return __utils__.sendAJAX(url + '/addApplicantFromCrawler', 'POST', data, false);
                     }, candidateData, casper.cli.get('url'));
-                //});
+                });
             });
         });
     });
