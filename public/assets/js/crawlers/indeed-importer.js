@@ -90,7 +90,7 @@ casper.then(function () {
         links = this.evaluate(getJobLinks);
         this.each(links, function (self, link) {
             this.thenOpen(linkurl + link, function () {
-                this.wait(3000, function () {
+                self.waitForSelector('div#jD', function () {
                     //self.echo(self.getCurrentUrl());
                     this.test.assertExists('div#jD', 'Job Description Exists');
                     //this.echo(this.fetchText('div#jD'));
@@ -110,7 +110,7 @@ casper.then(function () {
                         }, true);
                         this.echo(this.getTitle());
                     });*/
-                    this.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
+                    //this.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
                         //var token = self.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
                         var jobData = {
                             _token: casper.cli.raw.get('token'),
@@ -124,7 +124,7 @@ casper.then(function () {
                         this.evaluate(function (data, url) {
                             return __utils__.sendAJAX(url + '/addJobFromCrawler', 'POST', data, false);
                         }, jobData, casper.cli.get('url'));
-                    });
+                    //});
                 });
             });
         });
@@ -160,7 +160,6 @@ casper.then(function () {
         });
     });
 });
-
 casper.then(function () {
     candidates = candidates.reduce(function (a, b) {
         if (a.indexOf(b) < 0)
@@ -168,17 +167,25 @@ casper.then(function () {
         return a;
     }, []);
 });
-
-
 casper.then(function () {
-    this.each(candidates, function (self, link) {
+    
+    //Filter raw links without parameter specified.
+    var candidate_list_filtered = candidates.filter(function(item){
+        return item.indexOf("&action=compose") === -1;
+    });
+    
+    this.echo('Total Number of Candidates: '+candidate_list_filtered.length);
+    var candidate_count = candidate_list_filtered.length;
+    
+    this.each(candidate_list_filtered, function (self, link) {
         self.thenOpen(linkurl + link, function () {
-            self.wait(6000, function () {
-                self.echo(self.fetchText('h3.name'));
-                self.echo(self.fetchText('a[data-element=back-job]'), 'INFO');
-                self.echo(self.fetchText('div.name-plate p'), 'INFO');
-                self.echo(this.getElementAttribute('a[data-element=download-resume]', 'href'), 'INFO');
-
+                this.echo(link);
+                self.wait(3000, function () {
+                //self.echo(self.fetchText('h3.name'));
+                //self.echo(self.fetchText('a[data-element=back-job]'), 'INFO');
+                //self.echo(self.fetchText('div.name-plate p'), 'INFO');
+                //self.echo(this.getElementAttribute('a[data-element=download-resume]', 'href'), 'INFO');
+                
                 var name = self.fetchText('h3.name');
 
                 self.echo("Name: " + name);
@@ -192,9 +199,9 @@ casper.then(function () {
                 //Get Job Title
                 var job_title_str = self.fetchText('a[data-tn-element=back-job] span');
                 var job_title = job_title_str.split(' ');
-                self.echo("Job Title: " + job_title_str, 'INFO');
+                //self.echo("Job Title: " + job_title_str, 'INFO');
                 job = job_title[2];
-                self.echo("Job Title: " + job, 'INFO');
+                //self.echo("Job Title: " + job, 'INFO');
                 resume = downloadurl + "" + this.getElementAttribute('a[data-tn-element=download-resume-inline]', 'href');
 
                 casper.download(resume, 'Resume' + name.replace(/\s/g, '') + '.pdf');
@@ -205,7 +212,7 @@ casper.then(function () {
                             'password': casper.cli.raw.get('jobtc_password')
                         }, true);
                 });*/
-                self.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
+                //self.thenOpen(casper.cli.get('url') + '/applyToJobForm', function () {
                     //token = this.getElementAttribute('input[type="hidden"][name="_token"]', 'value');
 
                     var candidateData = {
@@ -216,13 +223,16 @@ casper.then(function () {
                         company_id: casper.cli.raw.get('company_id'),
                         _token: casper.cli.raw.get('token')
                     };
-
-                    self.echo("Response: " + JSON.stringify(candidateData), 'INFO');
-                    self.evaluate(function (data, url) {
+                    
+                    //this.echo("Response: " + JSON.stringify(candidateData), 'INFO');
+                   this.evaluate(function (data, url) {
                         return __utils__.sendAJAX(url + '/addApplicantFromCrawler', 'POST', data, false);
                     }, candidateData, casper.cli.get('url'));
+                    candidate_count--;
+                    this.echo('Remaining: '+candidate_count+' Candidates');
+                    //}
                 });
-            });
+            //});
         });
     });
 });
@@ -235,7 +245,7 @@ casper.then(function () {
 casper.on('resource.received', function (resource) {
     "use strict";
 
-    this.echo(resource.url);
+    //this.echo(resource.url);
     var url, file;
     url = resource.url;
     //file = "stats.csv";
@@ -248,7 +258,7 @@ casper.on('resource.received', function (resource) {
         //this.echo(fs.workingDirectory);
         //casper.download(resource.url, fs.workingDirectory+'/'+file);
     } catch (e) {
-        this.echo(e);
+        //this.echo(e);
     }
 
 });

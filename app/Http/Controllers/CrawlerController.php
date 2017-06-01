@@ -123,7 +123,7 @@ class CrawlerController extends Controller {
         $company_id = $request->input('company_id');
         $email = $request->input('email');
         $password = $request->input('password');
-        $url = 'https://job.tc';
+        $url = 'https://job.tc/pm';
         $applicant_dir = '/var/www/html/main-app';
         
         $import_indeed_entries = 'casperjs '.$applicant_dir.'/public/assets/js/crawlers/indeed-importer.js '
@@ -183,7 +183,7 @@ class CrawlerController extends Controller {
         
         $job_id = Job::where('company_id',$company_id)->where('title', 'like', '%' . preg_replace('/\s+/', '', $job) . '%')->first();
 
-        $applicant_exists = Applicant::where('name', 'like', $name)->count();
+        $applicant_exists = Applicant::where('job_id',$job_id->id)->where('name', 'like', $name)->exists();
 
         $photo_path = 'assets/user/default-avatar.jpg';
         
@@ -196,10 +196,10 @@ class CrawlerController extends Controller {
             'phone' => $phone,
             'photo' => $photo_path,
             'resume' => $resume_path,
-            'password' => bcrypt($email)
+            'password' => bcrypt($job_id->id)
         ]);
 
-        if ($applicant_exists ===  0) {
+        if (!$applicant_exists) {
             $applicant->save();
         }
 
@@ -238,4 +238,8 @@ class CrawlerController extends Controller {
         return $message;
     }
 
+    public function getRemainingCandidates(Request $request) {
+        
+    }
+    
 }
