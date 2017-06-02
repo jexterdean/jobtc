@@ -105,7 +105,6 @@
 @endif <!--Check if test completed condition-->
 @endforeach
 @endif <!--Check if user is applicant-->
-
 @if(Auth::check('user'))
 @foreach($tests as $test)
 @if($tests_completed->contains('test_id',$test->id))

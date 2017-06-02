@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 @elseif($question->question_type_id == 4 && $question->record_id)
-                <video id="quiz-video-play" controls="controls" preload="metadata" src="https://laravel.software/recordings/{{ $question->record_id }}.webm">
+                <video id="quiz-video-play" controls="controls" preload="metadata" src="https://extremefreedom.org/recordings/{{ $question->record_id }}.webm">
                     Your browser does not support the video tag.
                 </video>
                 @endif
