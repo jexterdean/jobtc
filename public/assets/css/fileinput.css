@@ -119,7 +119,7 @@
     margin: 8px;
     height: 160px;
     border: 1px solid #ddd;
-    box-shadow: 1px 1px 5px 0px #a2958a;
+    /*box-shadow: 1px 1px 5px 0px #a2958a;*/
     padding: 6px;
     float: left;
     text-align: center;
@@ -127,7 +127,7 @@
 }
 
 .file-preview-frame:hover {
-    box-shadow: 3px 3px 5px 0px #333;
+    /*box-shadow: 3px 3px 5px 0px #333;*/
 }
 
 .file-preview-image {
@@ -193,9 +193,9 @@
 }
 
 .file-upload-indicator:hover {
-    font-size: 1.2em;
+    /*font-size: 1.2em;
     font-weight: bold;
-    padding-top: 0;
+    padding-top: 0;*/
 }
 
 .file-drop-zone {

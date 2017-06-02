@@ -9,13 +9,13 @@ var casper = require('casper').create({
         loadPlugins: false, // use these settings
         webSecurityEnabled: false,
         ignoreSslErrors: false,
-        viewportSize: {width: 1366, height: 784}
-        //userAgent: "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36"
+        viewportSize: {width: 1366, height: 784},
+        userAgent: "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 Safari/537.36"
     }
 //remoteScripts: ['https://code.jquery.com/jquery-2.1.4.min.js']
 });
 
-phantom.casperTest = false;
+phantom.casperTest = true;
 
 /*Script options*/
 //Job.tc Url
@@ -101,7 +101,7 @@ casper.then(function () {
 
                     jobs.push({title: title, description: desc});
 
-                    this.echo('Starting Ajax request');
+                    //this.echo('Starting Ajax request');
                     
                     /*this.thenOpen(casper.cli.get('url') + '/login?_token='+casper.cli.raw.get('token'), function () {
                         this.fill('form#login-form', {
@@ -179,7 +179,7 @@ casper.then(function () {
     
     this.each(candidate_list_filtered, function (self, link) {
         self.thenOpen(linkurl + link, function () {
-                this.echo(link);
+                //this.echo(link);
                 self.wait(3000, function () {
                 //self.echo(self.fetchText('h3.name'));
                 //self.echo(self.fetchText('a[data-element=back-job]'), 'INFO');
@@ -188,7 +188,7 @@ casper.then(function () {
                 
                 var name = self.fetchText('h3.name');
 
-                self.echo("Name: " + name);
+                //self.echo("Name: " + name);
                 //Split the email and phone
                 var email_phone_str = self.fetchText('div.name-plate p');
                 var email_phone = email_phone_str.split("|");
@@ -225,7 +225,7 @@ casper.then(function () {
                     };
                     
                     //this.echo("Response: " + JSON.stringify(candidateData), 'INFO');
-                   this.evaluate(function (data, url) {
+                   var applicant_insert = this.evaluate(function (data, url) {
                         return __utils__.sendAJAX(url + '/addApplicantFromCrawler', 'POST', data, false);
                     }, candidateData, casper.cli.get('url'));
                     candidate_count--;
