@@ -6950,10 +6950,10 @@ button.close {
   padding: 15px;
   border-bottom: 1px solid #e5e5e5;
   background: #4285F4 !important;
-  color: #ffffff!important;
+  color: #ffffff !important;
   /* Shadows are visible under slightly transparent text color */
   color: #ffffff;
-  text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;
+  /*text-shadow: 1px 1px 1px #000, 0 0 0 #000, 1px 1px 1px #000;*/
 }
 .modal-header .close {
   margin-top: -2px;
@@ -6961,6 +6961,10 @@ button.close {
 .modal-title {
   margin: 0;
   line-height: 1.42857143;
+}
+.modal-title small,
+.modal-title samp{
+  color: #fff; 
 }
 .modal-body {
   position: relative;

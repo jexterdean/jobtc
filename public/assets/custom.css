@@ -725,6 +725,18 @@ select{
 .video-options{
     padding: 10px 0;
 }
+.kv-file-zoom:active,
+.kv-file-zoom:focus,
+.kv-file-zoom:hover,
+.kv-file-zoom:visited,
+.kv-zoom-actions .btn:active,
+.kv-zoom-actions .btn:focus,
+.kv-zoom-actions .btn:hover,
+.kv-zoom-actions .btn:visited{
+    background: #fff !important;
+    color: #306aca !important;
+    box-shadow: none !important;
+}
 
 /* Projects */
 .project-list{
